@@ -121,5 +121,5 @@ def add_html_foundation(event):
     #jqueryui_smoothness.need()
     #jqueryui_bootstrap.need()
 
-    #from css.fontawesome import fontawesome
-    #fontawesome.need()
+    from css.fontawesome import fontawesome
+    fontawesome.need()
