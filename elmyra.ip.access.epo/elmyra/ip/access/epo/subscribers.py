@@ -96,7 +96,12 @@ def add_renderer_globals(event):
 
 
 def add_html_foundation(event):
+
     # include all javascript/css frameworks
+
+    # backbone.marionette
+    from js.marionette import marionette
+    marionette.need()
 
     # bootstrap
     from js.bootstrap import bootstrap

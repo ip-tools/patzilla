@@ -31,6 +31,10 @@ requires = [
     # fontawesome
     'css.fontawesome==3.2.1',
 
+    # marionette, backbone and prerequisites
+    'js.marionette==1.1.0',
+]
+
 setup(name='elmyra.ip.access.epo',
       version='0.0.0',
       description='elmyra.ip.access.epo',
