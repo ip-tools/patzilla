@@ -4,3 +4,7 @@ from pyramid.view import view_config
 @view_config(route_name='ops-chooser', renderer='elmyra.ip.access.epo:templates/ops-chooser.mako')
 def screening(request):
     return {'project': 'elmyra.ip.access.epo'}
+
+@view_config(route_name='angry-cats', renderer='elmyra.ip.access.epo:templates/angry-cats.mako')
+def angry_cats(request):
+    return {}

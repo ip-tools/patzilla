@@ -1,0 +1,48 @@
+img.angry_cat_pic {
+    height: 100px;
+    width: 100px;
+}
+
+#content {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#angry_cats {
+    margin-top: 30px;
+}
+
+#angry_cats .angry_cat {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#angry_cats th {
+    font-size: 24px;
+}
+
+#angry_cats td, table#angry_cats th {
+    padding: 12px;
+}
+
+#angry_cats td.rank div {
+    display: block;
+    text-align: center;
+}
+
+#angry_cats .rank_up img, .rank_down img {
+    padding: 8px;
+    padding-right: 24px;
+    padding-left: 24px;
+    margin: 2px;
+    color: #fff;
+    background-color: #000;
+    border-radius: 8px;
+    cursor: pointer;
+    cursor: hand;
+}
+
+#angry_cats .rank_up img:hover, .rank_down img:hover {
+    background-color: #ccc;
+}

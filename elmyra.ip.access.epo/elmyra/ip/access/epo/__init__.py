@@ -17,6 +17,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_route('ops-chooser', '/ops-chooser')
+    config.add_route('angry-cats', '/angry-cats')
 
     config.scan()
 
