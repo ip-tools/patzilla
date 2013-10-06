@@ -6,12 +6,6 @@ from pyramid.url import route_url
 from akhet.urlgenerator import URLGenerator as ApplicationURLGenerator
 
 import fanstatic
-from js.bootstrap import bootstrap
-from js.bootstrap import bootstrap_theme
-from js.jquery import jquery
-from css.fontawesome import fontawesome
-from js.jqueryui import jqueryui
-from js.jqueryui_bootstrap import jqueryui_bootstrap
 
 from . import helpers
 
@@ -103,9 +97,24 @@ def add_renderer_globals(event):
 
 def add_html_foundation(event):
     # include all javascript/css frameworks
+
+    # bootstrap
+    from js.bootstrap import bootstrap
+    #from js.bootstrap import bootstrap_theme
     bootstrap.need()
-    bootstrap_theme.need()
+    #bootstrap_theme.need()
+
+    # jquery
+    from js.jquery import jquery
     jquery.need()
-    jqueryui.need()
-    jqueryui_bootstrap.need()
-    fontawesome.need()
+
+    # jqueryui
+    #from js.jqueryui import jqueryui, base as jqueryui_base, smoothness as jqueryui_smoothness
+    #from js.jqueryui_bootstrap import jqueryui_bootstrap
+    #jqueryui.need()
+    #jqueryui_base.need()
+    #jqueryui_smoothness.need()
+    #jqueryui_bootstrap.need()
+
+    #from css.fontawesome import fontawesome
+    #fontawesome.need()

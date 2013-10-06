@@ -18,8 +18,8 @@ requires = [
     # frontend
     'fanstatic==1.0a2',
     'pyramid_fanstatic==0.4',
-    #'js.bootstrap==2.3.1',
-    'js.bootstrap==3.0.0.1',
+    'js.bootstrap==2.3.1',
+    #'js.bootstrap==3.0.0.1',
     'js.jquery==1.9.1',
     'js.jqueryui==1.10.3',
     'js.jqueryui_bootstrap==0.0.0',
