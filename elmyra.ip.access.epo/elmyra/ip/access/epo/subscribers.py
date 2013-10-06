@@ -110,8 +110,8 @@ def add_html_foundation(event):
     #bootstrap_theme.need()
 
     # jquery
-    from js.jquery import jquery
-    jquery.need()
+    #from js.jquery import jquery
+    #jquery.need()
 
     # jqueryui
     #from js.jqueryui import jqueryui, base as jqueryui_base, smoothness as jqueryui_smoothness
