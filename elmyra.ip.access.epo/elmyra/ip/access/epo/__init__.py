@@ -8,6 +8,7 @@ def main(global_config, **settings):
     # Addons
     config.include('pyramid_mako')
     config.include('pyramid_fanstatic')
+    config.include('cornice')
 
     # Configure subscribers: URL generator, renderer globals.
     config.include(".subscribers")

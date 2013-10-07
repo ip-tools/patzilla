@@ -8,14 +8,28 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
 
-    # foundation: pyramid
+    # ----------------------------------------------
+    #   backend
+    # ----------------------------------------------
+    # pyramid core
     'pyramid==1.5a2',
-    'Akhet==2.0',
     'pyramid_debugtoolbar',
-    'waitress',
     'pyramid_mako',
+    'Akhet==2.0',
+    'waitress',
 
-    # frontend
+    # web services
+    'cornice==0.14',
+
+    # ----------------------------------------------
+    #   business logic
+    # ----------------------------------------------
+    'requests==2.0.0',
+
+    # ----------------------------------------------
+    #   user interface
+    # ----------------------------------------------
+    # fanstatic
     'fanstatic==1.0a2',
     'pyramid_fanstatic==0.4',
 
