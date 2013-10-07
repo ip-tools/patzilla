@@ -1,0 +1,8 @@
+.table-clear-border, .table-clear-border th, .table-clear-border td, .table-clear-border thead, .table-clear-border tfoot, .table-clear-border tbody {
+    border: 0;
+}
+
+.table-clear-border-vertical, .table-clear-border-vertical th, .table-clear-border-vertical td, .table-clear-border-vertical thead, .table-clear-border-vertical tfoot, .table-clear-border-vertical tbody {
+    border-left: 0;
+    border-right: 0;
+}
