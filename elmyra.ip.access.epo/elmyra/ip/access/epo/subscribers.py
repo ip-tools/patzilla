@@ -109,6 +109,8 @@ def add_html_foundation(event):
     #jquery.need()
     from js.jquery_shorten import jquery_shorten
     jquery_shorten.need()
+    from js.purl import purl
+    purl.need()
 
     # jqueryui
     #from js.jqueryui import jqueryui, base as jqueryui_base, smoothness as jqueryui_smoothness
