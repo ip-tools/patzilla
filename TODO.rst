@@ -2,21 +2,32 @@
 elmyra.ip.access.epo TODO
 =========================
 
+Prio 0
+======
+- setup on https://tools.ip.elmyra.de/ops-chooser
+
+
 Prio 1
 ======
-- don't hardcode query in ops-chooser.js, but use from html form
+- [x] don't hardcode query in ops-chooser.js, but use from html form
     - http://bootsnipp.com/snipps/twitter-like-message-box
+- [x] shipping subsystem via basket textarea
+- fix "abstract" parsing, e.g. @ WO2013148409A1
 - Multiple Checkbox Select/Deselect
     - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
+- rename "came_from" to "ship_url"
+- get "ship_param=NumberList" form query param
+- disable javascript resource caching
 - Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 - test: swap Titel, Anmelder, ... column with content column
 - react on "no records" and display it somehow
-- fix "abstract" parsing, e.g. @ WO2013148409A1
 - show spinner while loading, from fontawesome
 - load pictures
     - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
 - paging!
+- applicant=ibm => cannot use method "join" on undefined
+- anmeldedatum
 
 Prio 2
 ======
