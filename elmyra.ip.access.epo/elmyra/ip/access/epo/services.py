@@ -46,12 +46,20 @@ def ops_published_data_search(constituents, query, range):
     url = url_tpl.format(constituents=constituents)
     response = requests.get(url, headers={'Accept': 'application/json'}, params={'q': query, 'Range': range})
 
+    #print "url:", url
+    #print "status-code:", response.status_code
+
     if response.status_code == 200:
-        return response.json()
+        #print "content-type:", response.headers['content-type']
+        if response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            return {}
     else:
         request = get_current_request()
         response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
         request.errors.add('ops-published-data-search', 'http-response', response_dict)
         response = json_error(request.errors)
         response.status = 500
+        print "response:", response
         raise response
