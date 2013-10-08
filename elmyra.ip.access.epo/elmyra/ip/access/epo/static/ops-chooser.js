@@ -3,14 +3,45 @@
 OpsChooserApp = new Backbone.Marionette.Application();
 
 OpsChooserApp.addRegions({
-    listRegion: "#ipdocumentcollection-region"
+    listRegion: "#ops-collection-region"
 });
 
-IpDocument = Backbone.Model.extend({
+OpsPublishedDataSearch = Backbone.Model.extend({
+    url: '/api/ops/published-data/search',
+});
+
+OpsExchangeDocument = Backbone.Model.extend({
 
     defaults: {
-        votes: 0,
-        selected: false
+        selected: false,
+
+        // TODO: move to template helper
+        // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
+        get_applicants: function() {
+            var sequence_max = "0";
+            var applicant_groups = {};
+            var applicants_node = this['bibliographic-data']['parties']['applicants']['applicant'];
+            _.each(applicants_node, function(applicant_node) {
+                var data_format = applicant_node['@data-format'];
+                var sequence = applicant_node['@sequence'];
+                var value = _.string.trim(applicant_node['applicant-name']['name']['$'], ', ');
+                applicant_groups[data_format] = applicant_groups[data_format] || {};
+                applicant_groups[data_format][sequence] = value;
+                if (sequence > sequence_max)
+                    sequence_max = sequence;
+            });
+            //console.log(applicant_groups);
+
+            var applicants_list = [];
+            _.each(_.range(1, parseInt(sequence_max) + 1), function(sequence) {
+                sequence = sequence.toString();
+                var epodoc_value = applicant_groups['epodoc'][sequence];
+                var original_value = applicant_groups['original'][sequence];
+                applicants_list.push(epodoc_value + ' / ' + original_value);
+            });
+
+            return applicants_list;
+        },
     },
 
     select: function() {
@@ -18,24 +49,27 @@ IpDocument = Backbone.Model.extend({
     },
     unselect: function() {
         this.set('selected', false);
-    }
+    },
+
 
 });
 
-IpDocumentCollection = Backbone.Collection.extend({
+OpsExchangeDocumentCollection = Backbone.Collection.extend({
 
-    model: IpDocument,
+    model: OpsExchangeDocument,
 
-    initialize: function(ipdocumentcollection) {
+    initialize: function(collection) {
         var self = this;
     },
 
 });
 
-IpDocumentView = Backbone.Marionette.ItemView.extend({
-    template: "#ipdocument-template",
+
+OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
+    //template: "#ops-entry-template",
+    template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
     tagName: 'tr',
-    className: 'ipdocument',
+    className: 'entry',
 
     events: {
         'click .rank_up img': 'rankUp',
@@ -43,48 +77,60 @@ IpDocumentView = Backbone.Marionette.ItemView.extend({
         'click a.disqualify': 'disqualify'
     },
 
+    onDomRefresh: function () {
+        $(".abstract").shorten({showChars: 200, moreText: 'mehr', lessText: 'weniger'});
+    },
+
 });
 
-IpDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
+OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     tagName: "table",
-    id: "ipdocumentcollection",
+    id: "opsexchangedocumentcollection",
     className: "table table-bordered table-condensed table-hover",
-    template: "#ipdocumentcollection-template",
-    itemView: IpDocumentView,
+    template: "#ops-collection-template",
+    itemView: OpsExchangeDocumentView,
 
-    appendHtml: function(collectionView, itemView){
-        collectionView.$("tbody#ipdocumentcollection-tbody").append(itemView.el);
-    }
+    appendHtml: function(collectionView, itemView) {
+        collectionView.$("tbody#ops-collection-tbody").append(itemView.el);
+    },
 });
 
-OpsChooserApp.addInitializer(function(options){
-    var ipDocumentCollectionView = new IpDocumentCollectionView({
+OpsChooserApp.addInitializer(function(options) {
+    var collectionView = new OpsExchangeDocumentCollectionView({
         collection: options.documents
     });
-    OpsChooserApp.listRegion.show(ipDocumentCollectionView);
+    OpsChooserApp.listRegion.show(collectionView);
 });
 
-$(document).ready(function(){
+$(document).ready(function() {
 
     console.log("OpsChooserApp starting");
 
-    var documents = new IpDocumentCollection([
-        new IpDocument({
-            patent_number: 'EP666666A1',
-            publication_date: '2010-01-01',
-            title: 'Some title',
-            applicant: 'Some applicant',
-            ipc: 'A68H'
-        }),
-        new IpDocument({
-            patent_number: 'DE123456A1',
-            publication_date: '2012-05-20',
-            title: 'Another title',
-            applicant: 'Another applicant',
-            ipc: 'A68G'
-        }),
-    ]);
-    documents.fetch();
+    var search = new OpsPublishedDataSearch();
+    var documents = new OpsExchangeDocumentCollection();
+
+    search.fetch({
+        data: $.param({ query: 'applicant=IBM'}),
+        //data: $.param({ query: 'pn=US2013255753A1'}),
+        success: function (payload) {
+            //console.log("payload raw:");
+            //console.log(payload);
+            console.log("payload data:");
+            console.log(payload['attributes']);
+
+            // get "node" containing record list from nested json response
+            var exchange_documents = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['exchange-documents'];
+            if (!_.isArray(exchange_documents)) {
+                exchange_documents = [exchange_documents];
+            }
+
+            // unwrap and create model object of each record
+            var entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
+
+            // propagate data to model collection instance
+            documents.reset(entries);
+        },
+    });
 
     OpsChooserApp.start({documents: documents});
 

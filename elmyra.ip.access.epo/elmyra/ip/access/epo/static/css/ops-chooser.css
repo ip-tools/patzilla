@@ -6,3 +6,7 @@
     border-left: 0;
     border-right: 0;
 }
+
+.table-clear-margin {
+    margin: 0px;
+}
