@@ -26,7 +26,7 @@ setup(
     url='https://github.com/amotl/js.underscore.string',
     license='BSD',
     packages=find_packages(),
-    namespace_packages=['js'],
+    namespace_packages=['js', 'js.underscore'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
