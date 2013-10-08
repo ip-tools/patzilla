@@ -8,7 +8,20 @@
 ## http://davidsulc.com/blog/2012/04/15/a-simple-backbone-marionette-tutorial/
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
-<div class="container">
+
+<div class="container pull-left">
+    <h1>Patentrecherche <small>via EPO/OPS</small></h1>
+    <div id="ops-query">
+        <div class="well">
+            <h6 class="pull-right2" style="display: inline">
+                <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
+            </h6>
+            <br/>
+            <textarea class="span6" id="query" name="query" placeholder="CQL Anfrage" rows="5"></textarea>
+            <br/>
+            <input id="query-button" type="button" class="btn btn-info" value="Absenden"></input>
+        </div>
+    </div>
     <div class="table-responsive">
         <div id="ops-collection-region"/>
     </div>
@@ -39,27 +52,35 @@
         // 2. prepare some template variables
 
         var patent_number = data['@country'] + data['@doc-number'] + data['@kind'];
-        var title = data['bibliographic-data']['invention-title']['$'];
         var publication_date = data['bibliographic-data']['publication-reference']['document-id'][0]['date']['$'];
+        var applicant_list = data.get_applicants();
 
-        var applicant_list = _.map(data['bibliographic-data']['parties']['applicants']['applicant'], function(applicant) {
-            return applicant['applicant-name']['name']['$'];
-        });
-        applicant_list = data.get_applicants();
-
-        var ipc_node = data['bibliographic-data']['classifications-ipcr']['classification-ipcr'];
-        if (!_.isArray(ipc_node)) {
-            ipc_node = [ipc_node];
+        // title
+        var title_node = data['bibliographic-data']['invention-title'];
+        if (!_.isArray(title_node)) {
+            title_node = [title_node];
         }
-        var ipc_list = _.map(ipc_node, function(ipc) {
-            return ipc['text']['$'];
+        var title_list = _.map(title_node, function(title) {
+            return '[' + title['@lang'] + '] ' + title['$'];
         });
 
-        var abstract_node = data['abstract']['p'];
+        // ipc
+        var ipc_node_top = data['bibliographic-data']['classifications-ipcr'];
+        if (ipc_node_top) {
+            var ipc_node = ipc_node_top['classification-ipcr'];
+            if (!_.isArray(ipc_node)) {
+                ipc_node = [ipc_node];
+            }
+            var ipc_list = _.map(ipc_node, function(ipc) {
+                return ipc['text']['$'];
+            });
+        }
+
+        var abstract_node = data['abstract'];
         if (!_.isArray(abstract_node)) {
             abstract_node = [abstract_node];
         }
-        var abstract = '[' + data['abstract']['@lang'] + '] ' + abstract_node.map(function(node) { return node['$']; }).join(' ');
+        var abstract_list = abstract_node.map(function(node) { return '[' + node['@lang'] + '] ' + node['p']['$']; });
 
         %>
 
@@ -70,7 +91,7 @@
                 <tbody>
                     <tr>
                         <td class="span2"><i class="icon-file-text-alt"></i>&nbsp; Titel</td>
-                        <td><%= title %></td>
+                        <td><strong><%= title_list.join('<br/>') %></strong></td>
                     </tr>
                     <tr>
                         <td><i class="icon-group"></i> Anmelder</td>
@@ -90,7 +111,7 @@
                     </tr>
                     <tr>
                         <td><i class="icon-align-justify"></i>&nbsp; Beschreibung</td>
-                        <td><div class="abstract"><%= abstract %></div></td>
+                        <td><div class="abstract"><%= abstract_list.join('<br/>') %></div></td>
                     </tr>
                 </tbody>
             </table>
