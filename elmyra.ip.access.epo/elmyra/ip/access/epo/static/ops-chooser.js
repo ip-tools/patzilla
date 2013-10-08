@@ -155,13 +155,20 @@ $(document).ready(function() {
 
     // process and propagate application ingress parameters
     var came_from = $.url(window.location.href).param('came_from');
+    var query = $.url(window.location.href).param('query');
     $('#basket-came-from').val(came_from);
+    $('#query').val(query);
 
+    //query = 'applicant=IBM';
+    //query = 'publicationnumber=US2013255753A1';
+
+    // create application domain objects
     OpsChooserApp.search = new OpsPublishedDataSearch();
     OpsChooserApp.documents = new OpsExchangeDocumentCollection();
 
-    //OpsChooserApp.search.perform('applicant=IBM', OpsChooserApp.documents);
-    //OpsChooserApp.search.perform('publicationnumber=US2013255753A1', OpsChooserApp.documents);
+    // automatically run query if submitted
+    if (!_.isEmpty(query))
+        OpsChooserApp.search.perform(query, OpsChooserApp.documents);
 
     OpsChooserApp.start({documents: OpsChooserApp.documents});
 
