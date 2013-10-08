@@ -9,9 +9,6 @@ Prio 0
 
 Prio 1
 ======
-- [x] don't hardcode query in ops-chooser.js, but use from html form
-    - http://bootsnipp.com/snipps/twitter-like-message-box
-- [x] shipping subsystem via basket textarea
 - fix "abstract" parsing, e.g. @ WO2013148409A1
 - Multiple Checkbox Select/Deselect
     - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
@@ -44,3 +41,12 @@ Prio 2
 Prio 3
 ======
 - http://viralpatel.net/blogs/jquery-not-selector-example/
+
+
+
+
+
+
+Done
+====
+- http://bootsnipp.com/snipps/twitter-like-message-box

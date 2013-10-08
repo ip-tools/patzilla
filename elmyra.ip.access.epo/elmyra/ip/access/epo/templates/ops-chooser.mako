@@ -46,7 +46,7 @@
 <script type="text/x-underscore-template" id="ops-collection-template">
     <thead>
         <tr>
-        <th class="span1"><input type="checkbox" title="Alle auswählen"/></th>
+        <th class="span1"><input type="checkbox" id="all-check" title="Alle auswählen"/></th>
         <th class="span2">Patentnummer</th>
         <th class="span9">Bibliographische Daten</th>
         </tr>
