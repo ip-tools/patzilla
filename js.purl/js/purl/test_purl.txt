@@ -1,0 +1,9 @@
+How to use?
+===========
+
+
+You can import ``purl`` from ``js.purl`` and ``need`` it where you want
+these resources to be included on a page::
+
+  >>> from js.purl import purl
+  >>> purl.need()
