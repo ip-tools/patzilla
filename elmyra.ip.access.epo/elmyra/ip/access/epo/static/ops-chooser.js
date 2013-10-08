@@ -8,6 +8,31 @@ OpsChooserApp.addRegions({
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
+    perform: function(query, documents) {
+
+        this.fetch({
+            data: $.param({ query: query}),
+            success: function (payload) {
+                //console.log("payload raw:");
+                //console.log(payload);
+                console.log("payload data:");
+                console.log(payload['attributes']);
+
+                // get "node" containing record list from nested json response
+                var exchange_documents = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['exchange-documents'];
+                if (!_.isArray(exchange_documents)) {
+                    exchange_documents = [exchange_documents];
+                }
+
+                // unwrap and create model object of each record
+                var entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
+
+                // propagate data to model collection instance
+                documents.reset(entries);
+            },
+        });
+
+    },
 });
 
 OpsExchangeDocument = Backbone.Model.extend({
@@ -15,7 +40,8 @@ OpsExchangeDocument = Backbone.Model.extend({
     defaults: {
         selected: false,
 
-        // TODO: move to template helper
+        // TODO: move to "viewHelpers"
+        // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
         // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
         get_applicants: function() {
             var sequence_max = "0";
@@ -106,32 +132,21 @@ $(document).ready(function() {
 
     console.log("OpsChooserApp starting");
 
-    var search = new OpsPublishedDataSearch();
-    var documents = new OpsExchangeDocumentCollection();
+    OpsChooserApp.search = new OpsPublishedDataSearch();
+    OpsChooserApp.documents = new OpsExchangeDocumentCollection();
 
-    search.fetch({
-        data: $.param({ query: 'applicant=IBM'}),
-        //data: $.param({ query: 'pn=US2013255753A1'}),
-        success: function (payload) {
-            //console.log("payload raw:");
-            //console.log(payload);
-            console.log("payload data:");
-            console.log(payload['attributes']);
+    //OpsChooserApp.search.perform('applicant=IBM', OpsChooserApp.documents);
+    //OpsChooserApp.search.perform('publicationnumber=US2013255753A1', OpsChooserApp.documents);
 
-            // get "node" containing record list from nested json response
-            var exchange_documents = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['exchange-documents'];
-            if (!_.isArray(exchange_documents)) {
-                exchange_documents = [exchange_documents];
-            }
+    OpsChooserApp.start({documents: OpsChooserApp.documents});
 
-            // unwrap and create model object of each record
-            var entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
+});
 
-            // propagate data to model collection instance
-            documents.reset(entries);
-        },
-    });
-
-    OpsChooserApp.start({documents: documents});
-
+$('input#query-button').click(function() {
+    var querystring = $('textarea#query').val();
+    //send to server and process response
+    //alert(querystring);
+    if (!_.isEmpty(querystring)) {
+        OpsChooserApp.search.perform(querystring, OpsChooserApp.documents);
+    }
 });
