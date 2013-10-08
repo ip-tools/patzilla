@@ -1,11 +1,8 @@
 # -*- encoding: utf-8 -*-
 import logging
-import itertools
-import pyramid.threadlocal as threadlocal
+from pyramid.threadlocal import get_current_request
 from pyramid.url import route_url
 from akhet.urlgenerator import URLGenerator as ApplicationURLGenerator
-
-import fanstatic
 
 from . import helpers
 
@@ -65,7 +62,7 @@ def add_renderer_globals(event):
     #renderer_globals["needed"] = needed
 
     renderer_globals["h"] = helpers
-    request = event.get("request") or threadlocal.get_current_request()
+    request = event.get("request") or get_current_request()
     if not request:     # pragma: no cover
         return
     renderer_globals["r"] = request
@@ -97,21 +94,21 @@ def add_renderer_globals(event):
 
 def add_html_foundation(event):
 
-    # include all javascript/css frameworks
+    # setup javascript foundation
+
+    # underscore.string
+    from js.underscore.string import underscore_string
+    underscore_string.need()
 
     # backbone.marionette
     from js.marionette import marionette
     marionette.need()
 
-    # bootstrap
-    from js.bootstrap import bootstrap
-    #from js.bootstrap import bootstrap_theme
-    bootstrap.need()
-    #bootstrap_theme.need()
-
     # jquery
     #from js.jquery import jquery
     #jquery.need()
+    from js.jquery_shorten import jquery_shorten
+    jquery_shorten.need()
 
     # jqueryui
     #from js.jqueryui import jqueryui, base as jqueryui_base, smoothness as jqueryui_smoothness
@@ -121,5 +118,16 @@ def add_html_foundation(event):
     #jqueryui_smoothness.need()
     #jqueryui_bootstrap.need()
 
+
+    # setup css foundation
+
+    # bootstrap
+    from js.bootstrap import bootstrap
+    #from js.bootstrap import bootstrap_theme
+    bootstrap.need()
+    #bootstrap_theme.need()
+    # TODO: what about bootstrap_responsive_css?
+
+    # fontawesome
     from css.fontawesome import fontawesome
     fontawesome.need()

@@ -37,16 +37,20 @@ requires = [
     'js.bootstrap==2.3.1',
     #'js.bootstrap==3.0.0.1',
 
-    # jquery and jquerui
+    # jquery
     'js.jquery==1.9.1',
-    'js.jqueryui==1.10.3',
-    'js.jqueryui_bootstrap==0.0.0',
+    'js.jquery_shorten==1.0.0',
+
+    # jquerui
+    #'js.jqueryui==1.10.3',
+    #'js.jqueryui_bootstrap==0.0.0',
 
     # fontawesome
     'css.fontawesome==3.2.1',
 
     # marionette, backbone and prerequisites
     'js.marionette==1.1.0',
+    'js.underscore.string==2.3.0',
 ]
 
 setup(name='elmyra.ip.access.epo',
