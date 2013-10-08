@@ -12,14 +12,29 @@
 <div class="container pull-left">
     <h1>Patentrecherche <small>via EPO/OPS</small></h1>
     <div id="ops-query">
-        <div class="well">
-            <h6 class="pull-right2" style="display: inline">
-                <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
-            </h6>
+        <div class="container well">
+            <div class="pull-left">
+                <h6 style="display: inline">
+                    <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
+                </h6>
+                <br/>
+                <textarea class="span6" id="query" name="query" placeholder="CQL Anfrage" rows="5"></textarea>
+                <br/>
+                <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"></input>
+            </div>
+            <div class="pull-right">
+                <h6 style="display: inline">
+                    Auftrag
+                </h6>
+                <br/>
+                <form id="basket-form" name="basket-form" method="post">
+                    <textarea class="span6" id="basket" name="NumberList" rows="5"></textarea>
+                    <br/>
+                    <input id="basket-button" type="button" class="btn btn-info" value="Übermitteln"></input>
+                    <input id="basket-came-from" type="text" class="span4" value=""></input>
+                </form>
+            </div>
             <br/>
-            <textarea class="span6" id="query" name="query" placeholder="CQL Anfrage" rows="5"></textarea>
-            <br/>
-            <input id="query-button" type="button" class="btn btn-info" value="Absenden"></input>
         </div>
     </div>
     <div class="table-responsive">
@@ -84,7 +99,7 @@
 
         %>
 
-        <td><input type="checkbox"/></td>
+        <td><input type="checkbox" name="patent_number" class="patent_number" value="<%= patent_number %>"/></td>
         <td><strong><%= patent_number %></strong></td>
         <td>
             <table class="table table-condensed table-clear-border-vertical">

@@ -91,6 +91,11 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 });
 
 
+// FIXME: why does underscore.string's "include" not work?
+function contains(string, pattern) {
+    return string.indexOf(pattern) > -1;
+}
+
 OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     //template: "#ops-entry-template",
     template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
@@ -103,7 +108,23 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
         'click a.disqualify': 'disqualify'
     },
 
+    // actions to run after populating the view
+    // e.g. to bind click handlers on individual records
     onDomRefresh: function () {
+
+        // handle checkbox clicks by add-/remove-operations on basket
+        $(".patent_number").click(function() {
+            var payload = $('#basket').val();
+            var patent_number = this.value;
+            // FIXME: why does underscore.string's "include" not work?
+            if (this.checked && !contains(payload, patent_number))
+                payload += patent_number + '\n';
+            if (!this.checked && contains(payload, patent_number))
+                payload = payload.replace(patent_number + '\n', '');
+            $('#basket').val(payload);
+        });
+
+        // use jquery.shorten on abstract text
         $(".abstract").shorten({showChars: 200, moreText: 'mehr', lessText: 'weniger'});
     },
 
@@ -132,6 +153,10 @@ $(document).ready(function() {
 
     console.log("OpsChooserApp starting");
 
+    // process and propagate application ingress parameters
+    var came_from = $.url(window.location.href).param('came_from');
+    $('#basket-came-from').val(came_from);
+
     OpsChooserApp.search = new OpsPublishedDataSearch();
     OpsChooserApp.documents = new OpsExchangeDocumentCollection();
 
@@ -149,4 +174,10 @@ $('input#query-button').click(function() {
     if (!_.isEmpty(querystring)) {
         OpsChooserApp.search.perform(querystring, OpsChooserApp.documents);
     }
+});
+
+$('input#basket-button').click(function() {
+    var came_from = $('#basket-came-from').val();
+    $("#basket-form").attr("action", came_from);
+    $('#basket-form').submit();
 });
