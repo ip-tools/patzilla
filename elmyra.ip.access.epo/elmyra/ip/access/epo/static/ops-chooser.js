@@ -154,11 +154,8 @@ $(document).ready(function() {
     console.log("OpsChooserApp starting");
 
     // process and propagate application ingress parameters
-    var came_from = $.url(window.location.href).param('came_from');
-    var query = $.url(window.location.href).param('query');
-    $('#basket-came-from').val(came_from);
-    $('#query').val(query);
-
+    var url = $.url(window.location.href);
+    var query = url.param('query');
     //query = 'applicant=IBM';
     //query = 'publicationnumber=US2013255753A1';
 
@@ -184,7 +181,7 @@ $('input#query-button').click(function() {
 });
 
 $('input#basket-button').click(function() {
-    var came_from = $('#basket-came-from').val();
-    $("#basket-form").attr("action", came_from);
+    var ship_url = $('#basket-ship-url').val();
+    $("#basket-form").attr("action", ship_url);
     $('#basket-form').submit();
 });

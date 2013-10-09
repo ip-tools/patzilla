@@ -18,7 +18,7 @@
                     <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
                 </h6>
                 <br/>
-                <textarea class="span6" id="query" name="query" placeholder="CQL Anfrage" rows="5"></textarea>
+                <textarea class="span6" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
                 <br/>
                 <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"></input>
             </div>
@@ -28,10 +28,10 @@
                 </h6>
                 <br/>
                 <form id="basket-form" name="basket-form" method="post">
-                    <textarea class="span6" id="basket" name="NumberList" rows="5"></textarea>
+                    <textarea class="span6" id="basket" name="${request.params.get('ship_param', 'payload')}" rows="5"></textarea>
                     <br/>
                     <input id="basket-button" type="button" class="btn btn-info" value="Übermitteln"></input>
-                    <input id="basket-came-from" type="text" class="span4" value=""></input>
+                    <input id="basket-ship-url" type="text" class="span4" value="${request.params.get('ship_url', '')}"></input>
                 </form>
             </div>
             <br/>
