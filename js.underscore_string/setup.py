@@ -10,12 +10,12 @@ def read(*rnames):
 long_description = (
     read('README.rst')
     + '\n' +
-    read('js', 'underscore', 'string', 'test_underscore_string.txt')
+    read('js', 'underscore_string', 'test_underscore_string.txt')
     + '\n' +
     read('CHANGES.rst'))
 
 setup(
-    name='js.underscore.string',
+    name='js.underscore_string',
     version=version,
     description="fanstatic underscore.string",
     long_description=long_description,
@@ -23,20 +23,19 @@ setup(
     keywords='',
     author='Andreas Motl',
     author_email='andreas.motl@elmyra.de',
-    url='https://github.com/amotl/js.underscore.string',
+    url='https://github.com/amotl/js.underscore_string',
     license='BSD',
     packages=find_packages(),
-    namespace_packages=['js', 'js.underscore'],
+    namespace_packages=['js'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         'fanstatic',
-        'setuptools',
         'js.underscore==1.4.4',
     ],
     entry_points={
         'fanstatic.libraries': [
-            'underscore_string = js.underscore.string:library',
+            'underscore_string = js.underscore_string:library',
         ],
     },
 )
