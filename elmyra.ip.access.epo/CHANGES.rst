@@ -9,7 +9,7 @@ CHANGES
 - top-notch frontend ui foundation based on jquery, bootstrap, backbone marionette, fontawesome
 - packaged some fanstatic javascript libraries:
     - js.marionette
-    - js.underscore.string
+    - js.underscore_string
     - js.jquery_shorten
     - js.purl
 - textarea for cql query input

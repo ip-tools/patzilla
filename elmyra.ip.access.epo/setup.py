@@ -51,7 +51,7 @@ requires = [
 
     # marionette, backbone and prerequisites
     'js.marionette==1.1.0',
-    'js.underscore.string==2.3.0',
+    'js.underscore_string==2.3.0',
 ]
 
 setup(name='elmyra.ip.access.epo',

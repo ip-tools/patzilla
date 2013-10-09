@@ -97,7 +97,7 @@ def add_html_foundation(event):
     # setup javascript foundation
 
     # underscore.string
-    from js.underscore.string import underscore_string
+    from js.underscore_string import underscore_string
     underscore_string.need()
 
     # backbone.marionette
