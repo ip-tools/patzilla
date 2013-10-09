@@ -3,3 +3,5 @@
 *.pyc
 /.venv*
 *.egg-info
+MANIFEST
+dist/

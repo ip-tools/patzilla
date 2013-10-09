@@ -5,7 +5,12 @@ elmyra.ip.access.epo TODO
 Prio 0
 ======
 - setup on https://tools.ip.elmyra.de/ops-chooser
-
+- ship_ parameters
+- select all
+- paging
+- Uncaught TypeError: Cannot read property '@lang' of undefined
+    =>
+- textarea widths
 
 Prio 1
 ======
@@ -41,6 +46,7 @@ Prio 2
 Prio 3
 ======
 - http://viralpatel.net/blogs/jquery-not-selector-example/
+- UY34620A
 
 
 

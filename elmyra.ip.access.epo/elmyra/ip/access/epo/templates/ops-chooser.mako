@@ -24,7 +24,7 @@
             </div>
             <div class="pull-right">
                 <h6 style="display: inline">
-                    Auftrag
+                    Auswahl
                 </h6>
                 <br/>
                 <form id="basket-form" name="basket-form" method="post">
