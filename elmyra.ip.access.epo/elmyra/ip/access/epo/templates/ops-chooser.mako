@@ -9,7 +9,7 @@
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
 
-<div class="container pull-left">
+<div class="container span12 pull-left">
     <h1>Patentrecherche <small>via EPO/OPS</small></h1>
     <div id="ops-query">
         <div class="container well">
@@ -18,7 +18,7 @@
                     <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
                 </h6>
                 <br/>
-                <textarea class="span6" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
+                <textarea class="span9" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
                 <br/>
                 <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"></input>
             </div>
@@ -27,18 +27,16 @@
                     Auswahl
                 </h6>
                 <br/>
-                <form id="basket-form" name="basket-form" method="post">
-                    <textarea class="span6" id="basket" name="${request.params.get('ship_param', 'payload')}" rows="5"></textarea>
+                <form id="basket-form" name="basket-form" method="post" action="${request.params.get('ship_url', '')}">
+                    <textarea class="span3" id="basket" name="${request.params.get('ship_param', 'payload')}" rows="5"></textarea>
                     <br/>
-                    <input id="basket-button" type="button" class="btn btn-info" value="Übermitteln"></input>
-                    <input id="basket-ship-url" type="text" class="span4" value="${request.params.get('ship_url', '')}"></input>
+                    <input id="basket-button" type="submit" class="btn btn-info" ${request.params.get('ship_url') or 'disabled="disabled"'} value="Übermitteln"/>
                 </form>
             </div>
-            <br/>
         </div>
     </div>
     <div class="table-responsive">
-        <div id="ops-collection-region"/>
+        <div id="ops-collection-region" class="span12"/>
     </div>
 </div>
 

@@ -179,9 +179,3 @@ $('input#query-button').click(function() {
         OpsChooserApp.search.perform(querystring, OpsChooserApp.documents);
     }
 });
-
-$('input#basket-button').click(function() {
-    var ship_url = $('#basket-ship-url').val();
-    $("#basket-form").attr("action", ship_url);
-    $('#basket-form').submit();
-});
