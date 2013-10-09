@@ -5,9 +5,12 @@ elmyra.ip.access.epo TODO
 Prio 0
 ======
 - setup on https://tools.ip.elmyra.de/ops-chooser
-- ship_ parameters
-- select all
-- paging
+- integration with lotus notes
+    - http://www.tlcc.com/admin/tips.nsf/tipurlref/20041108
+    - http://www-01.ibm.com/support/docview.wss?uid=swg21111823
+- select all functionality
+- paging; with basket backpropagation
+- infinite scrolling
 - Uncaught TypeError: Cannot read property '@lang' of undefined
     =>
 - textarea widths
@@ -47,10 +50,21 @@ Prio 3
 ======
 - http://viralpatel.net/blogs/jquery-not-selector-example/
 - UY34620A
+- "Help" screen
+- ship_* parameters
 
+    ops-chooser integration query parameters:
 
+    - ingress:
+        - query
 
-
+    - egress:
+        - ship_method: default="http-post", might be "ftp" as well ;])
+        - ship_url
+        - ship_param: default="payload"
+        - ship_kind:  default="numberlist", might be "details", etc.
+        - ship_format default="text" (or related to ship_kind's default), might be "json" or "xml"
+- display ship_* parameters with overlay
 
 
 Done
