@@ -1,6 +1,14 @@
 CHANGES
 *******
 
+0.0.2
+=====
+- changed production.ini port to 9999
+- renamed js.underscore.string to js.underscore_string
+- Makefile and fabfile.py for common sysop tasks
+- renamed some ingress query parameters to "ship_*"
+- cleaned up url parameter propagation
+
 0.0.1
 =====
 - initial release
