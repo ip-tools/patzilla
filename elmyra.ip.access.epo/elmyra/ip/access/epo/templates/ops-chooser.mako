@@ -134,6 +134,6 @@
 </%text>
 
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
-<script type="text/javascript" src="/static/ops-chooser.js"></script>
+<script type="text/javascript" src="/static/js/ops-chooser.js"></script>
 
 </%block>
