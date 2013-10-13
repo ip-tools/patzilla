@@ -12,6 +12,6 @@ upload-config:
 	rsync elmyra.ip.access.epo/production.ini root@almera.elmyra.de:/opt/ops-chooser/
 
 install:
-	source .venv27/bin/activate; pip install cuisine; fab install
+	source .venv27/bin/activate; pip install cuisine; fab install:version=$(version)
 
 package-and-install: sdist upload upload-config install
