@@ -1,5 +1,14 @@
-CHANGES
-*******
+============================
+elmyra.ip.access.epo CHANGES
+============================
+
+development
+===========
+- moved js.marionette to github
+- enhanced deployment code "make install" reg. versioning
+- fix "abstract" parsing, e.g. @ WO2013148409A1
+- applicant=ibm => cannot use method "join" on undefined
+- neu: anmeldedatum
 
 0.0.2
 =====

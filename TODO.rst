@@ -8,11 +8,11 @@ Prio 0
 
 Prio 1
 ======
+- paging; with basketstate-to-checkbox backpropagation
+- paging!
 - "select all" functionality
 - Multiple Checkbox Select/Deselect
     - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
-- paging; with basketstate-to-checkbox backpropagation
-- paging!
 - spinner when network action is taking place
 - Uncaught TypeError: Cannot read property '@lang' of undefined
     =>
