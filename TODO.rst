@@ -4,38 +4,32 @@ elmyra.ip.access.epo TODO
 
 Prio 0
 ======
-- setup on https://tools.ip.elmyra.de/ops-chooser
-- integration with lotus notes
-    - http://www.tlcc.com/admin/tips.nsf/tipurlref/20041108
-    - http://www-01.ibm.com/support/docview.wss?uid=swg21111823
-- select all functionality
-- paging; with basket backpropagation
-- infinite scrolling
-- Uncaught TypeError: Cannot read property '@lang' of undefined
-    =>
-- textarea widths
-
-Prio 1
-======
 - fix "abstract" parsing, e.g. @ WO2013148409A1
-- Multiple Checkbox Select/Deselect
-    - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
-- rename "came_from" to "ship_url"
-- get "ship_param=NumberList" form query param
-- disable javascript resource caching
-- Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
-  http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
-- test: swap Titel, Anmelder, ... column with content column
-- react on "no records" and display it somehow
-- show spinner while loading, from fontawesome
-- load pictures
-    - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
-- paging!
 - applicant=ibm => cannot use method "join" on undefined
 - anmeldedatum
 
+Prio 1
+======
+- "select all" functionality
+- Multiple Checkbox Select/Deselect
+    - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
+- paging; with basketstate-to-checkbox backpropagation
+- paging!
+- spinner when network action is taking place
+- Uncaught TypeError: Cannot read property '@lang' of undefined
+    =>
+- title padding
+- display (pull-right): ops-chooser v0.0.x in title
+
+- Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
+  http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
+- react on "no records" and display it somehow
+- show spinner while loading, from fontawesome
+
 Prio 2
 ======
+- load pictures
+    - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
 - convert pub.-date format to german locale using fine javascript library X
 - display other general data from ops response (record count, range, etc.)
 - display country flags:
@@ -44,6 +38,7 @@ Prio 2
 - enrich data
     - wordcount and wordle of abstract
 - Direktlinks zum OPS (HTML, XML, JSON, PDF)
+- test: swap Titel, Anmelder, ... column with content column
 
 
 Prio 3
@@ -65,8 +60,18 @@ Prio 3
         - ship_kind:  default="numberlist", might be "details", etc.
         - ship_format default="text" (or related to ship_kind's default), might be "json" or "xml"
 - display ship_* parameters with overlay
+- infinite scrolling
 
 
 Done
 ====
 - http://bootsnipp.com/snipps/twitter-like-message-box
+- setup on https://tools.ip.elmyra.de/ops-chooser
+- integration with lotus notes
+    - http://www.tlcc.com/admin/tips.nsf/tipurlref/20041108
+    - http://www-01.ibm.com/support/docview.wss?uid=swg21111823
+- tune textarea widths
+- introduce ship_* parameter convention
+    - rename "came_from" to "ship_url"
+    - get "ship_param=NumberList" form query param
+- disable javascript resource caching
