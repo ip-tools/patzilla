@@ -4,9 +4,7 @@ elmyra.ip.access.epo TODO
 
 Prio 0
 ======
-- fix "abstract" parsing, e.g. @ WO2013148409A1
-- applicant=ibm => cannot use method "join" on undefined
-- anmeldedatum
+- parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
 
 Prio 1
 ======
@@ -75,3 +73,6 @@ Done
     - rename "came_from" to "ship_url"
     - get "ship_param=NumberList" form query param
 - disable javascript resource caching
+- fix "abstract" parsing, e.g. @ WO2013148409A1
+- applicant=ibm => cannot use method "join" on undefined
+- neu: anmeldedatum

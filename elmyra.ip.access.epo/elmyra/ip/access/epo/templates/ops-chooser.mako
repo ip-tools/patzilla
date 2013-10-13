@@ -62,38 +62,54 @@
         console.log(data);
 
 
-        // 2. prepare some template variables
+        // 2.1 utility functions
+
+        // date values inside publication|application-reference
+        function search_date(node) {
+            var value = null;
+            _.each(node, function(item) {
+                if (!value && item['date'] && item['date']['$']) {
+                    value = item['date']['$'];
+                }
+            });
+            return value;
+        }
+
+        function to_list(value) {
+            return _.isArray(value) && value || [value];
+        }
+
+
+        // 2.2 prepare some template variables
 
         var patent_number = data['@country'] + data['@doc-number'] + data['@kind'];
-        var publication_date = data['bibliographic-data']['publication-reference']['document-id'][0]['date']['$'];
         var applicant_list = data.get_applicants();
 
+        var publication_date = search_date(data['bibliographic-data']['publication-reference']['document-id']);
+        var application_date = search_date(data['bibliographic-data']['application-reference']['document-id']);
+
         // title
-        var title_node = data['bibliographic-data']['invention-title'];
-        if (!_.isArray(title_node)) {
-            title_node = [title_node];
-        }
+        var title_node = to_list(data['bibliographic-data']['invention-title']);
         var title_list = _.map(title_node, function(title) {
             return '[' + title['@lang'] + '] ' + title['$'];
         });
 
         // ipc
+        var ipc_list = [];
         var ipc_node_top = data['bibliographic-data']['classifications-ipcr'];
         if (ipc_node_top) {
-            var ipc_node = ipc_node_top['classification-ipcr'];
-            if (!_.isArray(ipc_node)) {
-                ipc_node = [ipc_node];
-            }
-            var ipc_list = _.map(ipc_node, function(ipc) {
+            var ipc_node = to_list(ipc_node_top['classification-ipcr']);
+            ipc_list = _.map(ipc_node, function(ipc) {
                 return ipc['text']['$'];
             });
         }
 
-        var abstract_node = data['abstract'];
-        if (!_.isArray(abstract_node)) {
-            abstract_node = [abstract_node];
-        }
-        var abstract_list = abstract_node.map(function(node) { return '[' + node['@lang'] + '] ' + node['p']['$']; });
+        var abstract_node = to_list(data['abstract']);
+        var abstract_list = abstract_node.map(function(node) {
+            var text_nodelist = to_list(node['p']);
+            var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
+            return '[' + node['@lang'] + '] ' + text;
+        });
 
         %>
 
@@ -115,6 +131,10 @@
                         </td>
                     </tr>
                     <tr>
+                        <td><i class="icon-calendar"></i>&nbsp; Anm.-Datum</td>
+                        <td><%= application_date %></td>
+                    </tr>
+                    <tr>
                         <td><i class="icon-calendar"></i>&nbsp; Pub.-Datum</td>
                         <td><%= publication_date %></td>
                     </tr>
@@ -124,7 +144,7 @@
                     </tr>
                     <tr>
                         <td><i class="icon-align-justify"></i>&nbsp; Beschreibung</td>
-                        <td><div class="abstract"><%= abstract_list.join('<br/>') %></div></td>
+                        <td><div class="abstract"><%= abstract_list.join('<br/><br/>') %></div></td>
                     </tr>
                 </tbody>
             </table>
