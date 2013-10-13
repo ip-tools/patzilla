@@ -24,7 +24,7 @@ setup(
     author='Andreas Motl',
     author_email='andreas.motl@elmyra.de',
     url='https://github.com/amotl/js.underscore_string',
-    license='BSD',
+    license='MIT',
     packages=find_packages(),
     namespace_packages=['js'],
     include_package_data=True,
