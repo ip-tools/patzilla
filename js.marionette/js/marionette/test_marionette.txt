@@ -1,9 +1,0 @@
-How to use?
-===========
-
-
-You can import ``marionette`` from ``js.marionette`` and ``need`` it where you want
-these resources to be included on a page::
-
-  >>> from js.marionette import marionette
-  >>> marionette.need()

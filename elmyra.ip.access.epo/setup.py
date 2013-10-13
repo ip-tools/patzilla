@@ -50,7 +50,7 @@ requires = [
     'css.fontawesome==3.2.1',
 
     # marionette, backbone and prerequisites
-    'js.marionette==1.1.0',
+    'js.marionette==1.1.0a1',
     'js.underscore_string==2.3.0',
 ]
 
@@ -73,6 +73,9 @@ setup(name='elmyra.ip.access.epo',
       zip_safe=False,
       test_suite='elmyra.ip.access.epo',
       install_requires=requires,
+      dependency_links=[
+        'https://github.com/elmyra-org/js.marionette/tarball/1.1.0a1#egg=js.marionette-1.1.0a1',
+      ],
       entry_points="""\
       [paste.app_factory]
       main = elmyra.ip.access.epo:main
