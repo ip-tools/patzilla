@@ -120,7 +120,8 @@
         // title
         var title_node = to_list(data['bibliographic-data']['invention-title']);
         var title_list = _.map(title_node, function(title) {
-            return '[' + title['@lang'] + '] ' + title['$'];
+            var lang_prefix = title['@lang'] && '[' + title['@lang'] + '] ' || '';
+            return lang_prefix + title['$'];
         });
 
         // ipc
@@ -133,12 +134,16 @@
             });
         }
 
-        var abstract_node = to_list(data['abstract']);
-        var abstract_list = abstract_node.map(function(node) {
-            var text_nodelist = to_list(node['p']);
-            var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
-            return '[' + node['@lang'] + '] ' + text;
-        });
+        var abstract_list = [];
+        if (data['abstract']) {
+            var abstract_node = to_list(data['abstract']);
+            var abstract_list = abstract_node.map(function(node) {
+                var text_nodelist = to_list(node['p']);
+                var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
+                var lang_prefix = node['@lang'] && '[' + node['@lang'] + '] ' || '';
+                return lang_prefix + text;
+            });
+        }
 
         %>
 
