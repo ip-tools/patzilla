@@ -50,12 +50,12 @@ requires = [
     'css.fontawesome==3.2.1',
 
     # marionette, backbone and prerequisites
-    'js.marionette==1.1.0a1',
+    'js.marionette==1.1.0a2',
     'js.underscore_string==2.3.0',
 ]
 
 setup(name='elmyra.ip.access.epo',
-      version='0.0.3',
+      version='0.0.4',
       description='elmyra.ip.access.epo',
       long_description=README + '\n\n' + CHANGES,
       classifiers=[

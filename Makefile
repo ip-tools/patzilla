@@ -1,7 +1,6 @@
 sdist:
 	cd elmyra.ip.access.epo; python setup.py sdist
 	cd js.jquery_shorten; python setup.py sdist
-	cd js.marionette; python setup.py sdist
 	cd js.purl; python setup.py sdist
 	cd js.underscore_string; python setup.py sdist
 

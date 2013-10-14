@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.0.4
+=====
+- upgrade to 'js.marionette==1.1.0a2'
+
 0.0.3
 =====
 - moved js.marionette to github
