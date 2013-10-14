@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.0.6
+=====
+- fix "abstract" parsing
+
 0.0.5
 =====
 - fix packaging and deployment issues
