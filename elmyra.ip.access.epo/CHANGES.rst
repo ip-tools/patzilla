@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.0.3
+=====
 - moved js.marionette to github
 - enhanced deployment code "make install" reg. versioning
 - fix "abstract" parsing, e.g. @ WO2013148409A1
