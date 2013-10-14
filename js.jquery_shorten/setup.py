@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0.0'
+version = '1.0.0a1'
 
 
 def read(*rnames):
@@ -28,6 +28,7 @@ setup(
     packages=find_packages(),
     namespace_packages=['js'],
     include_package_data=True,
+    package_data={'js.jquery_shorten': ['**/*.js']},
     zip_safe=False,
     install_requires=[
         'fanstatic',

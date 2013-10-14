@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '2.3.1'
+version = '2.3.1a1'
 
 
 def read(*rnames):
@@ -28,6 +28,7 @@ setup(
     packages=find_packages(),
     namespace_packages=['js'],
     include_package_data=True,
+    package_data={'js.purl': ['**/*.js']},
     zip_safe=False,
     install_requires=[
         'fanstatic',

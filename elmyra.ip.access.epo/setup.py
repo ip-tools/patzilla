@@ -1,6 +1,7 @@
 import os
 
 from setuptools import setup, find_packages
+#from distutils.core import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
@@ -39,8 +40,8 @@ requires = [
 
     # jquery
     'js.jquery==1.9.1',
-    'js.jquery_shorten==1.0.0',
-    'js.purl==2.3.1',
+    'js.jquery_shorten==1.0.0a1',
+    'js.purl==2.3.1a1',
 
     # jquerui
     #'js.jqueryui==1.10.3',
@@ -51,7 +52,7 @@ requires = [
 
     # marionette, backbone and prerequisites
     'js.marionette==1.1.0a2',
-    'js.underscore_string==2.3.0',
+    'js.underscore_string==2.3.0a1',
 ]
 
 setup(name='elmyra.ip.access.epo',
@@ -69,7 +70,9 @@ setup(name='elmyra.ip.access.epo',
       url='',
       keywords='web wsgi pylons pyramid',
       packages=find_packages(),
+      #packages=['elmyra.ip.access.epo'],
       include_package_data=True,
+      package_data={'elmyra.ip.access.epo': ['**/*.mako', '**/**/*.js', '**/**/*.css', '**/**/*.jpg', '**/**/*.gif']},
       zip_safe=False,
       test_suite='elmyra.ip.access.epo',
       install_requires=requires,
