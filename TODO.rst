@@ -6,29 +6,27 @@ Prio 0
 ======
 - Uncaught TypeError: Cannot read property 'p' of undefined:  @ DE1521311A1 and HRP20130820T1
 - parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
+- title "?MÉTODO Y SISTEMA PARA INSTANCIAS DE FUNCIONAMIENTO DE UN JUEGO?." @ UY34621A
 
 Prio 1
 ======
 - paging:
-    - simple/static
-    - basketstate-to-checkbox backpropagation
-    - dynamic paging
-    - show current response range
+    - [x] simple/static
+    - [o] basketstate-to-checkbox backpropagation
+    - [o] dynamic pager
+    - [o] show current response range
 - use buttons with "Select" label instead of checkboxes
     http://bootsnipp.com/snipps/select-users
 - "select all" functionality
 - Multiple Checkbox Select/Deselect
     - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
-- spinner when network action is taking place
-- Uncaught TypeError: Cannot read property '@lang' of undefined
-    =>
 - title padding
 - display (pull-right): ops-chooser v0.0.x in title
 
 - Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 - react on "no records" and display it somehow
-- show spinner while loading, from fontawesome
+- show error messages from ops
 
 Prio 2
 ======
@@ -82,3 +80,4 @@ Done
 - fix "abstract" parsing, e.g. @ WO2013148409A1
 - applicant=ibm => cannot use method "join" on undefined
 - neu: anmeldedatum
+- show spinner while loading, from fontawesome
