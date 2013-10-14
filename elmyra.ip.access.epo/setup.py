@@ -74,7 +74,7 @@ setup(name='elmyra.ip.access.epo',
       test_suite='elmyra.ip.access.epo',
       install_requires=requires,
       dependency_links=[
-        'https://github.com/elmyra-org/js.marionette/tarball/1.1.0a1#egg=js.marionette-1.1.0a1',
+        'https://github.com/elmyra-org/js.marionette/tarball/1.1.0a2#egg=js.marionette-1.1.0a2',
       ],
       entry_points="""\
       [paste.app_factory]
