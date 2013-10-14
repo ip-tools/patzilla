@@ -4,12 +4,18 @@ elmyra.ip.access.epo TODO
 
 Prio 0
 ======
+- Uncaught TypeError: Cannot read property 'p' of undefined:  @ DE1521311A1 and HRP20130820T1
 - parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
 
 Prio 1
 ======
-- paging; with basketstate-to-checkbox backpropagation
-- paging!
+- paging:
+    - simple/static
+    - basketstate-to-checkbox backpropagation
+    - dynamic paging
+    - show current response range
+- use buttons with "Select" label instead of checkboxes
+    http://bootsnipp.com/snipps/select-users
 - "select all" functionality
 - Multiple Checkbox Select/Deselect
     - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/

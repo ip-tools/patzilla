@@ -9,6 +9,8 @@ development
 - fix "abstract" parsing, e.g. @ WO2013148409A1
 - applicant=ibm => cannot use method "join" on undefined
 - neu: anmeldedatum
+- simple static paging from 1-200, 25 each
+- spinner icon for showing activity
 
 0.0.2
 =====

@@ -1,17 +1,25 @@
 // -*- coding: utf-8 -*-
 
+function to_list(value) {
+    return _.isArray(value) && value || [value];
+}
+
+
 OpsChooserApp = new Backbone.Marionette.Application();
 
 OpsChooserApp.addRegions({
-    listRegion: "#ops-collection-region"
+    listRegion: "#ops-collection-region",
+    paginationRegion: "#ops-pagination-region",
 });
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
-    perform: function(query, documents) {
+    perform: function(documents, query, range) {
+
+        $('#spinner').show();
 
         this.fetch({
-            data: $.param({ query: query}),
+            data: $.param({ query: query, range: range}),
             success: function (payload) {
                 //console.log("payload raw:");
                 //console.log(payload);
@@ -19,16 +27,19 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 console.log(payload['attributes']);
 
                 // get "node" containing record list from nested json response
-                var exchange_documents = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['exchange-documents'];
-                if (!_.isArray(exchange_documents)) {
-                    exchange_documents = [exchange_documents];
-                }
+                var search_result = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
 
-                // unwrap and create model object of each record
-                var entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
+                var entries;
+                if (search_result) {
+                    // unwrap and create model object of each record
+                    var exchange_documents = to_list(search_result['exchange-documents']);
+                    entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
+                }
 
                 // propagate data to model collection instance
                 documents.reset(entries);
+
+                $('#spinner').hide();
             },
         });
 
@@ -142,11 +153,43 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     },
 });
 
+PaginationView = Backbone.Marionette.CompositeView.extend({
+    tagName: "div",
+    //id: "opsexchangedocumentcollection",
+    id: "pv",
+    //className: "table table-bordered table-condensed table-hover",
+    template: "#ops-pagination-template",
+    //itemView: OpsExchangeDocumentView,
+
+    appendHtml2: function(collectionView, itemView) {
+        collectionView.$("tbody#ops-collection-tbody").append(itemView.el);
+    },
+});
+
 OpsChooserApp.addInitializer(function(options) {
     var collectionView = new OpsExchangeDocumentCollectionView({
         collection: options.documents
     });
+    var paginationView = new PaginationView({
+        //collection: options.documents
+    });
+
     OpsChooserApp.listRegion.show(collectionView);
+    OpsChooserApp.paginationRegion.show(paginationView);
+
+    $('div.pagination a').click(function() {
+        var action = $(this).attr('action');
+        var range = $(this).attr('range');
+        //return;
+
+        var querystring = $('textarea#query').val();
+        if (!_.isEmpty(querystring) && range) {
+            OpsChooserApp.search.perform(OpsChooserApp.documents, querystring, range);
+        }
+
+        return false;
+    });
+
 });
 
 $(document).ready(function() {
@@ -165,7 +208,7 @@ $(document).ready(function() {
 
     // automatically run query if submitted
     if (!_.isEmpty(query))
-        OpsChooserApp.search.perform(query, OpsChooserApp.documents);
+        OpsChooserApp.search.perform(OpsChooserApp.documents, query);
 
     OpsChooserApp.start({documents: OpsChooserApp.documents});
 
@@ -176,6 +219,6 @@ $('input#query-button').click(function() {
     //send to server and process response
     //alert(querystring);
     if (!_.isEmpty(querystring)) {
-        OpsChooserApp.search.perform(querystring, OpsChooserApp.documents);
+        OpsChooserApp.search.perform(OpsChooserApp.documents, querystring);
     }
 });

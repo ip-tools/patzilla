@@ -11,6 +11,7 @@
 
 <div class="container span12 pull-left">
     <h1>Patentrecherche <small>via EPO/OPS</small></h1>
+
     <div id="ops-query">
         <div class="container well">
             <div class="pull-left">
@@ -35,10 +36,42 @@
             </div>
         </div>
     </div>
+
+    <div id="ops-pagination-region" class="span12"></div>
+
     <div class="table-responsive">
-        <div id="ops-collection-region" class="span12"/>
+        <div id="ops-collection-region" class="span12"></div>
     </div>
+
 </div>
+
+<%text>
+<script type="text/x-underscore-template" id="ops-pagination-template">
+    <div class="pagination pagination-centered">
+      <div class="pull-left">
+        <div class="span1">
+        <i class="icon-refresh icon-spin icon-large pull-left" id="spinner"></i>
+        </div>
+      </div>
+      <ul>
+        <!--
+        <li><a href="#" action="previous">Prev</a></li>
+        -->
+        <li><a href="#" range="1-25">1-25</a></li>
+        <li><a href="#" range="26-50">26-50</a></li>
+        <li><a href="#" range="51-75">51-75</a></li>
+        <li><a href="#" range="76-100">76-100</a></li>
+        <li><a href="#" range="101-125">101-125</a></li>
+        <li><a href="#" range="126-150">126-150</a></li>
+        <li><a href="#" range="151-175">151-175</a></li>
+        <li><a href="#" range="176-200">176-200</a></li>
+        <!--
+        <li><a href="#" action="next">Next</a></li>
+        -->
+      </ul>
+    </div>
+</script>
+</%text>
 
 <%text>
 <script type="text/x-underscore-template" id="ops-collection-template">
@@ -73,10 +106,6 @@
                 }
             });
             return value;
-        }
-
-        function to_list(value) {
-            return _.isArray(value) && value || [value];
         }
 
 
