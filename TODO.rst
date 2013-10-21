@@ -2,16 +2,41 @@
 elmyra.ip.access.epo TODO
 =========================
 
+
 Prio 0
 ======
 - Uncaught TypeError: Cannot read property 'p' of undefined:  @ DE1521311A1 and HRP20130820T1
 - parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
 - title "?MÉTODO Y SISTEMA PARA INSTANCIAS DE FUNCIONAMIENTO DE UN JUEGO?." @ UY34621A
 
+
 Prio 1
 ======
+- new usage ship_kind=single-bibdata
+    - blueprint multiframe page having opsbrowser integrated with other tools on the same page
+    - ui: use buttons instead of checkboxes
+    - query submit logic (by ship_kind; here: post all/common bibliographic data to ship_url)
+    - ui: hide basket
+    - ui: use icons from iconset
+    - data: display "inventor" attribute
+
+
+Prio 1.5
+========
+::
+
+    2013-10-17 05:26:32,976 ERROR [waitress][Dummy-2] Exception when serving /api/ops/published-data/search
+    Traceback (most recent call last):
+      File "/opt/ops-chooser/.venv/lib/python2.6/site-packages/waitress/channel.py", line 332, in service
+        task.service()
+      [...]
+        response = view_callable(exc, request)
+      File "/opt/ops-chooser/.venv/lib/python2.6/site-packages/pyramid/config/views.py", line 397, in viewresult_to_response
+        raise ValueError(msg % (view_description(view), result))
+    ValueError: Could not convert return value of the view callable function cornice.pyramidhook.handle_exceptions into a response object. The value returned was AttributeError("'_JSONError' object has no attribute 'detail'",).
+
 - paging:
-    - [x] simple/static
+    - [x] simple/static pager ui
     - [o] basketstate-to-checkbox backpropagation
     - [o] dynamic pager
     - [o] show current response range
@@ -28,6 +53,7 @@ Prio 1
 - react on "no records" and display it somehow
 - show error messages from ops
 
+
 Prio 2
 ======
 - load pictures
@@ -41,6 +67,9 @@ Prio 2
     - wordcount and wordle of abstract
 - Direktlinks zum OPS (HTML, XML, JSON, PDF)
 - test: swap Titel, Anmelder, ... column with content column
+- [14.10.13 19:25:43] Janosch: weißt was noch schön wär:
+    shift+enter -> nachste zeile
+    enter -> datenbank abfragen
 
 
 Prio 3
@@ -59,10 +88,17 @@ Prio 3
         - ship_method: default="http-post", might be "ftp" as well ;])
         - ship_url
         - ship_param: default="payload"
-        - ship_kind:  default="numberlist", might be "details", etc.
+        - ship_kind:  default="multi-numberlist", might be "details", etc.
         - ship_format default="text" (or related to ship_kind's default), might be "json" or "xml"
 - display ship_* parameters with overlay
 - infinite scrolling
+
+
+Prio 4
+======
+- get more from the data, e.g.
+    - query by applicant, show first and most recent publication dates
+    - query by applicant, show patent publications as timeline
 
 
 Done
