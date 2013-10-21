@@ -21,6 +21,9 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         this.fetch({
             data: $.param({ query: query, range: range}),
             success: function (payload) {
+
+                $('#spinner').hide();
+
                 //console.log("payload raw:");
                 //console.log(payload);
                 console.log("payload data:");
@@ -39,7 +42,6 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // propagate data to model collection instance
                 documents.reset(entries);
 
-                $('#spinner').hide();
             },
         });
 
@@ -51,9 +53,14 @@ OpsExchangeDocument = Backbone.Model.extend({
     defaults: {
         selected: false,
 
-        // TODO: move to "viewHelpers"
+        // TODO: move these methods to "viewHelpers"
         // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
         // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
+
+        get_patent_number: function() {
+            return this['@country'] + this['@doc-number'] + this['@kind'];
+        },
+
         get_applicants: function() {
             var sequence_max = "0";
             var applicant_groups = {};
@@ -123,8 +130,17 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     // e.g. to bind click handlers on individual records
     onDomRefresh: function () {
 
+        // backpropagate current basket entries into checkbox state
+        //console.log(this.model);
+        var payload = $('#basket').val();
+        var patent_number = this.model.attributes.get_patent_number();
+        if (contains(payload, patent_number)) {
+            var checkbox_id = 'patent-number-' + patent_number;
+            $('#' + checkbox_id).prop('checked', true);
+        }
+
         // handle checkbox clicks by add-/remove-operations on basket
-        $(".patent_number").click(function() {
+        $(".patent-number").click(function() {
             var payload = $('#basket').val();
             var patent_number = this.value;
             // FIXME: why does underscore.string's "include" not work?
@@ -182,7 +198,7 @@ OpsChooserApp.addInitializer(function(options) {
         var range = $(this).attr('range');
         //return;
 
-        var querystring = $('textarea#query').val();
+        var querystring = $('#query').val();
         if (!_.isEmpty(querystring) && range) {
             OpsChooserApp.search.perform(OpsChooserApp.documents, querystring, range);
         }

@@ -50,7 +50,7 @@
     <div class="pagination pagination-centered">
       <div class="pull-left">
         <div class="span1">
-        <i class="icon-refresh icon-spin icon-large pull-left" id="spinner"></i>
+        <i class="icon-refresh icon-spin icon-large pull-left hide" id="spinner"></i>
         </div>
       </div>
       <ul>
@@ -147,7 +147,7 @@
 
         %>
 
-        <td><input type="checkbox" name="patent_number" class="patent_number" value="<%= patent_number %>"/></td>
+        <td><input type="checkbox" id="patent-number-<%= patent_number %>" class="patent-number" value="<%= patent_number %>"/></td>
         <td><strong><%= patent_number %></strong></td>
         <td>
             <table class="table table-condensed table-clear-border-vertical">

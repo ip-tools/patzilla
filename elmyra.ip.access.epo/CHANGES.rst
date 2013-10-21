@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- backpropagate current basket entries into checkbox state
+
 
 0.0.6
 =====
