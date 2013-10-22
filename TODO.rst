@@ -57,6 +57,9 @@ Prio 2
 ======
 - load pictures
     - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
+    - lazy-load and display first drawing below patent number
+    - display inline images inside abstract text, e.g. WO2013153465A1, US2013270608A1,
+
 - convert pub.-date format to german locale using fine javascript library X
 - display other general data from ops response (record count, range, etc.)
 - display country flags:
@@ -99,6 +102,11 @@ Prio 4
 - get more from the data, e.g.
     - query by applicant, show first and most recent publication dates
     - query by applicant, show patent publications as timeline
+- semantically enrich "abstract" content
+    - decode all references and acronyms
+    - e.g.
+        US2013275937A1, US2013275704A1, US2013275667A1, WO2013153472A1, WO2013153755A1,
+        US2013270561A1, US2013265085A1, US2013264653A1, US2013264641A1, US2013268694A1,
 
 
 Done
