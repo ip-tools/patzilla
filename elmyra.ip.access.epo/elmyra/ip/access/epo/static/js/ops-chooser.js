@@ -48,6 +48,33 @@ OpsPublishedDataSearch = Backbone.Model.extend({
     },
 });
 
+function parties_to_list(container, value_attribute_name) {
+    var sequence_max = "0";
+    var groups = {};
+    _.each(container, function(item) {
+        var data_format = item['@data-format'];
+        var sequence = item['@sequence'];
+        var value = _.string.trim(item[value_attribute_name]['name']['$'], ', ');
+        groups[data_format] = groups[data_format] || {};
+        groups[data_format][sequence] = value;
+        if (sequence > sequence_max)
+            sequence_max = sequence;
+    });
+    //console.log(groups);
+
+    // TODO: somehow display in gui which one is the epodoc and which one is the original value
+    var entries = [];
+    _.each(_.range(1, parseInt(sequence_max) + 1), function(sequence) {
+        sequence = sequence.toString();
+        var epodoc_value = groups['epodoc'][sequence];
+        var original_value = groups['original'][sequence];
+        entries.push(epodoc_value + ' / ' + original_value);
+    });
+
+    return entries;
+}
+
+
 OpsExchangeDocument = Backbone.Model.extend({
 
     defaults: {
@@ -62,30 +89,15 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_applicants: function() {
-            var sequence_max = "0";
-            var applicant_groups = {};
             var applicants_node = this['bibliographic-data']['parties']['applicants']['applicant'];
-            _.each(applicants_node, function(applicant_node) {
-                var data_format = applicant_node['@data-format'];
-                var sequence = applicant_node['@sequence'];
-                var value = _.string.trim(applicant_node['applicant-name']['name']['$'], ', ');
-                applicant_groups[data_format] = applicant_groups[data_format] || {};
-                applicant_groups[data_format][sequence] = value;
-                if (sequence > sequence_max)
-                    sequence_max = sequence;
-            });
-            //console.log(applicant_groups);
-
-            var applicants_list = [];
-            _.each(_.range(1, parseInt(sequence_max) + 1), function(sequence) {
-                sequence = sequence.toString();
-                var epodoc_value = applicant_groups['epodoc'][sequence];
-                var original_value = applicant_groups['original'][sequence];
-                applicants_list.push(epodoc_value + ' / ' + original_value);
-            });
-
-            return applicants_list;
+            return parties_to_list(applicants_node, 'applicant-name');
         },
+
+        get_inventors: function() {
+            var inventors_node = this['bibliographic-data']['parties']['inventors']['inventor'];
+            return parties_to_list(inventors_node, 'inventor-name');
+        },
+
     },
 
     select: function() {

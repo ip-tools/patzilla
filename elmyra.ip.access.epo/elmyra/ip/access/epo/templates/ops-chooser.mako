@@ -21,7 +21,7 @@
                 <br/>
                 <textarea class="span9" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
                 <br/>
-                <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"></input>
+                <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"/>
             </div>
             <div class="pull-right">
                 <h6 style="display: inline">
@@ -113,6 +113,7 @@
 
         var patent_number = data['@country'] + data['@doc-number'] + data['@kind'];
         var applicant_list = data.get_applicants();
+        var inventor_list = data.get_inventors();
 
         var publication_date = search_date(data['bibliographic-data']['publication-reference']['document-id']);
         var application_date = search_date(data['bibliographic-data']['application-reference']['document-id']);
@@ -161,6 +162,14 @@
                         <td>
                             <ul>
                             <%= applicant_list.map(function(item) { return '<li>' + item + '</li>'; }).join('') %>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="icon-group"></i> Erfinder</td>
+                        <td>
+                            <ul>
+                            <%= inventor_list.map(function(item) { return '<li>' + item + '</li>'; }).join('') %>
                             </ul>
                         </td>
                     </tr>
