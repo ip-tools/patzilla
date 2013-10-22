@@ -5,25 +5,25 @@ elmyra.ip.access.epo TODO
 
 Prio 0
 ======
-- Uncaught TypeError: Cannot read property 'p' of undefined:  @ DE1521311A1 and HRP20130820T1
 - parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
-- title "?MÉTODO Y SISTEMA PARA INSTANCIAS DE FUNCIONAMIENTO DE UN JUEGO?." @ UY34621A
 
 
 Prio 1
 ======
 - new usage ship_kind=single-bibdata
-    - blueprint multiframe page having opsbrowser integrated with other tools on the same page
-    - ui: use buttons instead of checkboxes
-    - query submit logic (by ship_kind; here: post all/common bibliographic data to ship_url)
-    - ui: hide basket
-    - ui: use icons from iconset
-    - data: display "inventor" attribute
+    - [x] data: display "inventor" attribute
+    - [o] blueprint multiframe page having opsbrowser integrated with other tools on the same page
+    - [o] ui: use buttons instead of checkboxes
+    - [o] query submit logic (by ship_kind; here: post all/common bibliographic data to ship_url)
+    - [o] ui: hide basket
+    - [o] ui: use icons from iconset
+- minify @ production.ini
+-
 
 
 Prio 1.5
 ========
-::
+- show error messages from ops::
 
     2013-10-17 05:26:32,976 ERROR [waitress][Dummy-2] Exception when serving /api/ops/published-data/search
     Traceback (most recent call last):
@@ -51,7 +51,6 @@ Prio 1.5
 - Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 - react on "no records" and display it somehow
-- show error messages from ops
 
 
 Prio 2
@@ -70,6 +69,7 @@ Prio 2
 - [14.10.13 19:25:43] Janosch: weißt was noch schön wär:
     shift+enter -> nachste zeile
     enter -> datenbank abfragen
+- make some detail attributes collapsible
 
 
 Prio 3
@@ -117,3 +117,5 @@ Done
 - applicant=ibm => cannot use method "join" on undefined
 - neu: anmeldedatum
 - show spinner while loading, from fontawesome
+- Uncaught TypeError: Cannot read property 'p' of undefined:  @ DE1521311A1 and HRP20130820T1
+- title "?MÉTODO Y SISTEMA PARA INSTANCIAS DE FUNCIONAMIENTO DE UN JUEGO?." @ UY34621A => ist okay, da in den Original XML Daten auch genauso vorhanden
