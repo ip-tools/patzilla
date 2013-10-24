@@ -11,12 +11,12 @@ Prio 0
 
 Prio 1
 ======
-- new usage ship_mode=single-bibdata
+- new usage ship-mode=single-bibdata
     - [x] data: display "inventor" attribute
     - [x] blueprint multiframe page having opsbrowser integrated with other tools on the same page
-          http://localhost:6543/portfolio-demo?query=applicant=rational&ship_mode=single-bibdata&ship_url=http://httpbin.org/post&page_title=Portfolio%20Bewertung&page_subtitle=Schritt%201:%20Recherche%20bei%20OPS
+          http://localhost:6543/portfolio-demo?query=applicant=rational&ship-mode=single-bibdata&ship-url=http://httpbin.org/post&page_title=Portfolio%20Bewertung&page_subtitle=Schritt%201:%20Recherche%20bei%20OPS
     - [x] ui: use buttons instead of checkboxes
-    - [x] query submit logic (by ship_mode; here: post all/common bibliographic data to ship_url)
+    - [x] query submit logic (by ship-mode; here: post all/common bibliographic data to ship-url)
     - [x] ui: hide basket
     - [o] ui: use icons from iconset
 - "Help" screen
@@ -25,6 +25,7 @@ Prio 1
 Prio 1.5
 ========
 - beware of the CSRF/XSRF!!!
+- make "version" configurable
 - "select all" functionality
 - Multiple Checkbox Select/Deselect
     - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
@@ -81,7 +82,7 @@ Prio 3
 ======
 - http://viralpatel.net/blogs/jquery-not-selector-example/
 - UY34620A
-- ship_* parameters
+- ship-* parameters
 
     ops-chooser integration query parameters:
 
@@ -89,12 +90,12 @@ Prio 3
         - query
 
     - egress:
-        - ship_mode:   default="multi-numberlist", other values: "single-bibdata"
-        - ship_method: default="http-post", might be "ftp" as well ;])
-        - ship_url
-        - ship_param: default="payload"
-        - ship_format default="text" (or related to ship_mode's default), might be "json" or "xml"
-- display ship_* parameters with overlay
+        - ship-mode:   default="multi-numberlist", other values: "single-bibdata"
+        - ship-method: default="http-post", might be "ftp" as well ;])
+        - ship-url
+        - ship-param: default="payload"
+        - ship-format default="text" (or related to ship-mode's default), might be "json" or "xml"
+- display ship-* parameters with overlay
 - infinite scrolling
 
 
@@ -118,9 +119,9 @@ Done
     - http://www.tlcc.com/admin/tips.nsf/tipurlref/20041108
     - http://www-01.ibm.com/support/docview.wss?uid=swg21111823
 - tune textarea widths
-- introduce ship_* parameter convention
-    - rename "came_from" to "ship_url"
-    - get "ship_param=NumberList" form query param
+- introduce ship-* parameter convention
+    - rename "came_from" to "ship-url"
+    - get "ship-param=NumberList" form query param
 - disable javascript resource caching
 - fix "abstract" parsing, e.g. @ WO2013148409A1
 - applicant=ibm => cannot use method "join" on undefined
