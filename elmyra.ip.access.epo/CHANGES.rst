@@ -4,8 +4,22 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.0.7
+=====
+
+feature:
 - backpropagate current basket entries into checkbox state
 - display "inventor" attribute
+- add portfolio demo frameset
+- add ship-mode=single-bibdata
+- fix: be more graceful if applicants or inventors are missing from data
+- renamed ingress query parameters "ship_*" to "ship-*"
+
+tech:
+- route refactoring
+- ui refactoring: more responsive through "twitter bootstrap responsive css"
+
 
 0.0.6
 =====
