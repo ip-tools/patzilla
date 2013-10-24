@@ -127,6 +127,7 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 
 // FIXME: why does underscore.string's "include" not work?
 function contains(string, pattern) {
+    if (!string) return false;
     return string.indexOf(pattern) > -1;
 }
 
