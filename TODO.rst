@@ -11,12 +11,12 @@ Prio 0
 
 Prio 1
 ======
-- new usage ship_kind=single-bibdata
+- new usage ship_mode=single-bibdata
     - [x] data: display "inventor" attribute
     - [x] blueprint multiframe page having opsbrowser integrated with other tools on the same page
-          http://localhost:6543/portfolio-demo?page_title=Portfolio%20Bewertung&query=applicant=rational&ship_kind=single-bibdata&ship_url=http://httpbin.org/post
+          http://localhost:6543/portfolio-demo?query=applicant=rational&ship_mode=single-bibdata&ship_url=http://httpbin.org/post&page_title=Portfolio%20Bewertung&page_subtitle=Schritt%201:%20Recherche%20bei%20OPS
     - [x] ui: use buttons instead of checkboxes
-    - [x] query submit logic (by ship_kind; here: post all/common bibliographic data to ship_url)
+    - [x] query submit logic (by ship_mode; here: post all/common bibliographic data to ship_url)
     - [x] ui: hide basket
     - [o] ui: use icons from iconset
 - "Help" screen
@@ -24,8 +24,10 @@ Prio 1
 
 Prio 1.5
 ========
-- Navigation: replace hashtag in url
-- minify and **uglify** via bower / production.ini
+- beware of the CSRF/XSRF!!!
+- "select all" functionality
+- Multiple Checkbox Select/Deselect
+    - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
 - show error messages from ops::
 
     2013-10-17 05:26:32,976 ERROR [waitress][Dummy-2] Exception when serving /api/ops/published-data/search
@@ -45,17 +47,10 @@ Prio 1.5
     - [o] show current response range
 - use buttons with "Select" label instead of checkboxes
     http://bootsnipp.com/snipps/select-users
-- "select all" functionality
-- Multiple Checkbox Select/Deselect
-    - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
-- title padding
-- display (pull-right): ops-chooser v0.0.x in title
-
 - Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 - react on "no records" and display it somehow
 - searching with spaces, e.g. "inventor=moritz hilger"
-- make table responsive, e.g. by using twitter bootstrap 3 or FooTable ( http://fooplugins.com/plugins/footable-jquery/ )
 
 
 Prio 2
@@ -64,7 +59,6 @@ Prio 2
     - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
     - lazy-load and display first drawing below patent number
     - display inline images inside abstract text, e.g. WO2013153465A1, US2013270608A1,
-
 - convert pub.-date format to german locale using fine javascript library X
 - display other general data from ops response (record count, range, etc.)
 - display country flags:
@@ -78,6 +72,9 @@ Prio 2
     shift+enter -> nachste zeile
     enter -> datenbank abfragen
 - make some detail attributes collapsible
+- Navigation: replace hashtag in url
+- minify and **uglify** via bower / production.ini
+- make table responsive, e.g. by using twitter bootstrap 3 or FooTable ( http://fooplugins.com/plugins/footable-jquery/ )
 
 
 Prio 3
@@ -92,11 +89,11 @@ Prio 3
         - query
 
     - egress:
+        - ship_mode:   default="multi-numberlist", other values: "single-bibdata"
         - ship_method: default="http-post", might be "ftp" as well ;])
         - ship_url
         - ship_param: default="payload"
-        - ship_kind:  default="multi-numberlist", might be "details", etc.
-        - ship_format default="text" (or related to ship_kind's default), might be "json" or "xml"
+        - ship_format default="text" (or related to ship_mode's default), might be "json" or "xml"
 - display ship_* parameters with overlay
 - infinite scrolling
 
@@ -131,3 +128,5 @@ Done
 - show spinner while loading, from fontawesome
 - Uncaught TypeError: Cannot read property 'p' of undefined:  @ DE1521311A1 and HRP20130820T1
 - title "?MÉTODO Y SISTEMA PARA INSTANCIAS DE FUNCIONAMIENTO DE UN JUEGO?." @ UY34621A => ist okay, da in den Original XML Daten auch genauso vorhanden
+- title padding
+- display (pull-right): ops-chooser v0.0.x in title
