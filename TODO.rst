@@ -6,23 +6,26 @@ elmyra.ip.access.epo TODO
 Prio 0
 ======
 - parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
+  => CPC Fallback
 
 
 Prio 1
 ======
 - new usage ship_kind=single-bibdata
     - [x] data: display "inventor" attribute
-    - [o] blueprint multiframe page having opsbrowser integrated with other tools on the same page
-    - [o] ui: use buttons instead of checkboxes
-    - [o] query submit logic (by ship_kind; here: post all/common bibliographic data to ship_url)
-    - [o] ui: hide basket
+    - [x] blueprint multiframe page having opsbrowser integrated with other tools on the same page
+          http://localhost:6543/portfolio-demo?page_title=Portfolio%20Bewertung&query=applicant=rational&ship_kind=single-bibdata&ship_url=http://httpbin.org/post
+    - [x] ui: use buttons instead of checkboxes
+    - [x] query submit logic (by ship_kind; here: post all/common bibliographic data to ship_url)
+    - [x] ui: hide basket
     - [o] ui: use icons from iconset
-- minify @ production.ini
--
+- "Help" screen
 
 
 Prio 1.5
 ========
+- Navigation: replace hashtag in url
+- minify and **uglify** via bower / production.ini
 - show error messages from ops::
 
     2013-10-17 05:26:32,976 ERROR [waitress][Dummy-2] Exception when serving /api/ops/published-data/search
@@ -51,6 +54,8 @@ Prio 1.5
 - Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 - react on "no records" and display it somehow
+- searching with spaces, e.g. "inventor=moritz hilger"
+- make table responsive, e.g. by using twitter bootstrap 3 or FooTable ( http://fooplugins.com/plugins/footable-jquery/ )
 
 
 Prio 2
@@ -79,7 +84,6 @@ Prio 3
 ======
 - http://viralpatel.net/blogs/jquery-not-selector-example/
 - UY34620A
-- "Help" screen
 - ship_* parameters
 
     ops-chooser integration query parameters:
