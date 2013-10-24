@@ -10,6 +10,7 @@
 
 <%
 page_title = request.params.get('page_title', 'Patentrecherche')
+page_subtitle = request.params.get('page_subtitle', 'via EPO/OPS, ops/browser 0.0.7')
 ship_mode = request.params.get('ship_mode', 'multi-numberlist')
 ship_param = request.params.get('ship_param', 'payload')
 ship_url = request.params.get('ship_url', '#')
@@ -29,7 +30,7 @@ var ship_frame = '${ship_frame}';
             <h2 style="display: inline">${page_title}</h2>
             &nbsp;&nbsp;&nbsp;<i class="icon-refresh icon-spin icon-large" style="display: none" id="spinner"></i>
         </p>
-        <small>via EPO/OPS, opsbrowser 0.0.6</small>
+        <small>${page_subtitle}</small>
     </blockquote>
 </div>
 
