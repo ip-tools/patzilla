@@ -9,12 +9,12 @@
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
 <%
-page_title = request.params.get('page_title', 'Patentrecherche')
-page_subtitle = request.params.get('page_subtitle', 'via EPO/OPS, ops/browser 0.0.7')
-ship_mode = request.params.get('ship_mode', 'multi-numberlist')
-ship_param = request.params.get('ship_param', 'payload')
-ship_url = request.params.get('ship_url', '#')
-ship_frame = request.params.get('ship_frame', 'opsbrowser_right_frame')
+page_title = request.params.get('page-title', 'Patentrecherche')
+page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.7')
+ship_mode = request.params.get('ship-mode', 'multi-numberlist')
+ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
+ship_url = request.params.get('ship-url', request.params.get('ship_url', '#'))
+ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
 %>
 <script type="application/javascript">
 var ship_mode = '${ship_mode}';
