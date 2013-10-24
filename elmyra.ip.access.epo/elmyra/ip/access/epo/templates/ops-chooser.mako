@@ -8,51 +8,74 @@
 ## http://davidsulc.com/blog/2012/04/15/a-simple-backbone-marionette-tutorial/
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
+<%
+page_title = request.params.get('page_title', 'Patentrecherche')
+ship_mode = request.params.get('ship_mode', 'multi-numberlist')
+ship_param = request.params.get('ship_param', 'payload')
+ship_url = request.params.get('ship_url', '#')
+ship_frame = request.params.get('ship_frame', 'opsbrowser_right_frame')
+%>
+<script type="application/javascript">
+var ship_mode = '${ship_mode}';
+var ship_param = '${ship_param}';
+var ship_url = '${ship_url}';
+var ship_frame = '${ship_frame}';
+</script>
 
-<div class="container span12 pull-left">
-    <h1>Patentrecherche <small>via EPO/OPS</small></h1>
+## title / headline
+<div class="container-fluid span12">
+    <blockquote>
+        <p>
+            <h2 style="display: inline">${page_title}</h2>
+            &nbsp;&nbsp;&nbsp;<i class="icon-refresh icon-spin icon-large" style="display: none" id="spinner"></i>
+        </p>
+        <small>via EPO/OPS, opsbrowser 0.0.6</small>
+    </blockquote>
+</div>
 
-    <div id="ops-query">
-        <div class="container well">
-            <div class="pull-left">
-                <h6 style="display: inline">
-                    <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
-                </h6>
-                <br/>
-                <textarea class="span9" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
-                <br/>
-                <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"/>
-            </div>
-            <div class="pull-right">
-                <h6 style="display: inline">
-                    Auswahl
-                </h6>
-                <br/>
-                <form id="basket-form" name="basket-form" method="post" action="${request.params.get('ship_url', '')}">
-                    <textarea class="span3" id="basket" name="${request.params.get('ship_param', 'payload')}" rows="5"></textarea>
-                    <br/>
-                    <input id="basket-button" type="submit" class="btn btn-info" ${request.params.get('ship_url') or 'disabled="disabled"'} value="Übermitteln"/>
-                </form>
-            </div>
+<div class="container-fluid span12">
+
+    ## query builder and basket
+    <div class="row-fluid well" id="querybuilder-basket-area" style="padding: 0px;">
+        <div class="span8" id="querybuilder-area" style="padding: 1em">
+            <h6 style="display: inline">
+                <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
+            </h6>
+            <br/>
+            <textarea class="span12" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
+            <br/>
+            <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"/>
         </div>
+        % if ship_mode != 'single-bibdata':
+        <div class="span4" id="basket-area" style="padding: 1em">
+            <h6 style="display: inline">
+                Auswahl
+            </h6>
+            <br/>
+            <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
+                <textarea class="span12" id="basket" name="${ship_param}" rows="5"></textarea>
+                <br/>
+                <input id="basket-button" type="submit" class="btn btn-info" ${ship_url or 'disabled="disabled"'} value="Übermitteln"/>
+            </form>
+        </div>
+        % endif
     </div>
 
-    <div id="ops-pagination-region" class="span12"></div>
 
-    <div class="table-responsive">
-        <div id="ops-collection-region" class="span12"></div>
-    </div>
+    ## pager
+    <div id="ops-pagination-region"></div>
+
+
+    ## results
+    <div id="ops-collection-region"></div>
 
 </div>
 
+
+## pager template
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
     <div class="pagination pagination-centered">
-      <div class="pull-left">
-        <div class="span1">
-        <i class="icon-refresh icon-spin icon-large pull-left hide" id="spinner"></i>
-        </div>
-      </div>
       <ul>
         <!--
         <li><a href="#" action="previous">Prev</a></li>
@@ -73,22 +96,30 @@
 </script>
 </%text>
 
-<%text>
+
+## result list template
 <script type="text/x-underscore-template" id="ops-collection-template">
     <thead>
         <tr>
+        % if ship_mode == 'multi-numberlist':
         <th class="span1"><input type="checkbox" id="all-check" title="Alle auswählen"/></th>
+        % endif
         <th class="span2">Patentnummer</th>
         <th class="span9">Bibliographische Daten</th>
+        % if ship_mode == 'single-bibdata':
+        <th class="span1"></th>
+        % endif
         </tr>
     </thead>
     <tbody id="ops-collection-tbody">
     </tbody>
 </script>
-</%text>
 
-<%text>
+
+## result item template
 <script type="text/x-underscore-template" id="ops-entry-template">
+
+        <%text>
         <%
 
         // 1. log model item to assist in data exploration
@@ -147,9 +178,17 @@
         }
 
         %>
+        </%text>
 
-        <td><input type="checkbox" id="patent-number-<%= patent_number %>" class="patent-number" value="<%= patent_number %>"/></td>
+        % if ship_mode == 'multi-numberlist':
+        <%text>
+        <td><input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number" value="<%= patent_number %>"/></td>
+        </%text>
+        % endif
+
+        <%text>
         <td><strong><%= patent_number %></strong></td>
+
         <td>
             <table class="table table-condensed table-clear-border-vertical">
                 <tbody>
@@ -192,9 +231,28 @@
                 </tbody>
             </table>
         </td>
+        </%text>
+
+        % if ship_mode == 'single-bibdata':
+        <%text>
+        <td>
+            <form name="single-bibdata" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
+                <input name="query" type="hidden" value="${request.params.get('query', '')}"/>
+                <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
+                <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
+                <input name="applicants" type="hidden" value="<%= applicant_list.join('\n') %>"/>
+                <input name="inventors" type="hidden" value="<%= inventor_list.join('\n') %>"/>
+                <input name="application_date" type="hidden" value="<%= application_date %>"/>
+                <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
+                <input name="ipcs" type="hidden" value="<%= ipc_list.join('\n') %>"/>
+                <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
+                <input name="submit" type="submit" value="bewerten"/>
+            </form>
+        </td>
+        </%text>
+        % endif
 
 </script>
-</%text>
 
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
 <script type="text/javascript" src="/static/js/ops-chooser.js"></script>
