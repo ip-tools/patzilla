@@ -5,31 +5,32 @@ elmyra.ip.access.epo TODO
 
 Prio 0
 ======
-- parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
-  => CPC Fallback
+- [o] parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
+      => CPC Fallback
 
 
 Prio 1
 ======
-- new usage ship-mode=single-bibdata
+- [o] new usage ship-mode=single-bibdata
     - [x] data: display "inventor" attribute
     - [x] blueprint multiframe page having opsbrowser integrated with other tools on the same page
-          http://localhost:6543/portfolio-demo?query=applicant=rational&ship-mode=single-bibdata&ship-url=http://httpbin.org/post&page_title=Portfolio%20Bewertung&page_subtitle=Schritt%201:%20Recherche%20bei%20OPS
+          https://tools.ip.elmyra.de/portfolio-demo?query=applicant=rational&ship-mode=single-bibdata&ship-url=https://httpbin.org/post&page-title=Portfolio%20Bewertung&page-subtitle=Schritt%201:%20Recherche%20bei%20OPS
     - [x] ui: use buttons instead of checkboxes
     - [x] query submit logic (by ship-mode; here: post all/common bibliographic data to ship-url)
     - [x] ui: hide basket
-    - [o] ui: use icons from iconset
-- "Help" screen
+    - [o] introduce "ship-button-label", default="auswählen"
+- [o] "Help" screen
 
 
 Prio 1.5
 ========
-- beware of the CSRF/XSRF!!!
-- make "version" configurable
-- "select all" functionality
-- Multiple Checkbox Select/Deselect
-    - http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
-- show error messages from ops::
+- [o] beware of the CSRF/XSRF!!! (ship-url, page-title, page-subtitle, ship-button-label)
+- [o] ui: display "version" from configfile
+- [o] ui: use icons from iconset
+- [o] "select all" functionality
+    - | Multiple Checkbox Select/Deselect
+      |http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
+- [o] show error messages from ops::
 
     2013-10-17 05:26:32,976 ERROR [waitress][Dummy-2] Exception when serving /api/ops/published-data/search
     Traceback (most recent call last):
@@ -41,17 +42,18 @@ Prio 1.5
         raise ValueError(msg % (view_description(view), result))
     ValueError: Could not convert return value of the view callable function cornice.pyramidhook.handle_exceptions into a response object. The value returned was AttributeError("'_JSONError' object has no attribute 'detail'",).
 
-- paging:
+- [o] paging:
     - [x] simple/static pager ui
     - [o] basketstate-to-checkbox backpropagation
     - [o] dynamic pager
     - [o] show current response range
-- use buttons with "Select" label instead of checkboxes
+- [o] use buttons with "Select" label instead of checkboxes
     http://bootsnipp.com/snipps/select-users
-- Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
+- [o] Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
-- react on "no records" and display it somehow
-- searching with spaces, e.g. "inventor=moritz hilger"
+- [o] react on "no records" and display it somehow
+- [o] searching with spaces, e.g. "inventor=moritz hilger"
+- [o] display and use some metadata information from ops response envelope
 
 
 Prio 2
