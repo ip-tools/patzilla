@@ -124,11 +124,11 @@ def add_html_foundation(event):
     # setup css foundation
 
     # bootstrap
-    from js.bootstrap import bootstrap
+    from js.bootstrap import bootstrap, bootstrap_responsive_css
     #from js.bootstrap import bootstrap_theme
     bootstrap.need()
     #bootstrap_theme.need()
-    # TODO: what about bootstrap_responsive_css?
+    bootstrap_responsive_css.need()
 
     # fontawesome
     from css.fontawesome import fontawesome
