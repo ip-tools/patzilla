@@ -150,16 +150,19 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
         // backpropagate current basket entries into checkbox state
         //console.log(this.model);
         var payload = $('#basket').val();
-        var patent_number = this.model.attributes.get_patent_number();
-        if (contains(payload, patent_number)) {
-            var checkbox_id = 'patent-number-' + patent_number;
-            $('#' + checkbox_id).prop('checked', true);
+        if (payload) {
+            var patent_number = this.model.attributes.get_patent_number();
+            if (contains(payload, patent_number)) {
+                var checkbox_id = 'chk-patent-number-' + patent_number;
+                $('#' + checkbox_id).prop('checked', true);
+            }
         }
 
         // handle checkbox clicks by add-/remove-operations on basket
-        $(".patent-number").click(function() {
+        $(".chk-patent-number").click(function() {
             var payload = $('#basket').val();
             var patent_number = this.value;
+            //console.log(patent_number);
             // FIXME: why does underscore.string's "include" not work?
             if (this.checked && !contains(payload, patent_number))
                 payload += patent_number + '\n';
