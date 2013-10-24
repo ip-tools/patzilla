@@ -89,12 +89,16 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_applicants: function() {
-            var applicants_node = this['bibliographic-data']['parties']['applicants']['applicant'];
+            var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
+            applicants_root_node = applicants_root_node || [];
+            var applicants_node = applicants_root_node['applicant'];
             return parties_to_list(applicants_node, 'applicant-name');
         },
 
         get_inventors: function() {
-            var inventors_node = this['bibliographic-data']['parties']['inventors']['inventor'];
+            var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
+            inventors_root_node = inventors_root_node || [];
+            var inventors_node = inventors_root_node['inventor'];
             return parties_to_list(inventors_node, 'inventor-name');
         },
 
