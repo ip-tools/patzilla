@@ -5,6 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.0.8
+=====
+- ship-mode=single-bibdata: rename "submit" form button name to "ship_action"
+
+
 0.0.7
 =====
 
