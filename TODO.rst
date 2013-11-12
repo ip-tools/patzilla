@@ -18,7 +18,7 @@ Prio 1
     - [x] ui: use buttons instead of checkboxes
     - [x] query submit logic (by ship-mode; here: post all/common bibliographic data to ship-url)
     - [x] ui: hide basket
-    - [o] introduce "ship-button-label", default="auswählen"
+    - [o] introduce "ship-button-label", default="auswählen" (instead of hardcoded "bewerten")
 - [o] "Help" screen
 
 
@@ -27,6 +27,7 @@ Prio 1.5
 - [o] beware of the CSRF/XSRF!!! (ship-url, page-title, page-subtitle, ship-button-label)
 - [o] ui: display "version" from configfile
 - [o] ui: use icons from iconset
+    - icon index/overview pages
 - [o] "select all" functionality
     - | Multiple Checkbox Select/Deselect
       |http://viralpatel.net/blogs/multiple-checkbox-select-deselect-jquery-tutorial-example/
@@ -78,6 +79,7 @@ Prio 2
 - Navigation: replace hashtag in url
 - minify and **uglify** via bower / production.ini
 - make table responsive, e.g. by using twitter bootstrap 3 or FooTable ( http://fooplugins.com/plugins/footable-jquery/ )
+- render reports using embedded webkit
 
 
 Prio 3
