@@ -9,6 +9,7 @@
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
 <%
+query = request.params.get('query', '')
 page_title = request.params.get('page-title', 'Patentrecherche')
 page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.7')
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
@@ -43,7 +44,7 @@ var ship_frame = '${ship_frame}';
                 <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
             </h6>
             <br/>
-            <textarea class="span12" id="query" name="query" placeholder="CQL Anfrage" rows="5">${request.params.get('query', '')}</textarea>
+            <textarea class="span12" id="query" name="query" placeholder="CQL Anfrage" rows="5">${query}</textarea>
             <br/>
             <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"/>
         </div>
@@ -238,7 +239,7 @@ var ship_frame = '${ship_frame}';
         <%text>
         <td>
             <form name="single-bibdata" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
-                <input name="query" type="hidden" value="${request.params.get('query', '')}"/>
+                <input name="query" type="hidden" value="${query}"/>
                 <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
                 <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
                 <input name="applicants" type="hidden" value="<%= applicant_list.join('\n') %>"/>
