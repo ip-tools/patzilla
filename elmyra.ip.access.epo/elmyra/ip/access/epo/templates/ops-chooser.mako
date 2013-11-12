@@ -238,7 +238,7 @@ var ship_frame = '${ship_frame}';
         % if ship_mode == 'single-bibdata':
         <%text>
         <td>
-            <form name="single-bibdata" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
+            <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
                 <input name="query" type="hidden" value="${query}"/>
                 <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
                 <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
