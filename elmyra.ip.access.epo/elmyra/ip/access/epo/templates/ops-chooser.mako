@@ -248,7 +248,7 @@ var ship_frame = '${ship_frame}';
                 <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
                 <input name="ipcs" type="hidden" value="<%= ipc_list.join('\n') %>"/>
                 <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
-                <input name="submit" type="submit" value="bewerten"/>
+                <input name="ship_action" type="submit" value="bewerten"/>
             </form>
         </td>
         </%text>
