@@ -77,6 +77,9 @@ var ship_frame = '${ship_frame}';
 ## pager template
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
+    <div class="pull-left">
+        Treffer: <%= result_count %>
+    </div>
     <div class="pagination pagination-centered">
       <ul>
         <!--

@@ -14,9 +14,10 @@ OpsChooserApp.addRegions({
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
-    perform: function(documents, query, range) {
+    perform: function(documents, metadata, query, range) {
 
         $('#spinner').show();
+        var self = this;
 
         this.fetch({
             data: $.param({ query: query, range: range}),
@@ -41,6 +42,10 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 // propagate data to model collection instance
                 documents.reset(entries);
+
+                // propagate metadata to model
+                var total_result_count = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['@total-result-count'];
+                metadata.set({result_count: total_result_count});
 
             },
         });
@@ -74,6 +79,13 @@ function parties_to_list(container, value_attribute_name) {
     return entries;
 }
 
+OpsExchangeMetadata = Backbone.Model.extend({
+
+    defaults: {
+        result_count: null,
+    }
+
+});
 
 OpsExchangeDocument = Backbone.Model.extend({
 
@@ -189,17 +201,39 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     },
 });
 
-PaginationView = Backbone.Marionette.CompositeView.extend({
+PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
     //id: "opsexchangedocumentcollection",
     id: "pv",
     //className: "table table-bordered table-condensed table-hover",
     template: "#ops-pagination-template",
+    //template: _.template($('#ops-pagination-template').html(), this.model, {variable: 'data'}),
     //itemView: OpsExchangeDocumentView,
 
     appendHtml2: function(collectionView, itemView) {
         collectionView.$("tbody#ops-collection-tbody").append(itemView.el);
     },
+
+    initialize: function(){
+        this.listenTo(this.model, "change", this.render);
+    },
+
+    onDomRefresh: function () {
+        console.log('PaginationView.onDomRefresh');
+        $('div.pagination a').click(function() {
+            var action = $(this).attr('action');
+            var range = $(this).attr('range');
+            //return;
+
+            var querystring = $('#query').val();
+            if (!_.isEmpty(querystring) && range) {
+                OpsChooserApp.search.perform(OpsChooserApp.documents, OpsChooserApp.metadata, querystring, range);
+            }
+
+            return false;
+        });
+    },
+
 });
 
 OpsChooserApp.addInitializer(function(options) {
@@ -208,24 +242,11 @@ OpsChooserApp.addInitializer(function(options) {
     });
     var paginationView = new PaginationView({
         //collection: options.documents
+        model: options.metadata
     });
 
     OpsChooserApp.listRegion.show(collectionView);
     OpsChooserApp.paginationRegion.show(paginationView);
-
-    $('div.pagination a').click(function() {
-        var action = $(this).attr('action');
-        var range = $(this).attr('range');
-        //return;
-
-        var querystring = $('#query').val();
-        if (!_.isEmpty(querystring) && range) {
-            OpsChooserApp.search.perform(OpsChooserApp.documents, querystring, range);
-        }
-
-        return false;
-    });
-
 });
 
 $(document).ready(function() {
@@ -240,13 +261,14 @@ $(document).ready(function() {
 
     // create application domain objects
     OpsChooserApp.search = new OpsPublishedDataSearch();
+    OpsChooserApp.metadata = new OpsExchangeMetadata();
     OpsChooserApp.documents = new OpsExchangeDocumentCollection();
 
     // automatically run query if submitted
     if (!_.isEmpty(query))
-        OpsChooserApp.search.perform(OpsChooserApp.documents, query);
+        OpsChooserApp.search.perform(OpsChooserApp.documents, OpsChooserApp.metadata, query);
 
-    OpsChooserApp.start({documents: OpsChooserApp.documents});
+    OpsChooserApp.start({documents: OpsChooserApp.documents, metadata: OpsChooserApp.metadata});
 
 });
 
@@ -255,6 +277,6 @@ $('input#query-button').click(function() {
     //send to server and process response
     //alert(querystring);
     if (!_.isEmpty(querystring)) {
-        OpsChooserApp.search.perform(OpsChooserApp.documents, querystring);
+        OpsChooserApp.search.perform(OpsChooserApp.documents, OpsChooserApp.metadata, querystring);
     }
 });

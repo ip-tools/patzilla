@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- show result count in pagination area
+
 
 0.0.8
 =====
