@@ -5,12 +5,16 @@ elmyra.ip.access.epo TODO
 
 Prio 0
 ======
-- [o] parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
-      => CPC Fallback
+- [o] Anzeige der Trefferanzahl
+- [o] Anzeige first-drawing
+- [o] Carousel für all-drawings
+- [o] Link zum PDF
 
 
 Prio 1
 ======
+- [o] parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
+      => CPC Fallback
 - [o] new usage ship-mode=single-bibdata
     - [x] data: display "inventor" attribute
     - [x] blueprint multiframe page having opsbrowser integrated with other tools on the same page
@@ -20,7 +24,8 @@ Prio 1
     - [x] ui: hide basket
     - [o] introduce "ship-button-label", default="auswählen" (instead of hardcoded "bewerten")
 - [o] "Help" screen
-
+- [o] browser history / pushstate
+      http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
 
 Prio 1.5
 ========
