@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - show result count in pagination area
+- application structure refactoring and streamlining
 
 
 0.0.8

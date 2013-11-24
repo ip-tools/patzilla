@@ -1,17 +1,54 @@
 // -*- coding: utf-8 -*-
 
+/**
+ * ------------------------------------------
+ *            generic utilities
+ * ------------------------------------------
+ */
+
 function to_list(value) {
     return _.isArray(value) && value || [value];
 }
 
+// FIXME: why does underscore.string's "include" not work?
+function contains(string, pattern) {
+    if (!string) return false;
+    return string.indexOf(pattern) > -1;
+}
 
-OpsChooserApp = new Backbone.Marionette.Application();
 
-OpsChooserApp.addRegions({
+/**
+ * ------------------------------------------
+ *            application objects
+ * ------------------------------------------
+ */
+OpsChooserApp = Backbone.Marionette.Application.extend({
+    // send to server and process response
+    perform_search: function(options) {
+        var query = $('#query').val();
+        if (!_.isEmpty(query)) {
+            if (options && options.range) {
+                opsChooserApp.search.perform(this.documents, this.metadata, query, options.range);
+            } else {
+                opsChooserApp.search.perform(this.documents, this.metadata, query);
+            }
+        }
+    }
+});
+opsChooserApp = new OpsChooserApp();
+
+opsChooserApp.addRegions({
     listRegion: "#ops-collection-region",
     paginationRegion: "#ops-pagination-region",
 });
 
+
+
+/**
+ * ------------------------------------------
+ *               model objects
+ * ------------------------------------------
+ */
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
     perform: function(documents, metadata, query, range) {
@@ -33,9 +70,9 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // get "node" containing record list from nested json response
                 var search_result = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
 
+                // unwrap response by creating a list of model objects from records
                 var entries;
                 if (search_result) {
-                    // unwrap and create model object of each record
                     var exchange_documents = to_list(search_result['exchange-documents']);
                     entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
                 }
@@ -52,32 +89,6 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
     },
 });
-
-function parties_to_list(container, value_attribute_name) {
-    var sequence_max = "0";
-    var groups = {};
-    _.each(container, function(item) {
-        var data_format = item['@data-format'];
-        var sequence = item['@sequence'];
-        var value = _.string.trim(item[value_attribute_name]['name']['$'], ', ');
-        groups[data_format] = groups[data_format] || {};
-        groups[data_format][sequence] = value;
-        if (sequence > sequence_max)
-            sequence_max = sequence;
-    });
-    //console.log(groups);
-
-    // TODO: somehow display in gui which one is the epodoc and which one is the original value
-    var entries = [];
-    _.each(_.range(1, parseInt(sequence_max) + 1), function(sequence) {
-        sequence = sequence.toString();
-        var epodoc_value = groups['epodoc'][sequence];
-        var original_value = groups['original'][sequence];
-        entries.push(epodoc_value + ' / ' + original_value);
-    });
-
-    return entries;
-}
 
 OpsExchangeMetadata = Backbone.Model.extend({
 
@@ -104,17 +115,46 @@ OpsExchangeDocument = Backbone.Model.extend({
             var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
             applicants_root_node = applicants_root_node || [];
             var applicants_node = applicants_root_node['applicant'];
-            return parties_to_list(applicants_node, 'applicant-name');
+            return this.parties_to_list(applicants_node, 'applicant-name');
         },
 
         get_inventors: function() {
             var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
             inventors_root_node = inventors_root_node || [];
             var inventors_node = inventors_root_node['inventor'];
-            return parties_to_list(inventors_node, 'inventor-name');
+            return this.parties_to_list(inventors_node, 'inventor-name');
         },
 
-    },
+        parties_to_list: function(container, value_attribute_name) {
+
+            // deserialize list of parties (applicants/inventors) from exchange payload
+            var sequence_max = "0";
+            var groups = {};
+            _.each(container, function(item) {
+                var data_format = item['@data-format'];
+                var sequence = item['@sequence'];
+                var value = _.string.trim(item[value_attribute_name]['name']['$'], ', ');
+                groups[data_format] = groups[data_format] || {};
+                groups[data_format][sequence] = value;
+                if (sequence > sequence_max)
+                    sequence_max = sequence;
+            });
+            //console.log(groups);
+
+            // TODO: somehow display in gui which one is the "epodoc" and which one is the "original" value
+            var entries = [];
+            _.each(_.range(1, parseInt(sequence_max) + 1), function(sequence) {
+                sequence = sequence.toString();
+                var epodoc_value = groups['epodoc'][sequence];
+                var original_value = groups['original'][sequence];
+                entries.push(epodoc_value + ' / ' + original_value);
+            });
+
+            return entries;
+
+        },
+
+},
 
     select: function() {
         this.set('selected', true);
@@ -137,12 +177,12 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 });
 
 
-// FIXME: why does underscore.string's "include" not work?
-function contains(string, pattern) {
-    if (!string) return false;
-    return string.indexOf(pattern) > -1;
-}
 
+/**
+ * ------------------------------------------
+ *                view objects
+ * ------------------------------------------
+ */
 OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     //template: "#ops-entry-template",
     template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
@@ -183,7 +223,7 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
             $('#basket').val(payload);
         });
 
-        // use jquery.shorten on abstract text
+        // use jquery.shorten on "abstract" text
         $(".abstract").shorten({showChars: 200, moreText: 'mehr', lessText: 'weniger'});
     },
 
@@ -203,18 +243,11 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
 
 PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
-    //id: "opsexchangedocumentcollection",
-    id: "pv",
-    //className: "table table-bordered table-condensed table-hover",
+    id: "paginationview",
     template: "#ops-pagination-template",
-    //template: _.template($('#ops-pagination-template').html(), this.model, {variable: 'data'}),
-    //itemView: OpsExchangeDocumentView,
-
-    appendHtml2: function(collectionView, itemView) {
-        collectionView.$("tbody#ops-collection-tbody").append(itemView.el);
-    },
 
     initialize: function(){
+        console.log('PaginationView.initialize');
         this.listenTo(this.model, "change", this.render);
     },
 
@@ -223,30 +256,46 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         $('div.pagination a').click(function() {
             var action = $(this).attr('action');
             var range = $(this).attr('range');
-            //return;
-
-            var querystring = $('#query').val();
-            if (!_.isEmpty(querystring) && range) {
-                OpsChooserApp.search.perform(OpsChooserApp.documents, OpsChooserApp.metadata, querystring, range);
-            }
-
+            opsChooserApp.perform_search({range: range});
             return false;
         });
     },
 
 });
 
-OpsChooserApp.addInitializer(function(options) {
+
+
+/**
+ * ------------------------------------------
+ *           bootstrap application
+ * ------------------------------------------
+ */
+
+opsChooserApp.addInitializer(function(options) {
+    // create application domain model objects
+    this.search = new OpsPublishedDataSearch();
+    this.metadata = new OpsExchangeMetadata();
+    this.documents = new OpsExchangeDocumentCollection();
+});
+
+opsChooserApp.addInitializer(function(options) {
+
+    // bind model objects to view objects
     var collectionView = new OpsExchangeDocumentCollectionView({
-        collection: options.documents
+        collection: this.documents
     });
     var paginationView = new PaginationView({
-        //collection: options.documents
-        model: options.metadata
+        model: this.metadata
     });
 
-    OpsChooserApp.listRegion.show(collectionView);
-    OpsChooserApp.paginationRegion.show(paginationView);
+    // bind view objects to region objects
+    opsChooserApp.listRegion.show(collectionView);
+    opsChooserApp.paginationRegion.show(paginationView);
+});
+
+opsChooserApp.addInitializer(function(options) {
+    // automatically run search after bootstrapping application
+    this.perform_search();
 });
 
 $(document).ready(function() {
@@ -254,29 +303,15 @@ $(document).ready(function() {
     console.log("OpsChooserApp starting");
 
     // process and propagate application ingress parameters
-    var url = $.url(window.location.href);
-    var query = url.param('query');
+    //var url = $.url(window.location.href);
+    //var query = url.param('query');
     //query = 'applicant=IBM';
     //query = 'publicationnumber=US2013255753A1';
 
-    // create application domain objects
-    OpsChooserApp.search = new OpsPublishedDataSearch();
-    OpsChooserApp.metadata = new OpsExchangeMetadata();
-    OpsChooserApp.documents = new OpsExchangeDocumentCollection();
+    opsChooserApp.start();
 
-    // automatically run query if submitted
-    if (!_.isEmpty(query))
-        OpsChooserApp.search.perform(OpsChooserApp.documents, OpsChooserApp.metadata, query);
+    $('input#query-button').click(function() {
+        opsChooserApp.perform_search();
+    });
 
-    OpsChooserApp.start({documents: OpsChooserApp.documents, metadata: OpsChooserApp.metadata});
-
-});
-
-$('input#query-button').click(function() {
-    var querystring = $('textarea#query').val();
-    //send to server and process response
-    //alert(querystring);
-    if (!_.isEmpty(querystring)) {
-        OpsChooserApp.search.perform(OpsChooserApp.documents, OpsChooserApp.metadata, querystring);
-    }
 });
