@@ -2,11 +2,17 @@
 elmyra.ip.access.epo TODO
 =========================
 
+- Open Patent Services RESTful Web Services Reference Guide
+  http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 
 Prio 0
 ======
-- [o] Anzeige der Trefferanzahl
+- [x] Anzeige der Trefferanzahl
 - [o] Anzeige first-drawing
+    - load pictures
+        - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
+        - lazy-load and display first drawing below patent number
+        - display inline images inside abstract text, e.g. WO2013153465A1, US2013270608A1,
 - [o] Carousel für all-drawings
 - [o] Link zum PDF
 
@@ -64,10 +70,6 @@ Prio 1.5
 
 Prio 2
 ======
-- load pictures
-    - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
-    - lazy-load and display first drawing below patent number
-    - display inline images inside abstract text, e.g. WO2013153465A1, US2013270608A1,
 - convert pub.-date format to german locale using fine javascript library X
 - display other general data from ops response (record count, range, etc.)
 - display country flags:
