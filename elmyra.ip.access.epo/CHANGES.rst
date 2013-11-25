@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.0.9
+=====
 - show result count in pagination area
 - application structure refactoring and streamlining
 - prepare inline display of first drawing
