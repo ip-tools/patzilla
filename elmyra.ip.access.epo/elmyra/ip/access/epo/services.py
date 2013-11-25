@@ -2,10 +2,13 @@
 # (c) 2013 Andreas Motl, Elmyra UG
 import logging
 import requests
+from pprint import pprint
 from pyramid.threadlocal import get_current_request
 from cornice import Service
 from cornice.util import json_error
+from simplejson.scanner import JSONDecodeError
 from elmyra.ip.access.epo.util import object_attributes_to_dict
+from elmyra.ip.access.epo.imageutil import tiff_to_png
 
 log = logging.getLogger(__name__)
 
@@ -18,6 +21,10 @@ ops_published_data_search_service = Service(
     path='/api/ops/published-data/search',
     description="OPS search interface")
 
+ops_firstdrawing_service = Service(
+    name='ops-firstdrawing',
+    path='/api/ops/{patent}/image/firstdrawing',
+    description="OPS firstdrawing interface")
 
 
 # ------------------------------------------
@@ -63,3 +70,60 @@ def ops_published_data_search(constituents, query, range):
         response.status = 500
         print "response:", response
         raise response
+
+
+@ops_firstdrawing_service.get(renderer='png')
+def ops_firstdrawing_handler(request):
+
+    service_url = 'http://ops.epo.org/3.1/rest-services/'
+
+
+    # 1. inquire images
+    url_image_inquriy_tpl = 'http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
+    patent = request.matchdict['patent']
+    url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
+    response = requests.get(url_image_inquriy, headers={'Accept': 'application/json'})
+    #print response
+    #print dir(response)
+    #print response.content
+    print patent, url_image_inquriy, response
+    if response.status_code != 200:
+        print response
+        print response.content
+        return
+
+    try:
+        data = response.json()
+    except JSONDecodeError:
+        return
+    result = data['ops:world-patent-data']['ops:document-inquiry']['ops:inquiry-result']
+    #pprint(result)
+
+    drawing_node = None
+    for node in result['ops:document-instance']:
+        if node['@desc'] == u'Drawing':
+            drawing_node = node
+            break
+
+    if drawing_node:
+        link = drawing_node['@link']
+        url = service_url + link + '.tiff?Range=1'
+    else:
+        return
+
+
+    # 2. request first drawing, convert from tiff to png
+    # works:
+    # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
+    # http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
+    #print "image url:", url
+    response = requests.get(url)
+    if response.status_code != 200:
+        print response
+        print response.headers
+        print response.content
+        return
+
+    tiff = response.content
+    png = tiff_to_png(tiff)
+    return png

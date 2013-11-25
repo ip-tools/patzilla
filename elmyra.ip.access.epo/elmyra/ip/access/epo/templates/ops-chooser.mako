@@ -150,6 +150,7 @@ var ship_frame = '${ship_frame}';
         var patent_number = data['@country'] + data['@doc-number'] + data['@kind'];
         var applicant_list = data.get_applicants();
         var inventor_list = data.get_inventors();
+        var firstpage_url = data.get_firstpage_url();
 
         var publication_date = search_date(data['bibliographic-data']['publication-reference']['document-id']);
         var application_date = search_date(data['bibliographic-data']['application-reference']['document-id']);
@@ -192,7 +193,13 @@ var ship_frame = '${ship_frame}';
         % endif
 
         <%text>
-        <td><strong><%= patent_number %></strong></td>
+        <td>
+            <strong><%= patent_number %></strong>
+            <!--
+            <br/>
+            <img src="<%= firstpage_url %>"/>
+            -->
+        </td>
 
         <td>
             <table class="table table-condensed table-clear-border-vertical">

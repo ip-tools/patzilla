@@ -6,12 +6,11 @@ development
 ===========
 - show result count in pagination area
 - application structure refactoring and streamlining
-
+- prepare inline display of first drawing
 
 0.0.8
 =====
 - ship-mode=single-bibdata: rename "submit" form button name to "ship_action"
-
 
 0.0.7
 =====
@@ -27,7 +26,6 @@ feature:
 tech:
 - route refactoring
 - ui refactoring: more responsive through "twitter bootstrap responsive css"
-
 
 0.0.6
 =====

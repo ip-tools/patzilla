@@ -13,14 +13,15 @@ requires = [
     #   backend
     # ----------------------------------------------
     # pyramid core
-    'pyramid==1.5a2',
+    #'pyramid==1.5a2',
+    'pyramid==1.4.2',
     'pyramid_debugtoolbar',
     'pyramid_mako',
     'Akhet==2.0',
     'waitress',
 
     # web services
-    'cornice==0.14',
+    'cornice==0.15',
 
     # ----------------------------------------------
     #   business logic

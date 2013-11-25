@@ -1,3 +1,4 @@
+from elmyra.ip.access.epo.util import PngRenderer
 from pyramid.config import Configurator
 
 def main(global_config, **settings):
@@ -14,6 +15,8 @@ def main(global_config, **settings):
     config.include(".subscribers")
     config.include(".views")
     #config.include("akhet.static")
+
+    config.add_renderer('png', PngRenderer)
 
     # Views and routes
     #config.add_static_view('static', 'static', cache_max_age=3600)

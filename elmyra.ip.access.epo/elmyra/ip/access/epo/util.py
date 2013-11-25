@@ -33,3 +33,16 @@ def dict_subset(bigdict, *wanted_keys):
 
 def object_attributes_to_dict(obj, attribute_names):
     return dict([(attr, safe_value(getattr(obj, attr))) for attr in attribute_names if hasattr(obj, attr)])
+
+
+class PngRenderer(object):
+
+    def __init__(self, info):
+        pass
+
+    def __call__(self, value, system):
+        request = system.get('request')
+        if request is not None:
+            response = request.response
+            response.content_type = 'image/png'
+        return value
