@@ -5,6 +5,8 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - add ops oauth client
+- inline display first drawing
+
 
 0.0.9
 =====

@@ -195,10 +195,8 @@ var ship_frame = '${ship_frame}';
         <%text>
         <td>
             <strong><%= patent_number %></strong>
-            <!--
             <br/>
             <img src="<%= firstpage_url %>"/>
-            -->
         </td>
 
         <td>
