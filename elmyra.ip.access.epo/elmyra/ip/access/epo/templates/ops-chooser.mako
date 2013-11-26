@@ -11,7 +11,7 @@
 <%
 query = request.params.get('query', '')
 page_title = request.params.get('page-title', 'Patentrecherche')
-page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.9')
+page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.10')
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
 ship_url = request.params.get('ship-url', request.params.get('ship_url', '#'))
