@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- add ops oauth client
 
 0.0.9
 =====
