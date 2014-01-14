@@ -13,9 +13,9 @@ Prio 0
         - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
         - lazy-load and display first drawing below patent number
         - display inline images inside abstract text, e.g. WO2013153465A1, US2013270608A1,
-- [o] Carousel für all-drawings
+- [o] Fullscreen carousel für all-drawings
 - [o] Link zum PDF
-
+- [o] History/Warenkorb mit quadrupel (bookmark-date, number, title, stars)
 
 Prio 1
 ======
@@ -32,6 +32,10 @@ Prio 1
 - [o] "Help" screen
 - [o] browser history / pushstate
       http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
+- [o] Lokalisierung english-only
+- [o] Sharing: Patent with Picture (and Comment)
+- [o] Aktive Merkliste => Klicken eines Detaildokuments führt zu Query-By-Document
+
 
 Prio 1.5
 ========
@@ -66,7 +70,7 @@ Prio 1.5
 - [o] react on "no records" and display it somehow
 - [o] searching with spaces, e.g. "inventor=moritz hilger"
 - [o] display and use some metadata information from ops response envelope
-
+- [o] Marken: curl --silent -XPOST --data 'start=0&rows=15&criterion_1=ApplicantName&term_1=Grohe+AG&operator_1=AND&condition_1=CONTAINS&sortField=ApplicationNumber&sortOrder=asc' https://oami.europa.eu/copla/ctmsearch/json | python -mjson.tool
 
 Prio 2
 ======
