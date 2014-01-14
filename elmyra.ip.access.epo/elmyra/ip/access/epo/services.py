@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2013 Andreas Motl, Elmyra UG
+from elmyra.ip.access.epo.patentutil import split_patent_number
 import requests
 import logging
 from pyramid.threadlocal import get_current_request
@@ -31,6 +32,11 @@ ops_firstdrawing_service = Service(
     name='ops-firstdrawing',
     path='/api/ops/{patent}/image/firstdrawing',
     description="OPS firstdrawing interface")
+
+ops_family_publication_service = Service(
+    name='ops-family-publication',
+    path='/api/ops/{patent}/family/publication',
+    description="OPS family publication interface")
 
 
 # ------------------------------------------
@@ -142,3 +148,29 @@ def ops_firstdrawing_handler(request):
     tiff = response.content
     png = tiff_to_png(tiff)
     return png
+
+
+
+@ops_family_publication_service.get(renderer='xml')
+def ops_family_publication_handler(request):
+    """
+    Download requested family publication information from OPS
+    e.g. http://ops.epo.org/3.1/rest-services/family/publication/docdb/EP.1491501.A1/biblio,legal
+    """
+
+    url_tpl = 'https://ops.epo.org/3.1/rest-services/family/publication/docdb/{patent}/{constituents}'
+
+    # split patent number
+    patent = split_patent_number(request.matchdict.get('patent'))
+    patent_dotted = '.'.join([patent['country'], patent['number'], patent['kind']])
+
+    # constituents: biblio, legal, xxx?
+    constituents = request.params.get('constituents', 'biblio')
+
+    url = url_tpl.format(patent=patent_dotted, constituents=constituents)
+    client = get_ops_client()
+    #response = client.get(url, headers={'Accept': 'application/json'})
+    response = client.get(url, headers={'Accept': 'text/xml'})
+    #print "response:", response.content
+
+    return response.content

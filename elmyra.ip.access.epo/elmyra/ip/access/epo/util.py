@@ -40,9 +40,34 @@ class PngRenderer(object):
     def __init__(self, info):
         pass
 
-    def __call__(self, value, system):
-        request = system.get('request')
+    def __call__(self, data, context):
+        request = context.get('request')
         if request is not None:
             response = request.response
             response.content_type = 'image/png'
-        return value
+        return data
+
+
+class XmlRendererTest(object):
+    def __call__(self, data, context):
+        acceptable = ('application/json', 'text/json', 'text/plain')
+        response = context['request'].response
+        content_type = (context['request'].accept.best_match(acceptable)
+                        or acceptable[0])
+        response.content_type = content_type
+        print "data:", data
+        return 'hello'
+        #return json.dumps(data, use_decimal=True)
+
+
+class XmlRenderer(object):
+
+    def __init__(self, info):
+        pass
+
+    def __call__(self, data, context):
+        request = context.get('request')
+        if request is not None:
+            response = request.response
+            response.content_type = 'text/xml'
+        return data

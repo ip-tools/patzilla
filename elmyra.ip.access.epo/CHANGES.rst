@@ -6,6 +6,10 @@ development
 ===========
 
 
+0.0.11
+======
+- add endpoint for retrieving family publications in xml
+
 0.0.10
 ======
 - add ops oauth client

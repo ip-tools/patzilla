@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# (c) 2011 Andreas Motl
-# (c) 2013 Andreas Motl, Elmyra UG
+# (c) 2011 ***REMOVED***
+# (c) 2013 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
 import os, sys
 import StringIO
