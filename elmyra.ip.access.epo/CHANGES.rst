@@ -6,9 +6,14 @@ development
 ===========
 
 
+0.0.12
+======
+- api endpoint for retrieving fullimage documents as pdf
+- ui: modal pdf viewer with paging
+
 0.0.11
 ======
-- add endpoint for retrieving family publications in xml
+- api endpoint for retrieving family publications in xml
 
 0.0.10
 ======
