@@ -155,16 +155,21 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_firstpage_url: function() {
-            // works:
             // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
             // http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
-            //var url_tpl = _.template('http://ops.epo.org/3.1/rest-services/published-data/images/<%= country %>/<%= docnumber %>/<%= kind %>/firstpage.png?Range=1');
             var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %>.<%= kind %>/image/firstdrawing');
             var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
             return url;
         },
 
-},
+        get_fullimage_url: function() {
+            // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/A1/fullimage.pdf?Range=1
+            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %>.<%= kind %>/image/full');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
+    },
 
     select: function() {
         this.set('selected', true);
@@ -235,6 +240,7 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
 
         // use jquery.shorten on "abstract" text
         $(".abstract").shorten({showChars: 200, moreText: 'mehr', lessText: 'weniger'});
+
     },
 
 });
@@ -249,6 +255,7 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     appendHtml: function(collectionView, itemView) {
         collectionView.$("tbody#ops-collection-tbody").append(itemView.el);
     },
+
 });
 
 PaginationView = Backbone.Marionette.ItemView.extend({
@@ -256,13 +263,17 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     id: "paginationview",
     template: "#ops-pagination-template",
 
-    initialize: function(){
+    initialize: function() {
         console.log('PaginationView.initialize');
         this.listenTo(this.model, "change", this.render);
     },
 
-    onDomRefresh: function () {
+    onDomRefresh: function() {
         console.log('PaginationView.onDomRefresh');
+
+        // HACK: by now, run action bindings here after rendering data entries
+        listview_bind_actions();
+
         $('div.pagination a').click(function() {
             var action = $(this).attr('action');
             var range = $(this).attr('range');
@@ -273,6 +284,59 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
 });
 
+function pdf_display(element_id, url, page) {
+    // embed pdf object
+    var pdf_object = new PDFObject({
+        url: url + '?page=' + page,
+        id: 'myPDF',
+        pdfOpenParams: {
+            navpanes: 0,
+            toolbar: 0,
+            statusbar: 0,
+            view: 'FitB',
+            //zoom: '100',
+        },
+    });
+    pdf_object.embed(element_id);
+}
+
+function pdf_set_headline(document_number, page) {
+    var headline = document_number + ' Page ' + page;
+    $(".modal-header #ops-pdf-modal-label").empty().append(headline);
+}
+
+function listview_bind_actions() {
+
+    // pdf action button
+    $(".pdf-open").click(function() {
+
+        console.log('click');
+
+        var patent_number = $(this).data('patent-number');
+        var pdf_url = $(this).data('pdf-url');
+        var pdf_page = 1;
+
+        pdf_set_headline(patent_number, pdf_page);
+        pdf_display('pdf', pdf_url, pdf_page);
+
+        // pdf paging actions
+        $("#pdf-previous").unbind();
+        $("#pdf-previous").click(function() {
+            if (pdf_page == 1) return;
+            pdf_page -= 1;
+            pdf_set_headline(patent_number, pdf_page);
+            pdf_display('pdf', pdf_url, pdf_page);
+        });
+        $("#pdf-next").unbind();
+        $("#pdf-next").click(function() {
+            pdf_page += 1;
+            pdf_set_headline(patent_number, pdf_page);
+            pdf_display('pdf', pdf_url, pdf_page);
+        });
+
+    });
+
+}
 
 
 /**

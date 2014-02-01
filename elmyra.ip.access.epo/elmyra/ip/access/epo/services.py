@@ -75,7 +75,7 @@ def ops_fullimage_handler(request):
     # TODO: respond with proper 4xx codes if something fails
 
     patent = request.matchdict['patent']
-    page = request.matchdict.get('page', 1)
+    page = request.params.get('page', 1)
     pdf = get_ops_image(patent, page, 'FullDocument', 'pdf')
     return pdf
 

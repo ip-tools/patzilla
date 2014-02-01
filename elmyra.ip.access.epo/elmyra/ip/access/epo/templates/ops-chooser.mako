@@ -11,7 +11,7 @@
 <%
 query = request.params.get('query', '')
 page_title = request.params.get('page-title', 'Patentrecherche')
-page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.10')
+page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.11')
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
 ship_url = request.params.get('ship-url', request.params.get('ship_url', '#'))
@@ -74,6 +74,24 @@ var ship_frame = '${ship_frame}';
 </div>
 
 
+<div id="ops-pdf-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ops-pdf-modal-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="ops-pdf-modal-label"></h3>
+    </div>
+    <div class="modal-body" id="pdf">
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group pull-left">
+            <button class="btn btn-primary" id="pdf-previous">Previous</button>
+            <button class="btn btn-primary" id="pdf-next">Next</button>
+        </div>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+
+
+
 ## pager template
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
@@ -122,7 +140,7 @@ var ship_frame = '${ship_frame}';
 
 
 ## result item template
-<script type="text/x-underscore-template" id="ops-entry-template">
+<script id="ops-entry-template" type="text/x-underscore-template">
 
         <%text>
         <%
@@ -151,6 +169,7 @@ var ship_frame = '${ship_frame}';
         var applicant_list = data.get_applicants();
         var inventor_list = data.get_inventors();
         var firstpage_url = data.get_firstpage_url();
+        var fullimage_url = data.get_fullimage_url();
 
         var publication_date = search_date(data['bibliographic-data']['publication-reference']['document-id']);
         var application_date = search_date(data['bibliographic-data']['application-reference']['document-id']);
@@ -195,6 +214,7 @@ var ship_frame = '${ship_frame}';
         <%text>
         <td>
             <strong><%= patent_number %></strong>
+            <a href="#ops-pdf-modal" data-toggle="modal" data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>" role="button" class="btn btn-small pdf-open">PDF</a>
             <br/>
             <img src="<%= firstpage_url %>"/>
         </td>
@@ -264,7 +284,9 @@ var ship_frame = '${ship_frame}';
 
 </script>
 
+
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
+<script type="text/javascript" src="/static/js/pdfobject.min.js"></script>
 <script type="text/javascript" src="/static/js/ops-chooser.js"></script>
 
 </%block>
