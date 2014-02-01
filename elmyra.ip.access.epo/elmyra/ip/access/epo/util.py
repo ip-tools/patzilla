@@ -35,19 +35,6 @@ def object_attributes_to_dict(obj, attribute_names):
     return dict([(attr, safe_value(getattr(obj, attr))) for attr in attribute_names if hasattr(obj, attr)])
 
 
-class PngRenderer(object):
-
-    def __init__(self, info):
-        pass
-
-    def __call__(self, data, context):
-        request = context.get('request')
-        if request is not None:
-            response = request.response
-            response.content_type = 'image/png'
-        return data
-
-
 class XmlRendererTest(object):
     def __call__(self, data, context):
         acceptable = ('application/json', 'text/json', 'text/plain')
@@ -70,4 +57,30 @@ class XmlRenderer(object):
         if request is not None:
             response = request.response
             response.content_type = 'text/xml'
+        return data
+
+
+class PngRenderer(object):
+
+    def __init__(self, info):
+        pass
+
+    def __call__(self, data, context):
+        request = context.get('request')
+        if request is not None:
+            response = request.response
+            response.content_type = 'image/png'
+        return data
+
+
+class PdfRenderer(object):
+
+    def __init__(self, info):
+        pass
+
+    def __call__(self, data, context):
+        request = context.get('request')
+        if request is not None:
+            response = request.response
+            response.content_type = 'application/pdf'
         return data
