@@ -84,6 +84,9 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var total_result_count = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['@total-result-count'];
                 metadata.set({result_count: total_result_count});
 
+                // HACK: by now, run action bindings here after rendering data entries
+                listview_bind_actions();
+
             },
         });
 
@@ -270,10 +273,6 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
     onDomRefresh: function() {
         console.log('PaginationView.onDomRefresh');
-
-        // HACK: by now, run action bindings here after rendering data entries
-        listview_bind_actions();
-
         $('div.pagination a').click(function() {
             var action = $(this).attr('action');
             var range = $(this).attr('range');
@@ -309,8 +308,6 @@ function listview_bind_actions() {
 
     // pdf action button
     $(".pdf-open").click(function() {
-
-        console.log('click');
 
         var patent_number = $(this).data('patent-number');
         var pdf_url = $(this).data('pdf-url');
