@@ -168,7 +168,7 @@ var ship_frame = '${ship_frame}';
         var patent_number = data['@country'] + data['@doc-number'] + data['@kind'];
         var applicant_list = data.get_applicants();
         var inventor_list = data.get_inventors();
-        var firstpage_url = data.get_firstpage_url();
+        var drawing_url = data.get_drawing_url();
         var fullimage_url = data.get_fullimage_url();
 
         var publication_date = search_date(data['bibliographic-data']['publication-reference']['document-id']);
@@ -216,7 +216,7 @@ var ship_frame = '${ship_frame}';
             <strong><%= patent_number %></strong>
             <a href="#ops-pdf-modal" data-toggle="modal" data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>" role="button" class="btn btn-small pdf-open">PDF</a>
             <br/>
-            <img src="<%= firstpage_url %>"/>
+            <img src="<%= drawing_url %>"/>
         </td>
 
         <td>

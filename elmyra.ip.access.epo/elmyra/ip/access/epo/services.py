@@ -21,10 +21,10 @@ ops_family_publication_service = Service(
     path='/api/ops/{patent}/family/publication',
     description="OPS family publication interface")
 
-ops_firstdrawing_service = Service(
-    name='ops-firstdrawing',
-    path='/api/ops/{patent}/image/firstdrawing',
-    description="OPS firstdrawing interface")
+ops_drawing_service = Service(
+    name='ops-drawing',
+    path='/api/ops/{patent}/image/drawing',
+    description="OPS drawing interface")
 
 ops_fullimage_service = Service(
     name='ops-fullimage',
@@ -52,16 +52,17 @@ def ops_published_data_search_handler(request):
     return ops_published_data_search(constituents, query, range)
 
 
-@ops_firstdrawing_service.get(renderer='png')
-def ops_firstdrawing_handler(request):
-    """request first drawing, convert from tiff to png"""
+@ops_drawing_service.get(renderer='png')
+def ops_drawing_handler(request):
+    """request drawing, convert from tiff to png"""
     # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
     # http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
 
     # TODO: respond with proper 4xx codes if something fails
 
     patent = request.matchdict['patent']
-    tiff = get_ops_image(patent, 1, 'Drawing', 'tiff')
+    page = request.params.get('page', 1)
+    tiff = get_ops_image(patent, page, 'Drawing', 'tiff')
     if tiff:
         png = tiff_to_png(tiff)
         return png

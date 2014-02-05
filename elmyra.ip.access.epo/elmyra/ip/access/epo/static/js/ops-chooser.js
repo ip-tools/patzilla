@@ -157,10 +157,10 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         },
 
-        get_firstpage_url: function() {
+        get_drawing_url: function() {
             // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
             // http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
-            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %>.<%= kind %>/image/firstdrawing');
+            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %>.<%= kind %>/image/drawing');
             var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
             return url;
         },
