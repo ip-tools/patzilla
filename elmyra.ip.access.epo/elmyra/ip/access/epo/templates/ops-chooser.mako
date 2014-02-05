@@ -74,6 +74,7 @@ var ship_frame = '${ship_frame}';
 </div>
 
 
+<!-- model dialog for viewing pdf -->
 <div id="ops-pdf-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ops-pdf-modal-label" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -214,7 +215,8 @@ var ship_frame = '${ship_frame}';
         <%text>
         <td>
             <strong><%= patent_number %></strong>
-            <a href="#ops-pdf-modal" data-toggle="modal" data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>" role="button" class="btn btn-small pdf-open">PDF</a>
+            <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn btn-small pdf-open"
+                data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>">PDF</a>
             <br/>
             <img src="<%= drawing_url %>"/>
         </td>
