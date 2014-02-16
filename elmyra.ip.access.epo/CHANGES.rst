@@ -7,7 +7,7 @@ development
 
 0.1.1
 =====
-- fix MANIFEST
+- pdf.svg problems: fix MANIFEST, fix setup.py
 
 0.1.0
 =====
