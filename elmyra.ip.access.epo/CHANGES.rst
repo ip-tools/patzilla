@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.1.1
+=====
+- fix MANIFEST
+
 0.1.0
 =====
 - api: introduce new image kind "FullDocumentDrawing" which will return
