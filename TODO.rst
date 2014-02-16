@@ -5,20 +5,46 @@ elmyra.ip.access.epo TODO
 - Open Patent Services RESTful Web Services Reference Guide
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 
-Prio 0
-======
+Prio 1.1
+========
+- Big Layout changes
+    - [/] Abstände und Einzüge homogener machen
+        - z.B. Bei zwei Erfindern zum Abstract
+    - [x] Datumsformatierung: erstmal ISO 2013-10-01, später locale-abhängig
+    - [x] INID-Codes für Datumsangaben und IPC
+    - [x] IPCs in den rechten Block, kommagetrennt; CPC auch; beides über den Abstract Block
+    - [x] Icons
+        - https://upload.wikimedia.org/wikipedia/commons/2/24/Adobe_PDF_Icon.svg
+    - [x] Besserer "Add" Button
+    - [x] Popovers für action buttons
+
+    - [o] Alles englisch
+    - [o] Karussel für die Bilder
+    - [o] "Choose all"
+    - [o] Tooltips für INID Einträge in bibl. Daten
+    - [o] Idee: Embedding Feature mit iframe
+        - http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
+    - [o] jquery.shorten für Erfinder
+    - [o] INID-Code variiert je nach Kind
+    - [o] Patentnummer fetter, dicker Balken
+
+
+
+Prio 1.2
+========
 - [x] Anzeige der Trefferanzahl
-- [o] Anzeige first-drawing
+- [x] Anzeige first-drawing
     - load pictures
         - http://viralpatel.net/blogs/lazy-load-image-wordpress-avatar-jquery/
         - lazy-load and display first drawing below patent number
         - display inline images inside abstract text, e.g. WO2013153465A1, US2013270608A1,
-- [o] Fullscreen carousel für all-drawings
-- [o] Link zum PDF
+- [x] PDF Anzeige
+- [o] Link zur PDF Vollschrift
+- [o] "Detailansicht": Fullscreen carousel für all-drawings mit Abstract und Claims
 - [o] History/Warenkorb mit quadrupel (bookmark-date, number, title, stars)
 
-Prio 1
-======
+Prio 1.3
+========
 - [o] parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
       => CPC Fallback
 - [o] new usage ship-mode=single-bibdata
@@ -68,7 +94,7 @@ Prio 1.5
 - [o] Add text, fields and examples from "Open Patent Services RESTful Web Services Reference Guide » 4.2. CQL index catalogue"
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 - [o] react on "no records" and display it somehow
-- [o] searching with spaces, e.g. "inventor=moritz hilger"
+- [o] searching with spaces, e.g. "inventor=moritz hilger" or "applicant=RATIONAL INTELLECTUAL HOLDINGS LTD" throws 500 errors
 - [o] display and use some metadata information from ops response envelope
 - [o] Marken: curl --silent -XPOST --data 'start=0&rows=15&criterion_1=ApplicantName&term_1=Grohe+AG&operator_1=AND&condition_1=CONTAINS&sortField=ApplicationNumber&sortOrder=asc' https://oami.europa.eu/copla/ctmsearch/json | python -mjson.tool
 
@@ -125,6 +151,9 @@ Prio 4
         US2013275937A1, US2013275704A1, US2013275667A1, WO2013153472A1, WO2013153755A1,
         US2013270561A1, US2013265085A1, US2013264653A1, US2013264641A1, US2013268694A1,
 
+Bugs
+====
+- [o] Trefferanzahl geht irgendwann weg
 
 Done
 ====
