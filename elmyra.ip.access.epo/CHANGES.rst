@@ -5,6 +5,20 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.1.0
+=====
+- api: introduce new image kind "FullDocumentDrawing" which will return
+  an url to a high resolution image ("FullDocument") of the first drawing page
+- ui: major overhaul, move on from table-based to container-based listview
+- ui: more appealing add-/remove-basket operation
+- ui: format dates in ISO format
+- ui: uppercase countrycodes
+- ui: popovers for action buttons
+- ui: add pdf icon
+- ui: show parties (applicants, inventors) "original" value only, hide "epodoc" value
+- ui: add page footer and product name
+- ui: add tooltips and popovers
+- ui: use english
 
 0.0.12
 ======
