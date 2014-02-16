@@ -48,7 +48,7 @@ def ops_published_data_search(constituents, query, range):
         request.errors.add('ops-published-data-search', 'http-response', response_dict)
         response = json_error(request.errors)
         response.status = 500
-        print "response:", response
+        #print "response:", response
         raise response
 
 
@@ -102,12 +102,23 @@ def get_ops_image_link_url(link, format, page=1):
 
 def get_ops_image(document, page, kind, format):
 
+    kind_requested = kind
+    if kind_requested == 'FullDocumentDrawing':
+        kind = 'FullDocument'
+
     # 1. inquire images to compute url to image resource
     image_info = inquire_images(document)
     if image_info:
+        #print image_info
         drawing_node = image_info.get(kind)
         if drawing_node:
             link = drawing_node['@link']
+            if kind_requested == 'FullDocumentDrawing':
+                sections = drawing_node['ops:document-section']
+                for section in sections:
+                    if section['@name'] == 'DRAWINGS':
+                        start_page = int(section['@start-page'])
+                        page = start_page + page - 1
             url = get_ops_image_link_url(link, format, page)
         else:
             print "WARN: No full image for document '{0}'".format(document)

@@ -62,7 +62,8 @@ def ops_drawing_handler(request):
 
     patent = request.matchdict['patent']
     page = request.params.get('page', 1)
-    tiff = get_ops_image(patent, page, 'Drawing', 'tiff')
+    tiff = get_ops_image(patent, page, 'FullDocumentDrawing', 'tiff')
+
     if tiff:
         png = tiff_to_png(tiff)
         return png
