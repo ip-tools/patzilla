@@ -84,7 +84,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var total_result_count = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['@total-result-count'];
                 metadata.set({result_count: total_result_count});
 
-                // HACK: by now, run action bindings here after rendering data entries
+                // run action bindings here after rendering data entries
                 listview_bind_actions();
 
             },
@@ -204,8 +204,8 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     //template: "#ops-entry-template",
     template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
-    tagName: 'tr',
-    className: 'entry',
+    tagName: 'div',
+    className: 'row-fluid',
 
     events: {
         'click .rank_up img': 'rankUp',
@@ -215,48 +215,24 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
 
     // actions to run after populating the view
     // e.g. to bind click handlers on individual records
-    onDomRefresh: function () {
+    onDomRefresh: function() {
 
-        // backpropagate current basket entries into checkbox state
-        //console.log(this.model);
-        var payload = $('#basket').val();
-        if (payload) {
-            var patent_number = this.model.attributes.get_patent_number();
-            if (contains(payload, patent_number)) {
-                var checkbox_id = 'chk-patent-number-' + patent_number;
-                $('#' + checkbox_id).prop('checked', true);
-            }
-        }
-
-        // handle checkbox clicks by add-/remove-operations on basket
-        $(".chk-patent-number").click(function() {
-            var payload = $('#basket').val();
-            var patent_number = this.value;
-            //console.log(patent_number);
-            // FIXME: why does underscore.string's "include" not work?
-            if (this.checked && !contains(payload, patent_number))
-                payload += patent_number + '\n';
-            if (!this.checked && contains(payload, patent_number))
-                payload = payload.replace(patent_number + '\n', '');
-            $('#basket').val(payload);
-        });
-
-        // use jquery.shorten on "abstract" text
-        $(".abstract").shorten({showChars: 200, moreText: 'mehr', lessText: 'weniger'});
+        var patent_number = this.model.attributes.get_patent_number();
+        basket_update_ui_entry(patent_number);
 
     },
 
 });
 
 OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
-    tagName: "table",
+    tagName: "div",
     id: "opsexchangedocumentcollection",
-    className: "table table-bordered table-condensed table-hover",
+    className: "container",
     template: "#ops-collection-template",
     itemView: OpsExchangeDocumentView,
 
     appendHtml: function(collectionView, itemView) {
-        collectionView.$("tbody#ops-collection-tbody").append(itemView.el);
+        $(collectionView.el).append(itemView.el);
     },
 
 });
@@ -283,6 +259,47 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
 });
 
+
+/*
+------------------------------------------
+    utility functions
+------------------------------------------
+ */
+
+function basket_add(entry) {
+    var payload = $('#basket').val();
+    if (!contains(payload, entry))
+        payload += entry + '\n';
+    $('#basket').val(payload);
+    basket_update_ui_entry(entry);
+}
+
+function basket_remove(entry) {
+    var payload = $('#basket').val();
+    if (contains(payload, entry))
+        payload = payload.replace(entry + '\n', '');
+    $('#basket').val(payload);
+    basket_update_ui_entry(entry);
+}
+
+function basket_update_ui_entry(entry) {
+    // backpropagate current basket entries into checkbox state
+    //console.log(this.model);
+    var payload = $('#basket').val();
+    var checkbox_element = $('#' + 'chk-patent-number-' + entry);
+    var add_button_element = $('#' + 'add-patent-number-' + entry);
+    var remove_button_element = $('#' + 'remove-patent-number-' + entry);
+    if (contains(payload, entry)) {
+        checkbox_element && checkbox_element.prop('checked', true);
+        add_button_element && add_button_element.hide();
+        remove_button_element && remove_button_element.show();
+    } else {
+        checkbox_element && checkbox_element.prop('checked', false);
+        add_button_element && add_button_element.show();
+        remove_button_element && remove_button_element.hide();
+    }
+}
+
 function pdf_display(element_id, url, page) {
     // embed pdf object
     var pdf_object = new PDFObject({
@@ -305,6 +322,33 @@ function pdf_set_headline(document_number, page) {
 }
 
 function listview_bind_actions() {
+
+    // handle checkbox clicks by add-/remove-operations on basket
+    $(".chk-patent-number").click(function() {
+        var patent_number = this.value;
+        if (this.checked)
+            basket_add(patent_number);
+        if (!this.checked)
+            basket_remove(patent_number);
+    });
+
+    // handle button clicks by add-/remove-operations on basket
+    $(".add-patent-number").click(function() {
+        var patent_number = $(this).data('patent-number');
+        basket_add(patent_number);
+    });
+    $(".remove-patent-number").click(function() {
+        var patent_number = $(this).data('patent-number');
+        basket_remove(patent_number);
+    });
+
+    // use jquery.shorten on "abstract" text
+    $(".abstract").shorten({showChars: 2000, moreText: 'mehr', lessText: 'weniger'});
+
+    // popovers
+    $('.add-patent-number').popover();
+    $('.remove-patent-number').popover();
+    $('.pdf-open').popover();
 
     // pdf action button
     $(".pdf-open").click(function() {

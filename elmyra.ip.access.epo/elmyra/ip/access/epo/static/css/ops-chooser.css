@@ -11,7 +11,15 @@
     margin: 0px;
 }
 
+.clear-margin {
+    margin: 0px;
+}
+
+
+/* modal boxes */
+
 /* http://www.revillwebdesign.com/change-the-height-width-and-position-of-a-modal-in-twitter-bootstrap/ */
+
 #ops-pdf-modal .modal-body {
     max-height: 600px;
     height: 600px;
@@ -19,4 +27,44 @@
 #ops-pdf-modal {
     width: 900px; /* SET THE WIDTH OF THE MODAL */
     margin: -50px 0 0 -450px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
+}
+
+
+/* result entry */
+
+.ops-collection-entry {
+    position: relative;
+    margin: 15px 0;
+    padding: 0px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.ops-collection-entry-heading {
+    padding: 9px 15px;
+    border-bottom: 0;
+}
+
+.ops-collection-entry-inner {
+    display: block;
+    padding: 9px 15px;
+    border-top: 1px solid #e5e5e5;
+}
+
+
+.dl-horizontal-biblio {
+    margin-bottom: 0px;
+}
+.dl-horizontal-biblio dt {
+    width: 30px;
+}
+.dl-horizontal-biblio dd {
+    margin-left: 40px;
+}
+
+.header-compact {
+    line-height: 20px;
 }

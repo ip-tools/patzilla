@@ -122,21 +122,8 @@ var ship_frame = '${ship_frame}';
 
 
 ## result list template
-<script type="text/x-underscore-template" id="ops-collection-template">
-    <thead>
-        <tr>
-        % if ship_mode == 'multi-numberlist':
-        <th class="span1"><input type="checkbox" id="all-check" title="Alle auswählen"/></th>
-        % endif
-        <th class="span2">Patentnummer</th>
-        <th class="span9">Bibliographische Daten</th>
-        % if ship_mode == 'single-bibdata':
-        <th class="span1"></th>
-        % endif
-        </tr>
-    </thead>
-    <tbody id="ops-collection-tbody">
-    </tbody>
+<script id="ops-collection-template" type="text/x-underscore-template">
+    <div id="ops-collection-entry" class="row"/>
 </script>
 
 
@@ -163,6 +150,11 @@ var ship_frame = '${ship_frame}';
             return value;
         }
 
+        function format_date(value) {
+            var ready = value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 8);
+            return ready;
+        }
+
 
         // 2.2 prepare some template variables
 
@@ -172,13 +164,13 @@ var ship_frame = '${ship_frame}';
         var drawing_url = data.get_drawing_url();
         var fullimage_url = data.get_fullimage_url();
 
-        var publication_date = search_date(data['bibliographic-data']['publication-reference']['document-id']);
-        var application_date = search_date(data['bibliographic-data']['application-reference']['document-id']);
+        var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
+        var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
 
         // title
         var title_node = to_list(data['bibliographic-data']['invention-title']);
         var title_list = _.map(title_node, function(title) {
-            var lang_prefix = title['@lang'] && '[' + title['@lang'] + '] ' || '';
+            var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '';
             return lang_prefix + title['$'];
         });
 
@@ -198,7 +190,7 @@ var ship_frame = '${ship_frame}';
             var abstract_list = abstract_node.map(function(node) {
                 var text_nodelist = to_list(node['p']);
                 var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
-                var lang_prefix = node['@lang'] && '[' + node['@lang'] + '] ' || '';
+                var lang_prefix = node['@lang'] && '[' + node['@lang'].toUpperCase() + '] ' || '';
                 return lang_prefix + text;
             });
         }
@@ -206,64 +198,135 @@ var ship_frame = '${ship_frame}';
         %>
         </%text>
 
-        % if ship_mode == 'multi-numberlist':
-        <%text>
-        <td><input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number" value="<%= patent_number %>"/></td>
-        </%text>
-        % endif
 
         <%text>
-        <td>
-            <strong><%= patent_number %></strong>
-            <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn btn-small pdf-open"
-                data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>">PDF</a>
-            <br/>
-            <img src="<%= drawing_url %>"/>
-        </td>
+        <div class="container-fluid ops-collection-entry">
 
-        <td>
-            <table class="table table-condensed table-clear-border-vertical">
-                <tbody>
-                    <tr>
-                        <td class="span2"><i class="icon-file-text-alt"></i>&nbsp; Titel</td>
-                        <td><strong><%= title_list.join('<br/>') %></strong></td>
-                    </tr>
-                    <tr>
-                        <td><i class="icon-group"></i> Anmelder</td>
-                        <td>
-                            <ul>
-                            <%= applicant_list.map(function(item) { return '<li>' + item + '</li>'; }).join('') %>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><i class="icon-group"></i> Erfinder</td>
-                        <td>
-                            <ul>
-                            <%= inventor_list.map(function(item) { return '<li>' + item + '</li>'; }).join('') %>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><i class="icon-calendar"></i>&nbsp; Anm.-Datum</td>
-                        <td><%= application_date %></td>
-                    </tr>
-                    <tr>
-                        <td><i class="icon-calendar"></i>&nbsp; Pub.-Datum</td>
-                        <td><%= publication_date %></td>
-                    </tr>
-                    <tr>
-                        <td><i class="icon-tag"></i>&nbsp; IPC</td>
-                        <td><%= ipc_list.join(', ') %></td>
-                    </tr>
-                    <tr>
-                        <td><i class="icon-align-justify"></i>&nbsp; Beschreibung</td>
-                        <td><div class="abstract"><%= abstract_list.join('<br/><br/>') %></div></td>
-                    </tr>
-                </tbody>
-            </table>
-        </td>
+            <div class="ops-collection-entry-heading row-fluid">
+
+                <!-- patent number -->
+                <div class="span5">
+                    <h3 class="header-compact"><%= patent_number %></h3>
+                </div>
+
+                <!-- dates -->
+                <div class="span3 container-fluid">
+                    <div class="span6">
+                        <dl class="dl-horizontal dl-horizontal-biblio">
+                            <dt>
+                                (22)
+                            </dt>
+                            <dd>
+                                <%= application_date %>
+                            </dd>
+                        </dl>
+                    </div>
+                    <div class="span6">
+                        <dl class="dl-horizontal dl-horizontal-biblio">
+                            <dt>
+                                (45)
+                            </dt>
+                            <dd>
+                                <%= publication_date %>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+
+                <!-- actions -->
+                <div class="span3 container-fluid pull-right">
+                    <div class="span6">
+                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open"
+                            data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="View PDF document"
+                            >
+                            <img src="/static/img/icons/pdf.svg" width="20"/>
+                            &nbsp;
+                            PDF
+                        </a>
+                    </div>
+                    <div class="span6">
+                        </%text>
+                        % if ship_mode == 'multi-numberlist':
+                            <%text>
+                            <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
+                            <a id="add-patent-number-<%= patent_number %>" role="button" class="btn add-patent-number"
+                                data-patent-number="<%= patent_number %>"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Add document number to basket"
+                                >
+                                <i class="icon-white icon-plus"></i> Add
+                            </a>
+                            <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn remove-patent-number"
+                                data-patent-number="<%= patent_number %>"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Remove document number from basket"
+                                >
+                                <i class="icon-white icon-minus"></i> Remove
+                            </a>
+                            </%text>
+                        % endif
+                        <%text>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="ops-collection-entry-inner container-fluid">
+
+                <div class="row-fluid">
+                    <div class="span12">
+                        <strong><%= title_list.join('<br/>') %></strong>
+                    </div>
+                </div>
+
+                <div class="row-fluid">
+                    <div class="span5">
+                        <img src="<%= drawing_url %>"/>
+                    </div>
+                    <div class="span7">
+
+                        <dl class="dl-horizontal dl-horizontal-biblio">
+
+                            <dt>
+                                (71)
+                            </dt>
+                            <dd>
+                                <%= applicant_list.map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
+                            </dd>
+
+                            <dt>
+                                (72)
+                            </dt>
+                            <dd>
+                                <%= inventor_list.map(function(item) { return '' + item + ''; }).join('<br/>') %>
+                            </dd>
+
+                            <dt>
+                                (51)
+                            </dt>
+                            <dd>
+                                <%= ipc_list.join(', ') %>
+                            </dd>
+
+                            <br/>
+
+                            <dt>
+                                (57)
+                            </dt>
+                            <dd>
+                                <div class="abstract">
+                                    <%= abstract_list.join('<br/><br/>') %>
+                                </div>
+                            </dd>
+
+                        </dl>
+
+                    </div>
+                </div>
+
+             </div>
+        </div>
         </%text>
+
 
         % if ship_mode == 'single-bibdata':
         <%text>
