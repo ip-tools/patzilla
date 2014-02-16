@@ -86,8 +86,8 @@ def add_renderer_globals(event):
     the title on the page is only rendered if ``page_title is not None``
     """
     renderer_globals['page_title'] = None
-    renderer_globals['site_title'] = u"elmyra.ip.access.epo"
-    renderer_globals['site_claim'] = u"EPO OPS access"
+    renderer_globals['site_title'] = u"Elmyra IP suite"
+    renderer_globals['site_claim'] = u"Patent search"
 
     renderer_globals['site_version'] = site_version
 

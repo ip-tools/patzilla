@@ -10,8 +10,12 @@
 
 <%
 query = request.params.get('query', '')
-page_title = request.params.get('page-title', 'Patentrecherche')
-page_subtitle = request.params.get('page-subtitle', 'via EPO/OPS, ops/browser 0.0.12')
+html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
+page_title = request.params.get('page-title', 'Patent search')
+page_subtitle = request.params.get('page-subtitle', '')
+page_footer = request.params.get('page-footer', 'data source: epo/ops')
+app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
+app_versionstring = request.params.get('app-versionstring', 'release 0.1.0')
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
 ship_url = request.params.get('ship-url', request.params.get('ship_url', '#'))
@@ -25,14 +29,21 @@ var ship_frame = '${ship_frame}';
 </script>
 
 ## title / headline
-<div class="container-fluid span12">
+<div class="container-fluid">
+    <div class="span8">
     <blockquote>
         <p>
             <h2 style="display: inline">${page_title}</h2>
             &nbsp;&nbsp;&nbsp;<i class="icon-refresh icon-spin icon-large" style="display: none" id="spinner"></i>
         </p>
-        <small>${page_subtitle}</small>
+        ${page_subtitle}
     </blockquote>
+    </div>
+    <div class="span4">
+    <div class="pull-right">
+        <h3>${app_productname | n}</h3>
+    </div>
+    </div>
 </div>
 
 <div class="container-fluid span12">
@@ -41,23 +52,29 @@ var ship_frame = '${ship_frame}';
     <div class="row-fluid well" id="querybuilder-basket-area" style="padding: 0px;">
         <div class="span8" id="querybuilder-area" style="padding: 1em">
             <h6 style="display: inline">
-                <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">Über CQL</a>
+                <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
             </h6>
             <br/>
-            <textarea class="span12" id="query" name="query" placeholder="CQL Anfrage" rows="5">${query}</textarea>
+            <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
             <br/>
-            <input id="query-button" type="button" class="btn btn-info" value="Datenbank abfragen"/>
+            <input id="query-button" type="button" class="btn btn-info"
+                type="button" role="button" value="Send query"
+                data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Send query to database"
+            />
         </div>
         % if ship_mode != 'single-bibdata':
         <div class="span4" id="basket-area" style="padding: 1em">
             <h6 style="display: inline">
-                Auswahl
+                Your selection
             </h6>
             <br/>
             <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
                 <textarea class="span12" id="basket" name="${ship_param}" rows="5"></textarea>
                 <br/>
-                <input id="basket-button" type="submit" class="btn btn-info" ${ship_url or 'disabled="disabled"'} value="Übermitteln"/>
+                <input id="basket-button" class="btn btn-info" ${ship_url or 'disabled="disabled"'}
+                    type="submit" role="button" value="Submit"
+                    data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Submit selection to origin or 3rd-party system"
+                />
             </form>
         </div>
         % endif
@@ -70,6 +87,17 @@ var ship_frame = '${ship_frame}';
 
     ## results
     <div id="ops-collection-region"></div>
+
+    <hr class="clear-margin" style="margin-top: 50px"/>
+    <div class="page-footer pull-left">
+        &copy; 2013-2014, Elmyra UG — All rights reserved.
+    </div>
+    <div class="page-footer pull-right">
+        <small>
+            ${page_footer},
+            ${app_versionstring}
+        </small>
+    </div>
 
 </div>
 
@@ -97,7 +125,7 @@ var ship_frame = '${ship_frame}';
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
     <div class="pull-left">
-        Treffer: <%= result_count %>
+        Result count: <span class="badge badge-info"><%= result_count| 0 %></span>
     </div>
     <div class="pagination pagination-centered">
       <ul>
@@ -213,7 +241,7 @@ var ship_frame = '${ship_frame}';
                 <div class="span3 container-fluid">
                     <div class="span6">
                         <dl class="dl-horizontal dl-horizontal-biblio">
-                            <dt>
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="application date">
                                 (22)
                             </dt>
                             <dd>
@@ -223,7 +251,7 @@ var ship_frame = '${ship_frame}';
                     </div>
                     <div class="span6">
                         <dl class="dl-horizontal dl-horizontal-biblio">
-                            <dt>
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="publication date">
                                 (45)
                             </dt>
                             <dd>
@@ -286,21 +314,21 @@ var ship_frame = '${ship_frame}';
 
                         <dl class="dl-horizontal dl-horizontal-biblio">
 
-                            <dt>
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="applicants">
                                 (71)
                             </dt>
                             <dd>
                                 <%= applicant_list.map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
                             </dd>
 
-                            <dt>
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
                                 (72)
                             </dt>
                             <dd>
                                 <%= inventor_list.map(function(item) { return '' + item + ''; }).join('<br/>') %>
                             </dd>
 
-                            <dt>
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="ipc classes">
                                 (51)
                             </dt>
                             <dd>
@@ -309,7 +337,7 @@ var ship_frame = '${ship_frame}';
 
                             <br/>
 
-                            <dt>
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
                                 (57)
                             </dt>
                             <dd>

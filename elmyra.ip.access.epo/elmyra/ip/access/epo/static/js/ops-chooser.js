@@ -350,6 +350,7 @@ function listview_bind_actions() {
     $('.add-patent-number').popover();
     $('.remove-patent-number').popover();
     $('.pdf-open').popover();
+    $('.inid-tooltip').tooltip();
 
     // pdf action button
     $(".pdf-open").click(function() {
@@ -426,8 +427,11 @@ $(document).ready(function() {
 
     opsChooserApp.start();
 
-    $('input#query-button').click(function() {
+    $('#query-button').click(function() {
         opsChooserApp.perform_search();
     });
+
+    $('#query-button').popover();
+    $('#basket-button').popover();
 
 });

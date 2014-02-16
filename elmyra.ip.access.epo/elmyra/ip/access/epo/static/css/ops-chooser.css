@@ -1,20 +1,21 @@
-.table-clear-border, .table-clear-border th, .table-clear-border td, .table-clear-border thead, .table-clear-border tfoot, .table-clear-border tbody {
-    border: 0;
-}
-
-.table-clear-border-vertical, .table-clear-border-vertical th, .table-clear-border-vertical td, .table-clear-border-vertical thead, .table-clear-border-vertical tfoot, .table-clear-border-vertical tbody {
-    border-left: 0;
-    border-right: 0;
-}
-
-.table-clear-margin {
-    margin: 0px;
-}
-
+/* general */
 .clear-margin {
     margin: 0px;
 }
+.page-footer {
+    color: #999999;
+}
 
+i.circle-icon {
+    border: 4px solid #000000;
+    border-radius: 50%;
+    display: inline-block;
+    font-size: 1.1em;
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+    text-align: center;
+}
 
 /* modal boxes */
 
