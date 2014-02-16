@@ -150,7 +150,8 @@ OpsExchangeDocument = Backbone.Model.extend({
                 sequence = sequence.toString();
                 var epodoc_value = groups['epodoc'][sequence];
                 var original_value = groups['original'][sequence];
-                entries.push(epodoc_value + ' / ' + original_value);
+                //entries.push(epodoc_value + ' / ' + original_value);
+                entries.push(original_value);
             });
 
             return entries;
