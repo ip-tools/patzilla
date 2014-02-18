@@ -17,17 +17,39 @@ Prio 1.1
         - https://upload.wikimedia.org/wikipedia/commons/2/24/Adobe_PDF_Icon.svg
     - [x] Besserer "Add" Button
     - [x] Popovers für action buttons
+    - [x] Alles englisch
+    - [x] Tooltips für INID Einträge in bibl. Daten
 
-    - [o] Alles englisch
-    - [o] Karussel für die Bilder
+    - [x] PDF Anzeige in Firefox und Internet Explorer fixen => Volles PDF erzeugen [Lino, Michael, Jan]
+    - [x] Wenn keine Zeichnung geladen werden kann, besser alternativen Text statt zerbrochenem Bild anzeigen [Jan]
+
+    - [o] Bilder ordentlich auf gewünschte Breite skalieren (mit Antialiasing), IE rendert es sonst hässlich [Lino]
+    - [o] Evaluate and display search fault responses (message / details) [Andi]
+    - [o] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
+    - [o] Nummernhomogenisierung DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
+    - [o] Generic Caching Layer [Andi]
+    - [o] Checkbox auf der linken Seite wiedereinführen [Jan]
+    - [o] DE202013003344U1  (PDF kann nicht geöffnet werden in Chrome) [Michael]
+    - [o] Karussell für die Bilder [Andi, Lino]
+
     - [o] "Choose all"
-    - [o] Tooltips für INID Einträge in bibl. Daten
-    - [o] Idee: Embedding Feature mit iframe
-        - http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
-    - [o] jquery.shorten für Erfinder
-    - [o] INID-Code variiert je nach Kind
-    - [o] Patentnummer fetter, dicker Balken
+    - [o] Embedding Feature mit iframe [Lino]
+        - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
+    - [o] jquery.shorten für Erfinder [Lino]
+    - [o] INID-Code variiert je nach "patent *kind*" [Lino]
+    - [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
+    - [o] Dokumentation [Andi]
 
+
+Espacenet Worldwide Patent search
+http://worldwide.espacenet.com/espacenetDocument.pdf?ND=2&flavour=trueFull&locale=en_EP&FT=D&date=20010807&CC=US&NR=6269530B1&KC=B1&popup=true
+http://worldwide.espacenet.com/espacenetDocument.pdf?ND=2&flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
+http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
+
+European Publication Server
+https://data.epo.org/publication-server/pdf-document?pn=0895066&ki=A1&cc=EP
+https://data.epo.org/publication-server/pdf-document?cc=EP&pn=0666666&ki=B1
+https://data.epo.org/publication-server/pdf-document?cc=US&pn=6269530&ki=B1
 
 
 Prio 1.2
