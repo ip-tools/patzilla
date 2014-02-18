@@ -8,6 +8,7 @@ development
 - ui: download full pdf document from espacenet instead of having single-page images only
 - ui: resize first drawing image to 457px width to avoid resizing in browsers
 - ui/feature: "review" selected documents
+- api/ui: propagate "numberlist" query parameter value into basket
 
 0.1.1
 =====

@@ -10,6 +10,7 @@
 
 <%
 query = request.params.get('query', '')
+numberlist = '\n'.join(request.params.get('numberlist', '').split(','))
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
 page_title = request.params.get('page-title', 'Patent search')
 page_subtitle = request.params.get('page-subtitle', '')
@@ -70,7 +71,7 @@ var ship_frame = '${ship_frame}';
                         Your selection
                     </h6>
                     <br/>
-                    <textarea class="span12" id="basket" name="${ship_param}" rows="5"></textarea>
+                    <textarea class="span12" id="basket" name="${ship_param}" rows="5">${numberlist}</textarea>
                 </div>
             </div>
             <div class="row-fluid">
