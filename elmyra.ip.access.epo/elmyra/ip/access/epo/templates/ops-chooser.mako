@@ -310,7 +310,14 @@ var ship_frame = '${ship_frame}';
 
                 <div class="row-fluid">
                     <div class="span12">
-                        <strong><%= title_list.join('<br/>') %></strong>
+                        <dl class="dl-horizontal dl-horizontal-biblio">
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="title">
+                                (54)
+                            </dt>
+                            <dd>
+                                <strong><%= title_list.join('<br/>') %></strong>
+                            </dd>
+                        </dl>
                     </div>
                 </div>
 
