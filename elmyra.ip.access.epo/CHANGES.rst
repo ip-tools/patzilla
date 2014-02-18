@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: show alternative text when no drawing image is available instead of broken image symbol
 
 0.1.1
 =====

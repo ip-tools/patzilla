@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
+from pyramid.httpexceptions import HTTPNotFound, HTTPError
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error
 from simplejson.scanner import JSONDecodeError
@@ -57,23 +58,30 @@ def inquire_images(patent):
     url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
     url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
 
+    error_msg_access = 'No image information for document "{0}"'.format(patent)
+    error_msg_process = 'Error while processing image information for document "{0}"'.format(patent)
+
     client = get_ops_client()
     response = client.get(url_image_inquriy, headers={'Accept': 'application/json'})
-    #print response
-    #print dir(response)
-    #print response.content
-    print patent, url_image_inquriy, response
     if response.status_code != 200:
-        print response
-        print response.content
-        return
+        log.warn(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
+        if response.status_code in [404]:
+            error = HTTPNotFound(error_msg_access)
+        else:
+            error = HTTPError(error_msg_access)
+            error.status_code = response.status_code
+        raise error
 
     try:
         data = response.json()
-    except JSONDecodeError:
-        return
+    except JSONDecodeError as ex:
+        error_msg_process += ': {0}'.format(str(ex))
+        log.error(error_msg_process)
+        error = HTTPError(error_msg_process)
+        error.status_code = 500
+        raise error
+
     result = data['ops:world-patent-data']['ops:document-inquiry']['ops:inquiry-result']
-    #pprint(result)
 
     info = {}
     for node in result['ops:document-instance']:
@@ -108,24 +116,20 @@ def get_ops_image(document, page, kind, format):
 
     # 1. inquire images to compute url to image resource
     image_info = inquire_images(document)
-    if image_info:
-        #print image_info
-        drawing_node = image_info.get(kind)
-        if drawing_node:
-            link = drawing_node['@link']
-            if kind_requested == 'FullDocumentDrawing':
-                sections = drawing_node['ops:document-section']
-                for section in sections:
-                    if section['@name'] == 'DRAWINGS':
-                        start_page = int(section['@start-page'])
-                        page = start_page + page - 1
-            url = get_ops_image_link_url(link, format, page)
-        else:
-            print "WARN: No full image for document '{0}'".format(document)
-            return
+    drawing_node = image_info.get(kind)
+    if drawing_node:
+        link = drawing_node['@link']
+        if kind_requested == 'FullDocumentDrawing':
+            sections = drawing_node['ops:document-section']
+            for section in sections:
+                if section['@name'] == 'DRAWINGS':
+                    start_page = int(section['@start-page'])
+                    page = start_page + page - 1
+        url = get_ops_image_link_url(link, format, page)
     else:
-        print "WARN: No image information for document '{0}'".format(document)
-        return
+        msg = 'No image information for document "{0}" for kind "{1}"'.format(document, kind)
+        log.warn(msg)
+        raise HTTPNotFound(msg)
 
     response = ops_safe_request(url)
     payload = response.content

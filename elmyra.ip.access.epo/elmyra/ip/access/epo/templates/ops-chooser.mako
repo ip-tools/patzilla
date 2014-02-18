@@ -308,7 +308,7 @@ var ship_frame = '${ship_frame}';
 
                 <div class="row-fluid">
                     <div class="span5">
-                        <img src="<%= drawing_url %>"/>
+                        <img src="<%= drawing_url %>" alt="No drawing available."/>
                     </div>
                     <div class="span7">
 
