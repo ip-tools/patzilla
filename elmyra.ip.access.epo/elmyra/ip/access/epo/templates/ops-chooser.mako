@@ -18,7 +18,7 @@ app_productname = request.params.get('app-productname', 'elmyra <i class="circle
 app_versionstring = request.params.get('app-versionstring', 'release 0.1.1')
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
-ship_url = request.params.get('ship-url', request.params.get('ship_url', '#'))
+ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
 ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
 %>
 <script type="application/javascript">
@@ -57,25 +57,39 @@ var ship_frame = '${ship_frame}';
             <br/>
             <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
             <br/>
-            <input id="query-button" type="button" class="btn btn-info"
+            <input id="query-button" type="button" class="btn btn-info btn-popover"
                 type="button" role="button" value="Send query"
                 data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Send query to database"
             />
         </div>
         % if ship_mode != 'single-bibdata':
-        <div class="span4" id="basket-area" style="padding: 1em">
-            <h6 style="display: inline">
-                Your selection
-            </h6>
-            <br/>
-            <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
-                <textarea class="span12" id="basket" name="${ship_param}" rows="5"></textarea>
-                <br/>
-                <input id="basket-button" class="btn btn-info" ${ship_url or 'disabled="disabled"'}
-                    type="submit" role="button" value="Submit"
-                    data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Submit selection to origin or 3rd-party system"
-                />
-            </form>
+        <div class="span4 container-fluid" id="basket-area" style="padding: 1em">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h6 style="display: inline">
+                        Your selection
+                    </h6>
+                    <br/>
+                    <textarea class="span12" id="basket" name="${ship_param}" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6">
+                    <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
+                        <input id="basket-submit-button" class="btn btn-info btn-popover" ${ship_url or 'disabled="disabled"'}
+                            type="submit" role="button" value="Submit"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Submit selected documents to origin or 3rd-party system"
+                        />
+                    </form>
+                </div>
+                <div class="span6">
+                    <a id="basket-review-button" role="button" class="btn btn-info btn-popover pull-right"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Review selected documents"
+                        >
+                        Review
+                    </a>
+                </div>
+            </div>
         </div>
         % endif
     </div>
@@ -102,7 +116,7 @@ var ship_frame = '${ship_frame}';
 </div>
 
 
-<!-- model dialog for viewing pdf -->
+<!-- modal dialog for viewing pdf -->
 <div id="ops-pdf-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ops-pdf-modal-label" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -265,7 +279,7 @@ var ship_frame = '${ship_frame}';
                 <!-- actions -->
                 <div class="span3 container-fluid pull-right">
                     <div class="span6">
-                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn btn-popover pdf-open hide"
+                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open btn-popover hide"
                             data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="View PDF document"
                             >
@@ -384,7 +398,7 @@ var ship_frame = '${ship_frame}';
                 <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
                 <input name="ipcs" type="hidden" value="<%= ipc_list.join('\n') %>"/>
                 <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
-                <input name="ship_action" type="submit" value="bewerten"/>
+                <input name="ship_action" type="submit" value="rate"/>
             </form>
         </td>
         </%text>

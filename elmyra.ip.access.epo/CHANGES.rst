@@ -7,6 +7,7 @@ development
 - ui: show alternative text when no drawing image is available instead of broken image symbol
 - ui: download full pdf document from espacenet instead of having single-page images only
 - ui: resize first drawing image to 457px width to avoid resizing in browsers
+- ui/feature: "review" selected documents
 
 0.1.1
 =====

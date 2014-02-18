@@ -438,7 +438,19 @@ $(document).ready(function() {
         opsChooserApp.perform_search();
     });
 
-    $('#query-button').popover();
-    $('#basket-button').popover();
+    $('#basket-review-button').click(function() {
+        // compute cql query from numberlist in basket
+        var basket = $('#basket').val();
+        var query = basket
+            .split('\n')
+            .filter(function(entry) { return entry; })
+            .map(function(entry) { return 'pn=' + entry; }).join(' OR ');
+        if (query) {
+            $('#query').val(query);
+            opsChooserApp.perform_search();
+        }
+    });
+
+    $('.btn-popover').popover();
 
 });
