@@ -61,7 +61,8 @@ def tiff_to_png(tiff_payload):
         log_error()
         return None
 
-    print stderr
+    if stderr:
+        print stderr
 
     if stdout and not 'ImageMagick' in stdout[:200]:
         #print stdout
