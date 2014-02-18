@@ -351,7 +351,7 @@ function listview_bind_actions() {
     });
 
     // use jquery.shorten on "abstract" text
-    $(".abstract").shorten({showChars: 2000, moreText: 'mehr', lessText: 'weniger'});
+    $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
 
     // popovers
     $('.add-patent-number').popover();
