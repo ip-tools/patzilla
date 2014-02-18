@@ -50,6 +50,7 @@ def ops_published_data_search(constituents, query, range):
         response = json_error(request.errors)
         response.status = 500
         #print "response:", response
+        log.warn(request.errors)
         raise response
 
 
