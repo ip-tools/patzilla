@@ -3,8 +3,9 @@
 import logging
 from cornice import Service
 from elmyra.ip.access.epo.imageutil import tiff_to_png
-from elmyra.ip.access.epo.ops import ops_published_data_search, get_ops_image
-from elmyra.ip.access.epo.patentutil import split_patent_number
+from elmyra.ip.access.epo.ops import ops_published_data_search, get_ops_image, get_ops_client
+from elmyra.ip.util.numbers.common import split_patent_number
+from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
 
 log = logging.getLogger(__name__)
 
@@ -45,6 +46,14 @@ def ops_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('query', '')
+    log.info('query: ' + query)
+
+    # Parse and recompile CQL query string to apply number normalization
+    try:
+        query_object = cql_parse(query)
+        query = query_object.toCQL()
+    except Diagnostic as ex:
+        log.warn('CQL parse error: query="{0}", reason={1}'.format(query, str(ex)))
 
     # range: x-y, maximum delta is 100
     range = request.params.get('range', '1-25')

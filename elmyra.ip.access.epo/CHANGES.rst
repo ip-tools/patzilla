@@ -9,6 +9,8 @@ development
 - ui: resize first drawing image to 457px width to avoid resizing in browsers
 - ui/feature: "review" selected documents
 - api/ui: propagate "numberlist" query parameter value into basket
+- api/middleware: document-number normalization on patent-search endpoint
+
 
 0.1.1
 =====
