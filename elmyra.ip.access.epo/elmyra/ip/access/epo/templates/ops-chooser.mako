@@ -239,7 +239,7 @@ var ship_frame = '${ship_frame}';
                 </div>
 
                 <!-- dates -->
-                <div class="span3 container-fluid">
+                <div class="span4 container-fluid">
                     <div class="span6">
                         <dl class="dl-horizontal dl-horizontal-biblio">
                             <dt class="inid-tooltip" data-toggle="tooltip" title="application date">
