@@ -265,7 +265,7 @@ var ship_frame = '${ship_frame}';
                 <!-- actions -->
                 <div class="span3 container-fluid pull-right">
                     <div class="span6">
-                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open hide"
+                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn btn-popover pdf-open hide"
                             data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="View PDF document"
                             >
@@ -273,7 +273,7 @@ var ship_frame = '${ship_frame}';
                             &nbsp;
                             PDF
                         </a>
-                        <a href="<%= espacenet_pdf_url %>" target="_blank" role="button" class="btn pdf-download"
+                        <a href="<%= espacenet_pdf_url %>" target="_blank" role="button" class="btn btn-popover pdf-download"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Download PDF document"
                             >
                             <img src="/static/img/icons/pdf.svg" width="20"/>

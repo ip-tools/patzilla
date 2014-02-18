@@ -356,7 +356,7 @@ function listview_bind_actions() {
     // popovers
     $('.add-patent-number').popover();
     $('.remove-patent-number').popover();
-    $('.pdf-open').popover();
+    $('.btn-popover').popover();
     $('.inid-tooltip').tooltip();
 
     // pdf action button
