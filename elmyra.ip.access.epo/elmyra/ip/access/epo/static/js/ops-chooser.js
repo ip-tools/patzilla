@@ -173,6 +173,13 @@ OpsExchangeDocument = Backbone.Model.extend({
             return url;
         },
 
+        get_espacenet_pdf_url: function() {
+            // http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
+            var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        }
+
     },
 
     select: function() {

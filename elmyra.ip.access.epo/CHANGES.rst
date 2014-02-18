@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: show alternative text when no drawing image is available instead of broken image symbol
+- ui: download full pdf document from espacenet instead of having single-page images only
 
 0.1.1
 =====

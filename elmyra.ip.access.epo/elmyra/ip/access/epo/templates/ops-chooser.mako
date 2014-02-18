@@ -191,6 +191,7 @@ var ship_frame = '${ship_frame}';
         var inventor_list = data.get_inventors();
         var drawing_url = data.get_drawing_url();
         var fullimage_url = data.get_fullimage_url();
+        var espacenet_pdf_url = data.get_espacenet_pdf_url();
 
         var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
@@ -264,9 +265,16 @@ var ship_frame = '${ship_frame}';
                 <!-- actions -->
                 <div class="span3 container-fluid pull-right">
                     <div class="span6">
-                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open"
+                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open hide"
                             data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="View PDF document"
+                            >
+                            <img src="/static/img/icons/pdf.svg" width="20"/>
+                            &nbsp;
+                            PDF
+                        </a>
+                        <a href="<%= espacenet_pdf_url %>" target="_blank" role="button" class="btn pdf-download"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Download PDF document"
                             >
                             <img src="/static/img/icons/pdf.svg" width="20"/>
                             &nbsp;
