@@ -22,15 +22,13 @@ Prio 1.1
 
     - [x] PDF Anzeige in Firefox und Internet Explorer fixen => Volles PDF erzeugen [Lino, Michael, Jan]
     - [x] Wenn keine Zeichnung geladen werden kann, besser alternativen Text statt zerbrochenem Bild anzeigen [Jan]
-
-    - [o] Bilder ordentlich auf gewünschte Breite skalieren (mit Antialiasing), IE rendert es sonst hässlich [Lino]
-    - [o] Evaluate and display search fault responses (message / details) [Andi]
-    - [o] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
-    - [o] Nummernhomogenisierung DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
+    - [x] Bilder ordentlich auf gewünschte Breite skalieren (mit Antialiasing), IE rendert es sonst hässlich [Lino]
+    - [x] DE202013003344U1  (PDF kann nicht geöffnet werden in Chrome) [Michael]
+    - [x] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
+    - [x] Nummern Normalisierung z.B. DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
     - [o] Generic Caching Layer [Andi]
-    - [o] Checkbox auf der linken Seite wiedereinführen [Jan]
-    - [o] DE202013003344U1  (PDF kann nicht geöffnet werden in Chrome) [Michael]
     - [o] Karussell für die Bilder [Andi, Lino]
+    - [o] Evaluate and display search fault responses (message / details) [Andi]
 
     - [o] "Choose all"
     - [o] Embedding Feature mit iframe [Lino]
@@ -38,7 +36,8 @@ Prio 1.1
     - [o] jquery.shorten für Erfinder [Lino]
     - [o] INID-Code variiert je nach "patent *kind*" [Lino]
     - [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
-    - [o] Dokumentation [Andi]
+    - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
+    - [o] Checkbox auf der linken Seite wiedereinführen [Jan]
 
 
 Espacenet Worldwide Patent search

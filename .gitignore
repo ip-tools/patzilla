@@ -5,3 +5,4 @@
 *.egg-info
 MANIFEST
 dist/
+/var
