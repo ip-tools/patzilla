@@ -26,8 +26,16 @@ def tiff_to_png(tiff_payload):
     # ... so use ImageMagick! ;-(
     # http://www.imagemagick.org/pipermail/magick-users/2003-May/008869.html
     #convert_bin = os.path.join(os.path.dirname(__file__), 'imagemagick', 'convert.exe')
-    convert_bin = 'convert'
-    command = [convert_bin, 'tif:-', '+set', 'date:create', '+set', 'date:modify', 'png:-']
+    #command = ['convert', 'tif:-', '+set', 'date:create', '+set', 'date:modify', 'png:-']
+    command = ['convert', 'tif:-',
+                '+set', 'date:create', '+set', 'date:modify',
+                # FIXME: make this configurable
+                '-resize', '457x',
+                '-colorspace', 'rgb', '-flatten', '-depth', '8',
+                '-antialias', '-quality', '100', '-density', '300',
+                'png:-']
+
+    #print command
 
     proc = subprocess.Popen(
         command,
@@ -53,7 +61,10 @@ def tiff_to_png(tiff_payload):
         log_error()
         return None
 
+    print stderr
+
     if stdout and not 'ImageMagick' in stdout[:200]:
+        #print stdout
         return stdout
 
     else:
