@@ -1,11 +1,18 @@
 # -*- coding: utf-8 -*-
 # (c) 2007-2011 ***REMOVED***
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+from elmyra.ip.util.numbers.helper import strip_spaces
 import re
 
 """
-
+Common lowlevel functions
 """
+
+def join_patent(patent):
+    if patent:
+        number = patent['country'] + patent['number'] + patent.get('kind', '')
+        return number
+
 
 def split_patent_number(patent_number):
 
