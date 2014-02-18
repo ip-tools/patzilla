@@ -3,13 +3,11 @@
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
 
+"""
+
+"""
 
 def split_patent_number(patent_number):
-    """
-    derived from
-    - "pdf-distributor.pl"
-    - Europatent::Utils::decode_patent_id
-    """
 
     if not patent_number:
         return
