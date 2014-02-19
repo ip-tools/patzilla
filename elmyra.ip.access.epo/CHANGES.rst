@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.2.1
+=====
 - ui/api: evaluate and display upstream error responses
 - middleware: adjust image level while converting from tiff to png
 - ui: remove (54) entry prefix
@@ -13,7 +16,6 @@ development
 - ui: gray background, refactor query area
 - ui: link to legal status information from various patent offices
   (European Patent Register, INPADOC legal status, DPMAregister)
-
 
 0.2.0
 =====
