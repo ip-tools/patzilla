@@ -115,17 +115,27 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_applicants: function() {
-            var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
-            applicants_root_node = applicants_root_node || [];
-            var applicants_node = applicants_root_node['applicant'];
-            return this.parties_to_list(applicants_node, 'applicant-name');
+            try {
+                var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
+                applicants_root_node = applicants_root_node || [];
+                var applicants_node = applicants_root_node['applicant'];
+                return this.parties_to_list(applicants_node, 'applicant-name');
+
+            } catch(e) {
+                console.warn('patent-search: applicants could not be parsed from document ' + this.get_patent_number());
+            }
         },
 
         get_inventors: function() {
-            var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
-            inventors_root_node = inventors_root_node || [];
-            var inventors_node = inventors_root_node['inventor'];
-            return this.parties_to_list(inventors_node, 'inventor-name');
+            try {
+                var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
+                inventors_root_node = inventors_root_node || [];
+                var inventors_node = inventors_root_node['inventor'];
+                return this.parties_to_list(inventors_node, 'inventor-name');
+
+            } catch(e) {
+                console.warn('patent-search: inventors could not be parsed from document ' + this.get_patent_number());
+            }
         },
 
         parties_to_list: function(container, value_attribute_name) {
