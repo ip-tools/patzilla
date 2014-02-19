@@ -6,6 +6,7 @@ development
 ===========
 - ui/api: evaluate and display upstream error responses
 - middleware: adjust image level while converting from tiff to png
+- ui: remove (54) entry prefix
 
 0.2.0
 =====
