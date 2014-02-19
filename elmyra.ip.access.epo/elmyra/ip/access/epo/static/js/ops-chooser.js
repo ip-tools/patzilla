@@ -82,6 +82,18 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 listview_bind_actions();
 
             },
+            error: function(e, xhr) {
+                console.log("error: " + xhr.responseText);
+                response = jQuery.parseJSON(xhr.responseText);
+                if (response['status'] == 'error') {
+                    _.each(response['errors'], function(error) {
+                        var tpl = _.template($('#backend-error-template').html());
+                        var alert_html = tpl(error);
+                        $('#alert-area').append(alert_html);
+                    });
+                    $(".very-short").shorten({showChars: 0, moreText: 'more', lessText: 'less'});
+                }
+            }
         });
 
     },
@@ -117,6 +129,7 @@ OpsExchangeDocument = Backbone.Model.extend({
 
             } catch(e) {
                 console.warn('patent-search: applicants could not be parsed from document ' + this.get_patent_number());
+                return [];
             }
         },
 
@@ -129,6 +142,7 @@ OpsExchangeDocument = Backbone.Model.extend({
 
             } catch(e) {
                 console.warn('patent-search: inventors could not be parsed from document ' + this.get_patent_number());
+                return [];
             }
         },
 
@@ -458,5 +472,7 @@ $(document).ready(function() {
     });
 
     $('.btn-popover').popover();
+
+    $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
 
 });

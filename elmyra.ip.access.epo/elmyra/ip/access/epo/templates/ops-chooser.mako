@@ -166,6 +166,7 @@ var ship_frame = '${ship_frame}';
 
 ## result list template
 <script id="ops-collection-template" type="text/x-underscore-template">
+    <div id="alert-area"/>
     <div id="ops-collection-entry" class="row"/>
 </script>
 
@@ -407,6 +408,64 @@ var ship_frame = '${ship_frame}';
         </td>
         </%text>
         % endif
+
+</script>
+
+
+<script id="backend-error-template" type="text/x-underscore-template">
+
+    <div class="alert alert-error alert-block">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>ERROR</h4>
+        <%text>
+
+        <dl class="dl-horizontal dl-horizontal-biblio2">
+            <dt>
+                Name
+            </dt>
+            <dd>
+                <%= name %>
+            </dd>
+
+            <dt>
+                Location
+            </dt>
+            <dd>
+                <%= location %>
+            </dd>
+
+            <dt>
+                Message
+            </dt>
+            <dd>
+                <%= description['content'] %>
+            </dd>
+
+            <hr/>
+
+            <%
+            var headers = description['headers'];
+            delete(description['headers']);
+            %>
+
+            <dt>
+                Details
+            </dt>
+            <dd>
+                <pre class="very-short"><%= JSON.stringify(description, null, 4) %></pre>
+            </dd>
+
+            <dt>
+                Headers
+            </dt>
+            <dd>
+                <pre class="very-short"><%= JSON.stringify(headers, null, 4) %></pre>
+            </dd>
+
+        </dl>
+        </%text>
+
+    </div>
 
 </script>
 

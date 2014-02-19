@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui/api: evaluate and display error responses
 
 0.2.0
 =====
@@ -16,7 +17,6 @@ development
 - middleware: resource caching
     - search: 5 minutes
     - static: 1 year
-
 
 0.1.1
 =====
