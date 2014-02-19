@@ -29,13 +29,15 @@ Prio 1.1
     - [x] Generic Caching Layer [Andi]
     - [x] Evaluate and display search fault responses (message / details) [Andi]
 
-    - [o] PDF selbst erzeugen(!!!) [Andi, Lino]
-    - [o] link zum register (paragraph) [Lino]
-    - [o] header stil links/rechts gleich [Lino]
-    - [o] (54) wieder weg [Lino]
-    - [o] buttons grau [Lino]
-    - [o] hintergrund grau [Lino]
+    - [x] (54) wieder weg [Lino]
+    - [x] header stil links/rechts gleich [Lino]
+    - [x] buttons grau [Lino]
+    - [x] hintergrund grau [Lino]
+    - [x] link zum register (with paragraph symbol) [Lino]
 
+    - [o] business rules für register-links [Andi]
+
+    - [o] PDF selbst erzeugen(!!!) [Andi, Lino]
     - [o] Karussell für die Bilder [Andi, Lino]
     - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
     - [o] Embedding Feature mit iframe [Lino]
@@ -49,6 +51,7 @@ Prio 1.1
     - [o] INID-Code variiert je nach "patent *kind*" [Lino]
     - [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
     - [o] Checkbox auf der linken Seite wiedereinführen [Jan]
+    - [o] use app-pagename et al. in html title as well!
 
     - [o] browser history / pushstate
           http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
@@ -59,15 +62,6 @@ Prio 1.1
 
 
 
-Espacenet Worldwide Patent search
-http://worldwide.espacenet.com/espacenetDocument.pdf?ND=2&flavour=trueFull&locale=en_EP&FT=D&date=20010807&CC=US&NR=6269530B1&KC=B1&popup=true
-http://worldwide.espacenet.com/espacenetDocument.pdf?ND=2&flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
-http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
-
-European Publication Server
-https://data.epo.org/publication-server/pdf-document?pn=0895066&ki=A1&cc=EP
-https://data.epo.org/publication-server/pdf-document?cc=EP&pn=0666666&ki=B1
-https://data.epo.org/publication-server/pdf-document?cc=US&pn=6269530&ki=B1
 
 
 Prio 1.2
