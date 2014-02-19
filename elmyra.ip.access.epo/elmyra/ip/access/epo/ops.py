@@ -12,6 +12,9 @@ from elmyra.ip.access.epo.client import oauth_client_create
 log = logging.getLogger(__name__)
 
 
+ops_service_url = 'https://ops.epo.org/3.1/rest-services/'
+
+
 ops_client = None
 def get_ops_client():
     global ops_client
@@ -48,6 +51,7 @@ def ops_published_data_search(constituents, query, range):
     else:
         request = get_current_request()
         response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
+        response_dict['url'] = response_dict['url'].replace(ops_service_url, '/')
         request.errors.add('ops-published-data-search', 'http-response', response_dict)
         response = json_error(request.errors)
         response.status = 500
@@ -110,7 +114,7 @@ def ops_safe_request(url):
 
 
 def get_ops_image_link_url(link, format, page=1):
-    service_url = 'https://ops.epo.org/3.1/rest-services/'
+    service_url = ops_service_url
     url_tpl = '{service_url}{link}.{format}?Range={page}'
     url = url_tpl.format(**locals())
     return url
