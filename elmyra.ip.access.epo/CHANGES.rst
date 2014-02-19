@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: add DPMAregister smart access subsystem
+- api: publish DPMAregister smart access subsystem, e.g.
+  /jump/dpma/register?pn=DE19630877
 
 0.2.1
 =====
@@ -14,7 +17,6 @@ development
 - middleware: also cache output of tiff-to-png conversion for drawings
 - ui: style header buttons inline with others (gray, not turquoise)
 - ui: gray background, refactor query area
-- middleware: add DPMAregister access subsystem
 - ui: link to legal status information from various patent offices
   (European Patent Register, INPADOC legal status, DPMAregister)
 

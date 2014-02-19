@@ -62,6 +62,25 @@ class DpmaRegisterAccess:
 
     def fetch_html(self, patent):
 
+        # 1. search patent reference for direct download
+        results = self.search_patent_smart(patent)
+
+        # 2. download patent information by direct reference
+        search_entry = results[0]
+        return self.fetch_reference(search_entry)
+
+
+    def get_document_url(self, patent):
+        results = self.search_patent_smart(patent)
+        # TODO: review this logic
+        if results:
+            url = self.accessurl % results[0].reference
+            logger.info('document url: {0}'.format(url))
+            return url
+
+
+    def search_patent_smart(self, patent):
+
         patent = patent.upper()
 
         # 1. search patent reference for direct download
@@ -78,18 +97,16 @@ class DpmaRegisterAccess:
 
         errmsg = None
         if not results:
-            errmsg = "search result for '%s' had no filtered results" % (patent)
+            errmsg = "search result for '%s' is empty" % (patent)
         elif len(results) >= 2:
-            errmsg = "ambiguous search result for '%s' (count=%s, results=%s)" % (patent, len(results), results)
+            errmsg = "search result for '%s' is ambiguous: count=%s, results=%s" % (patent, len(results), results)
 
         if errmsg:
             logger.warning(errmsg)
-            raise Exception(errmsg)
+            #raise Exception(errmsg)
 
+        return results
 
-        # 2. download patent information by direct reference
-        search_entry = results[0]
-        return self.fetch_reference(search_entry)
 
     def search_patent(self, patent):
 
@@ -97,8 +114,6 @@ class DpmaRegisterAccess:
 
         patent_country = patent[:2].upper()
         patent_number = patent[2:]
-
-        logger.info("downloading document, reference='%s'" % patent_number)
 
         #if patent_country != 'DE':
         #    msg = "country '%s' not valid, must be 'DE'" % patent_country
@@ -337,8 +352,11 @@ if __name__ == '__main__':
         #data = register.fetch('DE3831719')      # search and follow to 3831719.2
         #data = register.fetch('WO2007037298')   # worked with DPINFO only
         #data = register.fetch('WO2008034638')   # leads to two results, take the non-"E" one
-        data = register.fetch('DE102006006014') # just one result, directly redirects to detail page
+        #data = register.fetch('DE102006006014') # just one result, directly redirects to detail page
 
+        #data = register.fetch('DE19630877')
+        data = register.fetch('DE102012009645')
+        #print register.get_document_url('DE102012009645')
 
     print data['html_stripped']
 

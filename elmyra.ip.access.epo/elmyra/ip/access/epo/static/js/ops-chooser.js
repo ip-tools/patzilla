@@ -232,11 +232,19 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_dpma_register_url: function() {
+
+            // DE19630877.1 / DE19630877A1 / DE000019630877C2
+            // http://localhost:6543/ops/browser?query=pn=DE19630877A1
+            // http://localhost:6543/jump/dpma/register?pn=DE19630877
             // https://register.dpma.de/DPMAregister/pat/register?AKZ=196308771
-            // FIXME: is this always "1"!?
-            var HACK_SUFFIX = '1';
-            var url_tpl = _.template('https://register.dpma.de/DPMAregister/pat/register?AKZ=<%= application_number %>' + HACK_SUFFIX);
-            var url = url_tpl({application_number: this.get_application_number('original')});
+
+            // DE102012009645.3 / DE102012009645A1
+            // http://localhost:6543/ops/browser?query=pn=DE102012009645
+            // http://localhost:6543/jump/dpma/register?pn=DE102012009645
+            // https://register.dpma.de/DPMAregister/pat/register?AKZ=1020120096453
+
+            var url_tpl = _.template('/jump/dpma/register?pn=<%= application_number %>');
+            var url = url_tpl({application_number: this.get_application_number('docdb')});
             return url;
         },
 
