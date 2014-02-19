@@ -349,6 +349,7 @@ var ship_frame = '${ship_frame}';
                             </dt>
                             <dd>
                                 <%= applicant_list.map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
+                                &nbsp;
                             </dd>
 
                             <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
@@ -356,6 +357,7 @@ var ship_frame = '${ship_frame}';
                             </dt>
                             <dd>
                                 <%= inventor_list.map(function(item) { return '' + item + ''; }).join('<br/>') %>
+                                &nbsp;
                             </dd>
 
                             <dt class="inid-tooltip" data-toggle="tooltip" title="ipc classes">
@@ -363,6 +365,7 @@ var ship_frame = '${ship_frame}';
                             </dt>
                             <dd>
                                 <%= ipc_list.join(', ') %>
+                                &nbsp;
                             </dd>
 
                             <br/>
