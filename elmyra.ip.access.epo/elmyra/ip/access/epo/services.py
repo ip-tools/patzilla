@@ -46,7 +46,7 @@ def ops_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('query', '')
-    log.info('query start: ' + query)
+    log.info('query raw: ' + query)
 
     # Parse and recompile CQL query string to apply number normalization
     try:
@@ -54,6 +54,8 @@ def ops_published_data_search_handler(request):
         query = query_object.toCQL()
     except Diagnostic as ex:
         log.warn('CQL parse error: query="{0}", reason={1}'.format(query, str(ex)))
+
+    log.info('query cql: ' + query)
 
     # range: x-y, maximum delta is 100
     range = request.params.get('range', '1-25')
