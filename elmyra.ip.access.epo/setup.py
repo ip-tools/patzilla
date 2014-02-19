@@ -33,6 +33,8 @@ requires = [
     # ----------------------------------------------
     'requests==2.0.1',
     'requests-oauthlib==0.4.0',
+    'mechanize==0.2.5',
+    'BeautifulSoup==3.2.1',
 
     # ----------------------------------------------
     #   user interface

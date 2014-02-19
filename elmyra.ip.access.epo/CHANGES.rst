@@ -14,8 +14,10 @@ development
 - middleware: also cache output of tiff-to-png conversion for drawings
 - ui: style header buttons inline with others (gray, not turquoise)
 - ui: gray background, refactor query area
+- middleware: add DPMAregister access subsystem
 - ui: link to legal status information from various patent offices
   (European Patent Register, INPADOC legal status, DPMAregister)
+
 
 0.2.0
 =====
