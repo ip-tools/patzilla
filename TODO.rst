@@ -29,12 +29,22 @@ Prio 1.1
     - [x] Generic Caching Layer [Andi]
     - [x] Evaluate and display search fault responses (message / details) [Andi]
 
+    - [o] PDF selbst erzeugen(!!!) [Andi, Lino]
+    - [o] link zum register (paragraph) [Lino]
+    - [o] header stil links/rechts gleich [Lino]
+    - [o] (54) wieder weg [Lino]
+    - [o] buttons grau [Lino]
+    - [o] hintergrund grau [Lino]
+
     - [o] Karussell für die Bilder [Andi, Lino]
     - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
-
-    - [o] "Choose all"
     - [o] Embedding Feature mit iframe [Lino]
         - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
+    - [o] Query builder + query help (feldnamen)
+        https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
+    - [o] "BROWSE" from data (click on applicant, inventor, ipc class)
+
+    - [o] "Choose all"
     - [o] jquery.shorten für Erfinder [Lino]
     - [o] INID-Code variiert je nach "patent *kind*" [Lino]
     - [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
@@ -42,6 +52,11 @@ Prio 1.1
 
     - [o] browser history / pushstate
           http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
+
+    - [o] Mail shipping feature
+    - [o] Annotations feature
+    - [o] Meta: Feature tracker / Ticket system => Trac
+
 
 
 Espacenet Worldwide Patent search

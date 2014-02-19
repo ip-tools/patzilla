@@ -4,7 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-- ui/api: evaluate and display error responses
+- ui/api: evaluate and display upstream error responses
 - middleware: adjust image level while converting from tiff to png
 
 0.2.0
@@ -14,7 +14,7 @@ development
 - ui: resize first drawing image to 457px width to avoid resizing in browsers
 - ui/feature: "review" selected documents
 - api/ui: propagate "numberlist" query parameter value into basket
-- api/middleware: document-number normalization on patent-search endpoint
+- api/middleware: document-number normalization on patent-search endpoint for "pn=" attributes
 - middleware: resource caching
     - search: 5 minutes
     - static: 1 year
