@@ -8,6 +8,7 @@ development
 - middleware: adjust image level while converting from tiff to png
 - ui: remove (54) entry prefix
 - ui: refactor header
+- middleware: also cache output of tiff-to-png conversion for drawings
 
 0.2.0
 =====

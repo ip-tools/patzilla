@@ -8,6 +8,7 @@ from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.client import oauth_client_create
+from elmyra.ip.access.epo.imageutil import tiff_to_png
 
 log = logging.getLogger(__name__)
 
@@ -119,6 +120,11 @@ def get_ops_image_link_url(link, format, page=1):
     url = url_tpl.format(**locals())
     return url
 
+@cache_region('static')
+def get_ops_image_png(document, page, kind):
+    payload = get_ops_image(document, page, kind, 'tiff')
+    payload = tiff_to_png(payload)
+    return payload
 
 @cache_region('static')
 def get_ops_image(document, page, kind, format):

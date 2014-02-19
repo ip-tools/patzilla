@@ -2,8 +2,7 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
 from cornice import Service
-from elmyra.ip.access.epo.imageutil import tiff_to_png
-from elmyra.ip.access.epo.ops import ops_published_data_search, get_ops_image, get_ops_client
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, get_ops_image_png
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
 
@@ -77,11 +76,8 @@ def ops_drawing_handler(request):
 
     patent = request.matchdict['patent']
     page = request.params.get('page', 1)
-    tiff = get_ops_image(patent, page, 'FullDocumentDrawing', 'tiff')
-
-    if tiff:
-        png = tiff_to_png(tiff)
-        return png
+    png = get_ops_image_png(patent, page, 'FullDocumentDrawing')
+    return png
 
 
 @ops_fullimage_service.get(renderer='pdf')
