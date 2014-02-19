@@ -27,11 +27,11 @@ Prio 1.1
     - [x] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
     - [x] Nummern Normalisierung z.B. DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
     - [x] Generic Caching Layer [Andi]
+    - [x] Evaluate and display search fault responses (message / details) [Andi]
 
     - [o] Karussell für die Bilder [Andi, Lino]
     - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
 
-    - [o] Evaluate and display search fault responses (message / details) [Andi]
     - [o] "Choose all"
     - [o] Embedding Feature mit iframe [Lino]
         - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
