@@ -10,12 +10,6 @@ function to_list(value) {
     return _.isArray(value) && value || [value];
 }
 
-// FIXME: why does underscore.string's "include" not work?
-function contains(string, pattern) {
-    if (!string) return false;
-    return string.indexOf(pattern) > -1;
-}
-
 
 /**
  * ------------------------------------------
@@ -286,7 +280,9 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
 function basket_add(entry) {
     var payload = $('#basket').val();
-    if (!contains(payload, entry))
+    if (!_.string.include(payload, entry))
+        if (payload != '' && !_.string.endsWith(payload, '\n'))
+            payload += '\n'
         payload += entry + '\n';
     $('#basket').val(payload);
     basket_update_ui_entry(entry);
@@ -294,7 +290,7 @@ function basket_add(entry) {
 
 function basket_remove(entry) {
     var payload = $('#basket').val();
-    if (contains(payload, entry))
+    if (_.string.include(payload, entry))
         payload = payload.replace(entry + '\n', '');
     $('#basket').val(payload);
     basket_update_ui_entry(entry);
@@ -307,7 +303,7 @@ function basket_update_ui_entry(entry) {
     var checkbox_element = $('#' + 'chk-patent-number-' + entry);
     var add_button_element = $('#' + 'add-patent-number-' + entry);
     var remove_button_element = $('#' + 'remove-patent-number-' + entry);
-    if (contains(payload, entry)) {
+    if (_.string.include(payload, entry)) {
         checkbox_element && checkbox_element.prop('checked', true);
         add_button_element && add_button_element.hide();
         remove_button_element && remove_button_element.show();
