@@ -10,6 +10,7 @@ development
 - ui: refactor header
 - middleware: also cache output of tiff-to-png conversion for drawings
 - ui: style header buttons inline with others (gray, not turquoise)
+- ui: gray background, refactor query area
 
 0.2.0
 =====

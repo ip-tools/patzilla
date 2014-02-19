@@ -50,8 +50,8 @@ var ship_frame = '${ship_frame}';
 <div class="container-fluid span12">
 
     ## query builder and basket
-    <div class="row-fluid well" id="querybuilder-basket-area" style="padding: 0px;">
-        <div class="span8" id="querybuilder-area" style="padding: 1em">
+    <div class="row-fluid" id="querybuilder-basket-area">
+        <div class="span8" id="querybuilder-area">
             <h6 style="display: inline">
                 <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
             </h6>
@@ -64,7 +64,9 @@ var ship_frame = '${ship_frame}';
             />
         </div>
         % if ship_mode != 'single-bibdata':
-        <div class="span4 container-fluid" id="basket-area" style="padding: 1em">
+        <div class="span4 container-fluid" id="basket-area">
+        <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
+
             <div class="row-fluid">
                 <div class="span12">
                     <h6 style="display: inline">
@@ -76,12 +78,10 @@ var ship_frame = '${ship_frame}';
             </div>
             <div class="row-fluid">
                 <div class="span6">
-                    <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
                         <input id="basket-submit-button" class="btn btn-popover" ${ship_url or 'disabled="disabled"'}
                             type="submit" role="button" value="Submit"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Submit selected documents to origin or 3rd-party system"
                         />
-                    </form>
                 </div>
                 <div class="span6">
                     <a id="basket-review-button" role="button" class="btn btn-popover pull-right"
@@ -91,6 +91,8 @@ var ship_frame = '${ship_frame}';
                     </a>
                 </div>
             </div>
+
+        </form>
         </div>
         % endif
     </div>
