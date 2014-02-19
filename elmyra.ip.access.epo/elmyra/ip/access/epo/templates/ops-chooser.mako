@@ -426,6 +426,21 @@ var ship_frame = '${ship_frame}';
         <%text>
 
         <dl class="dl-horizontal dl-horizontal-biblio2">
+
+            <dt>
+                Date
+            </dt>
+            <dd>
+                <%= description['headers']['date'] %>
+            </dd>
+
+            <dt>
+                Status
+            </dt>
+            <dd>
+                <%= description['status_code'] %> <%= description['reason'] %>
+            </dd>
+
             <dt>
                 Name
             </dt>
@@ -447,25 +462,11 @@ var ship_frame = '${ship_frame}';
                 <%= description['content'] %>
             </dd>
 
-            <hr/>
-
-            <%
-            var headers = description['headers'];
-            delete(description['headers']);
-            %>
-
             <dt>
-                Details
+                URL
             </dt>
             <dd>
-                <pre class="very-short"><%= JSON.stringify(description, null, 4) %></pre>
-            </dd>
-
-            <dt>
-                Headers
-            </dt>
-            <dd>
-                <pre class="very-short"><%= JSON.stringify(headers, null, 4) %></pre>
+                <%= description['url'] %>
             </dd>
 
         </dl>
