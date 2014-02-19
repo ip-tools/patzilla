@@ -126,7 +126,6 @@ def get_ops_image_png(document, page, kind):
     payload = tiff_to_png(payload)
     return payload
 
-@cache_region('static')
 def get_ops_image(document, page, kind, format):
 
     kind_requested = kind
