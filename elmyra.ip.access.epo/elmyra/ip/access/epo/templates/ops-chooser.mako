@@ -207,12 +207,15 @@ var ship_frame = '${ship_frame}';
 
         // 2.2 prepare some template variables
 
-        var patent_number = data['@country'] + data['@doc-number'] + data['@kind'];
+        var patent_number = data.get_patent_number();
         var applicant_list = data.get_applicants();
         var inventor_list = data.get_inventors();
         var drawing_url = data.get_drawing_url();
         var fullimage_url = data.get_fullimage_url();
         var espacenet_pdf_url = data.get_espacenet_pdf_url();
+        var epo_register_url = data.get_epo_register_url();
+        var inpadoc_legal_url = data.get_inpadoc_legal_url();
+        var dpma_register_url = data.get_dpma_register_url();
 
         var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
@@ -258,7 +261,7 @@ var ship_frame = '${ship_frame}';
             <div class="ops-collection-entry-heading row-fluid">
 
                 <!-- patent number -->
-                <div class="span5">
+                <div class="span3">
                     <h3 class="header-compact"><%= patent_number %></h3>
                 </div>
 
@@ -287,8 +290,8 @@ var ship_frame = '${ship_frame}';
                 </div>
 
                 <!-- actions -->
-                <div class="span3 container-fluid pull-right">
-                    <div class="span6">
+                <div class="span5 container-fluid pull-right">
+                    <div class="span8">
                         <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open btn-popover hide"
                             data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="View PDF document"
@@ -300,12 +303,41 @@ var ship_frame = '${ship_frame}';
                         <a href="<%= espacenet_pdf_url %>" target="_blank" role="button" class="btn btn-popover pdf-download"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Download PDF document"
                             >
-                            <img src="/static/img/icons/pdf.svg" width="20"/>
-                            &nbsp;
+                            <img src="/static/img/icons/pdf.svg" width="16"/>
                             PDF
                         </a>
+
+
+
+                        <div class="btn-group btn-popover"
+                                    data-toggle="popover" data-trigger="hover" data-placement="top"
+                                    data-content="Show legal information from various patent offices"
+                            >
+                            <button class="btn"><strong>§</strong> Legal info</button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="<%= epo_register_url %>" target="_blank">
+                                        [LEGAL] <%= patent_number %> @ European Patent Register
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<%= inpadoc_legal_url %>" target="_blank">
+                                        [LEGAL] <%= patent_number %> @ INPADOC legal status
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<%= dpma_register_url %>" target="_blank">
+                                        [LEGAL] <%= patent_number %> @ DPMAregister
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
-                    <div class="span6">
+                    <div class="span4">
                         </%text>
                         % if ship_mode == 'multi-numberlist':
                             <%text>

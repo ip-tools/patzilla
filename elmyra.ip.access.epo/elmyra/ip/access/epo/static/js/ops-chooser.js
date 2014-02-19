@@ -127,6 +127,18 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this['@country'] + this['@doc-number'] + this['@kind'];
         },
 
+        get_application_number: function(source) {
+            var application_references = this['bibliographic-data']['application-reference']['document-id'];
+            for (i in application_references) {
+                var item = application_references[i];
+                if (source == 'docdb' && item['@document-id-type'] == 'docdb') {
+                    return item['country']['$'] + item['doc-number']['$'];
+                } else if (source == 'original' && item['@document-id-type'] == 'original') {
+                    return item['doc-number']['$'];
+                }
+            }
+        },
+
         get_applicants: function() {
             try {
                 var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
@@ -203,7 +215,30 @@ OpsExchangeDocument = Backbone.Model.extend({
             var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
             return url;
-        }
+        },
+
+        get_epo_register_url: function() {
+            // https://register.epo.org/application?number=EP95480005
+            var url_tpl = _.template('https://register.epo.org/application?number=<%= application_number %>');
+            var url = url_tpl({application_number: this.get_application_number('docdb')});
+            return url;
+        },
+
+        get_inpadoc_legal_url: function() {
+            // http://worldwide.espacenet.com/publicationDetails/inpadoc?CC=US&NR=6269530B1&KC=B1&FT=D
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadoc?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
+        get_dpma_register_url: function() {
+            // https://register.dpma.de/DPMAregister/pat/register?AKZ=196308771
+            // FIXME: is this always "1"!?
+            var HACK_SUFFIX = '1';
+            var url_tpl = _.template('https://register.dpma.de/DPMAregister/pat/register?AKZ=<%= application_number %>' + HACK_SUFFIX);
+            var url = url_tpl({application_number: this.get_application_number('original')});
+            return url;
+        },
 
     },
 
