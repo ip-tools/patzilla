@@ -32,18 +32,18 @@ var ship_frame = '${ship_frame}';
 ## title / headline
 <div class="container-fluid">
     <div class="span8">
-    <blockquote>
-        <p>
-            <h2 style="display: inline">${page_title}</h2>
-            &nbsp;&nbsp;&nbsp;<i class="icon-refresh icon-spin icon-large" style="display: none" id="spinner"></i>
-        </p>
+        <div class="pull-left">
+        <h3 style="display: inline-block">${page_title}</h3>
+        &nbsp;&nbsp;&nbsp;
         ${page_subtitle}
-    </blockquote>
+        &nbsp;&nbsp;&nbsp;
+        <i class="icon-refresh icon-spin icon-large" style="display: none" id="spinner"></i>
+        </div>
     </div>
     <div class="span4">
-    <div class="pull-right">
-        <h3>${app_productname | n}</h3>
-    </div>
+        <div class="pull-right">
+            <h3>${app_productname | n}</h3>
+        </div>
     </div>
 </div>
 
