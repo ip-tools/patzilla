@@ -26,18 +26,22 @@ Prio 1.1
     - [x] DE202013003344U1  (PDF kann nicht geöffnet werden in Chrome) [Michael]
     - [x] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
     - [x] Nummern Normalisierung z.B. DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
-    - [o] Generic Caching Layer [Andi]
-    - [o] Karussell für die Bilder [Andi, Lino]
-    - [o] Evaluate and display search fault responses (message / details) [Andi]
+    - [x] Generic Caching Layer [Andi]
 
+    - [o] Karussell für die Bilder [Andi, Lino]
+    - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
+
+    - [o] Evaluate and display search fault responses (message / details) [Andi]
     - [o] "Choose all"
     - [o] Embedding Feature mit iframe [Lino]
         - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
     - [o] jquery.shorten für Erfinder [Lino]
     - [o] INID-Code variiert je nach "patent *kind*" [Lino]
     - [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
-    - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
     - [o] Checkbox auf der linken Seite wiedereinführen [Jan]
+
+    - [o] browser history / pushstate
+          http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
 
 
 Espacenet Worldwide Patent search
@@ -77,8 +81,6 @@ Prio 1.3
     - [x] ui: hide basket
     - [o] introduce "ship-button-label", default="auswählen" (instead of hardcoded "bewerten")
 - [o] "Help" screen
-- [o] browser history / pushstate
-      http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
 - [o] Lokalisierung english-only
 - [o] Sharing: Patent with Picture (and Comment)
 - [o] Aktive Merkliste => Klicken eines Detaildokuments führt zu Query-By-Document
