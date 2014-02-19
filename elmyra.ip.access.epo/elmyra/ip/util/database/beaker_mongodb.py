@@ -258,7 +258,7 @@ class MongoDBNamespaceManager(NamespaceManager):
         """@TODO - stop hitting filesystem for this...
         I think mongo can properly avoid dog piling for us.
         """
-        return null_synchronizer
+        return null_synchronizer()
 
     def do_remove(self):
         """Clears the entire filesystem (drops the collection)"""
@@ -375,14 +375,14 @@ class MongoDBNamespaceManager(NamespaceManager):
                 'key': key
             }
 
-            doc['data'] = value
+            doc['data'] = bson.Binary(value)
             doc['_id'] = _id
             if expiretime:
                 # TODO - What is the datatype of this? it should be instantiated as a datetime instance
                 doc['valid_until'] = expiretime
         else:
             _id = self.namespace
-            doc['$set'] = {'data.' + key: value}
+            doc['$set'] = {'data.' + key: bson.Binary(value)}
             if expiretime:
                 # TODO - What is the datatype of this? it should be instantiated as a datetime instance
                 doc['$set']['valid_until'] = expiretime
@@ -494,7 +494,7 @@ def _parse_uri(uri, default_port=27017):
 
 def _depickle(value):
     try:
-        return pickle.loads(value.encode('utf-8'))
+        return pickle.loads(value)
     except Exception, e:
-        log.exception("Failed to unpickle value.", e)
+        log.exception("Failed to unpickle value '{0}'.".format(e))
         return None
