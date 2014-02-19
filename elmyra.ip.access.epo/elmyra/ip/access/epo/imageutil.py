@@ -33,6 +33,7 @@ def tiff_to_png(tiff_payload):
                 '-resize', '457x',
                 '-colorspace', 'rgb', '-flatten', '-depth', '8',
                 '-antialias', '-quality', '100', '-density', '300',
+                '-level', '30%,100%',
                 'png:-']
 
     #print command

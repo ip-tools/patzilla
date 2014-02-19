@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui/api: evaluate and display error responses
+- middleware: adjust image level while converting from tiff to png
 
 0.2.0
 =====
