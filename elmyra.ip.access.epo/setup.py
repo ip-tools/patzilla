@@ -20,6 +20,11 @@ requires = [
     'Akhet==2.0',
     'waitress',
 
+    # caching
+    'Beaker==1.6.4',
+    'pyramid_beaker==0.8',
+    'pymongo==2.6.3',
+
     # web services
     'cornice==0.15',
 
@@ -84,5 +89,7 @@ setup(name='elmyra.ip.access.epo',
       entry_points="""\
       [paste.app_factory]
       main = elmyra.ip.access.epo:main
+      [beaker.backends]
+      mongodb = elmyra.ip.util.database.beaker_mongodb:MongoDBNamespaceManager
       """,
       )

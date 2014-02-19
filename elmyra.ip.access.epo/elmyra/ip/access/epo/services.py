@@ -46,7 +46,7 @@ def ops_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('query', '')
-    log.info('query: ' + query)
+    log.info('query start: ' + query)
 
     # Parse and recompile CQL query string to apply number normalization
     try:
@@ -58,7 +58,11 @@ def ops_published_data_search_handler(request):
     # range: x-y, maximum delta is 100
     range = request.params.get('range', '1-25')
 
-    return ops_published_data_search(constituents, query, range)
+    result = ops_published_data_search(constituents, query, range)
+
+    log.info('query finished')
+
+    return result
 
 
 @ops_drawing_service.get(renderer='png')

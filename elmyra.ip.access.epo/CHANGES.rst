@@ -10,6 +10,9 @@ development
 - ui/feature: "review" selected documents
 - api/ui: propagate "numberlist" query parameter value into basket
 - api/middleware: document-number normalization on patent-search endpoint
+- middleware: resource caching
+    - search: 5 minutes
+    - static: 1 year
 
 
 0.1.1

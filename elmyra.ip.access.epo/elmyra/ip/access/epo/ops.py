@@ -3,8 +3,9 @@
 import logging
 from pyramid.httpexceptions import HTTPNotFound, HTTPError
 from pyramid.threadlocal import get_current_request
-from cornice.util import json_error
+from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
+from beaker.cache import cache_region
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.client import oauth_client_create
 
@@ -19,6 +20,7 @@ def get_ops_client():
     return ops_client
 
 
+@cache_region('search')
 def ops_published_data_search(constituents, query, range):
 
     # query EPO OPS REST service
@@ -42,7 +44,7 @@ def ops_published_data_search(constituents, query, range):
         if response.headers['content-type'] == 'application/json':
             return response.json()
         else:
-            return {}
+            return
     else:
         request = get_current_request()
         response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
@@ -54,21 +56,26 @@ def ops_published_data_search(constituents, query, range):
         raise response
 
 
+@cache_region('search')
 def inquire_images(patent):
 
     url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
     url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
 
-    error_msg_access = 'No image information for document "{0}"'.format(patent)
-    error_msg_process = 'Error while processing image information for document "{0}"'.format(patent)
+    error_msg_access = 'No image information for document={0}'.format(patent)
+    error_msg_process = 'Error while processing image information for document={0}'.format(patent)
 
     client = get_ops_client()
     response = client.get(url_image_inquriy, headers={'Accept': 'application/json'})
     if response.status_code != 200:
-        log.warn(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
-        if response.status_code in [404]:
-            error = HTTPNotFound(error_msg_access)
+
+        # make 404s cacheable
+        if response.status_code == 404:
+            log.warn(error_msg_access)
+            return
+
         else:
+            log.error(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
             error = HTTPError(error_msg_access)
             error.status_code = response.status_code
         raise error
@@ -85,7 +92,7 @@ def inquire_images(patent):
     result = data['ops:world-patent-data']['ops:document-inquiry']['ops:inquiry-result']
 
     info = {}
-    for node in result['ops:document-instance']:
+    for node in to_list(result['ops:document-instance']):
         key = node['@desc']
         info[key] = node
 
@@ -109,6 +116,7 @@ def get_ops_image_link_url(link, format, page=1):
     return url
 
 
+@cache_region('static')
 def get_ops_image(document, page, kind, format):
 
     kind_requested = kind
@@ -117,19 +125,26 @@ def get_ops_image(document, page, kind, format):
 
     # 1. inquire images to compute url to image resource
     image_info = inquire_images(document)
-    drawing_node = image_info.get(kind)
-    if drawing_node:
-        link = drawing_node['@link']
-        if kind_requested == 'FullDocumentDrawing':
-            sections = drawing_node['ops:document-section']
-            for section in sections:
-                if section['@name'] == 'DRAWINGS':
-                    start_page = int(section['@start-page'])
-                    page = start_page + page - 1
-        url = get_ops_image_link_url(link, format, page)
+    if image_info:
+        drawing_node = image_info.get(kind)
+        if drawing_node:
+            link = drawing_node['@link']
+            if kind_requested == 'FullDocumentDrawing':
+                if drawing_node.has_key('ops:document-section'):
+                    sections = drawing_node['ops:document-section']
+                    for section in sections:
+                        if section['@name'] == 'DRAWINGS':
+                            start_page = int(section['@start-page'])
+                            page = start_page + page - 1
+
+            url = get_ops_image_link_url(link, format, page)
+        else:
+            msg = 'No image information for document={0}, kind={1}'.format(document, kind)
+            log.warn(msg)
+            raise HTTPNotFound(msg)
     else:
-        msg = 'No image information for document "{0}" for kind "{1}"'.format(document, kind)
-        log.warn(msg)
+        msg = 'No image information for document={0}'.format(document)
+        #log.warn(msg)
         raise HTTPNotFound(msg)
 
     response = ops_safe_request(url)
