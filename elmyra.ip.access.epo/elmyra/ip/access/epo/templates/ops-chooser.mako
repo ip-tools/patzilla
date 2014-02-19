@@ -58,7 +58,7 @@ var ship_frame = '${ship_frame}';
             <br/>
             <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
             <br/>
-            <input id="query-button" type="button" class="btn btn-info btn-popover"
+            <input id="query-button" type="button" class="btn btn-popover"
                 type="button" role="button" value="Send query"
                 data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Send query to database"
             />
@@ -77,14 +77,14 @@ var ship_frame = '${ship_frame}';
             <div class="row-fluid">
                 <div class="span6">
                     <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
-                        <input id="basket-submit-button" class="btn btn-info btn-popover" ${ship_url or 'disabled="disabled"'}
+                        <input id="basket-submit-button" class="btn btn-popover" ${ship_url or 'disabled="disabled"'}
                             type="submit" role="button" value="Submit"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Submit selected documents to origin or 3rd-party system"
                         />
                     </form>
                 </div>
                 <div class="span6">
-                    <a id="basket-review-button" role="button" class="btn btn-info btn-popover pull-right"
+                    <a id="basket-review-button" role="button" class="btn btn-popover pull-right"
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Review selected documents"
                         >
                         Review
