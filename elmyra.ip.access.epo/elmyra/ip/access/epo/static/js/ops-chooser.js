@@ -55,6 +55,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
             success: function (payload) {
 
                 $('#spinner').hide();
+                $('#alert-area').empty();
 
                 //console.log("payload raw:");
                 //console.log(payload);
@@ -83,7 +84,12 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
             },
             error: function(e, xhr) {
-                console.log("error: " + xhr.responseText);
+
+                //console.log("error: " + xhr.responseText);
+
+                $('#spinner').hide();
+                documents.reset();
+
                 response = jQuery.parseJSON(xhr.responseText);
                 if (response['status'] == 'error') {
                     _.each(response['errors'], function(error) {

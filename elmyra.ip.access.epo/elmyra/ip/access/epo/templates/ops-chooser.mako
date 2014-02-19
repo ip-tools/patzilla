@@ -99,6 +99,7 @@ var ship_frame = '${ship_frame}';
     ## pager
     <div id="ops-pagination-region"></div>
 
+    <div id="alert-area"></div>
 
     ## results
     <div id="ops-collection-region"></div>
@@ -166,8 +167,9 @@ var ship_frame = '${ship_frame}';
 
 ## result list template
 <script id="ops-collection-template" type="text/x-underscore-template">
-    <div id="alert-area"/>
+    <!--
     <div id="ops-collection-entry" class="row"/>
+    -->
 </script>
 
 
