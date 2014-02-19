@@ -88,6 +88,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 //console.log("error: " + xhr.responseText);
 
                 $('#spinner').hide();
+                $('#alert-area').empty();
                 documents.reset();
 
                 response = jQuery.parseJSON(xhr.responseText);
