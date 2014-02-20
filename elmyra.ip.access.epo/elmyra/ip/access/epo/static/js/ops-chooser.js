@@ -198,21 +198,28 @@ OpsExchangeDocument = Backbone.Model.extend({
         get_drawing_url: function() {
             // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
             // http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
-            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %>.<%= kind %>/image/drawing');
-            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            var url_tpl = _.template('/api/ops/<%= patent_number %>/image/drawing');
+            var url = url_tpl({patent_number: this.get_patent_number()});
             return url;
         },
 
         get_fullimage_url: function() {
             // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/A1/fullimage.pdf?Range=1
-            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %>.<%= kind %>/image/full');
-            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            var url_tpl = _.template('/api/ops/<%= patent_number %>/image/full');
+            var url = url_tpl({patent_number: this.get_patent_number()});
             return url;
         },
 
         get_espacenet_pdf_url: function() {
             // http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
             var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
+        get_ops_pdf_url: function() {
+            // /api/ops/EP0666666B1/pdf/all
+            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %><%= kind %>/pdf/all');
             var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
             return url;
         },

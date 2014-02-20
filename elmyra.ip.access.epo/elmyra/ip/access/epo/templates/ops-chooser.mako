@@ -213,6 +213,7 @@ var ship_frame = '${ship_frame}';
         var drawing_url = data.get_drawing_url();
         var fullimage_url = data.get_fullimage_url();
         var espacenet_pdf_url = data.get_espacenet_pdf_url();
+        var ops_pdf_url = data.get_ops_pdf_url();
         var epo_register_url = data.get_epo_register_url();
         var inpadoc_legal_url = data.get_inpadoc_legal_url();
         var dpma_register_url = data.get_dpma_register_url();
@@ -293,28 +294,44 @@ var ship_frame = '${ship_frame}';
                 <!-- actions -->
                 <div class="span5 container-fluid pull-right">
                     <div class="span8">
-                        <a href="#ops-pdf-modal" data-toggle="modal" role="button" class="btn pdf-open btn-popover hide"
-                            data-patent-number="<%= patent_number %>" data-pdf-url="<%= fullimage_url %>"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="View PDF document"
+
+
+                        <!-- pdf document -->
+                        <div class="btn-group btn-popover"
+                                    data-toggle="popover" data-trigger="hover" data-placement="top"
+                                    data-content="Download full pdf documents from various sources"
                             >
-                            <img src="/static/img/icons/pdf.svg" width="20"/>
-                            &nbsp;
-                            PDF
-                        </a>
-                        <a href="<%= espacenet_pdf_url %>" target="_blank" role="button" class="btn btn-popover pdf-download"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Download PDF document"
-                            >
-                            <img src="/static/img/icons/pdf.svg" width="16"/>
-                            PDF
-                        </a>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <img src="/static/img/icons/pdf.svg" width="16"/>
+                                PDF
+                            </button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="<%= ops_pdf_url %>" target="_blank">
+                                        [PDF] <%= patent_number %> @ OPS
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<%= espacenet_pdf_url %>" target="_blank">
+                                        [PDF] <%= patent_number %> @ Espacenet
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
 
 
 
+                        <!-- legal status -->
                         <div class="btn-group btn-popover"
                                     data-toggle="popover" data-trigger="hover" data-placement="top"
                                     data-content="Show legal information from various patent offices"
                             >
-                            <button class="btn dropdown-toggle" data-toggle="dropdown">§ Legal info</button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                § Legal info
+                            </button>
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>

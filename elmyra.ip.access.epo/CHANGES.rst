@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: create full pdf documents from single pages
+- ui: offer full pdf document from multiple sources
 
 0.2.2
 =====
