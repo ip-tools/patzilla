@@ -2,7 +2,7 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
 from cornice import Service
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, get_ops_image_png
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, get_ops_image_png, pdf_document_build
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
 
@@ -31,6 +31,10 @@ ops_fullimage_service = Service(
     path='/api/ops/{patent}/image/full',
     description="OPS fullimage interface")
 
+ops_pdf_service = Service(
+    name='ops-pdf',
+    path='/api/ops/{patent}/pdf/{parts}',
+    description="OPS pdf interface")
 
 
 # ------------------------------------------
@@ -116,3 +120,18 @@ def ops_family_publication_handler(request):
     #print "response:", response.content
 
     return response.content
+
+
+@ops_pdf_service.get(renderer='pdf')
+def ops_pdf_handler(request):
+    """request full document as pdf"""
+    # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/A1/fullimage.pdf?Range=1
+
+    # TODO: respond with proper 4xx codes if something fails
+
+    patent = request.matchdict['patent']
+    parts = request.matchdict['parts']
+
+    pdf_payload = pdf_document_build(patent)
+    request.response.headers['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(patent)
+    return pdf_payload

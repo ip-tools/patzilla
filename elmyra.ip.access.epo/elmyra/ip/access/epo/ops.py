@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
-from pyramid.httpexceptions import HTTPNotFound, HTTPError
+from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPInternalServerError
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.client import oauth_client_create
-from elmyra.ip.access.epo.imageutil import tiff_to_png
+from elmyra.ip.access.epo.imageutil import tiff_to_png, pdf_join, pdf_set_metadata, pdf_make_metadata
+from elmyra.ip.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
 
@@ -63,6 +64,11 @@ def ops_published_data_search(constituents, query, range):
 
 @cache_region('search')
 def inquire_images(patent):
+
+    p = split_patent_number(patent)
+    patent = p['country'] + p['number'] + '.' + p['kind']
+
+    #print "inquire_images:", patent
 
     url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
     url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
@@ -123,7 +129,15 @@ def get_ops_image_link_url(link, format, page=1):
 @cache_region('static')
 def get_ops_image_png(document, page, kind):
     payload = get_ops_image(document, page, kind, 'tiff')
-    payload = tiff_to_png(payload)
+    try:
+        payload = tiff_to_png(payload)
+    except Exception as ex:
+        raise HTTPInternalServerError(ex)
+    return payload
+
+@cache_region('static')
+def get_ops_image_pdf(document, page):
+    payload = get_ops_image(document, page, 'FullDocument', 'pdf')
     return payload
 
 def get_ops_image(document, page, kind, format):
@@ -159,3 +173,30 @@ def get_ops_image(document, page, kind, format):
     response = ops_safe_request(url)
     payload = response.content
     return payload
+
+
+# TODO: activate caching as soon it's reasonably stable
+#@cache_region('static')
+def pdf_document_build(patent):
+
+    # 1. collect all single pdf pages
+    image_info = inquire_images(patent)
+    page_count = int(image_info['FullDocument']['@number-of-pages'])
+    log.info('pdf_document_build collecting {0} pages for document {1}'.format(page_count, patent))
+    pdf_pages = []
+    for page_number in range(1, page_count + 1):
+        page = get_ops_image_pdf(patent, page_number)
+        pdf_pages.append(page)
+
+    # 2. join single pdf pages
+    pdf_document = pdf_join(pages=pdf_pages)
+
+    # 3. add pdf metadata
+    page_sections = image_info['FullDocument']['ops:document-section']
+    #pprint(page_sections)
+    metadata = pdf_make_metadata(patent, 'digi42, elmyra ip suite', page_count, page_sections)
+    pdf_document = pdf_set_metadata(pdf_document, metadata)
+
+    # TODO: 4. add attachments
+
+    return pdf_document

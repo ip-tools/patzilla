@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: create full pdf documents from single pages
 
 0.2.2
 =====

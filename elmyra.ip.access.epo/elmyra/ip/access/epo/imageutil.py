@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 # (c) 2011 ***REMOVED***
 # (c) 2013 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-
-import os, sys
+import os
+import logging
 import StringIO
 import subprocess
+import datetime
+from tempfile import NamedTemporaryFile
+
+
+log = logging.getLogger(__name__)
 
 def tiff_to_png(tiff_payload):
 
@@ -49,30 +54,20 @@ def tiff_to_png(tiff_payload):
 
     stdout = stderr = ''
 
-    def log_error():
-        sys.stderr.write("ERROR: TIFF to PNG conversion failed; command was: '%s'\n" % command)
-        sys.stderr.write("ERROR: TIFF to PNG conversion failed; len(tiff_payload) was: %s\n" % len(tiff_payload))
-        sys.stderr.write("ERROR: TIFF to PNG conversion failed; left(STDOUT, 1000)  was:\n%s\n" % stdout[:1000])
-        sys.stderr.write("ERROR: TIFF to PNG conversion failed; STDERR was:\n%s\n" % stderr)
-        sys.stderr.write("ERROR: Maybe the 'convert' tool (from ImageMagick) is not available on PATH\n")
-
     try:
         stdout, stderr = proc.communicate(tiff_payload)
+        if proc.returncode is not None and proc.returncode != 0:
+            log.error('TIFF to PNG conversion failed, command={0}, stderr={1}, returncode={2}'.format(command, stderr, proc.returncode))
+            raise Exception('TIFF to PNG conversion failed')
     except:
-        log_error()
-        return None
+        log.error('TIFF to PNG conversion failed, command={0}, stderr={1}'.format(command, stderr))
+        raise Exception('TIFF to PNG conversion failed')
 
-    if stderr:
-        print stderr
+    if 'ImageMagick' in stdout[:200]:
+        log.error('TIFF to PNG conversion failed, command={0}, stdout={1}, stderr={1}'.format(command, stdout, stderr))
+        raise Exception('TIFF to PNG conversion failed')
 
-    if stdout and not 'ImageMagick' in stdout[:200]:
-        #print stdout
-        return stdout
-
-    else:
-        log_error()
-        return None
-        #raise RuntimeError, 'TIF to PNG conversion failed, please see the logs.'
+    return stdout
 
 
 def png_resize(png_payload, width):
@@ -105,3 +100,159 @@ def png_resize(png_payload, width):
     #print "got payload"
 
     return png_payload_resized
+
+
+def pdf_join(pages):
+    # pdftk in1.pdf in2.pdf cat output out1.pdf
+    # pdftk in.pdf dump_data output report.txt
+    # pdftk in.pdf update_info in.info output out.pdf
+    # pdftk in.pdf update_info_utf8 in.info output out.pdf
+    # pdftk in.pdf attach_files table1.html table2.html to_page 6 output out.pdf
+
+    command = [
+        'pdftk',
+    ]
+    tmpfiles = []
+    for page in pages:
+        tmpfile = NamedTemporaryFile()
+        tmpfile.write(page)
+        tmpfile.flush()
+
+        tmpfiles.append(tmpfile)
+        command.append(tmpfile.name)
+
+    command += ['cat', 'output', '-']
+
+    #log.info('command={0}'.format(' '.join(command)))
+
+    proc = subprocess.Popen(
+        command,
+        shell = (os.name == 'nt'),
+        #shell = True,
+        stdin = subprocess.PIPE,
+        stdout = subprocess.PIPE,
+        stderr = subprocess.PIPE,
+    )
+
+    stdout = stderr = ''
+
+    try:
+        stdout, stderr = proc.communicate()
+        if proc.returncode is not None and proc.returncode != 0:
+            log.error('pdftk joining failed, command={0}, stderr={1}, returncode={2}'.format(command, stderr, proc.returncode))
+    except:
+        log.error('pdftk joining failed, command={0}, stderr={1}'.format(command, stderr))
+        return None
+
+    return stdout
+
+
+def pdf_set_metadata(pdf_payload, metadata):
+
+    # scdsc
+    # PDF Producer: BNS/PXI/BPS systems of the EPO
+    # Content creator: -
+    # Mod-date: -
+    # Author: -
+    # Subject: -
+    # Title: EP        0666666A2 I
+    pass
+
+    tmpfile = NamedTemporaryFile(delete=False)
+    tmpfile.write(metadata)
+    tmpfile.flush()
+
+    """
+    command = ['pdftk', '-', 'dump_data', 'output', '-']
+    proc = subprocess.Popen(
+        command,
+        shell = (os.name == 'nt'),
+        #shell = True,
+        stdin = subprocess.PIPE,
+        stdout = subprocess.PIPE,
+        stderr = subprocess.PIPE,
+    )
+    stdout, stderr = proc.communicate(pdf_payload)
+    print stdout
+    #sys.exit()
+    """
+
+
+    command = ['pdftk', '-', 'update_info', tmpfile.name, 'output', '-']
+
+    #log.info('command={0}'.format(' '.join(command)))
+
+    proc = subprocess.Popen(
+        command,
+        shell = (os.name == 'nt'),
+        #shell = True,
+        stdin = subprocess.PIPE,
+        stdout = subprocess.PIPE,
+        stderr = subprocess.PIPE,
+    )
+
+    stdout = stderr = ''
+
+    try:
+        stdout, stderr = proc.communicate(pdf_payload)
+        if proc.returncode is not None and proc.returncode != 0:
+            raise Exception()
+    except:
+        log.error('pdftk metadata store failed, command={0}, stderr={1}'.format(command, stderr))
+        return None
+
+    return stdout
+
+
+def pdf_make_metadata(title, producer, pagecount, page_sections):
+
+    date = pdf_now()
+
+    tpl = """
+InfoBegin
+InfoKey: Title
+InfoValue: {title}
+InfoBegin
+InfoKey: Producer
+InfoValue: {producer}
+InfoBegin
+InfoKey: Creator
+InfoValue:
+InfoBegin
+InfoKey: ModDate
+InfoValue:
+InfoBegin
+InfoKey: CreationDate
+InfoValue: {date}
+
+NumberOfPages: {pagecount}
+"""
+
+    metadata = tpl.format(**locals())
+
+    # https://stackoverflow.com/questions/2969479/merge-pdfs-with-pdftk-with-bookmarks/20333267#20333267
+    bookmark_tpl = """
+BookmarkBegin
+BookmarkTitle: {title}
+BookmarkLevel: {level}
+BookmarkPageNumber: {start_page}
+"""
+
+    for page_section in page_sections:
+        name = page_section['@name']
+        start_page = page_section['@start-page']
+        if name == 'SEARCH_REPORT':
+            title = 'Search-report'
+        else:
+            title = name.title()
+        level = 1
+
+        metadata += bookmark_tpl.format(**locals())
+
+    return metadata
+
+
+def pdf_now():
+    # D:20150220033046+01'00'
+    now = datetime.datetime.now().strftime("D:%Y%m%d%H%M%S+01'00'")
+    return now
