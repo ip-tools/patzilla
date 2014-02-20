@@ -35,6 +35,9 @@ Prio 1.1
     - [x] hintergrund grau [Lino]
     - [x] link zum register (with paragraph symbol) [Lino]
 
+    - [x] internal server error @ /api/ops/GB2505130.A/image/drawing
+    - [x] dpmaregister mit autobrowser + generische redirect schnittstelle
+    - [x] uspto pair access; entweder direktlink, oder zur einstiegsseite
     - [o] business rules für register-links [Andi]
 
     - [o] PDF selbst erzeugen(!!!) [Andi, Lino]
@@ -45,6 +48,8 @@ Prio 1.1
     - [o] Query builder + query help (feldnamen)
         https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
     - [o] "BROWSE" from data (click on applicant, inventor, ipc class)
+    - [o] checkbox wieder links, aber schöner, grafischer
+    - [o] Image rotation, e.g. EP2697738A1
 
     - [o] "Choose all"
     - [o] jquery.shorten für Erfinder [Lino]
@@ -58,6 +63,8 @@ Prio 1.1
 
     - [o] Mail shipping feature
     - [o] Annotations feature
+    - [o] Local history feature (breadcrumb, tagcloud)
+    - [o] Link to online bibliographic database
     - [o] Meta: Feature tracker / Ticket system => Trac
 
 
