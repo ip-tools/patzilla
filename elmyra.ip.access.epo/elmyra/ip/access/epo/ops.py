@@ -141,7 +141,7 @@ def get_ops_image(document, page, kind, format):
             if kind_requested == 'FullDocumentDrawing':
                 if drawing_node.has_key('ops:document-section'):
                     sections = drawing_node['ops:document-section']
-                    for section in sections:
+                    for section in to_list(sections):
                         if section['@name'] == 'DRAWINGS':
                             start_page = int(section['@start-page'])
                             page = start_page + page - 1
