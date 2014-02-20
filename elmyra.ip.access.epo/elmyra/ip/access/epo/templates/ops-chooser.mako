@@ -297,7 +297,7 @@ var ship_frame = '${ship_frame}';
 
 
                         <!-- pdf document -->
-                        <div class="btn-group btn-popover"
+                        <div class="btn-group btn-popover span5"
                                     data-toggle="popover" data-trigger="hover" data-placement="top"
                                     data-content="Download full pdf documents from various sources"
                             >
@@ -325,7 +325,7 @@ var ship_frame = '${ship_frame}';
 
 
                         <!-- legal status -->
-                        <div class="btn-group btn-popover"
+                        <div class="btn-group btn-popover span7"
                                     data-toggle="popover" data-trigger="hover" data-placement="top"
                                     data-content="Show legal information from various patent offices"
                             >
