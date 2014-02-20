@@ -38,16 +38,19 @@ Prio 1.1
     - [x] internal server error @ /api/ops/GB2505130.A/image/drawing
     - [x] dpmaregister mit autobrowser + generische redirect schnittstelle
     - [x] uspto pair access; entweder direktlink, oder zur einstiegsseite
-    - [o] business rules für register-links [Andi]
+    - [/] business rules für register-links [Andi]
 
-    - [o] PDF selbst erzeugen(!!!) [Andi, Lino]
+    - [x] PDF selbst erzeugen(!!!) [Andi, Lino]
+    - [x] PDF erzeugen: internal server error bei /api/ops/DE69534171T2/pdf/all
+    - [x] PDF erzeugen: internal server error bei /api/ops/US5572526A/pdf/all
+    - [x] "BROWSE" feature: drill down into data (link applicant, inventor, ipc class, ...)
+
     - [o] Karussell für die Bilder [Andi, Lino]
     - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
     - [o] Embedding Feature mit iframe [Lino]
         - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
     - [o] Query builder + query help (feldnamen)
         https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
-    - [o] "BROWSE" from data (click on applicant, inventor, ipc class)
     - [o] checkbox wieder links, aber schöner, grafischer
     - [o] Image rotation, e.g. EP2697738A1
 
@@ -67,6 +70,11 @@ Prio 1.1
     - [o] Link to online bibliographic database
     - [o] Meta: Feature tracker / Ticket system => Trac
 
+    - [o] deliver svg placeholder, if tiff/png fails::
+
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <text x="200" y="40">No drawing available.</text>
+          </svg>
 
 
 
