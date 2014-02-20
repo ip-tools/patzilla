@@ -196,8 +196,11 @@ def pdf_document_build(patent):
     pdf_document = pdf_join(pages=pdf_pages)
 
     # 3. add pdf metadata
-    page_sections = image_info['FullDocument']['ops:document-section']
-    #pprint(page_sections)
+    page_sections = None
+    if image_info['FullDocument'].has_key('ops:document-section'):
+        page_sections = image_info['FullDocument']['ops:document-section']
+        #pprint(page_sections)
+
     metadata = pdf_make_metadata(patent, 'digi42, elmyra ip suite', page_count, page_sections)
     pdf_document = pdf_set_metadata(pdf_document, metadata)
 
