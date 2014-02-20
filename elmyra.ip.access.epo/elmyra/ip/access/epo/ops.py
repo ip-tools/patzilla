@@ -181,6 +181,10 @@ def pdf_document_build(patent):
 
     # 1. collect all single pdf pages
     image_info = inquire_images(patent)
+    if not image_info:
+        msg = 'No image information for document={0}'.format(patent)
+        raise HTTPNotFound(msg)
+
     page_count = int(image_info['FullDocument']['@number-of-pages'])
     log.info('pdf_document_build collecting {0} pages for document {1}'.format(page_count, patent))
     pdf_pages = []
