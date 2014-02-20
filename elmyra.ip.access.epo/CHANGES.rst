@@ -7,6 +7,7 @@ development
 - middleware: add DPMAregister smart access subsystem
 - api: publish DPMAregister smart access subsystem, e.g.
   /jump/dpma/register?pn=DE19630877
+- ui: display link to uspto pair
 
 0.2.1
 =====

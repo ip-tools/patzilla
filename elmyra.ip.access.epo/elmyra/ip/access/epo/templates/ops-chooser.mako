@@ -216,6 +216,7 @@ var ship_frame = '${ship_frame}';
         var epo_register_url = data.get_epo_register_url();
         var inpadoc_legal_url = data.get_inpadoc_legal_url();
         var dpma_register_url = data.get_dpma_register_url();
+        var uspto_pair_url = data.get_uspto_pair_url();
 
         var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
@@ -313,24 +314,30 @@ var ship_frame = '${ship_frame}';
                                     data-toggle="popover" data-trigger="hover" data-placement="top"
                                     data-content="Show legal information from various patent offices"
                             >
-                            <button class="btn"><strong>§</strong> Legal info</button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">§ Legal info</button>
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li>
-                                    <a href="<%= epo_register_url %>" target="_blank">
-                                        [LEGAL] <%= patent_number %> @ European Patent Register
-                                    </a>
-                                </li>
                                 <li>
                                     <a href="<%= inpadoc_legal_url %>" target="_blank">
                                         [LEGAL] <%= patent_number %> @ INPADOC legal status
                                     </a>
                                 </li>
                                 <li>
+                                    <a href="<%= epo_register_url %>" target="_blank">
+                                        [LEGAL] <%= patent_number %> @ European Patent Register
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="<%= dpma_register_url %>" target="_blank">
                                         [LEGAL] <%= patent_number %> @ DPMAregister
+                                    </a>
+                                </li>
+                                <li class="divider"/>
+                                <li>
+                                    <a href="<%= uspto_pair_url %>" target="_blank">
+                                        [LEGAL] @ USPTO PAIR
                                     </a>
                                 </li>
                             </ul>
@@ -455,6 +462,15 @@ var ship_frame = '${ship_frame}';
         <dl class="dl-horizontal dl-horizontal-biblio2">
 
             <dt>
+                Message
+            </dt>
+            <dd>
+                <h4><%= description['content'] %></h4>
+            </dd>
+
+            <br/>
+
+            <dt>
                 Date
             </dt>
             <dd>
@@ -480,13 +496,6 @@ var ship_frame = '${ship_frame}';
             </dt>
             <dd>
                 <%= location %>
-            </dd>
-
-            <dt>
-                Message
-            </dt>
-            <dd>
-                <%= description['content'] %>
             </dd>
 
             <dt>

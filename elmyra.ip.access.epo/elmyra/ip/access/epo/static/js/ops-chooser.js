@@ -248,6 +248,13 @@ OpsExchangeDocument = Backbone.Model.extend({
             return url;
         },
 
+        get_uspto_pair_url: function() {
+            // http://portal.uspto.gov/pair/PublicPair
+            var url_tpl = _.template('http://portal.uspto.gov/pair/PublicPair');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
     },
 
     select: function() {
