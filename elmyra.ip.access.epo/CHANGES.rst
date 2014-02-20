@@ -4,8 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-- middleware: create full pdf documents from single pages
+- middleware: create full pdf documents from single pages via ops only
 - ui: offer full pdf document from multiple sources
+- ui/middleware: apply links to applicants, inventors, ipc classes and publication date
 
 0.2.2
 =====

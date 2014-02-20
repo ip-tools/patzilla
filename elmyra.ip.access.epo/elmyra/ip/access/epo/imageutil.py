@@ -204,7 +204,9 @@ def pdf_set_metadata(pdf_payload, metadata):
     return stdout
 
 
-def pdf_make_metadata(title, producer, pagecount, page_sections):
+def pdf_make_metadata(title, producer, pagecount, page_sections=None):
+
+    page_sections = page_sections or []
 
     date = pdf_now()
 

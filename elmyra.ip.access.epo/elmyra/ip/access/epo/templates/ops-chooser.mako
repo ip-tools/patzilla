@@ -208,8 +208,6 @@ var ship_frame = '${ship_frame}';
         // 2.2 prepare some template variables
 
         var patent_number = data.get_patent_number();
-        var applicant_list = data.get_applicants();
-        var inventor_list = data.get_inventors();
         var drawing_url = data.get_drawing_url();
         var fullimage_url = data.get_fullimage_url();
         var espacenet_pdf_url = data.get_espacenet_pdf_url();
@@ -219,7 +217,7 @@ var ship_frame = '${ship_frame}';
         var dpma_register_url = data.get_dpma_register_url();
         var uspto_pair_url = data.get_uspto_pair_url();
 
-        var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
+        var publication_date = data.enrich_link(format_date(search_date(data['bibliographic-data']['publication-reference']['document-id'])), 'publicationdate');
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
 
         // title
@@ -229,16 +227,6 @@ var ship_frame = '${ship_frame}';
             title_list = _.map(to_list(title_node), function(title) {
                 var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '';
                 return lang_prefix + title['$'];
-            });
-        }
-
-        // ipc
-        var ipc_list = [];
-        var ipc_node_top = data['bibliographic-data']['classifications-ipcr'];
-        if (ipc_node_top) {
-            var ipc_node = to_list(ipc_node_top['classification-ipcr']);
-            ipc_list = _.map(ipc_node, function(ipc) {
-                return ipc['text']['$'];
             });
         }
 
@@ -406,7 +394,7 @@ var ship_frame = '${ship_frame}';
                                 (71)
                             </dt>
                             <dd>
-                                <%= applicant_list.map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
+                                <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
                                 &nbsp;
                             </dd>
 
@@ -414,7 +402,7 @@ var ship_frame = '${ship_frame}';
                                 (72)
                             </dt>
                             <dd>
-                                <%= inventor_list.map(function(item) { return '' + item + ''; }).join('<br/>') %>
+                                <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') %>
                                 &nbsp;
                             </dd>
 
@@ -422,7 +410,7 @@ var ship_frame = '${ship_frame}';
                                 (51)
                             </dt>
                             <dd>
-                                <%= ipc_list.join(', ') %>
+                                <%= data.get_ipc_list(true).join(', ') %>
                                 &nbsp;
                             </dd>
 
@@ -454,11 +442,11 @@ var ship_frame = '${ship_frame}';
                 <input name="query" type="hidden" value="${query}"/>
                 <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
                 <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
-                <input name="applicants" type="hidden" value="<%= applicant_list.join('\n') %>"/>
-                <input name="inventors" type="hidden" value="<%= inventor_list.join('\n') %>"/>
+                <input name="applicants" type="hidden" value="<%= data.get_applicants().join('\n') %>"/>
+                <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
                 <input name="application_date" type="hidden" value="<%= application_date %>"/>
                 <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
-                <input name="ipcs" type="hidden" value="<%= ipc_list.join('\n') %>"/>
+                <input name="ipcs" type="hidden" value="<%= data.get_ipc_list().join('\n') %>"/>
                 <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
                 <input name="ship_action" type="submit" value="rate"/>
             </form>

@@ -17,6 +17,7 @@ function to_list(value) {
  * ------------------------------------------
  */
 OpsChooserApp = Backbone.Marionette.Application.extend({
+
     // send to server and process response
     perform_search: function(options) {
         var query = $('#query').val();
@@ -27,7 +28,15 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 opsChooserApp.search.perform(this.documents, this.metadata, query);
             }
         }
+    },
+
+    send_query: function(query, options) {
+        if (query) {
+            $('#query').val(query);
+            opsChooserApp.perform_search(options);
+        }
     }
+
 });
 opsChooserApp = new OpsChooserApp();
 
@@ -47,6 +56,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
     perform: function(documents, metadata, query, range) {
 
+        documents.reset();
         $('#spinner').show();
         var self = this;
 
@@ -139,12 +149,16 @@ OpsExchangeDocument = Backbone.Model.extend({
             }
         },
 
-        get_applicants: function() {
+        get_applicants: function(links) {
             try {
                 var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
                 applicants_root_node = applicants_root_node || [];
                 var applicants_node = applicants_root_node['applicant'];
-                return this.parties_to_list(applicants_node, 'applicant-name');
+                var applicants_list = this.parties_to_list(applicants_node, 'applicant-name');
+                if (links) {
+                    applicants_list = this.enrich_links(applicants_list, 'applicant');
+                }
+                return applicants_list;
 
             } catch(e) {
                 console.warn('patent-search: applicants could not be parsed from document ' + this.get_patent_number());
@@ -152,12 +166,16 @@ OpsExchangeDocument = Backbone.Model.extend({
             }
         },
 
-        get_inventors: function() {
+        get_inventors: function(links) {
             try {
                 var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
                 inventors_root_node = inventors_root_node || [];
                 var inventors_node = inventors_root_node['inventor'];
-                return this.parties_to_list(inventors_node, 'inventor-name');
+                var inventor_list = this.parties_to_list(inventors_node, 'inventor-name');
+                if (links) {
+                    inventor_list = this.enrich_links(inventor_list, 'inventor');
+                }
+                return inventor_list;
 
             } catch(e) {
                 console.warn('patent-search: inventors could not be parsed from document ' + this.get_patent_number());
@@ -193,6 +211,42 @@ OpsExchangeDocument = Backbone.Model.extend({
 
             return entries;
 
+        },
+
+        get_ipc_list: function(links) {
+            var ipc_list = [];
+            var ipc_node_top = this['bibliographic-data']['classifications-ipcr'];
+            if (ipc_node_top) {
+                var ipc_node = to_list(ipc_node_top['classification-ipcr']);
+                ipc_list = _.map(ipc_node, function(ipc) {
+                    return ipc['text']['$'];
+                });
+            }
+
+            if (links) {
+                ipc_list = this.enrich_links(ipc_list, 'ipc', function(value) {
+                    return value.substring(0, 15).replace(/ /g, '')
+                });
+            }
+            return ipc_list;
+
+        },
+
+        enrich_links: function(container, attribute, value_modifier) {
+            var self = this;
+            return _.map(container, function(item) {
+                return self.enrich_link(item, attribute, value_modifier);
+            });
+        },
+
+        enrich_link: function(item, attribute, value_modifier) {
+            var label = item;
+            var value = item;
+            if (value_modifier)
+                value = value_modifier(value);
+            var link_tpl = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
+            var link = link_tpl({attribute: attribute, value: value, label: label});
+            return link;
         },
 
         get_drawing_url: function() {
@@ -468,6 +522,16 @@ function listview_bind_actions() {
             pdf_display('pdf', pdf_url, pdf_page);
         });
 
+    });
+
+    // pdf action button
+    $(".query-link").click(function(event) {
+        event.preventDefault();
+        var attr = $(this).data('query-attribute');
+        var val = $(this).data('query-value');
+        var query = attr + '=' + '"' + val + '"';
+        opsChooserApp.send_query(query);
+        $(window).scrollTop(0);
     });
 
 }

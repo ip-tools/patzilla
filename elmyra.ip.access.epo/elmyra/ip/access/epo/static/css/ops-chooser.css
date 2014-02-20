@@ -22,6 +22,16 @@ i.circle-icon {
     text-align: center;
 }
 
+a.query-link {
+    color: #333333;
+    /*
+    color: black;
+    text-decoration: none;
+    text-decoration-color: green;
+    */
+}
+
+
 /* modal boxes */
 
 /* http://www.revillwebdesign.com/change-the-height-width-and-position-of-a-modal-in-twitter-bootstrap/ */
