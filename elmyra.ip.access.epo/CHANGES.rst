@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.2.2
+=====
 - middleware: add DPMAregister smart access subsystem
 - api: publish DPMAregister smart access subsystem, e.g.
   /jump/dpma/register?pn=DE19630877
