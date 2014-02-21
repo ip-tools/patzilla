@@ -252,6 +252,60 @@ OpsExchangeDocument = Backbone.Model.extend({
             return link;
         },
 
+
+        _find_document_number: function(container, id_type) {
+            for (i in container) {
+                var item = container[i];
+                if (item['@document-id-type'] == id_type) {
+                    var docnumber =
+                        (item['country'] ? item['country']['$'] : '') +
+                        (item['doc-number'] ? item['doc-number']['$'] : '') +
+                        (item['kind'] ? item['kind']['$'] : '');
+                    return docnumber;
+                }
+            }
+        },
+
+        get_patent_citation_list: function(links) {
+            var self = this;
+            var results = [];
+            var container_top = this['bibliographic-data']['references-cited'];
+            if (container_top) {
+                var container = to_list(container_top['citation']);
+                results = container
+                    .filter(function(item) { return item['patcit']; })
+                    .map(function(item) { return self._find_document_number(item['patcit']['document-id'], 'docdb'); })
+                ;
+            }
+            if (links) {
+                results = this.enrich_links(results, 'pn');
+            }
+            return results;
+        },
+
+        _expand_links: function(text) {
+            var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/g;
+            _(text.match(urlPattern)).each(function(item) {
+                text = text.replace(item, '<a href="' + item + '" target="_blank">' + item + '</a>');
+            });
+            return text;
+        },
+
+        get_npl_citation_list: function() {
+            var self = this;
+            var results = [];
+            var container_top = this['bibliographic-data']['references-cited'];
+            if (container_top) {
+                var container = to_list(container_top['citation']);
+                results = container
+                    .filter(function(item) { return item['nplcit']; })
+                    .map(function(item) { return item['nplcit']['text']['$']; })
+                    .map(self._expand_links)
+                ;
+            }
+            return results;
+        },
+
         get_drawing_url: function() {
             // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
             // http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1

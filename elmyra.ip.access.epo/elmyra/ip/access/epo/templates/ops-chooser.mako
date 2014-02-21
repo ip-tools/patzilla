@@ -476,6 +476,19 @@ var ship_frame = '${ship_frame}';
                                 </div>
                             </dd>
 
+                            <br/>
+
+                            <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
+                                (56)
+                            </dt>
+                            <dd>
+                                <%= data.get_patent_citation_list(true).join(', ') %>
+                                <br/><br/>
+                                <table class="table table-striped table-condensed">
+                                    <%= data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>
+                                </table>
+                            </dd>
+
                         </dl>
 
                     </div>
