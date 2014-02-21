@@ -58,6 +58,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
     perform: function(documents, metadata, query, range) {
 
         documents.reset();
+        $('.pager-area').hide();
         $('#spinner').show();
         var self = this;
 
@@ -67,6 +68,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 $('#spinner').hide();
                 $('#alert-area').empty();
+                $('.pager-area').show();
 
                 //console.log("payload raw:");
                 //console.log(payload);
@@ -696,5 +698,7 @@ $(document).ready(function() {
     $('.btn-popover').popover();
 
     $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
+
+    $('.pager-area').hide();
 
 });

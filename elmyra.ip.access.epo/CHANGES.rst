@@ -9,6 +9,7 @@ development
 - api: enhance image information, publish via endpoint
 - ui: carousel for drawings
 - ui: display pager on top of and at bottom of resultlist
+- ui: don't show pagers when there are no results yet
 
 0.3.0
 =====
