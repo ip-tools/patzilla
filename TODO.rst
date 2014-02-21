@@ -5,6 +5,10 @@ elmyra.ip.access.epo TODO
 - Open Patent Services RESTful Web Services Reference Guide
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 
+- INID Code Standard
+  http://www.wipo.int/export/sites/www/standards/en/pdf/03-09-01.pdf
+
+
 Prio 1
 ======
 - Big Layout changes
@@ -51,19 +55,30 @@ Prio 2
 
 Prio 3
 ======
-- [o] Familienrechtsstand @ Inpadoc EPO
+- [x] Karussell für die Bilder [Andi, Lino]
+- [x] Paging Area auch unten anbringen! [Michi]
+- [x] Familienrechtsstand @ Inpadoc EPO [Lino]
     - http://ops.epo.org/3.0/rest-services/family/publication/docdb/EP.2070806.B1/biblio,legal
-- [o] Paging Area auch unten anbringen!
+- [x] Es wäre cool, wenn unter dem Abstract auch die Zitierten Schriften angezeigt
+      werden würden, jeweils mit einem Link auf die Vollschrift. [Lino]
 
-- [o] Karussell für die Bilder [Andi, Lino]
+
+Prio 4
+======
 - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
 - [o] Embedding Feature mit iframe [Lino]
     - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
 - [o] Query builder + query help (feldnamen)
     https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
+- [o] click on patent number to reach single view
+- [o] Drawing: Show total number of drawings in gui
+- [o] Bug: CH706742B1ww
+
+      File "/Users/amo/dev/elmyra/elmyra.ip.access.epo/elmyra.ip.access.epo/elmyra/ip/access/epo/ops.py", line 69, in inquire_images
+        patent = p['country'] + p['number'] + '.' + p['kind']
 
 
-Prio 4
+Prio 5
 ======
 - [o] browser history / pushstate
       http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
@@ -85,6 +100,7 @@ Prio 4
     - intelligent detection and handling of
         - patent number (and lists)
         - inventor name (and lists)
+- [o] gerastertes scrolling von eintrag zu eintrag
 
 
 Prio 7
@@ -104,6 +120,8 @@ Prio 8
 - [o] interlink documents (bibliographic data) and searches with other offices
     - DEPATISnet
         - https://depatisnet.dpma.de/
+    - EPO Publications
+        - https://data.epo.org/publication-server/?lg=en
     - Espacenet
         - http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?CC=CH&NR=706742B1&KC=B1&FT=D&ND=&date=20140131&DB=&&locale=en_EP
     - Patentscope
@@ -119,6 +137,8 @@ Prio 8
         - http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=CH20130000292&type=application&format=epodoc
         - http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=EP20040425480&type=application&format=epodoc
         - http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=JP2009214944&type=application&format=epodoc
+    - FreePatentsOnline
+    - http://www.intellogist.com/wiki/Compare:Patent_Search_System
 
 - [o] feature: sort/group by country
 
