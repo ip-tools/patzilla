@@ -8,6 +8,7 @@ development
 - ui: enhance pager, display active pagination entry, display current range
 - ui: open drill-down links in external window
 - ui: move arrow controls of carousel to bottom of image
+- ui: center "Drawing #1" label below image
 
 0.4.0
 =====

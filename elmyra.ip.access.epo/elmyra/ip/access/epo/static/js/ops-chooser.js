@@ -631,10 +631,10 @@ function listview_bind_actions() {
         interval: null
     });
 
-    // show page number
+    // update page number on slide
     $('.drawings-carousel').bind('slid', function(event) {
         var page = $(this).data('carousel').getActiveIndex() + 1;
-        $(this).closest('.ops-collection-entry').find('.page-number').text('Drawing: ' + page);
+        $(this).closest('.ops-collection-entry').find('.page-number').text(page);
     });
 
     var carousel_button_more = $('.drawings-carousel .carousel-control.right');
