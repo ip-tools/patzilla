@@ -51,11 +51,16 @@ def ops_published_data_search_handler(request):
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
 
+    # fixup query: wrap into quotes if cql string contains spaces and is still unquoted
+    if ' ' in query and query[0] != '"' and query[-1] != '"':
+        query = '"%s"' % query
+
     # Parse and recompile CQL query string to apply number normalization
     try:
         query_object = cql_parse(query)
-        query = query_object.toCQL()
+        query = query_object.toCQL().strip()
     except Diagnostic as ex:
+        # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
         log.warn('CQL parse error: query="{0}", reason={1}'.format(query, str(ex)))
 
     log.info('query cql: ' + query)

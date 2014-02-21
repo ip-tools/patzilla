@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- api: add a little cql smartness: wrap cql query string with
+       quotes if query contains spaces and is still unquoted
 
 0.3.0
 =====
