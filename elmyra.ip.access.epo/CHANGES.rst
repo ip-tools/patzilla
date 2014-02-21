@@ -7,6 +7,7 @@ development
 - ui: click on document-number in header to navigate to this document
 - ui: enhance pager, display active pagination entry, display current range
 - ui: open drill-down links in external window
+- ui: move arrow controls of carousel to bottom of image
 
 0.4.0
 =====

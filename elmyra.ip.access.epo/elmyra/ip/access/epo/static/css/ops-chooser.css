@@ -96,3 +96,11 @@ a.query-link {
 .dl-horizontal-biblio dd {
     margin-left: 40px;
 }
+
+
+/* carousel for drawings */
+/* move control arrows to bottom of image */
+.carousel-control {
+    position: absolute;
+    top: 95%;
+}
