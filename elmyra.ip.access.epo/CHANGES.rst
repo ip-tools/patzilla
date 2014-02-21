@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: click on document-number in header to navigate to this document
 
 0.4.0
 =====

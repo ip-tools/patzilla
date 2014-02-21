@@ -34,6 +34,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         if (query) {
             $('#query').val(query);
             opsChooserApp.perform_search(options);
+            $(window).scrollTop(0);
         }
     }
 
@@ -603,7 +604,6 @@ function listview_bind_actions() {
         var val = $(this).data('query-value');
         var query = attr + '=' + '"' + val + '"';
         opsChooserApp.send_query(query);
-        $(window).scrollTop(0);
     });
 
     // make the carousel fly
