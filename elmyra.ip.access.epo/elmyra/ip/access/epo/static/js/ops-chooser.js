@@ -631,10 +631,19 @@ function listview_bind_actions() {
         interval: null
     });
 
-    // update page number on slide
+    // update page numbers below drawing
     $('.drawings-carousel').bind('slid', function(event) {
+
+        var container = $(this).closest('.ops-collection-entry');
+
+        // current drawing number
         var page = $(this).data('carousel').getActiveIndex() + 1;
-        $(this).closest('.ops-collection-entry').find('.page-number').text(page);
+        container.find('.drawing-number').text(page);
+
+        // number of all drawings
+        var carousel = container.find('.drawings-carousel');
+        var totalcount = carousel.data('totalcount');
+        container.find('.drawing-totalcount').text(totalcount);
     });
 
     var carousel_button_more = $('.drawings-carousel .carousel-control.right');
@@ -659,10 +668,10 @@ function listview_bind_actions() {
 
         // "number of drawings" is required to limit the upper page bound,
         // inquire it from image information metadata and cache associated with dom element
-        var max_count = carousel_items.data('max_count');
+        var totalcount = carousel.data('totalcount');
 
-        if (!max_count) {
-            max_count = 1;
+        if (!totalcount) {
+            totalcount = 1;
             var document_number = carousel.closest('.ops-collection-entry').data('document-number');
             if (!document_number) {
                 console.warn("document-number could not be found, won't proceed loading items into carousel");
@@ -673,19 +682,19 @@ function listview_bind_actions() {
             //console.log(image_info_url);
 
             $.ajax({url: image_info_url, async: false}).success(function(payload) {
-                max_count = payload['META']['drawing-total-count'];
-                console.log('drawing count: ' + max_count);
+                totalcount = payload['META']['drawing-total-count'];
+                console.log('drawing count: ' + totalcount);
             }).error(function(error) {
                 console.log('Error while fetching drawing count: ' + error);
             });
-            carousel_items.data('max_count', max_count);
+            carousel.data('totalcount', totalcount);
         }
 
-        // skip if max_count is invalid
-        if (!max_count) return;
+        // skip if totalcount is invalid
+        if (!totalcount) return;
 
         // skip if all drawings are already established
-        if (item_count >= max_count) return;
+        if (item_count >= totalcount) return;
 
 
         // build a new carousel item from the last one

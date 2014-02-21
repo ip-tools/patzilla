@@ -10,6 +10,7 @@ development
 - ui: move arrow controls of carousel to bottom of image
 - ui: center "Drawing #1" label below image
 - ui: don't show "Drawing #1" label when there's no image
+- ui: drawing carousel: show total number of drawings in status line
 
 0.4.0
 =====
