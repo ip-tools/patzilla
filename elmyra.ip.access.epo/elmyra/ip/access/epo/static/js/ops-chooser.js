@@ -728,6 +728,24 @@ function listview_bind_actions() {
         $(this).closest('.carousel').hide().parent().find('.drawing-info').html(image_placeholder);
     }); //.attr("src", "missing.png");
 
+
+    // embed 3rd-party component
+    $('.embed-item').each(function(idx, embed_container) {
+        var embed_item_url = $(embed_container).data('embed-url');
+        var document_number = $(embed_container).data('document-number');
+        if (embed_item_url) {
+
+            // 1. compute url to component
+            var _tpl = _.template(embed_item_url, null, { interpolate: /\{\{(.+?)\}\}/g });
+            var embed_real_url = _tpl({publication_number: document_number});
+
+            // 2. create an iframe
+            var iframe = '<iframe src="' + embed_real_url + '" class="container-fluid well" seamless="seamless" height2="200" width2="100%" style="min-height: 50%; min-width: 80%"/>';
+            $(this).append(iframe);
+
+        }
+    });
+
 }
 
 

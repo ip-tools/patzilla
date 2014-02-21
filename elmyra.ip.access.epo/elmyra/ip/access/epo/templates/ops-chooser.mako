@@ -21,12 +21,14 @@ ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
 ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
 ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
+embed_item_url = request.params.get('embed-item-url', '')
 %>
 <script type="application/javascript">
 var ship_mode = '${ship_mode}';
 var ship_param = '${ship_param}';
 var ship_url = '${ship_url}';
 var ship_frame = '${ship_frame}';
+var embed_item_url = decodeURIComponent('${embed_item_url}');
 </script>
 
 ## title / headline
@@ -541,6 +543,10 @@ var ship_frame = '${ship_frame}';
                             </dd>
 
                         </dl>
+
+                        <!-- embed 3rd-party component -->
+                        <div class="embed-item" data-embed-url="<%= embed_item_url %>" data-document-number="<%= patent_number %>">
+                        </div>
 
                     </div>
                 </div>

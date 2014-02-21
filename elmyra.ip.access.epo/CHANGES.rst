@@ -7,6 +7,7 @@ development
 - ui: fix height-flickering of list entry when new drawing is lazy-loaded into carousel
 - middleware: activate caching of generated pdf documents
 - ui: make ship-mode=single-bibdata work again
+- ui: integrate 3rd-party tools via iframe (parameter "embed-item-url")
 
 0.4.2
 =====
