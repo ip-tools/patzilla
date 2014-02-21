@@ -10,6 +10,7 @@ development
 - ui: carousel for drawings
 - ui: display pager on top of and at bottom of resultlist
 - ui: don't show pagers when there are no results yet
+- ui: link to family information (INPADOC, OPS)
 
 0.3.0
 =====

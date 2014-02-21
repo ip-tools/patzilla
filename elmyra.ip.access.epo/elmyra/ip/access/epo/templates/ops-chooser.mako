@@ -220,6 +220,8 @@ var ship_frame = '${ship_frame}';
         var inpadoc_legal_url = data.get_inpadoc_legal_url();
         var dpma_register_url = data.get_dpma_register_url();
         var uspto_pair_url = data.get_uspto_pair_url();
+        var inpadoc_family_url = data.get_inpadoc_family_url();
+        var ops_family_url = data.get_ops_family_url();
 
         var publication_date = data.enrich_link(format_date(search_date(data['bibliographic-data']['publication-reference']['document-id'])), 'publicationdate');
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
@@ -322,12 +324,17 @@ var ship_frame = '${ship_frame}';
                                     data-content="Show legal information from various patent offices"
                             >
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                § Legal info
+                                <i class="icon-globe icon-large"></i> More
                             </button>
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
+
+                                <li><div style="padding-left: 10px">
+                                    <h5>§ &nbsp; Legal information</h5>
+                                    </div>
+                                </li>
                                 <li>
                                     <a href="<%= inpadoc_legal_url %>" target="_blank">
                                         [LEGAL] <%= patent_number %> @ INPADOC legal status
@@ -343,12 +350,28 @@ var ship_frame = '${ship_frame}';
                                         [LEGAL] <%= patent_number %> @ DPMAregister
                                     </a>
                                 </li>
-                                <li class="divider"/>
                                 <li>
                                     <a href="<%= uspto_pair_url %>" target="_blank">
                                         [LEGAL] @ USPTO PAIR
                                     </a>
                                 </li>
+                                <li class="divider"/>
+
+                                <li><div style="padding-left: 10px">
+                                    <h5><i class="icon-group"></i> &nbsp; Patent family information</h5>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="<%= inpadoc_family_url %>" target="_blank">
+                                        [FAMILY] <%= patent_number %> @ INPADOC patent family
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<%= ops_family_url %>" target="_blank">
+                                        [FAMILY] <%= patent_number %> @ OPS biblio,legal
+                                    </a>
+                                </li>
+
                             </ul>
                         </div>
 

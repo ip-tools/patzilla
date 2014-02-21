@@ -319,6 +319,21 @@ OpsExchangeDocument = Backbone.Model.extend({
             return url;
         },
 
+        get_inpadoc_family_url: function() {
+            // http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?CC=US&NR=6269530B1&KC=B1&FT=D
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
+        get_ops_family_url: function() {
+            // http://ops.epo.org/3.0/rest-services/family/publication/docdb/EP.2070806.B1/biblio,legal
+            var url_tpl = _.template('http://ops.epo.org/3.0/rest-services/family/publication/docdb/<%= country %>.<%= docnumber %>.<%= kind %>/biblio,legal');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
+
     },
 
     select: function() {
