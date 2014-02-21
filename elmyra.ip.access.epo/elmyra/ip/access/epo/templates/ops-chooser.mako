@@ -24,10 +24,10 @@ ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
 embed_item_url = request.params.get('embed-item-url', '')
 %>
 <script type="application/javascript">
-var ship_mode = '${ship_mode}';
-var ship_param = '${ship_param}';
-var ship_url = '${ship_url}';
-var ship_frame = '${ship_frame}';
+var ship_mode = decodeURIComponent('${ship_mode}');
+var ship_param = decodeURIComponent('${ship_param}');
+var ship_url = decodeURIComponent('${ship_url}');
+var ship_frame = decodeURIComponent('${ship_frame}');
 var embed_item_url = decodeURIComponent('${embed_item_url}');
 </script>
 
