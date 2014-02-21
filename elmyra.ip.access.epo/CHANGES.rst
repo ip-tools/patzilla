@@ -8,6 +8,7 @@ development
        quotes if query contains spaces and is still unquoted
 - api: enhance image information, publish via endpoint
 - ui: carousel for drawings
+- ui: display pager on top of and at bottom of resultlist
 
 0.3.0
 =====

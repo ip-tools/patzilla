@@ -98,13 +98,17 @@ var ship_frame = '${ship_frame}';
     </div>
 
 
-    ## pager
-    <div id="ops-pagination-region"></div>
+    ## pager top
+    <div class="pager-area" id="ops-pagination-region-top"></div>
 
+    ## notifications and alerts
     <div id="alert-area"></div>
 
     ## results
     <div id="ops-collection-region"></div>
+
+    ## pager bottom
+    <div class="pager-area" id="ops-pagination-region-bottom"></div>
 
     <hr class="clear-margin" style="margin-top: 50px"/>
     <div class="page-footer pull-left">

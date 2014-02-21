@@ -42,7 +42,8 @@ opsChooserApp = new OpsChooserApp();
 
 opsChooserApp.addRegions({
     listRegion: "#ops-collection-region",
-    paginationRegion: "#ops-pagination-region",
+    paginationRegionTop: "#ops-pagination-region-top",
+    paginationRegionBottom: "#ops-pagination-region-bottom",
 });
 
 
@@ -645,13 +646,17 @@ opsChooserApp.addInitializer(function(options) {
     var collectionView = new OpsExchangeDocumentCollectionView({
         collection: this.documents
     });
-    var paginationView = new PaginationView({
+    var paginationViewTop = new PaginationView({
+        model: this.metadata
+    });
+    var paginationViewBottom = new PaginationView({
         model: this.metadata
     });
 
     // bind view objects to region objects
     opsChooserApp.listRegion.show(collectionView);
-    opsChooserApp.paginationRegion.show(paginationView);
+    opsChooserApp.paginationRegionTop.show(paginationViewTop);
+    opsChooserApp.paginationRegionBottom.show(paginationViewBottom);
 });
 
 opsChooserApp.addInitializer(function(options) {
