@@ -451,7 +451,7 @@ var ship_frame = '${ship_frame}';
                             <a class="carousel-control right" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
                         </div>
 
-                        <div class="span12 text-center">
+                        <div class="drawing-info span12 text-center">
                             Drawing #<span class="page-number">1</span>
                         </div>
 

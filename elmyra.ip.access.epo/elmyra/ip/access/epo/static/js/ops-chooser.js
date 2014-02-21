@@ -710,7 +710,8 @@ function listview_bind_actions() {
     var images = $('.drawings-carousel').find('img');
     images.error(function() {
         $(this).hide();
-        $(this).closest('.carousel').hide().parent().append('<br/><br/><br/><br/><p align="center">No image</p>');
+        var image_placeholder = '<br/><blockquote class="text-center" style="min-height: 300px"><br/><br/><br/><br/><br/><br/>No image</blockquote>';
+        $(this).closest('.carousel').hide().parent().find('.drawing-info').html(image_placeholder);
     }); //.attr("src", "missing.png");
 
 }

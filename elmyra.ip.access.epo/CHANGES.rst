@@ -9,6 +9,7 @@ development
 - ui: open drill-down links in external window
 - ui: move arrow controls of carousel to bottom of image
 - ui: center "Drawing #1" label below image
+- ui: don't show "Drawing #1" label when there's no image
 
 0.4.0
 =====
