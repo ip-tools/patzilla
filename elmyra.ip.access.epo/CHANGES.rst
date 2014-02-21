@@ -14,6 +14,7 @@ development
 - ui: center "Drawing #1" label below image
 - ui: don't show "Drawing #1" label when there's no image
 - ui: drawing carousel: show total number of drawings in status line
+- dev: prepare automatic version bumping
 
 0.4.0
 =====

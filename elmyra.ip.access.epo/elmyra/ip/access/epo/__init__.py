@@ -1,9 +1,12 @@
+from elmyra.ip.version import __VERSION__
 from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer
 from pyramid.config import Configurator
 
 def main(global_config, **settings):
-    """ This function returns a Pyramid WSGI application.
-    """
+    """This function returns a Pyramid WSGI application."""
+
+    settings['SOFTWARE_VERSION'] = __VERSION__
+
     config = Configurator(settings=settings)
 
     # Addons
