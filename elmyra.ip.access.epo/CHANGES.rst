@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.4.1
+=====
 - ui: click on document-number in header to navigate to this document
 - ui: enhance pager, display active pagination entry, display current range
 - ui: open drill-down links in external window
