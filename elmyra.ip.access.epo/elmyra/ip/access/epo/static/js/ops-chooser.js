@@ -643,7 +643,8 @@ function listview_bind_actions() {
         // number of all drawings
         var carousel = container.find('.drawings-carousel');
         var totalcount = carousel.data('totalcount');
-        container.find('.drawing-totalcount').text(totalcount);
+        if (totalcount)
+            container.find('.drawing-totalcount').text('/' + totalcount);
     });
 
     var carousel_button_more = $('.drawings-carousel .carousel-control.right');

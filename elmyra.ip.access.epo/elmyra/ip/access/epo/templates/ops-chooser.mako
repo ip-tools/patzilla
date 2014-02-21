@@ -452,7 +452,7 @@ var ship_frame = '${ship_frame}';
                         </div>
 
                         <div class="drawing-info span12 text-center">
-                            Drawing #<span class="drawing-number">1</span>/<span class="drawing-totalcount">?</span>
+                            Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"/>
                         </div>
 
                     </div>
