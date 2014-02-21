@@ -2,7 +2,7 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
 from cornice import Service
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, get_ops_image_png, pdf_document_build
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, get_ops_image_png, pdf_document_build, inquire_images
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
 
@@ -20,6 +20,11 @@ ops_family_publication_service = Service(
     name='ops-family-publication',
     path='/api/ops/{patent}/family/publication',
     description="OPS family publication interface")
+
+ops_image_info_service = Service(
+    name='ops-image-info',
+    path='/api/ops/{patent}/image/info',
+    description="OPS image info interface")
 
 ops_drawing_service = Service(
     name='ops-drawing',
@@ -73,6 +78,13 @@ def ops_published_data_search_handler(request):
     log.info('query finished')
 
     return result
+
+
+@ops_image_info_service.get()
+def ops_image_info_handler(request):
+    patent = request.matchdict['patent']
+    info = inquire_images(patent)
+    return info
 
 
 @ops_drawing_service.get(renderer='png')

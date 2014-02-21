@@ -107,17 +107,30 @@ def inquire_images(patent):
         key = node['@desc']
         info[key] = node
 
+    enrich_image_inquiry_info(info)
+
     return info
 
 
-def ops_safe_request(url):
-    client = get_ops_client()
-    response = client.get(url)
-    if response.status_code != 200:
-        print response
-        print response.headers
-        print response.content
-    return response
+def enrich_image_inquiry_info(info):
+    """enrich image inquiry information"""
+
+    meta = {}
+
+    # compute page offset to first drawing
+    entry = info.get('FullDocument')
+    if entry and entry.has_key('ops:document-section'):
+        sections = entry.get('ops:document-section', [])
+        for section in to_list(sections):
+            if section['@name'] == 'DRAWINGS':
+                meta['drawing-start-page'] = int(section['@start-page'])
+                break
+
+    # clone number of drawings
+    if meta.has_key('drawing-start-page'):
+        meta['drawing-total-count'] = info['Drawing']['@number-of-pages']
+
+    info['META'] = meta
 
 
 def get_ops_image_link_url(link, format, page=1):
@@ -125,6 +138,7 @@ def get_ops_image_link_url(link, format, page=1):
     url_tpl = '{service_url}{link}.{format}?Range={page}'
     url = url_tpl.format(**locals())
     return url
+
 
 @cache_region('static')
 def get_ops_image_png(document, page, kind):
@@ -134,6 +148,7 @@ def get_ops_image_png(document, page, kind):
     except Exception as ex:
         raise HTTPInternalServerError(ex)
     return payload
+
 
 @cache_region('static')
 def get_ops_image_pdf(document, page):
@@ -152,13 +167,12 @@ def get_ops_image(document, page, kind, format):
         drawing_node = image_info.get(kind)
         if drawing_node:
             link = drawing_node['@link']
+
+            # compute offset to first drawing if special kind "FullDocumentDrawing" is requested
             if kind_requested == 'FullDocumentDrawing':
-                if drawing_node.has_key('ops:document-section'):
-                    sections = drawing_node['ops:document-section']
-                    for section in to_list(sections):
-                        if section['@name'] == 'DRAWINGS':
-                            start_page = int(section['@start-page'])
-                            page = start_page + page - 1
+                start_page = image_info['META'].get('drawing-start-page')
+                if start_page:
+                    page = page + start_page - 1
 
             url = get_ops_image_link_url(link, format, page)
         else:
@@ -170,9 +184,19 @@ def get_ops_image(document, page, kind, format):
         #log.warn(msg)
         raise HTTPNotFound(msg)
 
-    response = ops_safe_request(url)
-    payload = response.content
-    return payload
+    client = get_ops_client()
+    response = client.get(url)
+    if response.status_code == 200:
+        payload = response.content
+        return payload
+
+    else:
+        msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
+        log.warn('[{code}] {message}'.format(code=response.status_code, message=msg))
+        error = HTTPError()
+        error.explanation = msg
+        error.status_code = response.status_code
+        raise error
 
 
 # TODO: activate caching as soon it's reasonably stable
