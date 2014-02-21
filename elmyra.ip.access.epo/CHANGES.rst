@@ -7,6 +7,7 @@ development
 - api: add a little cql smartness: wrap cql query string with
        quotes if query contains spaces and is still unquoted
 - api: enhance image information, publish via endpoint
+- ui: carousel for drawings
 
 0.3.0
 =====

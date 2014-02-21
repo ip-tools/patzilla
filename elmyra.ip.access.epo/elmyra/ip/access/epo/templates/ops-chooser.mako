@@ -246,7 +246,7 @@ var ship_frame = '${ship_frame}';
 
 
         <%text>
-        <div class="container-fluid ops-collection-entry">
+        <div class="container-fluid ops-collection-entry" data-document-number="<%= patent_number %>">
 
             <div class="ops-collection-entry-heading row-fluid">
 
@@ -384,7 +384,34 @@ var ship_frame = '${ship_frame}';
 
                 <div class="row-fluid">
                     <div class="span5">
+
+                        <!-- first drawing only -->
+                        <!--
                         <img src="<%= drawing_url %>" alt="No drawing available."/>
+                        -->
+
+                        <!-- carousel for all drawings -->
+                        <div id="drawings-carousel-<%= patent_number %>" class="carousel slide drawings-carousel">
+                            <!--
+                            <ol class="carousel-indicators">
+                                <li data-target="#drawings-carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#drawings-carousel" data-slide-to="1"></li>
+                                <li data-target="#drawings-carousel" data-slide-to="2"></li>
+                            </ol>
+                            -->
+                            <!-- carousel items -->
+                            <div class="carousel-inner">
+                                <div class="active item">
+                                    <img src="<%= drawing_url %>" alt="No drawing available."/>
+                                </div>
+                            </div>
+                            <!-- carousel navigation -->
+                            <a class="carousel-control left" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
+                            <a class="carousel-control right" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
+                        </div>
+
+                        <span class="page-number pull-right">Drawing: 1</span>
+
                     </div>
                     <div class="span7">
 

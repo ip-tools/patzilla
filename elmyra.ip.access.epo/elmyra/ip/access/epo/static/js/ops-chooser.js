@@ -524,7 +524,7 @@ function listview_bind_actions() {
 
     });
 
-    // pdf action button
+    // run search actions when clicking query-links
     $(".query-link").click(function(event) {
         event.preventDefault();
         var attr = $(this).data('query-attribute');
@@ -533,6 +533,95 @@ function listview_bind_actions() {
         opsChooserApp.send_query(query);
         $(window).scrollTop(0);
     });
+
+    // make the carousel fly
+
+    // turn slideshow off
+    $('.drawings-carousel').carousel({
+        interval: null
+    });
+
+    // show page number
+    $('.drawings-carousel').bind('slid', function(event) {
+        var page = $(this).data('carousel').getActiveIndex() + 1;
+        $(this).closest('.ops-collection-entry').find('.page-number').text('Drawing: ' + page);
+    });
+
+    var carousel_button_more = $('.drawings-carousel .carousel-control.right');
+    carousel_button_more.click(function(event) {
+
+        /*
+         * dynamically load more drawings into the carousel,
+         * until maximum is reached
+         *
+         */
+
+        var carousel = $(this).closest('.ops-collection-entry').find('.drawings-carousel');
+        var carousel_items = carousel.find('.carousel-inner');
+
+        var item_index = carousel_items.find('div.active').index() + 1;
+        var item_count = carousel_items.find('div').length;
+
+
+        // skip if we're not on the last page
+        if (item_index != item_count) return;
+
+
+        // "number of drawings" is required to limit the upper page bound,
+        // inquire it from image information metadata and cache associated with dom element
+        var max_count = carousel_items.data('max_count');
+
+        if (!max_count) {
+            max_count = 1;
+            var document_number = carousel.closest('.ops-collection-entry').data('document-number');
+            if (!document_number) {
+                console.warn("document-number could not be found, won't proceed loading items into carousel");
+                return;
+            }
+            //console.log(document_number);
+            var image_info_url = _.template('/api/ops/<%= patent %>/image/info')({ patent: document_number });
+            //console.log(image_info_url);
+
+            $.ajax({url: image_info_url, async: false}).success(function(payload) {
+                max_count = payload['META']['drawing-total-count'];
+                console.log('Found drawing count: ' + max_count);
+            }).error(function(error) {
+                console.log('Error while fetching drawing count: ' + error);
+            });
+            carousel_items.data('max_count', max_count);
+        }
+
+        // skip if max_count is invalid
+        if (!max_count) return;
+
+        // skip if all drawings are already established
+        if (item_count >= max_count) return;
+
+
+        // build a new carousel item from the last one
+        var blueprint = $(carousel_items).children(':first').clone();
+        $(blueprint).removeClass('active');
+
+        // manipulate nested img src: bump page number
+        var img = $(blueprint).children('img');
+        var src = img.attr('src').replace(/\?page=.*/, '');
+        src += '?page=' + (item_index + 1);
+        img.attr('src', src);
+
+        //console.log(src);
+
+        // add carousel item
+        $(carousel_items).append(blueprint);
+
+    });
+
+
+    // hide broken drawing images
+    var images = $('.drawings-carousel').find('img');
+    images.error(function() {
+        $(this).hide();
+        $(this).closest('.carousel').hide().parent().append('<br/><br/><br/><br/><p align="center">No image</p>');
+    }); //.attr("src", "missing.png");
 
 }
 
