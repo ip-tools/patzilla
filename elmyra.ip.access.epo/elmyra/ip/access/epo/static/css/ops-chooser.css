@@ -7,6 +7,7 @@ body {
 .clear-margin {
     margin: 0px;
 }
+
 .page-footer {
     color: #999999;
 }
@@ -21,6 +22,9 @@ i.circle-icon {
     vertical-align: middle;
     text-align: center;
 }
+a.incognito {
+    color: #333333;
+}
 
 a.query-link {
     color: #333333;
@@ -30,6 +34,13 @@ a.query-link {
     text-decoration-color: green;
     */
 }
+
+/* header */
+.header-compact {
+    display: inline-block;
+    line-height: 20px;
+}
+
 
 /* pager */
 .pager-area {
@@ -84,8 +95,4 @@ a.query-link {
 }
 .dl-horizontal-biblio dd {
     margin-left: 40px;
-}
-
-.header-compact {
-    line-height: 20px;
 }

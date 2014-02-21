@@ -245,20 +245,34 @@ OpsExchangeDocument = Backbone.Model.extend({
         enrich_links: function(container, attribute, value_modifier) {
             var self = this;
             return _.map(container, function(item) {
-                return self.enrich_link(item, attribute, value_modifier);
+                return self.enrich_link(item, attribute, item, value_modifier)
             });
         },
 
-        enrich_link: function(item, attribute, value_modifier) {
-            var label = item;
-            var value = item;
+        enrich_link: function(label, attribute, value, value_modifier) {
+
+            // TODO: make this configurable!
+            var kind = 'external';
+            var target = '_blank';
+
+            if (!value) value = label;
+
+            var link_template;
+            if (kind == 'internal') {
+                link_template = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
+            } else if (kind == 'external') {
+                link_template = _.template('<a href="?query=<%= attribute %>=%22<%= value %>%22" target="' + target + '" class="incognito"><%= label %></a>');
+            }
+
             if (value_modifier)
                 value = value_modifier(value);
-            var link_tpl = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
-            var link = link_tpl({attribute: attribute, value: value, label: label});
-            return link;
-        },
 
+            if (link_template) {
+                var link = link_template({label: label, attribute: attribute, value: value});
+                return link;
+            }
+
+        },
 
         _find_document_number: function(container, id_type) {
             for (i in container) {
@@ -466,7 +480,6 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     template: "#ops-pagination-template",
 
     initialize: function() {
-        console.log('PaginationView.initialize');
         this.listenTo(this.model, "change", this.render);
     },
 

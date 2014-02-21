@@ -270,7 +270,9 @@ var ship_frame = '${ship_frame}';
 
                 <!-- patent number -->
                 <div class="span3">
-                    <h3 class="header-compact"><%= data.enrich_link(patent_number, 'pn') %></h3>
+                    <h3 class="header-compact">
+                        <%= data.enrich_link(patent_number, 'pn') %>
+                    </h3>
                 </div>
 
                 <!-- dates -->
