@@ -700,6 +700,7 @@ function listview_bind_actions() {
 
         // build a new carousel item from the last one
         var blueprint = $(carousel_items).children(':first').clone();
+        var height = $(carousel_items).height();
         $(blueprint).removeClass('active');
 
         // manipulate nested img src: bump page number
@@ -707,8 +708,11 @@ function listview_bind_actions() {
         var src = img.attr('src').replace(/\?page=.*/, '');
         src += '?page=' + (item_index + 1);
         img.attr('src', src);
-
         //console.log(src);
+
+        // fix height-flickering of list entry when new drawing is lazy-loaded into carousel
+        $(blueprint).attr('min-height', height);
+        $(blueprint).height(height);
 
         // add carousel item
         $(carousel_items).append(blueprint);
