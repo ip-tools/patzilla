@@ -602,7 +602,7 @@ function listview_bind_actions() {
 
             $.ajax({url: image_info_url, async: false}).success(function(payload) {
                 max_count = payload['META']['drawing-total-count'];
-                console.log('Found drawing count: ' + max_count);
+                console.log('drawing count: ' + max_count);
             }).error(function(error) {
                 console.log('Error while fetching drawing count: ' + error);
             });

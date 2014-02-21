@@ -321,7 +321,7 @@ var ship_frame = '${ship_frame}';
                         <!-- legal status -->
                         <div class="btn-group btn-popover span7"
                                     data-toggle="popover" data-trigger="hover" data-placement="top"
-                                    data-content="Show legal information from various patent offices"
+                                    data-content="Show more information from various patent offices"
                             >
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
                                 <i class="icon-globe icon-large"></i> More
@@ -449,7 +449,6 @@ var ship_frame = '${ship_frame}';
                             </dt>
                             <dd>
                                 <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
-                                &nbsp;
                             </dd>
 
                             <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
@@ -457,7 +456,6 @@ var ship_frame = '${ship_frame}';
                             </dt>
                             <dd>
                                 <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') %>
-                                &nbsp;
                             </dd>
 
                             <dt class="inid-tooltip" data-toggle="tooltip" title="ipc classes">
@@ -465,7 +463,6 @@ var ship_frame = '${ship_frame}';
                             </dt>
                             <dd>
                                 <%= data.get_ipc_list(true).join(', ') %>
-                                &nbsp;
                             </dd>
 
                             <br/>
