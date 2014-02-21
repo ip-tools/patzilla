@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.4.2
+=====
+- dev: fix .bumpversion.cfg
+
 0.4.1
 =====
 - ui: click on document-number in header to navigate to this document
