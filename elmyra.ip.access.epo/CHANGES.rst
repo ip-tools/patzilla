@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: fix height-flickering of list entry when new drawing is lazy-loaded into carousel
+- middleware: activate caching of generated pdf documents
 
 0.4.2
 =====

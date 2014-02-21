@@ -199,8 +199,7 @@ def get_ops_image(document, page, kind, format):
         raise error
 
 
-# TODO: activate caching as soon it's reasonably stable
-#@cache_region('static')
+@cache_region('static')
 def pdf_document_build(patent):
 
     # 1. collect all single pdf pages
