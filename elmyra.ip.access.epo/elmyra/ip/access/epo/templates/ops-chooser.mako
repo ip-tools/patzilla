@@ -146,27 +146,39 @@ var ship_frame = '${ship_frame}';
 ## pager template
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
-    <div class="pull-left">
-        Result count: <span class="badge badge-info"><%= result_count| 0 %></span>
-    </div>
     <div class="pagination pagination-centered">
       <ul>
         <!--
         <li><a href="#" action="previous">Prev</a></li>
         -->
-        <li><a href="#" range="1-25">1-25</a></li>
-        <li><a href="#" range="26-50">26-50</a></li>
-        <li><a href="#" range="51-75">51-75</a></li>
-        <li><a href="#" range="76-100">76-100</a></li>
-        <li><a href="#" range="101-125">101-125</a></li>
-        <li><a href="#" range="126-150">126-150</a></li>
-        <li><a href="#" range="151-175">151-175</a></li>
-        <li><a href="#" range="176-200">176-200</a></li>
+        <li><a href="" range="1-25">1-25</a></li>
+        <li><a href="" range="26-50">26-50</a></li>
+        <li><a href="" range="51-75">51-75</a></li>
+        <li><a href="" range="76-100">76-100</a></li>
+        <li><a href="" range="101-125">101-125</a></li>
+        <li><a href="" range="126-150">126-150</a></li>
+        <li><a href="" range="151-175">151-175</a></li>
+        <li><a href="" range="176-200">176-200</a></li>
         <!--
         <li><a href="#" action="next">Next</a></li>
         -->
       </ul>
     </div>
+    <div class="pagination-centered">
+        total = <span class="badge badge-info"><%= result_count | 0 %></span>
+        &nbsp;&nbsp;
+        current = <span class="badge badge-info"><%= result_range %></span>
+    </div>
+    <script language="javascript">
+        // mark proper pagination entry as active
+        $('.pagination').find('a').each(function(i, anchor) {
+            var anchor_range = $(anchor).attr('range');
+            if (anchor_range == '<%= result_range %>') {
+                var li = $(anchor).parent();
+                li.addClass('active');
+            }
+        });
+    </script>
 </script>
 </%text>
 

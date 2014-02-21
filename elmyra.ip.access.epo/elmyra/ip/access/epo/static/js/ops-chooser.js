@@ -90,8 +90,12 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 documents.reset(entries);
 
                 // propagate metadata to model
-                var total_result_count = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['@total-result-count'];
-                metadata.set({result_count: total_result_count});
+                var biblio_search = payload['attributes']['ops:world-patent-data']['ops:biblio-search'];
+                var result_count = biblio_search['@total-result-count'];
+                var result_range_node = biblio_search['ops:range'];
+                var result_range = result_range_node['@begin'] + '-' + result_range_node['@end'];
+                var query_real = biblio_search['ops:query']['$'];
+                metadata.set({result_count: result_count, result_range: result_range, query_real: query_real});
 
                 // run action bindings here after rendering data entries
                 listview_bind_actions();
@@ -124,6 +128,8 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
         result_count: null,
+        result_range: null,
+        query_real: null,
     }
 
 });
@@ -456,7 +462,7 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
 
 PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
-    id: "paginationview",
+    //id: "paginationview",
     template: "#ops-pagination-template",
 
     initialize: function() {
@@ -465,8 +471,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     onDomRefresh: function() {
-        console.log('PaginationView.onDomRefresh');
-        $('div.pagination a').click(function() {
+        $(this.el).find('div.pagination a').click(function() {
             var action = $(this).attr('action');
             var range = $(this).attr('range');
             opsChooserApp.perform_search({range: range});
