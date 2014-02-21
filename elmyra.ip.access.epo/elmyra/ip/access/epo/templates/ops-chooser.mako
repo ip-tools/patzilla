@@ -78,15 +78,21 @@ var ship_frame = '${ship_frame}';
             </div>
             <div class="row-fluid">
                 <div class="span6">
-                        <input id="basket-submit-button" class="btn btn-popover" ${ship_url or 'disabled="disabled"'}
-                            type="submit" role="button" value="Submit"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Submit selected documents to origin or 3rd-party system"
-                        />
+                    <button
+                        type="submit" role="button" class="btn btn-popover"
+                        ${ship_url or 'disabled="disabled"'}
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Submit selected documents to origin or 3rd-party system"
+                        >
+                        <i class="icon-share"></i>
+                        Submit
+                    </button>
                 </div>
                 <div class="span6">
                     <a id="basket-review-button" role="button" class="btn btn-popover pull-right"
                         data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Review selected documents"
                         >
+                        <i class="icon-reply"></i>
                         Review
                     </a>
                 </div>
@@ -235,7 +241,7 @@ var ship_frame = '${ship_frame}';
         var inpadoc_family_url = data.get_inpadoc_family_url();
         var ops_family_url = data.get_ops_family_url();
 
-        var publication_date = data.enrich_link(format_date(search_date(data['bibliographic-data']['publication-reference']['document-id'])), 'publicationdate');
+        var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
 
         // title
@@ -293,7 +299,7 @@ var ship_frame = '${ship_frame}';
                                 (45)
                             </dt>
                             <dd>
-                                <%= publication_date %>
+                                <%= data.enrich_link(publication_date, 'publicationdate') %>
                             </dd>
                         </dl>
                     </div>
@@ -392,6 +398,7 @@ var ship_frame = '${ship_frame}';
                     </div>
                     <div class="span4">
                         </%text>
+
                         % if ship_mode == 'multi-numberlist':
                             <%text>
                             <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
@@ -409,6 +416,34 @@ var ship_frame = '${ship_frame}';
                             </a>
                             </%text>
                         % endif
+
+                        % if ship_mode == 'single-bibdata':
+                        <%text>
+                            <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
+                                <input name="query" type="hidden" value="<%= $('#query').val().replace(/"/g, '&quot;') %>"/>
+                                <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
+                                <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
+                                <input name="applicants" type="hidden" value="<%= data.get_applicants().join('\n') %>"/>
+                                <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
+                                <input name="application_date" type="hidden" value="<%= application_date %>"/>
+                                <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
+                                <input name="ipcs" type="hidden" value="<%= data.get_ipc_list().join('\n') %>"/>
+                                <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
+                                <!--
+                                <input name="ship_action" type="submit" value="rate" class="btn"/>
+                                -->
+                                <button type="submit" role="button" class="btn btn-popover"
+                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                    data-content="Submit details of document to origin or 3rd-party system"
+                                    >
+                                    <i class="icon-share"/>
+                                    Submit
+                                </button>
+
+                            </form>
+                        </%text>
+                        % endif
+
                         <%text>
                     </div>
                 </div>
@@ -513,26 +548,6 @@ var ship_frame = '${ship_frame}';
              </div>
         </div>
         </%text>
-
-
-        % if ship_mode == 'single-bibdata':
-        <%text>
-        <td>
-            <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
-                <input name="query" type="hidden" value="${query}"/>
-                <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
-                <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
-                <input name="applicants" type="hidden" value="<%= data.get_applicants().join('\n') %>"/>
-                <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
-                <input name="application_date" type="hidden" value="<%= application_date %>"/>
-                <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
-                <input name="ipcs" type="hidden" value="<%= data.get_ipc_list().join('\n') %>"/>
-                <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
-                <input name="ship_action" type="submit" value="rate"/>
-            </form>
-        </td>
-        </%text>
-        % endif
 
 </script>
 
