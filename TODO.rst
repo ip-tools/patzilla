@@ -5,8 +5,8 @@ elmyra.ip.access.epo TODO
 - Open Patent Services RESTful Web Services Reference Guide
   http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
 
-Prio 1.1
-========
+Prio 1
+======
 - Big Layout changes
     - [/] Abstände und Einzüge homogener machen
         - z.B. Bei zwei Erfindern zum Abstract
@@ -20,67 +20,111 @@ Prio 1.1
     - [x] Alles englisch
     - [x] Tooltips für INID Einträge in bibl. Daten
 
-    - [x] PDF Anzeige in Firefox und Internet Explorer fixen => Volles PDF erzeugen [Lino, Michael, Jan]
-    - [x] Wenn keine Zeichnung geladen werden kann, besser alternativen Text statt zerbrochenem Bild anzeigen [Jan]
-    - [x] Bilder ordentlich auf gewünschte Breite skalieren (mit Antialiasing), IE rendert es sonst hässlich [Lino]
-    - [x] DE202013003344U1  (PDF kann nicht geöffnet werden in Chrome) [Michael]
-    - [x] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
-    - [x] Nummern Normalisierung z.B. DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
-    - [x] Generic Caching Layer [Andi]
-    - [x] Evaluate and display search fault responses (message / details) [Andi]
 
-    - [x] (54) wieder weg [Lino]
-    - [x] header stil links/rechts gleich [Lino]
-    - [x] buttons grau [Lino]
-    - [x] hintergrund grau [Lino]
-    - [x] link zum register (with paragraph symbol) [Lino]
+Prio 2
+======
+- [x] PDF Anzeige in Firefox und Internet Explorer fixen => Volles PDF erzeugen [Lino, Michael, Jan]
+- [x] Wenn keine Zeichnung geladen werden kann, besser alternativen Text statt zerbrochenem Bild anzeigen [Jan]
+- [x] Bilder ordentlich auf gewünschte Breite skalieren (mit Antialiasing), IE rendert es sonst hässlich [Lino]
+- [x] DE202013003344U1  (PDF kann nicht geöffnet werden in Chrome) [Michael]
+- [x] Basket: "Review" button neben "Submit" button, soll nur die ausgewählten Schriften zur Anzeige bringen [Lino]
+- [x] Nummern Normalisierung z.B. DE000019630877C2 vs. DE19630877C2 nach Kundenwunsch [Höfer via Jan]
+- [x] Generic Caching Layer [Andi]
+- [x] Evaluate and display search fault responses (message / details) [Andi]
 
-    - [x] internal server error @ /api/ops/GB2505130.A/image/drawing
-    - [x] dpmaregister mit autobrowser + generische redirect schnittstelle
-    - [x] uspto pair access; entweder direktlink, oder zur einstiegsseite
-    - [/] business rules für register-links [Andi]
+- [x] (54) wieder weg [Lino]
+- [x] header stil links/rechts gleich [Lino]
+- [x] buttons grau [Lino]
+- [x] hintergrund grau [Lino]
+- [x] link zum register (with paragraph symbol) [Lino]
 
-    - [x] PDF selbst erzeugen(!!!) [Andi, Lino]
-    - [x] PDF erzeugen: internal server error bei /api/ops/DE69534171T2/pdf/all
-    - [x] PDF erzeugen: internal server error bei /api/ops/US5572526A/pdf/all
-    - [x] "BROWSE" feature: drill down into data (link applicant, inventor, ipc class, ...)
+- [x] internal server error @ /api/ops/GB2505130.A/image/drawing
+- [x] dpmaregister mit autobrowser + generische redirect schnittstelle
+- [x] uspto pair access; entweder direktlink, oder zur einstiegsseite
+- [/] business rules für register-links [Andi]
 
-    - [o] Karussell für die Bilder [Andi, Lino]
-    - [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
-    - [o] Embedding Feature mit iframe [Lino]
-        - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
-    - [o] Query builder + query help (feldnamen)
-        https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
-    - [o] checkbox wieder links, aber schöner, grafischer
-    - [o] Image rotation, e.g. EP2697738A1
-
-    - [o] "Choose all"
-    - [o] jquery.shorten für Erfinder [Lino]
-    - [o] INID-Code variiert je nach "patent *kind*" [Lino]
-    - [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
-    - [o] Checkbox auf der linken Seite wiedereinführen [Jan]
-    - [o] use app-pagename et al. in html title as well!
-
-    - [o] browser history / pushstate
-          http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
-
-    - [o] Mail shipping feature
-    - [o] Annotations feature
-    - [o] Local history feature (breadcrumb, tagcloud)
-    - [o] Link to online bibliographic database
-    - [o] Meta: Feature tracker / Ticket system => Trac
-
-    - [o] deliver svg placeholder, if tiff/png fails::
-
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-              <text x="200" y="40">No drawing available.</text>
-          </svg>
+- [x] PDF selbst erzeugen(!!!) [Andi, Lino]
+- [x] PDF erzeugen: internal server error bei /api/ops/DE69534171T2/pdf/all
+- [x] PDF erzeugen: internal server error bei /api/ops/US5572526A/pdf/all
+- [x] "BROWSE" feature: drill down into data (link applicant, inventor, ipc class, ...)
 
 
+Prio 3
+======
+- [o] Familienrechtsstand @ Inpadoc EPO
+    - http://ops.epo.org/3.0/rest-services/family/publication/docdb/EP.2070806.B1/biblio,legal
+- [o] Paging Area auch unten anbringen!
+
+- [o] Karussell für die Bilder [Andi, Lino]
+- [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
+- [o] Embedding Feature mit iframe [Lino]
+    - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
+- [o] Query builder + query help (feldnamen)
+    https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
 
 
-Prio 1.2
-========
+Prio 4
+======
+- [o] browser history / pushstate
+      http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
+- [o] Mail shipping feature
+- [o] Annotations feature
+- [o] Local history feature (breadcrumb, tagcloud)
+- [o] Link to online bibliographic database
+- [o] Meta: Feature tracker / Ticket system => Trac
+
+- [o] deliver svg placeholder, if tiff/png fails::
+
+      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <text x="200" y="40">No drawing available.</text>
+      </svg>
+
+- [o] POS tagging of interesting keywords
+- [o] intercept paste handler to reformat numberlist
+    - https://stackoverflow.com/questions/13964592/jquery-intercepting-paste-event/13964699#13964699
+    - intelligent detection and handling of
+        - patent number (and lists)
+        - inventor name (and lists)
+
+
+Prio 7
+======
+- [o] Image rotation, e.g. EP2697738A1
+- [o] "Choose all"
+- [o] jquery.shorten für Erfinder [Lino]
+- [o] INID-Code variiert je nach "patent *kind*" [Lino]
+- [/] Patentnummer fetter, dicker Balken, falls selektiert [Andi, Lino]
+- [o] Checkbox auf der linken Seite wiedereinführen, aber schöner, grafischer [Jan]
+- [o] use app-pagename et al. in html title as well!
+
+
+Prio 8
+======
+
+- [o] interlink documents (bibliographic data) and searches with other offices
+    - DEPATISnet
+        - https://depatisnet.dpma.de/
+    - Espacenet
+        - http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?CC=CH&NR=706742B1&KC=B1&FT=D&ND=&date=20140131&DB=&&locale=en_EP
+    - Patentscope
+        - http://patentscope.wipo.int/search/en/detail.jsf?docId=EP12638285
+        - http://www.wipo.int/patentscope/search/en/result.jsf?query=ALLNUM:US20060123456
+    - Google:
+        - https://www.google.com/patents/WO2012055913A2
+        - https://www.google.com/search?tbm=pts&q=inassignee:%22Mammut+Sports+Group+Ag%22
+        - https://www.google.com/search?tbm=pts&q=ininventor:%22moritz+hilger%22
+    - CCD Viewer
+        - http://ops.epo.org/3.0/rest-services/published-data/search/biblio/.json?q=PN%3DEP%20AND%20(NUM%3DEP1612402%20OR%20NUM%3D1612402)&range=1-25
+        - http://ops.epo.org/3.0/rest-services/published-data/publication/epodoc/JP2010043647/fulltext.json
+        - http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=CH20130000292&type=application&format=epodoc
+        - http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=EP20040425480&type=application&format=epodoc
+        - http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=JP2009214944&type=application&format=epodoc
+
+- [o] feature: sort/group by country
+
+
+Prio 9
+======
 - [x] Anzeige der Trefferanzahl
 - [x] Anzeige first-drawing
     - load pictures
@@ -92,8 +136,8 @@ Prio 1.2
 - [o] "Detailansicht": Fullscreen carousel für all-drawings mit Abstract und Claims
 - [o] History/Warenkorb mit quadrupel (bookmark-date, number, title, stars)
 
-Prio 1.3
-========
+Prio 10
+=======
 - [o] parse "patent-classification" if "classification-ipcr" is not present!? (@ pn=US2013266007A1)
       => CPC Fallback
 - [o] new usage ship-mode=single-bibdata
@@ -110,8 +154,8 @@ Prio 1.3
 - [o] Aktive Merkliste => Klicken eines Detaildokuments führt zu Query-By-Document
 
 
-Prio 1.5
-========
+Prio 11
+=======
 - [o] beware of the CSRF/XSRF!!! (ship-url, page-title, page-subtitle, ship-button-label)
 - [o] ui: display "version" from configfile
 - [o] ui: use icons from iconset
@@ -145,8 +189,8 @@ Prio 1.5
 - [o] display and use some metadata information from ops response envelope
 - [o] Marken: curl --silent -XPOST --data 'start=0&rows=15&criterion_1=ApplicantName&term_1=Grohe+AG&operator_1=AND&condition_1=CONTAINS&sortField=ApplicationNumber&sortOrder=asc' https://oami.europa.eu/copla/ctmsearch/json | python -mjson.tool
 
-Prio 2
-======
+Prio 12
+=======
 - convert pub.-date format to german locale using fine javascript library X
 - display other general data from ops response (record count, range, etc.)
 - display country flags:
@@ -166,8 +210,8 @@ Prio 2
 - render reports using embedded webkit
 
 
-Prio 3
-======
+Prio 13
+=======
 - http://viralpatel.net/blogs/jquery-not-selector-example/
 - UY34620A
 - ship-* parameters
@@ -187,8 +231,8 @@ Prio 3
 - infinite scrolling
 
 
-Prio 4
-======
+Prio 14
+=======
 - get more from the data, e.g.
     - query by applicant, show first and most recent publication dates
     - query by applicant, show patent publications as timeline
