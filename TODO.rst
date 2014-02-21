@@ -2,13 +2,6 @@
 elmyra.ip.access.epo TODO
 =========================
 
-- Open Patent Services RESTful Web Services Reference Guide
-  http://documents.epo.org/projects/babylon/eponot.nsf/0/2F88B7285FC1E3ECC125785500531278/$File/OPS_v3_1_documentation_version_1_2_7_en.pdf
-
-- INID Code Standard
-  http://www.wipo.int/export/sites/www/standards/en/pdf/03-09-01.pdf
-
-
 Prio 1
 ======
 - Big Layout changes
@@ -65,20 +58,52 @@ Prio 3
 
 Prio 4
 ======
-- [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
+- [x] click on patent number to reach single view [Andi]
+- [x] show current result range [Andi]
+- [x] don't show "Drawing: 1" if there's no image [Andi]
+- [x] drawing carousel: Show total number of drawings in gui [Andi]
+
+- [o] [BUG] Gibts Bilder für z.B. AT9273U1, wenn man nach AT009273U1 schaut? [Andi]
+- [o] [BUG] /api/ops/CH697931B1/image/drawing 500 (Internal Server Error) [Andi]
+- [o] [BUG] /api/ops/CH697216B1/image/drawing 500 (Internal Server Error) [Andi]
+- [o] [ANOMALY] "72) inventors RETO RUEEGGER" is shown, but search for "RUEEGGER RETO" would be better ;-) [Andi]
+- [o] [BUG] UI-BEHAVIOUR: Dokumenteintrag "schnappt zusammen", wenn Bild nachgeladen wird => "min-height" setzen!?
+- [o] [FEATURE] click on drawing should open high resolution version, maybe with zoom lens function
+
+Prio 5.0
+========
+- [x] [UX] links extern öffnen [Lino]
+- [x] [UX] pfeile karussel nach unten [Lino]
+- [x] [UX] Drawing: mittig [Lino]
+- [o] [FEATURE] legal infos ranholen und inline anzeigen [Andi]
+- [o] [LEGAL] "BETA" badge [Andi]
+- [o] [LEGAL] Disclaimer [Andi]
+- [o] [BUG] CH706742B1 führt zu falscher DPMAregister seite [Andi, Lino]
+- [o] [REFACTOR] /jump => /api/jump [Andi]
+- [o] [IDEA] spawn mit referenz => html titel [Lino]
+- [o] [IDEA] datepicker [Lino]
+
+Prio 5.5
+========
 - [o] Embedding Feature mit iframe [Lino]
     - z.B. http://demo08.europatentdienst.de/kunden/demo08/pmn.nsf/CommentExpert?OpenForm&PN=DE1234567A1
 - [o] Query builder + query help (feldnamen)
     https://depatisnet.dpma.de/DepatisNet/depatisnet?action=experte
-- [o] click on patent number to reach single view
-- [o] Drawing: Show total number of drawings in gui
+
+- [o] Ansprechende und ausführliche Dokumentation für alle Parameter [Andi]
 - [o] Bug: CH706742B1ww
 
       File "/Users/amo/dev/elmyra/elmyra.ip.access.epo/elmyra.ip.access.epo/elmyra/ip/access/epo/ops.py", line 69, in inquire_images
         patent = p['country'] + p['number'] + '.' + p['kind']
+- [o] thumbnail view: http://getbootstrap.com/2.3.2/components.html#thumbnails
+- [o] DPMAregister: nicht anhängig/erloschen Status inline lazy anzeigen
+- [o] hide (56) (citations) if content is empty (maybe apply to all INID fields)
+
+- [o] refactoring
+    - LinkMaker
 
 
-Prio 5
+Prio 6
 ======
 - [o] browser history / pushstate
       http://stackoverflow.com/questions/6638738/codeigniter-jqueryajax-html5-pushstate-how-can-i-make-a-clean-navigation/6639119#6639119
