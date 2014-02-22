@@ -53,18 +53,54 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
     ## query builder and basket
     <div class="row-fluid" id="querybuilder-basket-area">
-        <div class="span8" id="querybuilder-area">
-            <h6 style="display: inline">
-                <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
-            </h6>
-            <br/>
-            <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
-            <br/>
-            <input id="query-button" type="button" class="btn btn-popover"
-                type="button" role="button" value="Send query"
-                data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Send query to database"
-            />
+
+        <div class="span8 container-fluid" id="querybuilder-area">
+
+            <div class="row-fluid">
+                <div class="span11">
+                    <h6 style="display: inline">
+                        <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
+                    </h6>
+                </div>
+                <div class="span1">
+                    <a id="btn-query-clear" class="icon-trash icon-large"></a>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+
+                <div class="span11">
+                    <textarea class="aspan12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
+                </div>
+
+                <div class="span1">
+
+                    <br/>
+
+                    <div class="btn-group" data-toggle="buttons-radio">
+                        <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
+                        <button class="btn-cql-boolean btn btn-mini"        type="button" data-value="AND">AND</button>
+                    </div>
+
+                    <a class="btn-cql-attribute label label-success" data-value="pn=">pn=</a>
+                    <a class="btn-cql-attribute label label-info" data-value="applicant=">applicant=</a>
+                    <a class="btn-cql-attribute label label-warning" data-value="inventor=">inventor=</a>
+
+                </div>
+
+            </div>
+
+            <div class="row-fluid">
+
+                <input id="query-button" type="button" class="btn btn-popover"
+                    type="button" role="button" value="Send query"
+                    data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Send query to database"
+                />
+
+            </div>
+
         </div>
+
         % if ship_mode != 'single-bibdata':
         <div class="span4 container-fluid" id="basket-area">
         <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
@@ -74,7 +110,10 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                     <h6 style="display: inline">
                         Your selection
                     </h6>
-                    <br/>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
                     <textarea class="span12" id="basket" name="${ship_param}" rows="5">${numberlist}</textarea>
                 </div>
             </div>
@@ -620,7 +659,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
 
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
-<script type="text/javascript" src="/static/js/pdfobject.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.caret-1.5.1.min.js"></script>
 <script type="text/javascript" src="/static/js/ops-chooser.js"></script>
 
 </%block>

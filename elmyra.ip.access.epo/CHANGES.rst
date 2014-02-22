@@ -8,6 +8,7 @@ development
 - middleware: activate caching of generated pdf documents
 - ui: make ship-mode=single-bibdata work again
 - ui: integrate 3rd-party tools via iframe (parameter "embed-item-url")
+- ui: query builder I: quick add popular attributes
 
 0.4.2
 =====

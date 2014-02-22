@@ -821,4 +821,58 @@ $(document).ready(function() {
 
     $('.pager-area').hide();
 
+    // cql query area
+    $('#btn-query-clear').click(function() {
+        $('#query').val('').focus();
+    });
+
+    // cql query builder
+    $('.btn-cql-attribute').click(function() {
+
+        var query = $('#query').val();
+        var operator = $('.btn-cql-boolean.active').data('value');
+        var attribute = $(this).data('value');
+
+        var position = $('#query').caret();
+        var do_op = false;
+        var do_att = true;
+        //console.log('position: ' + position);
+
+        var leftchar;
+        if (position != 0) {
+            do_op = true;
+
+            // insert nothing if we're right off an equals "="
+            leftchar = query.substring(position - 1, position);
+            //console.log('leftchar: ' + leftchar);
+            if (leftchar == '=') {
+                do_op = false;
+                do_att = false;
+            }
+
+            // don't insert operation if there's already one left of the cursor
+            var fiveleftchar = query.substring(position - 5, position).toLowerCase();
+            //console.log('fiveleftchar: ' + fiveleftchar);
+            if (_.string.include(fiveleftchar, 'and') || _.string.include(fiveleftchar, 'or')) {
+                do_op = false;
+            }
+
+        }
+
+        // manipulate query by inserting relevant
+        // parts at the current cursor position
+        var leftspace = (!leftchar || leftchar == ' ') ? '' : ' ';
+
+        if (do_op)
+            $('#query').caret(leftspace + operator);
+        if (do_att)
+            $('#query').caret((do_op ? ' ' : leftspace) + attribute);
+
+        $('#query').focus();
+    });
+    $('.btn-cql-boolean').button();
+
+    // set cursor to end of query string
+    $('#query').caret($('#query').val().length);
+
 });
