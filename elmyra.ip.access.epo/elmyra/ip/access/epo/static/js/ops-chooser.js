@@ -798,10 +798,17 @@ $(document).ready(function() {
 
     opsChooserApp.start();
 
+
+    // show pager only when results are non-empty
+    $('.pager-area').hide();
+
+
+    // application action: perform search
     $('#query-button').click(function() {
         opsChooserApp.perform_search();
     });
 
+    // application action: search from basket content
     $('#basket-review-button').click(function() {
         // compute cql query from numberlist in basket
         var basket = $('#basket').val();
@@ -815,11 +822,13 @@ $(document).ready(function() {
         }
     });
 
+
+    // apply popovers to all desired buttons
     $('.btn-popover').popover();
 
+    // auto-shorten some texts
     $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
 
-    $('.pager-area').hide();
 
     // cql query area
     $('#btn-query-clear').click(function() {
