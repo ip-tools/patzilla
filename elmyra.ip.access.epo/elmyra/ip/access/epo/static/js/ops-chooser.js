@@ -695,9 +695,9 @@ function listview_bind_actions() {
 
             $.ajax({url: image_info_url, async: false}).success(function(payload) {
                 totalcount = payload['META']['drawing-total-count'];
-                console.log('drawing count: ' + totalcount);
+                //console.log('drawing count: ' + totalcount);
             }).error(function(error) {
-                console.log('Error while fetching drawing count: ' + error);
+                console.warn('Error while fetching drawing count: ' + error);
             });
             carousel.data('totalcount', totalcount);
         }
