@@ -38,8 +38,6 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
         <h3 style="display: inline-block">${page_title}</h3>
         &nbsp;&nbsp;&nbsp;
         ${page_subtitle}
-        &nbsp;&nbsp;&nbsp;
-        <i class="icon-refresh icon-spin icon-large" style="display: none" id="spinner"></i>
         </div>
     </div>
     <div class="span4">
@@ -92,10 +90,18 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
             <div class="row-fluid">
 
-                <input id="query-button" type="button" class="btn btn-popover"
-                    type="button" role="button" value="Send query"
-                    data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Send query to database"
-                />
+                <div class="btn-group btn-popover"
+                    data-toggle="popover" data-trigger="hover" data-placement="right"
+                    data-content="Send query to database"
+                    >
+                    <button type="submit" role="button" class="btn btn-query-perform">
+                        <i class="icon-star" id="idler"></i>
+                        <i class="icon-refresh icon-spin" style="display: none" id="spinner"></i>
+                    </button>
+                    <button type="submit" role="button" class="btn btn-query-perform">
+                        Send query
+                    </button>
+                </div>
 
             </div>
 

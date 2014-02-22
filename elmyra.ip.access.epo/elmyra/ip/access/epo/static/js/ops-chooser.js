@@ -60,14 +60,14 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
         documents.reset();
         $('.pager-area').hide();
-        $('#spinner').show();
+        indicate_activity(true);
         var self = this;
 
         this.fetch({
             data: $.param({ query: query, range: range}),
             success: function (payload) {
 
-                $('#spinner').hide();
+                indicate_activity(false);
                 $('#alert-area').empty();
                 $('.pager-area').show();
 
@@ -105,7 +105,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 //console.log("error: " + xhr.responseText);
 
-                $('#spinner').hide();
+                indicate_activity(false);
                 $('#alert-area').empty();
                 documents.reset();
 
@@ -501,6 +501,17 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 ------------------------------------------
  */
 
+function indicate_activity(active) {
+    if (active) {
+        $('#idler').hide();
+        $('#spinner').show();
+
+    } else {
+        $('#spinner').hide();
+        $('#idler').show();
+    }
+}
+
 function basket_add(entry) {
     var payload = $('#basket').val();
     if (!_.string.include(payload, entry))
@@ -804,7 +815,7 @@ $(document).ready(function() {
 
 
     // application action: perform search
-    $('#query-button').click(function() {
+    $('.btn-query-perform').click(function() {
         opsChooserApp.perform_search();
     });
 

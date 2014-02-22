@@ -9,6 +9,7 @@ development
 - ui: make ship-mode=single-bibdata work again
 - ui: integrate 3rd-party tools via iframe (parameter "embed-item-url")
 - ui: query builder I: quick add popular attributes
+- ui: get a better place for the activity spinner
 
 0.4.2
 =====
