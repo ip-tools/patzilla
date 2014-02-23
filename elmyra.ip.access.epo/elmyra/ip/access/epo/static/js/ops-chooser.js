@@ -1,4 +1,5 @@
 // -*- coding: utf-8 -*-
+// (c) 2013,2014 Andreas Motl, Elmyra UG
 
 /**
  * ------------------------------------------
@@ -256,21 +257,33 @@ OpsExchangeDocument = Backbone.Model.extend({
             // TODO: make this configurable!
             var kind = 'external';
             var target = '_blank';
+            var query = null;
 
+            // fallback: use label, if no value is given
             if (!value) value = label;
 
+            // apply supplied modifier function to value
+            if (value_modifier)
+                value = value_modifier(value);
+
+            // if value contains spaces, wrap into quotes
+            // FIXME: do this only, if string is not already quoted, see "services.py":
+            //      if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"'
+            if (_.string.include(value, ' '))
+                value = '"' + value + '"';
+
+            // prepare link rendering
             var link_template;
             if (kind == 'internal') {
                 link_template = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
             } else if (kind == 'external') {
-                link_template = _.template('<a href="?query=<%= attribute %>=%22<%= value %>%22" target="' + target + '" class="incognito"><%= label %></a>');
+                query = encodeURIComponent(attribute + '=' + value);
+                link_template = _.template('<a href="?query=<%= query %>" target="<%= target %>" class="incognito"><%= label %></a>');
             }
 
-            if (value_modifier)
-                value = value_modifier(value);
-
+            // render link
             if (link_template) {
-                var link = link_template({label: label, attribute: attribute, value: value});
+                var link = link_template({label: label, attribute: attribute, value: value, target: target, query: query});
                 return link;
             }
 
@@ -633,7 +646,7 @@ function listview_bind_actions() {
         event.preventDefault();
         var attr = $(this).data('query-attribute');
         var val = $(this).data('query-value');
-        var query = attr + '=' + '"' + val + '"';
+        var query = attr + '=' + val;
         opsChooserApp.send_query(query);
     });
 
@@ -848,8 +861,9 @@ $(document).ready(function() {
         $('#query').val('').focus();
     });
 
+
     // cql query builder
-    $('.btn-cql-attribute').click(function() {
+    $('.btn-cql-field').click(function() {
 
         var query = $('#query').val();
         var operator = $('.btn-cql-boolean.active').data('value');
@@ -896,5 +910,34 @@ $(document).ready(function() {
 
     // set cursor to end of query string
     $('#query').caret($('#query').val().length);
+
+
+    // cql field chooser
+    $('#cql-field-chooser').select2({
+        data: { results: OPS_CQL_FIELDS },
+        dropdownCssClass: "bigdrop",
+        escapeMarkup: function(text) { return text; },
+    });
+    $('#cql-field-chooser').on('change', function(event) {
+
+        var value = $(this).val();
+        if (!value) return;
+
+        //console.log(value);
+
+        var query = $('#query').val();
+        var position = $('#query').caret();
+        var leftchar = query.substring(position - 1, position);
+
+        // skip insert if we're right behind a "="
+        if (leftchar == '=') return;
+
+        // insert space before new field if there is none and we're not at the beginning
+        if (leftchar != ' ' && position != 0) value = ' ' + value;
+
+        $('#query').caret(value + '=');
+        $(this).data('select2').clear();
+
+    });
 
 });

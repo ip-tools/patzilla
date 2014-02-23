@@ -11,6 +11,7 @@ development
 - ui: query builder I: quick add popular attributes
 - ui: get a better place for the activity spinner
 - api/cql: automatically apply number normalization to "num" fields, too
+- ui: add cql field chooser to query builder
 
 0.4.2
 =====

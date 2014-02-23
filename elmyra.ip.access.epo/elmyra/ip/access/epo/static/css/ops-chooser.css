@@ -4,6 +4,10 @@ body {
     background-color: #e7e7e7;
 }
 
+.strong {
+    font-weight: bold;
+}
+
 .clear-margin {
     margin: 0px;
 }
@@ -40,6 +44,11 @@ a.query-link {
     display: inline-block;
     line-height: 20px;
 }
+
+/* cql field chooser */
+/* .bigdrop .select2-container .select2-results {max-height: 200px;} */
+.bigdrop .select2-results {max-height: 35em;}
+/* .bigdrop .select2-choices {max-height: 150px; overflow-y: auto;} */
 
 
 /* pager */

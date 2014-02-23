@@ -68,21 +68,20 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
             <div class="row-fluid">
 
                 <div class="span11">
-                    <textarea class="aspan12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
+                    <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
                 </div>
 
                 <div class="span1">
-
-                    <br/>
 
                     <div class="btn-group" data-toggle="buttons-radio">
                         <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
                         <button class="btn-cql-boolean btn btn-mini"        type="button" data-value="AND">AND</button>
                     </div>
 
-                    <a class="btn-cql-attribute label label-success" data-value="pn=">pn=</a>
-                    <a class="btn-cql-attribute label label-info" data-value="applicant=">applicant=</a>
-                    <a class="btn-cql-attribute label label-warning" data-value="inventor=">inventor=</a>
+                    <a class="btn-cql-field label label-success" data-value="num=">num=</a>
+                    <a class="btn-cql-field label label-info" data-value="applicant=">applicant=</a>
+                    <a class="btn-cql-field label label-warning" data-value="inventor=">inventor=</a>
+                    <a class="btn-cql-field label label-primary" data-value="ta=">ta=</a>
 
                 </div>
 
@@ -90,17 +89,28 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
             <div class="row-fluid">
 
-                <div class="btn-group btn-popover"
-                    data-toggle="popover" data-trigger="hover" data-placement="right"
-                    data-content="Send query to database"
-                    >
-                    <button type="submit" role="button" class="btn btn-query-perform">
-                        <i class="icon-star" id="idler"></i>
-                        <i class="icon-refresh icon-spin" style="display: none" id="spinner"></i>
-                    </button>
-                    <button type="submit" role="button" class="btn btn-query-perform">
-                        Send query
-                    </button>
+                <div class="span4">
+
+                    <div class="btn-group btn-popover"
+                        data-toggle="popover" data-trigger="hover" data-placement="right"
+                        data-content="Send query to database"
+                        >
+                        <button type="submit" role="button" class="btn btn-query-perform">
+                            <i class="icon-star" id="idler"></i>
+                            <i class="icon-refresh icon-spin" style="display: none" id="spinner"></i>
+                        </button>
+                        <button type="submit" role="button" class="btn btn-query-perform">
+                            Send query
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="span7">
+                    <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
+                </div>
+
+                <div class="span1">
                 </div>
 
             </div>
@@ -664,8 +674,30 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 </script>
 
 
+<script id="cql-field-chooser-entry" type="text/x-underscore-template">
+<%text>
+
+    <div class="row-fluid">
+        <div class="span5 strong">
+            <%= label %>
+        </div>
+        <div class="span4">
+            <%= _(fields).first() %>
+            <br/>
+            <small><%= _(fields).rest(1).join('<br/>') %></small>
+        </div>
+        <div class="span3">
+            <%= more %>
+        </div>
+    </div>
+
+</%text>
+</script>
+
+
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
 <script type="text/javascript" src="/static/js/jquery.caret-1.5.1.min.js"></script>
+<script type="text/javascript" src="/static/js/ops-sdk.js"></script>
 <script type="text/javascript" src="/static/js/ops-chooser.js"></script>
 
 </%block>

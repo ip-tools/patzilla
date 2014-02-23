@@ -51,6 +51,7 @@ requires = [
     'js.jquery==1.9.1',
     'js.jquery_shorten==1.0.0a1',
     'js.purl==2.3.1a1',
+    'js.select2==3.4.1',
 
     # jquerui
     #'js.jqueryui==1.10.3',

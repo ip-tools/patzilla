@@ -112,6 +112,9 @@ def add_html_foundation(event):
     from js.purl import purl
     purl.need()
 
+    from js.select2 import select2
+    select2.need()
+
     # jqueryui
     #from js.jqueryui import jqueryui, base as jqueryui_base, smoothness as jqueryui_smoothness
     #from js.jqueryui_bootstrap import jqueryui_bootstrap
