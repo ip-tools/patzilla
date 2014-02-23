@@ -20,10 +20,15 @@ class SmartSearchClause(SearchClause):
                 text.append('>"%s"' % (self.prefixes[p]))
 
         # add some smartness:
-        # 1. apply document number normalization to value, if attribute equals "pn"
-        term = self.term.toCQL()
+
+        # 1. for certain attributes, apply document number normalization to value
+        term_vanilla = term = self.term.toCQL()
         if str(self.index).lower() in ['pn', 'num']:
             term = normalize_patent(str(term))
+
+        # 2. fallback to original value, if number normalization couldn't handle this value
+        if not term:
+            term = term_vanilla
 
         text.append('%s %s "%s"' % (self.index,
                                     self.relation.toCQL(),

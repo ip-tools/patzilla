@@ -69,6 +69,8 @@ def patch_patent(patent):
         #print "patched (regular):", patent, patched
         return patched
 
+    return patent
+
 
 def normalize_patent(number, as_dict = False, as_string = False):
 
