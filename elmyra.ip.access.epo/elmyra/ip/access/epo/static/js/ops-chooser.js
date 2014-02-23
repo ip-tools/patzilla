@@ -856,9 +856,11 @@ $(document).ready(function() {
     $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
 
 
-    // cql query area
+    // ------------------------------------------
+    //   cql query area
+    // ------------------------------------------
 
-    // set cursor to end of query string
+    // set cursor to end of query string, also focuses element
     $('#query').caret($('#query').val().length);
 
     // submit on meta+enter
@@ -866,7 +868,43 @@ $(document).ready(function() {
         opsChooserApp.perform_search();
     });
 
-    // clear the whole content
+    // intercept and reformat clipboard content
+    $("#query").on("paste", function(e) {
+
+        // only run interceptor if content of target element is empty
+        if ($(this).val()) return;
+
+        e.preventDefault();
+
+        var text = (e.originalEvent || e).clipboardData.getData('text');
+
+        // show dialog to request modifier kind from
+        $('#clipboard-modifier-chooser').modal('show');
+
+        // modifier kind selected in dialog, compute and set new clipboard content
+        $('.btn-clipboard-modifier').click(function() {
+
+            // get field name and operator from dialog
+            var modifier = $(this).data('modifier');
+            var operator = $('#clipboard-modifier-operator').find('.btn.active').data('value') || 'OR';
+
+            // close dialog
+            $('#clipboard-modifier-chooser').modal('hide');
+
+            // compute new clipboard content
+            var query = _(text.split('\n')).map(function(item) {
+                return modifier + '=' + item;
+            }).join(' ' + operator + ' ');
+
+            // set clipboard content and focus element
+            $('#query').val(query);
+            $('#query').focus();
+
+        });
+
+    });
+
+    // trash icon clears the whole content
     $('#btn-query-clear').click(function() {
         $('#query').val('').focus();
     });
@@ -874,12 +912,17 @@ $(document).ready(function() {
 
 
 
-    // cql query builder
+    // ------------------------------------------
+    //   cql query builder
+    // ------------------------------------------
     $('.btn-cql-boolean').button();
+    $('#cql-quick-operator').find('.btn-cql-boolean').click(function() {
+        $('#query').focus();
+    });
     $('.btn-cql-field').click(function() {
 
         var query = $('#query').val();
-        var operator = $('.btn-cql-boolean.active').data('value');
+        var operator = $('#cql-quick-operator').find('.btn-cql-boolean.active').data('value');
         var attribute = $(this).data('value');
 
         var position = $('#query').caret();
@@ -921,7 +964,9 @@ $(document).ready(function() {
     });
 
 
-    // cql field chooser
+    // ------------------------------------------
+    //   cql field chooser
+    // ------------------------------------------
     $('#cql-field-chooser').select2({
         data: { results: OPS_CQL_FIELDS },
         dropdownCssClass: "bigdrop",

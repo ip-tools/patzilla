@@ -51,6 +51,7 @@ a.query-link {
 /* .bigdrop .select2-choices {max-height: 150px; overflow-y: auto;} */
 
 
+
 /* pager */
 .pager-area {
     margin-bottom: 20px;
@@ -69,6 +70,13 @@ a.query-link {
     width: 900px; /* SET THE WIDTH OF THE MODAL */
     margin: -50px 0 0 -450px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
 }
+
+/* clipboard modifier */
+.btn-clipboard-modifier {
+    min-width: 30em;
+    min-height: 7em;
+}
+
 
 
 /* result entry */

@@ -73,15 +73,14 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
                 <div class="span1">
 
-                    <div class="btn-group" data-toggle="buttons-radio">
+                    <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
                         <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
                         <button class="btn-cql-boolean btn btn-mini"        type="button" data-value="AND">AND</button>
                     </div>
 
                     <a class="btn-cql-field label label-success" data-value="num=">num=</a>
-                    <a class="btn-cql-field label label-info" data-value="applicant=">applicant=</a>
-                    <a class="btn-cql-field label label-warning" data-value="inventor=">inventor=</a>
-                    <a class="btn-cql-field label label-primary" data-value="ta=">ta=</a>
+                    <a class="btn-cql-field label label-info" data-value="txt=">txt=</a>
+                    <a class="btn-cql-field label label-important" data-value="cl=">cl=</a>
 
                 </div>
 
@@ -204,6 +203,40 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
     </div>
 </div>
 
+
+<!-- modal dialog for choosing clipboard content modifier -->
+<div id="clipboard-modifier-chooser" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="clipboard-modifier-chooser-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="clipboard-modifier-chooser-label">Choose clipboard transformation...</h3>
+    </div>
+    <div class="modal-body">
+        <div class="btn-group btn-group-vertical">
+            <button class="btn btn-large btn-success btn-clipboard-modifier" data-modifier="num">
+                <strong>Publication-, application- or priority number</strong>
+                <br/><br/>
+                <small>FIXME: examples</small>
+            </button>
+            <button class="btn btn-large btn-info btn-clipboard-modifier" data-modifier="txt">
+                <strong>Title, abstract, inventor-, or applicant name</strong>
+                <br/><br/>
+                <small>FIXME: examples</small>
+            </button>
+            <button class="btn btn-large btn-danger btn-clipboard-modifier" data-modifier="cl">
+                <strong>CPC or IPC8 class</strong>
+                <br/><br/>
+                <small>FIXME: examples</small>
+            </button>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons-radio">
+            <button class="btn active" type="button" data-value="OR">OR</button>
+            <button class="btn"        type="button" data-value="AND">AND</button>
+        </div>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
 
 
 ## pager template
