@@ -267,6 +267,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
     </div>
     <script language="javascript">
         // mark proper pagination entry as active
+        // FIXME: move to ops-chooser.js
         $('.pagination').find('a').each(function(i, anchor) {
             var anchor_range = $(anchor).attr('range');
             if (anchor_range == '<%= result_range %>') {
@@ -731,7 +732,12 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 <script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
-<script type="text/javascript" src="/static/js/ops-sdk.js"></script>
-<script type="text/javascript" src="/static/js/ops-chooser.js"></script>
+
+% if request.registry.settings.get('ipsuite.production') == 'true':
+    <script type="text/javascript" src="/static/js/lib/ipsuite-search.min.js"></script>
+% else:
+    <script type="text/javascript" src="/static/js/ops-sdk.js"></script>
+    <script type="text/javascript" src="/static/js/ops-chooser.js"></script>
+% endif
 
 </%block>

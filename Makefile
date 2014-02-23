@@ -1,3 +1,16 @@
+#VERSION := $(shell cat elmyra.ip.access.epo/elmyra/ip/version.py | awk '{ print $$3 }' | tr -d "'")
+#$(error VERSION=$(VERSION))
+
+js:
+	@#echo bundling javascript for release=$(VERSION)
+	node_modules/.bin/uglifyjs \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ops-*.js \
+		--preamble "// (c) 2013,2014 Elmyra UG" \
+		--mangle --compress --define \
+		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.map \
+		--source-map-url /static/js/lib/ipsuite-search.min.map \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.js
+
 sdist:
 	cd elmyra.ip.access.epo; python setup.py sdist
 	cd js.jquery_shorten; python setup.py sdist

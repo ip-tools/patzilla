@@ -1,2 +1,3 @@
 include *.txt *.ini *.cfg *.rst
-recursive-include elmyra/ip/access/epo *.ico *.png *.css *.gif *.jpg *.svg *.pt *.txt *.mak *.mako *.js *.html *.xml
+recursive-include elmyra/ip/access/epo *.ico *.png *.css *.gif *.jpg *.svg *.pt *.txt *.mak *.mako *.js *.map *.html *.xml
+prune elmyra/ip/access/epo/static/js/*.js

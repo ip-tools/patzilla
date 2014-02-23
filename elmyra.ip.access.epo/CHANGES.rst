@@ -14,6 +14,7 @@ development
 - ui: query builder II: full cql field chooser
 - ui: perform query when hitting hotkey "meta+return" in query form field
 - ui: clipboard modifier intercepts when pasting text into empty query form field
+- dev/prod: uglify main javascript resources
 
 0.4.2
 =====
