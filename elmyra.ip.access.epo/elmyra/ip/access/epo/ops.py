@@ -230,3 +230,13 @@ def pdf_document_build(patent):
     # TODO: 4. add attachments
 
     return pdf_document
+
+def ops_service_usage():
+    client = get_ops_client()
+    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=01/01/2014~24/02/2014')
+    print response
+    print response.headers
+    print response.content
+
+if __name__ == '__main__':
+    ops_service_usage()
