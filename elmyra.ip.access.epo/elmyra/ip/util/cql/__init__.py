@@ -22,7 +22,7 @@ class SmartSearchClause(SearchClause):
         # add some smartness:
         # 1. apply document number normalization to value, if attribute equals "pn"
         term = self.term.toCQL()
-        if str(self.index).lower() == 'pn':
+        if str(self.index).lower() in ['pn', 'num']:
             term = normalize_patent(str(term))
 
         text.append('%s %s "%s"' % (self.index,
