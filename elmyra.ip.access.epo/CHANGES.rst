@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.5.1
+=====
+- dev/prod: try to exclude development javascript sources from source package
+
 0.5.0
 =====
 - ui: fix height-flickering of list entry when new drawing is lazy-loaded into carousel
