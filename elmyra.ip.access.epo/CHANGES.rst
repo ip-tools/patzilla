@@ -12,6 +12,7 @@ development
 - ui: better place for the activity spinner
 - api/cql: automatically apply number normalization to "num" fields, too
 - ui: query builder II: full cql field chooser
+- ui: perform query when hitting hotkey "meta+return" in query form field
 
 0.4.2
 =====

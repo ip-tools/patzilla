@@ -695,6 +695,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 </script>
 
 <script type="text/javascript" src="/static/js/jquery.caret-1.5.1.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
 <script type="text/javascript" src="/static/js/ops-sdk.js"></script>

@@ -861,6 +861,11 @@ $(document).ready(function() {
     // set cursor to end of query string
     $('#query').caret($('#query').val().length);
 
+    // submit on meta+enter
+    $('#query').on('keydown', null, 'meta+return', function() {
+        opsChooserApp.perform_search();
+    });
+
     // clear the whole content
     $('#btn-query-clear').click(function() {
         $('#query').val('').focus();
