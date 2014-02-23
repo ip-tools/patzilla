@@ -160,37 +160,39 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_applicants: function(links) {
+
             try {
                 var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
-                applicants_root_node = applicants_root_node || [];
-                var applicants_node = applicants_root_node['applicant'];
-                var applicants_list = this.parties_to_list(applicants_node, 'applicant-name');
-                if (links) {
-                    applicants_list = this.enrich_links(applicants_list, 'applicant');
-                }
-                return applicants_list;
-
             } catch(e) {
-                console.warn('patent-search: applicants could not be parsed from document ' + this.get_patent_number());
                 return [];
             }
+
+            applicants_root_node = applicants_root_node || [];
+            var applicants_node = applicants_root_node['applicant'];
+            var applicants_list = this.parties_to_list(applicants_node, 'applicant-name');
+            if (links) {
+                applicants_list = this.enrich_links(applicants_list, 'applicant');
+            }
+            return applicants_list;
+
         },
 
         get_inventors: function(links) {
+
             try {
                 var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
-                inventors_root_node = inventors_root_node || [];
-                var inventors_node = inventors_root_node['inventor'];
-                var inventor_list = this.parties_to_list(inventors_node, 'inventor-name');
-                if (links) {
-                    inventor_list = this.enrich_links(inventor_list, 'inventor');
-                }
-                return inventor_list;
-
             } catch(e) {
-                console.warn('patent-search: inventors could not be parsed from document ' + this.get_patent_number());
                 return [];
             }
+
+            inventors_root_node = inventors_root_node || [];
+            var inventors_node = inventors_root_node['inventor'];
+            var inventor_list = this.parties_to_list(inventors_node, 'inventor-name');
+            if (links) {
+                inventor_list = this.enrich_links(inventor_list, 'inventor');
+            }
+            return inventor_list;
+
         },
 
         parties_to_list: function(container, value_attribute_name) {
