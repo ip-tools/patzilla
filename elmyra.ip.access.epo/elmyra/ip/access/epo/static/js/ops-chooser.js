@@ -857,12 +857,20 @@ $(document).ready(function() {
 
 
     // cql query area
+
+    // set cursor to end of query string
+    $('#query').caret($('#query').val().length);
+
+    // clear the whole content
     $('#btn-query-clear').click(function() {
         $('#query').val('').focus();
     });
 
 
+
+
     // cql query builder
+    $('.btn-cql-boolean').button();
     $('.btn-cql-field').click(function() {
 
         var query = $('#query').val();
@@ -906,10 +914,6 @@ $(document).ready(function() {
 
         $('#query').focus();
     });
-    $('.btn-cql-boolean').button();
-
-    // set cursor to end of query string
-    $('#query').caret($('#query').val().length);
 
 
     // cql field chooser

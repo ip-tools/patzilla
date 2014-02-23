@@ -8,10 +8,10 @@ development
 - middleware: activate caching of generated pdf documents
 - ui: make ship-mode=single-bibdata work again
 - ui: integrate 3rd-party tools via iframe (parameter "embed-item-url")
-- ui: query builder I: quick add popular attributes
-- ui: get a better place for the activity spinner
+- ui: query builder I: quick access to popular fields
+- ui: better place for the activity spinner
 - api/cql: automatically apply number normalization to "num" fields, too
-- ui: add cql field chooser to query builder
+- ui: query builder II: full cql field chooser
 
 0.4.2
 =====
