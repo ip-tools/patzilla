@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - api: refactor dpma register jump mechanics and url
+- ui: add link to CCD Viewer
 
 0.5.1
 =====

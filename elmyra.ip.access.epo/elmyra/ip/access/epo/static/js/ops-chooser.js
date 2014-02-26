@@ -148,16 +148,32 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this['@country'] + this['@doc-number'] + this['@kind'];
         },
 
-        get_application_number: function(source) {
-            var application_references = this['bibliographic-data']['application-reference']['document-id'];
-            for (i in application_references) {
-                var item = application_references[i];
-                if (source == 'docdb' && item['@document-id-type'] == 'docdb') {
-                    return item['country']['$'] + item['doc-number']['$'];
-                } else if (source == 'original' && item['@document-id-type'] == 'original') {
-                    return item['doc-number']['$'];
+        _flatten_textstrings: function(dict) {
+            // TODO: not recursive yet
+            var newdict = {};
+            _(dict).each(function(value, key) {
+                if (key == '@document-id-type') {
+                    key = 'type';
+                } else if (key == 'doc-number') {
+                    key = 'number';
                 }
-            }
+                if (typeof(value) == 'object') {
+                    var realvalue = value['$'];
+                    if (realvalue) {
+                        value = realvalue;
+                    }
+                }
+                newdict[key] = value;
+            });
+            return newdict;
+        },
+
+        get_application_reference: function(source) {
+            var application_references = this['bibliographic-data']['application-reference']['document-id'];
+            var document_id = _(application_references).find(function(item) {
+                return item['@document-id-type'] == source;
+            });
+            return this._flatten_textstrings(document_id);
         },
 
         get_applicants: function(links) {
@@ -373,8 +389,9 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         get_epo_register_url: function() {
             // https://register.epo.org/application?number=EP95480005
-            var url_tpl = _.template('https://register.epo.org/application?number=<%= application_number %>');
-            var url = url_tpl({application_number: this.get_application_number('docdb')});
+            var document_id = this.get_application_reference('docdb');
+            var url_tpl = _.template('https://register.epo.org/application?number=<%= country %><%= number %>');
+            var url = url_tpl(document_id);
             return url;
         },
 
@@ -438,6 +455,16 @@ OpsExchangeDocument = Backbone.Model.extend({
             return url;
         },
 
+        get_ccd_viewer_url: function() {
+            // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=CH20130000292&type=application&format=epodoc
+            // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=DE20132003344U&type=application&format=epodoc
+            // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=US201113881490&type=application&format=epodoc
+            var document_id = this.get_application_reference('epodoc');
+            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=<%= number %>&type=application&format=epodoc');
+            var url = url_tpl(document_id);
+            return url;
+
+        },
 
     },
 

@@ -331,6 +331,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
         var uspto_pair_url = data.get_uspto_pair_url();
         var inpadoc_family_url = data.get_inpadoc_family_url();
         var ops_family_url = data.get_ops_family_url();
+        var ccd_viewer_url = data.get_ccd_viewer_url();
 
         var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
@@ -473,6 +474,11 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                                     </div>
                                 </li>
                                 <li>
+                                    <a href="<%= ccd_viewer_url %>" target="_blank">
+                                        [FAMILY] <%= patent_number %> @ CCD Viewer
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="<%= inpadoc_family_url %>" target="_blank">
                                         [FAMILY] <%= patent_number %> @ INPADOC patent family
                                     </a>
@@ -482,7 +488,6 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                                         [FAMILY] <%= patent_number %> @ OPS biblio,legal
                                     </a>
                                 </li>
-
                             </ul>
                         </div>
 
