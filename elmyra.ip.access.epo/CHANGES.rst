@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- api: refactor dpma register jump mechanics and url
 
 0.5.1
 =====

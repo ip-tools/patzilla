@@ -387,6 +387,8 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         get_dpma_register_url: function() {
 
+            // TODO: use only for DE- and WO-documents
+
             // DE19630877.1 / DE19630877A1 / DE000019630877C2
             // http://localhost:6543/ops/browser?query=pn=DE19630877A1
             // http://localhost:6543/jump/dpma/register?pn=DE19630877
@@ -397,8 +399,21 @@ OpsExchangeDocument = Backbone.Model.extend({
             // http://localhost:6543/jump/dpma/register?pn=DE102012009645
             // https://register.dpma.de/DPMAregister/pat/register?AKZ=1020120096453
 
-            var url_tpl = _.template('/jump/dpma/register?pn=<%= application_number %>');
-            var url = url_tpl({application_number: this.get_application_number('docdb')});
+            // 1. DE102012009645 works
+            //    -            DE102012009645A1: no
+            //    - [docdb]    DE102012009645A: no
+            //    - [epodoc]   DE20121009645: no
+            //    - [original] 102012009645: no
+            //    => use docdb format, but without kindcode
+            //
+            // 2. 102012009645 finds WO document 2012009645
+            //    works as well: WO2012009645
+
+            // 3. PCT/US2011/044199 does not work yet, why/how?
+
+            var document_id = this.get_application_reference('docdb');
+            var url_tpl = _.template('/office/dpma/register/application/<%= country %><%= number %>?redirect=true');
+            var url = url_tpl(document_id);
             return url;
         },
 

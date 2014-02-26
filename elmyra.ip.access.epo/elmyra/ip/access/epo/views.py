@@ -6,7 +6,7 @@ from pyramid.view import view_config
 
 def includeme(config):
     config.add_route('ops-browser', '/ops/browser')
-    config.add_route('jump-dpmaregister', '/jump/dpma/register')
+    config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('angry-cats', '/angry-cats')
 
 
@@ -16,14 +16,15 @@ def opsbrowser(request):
 
 @view_config(route_name='jump-dpmaregister')
 def jump_dpmaregister(request):
-    publication_number = request.params.get('pn')
-    if publication_number:
+    document_number = request.matchdict.get('document_number')
+    redirect = request.params.get('redirect')
+    if document_number:
         dra = DpmaRegisterAccess()
-        url = dra.get_document_url(publication_number)
-        if url:
+        url = dra.get_document_url(document_number)
+        if url and redirect:
             return HTTPFound(location=url)
 
-    return HTTPNotFound('Could not find publication number "{0}" in DPMAregister'.format(publication_number))
+    return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
 
 
 @view_config(name='ops-chooser', renderer='elmyra.ip.access.epo:templates/ops-chooser.mako')
