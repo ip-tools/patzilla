@@ -231,12 +231,43 @@ def pdf_document_build(patent):
 
     return pdf_document
 
+
+def _summarize_metrics(payload, kind):
+
+    metrics = payload['environments'][0]['dimensions'][0]['metrics']
+    total_response_size_entries = filter(lambda item: item['name'] == kind, metrics)[0]['values']
+    #print total_response_size_entries
+
+    total_response_sizes = map(lambda item: float(item['value']), total_response_size_entries)
+    #print total_response_sizes
+
+    total = sum(total_response_sizes)
+    return total
+
 def ops_service_usage():
     client = get_ops_client()
-    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=01/01/2014~24/02/2014')
-    print response
-    print response.headers
-    print response.content
+
+    # one day
+    #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=24/02/2014~24/02/2014')
+
+    # misc
+    #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=01/01/2014~24/02/2014')
+    #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=23/02/2014~04/03/2014')
+
+    # all
+    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=26/11/2013~04/03/2014')
+
+    #print response
+    #print response.headers
+    #print response.content
+
+    payload = response.json()
+
+    total_response_size = _summarize_metrics(payload, 'total_response_size')
+    print 'Total response size: {0}G'.format(total_response_size / float(10**9))
+
+    message_count = _summarize_metrics(payload, 'message_count')
+    print 'Total message count: {0}'.format(message_count)
 
 if __name__ == '__main__':
     ops_service_usage()
