@@ -11,6 +11,7 @@ development
 - ui: external link to DEPATISnet (bibliographic data)
 - middleware: link to PDF to display inline, not as attachment
 - ui: attempt to fix internet explorer 10, which doesn't scale the pdf icon properly
+- middleware: lots of documents lack drawings, e.g. german utility documents (DE..U1) => use "docdb" format for image inquiry
 
 0.5.1
 =====

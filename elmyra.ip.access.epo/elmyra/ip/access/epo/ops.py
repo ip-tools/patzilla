@@ -70,7 +70,7 @@ def inquire_images(patent):
 
     #print "inquire_images:", patent
 
-    url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
+    url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/docdb/{patent}/images'
     url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
 
     error_msg_access = 'No image information for document={0}'.format(patent)
