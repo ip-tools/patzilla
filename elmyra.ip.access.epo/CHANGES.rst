@@ -10,6 +10,7 @@ development
 - ui: separated metadata info widget from pagination widget
 - ui: external link to DEPATISnet (bibliographic data)
 - middleware: link to PDF to display inline, not as attachment
+- ui: attempt to fix internet explorer 10, which doesn't scale the pdf icon properly
 
 0.5.1
 =====

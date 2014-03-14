@@ -464,7 +464,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                                     data-content="Download full pdf documents from various sources"
                             >
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
-                                <img src="/static/img/icons/pdf.svg" width="16"/>
+                                <img src="/static/img/icons/pdf.svg" width="16" height="16"/>
                                 PDF
                             </button>
                             <button class="btn dropdown-toggle" data-toggle="dropdown">
