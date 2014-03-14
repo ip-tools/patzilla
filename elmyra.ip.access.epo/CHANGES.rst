@@ -6,6 +6,8 @@ development
 ===========
 - api: refactor dpma register jump mechanics and url
 - ui: add link to CCD Viewer
+- ui: enhanced pagination widget: add pagesize chooser and mechanics
+- ui: separated metadata info widget from pagination widget
 
 0.5.1
 =====

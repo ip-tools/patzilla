@@ -167,6 +167,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
     <div id="alert-area"></div>
 
     ## results
+    <div id="ops-metadata-region"></div>
     <div id="ops-collection-region"></div>
 
     ## pager bottom
@@ -239,48 +240,99 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 </div>
 
 
-## pager template
+## ------------------------------------------
+##   pager template
+## ------------------------------------------
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
-    <div class="pagination pagination-centered">
-      <ul>
-        <!--
-        <li><a href="#" action="previous">Prev</a></li>
-        -->
-        <li><a href="" range="1-25">1-25</a></li>
-        <li><a href="" range="26-50">26-50</a></li>
-        <li><a href="" range="51-75">51-75</a></li>
-        <li><a href="" range="76-100">76-100</a></li>
-        <li><a href="" range="101-125">101-125</a></li>
-        <li><a href="" range="126-150">126-150</a></li>
-        <li><a href="" range="151-175">151-175</a></li>
-        <li><a href="" range="176-200">176-200</a></li>
-        <!--
-        <li><a href="#" action="next">Next</a></li>
-        -->
-      </ul>
+    <div class="container-fluid" id="pagination-widget">
+
+        <div class="row-fluid" id="pagination-chooser">
+
+            <!-- legal status -->
+            <div class="span2">
+                <div class="btn-group btn-popover page-size-chooser"
+                            data-toggle="popover" data-trigger="hover" data-placement="top"
+                            data-content="Select page size"
+                    >
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-resize-vertical"></i> &nbsp; Page size
+                    </button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                    </ul>
+                </div>
+            </div>
+
+            <div class="span10 pagination">
+                <ul>
+                    <!--
+                    <li><a href="#" action="previous">Prev</a></li>
+                    -->
+                    <!--
+                    <li><a href="#" action="next">Next</a></li>
+                    -->
+                </ul>
+            </div>
+        </div>
+
     </div>
-    <div class="pagination-centered">
-        total = <span class="badge badge-info"><%= result_count | 0 %></span>
-        &nbsp;&nbsp;
-        current = <span class="badge badge-info"><%= result_range %></span>
-    </div>
-    <script language="javascript">
-        // mark proper pagination entry as active
-        // FIXME: move to ops-chooser.js
-        $('.pagination').find('a').each(function(i, anchor) {
-            var anchor_range = $(anchor).attr('range');
-            if (anchor_range == '<%= result_range %>') {
-                var li = $(anchor).parent();
-                li.addClass('active');
-            }
-        });
-    </script>
 </script>
 </%text>
 
 
-## result list template
+## ------------------------------------------
+##   metadata template
+## ------------------------------------------
+<%text>
+<script type="text/x-underscore-template" id="ops-metadata-template">
+    <!--
+    <div class="row-fluid" id="pagination-info">
+        <div class="span12 pagination-centered">
+
+            &nbsp;&nbsp;
+            current = <span class="badge badge-info"><%= result_range %></span>
+        </div>
+    </div>
+    -->
+
+    <div class="row-fluid container-fluid ops-collection-entry" id="pagination-info">
+
+        <div class="ops-collection-entry-heading row-fluid">
+
+            <!-- total result count -->
+            <div class="span1">
+                Total:
+                <br/>
+                <span style="font-size: x-large"><%= result_count | 0 %></span>
+            </div>
+
+            <!-- current display range -->
+            <div class="span2">
+                Range:
+                <br/>
+                <span style="font-size: x-large"><%= result_range %></span>
+            </div>
+
+            <!-- current cql query string -->
+            <div class="span9">
+                Query:
+                <br/>
+                <span style="font-size: small" class="cql-query"><%= query_real %></span>
+            </div>
+
+        </div>
+    </div>
+
+</script>
+</%text>
+
+
+## ------------------------------------------
+##   result list template
+## ------------------------------------------
 <script id="ops-collection-template" type="text/x-underscore-template">
     <!--
     <div id="ops-collection-entry" class="row"/>
@@ -288,7 +340,10 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 </script>
 
 
-## result item template
+
+## ------------------------------------------
+##   result item template
+## ------------------------------------------
 <script id="ops-entry-template" type="text/x-underscore-template">
 
         <%text>

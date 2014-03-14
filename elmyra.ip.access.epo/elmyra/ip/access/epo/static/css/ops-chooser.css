@@ -52,9 +52,12 @@ a.query-link {
 
 
 
-/* pager */
+/* pager, pagination */
 .pager-area {
     margin-bottom: 20px;
+}
+.pagination {
+    margin: 0px;
 }
 
 

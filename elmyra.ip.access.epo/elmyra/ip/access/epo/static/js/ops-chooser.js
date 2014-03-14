@@ -23,11 +23,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     perform_search: function(options) {
         var query = $('#query').val();
         if (!_.isEmpty(query)) {
-            if (options && options.range) {
-                opsChooserApp.search.perform(this.documents, this.metadata, query, options.range);
-            } else {
-                opsChooserApp.search.perform(this.documents, this.metadata, query);
-            }
+            var page_size = this.metadata.get('page_size');
+            var default_range = '1-' + page_size;
+            var range = options && options.range ? options.range : default_range;
+            opsChooserApp.search.perform(this.documents, this.metadata, query, range);
         }
     },
 
@@ -43,6 +42,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 opsChooserApp = new OpsChooserApp();
 
 opsChooserApp.addRegions({
+    metadataRegion: "#ops-metadata-region",
     listRegion: "#ops-collection-region",
     paginationRegionTop: "#ops-pagination-region-top",
     paginationRegionBottom: "#ops-pagination-region-bottom",
@@ -59,11 +59,13 @@ OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
     perform: function(documents, metadata, query, range) {
 
-        documents.reset();
-        $('.pager-area').hide();
         indicate_activity(true);
-        var self = this;
 
+        documents.reset();
+        //$('.pager-area').hide();
+        $(opsChooserApp.paginationViewBottom.el).hide();
+
+        var self = this;
         this.fetch({
             data: $.param({ query: query, range: range}),
             success: function (payload) {
@@ -83,6 +85,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // unwrap response by creating a list of model objects from records
                 var entries;
                 if (search_result) {
+                    $(opsChooserApp.paginationViewBottom.el).show();
                     var exchange_documents = to_list(search_result['exchange-documents']);
                     entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
                 }
@@ -128,9 +131,12 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
+        page_size: 25,
         result_count: null,
         result_range: null,
         query_real: null,
+        pagination_entry_count: 11,
+        pagination_pagesize_choices: [25, 50, 75, 100],
     }
 
 });
@@ -541,12 +547,20 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     onDomRefresh: function() {
-        $(this.el).find('div.pagination a').click(function() {
-            var action = $(this).attr('action');
-            var range = $(this).attr('range');
-            opsChooserApp.perform_search({range: range});
-            return false;
-        });
+    },
+
+});
+
+MetadataView = Backbone.Marionette.ItemView.extend({
+    tagName: "div",
+    //id: "paginationview",
+    template: "#ops-metadata-template",
+
+    initialize: function() {
+        this.listenTo(this.model, "change", this.render);
+    },
+
+    onDomRefresh: function() {
     },
 
 });
@@ -627,6 +641,68 @@ function pdf_set_headline(document_number, page) {
 }
 
 function listview_bind_actions() {
+
+    // pager: create page size chooser
+    $('.page-size-chooser ul').each(function(i, page_size_chooser) {
+        $(this).empty();
+        var self = this;
+        var pagesize_choices = opsChooserApp.metadata.get('pagination_pagesize_choices');
+        var pagesize_chosen = opsChooserApp.metadata.get('page_size');
+        _(pagesize_choices).map(function(pagesize) {
+            var icon = '';
+            if (pagesize == pagesize_chosen) {
+                icon = '<i class="icon-check"></i>';
+            } else {
+                icon = '<i class="icon-check-empty"></i>';
+            }
+            var entry = _.template('<li><a href="" data-value="<%= pagesize %>"><%= icon %> <%= pagesize %></a></li>')({pagesize: pagesize, icon: icon});
+            $(self).append(entry);
+        });
+    });
+
+    // pager: make links from page size chooser entries
+    $('.page-size-chooser a').click(function() {
+        var value = $(this).data('value');
+        opsChooserApp.metadata.set('page_size', value);
+        opsChooserApp.perform_search();
+        return false;
+    });
+
+    // pager: create pagination entries
+    $('.pagination ul').each(function(i, pagination) {
+        $(this).empty();
+        var self = this;
+        var pagination_entry_count = opsChooserApp.metadata.get('pagination_entry_count');
+        var page_size = opsChooserApp.metadata.get('page_size');
+        _.range(1, pagination_entry_count * page_size, page_size).map(function(index) {
+            var offset = index * page_size;
+            var range_begin = index;
+            var range_end = range_begin + page_size - 1;
+            var range = range_begin + '-' + range_end;
+            var entry = _.template('<li><a href="" range="<%= range %>"><%= range %></a></li>')({range: range});
+            $(self).append(entry);
+        });
+    });
+
+    // pager: make links from pagination entries
+    $('.pagination a').click(function() {
+        var action = $(this).attr('action');
+        var range = $(this).attr('range');
+        opsChooserApp.perform_search({range: range});
+        return false;
+    });
+
+    // pager: mark proper pagination entry as active
+    $('.pagination').find('a').each(function(i, anchor) {
+        var anchor_range = $(anchor).attr('range');
+        if (anchor_range == opsChooserApp.metadata.get('result_range')) {
+            var li = $(anchor).parent();
+            li.addClass('active');
+        }
+    });
+
+    // metadata area: shorten cql query string
+    $(".cql-query").shorten({showChars: 125, moreText: 'more', lessText: 'less'});
 
     // handle checkbox clicks by add-/remove-operations on basket
     $(".chk-patent-number").click(function() {
@@ -833,20 +909,24 @@ opsChooserApp.addInitializer(function(options) {
 opsChooserApp.addInitializer(function(options) {
 
     // bind model objects to view objects
-    var collectionView = new OpsExchangeDocumentCollectionView({
-        collection: this.documents
-    });
-    var paginationViewTop = new PaginationView({
+    this.metadataView = new MetadataView({
         model: this.metadata
     });
-    var paginationViewBottom = new PaginationView({
+    this.collectionView = new OpsExchangeDocumentCollectionView({
+        collection: this.documents
+    });
+    this.paginationViewTop = new PaginationView({
+        model: this.metadata
+    });
+    this.paginationViewBottom = new PaginationView({
         model: this.metadata
     });
 
     // bind view objects to region objects
-    opsChooserApp.listRegion.show(collectionView);
-    opsChooserApp.paginationRegionTop.show(paginationViewTop);
-    opsChooserApp.paginationRegionBottom.show(paginationViewBottom);
+    opsChooserApp.metadataRegion.show(this.metadataView);
+    opsChooserApp.listRegion.show(this.collectionView);
+    opsChooserApp.paginationRegionTop.show(this.paginationViewTop);
+    opsChooserApp.paginationRegionBottom.show(this.paginationViewBottom);
 });
 
 opsChooserApp.addInitializer(function(options) {
@@ -867,8 +947,9 @@ $(document).ready(function() {
     opsChooserApp.start();
 
 
-    // show pager only when results are non-empty
+    // hide pager- and metadata area at first
     $('.pager-area').hide();
+    $('#pagination-info').hide();
 
 
     // application action: perform search

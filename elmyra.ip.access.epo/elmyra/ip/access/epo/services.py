@@ -70,8 +70,9 @@ def ops_published_data_search_handler(request):
 
     log.info('query cql: ' + query)
 
-    # range: x-y, maximum delta is 100
-    range = request.params.get('range', '1-25')
+    # range: x-y, maximum delta is 100, default is 25
+    range = request.params.get('range')
+    range = range or '1-25'
 
     result = ops_published_data_search(constituents, query, range)
 
