@@ -1,0 +1,3 @@
+"""
+Access USPTO patent services
+"""

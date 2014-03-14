@@ -375,7 +375,7 @@ OpsExchangeDocument = Backbone.Model.extend({
         get_drawing_url: function() {
             // http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
             // http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
-            var url_tpl = _.template('/api/ops/<%= patent_number %>/image/drawing');
+            var url_tpl = _.template('/api/drawing/<%= patent_number %>');
             var url = url_tpl({patent_number: this.get_patent_number()});
             return url;
         },
@@ -844,8 +844,10 @@ function listview_bind_actions() {
             //console.log(image_info_url);
 
             $.ajax({url: image_info_url, async: false}).success(function(payload) {
-                totalcount = payload['META']['drawing-total-count'];
-                //console.log('drawing count: ' + totalcount);
+                if (payload) {
+                    totalcount = payload['META']['drawing-total-count'];
+                    //console.log('drawing count: ' + totalcount);
+                }
             }).error(function(error) {
                 console.warn('Error while fetching drawing count: ' + error);
             });

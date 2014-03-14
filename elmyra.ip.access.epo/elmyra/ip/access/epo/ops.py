@@ -141,21 +141,14 @@ def get_ops_image_link_url(link, format, page=1):
 
 
 @cache_region('static')
-def get_ops_image_png(document, page, kind):
-    payload = get_ops_image(document, page, kind, 'tiff')
-    try:
-        payload = tiff_to_png(payload)
-    except Exception as ex:
-        raise HTTPInternalServerError(ex)
-    return payload
-
-
-@cache_region('static')
 def get_ops_image_pdf(document, page):
     payload = get_ops_image(document, page, 'FullDocument', 'pdf')
     return payload
 
 def get_ops_image(document, page, kind, format):
+
+    # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
+    # http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
 
     kind_requested = kind
     if kind_requested == 'FullDocumentDrawing':

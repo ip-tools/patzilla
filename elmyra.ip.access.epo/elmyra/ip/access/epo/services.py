@@ -2,7 +2,8 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
 from cornice import Service
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, get_ops_image_png, pdf_document_build, inquire_images
+from elmyra.ip.access.drawing import get_drawing_png
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
 
@@ -26,10 +27,10 @@ ops_image_info_service = Service(
     path='/api/ops/{patent}/image/info',
     description="OPS image info interface")
 
-ops_drawing_service = Service(
-    name='ops-drawing',
-    path='/api/ops/{patent}/image/drawing',
-    description="OPS drawing interface")
+drawing_service = Service(
+    name='drawing',
+    path='/api/drawing/{patent}',
+    description="Retrieve drawings for patent documents")
 
 ops_fullimage_service = Service(
     name='ops-fullimage',
@@ -88,17 +89,15 @@ def ops_image_info_handler(request):
     return info
 
 
-@ops_drawing_service.get(renderer='png')
-def ops_drawing_handler(request):
+@drawing_service.get(renderer='png')
+def drawing_handler(request):
     """request drawing, convert from tiff to png"""
-    # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
-    # http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
 
     # TODO: respond with proper 4xx codes if something fails
 
     patent = request.matchdict['patent']
     page = int(request.params.get('page', 1))
-    png = get_ops_image_png(patent, page, 'FullDocumentDrawing')
+    png = get_drawing_png(patent, page, 'FullDocumentDrawing')
     return png
 
 
