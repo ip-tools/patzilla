@@ -174,9 +174,17 @@ OpsExchangeDocument = Backbone.Model.extend({
             return newdict;
         },
 
+        get_publication_reference: function(source) {
+            var entries = this['bibliographic-data']['publication-reference']['document-id'];
+            var document_id = _(entries).find(function(item) {
+                return item['@document-id-type'] == source;
+            });
+            return this._flatten_textstrings(document_id);
+        },
+
         get_application_reference: function(source) {
-            var application_references = this['bibliographic-data']['application-reference']['document-id'];
-            var document_id = _(application_references).find(function(item) {
+            var entries = this['bibliographic-data']['application-reference']['document-id'];
+            var document_id = _(entries).find(function(item) {
                 return item['@document-id-type'] == source;
             });
             return this._flatten_textstrings(document_id);
@@ -469,7 +477,16 @@ OpsExchangeDocument = Backbone.Model.extend({
             var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=<%= number %>&type=application&format=epodoc');
             var url = url_tpl(document_id);
             return url;
+        },
 
+        get_depatisnet_url: function() {
+            // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=DE000004446098C2
+            // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=EP0666666A2
+            // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=EP666666A2
+            var document_id = this.get_publication_reference('docdb');
+            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=<%= country %><%= number %><%= kind %>');
+            var url = url_tpl(document_id);
+            return url;
         },
 
     },

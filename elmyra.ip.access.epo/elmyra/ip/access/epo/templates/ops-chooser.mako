@@ -387,6 +387,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
         var inpadoc_family_url = data.get_inpadoc_family_url();
         var ops_family_url = data.get_ops_family_url();
         var ccd_viewer_url = data.get_ccd_viewer_url();
+        var depatisnet_url = data.get_depatisnet_url();
 
         var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
         var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
@@ -485,7 +486,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
 
 
-                        <!-- legal status -->
+                        <!-- external links -->
                         <div class="btn-group btn-popover span7"
                                     data-toggle="popover" data-trigger="hover" data-placement="top"
                                     data-content="Show more information from various patent offices"
@@ -498,6 +499,20 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                             </button>
                             <ul class="dropdown-menu">
 
+                                <!-- bibliographic data -->
+                                <li><div style="padding-left: 10px">
+                                    <h5><i class="icon-list"></i> &nbsp; Bibliographic data</h5>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a href="<%= depatisnet_url %>" target="_blank">
+                                        [BIBLIO] <%= patent_number %> @ DEPATISnet
+                                    </a>
+                                </li>
+                                <li class="divider"/>
+
+
+                                <!-- legal status -->
                                 <li><div style="padding-left: 10px">
                                     <h5>§ &nbsp; Legal information</h5>
                                     </div>
@@ -519,11 +534,13 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                                 </li>
                                 <li>
                                     <a href="<%= uspto_pair_url %>" target="_blank">
-                                        [LEGAL] @ USPTO PAIR
+                                        [LEGAL] USPTO PAIR
                                     </a>
                                 </li>
                                 <li class="divider"/>
 
+
+                                <!-- patent family -->
                                 <li><div style="padding-left: 10px">
                                     <h5><i class="icon-group"></i> &nbsp; Patent family information</h5>
                                     </div>
@@ -543,6 +560,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                                         [FAMILY] <%= patent_number %> @ OPS biblio,legal
                                     </a>
                                 </li>
+
                             </ul>
                         </div>
 

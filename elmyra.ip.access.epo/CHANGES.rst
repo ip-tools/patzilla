@@ -8,6 +8,7 @@ development
 - ui: add link to CCD Viewer
 - ui: enhanced pagination widget: add pagesize chooser and mechanics
 - ui: separated metadata info widget from pagination widget
+- ui: external link to DEPATISnet (bibliographic data)
 
 0.5.1
 =====
