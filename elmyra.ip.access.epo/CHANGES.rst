@@ -9,6 +9,7 @@ development
 - ui: enhanced pagination widget: add pagesize chooser and mechanics
 - ui: separated metadata info widget from pagination widget
 - ui: external link to DEPATISnet (bibliographic data)
+- middleware: link to PDF to display inline, not as attachment
 
 0.5.1
 =====

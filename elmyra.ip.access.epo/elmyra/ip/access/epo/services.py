@@ -151,5 +151,8 @@ def ops_pdf_handler(request):
     parts = request.matchdict['parts']
 
     pdf_payload = pdf_document_build(patent)
-    request.response.headers['Content-Disposition'] = 'attachment; filename={0}.pdf'.format(patent)
+
+    # http://tools.ietf.org/html/rfc6266#section-4.2
+    request.response.headers['Content-Disposition'] = 'inline; filename={0}.pdf'.format(patent)
+
     return pdf_payload

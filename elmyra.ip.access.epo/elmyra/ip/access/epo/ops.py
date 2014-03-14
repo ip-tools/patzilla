@@ -227,7 +227,7 @@ def pdf_document_build(patent):
     metadata = pdf_make_metadata(patent, 'digi42, elmyra ip suite', page_count, page_sections)
     pdf_document = pdf_set_metadata(pdf_document, metadata)
 
-    # TODO: 4. add attachments
+    # TODO: 4. add attachments (e.g. xml)
 
     return pdf_document
 
