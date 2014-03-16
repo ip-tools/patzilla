@@ -10,6 +10,8 @@ js:
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.map \
 		--source-map-url /static/js/lib/ipsuite-search.min.map \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.js
+	git commit elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.* \
+		--message='release: update minified main javascript application and source map'
 
 sdist:
 	cd elmyra.ip.access.epo; python setup.py sdist
