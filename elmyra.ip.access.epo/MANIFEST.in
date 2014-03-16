@@ -1,4 +1,5 @@
 include *.txt *.ini *.cfg *.rst
 recursive-include elmyra/ip/access/epo *.ico *.png *.css *.gif *.jpg *.svg *.pt *.txt *.mak *.mako *.js *.map *.html *.xml
 exclude elmyra/ip/access/epo/static/js/app/*.js
+exclude elmyra/ip/access/epo/static/js/app/**/*.js
 recursive-include elmyra/ip/util/render *.js
