@@ -6,6 +6,7 @@ development
 ===========
 - refactor application layout on code level
 - ui: refactor basket into solid marionette component
+- ui: add localForage library
 
 0.6.1
 =====
