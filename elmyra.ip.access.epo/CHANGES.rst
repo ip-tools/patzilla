@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.6.1
+=====
+- middleware: fix result pdf rendering by using http url instead of https
+
 0.6.0
 =====
 - api: refactor dpma register jump mechanics and url

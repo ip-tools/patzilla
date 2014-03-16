@@ -24,7 +24,7 @@ def opspdf(request):
     filename = slugify(name, strip_equals=False, lowercase=False)
     suffix = '.pdf'
     request.response.headers['Content-Disposition'] = 'inline; filename={filename}{suffix}'.format(**locals())
-    print_url = request.url.replace('pdf=true', 'print=true')
+    print_url = request.url.replace('pdf=true', 'print=true').replace('https://', 'http://')
     return render_pdf(print_url)
 
 @view_config(route_name='jump-dpmaregister')
