@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.6.0
+=====
 - api: refactor dpma register jump mechanics and url
 - ui: add link to CCD Viewer
 - ui: enhanced pagination widget: add pagesize chooser and mechanics
