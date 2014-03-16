@@ -10,7 +10,6 @@
 
 <%
 query = request.params.get('query', '')
-numberlist = '\n'.join(request.params.get('numberlist', '').split(','))
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
 page_title = request.params.get('page-title', 'Patent search')
 page_subtitle = request.params.get('page-subtitle', '')
@@ -18,14 +17,12 @@ page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, USPTO')
 app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
 app_versionstring = request.params.get('app-versionstring', '<br/>Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''))
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
-ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
 ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
 ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
 embed_item_url = request.params.get('embed-item-url', '')
 %>
 <script type="application/javascript">
 var ship_mode = decodeURIComponent('${ship_mode}');
-var ship_param = decodeURIComponent('${ship_param}');
 var ship_url = decodeURIComponent('${ship_url}');
 var ship_frame = decodeURIComponent('${ship_frame}');
 var embed_item_url = decodeURIComponent('${embed_item_url}');
@@ -118,46 +115,9 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         </div>
 
         % if ship_mode != 'single-bibdata':
-        <div class="span4 container-fluid" id="basket-area">
-        <form id="basket-form" name="basket-form" method="post" action="${ship_url}">
-
-            <div class="row-fluid">
-                <div class="span12">
-                    <h6 style="display: inline">
-                        Your selection
-                    </h6>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <div class="span12">
-                    <textarea class="span12" id="basket" name="${ship_param}" rows="5">${numberlist}</textarea>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <div class="span6">
-                    <button
-                        type="submit" role="button" class="btn btn-popover"
-                        ${ship_url or 'disabled="disabled"'}
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                        data-content="Submit selected documents to origin or 3rd-party system"
-                        >
-                        <i class="icon-share"></i>
-                        Submit
-                    </button>
-                </div>
-                <div class="span6">
-                    <a id="basket-review-button" role="button" class="btn btn-popover pull-right"
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Review selected documents"
-                        >
-                        <i class="icon-reply"></i>
-                        Review
-                    </a>
-                </div>
-            </div>
-
-        </form>
-        </div>
+        <div class="span4" id="basket-area"></div>
         % endif
+
     </div>
 
 
@@ -837,14 +797,20 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 </%text>
 </script>
 
+<%include file="basket.html"/>
+
+
 <script type="text/javascript" src="/static/js/lib/jquery.caret-1.5.1.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
+<script type="text/javascript" src="/static/js/lib/localforage.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/backbone.localforage.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:
+    <script type="text/javascript" src="/static/js/app/components/basket.js"></script>
     <script type="text/javascript" src="/static/js/app/core.js"></script>
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ops.js"></script>

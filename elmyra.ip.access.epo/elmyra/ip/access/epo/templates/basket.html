@@ -1,0 +1,42 @@
+<script type="text/x-underscore-template" id="basket-template">
+    <%text>
+    <div class="container-fluid" id="basket-area">
+        <form id="basket-form" name="basket-form" method="post" action="<%= ship_url %>">
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <h6 style="display: inline">
+                        Your selection
+                    </h6>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <textarea class="span12" id="basket" name="<%= ship_param %>" rows="5"><%= numberlist %></textarea>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span6">
+                    <button
+                        type="submit" role="button" class="btn btn-popover"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Submit selected documents to origin or 3rd-party system"
+                    >
+                    <i class="icon-share"></i>
+                    Submit
+                    </button>
+                </div>
+                <div class="span6">
+                    <a id="basket-review-button" role="button" class="btn btn-popover pull-right"
+                       data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Review selected documents"
+                            >
+                        <i class="icon-reply"></i>
+                        Review
+                    </a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    </%text>
+</script>

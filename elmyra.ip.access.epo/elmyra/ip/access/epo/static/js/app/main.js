@@ -71,7 +71,7 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     onDomRefresh: function() {
 
         var patent_number = this.model.attributes.get_patent_number();
-        basket_update_ui_entry(patent_number);
+        opsChooserApp.collectionView.basket_update_ui_entry(patent_number);
 
     },
 
@@ -86,6 +86,24 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
 
     appendHtml: function(collectionView, itemView) {
         $(collectionView.el).append(itemView.el);
+    },
+
+    // backpropagate current basket entries into checkbox state
+    basket_update_ui_entry: function(entry) {
+        //console.log(this.model);
+        var payload = $('#basket').val();
+        var checkbox_element = $('#' + 'chk-patent-number-' + entry);
+        var add_button_element = $('#' + 'add-patent-number-' + entry);
+        var remove_button_element = $('#' + 'remove-patent-number-' + entry);
+        if (_.string.include(payload, entry)) {
+            checkbox_element && checkbox_element.prop('checked', true);
+            add_button_element && add_button_element.hide();
+            remove_button_element && remove_button_element.show();
+        } else {
+            checkbox_element && checkbox_element.prop('checked', false);
+            add_button_element && add_button_element.show();
+            remove_button_element && remove_button_element.hide();
+        }
     },
 
 });
@@ -119,11 +137,6 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 });
 
 
-/*
-------------------------------------------
-    utility functions
-------------------------------------------
- */
 
 
 /**
@@ -132,13 +145,20 @@ MetadataView = Backbone.Marionette.ItemView.extend({
  * ------------------------------------------
  */
 
+// model initializer
 opsChooserApp.addInitializer(function(options) {
-    // create application domain model objects
+
+    // application domain model objects
     this.search = new OpsPublishedDataSearch();
     this.metadata = new OpsExchangeMetadata();
     this.documents = new OpsExchangeDocumentCollection();
+
+    // model for basket component
+    this.basketModel = new BasketModel();
+
 });
 
+// view initializer
 opsChooserApp.addInitializer(function(options) {
 
     // bind model objects to view objects
@@ -155,12 +175,27 @@ opsChooserApp.addInitializer(function(options) {
         model: this.metadata
     });
 
+
+    var basketView = new BasketView({
+        el: $('#basket-area'),
+        model: this.basketModel,
+    });
+    basketView.render();
+
+
     // bind view objects to region objects
     opsChooserApp.metadataRegion.show(this.metadataView);
     opsChooserApp.listRegion.show(this.collectionView);
     opsChooserApp.paginationRegionTop.show(this.paginationViewTop);
     opsChooserApp.paginationRegionBottom.show(this.paginationViewBottom);
 });
+
+// component connect initializer
+opsChooserApp.addInitializer(function(options) {
+    this.listenTo(this.basketModel, "change:add", this.collectionView.basket_update_ui_entry);
+    this.listenTo(this.basketModel, "change:remove", this.collectionView.basket_update_ui_entry);
+});
+
 
 opsChooserApp.addInitializer(function(options) {
     // automatically run search after bootstrapping application

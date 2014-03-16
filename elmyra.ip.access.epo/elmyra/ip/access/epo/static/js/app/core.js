@@ -12,42 +12,6 @@ function indicate_activity(active) {
     }
 }
 
-function basket_add(entry) {
-    var payload = $('#basket').val();
-    if (!_.string.include(payload, entry))
-        if (payload != '' && !_.string.endsWith(payload, '\n'))
-            payload += '\n'
-    payload += entry + '\n';
-    $('#basket').val(payload);
-    basket_update_ui_entry(entry);
-}
-
-function basket_remove(entry) {
-    var payload = $('#basket').val();
-    if (_.string.include(payload, entry))
-        payload = payload.replace(entry + '\n', '');
-    $('#basket').val(payload);
-    basket_update_ui_entry(entry);
-}
-
-function basket_update_ui_entry(entry) {
-    // backpropagate current basket entries into checkbox state
-    //console.log(this.model);
-    var payload = $('#basket').val();
-    var checkbox_element = $('#' + 'chk-patent-number-' + entry);
-    var add_button_element = $('#' + 'add-patent-number-' + entry);
-    var remove_button_element = $('#' + 'remove-patent-number-' + entry);
-    if (_.string.include(payload, entry)) {
-        checkbox_element && checkbox_element.prop('checked', true);
-        add_button_element && add_button_element.hide();
-        remove_button_element && remove_button_element.show();
-    } else {
-        checkbox_element && checkbox_element.prop('checked', false);
-        add_button_element && add_button_element.show();
-        remove_button_element && remove_button_element.hide();
-    }
-}
-
 function pdf_display(element_id, url, page) {
     // embed pdf object
     var pdf_object = new PDFObject({
@@ -143,19 +107,19 @@ function listview_bind_actions() {
     $(".chk-patent-number").click(function() {
         var patent_number = this.value;
         if (this.checked)
-            basket_add(patent_number);
+            opsChooserApp.basketModel.add(patent_number);
         if (!this.checked)
-            basket_remove(patent_number);
+            opsChooserApp.basketModel.remove(patent_number);
     });
 
     // handle button clicks by add-/remove-operations on basket
     $(".add-patent-number").click(function() {
         var patent_number = $(this).data('patent-number');
-        basket_add(patent_number);
+        opsChooserApp.basketModel.add(patent_number);
     });
     $(".remove-patent-number").click(function() {
         var patent_number = $(this).data('patent-number');
-        basket_remove(patent_number);
+        opsChooserApp.basketModel.remove(patent_number);
     });
 
     // use jquery.shorten on "abstract" text
@@ -340,21 +304,6 @@ function boot_application() {
     $('.btn-query-perform').click(function() {
         opsChooserApp.perform_search();
     });
-
-    // application action: search from basket content
-    $('#basket-review-button').click(function() {
-        // compute cql query from numberlist in basket
-        var basket = $('#basket').val();
-        var query = basket
-            .split('\n')
-            .filter(function(entry) { return entry; })
-            .map(function(entry) { return 'pn=' + entry; }).join(' OR ');
-        if (query) {
-            $('#query').val(query);
-            opsChooserApp.perform_search();
-        }
-    });
-
 
     // apply popovers to all desired buttons
     $('.btn-popover').popover();

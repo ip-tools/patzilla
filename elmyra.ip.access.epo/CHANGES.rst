@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- refactor application layout on code level
+- ui: refactor basket into solid marionette component
 
 0.6.1
 =====
