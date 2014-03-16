@@ -13,6 +13,8 @@ development
 - ui: attempt to fix internet explorer 10, which doesn't scale the pdf icon properly
 - middleware: lots of documents lack drawings, e.g. german utility documents (DE..U1) => use "docdb" format for image inquiry
 - middleware: acquire first drawing from USPTO servers, if OPS lacks them
+- ui: print mode layout
+- middleware: export results as pdf using phantomjs
 
 0.5.1
 =====

@@ -14,9 +14,9 @@ numberlist = '\n'.join(request.params.get('numberlist', '').split(','))
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
 page_title = request.params.get('page-title', 'Patent search')
 page_subtitle = request.params.get('page-subtitle', '')
-page_footer = request.params.get('page-footer', 'data source: epo/ops')
+page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, USPTO')
 app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
-app_versionstring = request.params.get('app-versionstring', 'release ' + request.registry.settings.get('SOFTWARE_VERSION', ''))
+app_versionstring = request.params.get('app-versionstring', '<br/>Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''))
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_param = request.params.get('ship-param', request.params.get('ship_param', 'payload'))
 ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
@@ -29,6 +29,7 @@ var ship_param = decodeURIComponent('${ship_param}');
 var ship_url = decodeURIComponent('${ship_url}');
 var ship_frame = decodeURIComponent('${ship_frame}');
 var embed_item_url = decodeURIComponent('${embed_item_url}');
+var PRINTMODE = '${printmode}' == 'True' ? true : false;
 </script>
 
 ## title / headline
@@ -50,7 +51,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 <div class="container-fluid span12">
 
     ## query builder and basket
-    <div class="row-fluid" id="querybuilder-basket-area">
+    <div class="row-fluid do-not-print" id="querybuilder-basket-area">
 
         <div class="span8 container-fluid" id="querybuilder-area">
 
@@ -161,7 +162,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
 
     ## pager top
-    <div class="pager-area" id="ops-pagination-region-top"></div>
+    <div class="pager-area do-not-print" id="ops-pagination-region-top"></div>
 
     ## notifications and alerts
     <div id="alert-area"></div>
@@ -171,7 +172,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
     <div id="ops-collection-region"></div>
 
     ## pager bottom
-    <div class="pager-area" id="ops-pagination-region-bottom"></div>
+    <div class="pager-area do-not-print" id="ops-pagination-region-bottom"></div>
 
     <hr class="clear-margin" style="margin-top: 50px"/>
     <div class="page-footer pull-left">
@@ -179,8 +180,9 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
     </div>
     <div class="page-footer pull-right">
         <small>
-            ${page_footer},
-            ${app_versionstring}
+            <div style="text-align: right">
+                ${page_footer | n}${app_versionstring | n}
+            </div>
         </small>
     </div>
 
@@ -252,7 +254,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
             <!-- legal status -->
             <div class="span2">
                 <div class="btn-group btn-popover page-size-chooser"
-                            data-toggle="popover" data-trigger="hover" data-placement="top"
+                            data-toggle="popover" data-trigger="hover" data-placement="right"
                             data-content="Select page size"
                     >
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -317,10 +319,39 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
             </div>
 
             <!-- current cql query string -->
-            <div class="span9">
+            <div class="span7">
                 Query:
                 <br/>
                 <span style="font-size: small" class="cql-query"><%= query_real %></span>
+            </div>
+
+            <div class="span2">
+
+                <!-- result actions -->
+                <div class="btn-group btn-popover span7 result-actions do-not-print"
+                            data-toggle="popover" data-trigger="hover" data-placement="left"
+                            data-content="Export results"
+                    >
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-download-alt icon-large2"></i> &nbsp; Export
+                    </button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        <!-- bibliographic data -->
+                        <li>
+                            <a href="<%= window.location.href %>&pdf=true" target="_blank">
+                                <img src="/static/img/icons/pdf.svg" width="16" height="16"/> PDF
+                            </a>
+                            <a href="<%= window.location.href %>&print=true" target="_blank">
+                                <i class="icon-print icon-large"></i> Print
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
             </div>
 
         </div>
@@ -418,7 +449,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
 
 
         <%text>
-        <div class="container-fluid ops-collection-entry" data-document-number="<%= patent_number %>">
+        <div class="container-fluid ops-collection-entry" data-document-number="<%= patent_number %>" style="page-break-after: always;">
 
             <div class="ops-collection-entry-heading row-fluid">
 
@@ -454,7 +485,7 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                 </div>
 
                 <!-- actions -->
-                <div class="span5 container-fluid pull-right">
+                <div class="span5 container-fluid pull-right document-actions do-not-print">
                     <div class="span8">
 
 
@@ -651,8 +682,8 @@ var embed_item_url = decodeURIComponent('${embed_item_url}');
                                 </div>
                             </div>
                             <!-- carousel navigation -->
-                            <a class="carousel-control left" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
-                            <a class="carousel-control right" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
+                            <a class="carousel-control left do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
+                            <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
                         </div>
 
                         <div class="drawing-info span12 text-center">

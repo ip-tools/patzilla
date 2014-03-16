@@ -284,13 +284,19 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         enrich_link: function(label, attribute, value, value_modifier) {
 
+            // fallback: use label, if no value is given
+            if (!value) value = label;
+
+            // skip enriching links when in print mode
+            // due to phantomjs screwing them up when rendering to pdf
+            if (PRINTMODE) {
+                return value;
+            }
+
             // TODO: make this configurable!
             var kind = 'external';
             var target = '_blank';
             var query = null;
-
-            // fallback: use label, if no value is given
-            if (!value) value = label;
 
             // apply supplied modifier function to value
             if (value_modifier)
@@ -658,6 +664,12 @@ function pdf_set_headline(document_number, page) {
 }
 
 function listview_bind_actions() {
+
+    // hide all navigational- and action-elements when in print mode
+    if (PRINTMODE) {
+        $('.do-not-print').hide();
+        return;
+    }
 
     // pager: create page size chooser
     $('.page-size-chooser ul').each(function(i, page_size_chooser) {

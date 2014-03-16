@@ -4,6 +4,9 @@
 # Brendan W. McAdams <bwmcadams@gmail.com>
 # Ryan Bourgeois <bluedragonx@gmail.com>
 #
+# https://github.com/bwmcadams/mongodb_beaker
+# https://pypi.python.org/pypi/mongodb_beaker
+#
 """
 ==============
 beaker_mongodb
