@@ -840,13 +840,13 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/js/lib/jquery.caret-1.5.1.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
 
-<link rel="stylesheet" type="text/css" href="/static/css/ops-chooser.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
-    <script type="text/javascript" src="/static/js/lib/ipsuite-search.min.js"></script>
+    <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:
-    <script type="text/javascript" src="/static/js/ops-sdk.js"></script>
-    <script type="text/javascript" src="/static/js/ops-chooser.js"></script>
+    <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
+    <script type="text/javascript" src="/static/js/app/main.js"></script>
 % endif
 
 </%block>

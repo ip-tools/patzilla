@@ -8,17 +8,17 @@ from pyramid.url import route_path
 from pyramid.view import view_config
 
 def includeme(config):
-    config.add_route('ops-browser', '/ops/browser')
+    config.add_route('patentsearch', '/ops/browser')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('angry-cats', '/angry-cats')
 
 
-@view_config(route_name='ops-browser', renderer='elmyra.ip.access.epo:templates/ops-chooser.mako')
+@view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/app.mako')
 def opsbrowser(request):
     printmode = asbool(request.params.get('print'))
     return {'project': 'elmyra.ip.access.epo', 'printmode': printmode}
 
-@view_config(route_name='ops-browser', request_param="pdf=true", renderer='pdf')
+@view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
 def opspdf(request):
     name = 'elmyra-patentsearch-' + request.params.get('query')
     filename = slugify(name, strip_equals=False, lowercase=False)
@@ -40,9 +40,9 @@ def jump_dpmaregister(request):
     return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
 
 
-@view_config(name='ops-chooser', renderer='elmyra.ip.access.epo:templates/ops-chooser.mako')
+@view_config(name='patentsearch-old', renderer='elmyra.ip.access.epo:templates/app.mako')
 def ops_chooser(request):
-    url = route_path('ops-browser', request, _query=request.params)
+    url = route_path('patentsearch', request, _query=request.params)
     return HTTPFound(location=url)
 
 @view_config(name='portfolio-demo', renderer='elmyra.ip.access.epo:templates/portfolio-demo.mako')

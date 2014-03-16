@@ -4,14 +4,14 @@
 js:
 	@#echo bundling javascript for release=$(VERSION)
 	node_modules/.bin/uglifyjs \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ops-*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		--preamble "// (c) 2013,2014 Elmyra UG" \
 		--mangle --compress --define \
-		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.map \
-		--source-map-url /static/js/lib/ipsuite-search.min.map \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.js
-	git commit elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/lib/ipsuite-search.min.* \
-		--message='release: update minified main javascript application and source map'
+		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
+		--source-map-url /static/js/app.min.map \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.js
+	#git commit elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.* \
+	#	--message='release: update minified main javascript application and source map'
 
 sdist:
 	cd elmyra.ip.access.epo; python setup.py sdist

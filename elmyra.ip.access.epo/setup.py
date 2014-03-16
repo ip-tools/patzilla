@@ -83,7 +83,11 @@ setup(name='elmyra.ip.access.epo',
       #packages=['elmyra.ip.access.epo'],
       include_package_data=True,
       package_data={
-          'elmyra.ip.access.epo': ['**/*.mako', '**/**/*.js', '**/**/**/*.js', '**/**/**/*.map', '**/**/*.css', '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg'],
+          'elmyra.ip.access.epo': [
+              'templates/*.mako',
+              'static/js/**/*.js', 'static/js/**/*.map', '**/**/*.css',
+              '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg'
+          ],
           'elmyra.ip.util.render': ['*.js'],
       },
       zip_safe=False,
