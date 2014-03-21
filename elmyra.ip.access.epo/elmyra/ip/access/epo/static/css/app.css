@@ -59,6 +59,9 @@ a.query-link {
 .pagination {
     margin: 0px;
 }
+.pagination a {
+    color: black;
+}
 
 
 /* modal boxes */

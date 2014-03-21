@@ -8,6 +8,7 @@ development
 - ui: refactor basket into solid marionette component
 - ui: add localForage library
 - ui: temporarily remove cql quick query builder helper actions
+- ui: make pagination links black, not blue
 
 0.6.1
 =====
