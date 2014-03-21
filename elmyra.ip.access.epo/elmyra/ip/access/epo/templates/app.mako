@@ -304,10 +304,10 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
                         <!-- bibliographic data -->
                         <li>
-                            <a href="<%= window.location.href %>&pdf=true" target="_blank">
+                            <a href="<%= get_url_pdf() %>" target="_blank">
                                 <img src="/static/img/icons/pdf.svg" width="16" height="16"/> PDF
                             </a>
-                            <a href="<%= window.location.href %>&print=true" target="_blank">
+                            <a href="<%= get_url_print() %>" target="_blank">
                                 <i class="icon-print icon-large"></i> Print
                             </a>
                         </li>

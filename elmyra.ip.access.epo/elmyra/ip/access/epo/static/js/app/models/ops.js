@@ -83,7 +83,30 @@ OpsExchangeMetadata = Backbone.Model.extend({
         query_real: null,
         pagination_entry_count: 11,
         pagination_pagesize_choices: [25, 50, 75, 100],
-    }
+
+        get_url: function() {
+            var url =
+                window.location.pathname +
+                '?query=' + encodeURIComponent($('#query').val()) +
+                '&pagesize=' + this.page_size;
+            return url;
+        },
+        get_url_print: function() {
+            return this.get_url() + '&print=true';
+        },
+        get_url_pdf: function() {
+            return this.get_url() + '&pdf=true';
+        },
+
+    },
+
+    initialize: function(collection) {
+        var url = $.url(window.location.href);
+        var pagesize = url.param('pagesize');
+        if (pagesize) {
+            this.set('page_size', parseInt(pagesize));
+        }
+    },
 
 });
 
