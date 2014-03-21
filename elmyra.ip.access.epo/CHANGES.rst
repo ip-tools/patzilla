@@ -6,6 +6,7 @@ development
 ===========
 - ui: add "beta" badge to title
 - ui: drawings-carousel: always request image information to display fully qualified "Drawing #1/2"
+- ui: make widths of all widgets equal
 
 0.6.2
 =====

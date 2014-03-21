@@ -81,7 +81,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         result_count: null,
         result_range: null,
         query_real: null,
-        pagination_entry_count: 11,
+        pagination_entry_count: 12,
         pagination_pagesize_choices: [25, 50, 75, 100],
 
         get_url: function() {

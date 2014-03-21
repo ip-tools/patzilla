@@ -50,7 +50,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     ## query builder and basket
     <div class="row-fluid do-not-print" id="querybuilder-basket-area">
 
-        <div class="span8 container-fluid" id="querybuilder-area">
+        <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
                 <div class="span11">
@@ -209,7 +209,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 ## ------------------------------------------
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
-    <div class="container-fluid" id="pagination-widget">
+    <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
 
@@ -231,7 +231,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             </div>
 
             <div class="span10 pagination">
-                <ul>
+                <ul class="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>
                     -->
