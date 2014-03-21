@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.6.2
+=====
 - refactor application layout on code level
 - ui: refactor basket into solid marionette component
 - ui: add localForage library
