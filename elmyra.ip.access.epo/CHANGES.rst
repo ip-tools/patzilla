@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: add "beta" badge to title
+- ui: drawings-carousel: always request image information to display fully qualified "Drawing #1/2"
 
 0.6.2
 =====
