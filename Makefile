@@ -11,8 +11,8 @@ js:
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
 		--source-map-url /static/js/app.min.map \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.js
-	#git commit elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.* \
-	#	--message='release: update minified main javascript application and source map'
+	git commit elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.* \
+		--message='release: update minified main javascript application and source map'
 
 sdist:
 	cd elmyra.ip.access.epo; python setup.py sdist
