@@ -7,6 +7,7 @@ development
 - refactor application layout on code level
 - ui: refactor basket into solid marionette component
 - ui: add localForage library
+- ui: temporarily remove cql quick query builder helper actions
 
 0.6.1
 =====

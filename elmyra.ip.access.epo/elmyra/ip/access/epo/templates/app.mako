@@ -71,6 +71,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
                 <div class="span1">
 
+                    <!--
                     <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
                         <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
                         <button class="btn-cql-boolean btn btn-mini"        type="button" data-value="AND">AND</button>
@@ -79,6 +80,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                     <a class="btn-cql-field label label-success" data-value="num=">num=</a>
                     <a class="btn-cql-field label label-info" data-value="txt=">txt=</a>
                     <a class="btn-cql-field label label-important" data-value="cl=">cl=</a>
+                    -->
 
                 </div>
 
