@@ -11,7 +11,7 @@
 <%
 query = request.params.get('query', '')
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
-page_title = request.params.get('page-title', 'Patent search')
+page_title = request.params.get('page-title', 'Patent search &nbsp; <div class="label label-success" style="position: relative; top: -5px;">BETA</div>')
 page_subtitle = request.params.get('page-subtitle', '')
 page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, USPTO')
 app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
@@ -33,7 +33,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <div class="container-fluid">
     <div class="span8">
         <div class="pull-left">
-        <h3 style="display: inline-block">${page_title}</h3>
+        <h3 style="display: inline-block">${page_title | n}</h3>
         &nbsp;&nbsp;&nbsp;
         ${page_subtitle}
         </div>

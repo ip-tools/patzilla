@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: add "beta" badge to title
 
 0.6.2
 =====
