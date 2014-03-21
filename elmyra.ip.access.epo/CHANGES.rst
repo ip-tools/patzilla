@@ -9,6 +9,7 @@ development
 - ui: add localForage library
 - ui: temporarily remove cql quick query builder helper actions
 - ui: make pagination links black, not blue
+- ui: fix link to CCD Viewer (upgrade from /CCD-2.0.0 to /CCD-2.0.4)
 
 0.6.1
 =====

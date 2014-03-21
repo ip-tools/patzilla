@@ -426,7 +426,7 @@ OpsExchangeDocument = Backbone.Model.extend({
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=DE20132003344U&type=application&format=epodoc
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=US201113881490&type=application&format=epodoc
             var document_id = this.get_application_reference('epodoc');
-            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=<%= number %>&type=application&format=epodoc');
+            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0.4/html/viewCcd.html?num=<%= number %>&type=application&format=epodoc');
             var url = url_tpl(document_id);
             return url;
         },
