@@ -1,6 +1,7 @@
 from elmyra.ip.access.dpma.dpmaregister import DpmaRegisterAccess
 from elmyra.ip.util.render.phantomjs import render_pdf
 from elmyra.ip.util.text.format import slugify
+from pyramid.encode import urlencode
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.response import Response
 from pyramid.settings import asbool
@@ -9,7 +10,7 @@ from pyramid.view import view_config
 
 def includeme(config):
     config.add_route('patentsearch', '/ops/browser')
-    config.add_route('patentsearch-quick', '/{field}/{value}')
+    config.add_route('patentsearch-quick', '/ops/browser/{field}/{value}')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('angry-cats', '/angry-cats')
 
@@ -33,7 +34,13 @@ def opsbrowser_quick(request):
     field = request.matchdict.get('field')
     value = request.matchdict.get('value')
     query = '{field}={value}'.format(**locals())
-    return HTTPFound(location=request.route_url('patentsearch', _query={'query': query}))
+    #return HTTPFound(location=request.route_url('patentsearch', _query={'query': query}))
+
+    # FIXME: this is a hack
+    path = '/'
+    if '/ops/browser' in request.path:
+        path = '/ops/browser'
+    return HTTPFound(location=path + '?query=' + urlencode({field: value}))
 
 
 @view_config(route_name='jump-dpmaregister')
