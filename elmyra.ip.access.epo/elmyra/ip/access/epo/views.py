@@ -38,7 +38,7 @@ def opsbrowser_quick(request):
 
     # FIXME: this is a hack
     path = '/'
-    if '/ops/browser' in request.path:
+    if request.headers.get('Host') != 'patentsearch.elmyra.de':
         path = '/ops/browser'
     return HTTPFound(location=path + '?query=' + urlencode({field: value}))
 

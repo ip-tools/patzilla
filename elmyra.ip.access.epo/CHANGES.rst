@@ -8,6 +8,7 @@ development
 0.6.5
 =====
 - ui: drawings-carousel: request image information asynchronously to make result list display snappy again
+- fix direct access url semantics in local development (hack)
 
 0.6.4
 =====
