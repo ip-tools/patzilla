@@ -269,16 +269,17 @@ function listview_bind_actions() {
             var image_info_url = _.template('/api/ops/<%= patent %>/image/info')({ patent: document_number });
             //console.log(image_info_url);
 
-            $.ajax({url: image_info_url, async: false}).success(function(payload) {
+            $.ajax({url: image_info_url, async: true}).success(function(payload) {
                 if (payload) {
                     totalcount = payload['META']['drawing-total-count'];
                     //console.log('drawing count: ' + totalcount);
+                    carousel.data('totalcount', totalcount);
+                    update_carousel(carousel);
                 }
             }).error(function(error) {
-                    console.warn('Error while fetching total count of drawings: ' + error);
-                });
+                console.warn('Error while fetching total count of drawings: ' + error);
+            });
             carousel.data('totalcount', totalcount);
-
             update_carousel(carousel);
         }
 

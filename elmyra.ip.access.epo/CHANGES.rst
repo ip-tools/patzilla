@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.6.5
+=====
+- ui: drawings-carousel: request image information asynchronously to make result list display snappy again
+
 0.6.4
 =====
 - fix direct access url semantics
