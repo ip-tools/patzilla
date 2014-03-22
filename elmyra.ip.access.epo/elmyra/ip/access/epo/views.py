@@ -9,6 +9,7 @@ from pyramid.view import view_config
 
 def includeme(config):
     config.add_route('patentsearch', '/ops/browser')
+    config.add_route('patentsearch-quick', '/{field}/{value}')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('angry-cats', '/angry-cats')
 
@@ -26,6 +27,14 @@ def opspdf(request):
     request.response.headers['Content-Disposition'] = 'inline; filename={filename}{suffix}'.format(**locals())
     print_url = request.url.replace('pdf=true', 'print=true').replace('https://', 'http://')
     return render_pdf(print_url)
+
+@view_config(route_name='patentsearch-quick')
+def opsbrowser_quick(request):
+    field = request.matchdict.get('field')
+    value = request.matchdict.get('value')
+    query = '{field}={value}'.format(**locals())
+    return HTTPFound(location=request.route_url('patentsearch', _query={'query': query}))
+
 
 @view_config(route_name='jump-dpmaregister')
 def jump_dpmaregister(request):

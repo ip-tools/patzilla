@@ -7,6 +7,8 @@ development
 - ui: add "beta" badge to title
 - ui: drawings-carousel: always request image information to display fully qualified "Drawing #1/2"
 - ui: make widths of all widgets equal
+- switch to patentsearch.elmyra.de
+- better url semantics, e.g. /num/EP666666
 
 0.6.2
 =====
