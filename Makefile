@@ -30,3 +30,11 @@ install:
 	source .venv27/bin/activate; pip install cuisine; fab install:version=$(version)
 
 package-and-install: sdist upload upload-config install
+
+bumpversion:
+	bumpversion minor
+
+push:
+	git push && git push --tags
+
+release: js bumpversion push package-and-install
