@@ -12,6 +12,7 @@ def includeme(config):
     config.add_route('patentsearch', '/ops/browser')
     config.add_route('patentsearch-quick', '/ops/browser/{field}/{value}')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
+    config.add_route('jump-dpmaregister2', '/ops/browser/office/dpma/register/application/{document_number}')
     config.add_route('angry-cats', '/angry-cats')
 
 
@@ -44,6 +45,7 @@ def opsbrowser_quick(request):
 
 
 @view_config(route_name='jump-dpmaregister')
+@view_config(route_name='jump-dpmaregister2')
 def jump_dpmaregister(request):
     document_number = request.matchdict.get('document_number')
     redirect = request.params.get('redirect')

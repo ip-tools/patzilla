@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.6.6
+=====
+- fix switch to patentsearch.elmyra.de for /office urls
+
 0.6.5
 =====
 - ui: drawings-carousel: request image information asynchronously to make result list display snappy again
