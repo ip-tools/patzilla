@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.6.7
+=====
+- fix query parameter backwards compatibility: ship_url vs. ship-url
+
 0.6.6
 =====
 - fix switch to patentsearch.elmyra.de for /office urls

@@ -16,8 +16,12 @@ BasketModel = Backbone.Model.extend({
         var self = this;
         var url = $.url(window.location.href);
         _(basket_option_names).each(function(query_name) {
-            var value = url.param(query_name);
             var attribute_name = query_name.replace('-', '_');
+            var value = url.param(query_name);
+            // fall back to deprecated parameter name for backwards compatibility
+            if (!value) {
+                value = url.param(attribute_name);
+            }
             if (value) {
                 value = decodeURIComponent(value);
                 value = value.split(',');
