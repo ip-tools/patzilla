@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.7.0
+=====
 - search at DPMA DEPATISnet: prototype
 - ui: highlight "bi" search terms in abstract
 
