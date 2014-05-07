@@ -127,3 +127,23 @@ a.query-link {
     position: absolute;
     top: 95%;
 }
+
+
+
+/* https://github.com/alanphoon/jquery-keyword-highlight */
+.highlight
+{
+    background-color:#FFFF66;
+    color:#333;
+    padding:2px;
+}
+
+.highlight-circle
+{
+    border:solid 1px #eee;
+    border-radius:3px;
+    padding:2px;
+    background-color:#eee;
+    color:#333;
+    font-weight:600;
+}
