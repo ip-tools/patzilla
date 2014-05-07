@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
+from beaker.cache import cache_region
 from cornice import Service
+from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -71,6 +73,13 @@ def ops_published_data_search_handler(request):
 
     log.info('query cql: ' + query)
 
+    # DEPATISnet hack
+    if 'bi =' in query.lower() or 'pc =' in query.lower():
+        publication_numbers = dpma_published_data_search(query)
+        query = ' OR '.join(map(lambda x: 'pn=' + x, publication_numbers[:10]))
+        log.info('query cql via depatisnet: ' + query)
+
+
     # range: x-y, maximum delta is 100, default is 25
     range = request.params.get('range')
     range = range or '1-25'
@@ -80,6 +89,14 @@ def ops_published_data_search_handler(request):
     log.info('query finished')
 
     return result
+
+
+
+@cache_region('search')
+def dpma_published_data_search(query, range=None):
+    depatisnet = DpmaDepatisnetAccess()
+    publication_numbers = depatisnet.search_patents(query)
+    return publication_numbers
 
 
 @ops_image_info_service.get()

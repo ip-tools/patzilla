@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- search at DPMA DEPATISnet: prototype
 
 0.6.7
 =====

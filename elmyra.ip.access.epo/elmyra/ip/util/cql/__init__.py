@@ -30,7 +30,12 @@ class SmartSearchClause(SearchClause):
         if not term:
             term = term_vanilla
 
-        text.append('%s %s "%s"' % (self.index,
+        if str(self.index).lower() in ['pc']:
+            pass
+        else:
+            term = '"%s"' % term
+
+        text.append('%s %s %s' % (self.index,
                                     self.relation.toCQL(),
                                     term))
         # Add sortKeys
