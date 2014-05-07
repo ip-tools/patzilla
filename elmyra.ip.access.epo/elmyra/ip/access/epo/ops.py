@@ -33,16 +33,21 @@ def ops_published_data_search(constituents, query, range):
     url = url_tpl.format(constituents=constituents)
 
     # v1: anonymous
-    #client = requests
+    #import requests; client = requests
 
     # v2: with oauth
     client = get_ops_client()
 
     response = client.get(url, headers={'Accept': 'application/json'}, params={'q': query, 'Range': range})
-    #print "response:", response
 
-    #print "url:", url
+    # TODO: use POST for large "q" requests, move "Range" to "X-OPS-Range" header
+    #response = client.post(url, headers={'Accept': 'application/json'}, data={'q': query})
+
+    #print "request-url:", url
     #print "status-code:", response.status_code
+    #print "response:", response
+    #print "response body:", response.content
+
 
     if response.status_code == 200:
         #print "content-type:", response.headers['content-type']
