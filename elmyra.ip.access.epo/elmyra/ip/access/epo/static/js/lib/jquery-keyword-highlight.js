@@ -3,7 +3,8 @@
         keywordHighlight: function(options){
             var defaults = {
                 highlightClass: 'highlight',
-                caseSensitive: 'false'
+                caseSensitive: 'false',
+                contains: 'false',
             }
             var options = $.extend(defaults, options);
 
@@ -16,6 +17,11 @@
                 if($(e).attr("data-keyword"))
                     currentKeyword = $(e).attr("data-keyword");
 
+                if (currentKeyword == null) {
+                    console.warn('keywordHighlight will not highlight: ' + currentKeyword);
+                    return;
+                }
+
                 var currentHighlightClass = options.highlightClass;
                 if($(e).attr("data-highlightClass"))
                     currentHighlightClass = $(e).attr("data-highlightClass");
@@ -24,10 +30,19 @@
                 if($(e).attr("data-caseSensitive"))
                     currentCaseSensitive = $(e).attr("data-caseSensitive");
 
+                var currentContains = options.contains;
+                if($(e).attr("data-contains"))
+                    currentContains = $(e).attr("data-contains");
 
                 $(words).each(function(i,e) {
                     var found = false;
-                    if(currentCaseSensitive != 'true') {
+
+                    if (currentContains == 'true') {
+                        if (e.toLowerCase().indexOf(currentKeyword.toLowerCase()) != -1) {
+                            found = true;
+                        }
+
+                    } else if (currentCaseSensitive != 'true') {
                         //not case sensitive, so lowercase all and compare.
                         if(e.toLowerCase() == currentKeyword.toLowerCase())
                             found = true;

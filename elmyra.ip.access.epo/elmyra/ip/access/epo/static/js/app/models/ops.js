@@ -14,7 +14,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         var self = this;
         this.fetch({
             data: $.param({ query: query, range: range}),
-            success: function (payload) {
+            success: function (payload, response, options) {
 
                 indicate_activity(false);
                 $('#alert-area').empty();
@@ -48,7 +48,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 metadata.set({result_count: result_count, result_range: result_range, query_real: query_real});
 
                 // run action bindings here after rendering data entries
-                listview_bind_actions();
+                listview_bind_actions(options);
 
             },
             error: function(e, xhr) {

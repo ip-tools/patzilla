@@ -64,6 +64,7 @@ def ops_published_data_search_handler(request):
         query = '"%s"' % query
 
     # Parse and recompile CQL query string to apply number normalization
+    query_object = None
     try:
         query_object = cql_parse(query)
         query = query_object.toCQL().strip()
@@ -73,11 +74,20 @@ def ops_published_data_search_handler(request):
 
     log.info('query cql: ' + query)
 
+    def propagate_bi_keyword():
+        if query_object:
+            for op in query_object.leftOperand, query_object.rightOperand:
+                #print "op.index:", op.index
+                #print "op.term:", op.term
+                if str(op.index) == 'bi':
+                    request.response.headers['X-Elmyra-Query-Keywords'] = str(op.term)
+
     # DEPATISnet hack
     if 'bi =' in query.lower() or 'pc =' in query.lower():
         publication_numbers = dpma_published_data_search(query)
         query = ' OR '.join(map(lambda x: 'pn=' + x, publication_numbers[:10]))
         log.info('query cql via depatisnet: ' + query)
+        propagate_bi_keyword()
 
 
     # range: x-y, maximum delta is 100, default is 25

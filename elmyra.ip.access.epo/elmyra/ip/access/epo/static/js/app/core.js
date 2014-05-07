@@ -33,7 +33,7 @@ function pdf_set_headline(document_number, page) {
     $(".modal-header #ops-pdf-modal-label").empty().append(headline);
 }
 
-function listview_bind_actions() {
+function listview_bind_actions(options) {
 
     // hide all navigational- and action-elements when in print mode
     if (PRINTMODE) {
@@ -124,6 +124,15 @@ function listview_bind_actions() {
 
     // use jquery.shorten on "abstract" text
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
+
+    // use jquery-keyword-highlight on "abstract" text
+    var highlight_keyword = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+    console.log('keywordHighlight: ' + highlight_keyword);
+    $(".abstract").keywordHighlight({
+        keyword: highlight_keyword,
+        caseSensitive: 'false',
+        contains: 'true',
+    });
 
     // popovers
     $('.add-patent-number').popover();

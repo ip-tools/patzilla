@@ -806,6 +806,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
 <script type="text/javascript" src="/static/js/lib/localforage.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/backbone.localforage.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/jquery-keyword-highlight.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 

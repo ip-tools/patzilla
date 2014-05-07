@@ -30,6 +30,7 @@ class SmartSearchClause(SearchClause):
         if not term:
             term = term_vanilla
 
+        # 3. exclude some values from being quoted
         if str(self.index).lower() in ['pc']:
             pass
         else:
