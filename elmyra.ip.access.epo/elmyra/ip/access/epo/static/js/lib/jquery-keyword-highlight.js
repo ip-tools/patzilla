@@ -9,7 +9,9 @@
             var options = $.extend(defaults, options);
 
             return this.each(function(i, e) {
-                var words = $(e).html().split(' ');
+                var html = $(e).html();
+                if (!html) return;
+                var words = html.split(' ');
                 var new_content = '';
 
                 //check for inline data attributes.
@@ -18,7 +20,7 @@
                     currentKeyword = $(e).attr("data-keyword");
 
                 if (currentKeyword == null) {
-                    console.warn('keywordHighlight will not highlight: ' + currentKeyword);
+                    //console.warn('keywordHighlight will not highlight: ' + currentKeyword);
                     return;
                 }
 

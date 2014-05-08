@@ -5,6 +5,7 @@ import sys
 import logging
 import mechanize
 import cookielib
+from BeautifulSoup import BeautifulSoup
 
 
 """
@@ -26,13 +27,16 @@ class DpmaDepatisnetAccess:
         self.browser.set_handle_robots(False)
 
         self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
-        self.searchurl = self.baseurl + '/depatisnet?action=experte'
+        self.searchurl = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
         self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
+        self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
 
 
-    def search_patents(self, query):
+    def search_patents(self, query, hits_per_page=None):
 
-        logger.info("searching documents, query='%s'" % query)
+        hits_per_page = hits_per_page or self.hits_per_page
+
+        logger.info("searching documents, query='%s', hits_per_page='%s'" % (query, hits_per_page))
 
         # 1. open search url
         response_searchform = self.browser.open(self.searchurl)
@@ -42,24 +46,32 @@ class DpmaDepatisnetAccess:
         self.browser.select_form(nr=0)
         #self.browser.select_form(name='form')
         self.browser['query'] = query
+        self.browser['hitsPerPage'] = [str(hits_per_page)]
         response = self.browser.submit()
 
+        # propagate error- and info-messages
+        body = response.read().decode('iso-8859-1')
+        soup = BeautifulSoup(body)
+        error_message = soup.find('div', {'class': 'error'})
+        if error_message:
+            [s.extract() for s in error_message('a')]
+            [s.extract() for s in error_message('p', {'class': 'headline'})]
+        else:
+            error_message = ''
 
-        # TODO: check for errors like...
-        """
-        Beim Überprüfen Ihrer Expertensuchanfrage ist ein Fehler aufgetreten.
-
-        Fehlercode: 1203 - Das Suchfeld ist nicht bekannt
-        Fehlerposition: 1
-        BIA=bagger and PC=DE
-        """
+        if 'An error has occurred' in body:
+            raise SyntaxError(error_message)
 
         csv_response = self.browser.open(self.csvurl)
         #csv = csv_response.read().decode('latin-1')
         #print "csv:", csv
 
         results = self.csv_parse_publication_numbers(csv_response)
-        return results
+        payload = {
+            'data': results,
+            'message': str(error_message),
+        }
+        return payload
 
 
     def csv_parse_publication_numbers(self, csv_response):

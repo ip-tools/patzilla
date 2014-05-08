@@ -76,3 +76,81 @@ var OPS_CQL_FIELDS = [
         ],
     },
 ];
+
+var DEPATISNET_CQL_FIELDS = [
+    {
+        text: '<h4>Publication</h4>',
+        children: [
+            { id: 'pn', text: cql_field_chooser_text('Publication number', ['pn'], '(10, 11)') },
+            { id: 'pc', text: cql_field_chooser_text('Country of publication', ['pc'], '(19)') },
+            { id: 'pub', text: cql_field_chooser_text('Publication date', ['pub'], '') },
+            { id: 'py', text: cql_field_chooser_text('Publication year', ['py'], '') },
+            { id: 'pa', text: cql_field_chooser_text('Applicant/Owner', ['pa'], '(71, 73)') },
+            { id: 'in', text: cql_field_chooser_text('Inventor', ['in'], '(72)') },
+            { id: 'pcod', text: cql_field_chooser_text('Kind code', ['pcod'], '(12)') },
+        ],
+    },
+    {
+        text: '<h4>Text</h4>',
+        children: [
+            { id: 'ti', text: cql_field_chooser_text('Title', ['ti'], '(54)') },
+            { id: 'ab', text: cql_field_chooser_text('Abstract', ['ab'], '(57)') },
+            { id: 'de', text: cql_field_chooser_text('Description', ['de'], '') },
+            { id: 'cl', text: cql_field_chooser_text('Claims', ['cl'], '(57)') },
+            { id: 'bi', text: cql_field_chooser_text('Full text data', ['bi']) },
+        ],
+    },
+    {
+        text: '<h4>Application</h4>',
+        children: [
+            { id: 'an', text: cql_field_chooser_text('Application number', ['ap'], '(21)') },
+            { id: 'ac', text: cql_field_chooser_text('Country of application', ['ac'], '') },
+            { id: 'ad', text: cql_field_chooser_text('Application date', ['ad'], '(22, 96)') },
+            { id: 'ay', text: cql_field_chooser_text('Application year', ['ay'], '') },
+        ],
+    },
+    {
+        text: '<h4>Priority</h4>',
+        children: [
+            { id: 'prn', text: cql_field_chooser_text('Priority number', ['prn'], '(31)') },
+            { id: 'prc', text: cql_field_chooser_text('Country of priority', ['prc'], '(33)') },
+            { id: 'prd', text: cql_field_chooser_text('Priority date', ['prd'], '(32)') },
+            { id: 'pry', text: cql_field_chooser_text('Priority year', ['pry'], '') },
+        ],
+    },
+    {
+        text: '<h4>Citations</h4>',
+        children: [
+            { id: 'ct', text: cql_field_chooser_text('Cited documents', ['ct'], '(56)') },
+            { id: 'ctnp', text: cql_field_chooser_text('Cited non-patent literature', ['ctnp'], '(56)') },
+        ],
+    },
+    {
+        text: '<h4>Bibliographic IPC</h4>',
+        children: [
+            { id: 'icb', text: cql_field_chooser_text('Bibliographic IPC', ['icb'], '') },
+            { id: 'icm', text: cql_field_chooser_text('IPC main class', ['icm'], '(51)') },
+            { id: 'ics', text: cql_field_chooser_text('IPC secondary class', ['ics'], '(51)') },
+            { id: 'ica', text: cql_field_chooser_text('IPC additional class', ['ica'], '') },
+            { id: 'ici', text: cql_field_chooser_text('IPC index classes', ['ici'], '') },
+            { id: 'icmv', text: cql_field_chooser_text('IPC main class version', ['icmv'], '') },
+            { id: 'icsv', text: cql_field_chooser_text('IPC secondary class version', ['icsv'], '') },
+            { id: 'icav', text: cql_field_chooser_text('IPC additional class version', ['icav'], '') },
+            { id: 'icml', text: cql_field_chooser_text('IPC main class level', ['icml'], '') },
+            { id: 'icsl', text: cql_field_chooser_text('IPC secondary class level', ['icsl'], '') },
+            { id: 'ical', text: cql_field_chooser_text('IPC additional class level', ['ical'], '') },
+        ],
+    },
+    {
+        text: '<h4>Reclassified IPC</h4>',
+        children: [
+            { id: 'mcd', text: cql_field_chooser_text('Reclassified IPC', ['mcd'], '') },
+            { id: 'mcm', text: cql_field_chooser_text('MCD main class', ['mcm'], '') },
+            { id: 'mcs', text: cql_field_chooser_text('MCD secondary class', ['mcs'], '') },
+            { id: 'mca', text: cql_field_chooser_text('MCD additional class', ['mca'], '') },
+            { id: 'mcml', text: cql_field_chooser_text('MCD main class level', ['mcml'], '') },
+            { id: 'mcsl', text: cql_field_chooser_text('MCD secondary class level', ['mcsl'], '') },
+            { id: 'mcal', text: cql_field_chooser_text('MCD additional class level', ['mcal'], '') },
+        ],
+    },
+];

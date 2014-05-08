@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
+import json
 import logging
 from beaker.cache import cache_region
 from cornice import Service
@@ -44,6 +45,11 @@ ops_pdf_service = Service(
     path='/api/ops/{patent}/pdf/{parts}',
     description="OPS pdf interface")
 
+depatisnet_published_data_search_service = Service(
+    name='depatisnet-published-data-search',
+    path='/api/depatisnet/published-data/search',
+    description="DEPATISnet search interface")
+
 
 # ------------------------------------------
 #   handlers
@@ -74,27 +80,12 @@ def ops_published_data_search_handler(request):
 
     log.info('query cql: ' + query)
 
-    def propagate_bi_keyword():
-        if query_object:
-            for op in query_object.leftOperand, query_object.rightOperand:
-                #print "op.index:", op.index
-                #print "op.term:", op.term
-                if str(op.index) == 'bi':
-                    request.response.headers['X-Elmyra-Query-Keywords'] = str(op.term)
-
-    # DEPATISnet hack
-    if 'bi =' in query.lower() or 'pc =' in query.lower():
-        publication_numbers = dpma_published_data_search(query)
-        query = ' OR '.join(map(lambda x: 'pn=' + x, publication_numbers[:10]))
-        log.info('query cql via depatisnet: ' + query)
-        propagate_bi_keyword()
-
-
     # range: x-y, maximum delta is 100, default is 25
     range = request.params.get('range')
     range = range or '1-25'
 
     result = ops_published_data_search(constituents, query, range)
+    propagate_keywords(request, query_object)
 
     log.info('query finished')
 
@@ -102,12 +93,72 @@ def ops_published_data_search_handler(request):
 
 
 
-@cache_region('search')
-def dpma_published_data_search(query, range=None):
-    depatisnet = DpmaDepatisnetAccess()
-    publication_numbers = depatisnet.search_patents(query)
-    return publication_numbers
+@depatisnet_published_data_search_service.get(accept="application/json")
+def depatisnet_published_data_search_handler(request):
+    """Search for published-data at DEPATISnet"""
 
+    # CQL query string
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
+    if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
+        query = '"%s"' % query
+
+    # Parse and recompile CQL query string to apply number normalization
+    query_object = None
+    try:
+        query_object = cql_parse(query)
+        query = query_object.toCQL().strip()
+    except Diagnostic as ex:
+        # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
+        log.warn('CQL parse error: query="{0}", reason={1}'.format(query, str(ex)))
+
+    log.info('query cql: ' + query)
+
+    propagate_keywords(request, query_object)
+
+    try:
+        return dpma_published_data_search(query, 250)
+
+    except SyntaxError as ex:
+        request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
+
+
+def propagate_keywords(request, query_object):
+    """propagate keywords to client for highlighting"""
+    if query_object:
+        keywords = []
+        scan_keywords(query_object, keywords)
+        request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(list(set(keywords)))
+
+def scan_keywords(op, keywords):
+
+    if not op: return
+    #print "op:", dir(op)
+
+    keyword_fields = [
+        'applicant', 'pa', 'inventor', 'in', 'titleandabstract', 'ta', 'title', 'ti', 'abstract', 'ab',
+        'bi',
+    ]
+
+    if hasattr(op, 'index'):
+        #print "op.index:", op.index
+        #print "op.term:", op.term
+        if str(op.index) in keyword_fields:
+            keywords.append(str(op.term))
+
+    hasattr(op, 'leftOperand') and scan_keywords(op.leftOperand, keywords)
+    hasattr(op, 'rightOperand') and scan_keywords(op.rightOperand, keywords)
+
+@cache_region('search')
+def dpma_published_data_search(query, hits_per_page):
+    depatisnet = DpmaDepatisnetAccess()
+    try:
+        return depatisnet.search_patents(query, hits_per_page)
+    except SyntaxError as ex:
+        log.warn('Invalid query for DEPATISnet: %s' % ex.msg)
+        raise
 
 @ops_image_info_service.get()
 def ops_image_info_handler(request):

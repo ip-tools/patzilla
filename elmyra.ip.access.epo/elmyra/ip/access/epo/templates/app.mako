@@ -13,7 +13,7 @@ query = request.params.get('query', '')
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
 page_title = request.params.get('page-title', 'Patent search &nbsp; <div class="label label-success" style="position: relative; top: -5px;">BETA</div>')
 page_subtitle = request.params.get('page-subtitle', '')
-page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, USPTO')
+page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG')
 app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
 app_versionstring = request.params.get('app-versionstring', '<br/>Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''))
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
@@ -53,10 +53,16 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
-                <div class="span11">
+                <div class="span8">
                     <h6 style="display: inline">
                         <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
                     </h6>
+                </div>
+                <div class="span3">
+                    <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
+                      <button class="btn active" data-value="ops">OPS</button>
+                      <button class="btn" data-value="depatisnet">DEPATISnet</button>
+                    </div>
                 </div>
                 <div class="span1">
                     <a id="btn-query-clear" class="icon-trash icon-large"></a>
@@ -128,6 +134,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
     ## notifications and alerts
     <div id="alert-area"></div>
+    <div id="info-area"></div>
 
     ## results
     <div id="ops-metadata-region"></div>
@@ -615,7 +622,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="ops-collection-entry-inner container-fluid">
 
                 <div class="row-fluid">
-                    <div class="span12">
+                    <div class="span12 document_title">
                         <strong><%= title_list.join('<br/>') %></strong>
                     </div>
                 </div>
@@ -653,7 +660,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                         </div>
 
                     </div>
-                    <div class="span7">
+                    <div class="span7 document_details">
 
                         <dl class="dl-horizontal dl-horizontal-biblio">
 
@@ -779,6 +786,58 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 </script>
 
 
+<script id="cornice-error-template" type="text/x-underscore-template">
+
+    <div class="alert alert-error alert-block">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>ERROR</h4>
+        <%text>
+
+        <dl class="dl-horizontal dl-horizontal-biblio2">
+
+            <dt>
+                Message
+            </dt>
+            <dd>
+                <h4><%= description %></h4>
+            </dd>
+
+            <br/>
+
+            <dt>
+                Name
+            </dt>
+            <dd>
+                <%= name %>
+            </dd>
+
+            <dt>
+                Location
+            </dt>
+            <dd>
+                <%= location %>
+            </dd>
+
+        </dl>
+        </%text>
+
+    </div>
+
+</script>
+
+
+<script id="alert-template" type="text/x-underscore-template">
+    <%text>
+    <div class="alert alert-block <%= clazz %>">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4><%= title %></h4>
+        <br/>
+        <%= description %>
+    </div>
+    </%text>
+</script>
+
+
 <script id="cql-field-chooser-entry" type="text/x-underscore-template">
 <%text>
 
@@ -817,6 +876,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     <script type="text/javascript" src="/static/js/app/core.js"></script>
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ops.js"></script>
+    <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
     <script type="text/javascript" src="/static/js/app/main.js"></script>
 % endif
 

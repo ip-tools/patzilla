@@ -33,7 +33,7 @@ function pdf_set_headline(document_number, page) {
     $(".modal-header #ops-pdf-modal-label").empty().append(headline);
 }
 
-function listview_bind_actions(options) {
+function listview_bind_actions() {
 
     // hide all navigational- and action-elements when in print mode
     if (PRINTMODE) {
@@ -126,12 +126,20 @@ function listview_bind_actions(options) {
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
 
     // use jquery-keyword-highlight on "abstract" text
-    var highlight_keyword = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
-    console.log('keywordHighlight: ' + highlight_keyword);
-    $(".abstract").keywordHighlight({
-        keyword: highlight_keyword,
-        caseSensitive: 'false',
-        contains: 'true',
+    /*
+    var textnodes = $('.document_title, .document_details').find('*').andSelf().contents().filter(function(){
+        return this.nodeType === 3;
+    });
+    textnodes = $('.document_title, .document_details');
+    console.log('textnodes:', textnodes);
+    */
+    _.each(opsChooserApp.metadata.get('keywords'), function(item) {
+        //console.log('keyword: ' + item);
+        $('.document_title, .abstract').keywordHighlight({
+            keyword: item,
+            caseSensitive: 'false',
+            contains: 'true',
+        });
     });
 
     // popovers
@@ -325,12 +333,21 @@ function listview_bind_actions(options) {
 
 }
 
+function reset_content(options) {
+    $('#alert-area').empty();
+    $('#info-area').empty();
+    opsChooserApp.documents.reset();
+    $('#pagination-info').hide();
+    options = options || {};
+    if (!options.keep_pager) {
+        $('.pager-area').hide();
+    }
+}
+
 function boot_application() {
 
     // hide pager- and metadata area at first
-    $('.pager-area').hide();
-    $('#pagination-info').hide();
-
+    reset_content();
 
     // application action: perform search
     $('.btn-query-perform').click(function() {
@@ -398,6 +415,24 @@ function boot_application() {
     });
 
 
+    // ------------------------------------------
+    //   datasource selector
+    // ------------------------------------------
+
+    // propagate query parameter to datasource selector
+    var url = $.url(window.location.href);
+    var datasource = url.param('datasource') || 'ops';
+    if (datasource) {
+        $("#datasource > .btn[data-value='" + datasource + "']").button('toggle');
+    }
+
+    // toggle cql field chooser depending on datasource
+    $('#datasource').on('click', '.btn', function(event) {
+        cql_field_chooser_toggle($(this).data('value'));
+    });
+
+
+
 
 
     // ------------------------------------------
@@ -455,8 +490,23 @@ function boot_application() {
     // ------------------------------------------
     //   cql field chooser
     // ------------------------------------------
+    cql_field_chooser_toggle(datasource);
+
+}
+
+function cql_field_chooser_toggle(datasource) {
+    if (datasource == 'ops') {
+        cql_field_chooser_setup(OPS_CQL_FIELDS);
+
+    } else if (datasource == 'depatisnet') {
+        cql_field_chooser_setup(DEPATISNET_CQL_FIELDS);
+    }
+}
+
+function cql_field_chooser_setup(data) {
+
     $('#cql-field-chooser').select2({
-        data: { results: OPS_CQL_FIELDS },
+        data: { results: data },
         dropdownCssClass: "bigdrop",
         escapeMarkup: function(text) { return text; },
     });

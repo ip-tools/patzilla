@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.7.1
+=====
+- ui, middleware: proper DEPATISnet integration
+
 0.7.0
 =====
 - search at DPMA DEPATISnet: prototype

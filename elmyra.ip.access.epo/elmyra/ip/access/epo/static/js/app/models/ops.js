@@ -3,6 +3,7 @@
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
+    keywords: [],
     perform: function(documents, metadata, query, range) {
 
         indicate_activity(true);
@@ -12,9 +13,11 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         $(opsChooserApp.paginationViewBottom.el).hide();
 
         var self = this;
-        this.fetch({
+        return this.fetch({
             data: $.param({ query: query, range: range}),
             success: function (payload, response, options) {
+
+                self.keywords = jQuery.parseJSON(options.xhr.getResponseHeader('X-Elmyra-Query-Keywords'));
 
                 indicate_activity(false);
                 $('#alert-area').empty();
@@ -24,6 +27,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 //console.log(payload);
                 console.log("payload data:");
                 console.log(payload['attributes']);
+
+                if (_.isEmpty(payload['attributes'])) return;
 
                 // get "node" containing record list from nested json response
                 var search_result = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
@@ -46,9 +51,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var result_range = result_range_node['@begin'] + '-' + result_range_node['@end'];
                 var query_real = biblio_search['ops:query']['$'];
                 metadata.set({result_count: result_count, result_range: result_range, query_real: query_real});
-
-                // run action bindings here after rendering data entries
-                listview_bind_actions(options);
+                metadata.set('keywords', _.union(self.keywords, metadata.get('keywords')));
 
             },
             error: function(e, xhr) {
@@ -56,8 +59,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 //console.log("error: " + xhr.responseText);
 
                 indicate_activity(false);
-                $('#alert-area').empty();
-                documents.reset();
+                reset_content();
 
                 response = jQuery.parseJSON(xhr.responseText);
                 if (response['status'] == 'error') {
@@ -83,6 +85,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         query_real: null,
         pagination_entry_count: 12,
         pagination_pagesize_choices: [25, 50, 75, 100],
+        keywords: [],
 
         get_url: function() {
             var url =

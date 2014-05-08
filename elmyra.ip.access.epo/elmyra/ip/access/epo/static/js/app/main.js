@@ -19,14 +19,102 @@ function to_list(value) {
  */
 OpsChooserApp = Backbone.Marionette.Application.extend({
 
+    get_datasource: function() {
+        var datasource = $('#datasource > .btn.active').data('value');
+        return datasource;
+    },
+
     // send to server and process response
     perform_search: function(options) {
         var query = $('#query').val();
+        var datasource = this.get_datasource();
         if (!_.isEmpty(query)) {
-            var page_size = this.metadata.get('page_size');
-            var default_range = '1-' + page_size;
-            var range = options && options.range ? options.range : default_range;
-            opsChooserApp.search.perform(this.documents, this.metadata, query, range);
+
+            if (datasource == 'ops') {
+                console.log('ops search: ' + query);
+                var range = this.compute_range(options);
+                opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
+                    // run action bindings here after rendering data entries
+                    listview_bind_actions();
+                });
+
+            } else if (datasource == 'depatisnet') {
+                console.log('depatisnet search: ' + query);
+                var depatisnet = new DepatisnetSearch();
+                var self = this;
+                depatisnet.perform(query).done(function(response) {
+
+                    reset_content();
+
+                    var publication_numbers = response['data'];
+
+                    if (response['message']) {
+                        // TODO: refactor to "mkerror" or similar
+                        var tpl = _.template($('#alert-template').html());
+                        var error = {
+                            'title': 'WARNING',
+                            'description': response['message'],
+                            'clazz': 'alert-warning',
+                        };
+                        var alert_html = tpl(error);
+                        $('#info-area').append(alert_html);
+                    }
+
+
+                    self.metadata.set('keywords', depatisnet.keywords);
+
+                    // compute slice values
+                    var range = options && options.range ? options.range : '1-10';
+                    //console.log('range:', range);
+                    var range_parts = range.split('-');
+                    var sstart = parseInt(range_parts[0]);
+                    var ssend = parseInt(range_parts[1]) + 1;
+                    //console.log('range:', sstart, ssend);
+
+                    if (sstart > publication_numbers.length) {
+                        var msg = 'DEPATISnet: No more results for range: ' + range;
+                        console.warn(msg);
+                        reset_content({keep_pager: true});
+
+                        // TODO: refactor to "mkerror" or similar
+                        var tpl = _.template($('#cornice-error-template').html());
+                        var error = {'name': 'query', 'location': 'depatisnet-search', 'description': msg};
+                        var alert_html = tpl(error);
+                        $('#alert-area').append(alert_html);
+
+                        return;
+                    }
+
+                    var query_ops = _(_.map(publication_numbers, function(item) { return 'pn=' + item})).slice(sstart, ssend).join(' OR ');
+                    console.log('DEPATISnet: OPS CQL query:', query_ops);
+
+
+                    // querying by single document numbers has a limit of 10 at OPS
+                    self.metadata.set('page_size', 10);
+
+
+                    //var range = self.compute_range(options);
+                    opsChooserApp.search.perform(self.documents, self.metadata, query_ops, '1-10').done(function() {
+
+                        // make the pager display the original query
+                        self.metadata.set('query_real', query);
+
+                        // amend the current result range and paging parameter
+                        self.metadata.set('result_range', range);
+                        self.metadata.set('pagination_entry_count', 17);
+                        $('.pagination').removeClass('span10');
+                        $('.pagination').addClass('span12');
+
+                        // run action bindings here after rendering data entries
+                        listview_bind_actions();
+
+                        $('.page-size-chooser').parent().remove();
+
+                    });
+
+                });
+            }
+
         }
     },
 
@@ -36,7 +124,14 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             opsChooserApp.perform_search(options);
             $(window).scrollTop(0);
         }
-    }
+    },
+
+    compute_range: function(options) {
+        var page_size = this.metadata.get('page_size');
+        var default_range = '1-' + page_size;
+        var range = options && options.range ? options.range : default_range;
+        return range;
+    },
 
 });
 opsChooserApp = new OpsChooserApp();
@@ -197,11 +292,6 @@ opsChooserApp.addInitializer(function(options) {
 });
 
 
-opsChooserApp.addInitializer(function(options) {
-    // automatically run search after bootstrapping application
-    this.perform_search();
-});
-
 $(document).ready(function() {
 
     console.log("OpsChooserApp starting");
@@ -215,5 +305,8 @@ $(document).ready(function() {
     opsChooserApp.start();
 
     boot_application();
+
+    // automatically run search after bootstrapping application
+    opsChooserApp.perform_search();
 
 });
