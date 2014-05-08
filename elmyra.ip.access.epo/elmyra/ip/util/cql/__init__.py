@@ -31,7 +31,7 @@ class SmartSearchClause(SearchClause):
             term = term_vanilla
 
         # 3. exclude some values from being quoted (Error code: 1107 - Quote marks not applicable for this index)
-        if str(self.index).lower() in ['pc', 'py', 'pa', 'in']:
+        if str(self.index).lower() in ['pa', 'in', 'pc', 'ac', 'prc', 'py', 'ay', 'pry']:
             pass
         else:
             term = '"%s"' % term

@@ -44,7 +44,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 var self = this;
                 depatisnet.perform(query).done(function(response) {
 
-                    reset_content();
+                    //reset_content();
+                    reset_content({keep_pager: true});
 
                     var publication_numbers = response['data'];
 
@@ -71,10 +72,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     var ssend = parseInt(range_parts[1]) + 1;
                     //console.log('range:', sstart, ssend);
 
-                    if (sstart > publication_numbers.length) {
-                        var msg = 'DEPATISnet: No more results for range: ' + range;
+                    if (publication_numbers && sstart > publication_numbers.length) {
+                        var msg = 'DEPATISnet: No results for range "' + range + '"';
                         console.warn(msg);
-                        reset_content({keep_pager: true});
 
                         // TODO: refactor to "mkerror" or similar
                         var tpl = _.template($('#cornice-error-template').html());
