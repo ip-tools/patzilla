@@ -8,6 +8,7 @@ development
 0.7.1
 =====
 - ui, middleware: proper DEPATISnet integration
+- cache search queries for one hour
 
 0.7.0
 =====
