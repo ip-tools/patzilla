@@ -51,6 +51,10 @@ class DpmaDepatisnetAccess:
 
         # propagate error- and info-messages
         body = response.read().decode('iso-8859-1')
+        #print response.info(); print 'body:', body
+        if body == '':
+            raise SyntaxError('Empty response from server')
+
         soup = BeautifulSoup(body)
         error_message = soup.find('div', {'class': 'error'})
         if error_message:

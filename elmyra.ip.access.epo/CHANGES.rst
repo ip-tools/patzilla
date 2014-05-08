@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.7.3
+=====
+- DEPATISnet integration: more fixes
+
 0.7.2
 =====
 - DEPATISnet integration: minor fixes
