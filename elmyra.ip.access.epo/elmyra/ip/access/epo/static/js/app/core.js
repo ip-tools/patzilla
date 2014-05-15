@@ -372,6 +372,12 @@ function boot_application() {
     $('#query').on('keydown', null, 'meta+return', function() {
         opsChooserApp.perform_search();
     });
+    $('#query').on('keydown', null, 'hyper+return', function() {
+        opsChooserApp.perform_search();
+    });
+    $('#query').on('keydown', null, 'ctrl+return', function() {
+        opsChooserApp.perform_search();
+    });
 
     // intercept and reformat clipboard content
     $("#query").on("paste", function(e) {
