@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- update jquery.hotkeys.js
 
 0.7.3
 =====
