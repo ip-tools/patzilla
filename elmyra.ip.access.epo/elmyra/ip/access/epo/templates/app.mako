@@ -11,7 +11,7 @@
 <%
 query = request.params.get('query', '')
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
-page_title = request.params.get('page-title', 'Patent search &nbsp; <div class="label label-success" style="position: relative; top: -5px;">BETA</div>')
+page_title = request.params.get('page-title', 'Patent search')
 page_subtitle = request.params.get('page-subtitle', '')
 page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG')
 app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
