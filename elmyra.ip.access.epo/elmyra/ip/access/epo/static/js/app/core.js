@@ -376,6 +376,7 @@ function boot_application() {
         opsChooserApp.perform_search();
     });
 
+    /*
     // intercept and reformat clipboard content
     $("#query").on("paste", function(e) {
 
@@ -386,35 +387,44 @@ function boot_application() {
 
         var text = (e.originalEvent || e).clipboardData.getData('text');
 
-        // show dialog to request modifier kind from
-        $('#clipboard-modifier-chooser').modal('show');
-
-        // modifier kind selected in dialog, compute and set new clipboard content
-        $('.btn-clipboard-modifier').click(function() {
-
-            // get field name and operator from dialog
-            var modifier = $(this).data('modifier');
-            var operator = $('#clipboard-modifier-operator').find('.btn.active').data('value') || 'OR';
-
-            // close dialog
-            $('#clipboard-modifier-chooser').modal('hide');
-
-            // compute new clipboard content
-            var query = _(text.split('\n')).map(function(item) {
-                return modifier + '=' + item;
-            }).join(' ' + operator + ' ');
-
-            // set clipboard content and focus element
-            $('#query').val(query);
-            $('#query').focus();
-
-        });
-
     });
+    */
 
     // trash icon clears the whole content
     $('#btn-query-clear').click(function() {
         $('#query').val('').focus();
+    });
+
+    // transform query: open modul dialog to select modifier kind
+    $('#btn-query-transform').click(function() {
+
+        // show dialog to request modifier kind from
+        $('#clipboard-modifier-chooser').modal('show');
+
+    });
+
+    // transform query: modifier kind selected in dialog
+    $('.btn-clipboard-modifier').click(function() {
+
+        // get field name and operator from dialog
+        var modifier = $(this).data('modifier');
+        var operator = $('#clipboard-modifier-operator').find('.btn.active').data('value') || 'OR';
+
+        // close dialog
+        $('#clipboard-modifier-chooser').modal('hide');
+
+        // compute new query content
+        var text = $('#query').val().trim();
+        var entries = text.split('\n');
+        if (entries.length <= 1) return;
+        var query = _(entries).map(function(item) {
+            return modifier + '=' + item;
+        }).join(' ' + operator + ' ');
+
+        // set query content and focus element
+        $('#query').val(query);
+        $('#query').focus();
+
     });
 
 

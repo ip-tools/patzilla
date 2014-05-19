@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: bind search to meta+return and ctrl+return keys
+- ui: use explicit clipboard/query transformation (remove on.paste handler, add button)
 
 
 0.7.4

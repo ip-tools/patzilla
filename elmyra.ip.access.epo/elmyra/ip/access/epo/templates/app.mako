@@ -65,6 +65,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                     </div>
                 </div>
                 <div class="span1">
+                    <a id="btn-query-transform" class="icon-exchange icon-large"></a>
                     <a id="btn-query-clear" class="icon-trash icon-large"></a>
                 </div>
             </div>
@@ -180,24 +181,26 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <div id="clipboard-modifier-chooser" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="clipboard-modifier-chooser-label" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="clipboard-modifier-chooser-label">Choose clipboard transformation...</h3>
+        <h3 id="clipboard-modifier-chooser-label">Query transformation</h3>
     </div>
     <div class="modal-body">
+        Transform newline-separated data to syntactically correct query.
+        <br/><br/>
         <div class="btn-group btn-group-vertical">
             <button class="btn btn-large btn-success btn-clipboard-modifier" data-modifier="num">
-                <strong>Publication-, application- or priority number</strong>
+                <strong>Number: Publication-, application- or priority number</strong>
                 <br/><br/>
-                <small>FIXME: examples</small>
+                <small>e.g. "num=DE102012220639A1 OR num=DE102013201031A1 OR num=..."</small>
             </button>
             <button class="btn btn-large btn-info btn-clipboard-modifier" data-modifier="txt">
-                <strong>Title, abstract, inventor-, or applicant name</strong>
+                <strong>Text: Title, abstract, inventor-, or applicant name</strong>
                 <br/><br/>
-                <small>FIXME: examples</small>
+                <small>e.g. "txt=siemens OR txt=alstom OR txt=..."</small>
             </button>
             <button class="btn btn-large btn-danger btn-clipboard-modifier" data-modifier="cl">
-                <strong>CPC or IPC8 class</strong>
+                <strong>Class: CPC or IPC8 class</strong>
                 <br/><br/>
-                <small>FIXME: examples</small>
+                <small>e.g. "cl=H04L12/24 OR cl=H04L12/26 OR cl=..."</small>
             </button>
         </div>
     </div>
