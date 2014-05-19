@@ -4,6 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: bind search to meta+return and ctrl+return keys
+
+
+0.7.4
+=====
 - update jquery.hotkeys.js
 - ui: remove "beta" badge
 - ui: bind search to hyper+return and ctrl+return keys
