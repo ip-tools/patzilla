@@ -475,12 +475,12 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                             </button>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="<%= ops_pdf_url %>" target="_blank">
+                                    <a href="<%= ops_pdf_url %>" target="ipsuite-pdf">
                                         [PDF] <%= patent_number %> @ OPS
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="<%= espacenet_pdf_url %>" target="_blank">
+                                    <a href="<%= espacenet_pdf_url %>" target="ipsuite-pdf">
                                         [PDF] <%= patent_number %> @ Espacenet
                                     </a>
                                 </li>
