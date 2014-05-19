@@ -98,7 +98,10 @@ OpsExchangeMetadata = Backbone.Model.extend({
             return this.get_url() + '&print=true';
         },
         get_url_pdf: function() {
-            return this.get_url() + '&pdf=true';
+            var url = this.get_url() + '&pdf=true';
+            console.log('OpsExchangeMetadata.get_url: ' + url);
+            console.log('window.location.pathname: ' + window.location.pathname);
+            return url;
         },
 
     },
