@@ -95,6 +95,7 @@ function listview_bind_actions() {
     // popovers
     $('.add-patent-number').popover();
     $('.remove-patent-number').popover();
+    // TODO: rename to just "popover" or similar, since not just buttons may have popovers
     $('.btn-popover').popover();
     $('.inid-tooltip').tooltip();
 

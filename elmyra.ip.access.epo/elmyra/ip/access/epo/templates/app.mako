@@ -55,15 +55,19 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="row-fluid">
                 <div class="span12">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
-                      <button class="btn active" data-value="ops">
-                        <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
-                      </button>
-                      <button class="btn" data-value="depatisnet">
-                        <img src="/static/img/icons/dpma-logo-small.svg" width="24" height="24"/> DEPATISnet
-                      </button>
-                      <button class="btn basket-review-button" data-value="review">
-                        <i class="icon-pencil"></i> Review
-                      </button>
+                        <button class="btn active" data-value="ops">
+                            <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
+                        </button>
+                        <button class="btn" data-value="depatisnet">
+                            <img src="/static/img/icons/dpma-logo-small.svg" width="24" height="24"/> DEPATISnet
+                        </button>
+                        <button
+                            class="btn basket-review-button btn-popover" data-value="review"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="Review selection of documents on the right"
+                            >
+                            <i class="icon-pencil"></i> Review
+                        </button>
                     </div>
                 </div>
             </div>
@@ -95,7 +99,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
                 <div class="span4">
 
-                    <div class="btn-group btn-popover"
+                    <div
+                        class="btn-group btn-popover"
                         data-toggle="popover" data-trigger="hover" data-placement="right"
                         data-content="Send query to database"
                         >
