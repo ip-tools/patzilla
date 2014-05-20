@@ -313,7 +313,7 @@ function boot_application() {
 
     // application action: perform search
     $('.btn-query-perform').click(function() {
-        opsChooserApp.perform_search();
+        opsChooserApp.perform_search({reviewmode: false});
     });
 
     // apply popovers to all desired buttons
@@ -332,10 +332,10 @@ function boot_application() {
 
     // submit on meta+enter
     $('#query').on('keydown', null, 'meta+return', function() {
-        opsChooserApp.perform_search();
+        opsChooserApp.perform_search({reviewmode: false});
     });
     $('#query').on('keydown', null, 'ctrl+return', function() {
-        opsChooserApp.perform_search();
+        opsChooserApp.perform_search({reviewmode: false});
     });
 
     /*
@@ -472,11 +472,14 @@ function cql_field_chooser_toggle(datasource) {
 
     } else if (datasource == 'depatisnet') {
         cql_field_chooser_setup(DEPATISNET_CQL_FIELDS);
+
+    } else {
+        cql_field_chooser_setup([]);
+
     }
 }
 
 function cql_field_chooser_setup(data) {
-
     $('#cql-field-chooser').select2({
         data: { results: data },
         dropdownCssClass: "bigdrop",

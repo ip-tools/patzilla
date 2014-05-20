@@ -48,6 +48,27 @@ BasketModel = Backbone.Model.extend({
         this.trigger('change:remove', item);
     },
 
+    review: function(options) {
+
+        // clear query to prevent confusion
+        $('#query').val('');
+
+        // compute cql query from numberlist in basket
+        var basket = $('#basket').val();
+        var options = options || {};
+        var query = null;
+        var publication_numbers = basket
+            .split('\n')
+            .filter(function(entry) { return entry; });
+        var hits = publication_numbers.length;
+
+        opsChooserApp.set_datasource('review');
+        cql_field_chooser_toggle('review');
+        opsChooserApp.metadata.set('reviewmode', true);
+        // FIXME: decouple from referencing the main application object e.g. by using events!?
+        opsChooserApp.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR');
+    }
+
 });
 
 BasketView = Backbone.Marionette.ItemView.extend({
@@ -75,20 +96,11 @@ BasketView = Backbone.Marionette.ItemView.extend({
     setup: function() {
         //console.log('BasketView::setup');
 
+        var self = this;
+
         // application action: search from basket content
         $('#basket-review-button').click(function() {
-            // compute cql query from numberlist in basket
-            var basket = $('#basket').val();
-            var query = basket
-                .split('\n')
-                .filter(function(entry) { return entry; })
-                .map(function(entry) { return 'pn=' + entry; }).join(' OR ');
-            if (query) {
-                $('#query').val(query);
-
-                // FIXME: decouple from referencing the main application object by using events!?
-                opsChooserApp.perform_search();
-            }
+            self.model.review();
         });
     },
 

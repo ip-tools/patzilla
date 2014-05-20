@@ -53,18 +53,21 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
-                <div class="span7">
+                <div class="span6">
                     <h6 style="display: inline">
                         <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
                     </h6>
                 </div>
-                <div class="span4">
+                <div class="span5">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
+                      <button class="btn active" data-value="ops">
+                        <img src="/static/img/icons/epo-logo-small.svg" width="20"/> OPS
+                      </button>
                       <button class="btn" data-value="depatisnet">
                         <img src="/static/img/icons/dpma-logo-small.svg" width="24"/> DEPATISnet
                       </button>
-                      <button class="btn active" data-value="ops">
-                        <img src="/static/img/icons/epo-logo-small.svg" width="20"/> OPS
+                      <button class="btn" data-value="review">
+                        <i class="icon-pencil"></i> Review
                       </button>
                     </div>
                 </div>
@@ -222,7 +225,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 ##   pager template
 ## ------------------------------------------
 <%text>
-<script type="text/x-underscore-template" id="ops-pagination-template-ops">
+<script type="text/x-underscore-template" id="ops-pagination-template">
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
@@ -258,7 +261,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     </div>
 </script>
 
-<script type="text/x-underscore-template" id="ops-pagination-template-depatisnet">
+<script type="text/x-underscore-template" id="ops-pagination-template-nopagesize">
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
@@ -305,7 +308,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                 <br/>
                 <span style="font-size: x-large"><%= result_count %></span>
 
-                <% if (datasource == 'depatisnet') { %>
+                <% if (searchmode == 'subsearch') { %>
                     <br/>
                     View:
                     <br/>
@@ -324,9 +327,11 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="span7">
                 Query:
                 <br/>
-                <span style="font-size: small" class="cql-query"><%= query_origin %></span>
+                <span style="font-size: small" class="cql-query">
+                    <%= query_origin %>
+                </span>
 
-                <% if (datasource == 'depatisnet' && query_real) { %>
+                <% if (searchmode == 'subsearch' && query_real) { %>
                     <br/>
                     Query OPS:
                     <br/>

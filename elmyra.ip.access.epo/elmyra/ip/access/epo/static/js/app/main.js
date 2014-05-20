@@ -28,13 +28,24 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $("#datasource > .btn[data-value='" + datasource + "']").button('toggle');
     },
 
-    // send to server and process response
+    // perform ops search and process response
     perform_search: function(options) {
 
         this.metadata.resetSomeDefaults();
 
         var query = $('#query').val();
         var datasource = this.get_datasource();
+
+        // handle basket review mode specially
+        if (options && options.reviewmode != null) {
+            this.metadata.set('reviewmode', options.reviewmode);
+        }
+        var reviewmode = this.metadata.get('reviewmode');
+        if (reviewmode == true) {
+            this.basketModel.review(options);
+            return;
+        }
+
         if (!_.isEmpty(query)) {
 
             this.metadata.set('datasource', datasource);
@@ -59,69 +70,15 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 var self = this;
                 depatisnet.perform(query).done(function(response) {
 
-                    indicate_activity(false);
-                    //reset_content();
-                    reset_content({keep_pager: true});
-
                     self.propagate_depatisnet_message(response);
                     self.metadata.set('keywords', depatisnet.keywords);
-
                     console.log(response);
+
                     var publication_numbers = response['data'];
                     var hits = response['hits'];
 
-                    // compute slice values
-                    var range = options && options.range ? options.range : '1-10';
-                    //console.log('range:', range);
-                    var range_parts = range.split('-');
-                    var sstart = parseInt(range_parts[0]) - 1;
-                    var ssend = parseInt(range_parts[1]);
-                    //console.log('range:', sstart, ssend);
-
-                    if (publication_numbers && (publication_numbers.length == 0 || sstart > publication_numbers.length)) {
-
-                        //self.metadata.set('result_count', 0);
-
-                        var msg = _.template(
-                            'DEPATISnet: No results with query "<%= query %>", range "<%= range %>".')
-                            ({query: query, range: range});
-                        console.warn(msg);
-
-                        self.user_alert(msg, 'warning');
-                        return;
-                    }
-
-                    var query_ops = _(_.map(publication_numbers, function(item) { return 'pn=' + item})).slice(sstart, ssend).join(' OR ');
-                    console.log('DEPATISnet: OPS CQL query:', query_ops);
-
-
-                    // querying by single document numbers has a limit of 10 at OPS
-                    self.metadata.set('page_size', 10);
-
-
-                    //var range = self.compute_range(options);
-                    opsChooserApp.search.perform(self.documents, self.metadata, query_ops, '1-10').done(function() {
-
+                    self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
                         self.propagate_depatisnet_message(response);
-
-                        // show the original query
-                        self.metadata.set('query_origin', query);
-
-                        // show the original result size
-                        self.metadata.set('result_count', hits);
-
-                        // amend the current result range and paging parameter
-                        self.metadata.set('result_range', range);
-                        self.metadata.set('pagination_entry_count', 17);
-                        $('.pagination').removeClass('span10');
-                        $('.pagination').addClass('span12');
-
-                        // run action bindings here after rendering data entries
-                        listview_bind_actions();
-
-                        // TODO: selecting page size with DEPATISnet is currently not possible
-                        //$('.page-size-chooser').parent().remove();
-
                     });
 
                 });
@@ -137,6 +94,81 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             $(window).scrollTop(0);
         }
     },
+
+    // perform ops search and process response
+    perform_listsearch: function(options, query_origin, entries, hits, field, operator) {
+
+        //this.set_datasource('ops');
+
+        indicate_activity(false);
+        //reset_content();
+        reset_content({keep_pager: true});
+
+
+        // compute slice values
+        var range = options && options.range ? options.range : '1-10';
+        //console.log('range:', range);
+        var range_parts = range.split('-');
+        var sstart = parseInt(range_parts[0]) - 1;
+        var ssend = parseInt(range_parts[1]);
+        //console.log('range:', sstart, ssend);
+
+        if (entries && (entries.length == 0 || sstart > entries.length)) {
+
+            //self.metadata.set('result_count', 0);
+
+            var msg = _.template(
+                'No results with query "<%= query %>", range "<%= range %>".')
+                ({query: query, range: range});
+            console.warn(msg);
+
+            this.user_alert(msg, 'warning');
+            return;
+        }
+
+        var query_ops_constraints = _(_.map(entries, function(entry) { return field + '=' + entry}));
+        var query_ops_cql_full = query_ops_constraints.join(' ' + operator + ' ');
+        var query_ops_cql_sliced = query_ops_constraints.slice(sstart, ssend).join(' ' + operator + ' ');
+        console.log('OPS sliced CQL query:', query_ops_cql_sliced);
+
+        if (!query_origin) {
+            query_origin = query_ops_cql_full;
+        }
+
+        //$('#query').val(query_origin);
+
+        // querying by single document numbers has a limit of 10 at OPS
+        this.metadata.set('page_size', 10);
+
+        // set parameter to control subsearch
+        this.metadata.set('searchmode', 'subsearch');
+
+        var self = this;
+        //var range = this.compute_range(options);
+        return opsChooserApp.search.perform(this.documents, this.metadata, query_ops_cql_sliced, '1-10').done(function() {
+
+            // show the original query
+            self.metadata.set('query_origin', query_origin);
+
+            // show the original result size
+            self.metadata.set('result_count', hits);
+
+            // amend the current result range and paging parameter
+            self.metadata.set('result_range', range);
+            self.metadata.set('pagination_entry_count', 17);
+            $('.pagination').removeClass('span10');
+            $('.pagination').addClass('span12');
+
+            // run action bindings here after rendering data entries
+            listview_bind_actions();
+
+            // TODO: selecting page size with DEPATISnet is currently not possible
+            //$('.page-size-chooser').parent().remove();
+
+        });
+
+    },
+
 
     compute_range: function(options) {
         var page_size = this.metadata.get('page_size');

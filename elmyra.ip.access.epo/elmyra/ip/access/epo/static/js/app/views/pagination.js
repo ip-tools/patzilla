@@ -3,7 +3,7 @@
 
 PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
-    template: '#ops-pagination-template-ops',
+    template: '#ops-pagination-template',
 
     initialize: function() {
         //console.log('PaginationView::initialize');
@@ -14,6 +14,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     setup_ui: function() {
         //console.log('PaginationView::setup_ui');
 
+        var searchmode = opsChooserApp.metadata.get('searchmode');
         var datasource = opsChooserApp.metadata.get('datasource');
         var pagesize_choices = opsChooserApp.metadata.get('pagination_pagesize_choices');
         var page_size = opsChooserApp.metadata.get('page_size');
@@ -23,8 +24,8 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
         // compute number of pagination entries
         var page_count = 0;
-        if (datasource == 'depatisnet') {
-            this.template = '#ops-pagination-template-depatisnet';
+        if (searchmode == 'subsearch') {
+            this.template = '#ops-pagination-template-nopagesize';
         }
         if (result_count > 0 && page_size > 0) {
             var need_pages = result_count / page_size;
@@ -79,7 +80,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
         // pager: make links from pagination entries
         $(this.el).find('.pagination a').click(function() {
-            var action = $(this).attr('action');
+            //var action = $(this).attr('action');
             var range = $(this).attr('range');
             opsChooserApp.perform_search({range: range});
             return false;

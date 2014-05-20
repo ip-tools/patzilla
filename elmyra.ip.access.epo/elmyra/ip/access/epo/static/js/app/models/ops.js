@@ -55,7 +55,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 metadata.set({
                     result_count: result_count,
                     result_range: result_range,
-                    result_count_received: entries.length,
+                    result_count_received: entries ? entries.length : 0,
                     query_origin: query_origin,
                     query_real: query_real,
                 });
@@ -87,7 +87,9 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
+        reviewmode: false,      // this carries state, so switches the navigator into a special mode, currently
         datasource: null,
+        searchmode: null,
         page_size: 25,
         result_count: null,
         result_range: null,
@@ -132,7 +134,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
     resetSomeDefaults: function() {
         this.set(_(this.defaults).pick(
-            'datasource', 'result_count', 'result_range', 'result_count_received', 'query_origin', 'query_real', 'keywords'
+            'datasource', 'searchmode', 'result_count', 'result_range', 'result_count_received', 'query_origin', 'query_real', 'keywords'
         ));
     },
 
