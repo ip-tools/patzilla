@@ -52,7 +52,13 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var result_range = result_range_node['@begin'] + '-' + result_range_node['@end'];
                 var query_origin = biblio_search['ops:query']['$'];
                 var query_real = query_origin;
-                metadata.set({result_count: result_count, result_range: result_range, query_origin: query_origin, query_real: query_real});
+                metadata.set({
+                    result_count: result_count,
+                    result_range: result_range,
+                    result_count_received: entries.length,
+                    query_origin: query_origin,
+                    query_real: query_real,
+                });
                 metadata.set('keywords', _.union(self.keywords, metadata.get('keywords')));
 
             },
@@ -85,6 +91,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         page_size: 25,
         result_count: null,
         result_range: null,
+        result_count_received: null,
         query_origin: null,
         query_real: null,
         pagination_entry_count: 12,
@@ -125,7 +132,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
     resetSomeDefaults: function() {
         this.set(_(this.defaults).pick(
-            'datasource', 'result_count', 'result_range', 'query_origin', 'query_real', 'keywords'
+            'datasource', 'result_count', 'result_range', 'result_count_received', 'query_origin', 'query_real', 'keywords'
         ));
     },
 

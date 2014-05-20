@@ -300,6 +300,13 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                 Total:
                 <br/>
                 <span style="font-size: x-large"><%= result_count %></span>
+
+                <% if (datasource == 'depatisnet') { %>
+                    <br/>
+                    View:
+                    <br/>
+                    <span style="font-size: x-large"><%= result_count_received %></span>
+                <% } %>
             </div>
 
             <!-- current display range -->

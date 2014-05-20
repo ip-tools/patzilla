@@ -14,7 +14,7 @@ development
     - fix page offset calculation
     - show original- and ops-queries
     - fix pagination problems in general
-
+    - show count of items received from ops
 
 0.7.4
 =====
