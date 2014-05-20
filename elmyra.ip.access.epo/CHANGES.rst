@@ -6,6 +6,10 @@ development
 ===========
 
 
+0.8.1
+=====
+- link javascript resources
+
 0.8.0
 =====
 - ui: bind search to meta+return and ctrl+return keys
