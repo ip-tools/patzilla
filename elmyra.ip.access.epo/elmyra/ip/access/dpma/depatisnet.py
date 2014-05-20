@@ -46,8 +46,14 @@ class DpmaDepatisnetAccess:
         # http://wwwsearch.sourceforge.net/ClientForm/
         self.browser.select_form(nr=0)
         #self.browser.select_form(name='form')
+
         self.browser['query'] = query
         self.browser['hitsPerPage'] = [str(hits_per_page)]
+
+        # sort by publication date, descending
+        self.browser['sf'] = ['pd']
+        self.browser['so'] = ['desc']
+
         response = self.browser.submit()
 
         # propagate error- and info-messages

@@ -15,6 +15,7 @@ development
     - show original- and ops-queries
     - fix pagination problems in general
     - show count of items received from ops
+    - scrape results with sort order: publication date, descending
 
 0.7.4
 =====
