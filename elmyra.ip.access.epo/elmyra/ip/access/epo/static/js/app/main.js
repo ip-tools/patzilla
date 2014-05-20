@@ -24,6 +24,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         return datasource;
     },
 
+    set_datasource: function(datasource) {
+        $("#datasource > .btn[data-value='" + datasource + "']").button('toggle');
+    },
+
     // send to server and process response
     perform_search: function(options) {
 

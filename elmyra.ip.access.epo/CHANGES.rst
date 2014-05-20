@@ -16,6 +16,8 @@ development
     - fix pagination problems in general
     - show count of items received from ops
     - scrape results with sort order: publication date, descending
+- ui: properly propagate "datasource" query parameter, using sensible defaults, giving DEPATISnet priority
+
 
 0.7.4
 =====

@@ -289,6 +289,25 @@ function reset_content(options) {
 
 function boot_application() {
 
+    // compute default datasource
+    // set to DEPATISnet, if called with empty query
+    // otherwise, use ops
+    var url = $.url(window.location.href);
+    var datasource = url.param('datasource');
+
+    if (!datasource) {
+        var query = $('#query').val();
+        if (query.trim() == '') {
+            datasource = 'depatisnet';
+        }
+    }
+
+    if (!datasource) {
+        datasource = 'ops';
+    }
+
+
+
     // hide pager- and metadata area at first
     reset_content();
 
@@ -375,14 +394,7 @@ function boot_application() {
     //   datasource selector
     // ------------------------------------------
 
-    // propagate query parameter to datasource selector
-    var url = $.url(window.location.href);
-    var datasource = url.param('datasource') || 'ops';
-    if (datasource) {
-        $("#datasource > .btn[data-value='" + datasource + "']").button('toggle');
-    }
-
-    // toggle cql field chooser depending on datasource
+    // switch cql field chooser when selecting datasource
     $('#datasource').on('click', '.btn', function(event) {
         cql_field_chooser_toggle($(this).data('value'));
     });
@@ -446,7 +458,11 @@ function boot_application() {
     // ------------------------------------------
     //   cql field chooser
     // ------------------------------------------
-    cql_field_chooser_toggle(datasource);
+    // propagate "datasource" query parameter
+    if (datasource) {
+        opsChooserApp.set_datasource(datasource);
+        cql_field_chooser_toggle(datasource);
+    }
 
 }
 
