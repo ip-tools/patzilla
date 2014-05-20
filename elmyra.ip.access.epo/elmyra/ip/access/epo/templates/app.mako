@@ -66,7 +66,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                       <button class="btn" data-value="depatisnet">
                         <img src="/static/img/icons/dpma-logo-small.svg" width="24"/> DEPATISnet
                       </button>
-                      <button class="btn" data-value="review">
+                      <button class="btn basket-review-button" data-value="review">
                         <i class="icon-pencil"></i> Review
                       </button>
                     </div>

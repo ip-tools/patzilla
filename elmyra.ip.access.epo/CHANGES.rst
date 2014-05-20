@@ -6,8 +6,10 @@ development
 ===========
 - ui, middleware: propagate ops-specific fulltext fields to keyword highlighter
 - ui: link to DEPATISnet PDF
-- ui: prefer canonical epodoc values for parties (applicant, inventor) to increase search quality
+- ui: prefer canonical epodoc values over original ones for parties (applicant, inventor) to increase search quality
 - ui: enhance keyword highlighting: per-phrase vs. per-word
+- ui: review action: just use single button above the query area
+- ui: move basket submit button to the right side
 
 0.8.1
 =====

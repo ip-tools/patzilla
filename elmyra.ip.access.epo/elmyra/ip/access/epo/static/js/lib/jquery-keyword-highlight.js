@@ -90,7 +90,7 @@
                         // don't replace keywords found in links
                         var is_href = _.str.contains(e, 'href=');
                         //console.log('is_href:', e, is_href);
-                        
+
                         if (found && !is_href) {
                             // add span class around found word and add to new content
                             html_new += self.wrap_highlight(e, currentHighlightClass);

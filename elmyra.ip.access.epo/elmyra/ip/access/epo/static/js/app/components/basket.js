@@ -98,8 +98,17 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         var self = this;
 
+        // only enable submit button, if ship url is given
+        var ship_url = this.model.get('ship_url');
+        if (ship_url) {
+            $('#basket-submit-button').prop('disabled', false);
+        } else {
+            $('#basket-submit-button').prop('disabled', true);
+        }
+
+
         // application action: search from basket content
-        $('#basket-review-button').click(function() {
+        $('.basket-review-button').click(function() {
             self.model.review();
         });
     },
