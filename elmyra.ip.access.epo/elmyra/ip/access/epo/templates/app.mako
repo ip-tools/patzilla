@@ -61,10 +61,10 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                 <div class="span5">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                       <button class="btn active" data-value="ops">
-                        <img src="/static/img/icons/epo-logo-small.svg" width="20"/> OPS
+                        <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
                       </button>
                       <button class="btn" data-value="depatisnet">
-                        <img src="/static/img/icons/dpma-logo-small.svg" width="24"/> DEPATISnet
+                        <img src="/static/img/icons/dpma-logo-small.svg" width="24" height="24"/> DEPATISnet
                       </button>
                       <button class="btn basket-review-button" data-value="review">
                         <i class="icon-pencil"></i> Review

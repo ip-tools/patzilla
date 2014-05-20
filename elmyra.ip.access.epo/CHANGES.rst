@@ -11,6 +11,7 @@ development
 - ui: review action: just use single button above the query area
 - ui: move basket submit button to the right side
 - ui: show "current view count" and "real ops querystring" only in debug mode (by appending "&debug=true" to the url)
+- ui: attempt to fix IE SVG problem: img declaration may have lacked "height" attribute
 
 0.8.1
 =====
