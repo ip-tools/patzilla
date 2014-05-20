@@ -406,6 +406,14 @@ OpsExchangeDocument = Backbone.Model.extend({
             return url;
         },
 
+        get_depatisnet_pdf_url: function() {
+            // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=AU002005309058B2
+            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=<%= country %><%= docnumber %><%= kind %>');
+            var url = url_tpl({country: this['@country'], docnumber: this['@doc-number'], kind: this['@kind']});
+            return url;
+        },
+
+
         get_epo_register_url: function() {
             // https://register.epo.org/application?number=EP95480005
             var document_id = this.get_application_reference('docdb');

@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui, middleware: propagate ops-specific fulltext fields to keyword highlighter
+- ui: link to DEPATISnet PDF
 
 0.8.1
 =====

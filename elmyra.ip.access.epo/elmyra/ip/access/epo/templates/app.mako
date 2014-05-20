@@ -426,6 +426,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         var fullimage_url = data.get_fullimage_url();
         var espacenet_pdf_url = data.get_espacenet_pdf_url();
         var ops_pdf_url = data.get_ops_pdf_url();
+        var depatisnet_pdf_url = data.get_depatisnet_pdf_url();
         var epo_register_url = data.get_epo_register_url();
         var inpadoc_legal_url = data.get_inpadoc_legal_url();
         var dpma_register_url = data.get_dpma_register_url();
@@ -525,6 +526,11 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                                 <li>
                                     <a href="<%= espacenet_pdf_url %>" target="ipsuite-pdf">
                                         [PDF] <%= patent_number %> @ Espacenet
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="<%= depatisnet_pdf_url %>" target="ipsuite-pdf">
+                                        [PDF] <%= patent_number %> @ DEPATISnet
                                     </a>
                                 </li>
                             </ul>
