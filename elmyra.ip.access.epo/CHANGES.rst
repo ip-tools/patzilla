@@ -4,6 +4,10 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+
+0.8.0
+=====
 - ui: bind search to meta+return and ctrl+return keys
 - ui: use explicit clipboard/query transformation (remove on.paste handler, add button)
 - ui: use fixed name "ipsuite-pdf" for displaying the pdf
