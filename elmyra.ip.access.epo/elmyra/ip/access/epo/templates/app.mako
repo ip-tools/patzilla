@@ -104,7 +104,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                         data-content="Send query to database"
                         >
                         <button type="submit" role="button" class="btn btn-query-perform">
-                            <i class="icon-star" id="idler"></i>
+                            <i class="icon-search" id="idler"></i>
                             <i class="icon-refresh icon-spin" style="display: none" id="spinner"></i>
                         </button>
                         <button type="submit" role="button" class="btn btn-query-perform">
