@@ -526,7 +526,9 @@ function cql_field_chooser_toggle(datasource) {
 }
 
 function cql_field_chooser_setup(data) {
+    var datasource = opsChooserApp.get_datasource();
     $('#cql-field-chooser').select2({
+        placeholder: 'CQL field symbols ' + '(' + datasource + ')',
         data: { results: data },
         dropdownCssClass: "bigdrop",
         escapeMarkup: function(text) { return text; },
