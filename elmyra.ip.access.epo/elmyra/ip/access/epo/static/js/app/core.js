@@ -296,9 +296,8 @@ function reset_content(options) {
 
 function boot_application() {
 
-    // compute default datasource
-    // set to DEPATISnet, if called with empty query
-    // otherwise, use ops
+    // compute default data source
+    // set to DEPATISnet, if called with empty query; otherwise, use OPS
     var url = $.url(window.location.href);
     var datasource = url.param('datasource');
 
@@ -315,13 +314,14 @@ function boot_application() {
 
 
 
-    // hide pager- and metadata area at first
+    // hide pagination- and metadata-area to start from scratch
     reset_content();
 
-    // application action: perform search
-    $('.btn-query-perform').click(function() {
-        opsChooserApp.perform_search({reviewmode: false});
-    });
+
+
+    // ------------------------------------------
+    //   generic
+    // ------------------------------------------
 
     // apply popovers to all desired buttons
     $('.btn-popover').popover();
@@ -336,6 +336,11 @@ function boot_application() {
 
     // set cursor to end of query string, also focuses element
     $('#query').caret($('#query').val().length);
+
+    // application action: perform search
+    $('.btn-query-perform').click(function() {
+        opsChooserApp.perform_search({reviewmode: false});
+    });
 
 
     // ------------------------------------------
@@ -399,12 +404,9 @@ function boot_application() {
         $('#query').val('').focus();
     });
 
-    // transform query: open modul dialog to select modifier kind
+    // transform query: open modal dialog to choose transformation kind
     $('#btn-query-transform').click(function() {
-
-        // show dialog to request modifier kind from
         $('#clipboard-modifier-chooser').modal('show');
-
     });
 
     // transform query: modifier kind selected in dialog
@@ -491,6 +493,16 @@ function boot_application() {
     if (datasource) {
         opsChooserApp.set_datasource(datasource);
     }
+
+
+    // ------------------------------------------
+    //   online help
+    // ------------------------------------------
+
+    // transform query: open modal dialog to choose transformation kind
+    $('#link-help').click(function() {
+        $('#help-modal').modal('show');
+    });
 
 }
 

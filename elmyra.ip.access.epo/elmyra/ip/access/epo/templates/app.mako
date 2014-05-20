@@ -53,12 +53,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
-                <div class="span6">
-                    <h6 style="display: inline">
-                        <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
-                    </h6>
-                </div>
-                <div class="span5">
+                <div class="span11">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                       <button class="btn active" data-value="ops">
                         <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
@@ -158,11 +153,29 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     <div class="page-footer pull-right">
         <small>
             <div style="text-align: right">
-                ${page_footer | n}${app_versionstring | n}
+                ${page_footer | n}
+                ${app_versionstring | n}
+                <br/>
+                Help: <a id="link-help" class="incognito"><i class="icon-question-sign icon-large"></i></a>
             </div>
         </small>
     </div>
 
+</div>
+
+
+<!-- modal dialog for viewing online help -->
+<div id="help-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="help-modal-label">Online help</h3>
+    </div>
+    <div class="modal-body" id="help-body">
+        <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
 </div>
 
 

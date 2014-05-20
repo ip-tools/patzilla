@@ -12,6 +12,7 @@ development
 - ui: move basket submit button to the right side
 - ui: show "current view count" and "real ops querystring" only in debug mode (by appending "&debug=true" to the url)
 - ui: attempt to fix IE SVG problem: img declaration may have lacked "height" attribute
+- ui: move "About CQL" away from main gui into help modal dialog (help prototype)
 
 0.8.1
 =====
