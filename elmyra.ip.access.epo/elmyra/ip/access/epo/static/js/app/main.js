@@ -26,9 +26,14 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     // send to server and process response
     perform_search: function(options) {
+
+        this.metadata.resetSomeDefaults();
+
         var query = $('#query').val();
         var datasource = this.get_datasource();
         if (!_.isEmpty(query)) {
+
+            this.metadata.set('datasource', datasource);
 
             if (datasource == 'ops') {
                 console.log('ops search: ' + query);
@@ -40,48 +45,45 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             } else if (datasource == 'depatisnet') {
                 console.log('depatisnet search: ' + query);
+
+                indicate_activity(true);
+
+                // make the pager display the original query
+                this.metadata.set('query_origin', query);
+
                 var depatisnet = new DepatisnetSearch();
                 var self = this;
                 depatisnet.perform(query).done(function(response) {
 
+                    indicate_activity(false);
                     //reset_content();
                     reset_content({keep_pager: true});
 
-                    var publication_numbers = response['data'];
-
-                    if (response['message']) {
-                        // TODO: refactor to "mkerror" or similar
-                        var tpl = _.template($('#alert-template').html());
-                        var error = {
-                            'title': 'WARNING',
-                            'description': response['message'],
-                            'clazz': 'alert-warning',
-                        };
-                        var alert_html = tpl(error);
-                        $('#info-area').append(alert_html);
-                    }
-
-
+                    self.propagate_depatisnet_message(response);
                     self.metadata.set('keywords', depatisnet.keywords);
+
+                    console.log(response);
+                    var publication_numbers = response['data'];
+                    var hits = response['hits'];
 
                     // compute slice values
                     var range = options && options.range ? options.range : '1-10';
                     //console.log('range:', range);
                     var range_parts = range.split('-');
-                    var sstart = parseInt(range_parts[0]);
-                    var ssend = parseInt(range_parts[1]) + 1;
+                    var sstart = parseInt(range_parts[0]) - 1;
+                    var ssend = parseInt(range_parts[1]);
                     //console.log('range:', sstart, ssend);
 
-                    if (publication_numbers && sstart > publication_numbers.length) {
-                        var msg = 'DEPATISnet: No results for range "' + range + '"';
+                    if (publication_numbers && (publication_numbers.length == 0 || sstart > publication_numbers.length)) {
+
+                        //self.metadata.set('result_count', 0);
+
+                        var msg = _.template(
+                            'DEPATISnet: No results with query "<%= query %>", range "<%= range %>".')
+                            ({query: query, range: range});
                         console.warn(msg);
 
-                        // TODO: refactor to "mkerror" or similar
-                        var tpl = _.template($('#cornice-error-template').html());
-                        var error = {'name': 'query', 'location': 'depatisnet-search', 'description': msg};
-                        var alert_html = tpl(error);
-                        $('#alert-area').append(alert_html);
-
+                        self.user_alert(msg, 'warning');
                         return;
                     }
 
@@ -96,8 +98,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     //var range = self.compute_range(options);
                     opsChooserApp.search.perform(self.documents, self.metadata, query_ops, '1-10').done(function() {
 
-                        // make the pager display the original query
-                        self.metadata.set('query_real', query);
+                        self.propagate_depatisnet_message(response);
+
+                        // show the original query
+                        self.metadata.set('query_origin', query);
+
+                        // show the original result size
+                        self.metadata.set('result_count', hits);
 
                         // amend the current result range and paging parameter
                         self.metadata.set('result_range', range);
@@ -109,7 +116,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                         listview_bind_actions();
 
                         // TODO: selecting page size with DEPATISnet is currently not possible
-                        $('.page-size-chooser').parent().remove();
+                        //$('.page-size-chooser').parent().remove();
 
                     });
 
@@ -132,6 +139,32 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var default_range = '1-' + page_size;
         var range = options && options.range ? options.range : default_range;
         return range;
+    },
+
+    propagate_depatisnet_message: function(response) {
+        this.user_alert(response['message'], 'warning');
+    },
+
+    user_alert: function(message, kind) {
+
+        if (!message) {
+            return;
+        }
+
+        var label = 'INFO';
+        var clazz = 'alert-info';
+        if (kind == 'warning') {
+            label = 'WARNING';
+            clazz = 'alert-warning';
+        }
+        var tpl = _.template($('#alert-template').html());
+        var error = {
+            'title': label,
+            'description': message,
+            'clazz': clazz,
+        };
+        var alert_html = tpl(error);
+        $('#info-area').append(alert_html);
     },
 
 });

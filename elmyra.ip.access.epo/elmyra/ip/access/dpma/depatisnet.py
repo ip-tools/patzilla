@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+import re
 import csv
 import sys
 import logging
@@ -60,20 +61,49 @@ class DpmaDepatisnetAccess:
         if error_message:
             [s.extract() for s in error_message('a')]
             [s.extract() for s in error_message('p', {'class': 'headline'})]
+            error_message = str(error_message)
         else:
             error_message = ''
 
         if 'An error has occurred' in body:
             raise SyntaxError(error_message)
 
-        csv_response = self.browser.open(self.csvurl)
-        #csv = csv_response.read().decode('latin-1')
-        #print "csv:", csv
 
-        results = self.csv_parse_publication_numbers(csv_response)
+        # parse hit count
+        hits = 0
+
+        # Result list: 52 hits
+        #
+        matches = re.search('Result list:&nbsp;(\d+)&nbsp;hits', body)
+        if matches:
+            hits = int(matches.group(1))
+
+        # Total hits: 230175    A random selection of 1000 hits is being displayed.  You can narrow your search by adding more search criteria.
+        matches = re.search('Total hits:&nbsp;(\d+)', error_message)
+        if matches:
+            hits = int(matches.group(1))
+
+
+        # retrieve results via csv
+
+        if 'did not match any documents' in body:
+            results = []
+            #error_message = 'did not match any documents'
+
+        else:
+
+            csv_response = self.browser.open(self.csvurl)
+            #csv = csv_response.read().decode('latin-1')
+            #print "csv:", csv
+
+            results = self.csv_parse_publication_numbers(csv_response)
+
+
         payload = {
+            'query': query,
             'data': results,
-            'message': str(error_message),
+            'message': error_message,
+            'hits': hits,
         }
         return payload
 
@@ -89,7 +119,9 @@ class DpmaDepatisnetAccess:
                 results.append(publication_number)
 
         if results:
-            return results[1:]
+            results = results[1:]
+
+        return results
 
 
 if __name__ == '__main__':

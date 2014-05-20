@@ -9,6 +9,11 @@ development
 - ui: use fixed name "ipsuite-pdf" for displaying the pdf
 - ui: pagination: refactor into component
 - ui: pagination: show only required paging entries, show nothing without results
+- ui, middleware: enhance DEPATISnet integration
+    - parse hit count from scraped response
+    - fix page offset calculation
+    - show original- and ops-queries
+    - fix pagination problems in general
 
 
 0.7.4

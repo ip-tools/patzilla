@@ -15,23 +15,24 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         var self = this;
         return this.fetch({
             data: $.param({ query: query, range: range}),
-            success: function (payload, response, options) {
+            success: function (model, response, options) {
 
                 self.keywords = jQuery.parseJSON(options.xhr.getResponseHeader('X-Elmyra-Query-Keywords'));
 
                 indicate_activity(false);
-                $('#alert-area').empty();
+                reset_content();
+
+                console.log("response data:");
+                console.log(response);
+
+                if (_.isEmpty(response)) {
+                    return;
+                }
+
                 $('.pager-area').show();
 
-                //console.log("payload raw:");
-                //console.log(payload);
-                console.log("payload data:");
-                console.log(payload['attributes']);
-
-                if (_.isEmpty(payload['attributes'])) return;
-
                 // get "node" containing record list from nested json response
-                var search_result = payload['attributes']['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
+                var search_result = response['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
 
                 // unwrap response by creating a list of model objects from records
                 var entries;
@@ -45,23 +46,24 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 documents.reset(entries);
 
                 // propagate metadata to model
-                var biblio_search = payload['attributes']['ops:world-patent-data']['ops:biblio-search'];
+                var biblio_search = response['ops:world-patent-data']['ops:biblio-search'];
                 var result_count = biblio_search['@total-result-count'];
                 var result_range_node = biblio_search['ops:range'];
                 var result_range = result_range_node['@begin'] + '-' + result_range_node['@end'];
-                var query_real = biblio_search['ops:query']['$'];
-                metadata.set({result_count: result_count, result_range: result_range, query_real: query_real});
+                var query_origin = biblio_search['ops:query']['$'];
+                var query_real = query_origin;
+                metadata.set({result_count: result_count, result_range: result_range, query_origin: query_origin, query_real: query_real});
                 metadata.set('keywords', _.union(self.keywords, metadata.get('keywords')));
 
             },
-            error: function(e, xhr) {
+            error: function(model, response) {
 
-                //console.log("error: " + xhr.responseText);
+                //console.log("error: " + response.responseText);
 
                 indicate_activity(false);
                 reset_content();
 
-                response = jQuery.parseJSON(xhr.responseText);
+                var response = jQuery.parseJSON(response.responseText);
                 if (response['status'] == 'error') {
                     _.each(response['errors'], function(error) {
                         var tpl = _.template($('#backend-error-template').html());
@@ -79,9 +81,11 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
+        datasource: null,
         page_size: 25,
         result_count: null,
         result_range: null,
+        query_origin: null,
         query_real: null,
         pagination_entry_count: 12,
         pagination_pagesize_choices: [25, 50, 75, 100],
@@ -112,6 +116,17 @@ OpsExchangeMetadata = Backbone.Model.extend({
         if (pagesize) {
             this.set('page_size', parseInt(pagesize));
         }
+    },
+
+    resetToDefaults: function() {
+        //this.clear();
+        this.set(this.defaults);
+    },
+
+    resetSomeDefaults: function() {
+        this.set(_(this.defaults).pick(
+            'datasource', 'result_count', 'result_range', 'query_origin', 'query_real', 'keywords'
+        ));
     },
 
 });

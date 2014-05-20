@@ -2,8 +2,8 @@
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
 PaginationView = Backbone.Marionette.ItemView.extend({
-    tagName: "div",
-    template: "#ops-pagination-template",
+    tagName: 'div',
+    template: '#ops-pagination-template-ops',
 
     initialize: function() {
         //console.log('PaginationView::initialize');
@@ -14,6 +14,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     setup_ui: function() {
         //console.log('PaginationView::setup_ui');
 
+        var datasource = opsChooserApp.metadata.get('datasource');
         var pagesize_choices = opsChooserApp.metadata.get('pagination_pagesize_choices');
         var page_size = opsChooserApp.metadata.get('page_size');
         var result_count = opsChooserApp.metadata.get('result_count');
@@ -22,13 +23,16 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
         // compute number of pagination entries
         var page_count = 0;
-        if (result_count > 0) {
+        if (datasource == 'depatisnet') {
+            this.template = '#ops-pagination-template-depatisnet';
+        }
+        if (result_count > 0 && page_size > 0) {
             var need_pages = result_count / page_size;
             if (need_pages >= 1) {
                 page_count = Math.ceil(need_pages);
             }
+            page_count = _.min([page_count, page_count_max]);
         }
-        page_count = _.min([page_count, page_count_max]);
 
         if (page_count < 1) {
             $('.page-size-chooser').parent().remove();

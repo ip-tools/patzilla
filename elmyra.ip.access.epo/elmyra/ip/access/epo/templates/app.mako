@@ -218,7 +218,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 ##   pager template
 ## ------------------------------------------
 <%text>
-<script type="text/x-underscore-template" id="ops-pagination-template">
+<script type="text/x-underscore-template" id="ops-pagination-template-ops">
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
@@ -240,6 +240,26 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             </div>
 
             <div class="span10 pagination">
+                <ul class="pull-right">
+                    <!--
+                    <li><a href="#" action="previous">Prev</a></li>
+                    -->
+                    <!--
+                    <li><a href="#" action="next">Next</a></li>
+                    -->
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+<script type="text/x-underscore-template" id="ops-pagination-template-depatisnet">
+    <div id="pagination-widget">
+
+        <div class="row-fluid" id="pagination-chooser">
+
+            <div class="span12 pagination">
                 <ul class="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>
@@ -279,7 +299,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="span1">
                 Total:
                 <br/>
-                <span style="font-size: x-large"><%= result_count | 0 %></span>
+                <span style="font-size: x-large"><%= result_count %></span>
             </div>
 
             <!-- current display range -->
@@ -293,7 +313,15 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="span7">
                 Query:
                 <br/>
-                <span style="font-size: small" class="cql-query"><%= query_real %></span>
+                <span style="font-size: small" class="cql-query"><%= query_origin %></span>
+
+                <% if (datasource == 'depatisnet' && query_real) { %>
+                    <br/>
+                    Query OPS:
+                    <br/>
+                    <span style="font-size: small" class="cql-query"><%= query_real %></span>
+                <% } %>
+
             </div>
 
             <div class="span2">
