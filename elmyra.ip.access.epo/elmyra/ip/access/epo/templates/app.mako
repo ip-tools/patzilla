@@ -223,7 +223,6 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
         <div class="row-fluid" id="pagination-chooser">
 
-            <!-- legal status -->
             <div class="span2">
                 <div class="btn-group btn-popover page-size-chooser"
                             data-toggle="popover" data-trigger="hover" data-placement="right"
@@ -880,6 +879,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ops.js"></script>
     <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
+    <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
     <script type="text/javascript" src="/static/js/app/main.js"></script>
 % endif
 

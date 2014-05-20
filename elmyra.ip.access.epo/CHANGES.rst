@@ -7,6 +7,8 @@ development
 - ui: bind search to meta+return and ctrl+return keys
 - ui: use explicit clipboard/query transformation (remove on.paste handler, add button)
 - ui: use fixed name "ipsuite-pdf" for displaying the pdf
+- ui: pagination: refactor into component
+- ui: pagination: show only required paging entries, show nothing without results
 
 
 0.7.4

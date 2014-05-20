@@ -41,64 +41,7 @@ function listview_bind_actions() {
         return;
     }
 
-    // pager: create page size chooser
-    $('.page-size-chooser ul').each(function(i, page_size_chooser) {
-        $(this).empty();
-        var self = this;
-        var pagesize_choices = opsChooserApp.metadata.get('pagination_pagesize_choices');
-        var pagesize_chosen = opsChooserApp.metadata.get('page_size');
-        _(pagesize_choices).map(function(pagesize) {
-            var icon = '';
-            if (pagesize == pagesize_chosen) {
-                icon = '<i class="icon-check"></i>';
-            } else {
-                icon = '<i class="icon-check-empty"></i>';
-            }
-            var entry = _.template('<li><a href="" data-value="<%= pagesize %>"><%= icon %> <%= pagesize %></a></li>')({pagesize: pagesize, icon: icon});
-            $(self).append(entry);
-        });
-    });
-
-    // pager: make links from page size chooser entries
-    $('.page-size-chooser a').click(function() {
-        var value = $(this).data('value');
-        opsChooserApp.metadata.set('page_size', value);
-        opsChooserApp.perform_search();
-        return false;
-    });
-
-    // pager: create pagination entries
-    $('.pagination ul').each(function(i, pagination) {
-        $(this).empty();
-        var self = this;
-        var pagination_entry_count = opsChooserApp.metadata.get('pagination_entry_count');
-        var page_size = opsChooserApp.metadata.get('page_size');
-        _.range(1, pagination_entry_count * page_size, page_size).map(function(index) {
-            var offset = index * page_size;
-            var range_begin = index;
-            var range_end = range_begin + page_size - 1;
-            var range = range_begin + '-' + range_end;
-            var entry = _.template('<li><a href="" range="<%= range %>"><%= range %></a></li>')({range: range});
-            $(self).append(entry);
-        });
-    });
-
-    // pager: make links from pagination entries
-    $('.pagination a').click(function() {
-        var action = $(this).attr('action');
-        var range = $(this).attr('range');
-        opsChooserApp.perform_search({range: range});
-        return false;
-    });
-
-    // pager: mark proper pagination entry as active
-    $('.pagination').find('a').each(function(i, anchor) {
-        var anchor_range = $(anchor).attr('range');
-        if (anchor_range == opsChooserApp.metadata.get('result_range')) {
-            var li = $(anchor).parent();
-            li.addClass('active');
-        }
-    });
+    //console.log('listview_bind_actions');
 
     // metadata area: shorten cql query string
     $(".cql-query").shorten({showChars: 125, moreText: 'more', lessText: 'less'});

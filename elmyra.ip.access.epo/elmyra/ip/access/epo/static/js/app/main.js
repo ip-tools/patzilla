@@ -108,6 +108,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                         // run action bindings here after rendering data entries
                         listview_bind_actions();
 
+                        // TODO: selecting page size with DEPATISnet is currently not possible
                         $('.page-size-chooser').parent().remove();
 
                     });
@@ -199,20 +200,6 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
             add_button_element && add_button_element.show();
             remove_button_element && remove_button_element.hide();
         }
-    },
-
-});
-
-PaginationView = Backbone.Marionette.ItemView.extend({
-    tagName: "div",
-    //id: "paginationview",
-    template: "#ops-pagination-template",
-
-    initialize: function() {
-        this.listenTo(this.model, "change", this.render);
-    },
-
-    onDomRefresh: function() {
     },
 
 });
