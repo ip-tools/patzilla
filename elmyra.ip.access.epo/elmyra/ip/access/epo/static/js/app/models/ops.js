@@ -87,7 +87,10 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
-        reviewmode: false,      // this carries state, so switches the navigator into a special mode, currently
+        // these carry state, so switching the navigator into a special mode, currently
+        debugmode: false,
+        reviewmode: false,
+
         datasource: null,
         searchmode: null,
         page_size: 25,
@@ -121,10 +124,21 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
     initialize: function(collection) {
         var url = $.url(window.location.href);
+
+        // propagate page size from url
         var pagesize = url.param('pagesize');
         if (pagesize) {
             this.set('page_size', parseInt(pagesize));
         }
+
+        // TODO: propagate page number from url
+
+        // propagate debugmode from url
+        var debug = url.param('debug');
+        if (debug) {
+            this.set('debugmode', true);
+        }
+
     },
 
     resetToDefaults: function() {

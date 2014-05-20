@@ -10,6 +10,7 @@ development
 - ui: enhance keyword highlighting: per-phrase vs. per-word
 - ui: review action: just use single button above the query area
 - ui: move basket submit button to the right side
+- ui: show "current view count" and "real ops querystring" only in debug mode (by appending "&debug=true" to the url)
 
 0.8.1
 =====

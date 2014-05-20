@@ -308,7 +308,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                 <br/>
                 <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
 
-                <% if (searchmode == 'subsearch') { %>
+                <% if (debugmode && searchmode == 'subsearch') { %>
                     <br/>
                     View:
                     <br/>
@@ -331,7 +331,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                     <%= query_origin %>
                 </span>
 
-                <% if (searchmode == 'subsearch' && query_real) { %>
+                <% if (debugmode && searchmode == 'subsearch' && query_real) { %>
                     <br/>
                     Query OPS:
                     <br/>
