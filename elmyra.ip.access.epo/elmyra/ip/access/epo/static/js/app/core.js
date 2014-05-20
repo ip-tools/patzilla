@@ -406,7 +406,10 @@ function boot_application() {
 
     // transform query: open modal dialog to choose transformation kind
     $('#btn-query-transform').click(function() {
-        $('#clipboard-modifier-chooser').modal('show');
+        // TODO: this "$('#query').val().trim()" should be kept at a central place
+        if ($('#query').val().trim()) {
+            $('#clipboard-modifier-chooser').modal('show');
+        }
     });
 
     // transform query: modifier kind selected in dialog
@@ -421,10 +424,12 @@ function boot_application() {
 
         // compute new query content
         var text = $('#query').val().trim();
+        if (_.str.contains(text, '=')) {
+            return;
+        }
         var entries = text.split('\n');
-        if (entries.length <= 1) return;
         var query = _(entries).map(function(item) {
-            return modifier + '=' + item;
+            return modifier + '=' + '"' + item + '"';
         }).join(' ' + operator + ' ');
 
         // set query content and focus element

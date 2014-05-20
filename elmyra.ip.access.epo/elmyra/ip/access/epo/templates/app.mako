@@ -53,7 +53,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
-                <div class="span11">
+                <div class="span12">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                       <button class="btn active" data-value="ops">
                         <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
@@ -66,21 +66,17 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                       </button>
                     </div>
                 </div>
-                <div class="span1">
-                    <a id="btn-query-transform" class="icon-exchange icon-large"></a>
-                    <a id="btn-query-clear" class="icon-trash icon-large"></a>
-                </div>
             </div>
 
             <div class="row-fluid">
 
-                <div class="span11">
+                <div class="span12">
                     <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
                 </div>
 
+                <!--
                 <div class="span1">
 
-                    <!--
                     <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
                         <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
                         <button class="btn-cql-boolean btn btn-mini"        type="button" data-value="AND">AND</button>
@@ -89,9 +85,9 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                     <a class="btn-cql-field label label-success" data-value="num=">num=</a>
                     <a class="btn-cql-field label label-info" data-value="txt=">txt=</a>
                     <a class="btn-cql-field label label-important" data-value="cl=">cl=</a>
-                    -->
 
                 </div>
+                -->
 
             </div>
 
@@ -114,11 +110,29 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
                 </div>
 
-                <div class="span7">
+                <div class="span6">
                     <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
                 </div>
 
-                <div class="span1">
+                <div class="span2">
+                    <div id="query-action" class="btn-group pull-right">
+                        <button
+                            id="btn-query-transform"
+                            class="btn btn-popover"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="Transform query"
+                            >
+                            <i class="icon-exchange icon-large"></i>
+                        </button>
+                        <button
+                            id="btn-query-clear"
+                            class="btn btn-popover"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="Clear query"
+                            >
+                            <i class="icon-trash icon-large"></i>
+                        </button>
+                    </div>
                 </div>
 
             </div>
