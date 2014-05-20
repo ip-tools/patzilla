@@ -19,6 +19,7 @@ development
 - ui: properly propagate "datasource" query parameter, using sensible defaults, giving DEPATISnet priority
 - ui: dpma- and epo-logos for datasource selector buttons
 - ui: basket review: use the same mechanics as with DEPATISnet, i.e. splice list into bundles of 10 entries
+- middleware: cache search queries for two hours
 
 0.7.4
 =====
