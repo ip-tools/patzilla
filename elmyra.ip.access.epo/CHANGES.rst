@@ -17,7 +17,7 @@ development
     - show count of items received from ops
     - scrape results with sort order: publication date, descending
 - ui: properly propagate "datasource" query parameter, using sensible defaults, giving DEPATISnet priority
-
+- ui: dpma- and epo-logos for datasource selector buttons
 
 0.7.4
 =====

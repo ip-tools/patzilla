@@ -53,15 +53,19 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
-                <div class="span8">
+                <div class="span7">
                     <h6 style="display: inline">
                         <a href="https://en.wikipedia.org/wiki/Contextual_Query_Language" target="_blank">About CQL</a>
                     </h6>
                 </div>
-                <div class="span3">
+                <div class="span4">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
-                      <button class="btn active" data-value="ops">OPS</button>
-                      <button class="btn" data-value="depatisnet">DEPATISnet</button>
+                      <button class="btn" data-value="depatisnet">
+                        <img src="/static/img/icons/dpma-logo-small.svg" width="24"/> DEPATISnet
+                      </button>
+                      <button class="btn active" data-value="ops">
+                        <img src="/static/img/icons/epo-logo-small.svg" width="20"/> OPS
+                      </button>
                     </div>
                 </div>
                 <div class="span1">
