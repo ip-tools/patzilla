@@ -343,12 +343,42 @@ function boot_application() {
     // set cursor to end of query string, also focuses element
     $('#query').caret($('#query').val().length);
 
+
+    // ------------------------------------------
+    //   datasource selector
+    // ------------------------------------------
+
+    // switch cql field chooser when selecting datasource
+    $('#datasource').on('click', '.btn', function(event) {
+        opsChooserApp.set_datasource($(this).data('value'));
+    });
+
+
+
+    // ------------------------------------------
+    //   hotkeys
+    // ------------------------------------------
+
     // submit on meta+enter
     $('#query').on('keydown', null, 'meta+return', function() {
         opsChooserApp.perform_search({reviewmode: false});
     });
-    $('#query').on('keydown', null, 'ctrl+return', function() {
+    $('#query').on('keydown', null, 'ctrl+return', function(event) {
         opsChooserApp.perform_search({reviewmode: false});
+    });
+
+    _([document, '#query']).each(function (selector) {
+        $(selector).on('keydown', null, 'ctrl+shift+d', function(event) {
+            $('#datasource button[data-value="depatisnet"]').button('toggle');
+            opsChooserApp.set_datasource('depatisnet');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+o', function(event) {
+            $('#datasource button[data-value="ops"]').button('toggle');
+            opsChooserApp.set_datasource('ops');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
+            opsChooserApp.basketModel.review();
+        });
     });
 
     /*
@@ -364,6 +394,11 @@ function boot_application() {
 
     });
     */
+
+
+    // ------------------------------------------
+    //   cql query area action tools
+    // ------------------------------------------
 
     // trash icon clears the whole content
     $('#btn-query-clear').click(function() {
@@ -401,19 +436,6 @@ function boot_application() {
         $('#query').focus();
 
     });
-
-
-    // ------------------------------------------
-    //   datasource selector
-    // ------------------------------------------
-
-    // switch cql field chooser when selecting datasource
-    $('#datasource').on('click', '.btn', function(event) {
-        cql_field_chooser_toggle($(this).data('value'));
-    });
-
-
-
 
 
     // ------------------------------------------
@@ -474,7 +496,6 @@ function boot_application() {
     // propagate "datasource" query parameter
     if (datasource) {
         opsChooserApp.set_datasource(datasource);
-        cql_field_chooser_toggle(datasource);
     }
 
 }

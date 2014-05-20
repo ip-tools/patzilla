@@ -26,6 +26,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     set_datasource: function(datasource) {
         $("#datasource > .btn[data-value='" + datasource + "']").button('toggle');
+        cql_field_chooser_toggle(datasource);
+        if (datasource == 'review') {
+            $('#query').prop('disabled', true);
+        } else {
+            $('#query').prop('disabled', false);
+        }
     },
 
     // perform ops search and process response

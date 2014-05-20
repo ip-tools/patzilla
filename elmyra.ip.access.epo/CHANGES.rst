@@ -21,6 +21,10 @@ development
 - ui: basket review: use the same mechanics as with DEPATISnet, i.e. splice list into bundles of 10 entries
 - middleware: cache search queries for two hours
 - ui: format total result count using jquery-autonumeric
+- ui: add some hotkeys:
+    - ctrl+shift+o: switch to datasource=ops
+    - ctrl+shift+d: switch to datasource=depatisnet
+    - ctrl+shift+r: switch to review mode
 
 0.7.4
 =====

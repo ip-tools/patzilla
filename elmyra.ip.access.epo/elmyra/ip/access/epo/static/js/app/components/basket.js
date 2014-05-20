@@ -50,11 +50,12 @@ BasketModel = Backbone.Model.extend({
 
     review: function(options) {
 
-        // clear query to prevent confusion
-        $('#query').val('');
-
         // compute cql query from numberlist in basket
         var basket = $('#basket').val();
+        if (!basket) {
+            return;
+        }
+
         var options = options || {};
         var query = null;
         var publication_numbers = basket
@@ -62,10 +63,9 @@ BasketModel = Backbone.Model.extend({
             .filter(function(entry) { return entry; });
         var hits = publication_numbers.length;
 
+        // TODO: decouple from referencing the main application object e.g. by using events!?
         opsChooserApp.set_datasource('review');
-        cql_field_chooser_toggle('review');
         opsChooserApp.metadata.set('reviewmode', true);
-        // FIXME: decouple from referencing the main application object e.g. by using events!?
         opsChooserApp.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR');
     }
 
