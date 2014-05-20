@@ -83,16 +83,9 @@ function listview_bind_actions() {
 
     // use jquery-keyword-highlight on "abstract" text
     // FIXME: also highlight in applicant, inventor, etc.; (hint: this currently interferes with inline linking)
-    /*
-    var textnodes = $('.document_title, .document_details').find('*').andSelf().contents().filter(function(){
-        return this.nodeType === 3;
-    });
-    textnodes = $('.document_title, .document_details');
-    console.log('textnodes:', textnodes);
-    */
     _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
         //console.log('keyword: ' + item);
-        $('.document_title, .abstract').keywordHighlight({
+        $('.keyword').keywordHighlight({
             keyword: keyword,
             caseSensitive: 'false',
             contains: 'true',

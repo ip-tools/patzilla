@@ -674,7 +674,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="ops-collection-entry-inner container-fluid">
 
                 <div class="row-fluid">
-                    <div class="span12 document_title">
+                    <div class="span12 keyword">
                         <strong><%= title_list.join('<br/>') %></strong>
                     </div>
                 </div>
@@ -719,14 +719,14 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                             <dt class="inid-tooltip" data-toggle="tooltip" title="applicants">
                                 (71)
                             </dt>
-                            <dd>
+                            <dd class="keyword">
                                 <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
                             </dd>
 
                             <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
                                 (72)
                             </dt>
-                            <dd>
+                            <dd class="keyword">
                                 <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') %>
                             </dd>
 
@@ -742,7 +742,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                             <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
                                 (57)
                             </dt>
-                            <dd>
+                            <dd class="keyword">
                                 <div class="abstract">
                                     <%= abstract_list.join('<br/><br/>') %>
                                 </div>
@@ -753,7 +753,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                             <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
                                 (56)
                             </dt>
-                            <dd>
+                            <dd class="keyword">
                                 <%= data.get_patent_citation_list(true).join(', ') %>
                                 <br/><br/>
                                 <table class="table table-striped table-condensed">

@@ -6,6 +6,8 @@ development
 ===========
 - ui, middleware: propagate ops-specific fulltext fields to keyword highlighter
 - ui: link to DEPATISnet PDF
+- ui: prefer canonical epodoc values for parties (applicant, inventor) to increase search quality
+- ui: enhance keyword highlighting: per-phrase vs. per-word
 
 0.8.1
 =====

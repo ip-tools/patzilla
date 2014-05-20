@@ -247,8 +247,15 @@ OpsExchangeDocument = Backbone.Model.extend({
                 sequence = sequence.toString();
                 var epodoc_value = groups['epodoc'][sequence];
                 var original_value = groups['original'][sequence];
+
                 //entries.push(epodoc_value + ' / ' + original_value);
-                entries.push(original_value);
+                //entries.push(original_value);
+
+                var use_value = original_value;
+                if (epodoc_value) {
+                    use_value = epodoc_value.replace(/\[.+?\]/, '').trim();
+                }
+                entries.push(use_value);
             });
 
             return entries;
@@ -277,7 +284,13 @@ OpsExchangeDocument = Backbone.Model.extend({
         enrich_links: function(container, attribute, value_modifier) {
             var self = this;
             return _.map(container, function(item) {
-                return self.enrich_link(item, attribute, item, value_modifier)
+
+                // v1 replace text with links
+                return self.enrich_link(item, attribute, item, value_modifier);
+
+                // v2 use separate icon for link placement
+                //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
+                //return item + '&nbsp;&nbsp;' + link;
             });
         },
 
@@ -310,10 +323,10 @@ OpsExchangeDocument = Backbone.Model.extend({
             // prepare link rendering
             var link_template;
             if (kind == 'internal') {
-                link_template = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
+                link_template = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"> <%= label %> </a>');
             } else if (kind == 'external') {
                 query = encodeURIComponent(attribute + '=' + value);
-                link_template = _.template('<a href="?query=<%= query %>" target="<%= target %>" class="incognito"><%= label %></a>');
+                link_template = _.template('<a href="?query=<%= query %>" target="<%= target %>" class="incognito"> <%= label %> </a>');
             }
 
             // render link

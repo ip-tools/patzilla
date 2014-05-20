@@ -146,6 +146,9 @@ def scan_keywords(op, keywords):
         'applicant', 'pa',
         'inventor', 'in',
 
+        # TODO: due to different formatting, ipc classes can not be matched yet
+        #'ipc', 'ic',
+
         # DEPATISnet
         'ti', 'ab', 'de', 'bi',
         'pa', 'in',
