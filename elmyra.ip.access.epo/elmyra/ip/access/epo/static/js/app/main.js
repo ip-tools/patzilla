@@ -54,12 +54,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         if (!_.isEmpty(query)) {
 
+            var self = this;
             this.metadata.set('datasource', datasource);
 
             if (datasource == 'ops') {
                 console.log('ops search: ' + query);
                 var range = this.compute_range(options);
                 opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
+
+                    self.metadata.set('keywords', opsChooserApp.search.keywords);
+
                     // run action bindings here after rendering data entries
                     listview_bind_actions();
                 });
@@ -73,7 +77,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 this.metadata.set('query_origin', query);
 
                 var depatisnet = new DepatisnetSearch();
-                var self = this;
                 depatisnet.perform(query).done(function(response) {
 
                     self.propagate_depatisnet_message(response);

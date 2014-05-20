@@ -138,8 +138,17 @@ def scan_keywords(op, keywords):
     #print "op:", dir(op)
 
     keyword_fields = [
-        'applicant', 'pa', 'inventor', 'in', 'titleandabstract', 'ta', 'title', 'ti', 'abstract', 'ab',
-        'bi',
+        # OPS
+        'title', 'ti',
+        'abstract', 'ab',
+        'titleandabstract', 'ta',
+        'txt',
+        'applicant', 'pa',
+        'inventor', 'in',
+
+        # DEPATISnet
+        'ti', 'ab', 'de', 'bi',
+        'pa', 'in',
     ]
 
     if hasattr(op, 'index'):

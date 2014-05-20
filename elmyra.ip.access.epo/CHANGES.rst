@@ -4,7 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-
+- ui, middleware: propagate ops-specific fulltext fields to keyword highlighter
 
 0.8.1
 =====

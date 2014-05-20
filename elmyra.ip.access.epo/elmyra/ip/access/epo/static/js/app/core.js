@@ -82,6 +82,7 @@ function listview_bind_actions() {
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
 
     // use jquery-keyword-highlight on "abstract" text
+    // FIXME: also highlight in applicant, inventor, etc.; (hint: this currently interferes with inline linking)
     /*
     var textnodes = $('.document_title, .document_details').find('*').andSelf().contents().filter(function(){
         return this.nodeType === 3;
@@ -89,10 +90,10 @@ function listview_bind_actions() {
     textnodes = $('.document_title, .document_details');
     console.log('textnodes:', textnodes);
     */
-    _.each(opsChooserApp.metadata.get('keywords'), function(item) {
+    _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
         //console.log('keyword: ' + item);
         $('.document_title, .abstract').keywordHighlight({
-            keyword: item,
+            keyword: keyword,
             caseSensitive: 'false',
             contains: 'true',
         });
