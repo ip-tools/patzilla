@@ -43,8 +43,21 @@ function listview_bind_actions() {
 
     //console.log('listview_bind_actions');
 
-    // metadata area: shorten cql query string
+
+    // ------------------------------------------
+    //   metadata area
+    // ------------------------------------------
+
+    // shorten cql query string
     $(".cql-query").shorten({showChars: 125, moreText: 'more', lessText: 'less'});
+
+    // apply autonumeric formatting
+    $('#result-count-total').autoNumeric('init', {mDec: 0});
+
+
+    // ------------------------------------------
+    //   result list
+    // ------------------------------------------
 
     // handle checkbox clicks by add-/remove-operations on basket
     $(".chk-patent-number").click(function() {

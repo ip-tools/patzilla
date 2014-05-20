@@ -306,7 +306,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div class="span1">
                 Total:
                 <br/>
-                <span style="font-size: x-large"><%= result_count %></span>
+                <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
 
                 <% if (searchmode == 'subsearch') { %>
                     <br/>
@@ -355,7 +355,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                     </button>
                     <ul class="dropdown-menu">
 
-                        <!-- bibliographic data -->
+                        <!-- PDF export and print view -->
                         <li>
                             <a href="<%= get_url_pdf() %>" target="_blank">
                                 <img src="/static/img/icons/pdf.svg" width="16" height="16"/> PDF
@@ -912,6 +912,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/js/lib/localforage.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/backbone.localforage.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-keyword-highlight.js"></script>
+<script type="text/javascript" src="/static/js/lib/jquery-autonumeric.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 

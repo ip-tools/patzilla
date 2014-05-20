@@ -20,6 +20,7 @@ development
 - ui: dpma- and epo-logos for datasource selector buttons
 - ui: basket review: use the same mechanics as with DEPATISnet, i.e. splice list into bundles of 10 entries
 - middleware: cache search queries for two hours
+- ui: format total result count using jquery-autonumeric
 
 0.7.4
 =====
