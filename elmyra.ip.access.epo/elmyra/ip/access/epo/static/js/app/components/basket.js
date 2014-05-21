@@ -78,7 +78,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     initialize: function() {
         console.log('BasketView::initialize');
         this.listenTo(this.model, "change", this.render);
-        this.listenTo(this, "item:rendered", this.setup);
+        this.listenTo(this, "item:rendered", this.setup_ui);
     },
 
     serializeData: function() {
@@ -93,7 +93,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         return data;
     },
 
-    setup: function() {
+    setup_ui: function() {
         //console.log('BasketView::setup');
 
         var self = this;
@@ -106,11 +106,29 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $('#basket-submit-button').prop('disabled', true);
         }
 
-
         // application action: search from basket content
         $('.basket-review-button').click(function() {
             self.model.review();
         });
+
+        // basket sharing
+        $('#share-numberlist-email').click(function() {
+            self.future_premium_feature();
+        });
+        $('#share-documents-upload').click(function() {
+            self.future_premium_feature();
+        });
+
+    },
+
+    future_premium_feature: function(selector) {
+        bootbox.dialog(
+            'Available soon via subscription.', [{
+                "label": 'OK',
+                "icon" : 'OK',
+                "callback": null,
+            }],
+            {header: 'Future feature'});
     },
 
     onDomRefresh: function() {

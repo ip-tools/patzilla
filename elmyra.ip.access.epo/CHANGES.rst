@@ -18,6 +18,7 @@ development
 - ui: remove "Your selection" label, replace by placeholder on basket textarea
 - ui: add placeholder to CQL field chooser
 - ui: add “bootbox” library
+- ui: add basket share button (dummy)
 
 0.8.1
 =====

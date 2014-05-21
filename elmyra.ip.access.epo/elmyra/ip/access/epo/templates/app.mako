@@ -53,6 +53,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
+                <!-- data source chooser -->
                 <div class="span12">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                         <button class="btn active" data-value="ops">
@@ -74,6 +75,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
             <div class="row-fluid">
 
+                <!-- query string -->
                 <div class="span12">
                     <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
                 </div>
@@ -97,6 +99,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
             <div class="row-fluid">
 
+                <!-- send query to database -->
                 <div class="span4">
 
                     <div
@@ -115,10 +118,12 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
                 </div>
 
+                <!-- cql field symbol chooser -->
                 <div class="span6">
                     <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
                 </div>
 
+                <!-- query content transformation and clearing -->
                 <div class="span2">
                     <div id="query-action" class="btn-group pull-right">
                         <button
@@ -374,7 +379,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
             <div class="span2">
 
-                <!-- result actions -->
+                <!-- result list actions -->
                 <div class="btn-group btn-popover span7 result-actions do-not-print"
                             data-toggle="popover" data-trigger="hover" data-placement="left"
                             data-content="Export results"
@@ -951,6 +956,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/js/lib/backbone.localforage.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-keyword-highlight.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-autonumeric.js"></script>
+<script type="text/javascript" src="/static/js/lib/bootbox-2.3.2.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
