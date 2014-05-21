@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui, storage: update to recent localforage libraries
 
 0.9.0
 =====
