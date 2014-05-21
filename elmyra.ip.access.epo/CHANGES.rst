@@ -17,6 +17,7 @@ development
 - ui: stick query action buttons (transform, clear) to the right of the CQL field chooser
 - ui: remove "Your selection" label, replace by placeholder on basket textarea
 - ui: add placeholder to CQL field chooser
+- ui: add “bootbox” library
 
 0.8.1
 =====
