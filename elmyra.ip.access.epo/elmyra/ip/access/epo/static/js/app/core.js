@@ -559,3 +559,11 @@ function cql_field_chooser_setup(data) {
     });
 
 }
+
+function now_iso() {
+    return moment().format();
+}
+
+function today_iso() {
+    return moment().format('YYYY-MM-DD');
+}

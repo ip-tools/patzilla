@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui, storage: update to recent localforage libraries
+- ui: add date formatting library “moment.js” and helpers
 
 0.9.0
 =====
