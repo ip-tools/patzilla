@@ -6,6 +6,7 @@ development
 ===========
 - ui, storage: update to recent localforage libraries
 - ui: add date formatting library “moment.js” and helpers
+- ui, storage: introduce ProjectModel and ProjectCollection to record all queries made to the system
 
 0.9.0
 =====

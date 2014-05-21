@@ -60,6 +60,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             if (datasource == 'ops') {
                 console.log('ops search: ' + query);
                 var range = this.compute_range(options);
+                console.log('trigger search:before');
+                this.trigger('search:before', query, range);
                 opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
 
                     self.metadata.set('keywords', opsChooserApp.search.keywords);
@@ -354,6 +356,9 @@ opsChooserApp.addInitializer(function(options) {
 opsChooserApp.addInitializer(function(options) {
     this.listenTo(this.basketModel, "change:add", this.collectionView.basket_update_ui_entry);
     this.listenTo(this.basketModel, "change:remove", this.collectionView.basket_update_ui_entry);
+
+    // kick off the search process immediately after initial project was created
+    this.listenTo(this, "project:ready", this.perform_search);
 });
 
 
@@ -372,6 +377,9 @@ $(document).ready(function() {
     boot_application();
 
     // automatically run search after bootstrapping application
-    opsChooserApp.perform_search();
+    // gets triggered by "project:ready" events from now on [2014-05-21]
+    // We keep this here in case we want to switch gears / provide a non-storage
+    // version of the tool for which the chance is likely.
+    //opsChooserApp.perform_search();
 
 });

@@ -952,24 +952,26 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
 <script type="text/javascript" src="/static/js/lib/jquery.caret-1.5.1.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
-<script type="text/javascript" src="/static/js/lib/localforage.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/backbone.localforage.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-keyword-highlight.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-autonumeric.js"></script>
 <script type="text/javascript" src="/static/js/lib/bootbox-2.3.2.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/moment-with-langs.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:
-    <script type="text/javascript" src="/static/js/app/components/basket.js"></script>
     <script type="text/javascript" src="/static/js/app/core.js"></script>
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ops.js"></script>
     <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
     <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
     <script type="text/javascript" src="/static/js/app/main.js"></script>
+    <script type="text/javascript" src="/static/js/app/components/project.js"></script>
+    <script type="text/javascript" src="/static/js/app/components/basket.js"></script>
 % endif
 
 </%block>
