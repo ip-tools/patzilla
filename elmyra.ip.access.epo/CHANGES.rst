@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.9.0
+=====
 - ui, middleware: propagate ops-specific fulltext fields to keyword highlighter
 - ui: link to DEPATISnet PDF
 - ui: prefer canonical epodoc values over original ones for parties (applicant, inventor) to increase search quality
