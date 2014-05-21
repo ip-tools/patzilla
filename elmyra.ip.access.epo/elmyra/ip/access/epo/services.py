@@ -128,9 +128,15 @@ def depatisnet_published_data_search_handler(request):
 def propagate_keywords(request, query_object):
     """propagate keywords to client for highlighting"""
     if query_object:
-        keywords = []
-        scan_keywords(query_object, keywords)
-        request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(list(set(keywords)))
+        keywords = compute_keywords(query_object)
+        request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
+
+def compute_keywords(query_object):
+    keywords = []
+    scan_keywords(query_object, keywords)
+    keywords = list(set(keywords))
+    #print "keywords:", keywords
+    return keywords
 
 def scan_keywords(op, keywords):
 
