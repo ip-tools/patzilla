@@ -151,8 +151,11 @@ function listview_bind_actions() {
         var container = $(carousel).closest('.ops-collection-entry');
 
         // current drawing number
-        var page = $(carousel).data('carousel').getActiveIndex() + 1;
-        container.find('.drawing-number').text(page);
+        var carousel_real = $(carousel).data('carousel');
+        if (carousel_real) {
+            var page = carousel_real.getActiveIndex() + 1;
+            container.find('.drawing-number').text(page);
+        }
 
         // number of all drawings
         //var carousel = container.find('.drawings-carousel');
