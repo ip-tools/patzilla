@@ -958,6 +958,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/js/lib/moment-with-langs.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
@@ -970,8 +971,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
     <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
     <script type="text/javascript" src="/static/js/app/main.js"></script>
-    <script type="text/javascript" src="/static/js/app/components/project.js"></script>
     <script type="text/javascript" src="/static/js/app/components/basket.js"></script>
+    <script type="text/javascript" src="/static/js/app/components/project.js"></script>
 % endif
 
 </%block>
