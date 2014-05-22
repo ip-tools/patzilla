@@ -1,7 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
-BasketModel = Backbone.Model.extend({
+BasketModel = Backbone.RelationalModel.extend({
+
+    sync: Backbone.localforage.sync('Basket'),
 
     defaults: {
         numberlist: [],
@@ -106,7 +108,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $('#basket-submit-button').prop('disabled', true);
         }
 
-        // application action: search from basket content
+        // review feature: trigger search from basket content
         $('.basket-review-button').click(function() {
             self.model.review();
         });

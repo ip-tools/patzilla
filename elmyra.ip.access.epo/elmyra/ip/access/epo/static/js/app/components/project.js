@@ -9,15 +9,31 @@ QueryModel = Backbone.Model.extend({
 
 });
 
-ProjectModel = Backbone.Model.extend({
+ProjectModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Project'),
     //collection: ProjectCollection,
 
+    relations: [
+        {
+            type: Backbone.HasOne,
+            key: 'basket',
+            relatedModel: 'BasketModel',
+            includeInJSON: Backbone.Model.prototype.idAttribute,
+            collectionType: 'ProjectCollection',
+
+            reverseRelation: {
+                key: 'project',
+                includeInJSON: Backbone.Model.prototype.idAttribute,
+                // 'relatedModel' is automatically set to 'ProjectModel'
+                type: Backbone.HasOne,
+            }
+        }
+    ],
+
     defaults: {
         name: null,
         queries: [],
-        basket: null,
         created: null,
         modified: null,
     },
@@ -26,6 +42,9 @@ ProjectModel = Backbone.Model.extend({
     initialize: function() {
         console.log('ProjectModel::initialize');
         // TODO: how to make this not reference "opsChooserApp"?
+        // TODO: should old bindings be killed first?
+        //       - all queries will be recorded by all model instances otherwise
+        //       - most probably just don't do this here!
         this.listenTo(opsChooserApp, "search:before", this.record_query);
     },
 
@@ -63,19 +82,40 @@ ProjectCollection = Backbone.Collection.extend({
         console.log('ProjectCollection::initialize');
     },
 
+    // get project object from storage or create new one
+    // TODO: maybe make it more generic, esp. the uniqueness checking
     get_or_create: function(name) {
-        console.log('ProjectCollection::get_or_create: ' + name);
+        console.log('ProjectCollection.get_or_create: ' + name);
+
         var records = this.where({name: name});
 
-        // FIXME: raise an exception in this case
+        // FIXME: should raise an exception in this case, right?
         if (!records) return;
 
-        var record = records[0];
-        if (!record) {
-            console.log('create');
-            record = this.create({ name: name, created: now_iso() });
+        var project = records[0];
+
+        // create new project
+        if (!project) {
+            console.log('ProjectModel.create');
+
+            // fresh basket for new project
+            var basket = new BasketModel();
+            basket.save();
+
+            // create instance
+            project = this.create({ name: name, created: now_iso(), basket: basket });
+
+            // update backreference to project on basket object
+            basket.set('project', project);
+            basket.save();
         }
-        return record;
+
+        // bind basket change event to its save method when running in project mode
+        project.fetchRelated('basket');
+        var basket = project.get('basket');
+        this.listenTo(basket, "change", function() { basket.save() });
+
+        return project;
     },
 
 });
@@ -83,18 +123,19 @@ ProjectCollection = Backbone.Collection.extend({
 // TODO: how to make this not reference "opsChooserApp"?
 opsChooserApp.addInitializer(function(options) {
 
-    var collection = new ProjectCollection();
-    //opsChooserApp.dbprojects = collection;
+    // data storage bootstrapper
+    // 1. load data from ProjectCollection
+    // 2. get or create current default project (named <today>, e.g. "2014-05-22")
+    // 3. emit "project:ready" event
 
-    var self = this;
-    collection.fetch({success: function(abc) {
+    var collection = new ProjectCollection();
+
+    var _this = this;
+    collection.fetch({success: function(response) {
         var today = today_iso();
         var project = collection.get_or_create(today);
-        //opsChooserApp.project = project;
         console.log('project:ready');
-        self.trigger('project:ready', project);
-
-        console.log('queries:', project.get('queries'));
+        _this.trigger('project:ready', project);
     }});
 
 

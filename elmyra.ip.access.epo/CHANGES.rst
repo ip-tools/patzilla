@@ -4,10 +4,13 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-- ui, storage: update to recent localforage libraries
+- storage: update to recent localforage libraries
+- storage: add backbone-relational library
+- storage: introduce ProjectModel and ProjectCollection
+- storage: introduce BasketModel linked to ProjectModel
+- feature: record all queries made to the system
+- feature: make the basket persistent
 - ui: add date formatting library “moment.js” and helpers
-- ui, storage: introduce ProjectModel and ProjectCollection to record all queries made to the system
-- ui, storage: add backbone-relational library
 
 0.9.0
 =====

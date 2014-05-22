@@ -42,6 +42,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var query = $('#query').val();
         var datasource = this.get_datasource();
 
+        console.log('App.perform_search: datasource=' + datasource + ', query=' + query);
+
         // handle basket review mode specially
         if (options && options.reviewmode != null) {
             this.metadata.set('reviewmode', options.reviewmode);
@@ -58,9 +60,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             this.metadata.set('datasource', datasource);
 
             if (datasource == 'ops') {
-                console.log('ops search: ' + query);
                 var range = this.compute_range(options);
-                console.log('trigger search:before');
+                console.log('App.perform_search: trigger search:before');
                 this.trigger('search:before', query, range);
                 opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
 
@@ -71,7 +72,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 });
 
             } else if (datasource == 'depatisnet') {
-                console.log('depatisnet search: ' + query);
 
                 indicate_activity(true);
 
@@ -214,6 +214,37 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $('#info-area').append(alert_html);
     },
 
+    project_activate: function(project) {
+        console.log('App.project_activate:', project.get('name'));
+        project.fetchRelated('basket');
+        var basket = project.get('basket');
+        if (basket) {
+            this.basket_activate(basket);
+        }
+    },
+
+    basket_activate: function(basket) {
+
+        console.log('App.basket_activate');
+
+        // TODO: how to decouple this? is there something like a global utility registry?
+        this.basketModel = basket;
+
+        // toggle appropriate Add/Remove button when entries get added or removed from basket
+        // TODO: should old bindings be killed first using .stopListening?
+        this.listenTo(basket, "change:add", this.collectionView.basket_update_ui_entry);
+        this.listenTo(basket, "change:remove", this.collectionView.basket_update_ui_entry);
+
+        // create and render view based on model
+        // TODO: should the old view be killed first?
+        var basketView = new BasketView({
+            el: $('#basket-area'),
+            model: basket,
+        });
+        basketView.render();
+
+    },
+
 });
 opsChooserApp = new OpsChooserApp();
 
@@ -315,9 +346,6 @@ opsChooserApp.addInitializer(function(options) {
     this.metadata = new OpsExchangeMetadata();
     this.documents = new OpsExchangeDocumentCollection();
 
-    // model for basket component
-    this.basketModel = new BasketModel();
-
 });
 
 // view initializer
@@ -338,13 +366,6 @@ opsChooserApp.addInitializer(function(options) {
     });
 
 
-    var basketView = new BasketView({
-        el: $('#basket-area'),
-        model: this.basketModel,
-    });
-    basketView.render();
-
-
     // bind view objects to region objects
     opsChooserApp.metadataRegion.show(this.metadataView);
     opsChooserApp.listRegion.show(this.collectionView);
@@ -352,19 +373,27 @@ opsChooserApp.addInitializer(function(options) {
     opsChooserApp.paginationRegionBottom.show(this.paginationViewBottom);
 });
 
+// activate default basket (non-persistent/project-associated)
+opsChooserApp.addInitializer(function(options) {
+    // activate basket component
+    // remark: the model instance created here will get overwritten later
+    //         by a project-specific basket when activating a project
+    // reason: we still do it here for the case we decide to deactivate the project
+    //         subsystem in certain modes (dunno whether this will work out)
+    this.basket_activate(new BasketModel());
+});
+
 // component connect initializer
 opsChooserApp.addInitializer(function(options) {
-    this.listenTo(this.basketModel, "change:add", this.collectionView.basket_update_ui_entry);
-    this.listenTo(this.basketModel, "change:remove", this.collectionView.basket_update_ui_entry);
-
     // kick off the search process immediately after initial project was created
+    this.listenTo(this, "project:ready", this.project_activate);
     this.listenTo(this, "project:ready", this.perform_search);
 });
 
 
 $(document).ready(function() {
 
-    console.log("OpsChooserApp starting");
+    console.log("document.ready");
 
     // process and propagate application ingress parameters
     //var url = $.url(window.location.href);
