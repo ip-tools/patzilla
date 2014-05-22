@@ -63,9 +63,9 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                             <img src="/static/img/icons/dpma-logo-small.svg" width="24" height="24"/> DEPATISnet
                         </button>
                         <button
-                            class="btn basket-review-button btn-popover" data-value="review"
+                            class="btn btn-popover basket-review-button" data-value="review"
                             data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                            data-content="Review selection of documents on the right"
+                            data-content="Review list of selected documents"
                             >
                             <i class="icon-pencil"></i> Review
                         </button>

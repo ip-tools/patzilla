@@ -98,7 +98,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
     setup_ui: function() {
         //console.log('BasketView::setup');
 
-        var self = this;
+        var _this = this;
+
+        // basket import
+        $('#basket-import-button').click(function(e) {
+            _this.future_premium_feature();
+            return false;
+        });
 
         // only enable submit button, if ship url is given
         var ship_url = this.model.get('ship_url');
@@ -110,20 +116,20 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         // review feature: trigger search from basket content
         $('.basket-review-button').click(function() {
-            self.model.review();
+            _this.model.review();
         });
 
         // basket sharing
         $('#share-numberlist-email').click(function() {
-            self.future_premium_feature();
+            _this.future_premium_feature();
         });
-        $('#share-documents-upload').click(function() {
-            self.future_premium_feature();
+        $('#share-documents-transfer').click(function() {
+            _this.future_premium_feature();
         });
 
     },
 
-    future_premium_feature: function(selector) {
+    future_premium_feature: function() {
         bootbox.dialog(
             'Available soon via subscription.', [{
                 "label": 'OK',

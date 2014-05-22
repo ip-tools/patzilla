@@ -2,16 +2,27 @@
     <%text>
         <form id="basket-form" name="basket-form" method="post" action="<%= ship_url %>">
 
+            <!-- basket ingress controls -->
             <div class="row-fluid">
                 <div class="span12">
+                        <button id="basket-import-button"
+                                role="button" class="btn btn-popover"
+                                data-toggle="popover" data-trigger="hover" data-placement="right"
+                                data-content="Import numberlist from url or filesystem"
+                                >
+                            Import
+                        </button>
                 </div>
             </div>
+
+            <!-- basket content -->
             <div class="row-fluid">
-                <!-- basket content -->
                 <div class="span12">
                     <textarea class="span12" id="basket" name="<%= ship_param %>" rows="5" placeholder="Selection, match list"><%= numberlist %></textarea>
                 </div>
             </div>
+
+            <!-- basket egress controls -->
             <div class="row-fluid">
 
                 <div class="span6">
@@ -64,10 +75,10 @@
                                     &nbsp;
                                     Numberlist via Email
                                 </a>
-                                <a id="share-documents-upload" href="#">
+                                <a id="share-documents-transfer" href="#">
                                     <i class="icon-upload-alt icon-large"></i>
                                     &nbsp;
-                                    Upload documents
+                                    Transfer collection of documents
                                 </a>
                             </li>
 
