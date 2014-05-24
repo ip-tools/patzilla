@@ -41,12 +41,7 @@ ProjectModel = Backbone.RelationalModel.extend({
 
     // initialize model
     initialize: function() {
-        console.log('ProjectModel::initialize');
-        // TODO: how to make this not reference "opsChooserApp"?
-        // TODO: should old bindings be killed first?
-        //       - all queries will be recorded by all model instances otherwise
-        //       - most probably just don't do this here!
-        this.listenTo(opsChooserApp, "search:before", this.record_query);
+        console.log('ProjectModel.initialize');
     },
 
     record_query: function(query, range) {
@@ -64,10 +59,17 @@ ProjectModel = Backbone.RelationalModel.extend({
 
         if (dirty) {
             this.set('queries', queries);
-            this.set('modified', now_iso());
             this.save();
         }
+
     },
+
+    // automatically update "modified" field on save
+    save: function(key, val, options) {
+        // http://jstarrdewar.com/blog/2012/07/20/the-correct-way-to-override-concrete-backbone-methods/
+        this.set('modified', now_iso());
+        return Backbone.Model.prototype.save.call(this, key, val, options);
+    }
 
 });
 
@@ -79,6 +81,26 @@ ProjectCollection = Backbone.Collection.extend({
     // initialize model
     initialize: function() {
         console.log('ProjectCollection.initialize');
+    },
+
+    // TODO: refactor this to a generic base class
+    sortByField: function(fieldName, direction) {
+        var _this = this;
+        var _comparator_ascending = function(a, b) {
+            a = a.get(_this.sort_key);
+            b = b.get(_this.sort_key);
+            return a > b ?  1
+                 : a < b ? -1
+                 :          0;
+        };
+        var _comparator_descending = function(a, b) { return _comparator_ascending(b, a); }
+        this.comparator = _comparator_ascending;
+        if (_.str.startsWith(direction, 'd')) {
+            this.comparator = _comparator_descending;
+        }
+        this.sort_key = fieldName;
+        this.sort();
+        return this;
     },
 
     // get project object from storage or create new one
@@ -93,17 +115,23 @@ ProjectCollection = Backbone.Collection.extend({
         var project = records[0];
 
         // create new project
-        if (!project) {
+        if (project) {
+
+            // refetch project to work around localforage.backbone vs. backbone-relational woes
+            // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
+            project.fetch();
+
+        } else {
             console.log('ProjectModel.create');
 
-            // fresh basket for new project
+            // create basket for new project
             var basket = new BasketModel();
-            basket.save();
 
-            // create instance
-            project = this.create({ name: name, created: now_iso(), basket: basket });
+            // create new project
+            project = new ProjectModel({ name: name, created: now_iso(), basket: basket });
+            this.create(project);
 
-            // update backreference to project on basket object
+            // update backreference to project object on basket object
             basket.set('project', project);
             basket.save();
         }
@@ -114,9 +142,86 @@ ProjectCollection = Backbone.Collection.extend({
         this.listenTo(basket, "change", function() { basket.save() });
 
         return project;
+
     },
 
 });
+
+
+ProjectChooserView = Backbone.Marionette.ItemView.extend({
+
+    template: "#project-chooser-template",
+
+    initialize: function() {
+        console.log('ProjectChooserView.initialize');
+        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this, "item:rendered", this.setup_ui);
+    },
+
+    onDomRefresh: function() {
+        console.log('ProjectChooserView.onDomRefresh');
+    },
+
+    setup_ui: function() {
+        console.log('ProjectChooserView.setup_ui');
+
+        var _this = this;
+
+        // 1. rename a project by making the project name inline-editable
+        $('#project-chooser-name').editable({
+            mode: 'inline',
+            success: function(response, projectname_new) {
+
+                // reject renaming if project name already exists
+                var results = _this.collection.where({name: projectname_new});
+                if (!_.isEmpty(results)) {
+                    $('.editable-container input').tooltip({title: 'Project already exists'}).tooltip('show');
+                    changeTooltipColorTo('#DF0101');
+                    return false;
+                }
+
+                // rename project
+                _this.model.set('name', projectname_new);
+                _this.model.save();
+            },
+        });
+
+        // 2. set project name
+        $('#project-chooser-name').editable('setValue', this.model.get('name'));
+
+
+        // 3. populate dropdown-menu
+
+        // where to append the project entries
+        var container = $('#project-chooser-list ul');
+        var collection = this.collection;
+
+        // sort collection by modification date, descending
+        // TODO: refactor to ProjectChooserItemView, introduce ProjectChooserModel
+        container.empty();
+        collection.sortByField('modified', 'desc').each(function(project) {
+            var name = project.get('name');
+            var modified = project.get('modified');
+            var entry = _.template(
+                '<li>' +
+                    '<a class="span12" href="javascript: void(0);" data-value="<%= name %>">' +
+                    '<%= name %> ' +
+                    '<span class="pull-right"><%= modified %></span>' +
+                    '</a>' +
+                    '</li>')({name: name, modified: modified});
+            container.append(entry);
+        });
+
+        // make project entry links switch the current project
+        container.find('a').click(function() {
+            var projectname = $(this).data('value');
+            var project = collection.get_or_create(projectname);
+            opsChooserApp.trigger('project:ready', project);
+        });
+    },
+
+});
+
 
 // TODO: how to make this not reference "opsChooserApp"?
 opsChooserApp.addInitializer(function(options) {
@@ -126,12 +231,16 @@ opsChooserApp.addInitializer(function(options) {
     // 2. get or create current default project (named <today>, e.g. "2014-05-22")
     // 3. emit "project:ready" event
 
-    var collection = new ProjectCollection();
+    // TODO: establish settings store (e.g. JQuery-rememberme)
+    // TODO: run this logic only if not being able to get "current" project name from settings store
+
+    this.projects = new ProjectCollection();
 
     var _this = this;
-    collection.fetch({success: function(response) {
+    console.log('App.projects.fetch');
+    this.projects.fetch({success: function(response) {
         var today = today_iso();
-        var project = collection.get_or_create(today);
+        var project = _this.projects.get_or_create(today);
         console.log('project:ready');
         _this.trigger('project:ready', project);
     }});

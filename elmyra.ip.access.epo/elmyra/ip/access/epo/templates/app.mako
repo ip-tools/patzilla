@@ -55,8 +55,14 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
         <div class="span8" id="querybuilder-area">
 
             <div class="row-fluid">
+
+                <!-- project chooser -->
+                <div class="span7">
+                    <div id="project-chooser-area"></div>
+                </div>
+
                 <!-- data source chooser -->
-                <div class="span12">
+                <div class="span5">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                         <button class="btn active" data-value="ops">
                             <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
@@ -949,19 +955,33 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 </%text>
 </script>
 
+
+<!-- user interface: templates -->
 <%include file="basket.html"/>
+<%include file="project.html"/>
 
 
+<!-- storage -->
+<script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
+<!-- TODO: minify again, but currently includes an important patch -->
+<!-- <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script> -->
+<script type="text/javascript" src="/static/js/lib/localforage.backbone.js"></script>
+<script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
+
+<!-- user interface: single libraries -->
 <script type="text/javascript" src="/static/js/lib/jquery.caret-1.5.1.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-keyword-highlight.js"></script>
 <script type="text/javascript" src="/static/js/lib/jquery-autonumeric.js"></script>
 <script type="text/javascript" src="/static/js/lib/bootbox-2.3.2.min.js"></script>
 <script type="text/javascript" src="/static/js/lib/moment-with-langs.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
 
+<!-- user interface: widgets -->
+<script type="text/javascript" src="/static/widget/bootstrap-editable/js/bootstrap-editable.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
+
+
+<!-- application -->
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':

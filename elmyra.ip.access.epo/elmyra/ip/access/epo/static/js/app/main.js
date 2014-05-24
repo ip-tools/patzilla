@@ -215,17 +215,53 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     project_activate: function(project) {
-        console.log('App.project_activate:', project.get('name'));
-        project.fetchRelated('basket');
-        var basket = project.get('basket');
-        if (basket) {
-            this.basket_activate(basket);
+
+        var _this = this;
+
+        if (!project) {
+            console.error('project is null, will not activate');
+            return;
         }
+
+        var projectname = project.get('name');
+        console.log('App.project_activate:', projectname);
+
+        // set project active in application scope
+        // TODO: can this be further decoupled?
+        this.project = project;
+
+        // set hook to record all queries
+        this.stopListening(this, 'search:before');
+        this.listenTo(this, 'search:before', function(arguments) {
+            this.project.record_query(arguments);
+        });
+
+        // setup views
+        var projectChooserView = new ProjectChooserView({
+            el: $('#project-chooser-area'),
+            model: project,
+            collection: this.projects,
+        });
+        projectChooserView.render();
+
+        // activate basket
+        var basket = project.get('basket');
+        // refetch basket to work around localforage.backbone vs. backbone-relational woes
+        // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
+        basket.fetch({success: function(response) {
+            _this.basket_activate(basket);
+        }});
+
     },
 
     basket_activate: function(basket) {
 
         console.log('App.basket_activate');
+
+        if (!basket) {
+            console.error('basket is null, will not activate');
+            return;
+        }
 
         // TODO: how to decouple this? is there something like a global utility registry?
         this.basketModel = basket;
@@ -242,6 +278,47 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             model: basket,
         });
         basketView.render();
+
+        // update some other gui components after basket view is ready
+        this.basket_update_downstreams();
+
+    },
+
+    basket_update_downstreams: function() {
+
+        // TODO: maybe use an event handler for this, instead of a direct method call (e.g. "item:rendered")
+
+        var _this = this;
+
+        // handle checkbox clicks by add-/remove-operations on basket
+        /*
+        $(".chk-patent-number").click(function() {
+            var patent_number = this.value;
+            if (this.checked)
+                _this.basketModel.add(patent_number);
+            if (!this.checked)
+                _this.basketModel.remove(patent_number);
+        });
+        */
+
+        // handle button clicks by add-/remove-operations on basket
+        $(".add-patent-number").unbind('click');
+        $(".add-patent-number").click(function() {
+            var patent_number = $(this).data('patent-number');
+            _this.basketModel.add(patent_number);
+        });
+        $(".remove-patent-number").unbind('click');
+        $(".remove-patent-number").click(function() {
+            var patent_number = $(this).data('patent-number');
+            _this.basketModel.remove(patent_number);
+        });
+
+        // propagate numberlist to Add/Remove button states once when activating the basket
+        this.documents.each(function(document) {
+            var entry = document.attributes.get_patent_number()
+            // TODO: maybe refactor "basket_update_ui_entry" elsewhere
+            _this.collectionView.basket_update_ui_entry(entry);
+        });
 
     },
 
@@ -301,7 +378,9 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     },
 
     // backpropagate current basket entries into checkbox state
+    // TODO: maybe refactor this elsewhere
     basket_update_ui_entry: function(entry) {
+        // TODO: move to model access
         //console.log(this.model);
         var payload = $('#basket').val();
         var checkbox_element = $('#' + 'chk-patent-number-' + entry);
@@ -392,7 +471,7 @@ opsChooserApp.addInitializer(function(options) {
 opsChooserApp.addInitializer(function(options) {
     // kick off the search process immediately after initial project was created
     this.listenTo(this, "project:ready", this.project_activate);
-    this.listenTo(this, "project:ready", this.perform_search);
+    this.listenToOnce(this, "project:ready", this.perform_search);
 });
 
 

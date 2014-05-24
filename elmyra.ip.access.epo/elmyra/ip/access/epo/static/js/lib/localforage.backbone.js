@@ -78,6 +78,25 @@
                 }
                 switch (method) {
                     case "read":
+
+                        /*
+                        WORKAROUND
+
+                        This tries to worka around localforage.backbone vs. backbone-relational woes.
+                        Otherwise, data storage mayhem may happen, because of "model.id" vs. "model.sync.localforageKey" mismatch.
+
+                        e.g.::
+
+                            model.id:                  8e92b750-cd10-562c-13d9-cc4029c885bb
+                            model.sync.localforageKey: Basket/7e0bcfea-d0ce-7a06-207e-63c432533244
+
+                        */
+                        if (model.id && model.sync.localforageKey) {
+                            if (!_.str.contains(model.sync.localforageKey, model.id)) {
+                                model.sync.localforageKey = name + "/" + model.id;
+                            }
+                        }
+
                         return model.id ? _this.find(model, options) : _this.findAll(model, options);
                     case "create":
                         return _this.create(model, options);

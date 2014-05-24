@@ -1,0 +1,25 @@
+<script type="text/x-underscore-template" id="project-chooser-template">
+<%text>
+    <h4 style="display: inline">
+        Project:
+        <sup>｢</sup>
+        <a id="project-chooser-name" href="#" data-type="text" data-pk="1" data-title="Rename project"></a>
+        <sub>｣</sub>
+    </h4>
+
+    <div id="project-chooser-list"
+         class="btn-group btn-popover"
+         data-toggle="popover" data-trigger="hover" data-placement="top"
+         data-content="Select project"
+            >
+        <button class="btn dropdown-toggle hidden" data-toggle="dropdown">
+            <!-- dummy, makes caret narrower -->
+        </button>
+        <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" style="width: 300px">
+        </ul>
+    </div>
+</%text>
+</script>

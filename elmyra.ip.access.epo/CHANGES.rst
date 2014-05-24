@@ -13,6 +13,10 @@ development
 - ui: add date formatting library “moment.js” and helpers
 - ui: add “bootstrap-editable” widget
 - config change: cache searches for 6 hours
+- ui, storage
+  - add ProjectChooserView and accompanying mechanics
+  - properly string project-/basket-relationships and -behaviors together
+  - patch localforge.backbone.js to make things actually work (weird thing)
 
 0.9.0
 =====

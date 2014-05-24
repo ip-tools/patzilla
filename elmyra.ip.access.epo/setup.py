@@ -86,7 +86,8 @@ setup(name='elmyra.ip.access.epo',
           'elmyra.ip.access.epo': [
               'templates/*.mako',
               'static/js/**/*.js', 'static/js/**/*.map', '**/**/*.css',
-              '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg'
+              '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg',
+              'static/widget/**/**/*.*',
           ],
           'elmyra.ip.util.render': ['*.js'],
       },

@@ -58,25 +58,7 @@ function listview_bind_actions() {
     // ------------------------------------------
     //   result list
     // ------------------------------------------
-
-    // handle checkbox clicks by add-/remove-operations on basket
-    $(".chk-patent-number").click(function() {
-        var patent_number = this.value;
-        if (this.checked)
-            opsChooserApp.basketModel.add(patent_number);
-        if (!this.checked)
-            opsChooserApp.basketModel.remove(patent_number);
-    });
-
-    // handle button clicks by add-/remove-operations on basket
-    $(".add-patent-number").click(function() {
-        var patent_number = $(this).data('patent-number');
-        opsChooserApp.basketModel.add(patent_number);
-    });
-    $(".remove-patent-number").click(function() {
-        var patent_number = $(this).data('patent-number');
-        opsChooserApp.basketModel.remove(patent_number);
-    });
+    opsChooserApp.basket_update_downstreams();
 
     // use jquery.shorten on "abstract" text
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
