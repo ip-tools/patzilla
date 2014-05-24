@@ -45,6 +45,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     </div>
 </div>
 
+<br/>
+
 <div class="container-fluid span12">
 
     ## query builder and basket
@@ -965,6 +967,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:
+    <script type="text/javascript" src="/static/js/app/util.js"></script>
     <script type="text/javascript" src="/static/js/app/core.js"></script>
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ops.js"></script>

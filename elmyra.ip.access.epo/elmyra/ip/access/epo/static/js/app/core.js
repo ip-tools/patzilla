@@ -300,6 +300,8 @@ function reset_content(options) {
 
 function boot_application() {
 
+    console.log('boot_application');
+
     // compute default data source
     // set to DEPATISnet, if called with empty query; otherwise, use OPS
     var url = $.url(window.location.href);
@@ -558,12 +560,4 @@ function cql_field_chooser_setup(data) {
 
     });
 
-}
-
-function now_iso() {
-    return moment().format();
-}
-
-function today_iso() {
-    return moment().format('YYYY-MM-DD');
 }

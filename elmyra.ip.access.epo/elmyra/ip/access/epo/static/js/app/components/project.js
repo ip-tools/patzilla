@@ -19,23 +19,24 @@ ProjectModel = Backbone.RelationalModel.extend({
             type: Backbone.HasOne,
             key: 'basket',
             relatedModel: 'BasketModel',
+
             includeInJSON: Backbone.Model.prototype.idAttribute,
-            collectionType: 'ProjectCollection',
 
             reverseRelation: {
-                key: 'project',
-                includeInJSON: Backbone.Model.prototype.idAttribute,
-                // 'relatedModel' is automatically set to 'ProjectModel'
                 type: Backbone.HasOne,
-            }
+                key: 'project',
+                // 'relatedModel' is automatically set to 'ProjectModel'
+                includeInJSON: Backbone.Model.prototype.idAttribute,
+            },
+
         }
     ],
 
     defaults: {
         name: null,
-        queries: [],
         created: null,
         modified: null,
+        queries: [],
     },
 
     // initialize model
@@ -49,7 +50,7 @@ ProjectModel = Backbone.RelationalModel.extend({
     },
 
     record_query: function(query, range) {
-        console.log('ProjectModel::record_query: ' + query);
+        console.log('ProjectModel.record_query: ' + query);
 
         var dirty = false;
 
@@ -64,8 +65,6 @@ ProjectModel = Backbone.RelationalModel.extend({
         if (dirty) {
             this.set('queries', queries);
             this.set('modified', now_iso());
-            //this.sync();
-            //this.set('basket', 'abc');
             this.save();
         }
     },
@@ -79,13 +78,12 @@ ProjectCollection = Backbone.Collection.extend({
 
     // initialize model
     initialize: function() {
-        console.log('ProjectCollection::initialize');
+        console.log('ProjectCollection.initialize');
     },
 
     // get project object from storage or create new one
     // TODO: maybe make it more generic, esp. the uniqueness checking
     get_or_create: function(name) {
-        console.log('ProjectCollection.get_or_create: ' + name);
 
         var records = this.where({name: name});
 

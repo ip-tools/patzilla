@@ -246,6 +246,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
 });
+
+
+/**
+ * ------------------------------------------
+ *             main application
+ * ------------------------------------------
+ */
 opsChooserApp = new OpsChooserApp();
 
 opsChooserApp.addRegions({
@@ -258,7 +265,7 @@ opsChooserApp.addRegions({
 
 /**
  * ------------------------------------------
- *                view objects
+ *               view objects
  * ------------------------------------------
  */
 OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
@@ -276,10 +283,8 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     // actions to run after populating the view
     // e.g. to bind click handlers on individual records
     onDomRefresh: function() {
-
         var patent_number = this.model.attributes.get_patent_number();
         opsChooserApp.collectionView.basket_update_ui_entry(patent_number);
-
     },
 
 });

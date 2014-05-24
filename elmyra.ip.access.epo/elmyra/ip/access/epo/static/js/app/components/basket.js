@@ -11,11 +11,15 @@ BasketModel = Backbone.RelationalModel.extend({
         ship_param: 'payload',
     },
 
-    // initialize model from url query parameters
     initialize: function() {
-        console.log('BasketModel::initialize');
+        console.log('BasketModel.initialize');
+        this.init_from_query();
+    },
+
+    // initialize model from url query parameters
+    init_from_query: function() {
         var basket_option_names = ['numberlist', 'ship-url', 'ship-param'];
-        var self = this;
+        var _this = this;
         var url = $.url(window.location.href);
         _(basket_option_names).each(function(query_name) {
             var attribute_name = query_name.replace('-', '_');
@@ -27,9 +31,10 @@ BasketModel = Backbone.RelationalModel.extend({
             if (value) {
                 value = decodeURIComponent(value);
                 value = value.split(',');
-                self.set(attribute_name, value);
+                _this.set(attribute_name, value);
             }
         });
+
     },
 
     // add item to basket
@@ -78,7 +83,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     template: "#basket-template",
 
     initialize: function() {
-        console.log('BasketView::initialize');
+        console.log('BasketView.initialize');
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
     },
@@ -96,7 +101,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     },
 
     setup_ui: function() {
-        //console.log('BasketView::setup');
+        console.log('BasketView.setup_ui');
 
         var _this = this;
 
@@ -140,7 +145,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     },
 
     onDomRefresh: function() {
-        console.log('BasketView::onDomRefresh');
+        console.log('BasketView.onDomRefresh');
     },
 
 });
