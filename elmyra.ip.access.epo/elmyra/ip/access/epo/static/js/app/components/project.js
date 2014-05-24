@@ -136,10 +136,15 @@ ProjectCollection = Backbone.Collection.extend({
             basket.save();
         }
 
-        // bind basket change event to its save method when running in project mode
+        // wire basket events when running in project mode
         project.fetchRelated('basket');
         var basket = project.get('basket');
+
+        // save basket when changed
         this.listenTo(basket, "change", function() { basket.save() });
+
+        // save project also when basket changed, to update the "modified" attribute
+        this.listenTo(basket, "change", function() { project.save() });
 
         return project;
 
