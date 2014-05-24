@@ -12,6 +12,7 @@ development
 - feature: make the basket persistent
 - ui: add date formatting library “moment.js” and helpers
 - ui: add “bootstrap-editable” widget
+- config change: cache searches for 6 hours
 
 0.9.0
 =====
