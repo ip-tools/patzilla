@@ -18,6 +18,8 @@
     <meta itemprop="name" content="elmyra.ip.access.epo">
     <%block name="plus_description"></%block>
 
+    <link rel="search" type="application/opensearchdescription+xml" title="Elmyra patent search" href="/static/meta/opensearch.xml" />
+
     <link rel="shortcut icon" href="${url.app}/favicon.ico" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->

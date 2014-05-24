@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- meta: add OpenSearch description
 
 0.10.2
 ======

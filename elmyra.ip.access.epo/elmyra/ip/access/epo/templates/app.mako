@@ -961,6 +961,9 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <%include file="project.html"/>
 
 
+<!-- application -->
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+
 <!-- storage -->
 <script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
 <!-- TODO: minify again, but currently includes an important patch -->
@@ -980,9 +983,6 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/widget/bootstrap-editable/js/bootstrap-editable.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
 
-
-<!-- application -->
-<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
