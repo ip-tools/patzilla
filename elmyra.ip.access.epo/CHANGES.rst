@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.10.2
+======
+- ui, storage: [fix] automatically update the "project.modified" attribute when manipulating the basket
+
 0.10.1
 ======
 - ui: make "modified" attribute humanly readable in project chooser widget

@@ -266,10 +266,26 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // TODO: how to decouple this? is there something like a global utility registry?
         this.basketModel = basket;
 
+
+        // A. event listeners
+
         // toggle appropriate Add/Remove button when entries get added or removed from basket
         // TODO: should old bindings be killed first using .stopListening?
         this.listenTo(basket, "change:add", this.collectionView.basket_update_ui_entry);
         this.listenTo(basket, "change:remove", this.collectionView.basket_update_ui_entry);
+
+        // save basket when changed
+        this.listenTo(basket, "change", function() {
+            basket.save();
+        });
+
+        // also save project when basket changed, to update the "modified" attribute
+        this.listenTo(basket, "change", function() {
+            this.project.save();
+        });
+
+
+        // B. user interface
 
         // create and render view based on model
         // TODO: should the old view be killed first?
