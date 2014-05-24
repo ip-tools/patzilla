@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.10.0
+======
 - storage: update to recent localForage library
 - storage: add backbone-relational library
 - storage: introduce ProjectModel and ProjectCollection
