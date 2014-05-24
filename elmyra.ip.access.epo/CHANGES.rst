@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.10.1
+======
+- ui: make "modified" attribute humanly readable in project chooser widget
+
 0.10.0
 ======
 - storage: update to recent localForage library

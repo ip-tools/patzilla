@@ -208,7 +208,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                     '<%= name %> ' +
                     '<span class="pull-right"><%= modified %></span>' +
                     '</a>' +
-                    '</li>')({name: name, modified: modified});
+                    '</li>')({name: name, modified: moment(modified).fromNow()});
             container.append(entry);
         });
 
