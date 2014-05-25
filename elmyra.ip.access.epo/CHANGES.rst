@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - meta: add OpenSearch description
+- ui, storage: improved robustness, honor asynchronous callback flow
 
 0.10.2
 ======

@@ -233,22 +233,23 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // set hook to record all queries
         this.stopListening(this, 'search:before');
         this.listenTo(this, 'search:before', function(arguments) {
-            this.project.record_query(arguments);
+            project.record_query(arguments);
         });
 
         // setup views
         var projectChooserView = new ProjectChooserView({
             el: $('#project-chooser-area'),
             model: project,
-            collection: this.projects,
+            collection: project.collection,
         });
         projectChooserView.render();
 
         // activate basket
         var basket = project.get('basket');
+
         // refetch basket to work around localforage.backbone vs. backbone-relational woes
         // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
-        basket.fetch({success: function(response) {
+        basket.fetch({success: function() {
             _this.basket_activate(basket);
         }});
 

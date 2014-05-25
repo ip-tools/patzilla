@@ -105,7 +105,9 @@ ProjectCollection = Backbone.Collection.extend({
 
     // get project object from storage or create new one
     // TODO: maybe make it more generic, esp. the uniqueness checking
-    get_or_create: function(name) {
+    get_or_create: function(name, options) {
+
+        var _this = this;
 
         var records = this.where({name: name});
 
@@ -114,32 +116,61 @@ ProjectCollection = Backbone.Collection.extend({
 
         var project = records[0];
 
-        // create new project
+
+        // deferred which will get signalled when we're done with everything object storage
+        var deferred = $.Deferred();
+        var succeed = function() {
+            if (options && options.success) {
+                options.success(project);
+            }
+            deferred.resolve(project);
+        };
+
+        // load existing project
         if (project) {
 
             // refetch project to work around localforage.backbone vs. backbone-relational woes
             // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
-            project.fetch();
+            project.fetch({success: function() {
+                $.when(project.fetchRelated('basket')).then(succeed);
+            }})
 
+        // create new project
         } else {
             console.log('ProjectModel.create');
 
             // create basket for new project
             var basket = new BasketModel();
 
-            // create new project
-            project = new ProjectModel({ name: name, created: now_iso(), basket: basket });
-            this.create(project);
+            // save basket
+            basket.save(null, {success: function() {
 
-            // update backreference to project object on basket object
-            basket.set('project', project);
-            basket.save();
+                // create new project instance
+                project = new ProjectModel({ name: name, created: now_iso(), basket: basket });
+
+                // create project in collection
+                _this.create(project, {success: function() {
+
+                    // fetch associated basket objects
+                    $.when(project.fetchRelated('basket')).then(function() {
+
+                        // update backreference to project object on basket object
+                        var basket = project.get('basket');
+                        basket.save({'project': project}, {success: function() {
+
+                            // refetch project again and finally end this damn chain
+                            project.fetch({success: succeed});
+
+                        }});
+                    });
+
+                }});
+
+            }});
+
         }
 
-        project.fetchRelated('basket');
-        var basket = project.get('basket');
-
-        return project;
+        return deferred;
 
     },
 
@@ -213,9 +244,11 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         // make project entry links switch the current project
         container.find('a').click(function() {
             var projectname = $(this).data('value');
-            var project = collection.get_or_create(projectname);
-            opsChooserApp.trigger('project:ready', project);
+            $.when(collection.get_or_create(projectname)).done(function(project) {
+                opsChooserApp.trigger('project:ready', project);
+            });
         });
+
     },
 
 });
@@ -223,6 +256,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
 // TODO: how to make this not reference "opsChooserApp"?
 opsChooserApp.addInitializer(function(options) {
+
+    var _this = this;
 
     // data storage bootstrapper
     // 1. load data from ProjectCollection
@@ -234,13 +269,12 @@ opsChooserApp.addInitializer(function(options) {
 
     this.projects = new ProjectCollection();
 
-    var _this = this;
     console.log('App.projects.fetch');
     this.projects.fetch({success: function(response) {
-        var today = today_iso();
-        var project = _this.projects.get_or_create(today);
-        console.log('project:ready');
-        _this.trigger('project:ready', project);
+        var projectname = today_iso();
+        $.when(_this.projects.get_or_create(projectname)).done(function(project) {
+            _this.trigger('project:ready', project);
+        });
     }});
 
 
