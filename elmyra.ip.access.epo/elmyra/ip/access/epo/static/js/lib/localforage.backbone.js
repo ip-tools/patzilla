@@ -78,25 +78,7 @@
                 }
                 switch (method) {
                     case "read":
-
-                        /*
-                        WORKAROUND
-
-                        This tries to worka around localforage.backbone vs. backbone-relational woes.
-                        Otherwise, data storage mayhem may happen, because of "model.id" vs. "model.sync.localforageKey" mismatch.
-
-                        e.g.::
-
-                            model.id:                  8e92b750-cd10-562c-13d9-cc4029c885bb
-                            model.sync.localforageKey: Basket/7e0bcfea-d0ce-7a06-207e-63c432533244
-
-                        */
-                        if (model.id && model.sync.localforageKey) {
-                            if (!_.str.contains(model.sync.localforageKey, model.id)) {
-                                model.sync.localforageKey = name + "/" + model.id;
-                            }
-                        }
-
+                        _this._fix_bbrelational_id_mismatch(model);
                         return model.id ? _this.find(model, options) : _this.findAll(model, options);
                     case "create":
                         return _this.create(model, options);
@@ -114,23 +96,40 @@
             return sync;
         },
 
+        update_collection: function(model, callback) {
+            // Persist collection as `model.collection` models' ids
+
+            // fall back to remembered collection instance in case model.collection has already been unset
+            var collection = model.collection || model.sync.collection;
+
+            if (!collection) {
+                callback();
+            }
+
+            // Create an array of `model.collection` models' ids.
+            var collectionData = collection.map(function(model) {
+                return collection.model.prototype.sync._localforageNamespace + '/' + model.id;
+            });
+
+            // Persist `model.collection` models' ids.
+            localforage.setItem(collection.sync.localforageKey, collectionData, callback);
+        },
+
         save: function(model, callback) {
+            // Persist model
+            var _this = this;
             localforage.setItem(model.sync.localforageKey, model.toJSON(), function(data) {
                 // If this model has a collection, keep the collection in =
                 // sync as well.
                 if (model.collection) {
-                    var collection = model.collection;
-                    // Create an array of `model.collection` models' ids.
-                    var collectionData = collection.map(function(model) {
-                        return collection.model.prototype.sync._localforageNamespace + '/' + model.id;
-                    });
 
                     // Bind `data` to `callback` to call after
                     // `model.collection` models' ids are persisted.
                     callback = callback ? _.partial(callback, data) : void 0;
 
-                    // Persist `model.collection` models' ids.
-                    localforage.setItem(model.collection.sync.localforageKey, collectionData, callback);
+                    // Update `model.collection` models' ids.
+                    _this.update_collection(model, callback);
+
                 } else if (callback) {
                     callback(data);
                 }
@@ -195,13 +194,58 @@
         },
 
         destroy: function(model, callbacks) {
+            // Remove model from collection
+            var _this = this;
             localforage.removeItem(model.sync.localforageKey, function() {
-                var json = model.toJSON();
-                if (callbacks.success) {
-                    callbacks.success(json);
-                }
+
+                // Update persisted collection (`model.collection` models' ids)
+                _this.update_collection(model, function() {
+                    if (callbacks.success) {
+                        var json = model.toJSON();
+                        callbacks.success(json);
+                    }
+                });
+
             });
+        },
+
+        _fix_bbrelational_id_mismatch: function(model) {
+            /*
+             WORKAROUND
+
+             This tries to work around localforage.backbone vs. backbone-relational woes.
+             Otherwise, data storage mayhem may happen, because of "model.id" vs. "model.sync.localforageKey" mismatch.
+
+             e.g.::
+
+             model.id:                  8e92b750-cd10-562c-13d9-cc4029c885bb
+             model.sync.localforageKey: Basket/7e0bcfea-d0ce-7a06-207e-63c432533244
+
+             */
+            var name = model.sync._localforageNamespace;
+            if (model.id && model.sync.localforageKey) {
+                if (!_.str.contains(model.sync.localforageKey, model.id)) {
+                    //console.debug(model.id, model.sync.localforageKey);
+                    model.sync.localforageKey = name + "/" + model.id;
+                }
+            }
+        },
+
+    };
+
+    /**
+     * Override 'Backbone.Collection.remove' to remember models.collection
+     */
+    var remove = Backbone.Collection.prototype.__remove = Backbone.Collection.prototype.remove;
+    Backbone.Collection.prototype.remove = function( models, options ) {
+
+        // this will get used later when removing the model from its collection
+        // after model.collection has already been unset.
+        if (models.sync) {
+            models.sync.collection = models.collection;
         }
+
+        return remove.call( this, models, options );
     };
 
     return Backbone.localforage;

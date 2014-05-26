@@ -228,6 +228,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // set project active in application scope
         // TODO: can this be further decoupled?
+        if (this.project) {
+            this.stopListening(this.project);
+            delete this.project;
+        }
         this.project = project;
 
         // set hook to record all queries
@@ -265,6 +269,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
 
         // TODO: how to decouple this? is there something like a global utility registry?
+        if (this.basketModel) {
+            this.stopListening(this.basketModel);
+            delete this.basketModel;
+        }
         this.basketModel = basket;
 
 

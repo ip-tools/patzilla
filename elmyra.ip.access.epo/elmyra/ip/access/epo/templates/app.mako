@@ -965,11 +965,11 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 <!-- storage -->
+<script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
 <script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
 <!-- TODO: minify again, but currently includes an important patch -->
 <!-- <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script> -->
 <script type="text/javascript" src="/static/js/lib/localforage.backbone.js"></script>
-<script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
 
 <!-- user interface: single libraries -->
 <script type="text/javascript" src="/static/js/lib/jquery.caret-1.5.1.min.js"></script>

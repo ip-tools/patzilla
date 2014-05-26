@@ -69,7 +69,15 @@ ProjectModel = Backbone.RelationalModel.extend({
         // http://jstarrdewar.com/blog/2012/07/20/the-correct-way-to-override-concrete-backbone-methods/
         this.set('modified', now_iso());
         return Backbone.Model.prototype.save.call(this, key, val, options);
-    }
+    },
+
+    destroy: function(options) {
+        var basket = this.get('basket');
+        if (basket) {
+            basket.destroy();
+        }
+        return Backbone.Model.prototype.destroy.call(this, options);
+    },
 
 });
 
@@ -128,6 +136,7 @@ ProjectCollection = Backbone.Collection.extend({
 
         // load existing project
         if (project) {
+            console.log('ProjectModel.load');
 
             // refetch project to work around localforage.backbone vs. backbone-relational woes
             // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
@@ -151,6 +160,9 @@ ProjectCollection = Backbone.Collection.extend({
                 // create project in collection
                 _this.create(project, {success: function() {
 
+                    // workaround: this makes deleting a freshly created project work
+                    _this.add(project);
+
                     // fetch associated basket objects
                     $.when(project.fetchRelated('basket')).then(function() {
 
@@ -159,7 +171,9 @@ ProjectCollection = Backbone.Collection.extend({
                         basket.save({'project': project}, {success: function() {
 
                             // refetch project again and finally end this damn chain
-                            project.fetch({success: succeed});
+                            project.fetch({success: function() {
+                                $.when(project.fetchRelated('basket')).then(succeed);
+                            }});
 
                         }});
                     });
@@ -183,6 +197,9 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         console.log('ProjectChooserView.initialize');
+
+        this.data_list_selector = '#project-chooser-list ul';
+
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
     },
@@ -216,13 +233,13 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         });
 
         // 2. set project name
-        $('#project-chooser-name').editable('setValue', this.model.get('name'));
+        this.set_name(this.model.get('name'));
 
 
         // 3. populate dropdown-menu
 
         // where to append the project entries
-        var container = $('#project-chooser-list ul');
+        var container = $(this.data_list_selector);
         var collection = this.collection;
 
         // sort collection by modification date, descending
@@ -244,11 +261,36 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         // make project entry links switch the current project
         container.find('a').click(function() {
             var projectname = $(this).data('value');
-            $.when(collection.get_or_create(projectname)).done(function(project) {
-                opsChooserApp.trigger('project:ready', project);
-            });
+            opsChooserApp.trigger('project:load', projectname);
         });
 
+
+        // 4. activate project-delete-button
+        $(this.el).find('#project-delete-button').click(function(e) {
+            _this.model.destroy({success: function() {
+
+                var selected = collection.sortByField('modified', 'desc').first();
+                if (selected) {
+                    var projectname = selected.get('name');
+                    opsChooserApp.trigger('project:load', projectname);
+                } else {
+                    _this.set_name(null);
+                    $(_this.data_list_selector).empty();
+                }
+
+            }});
+
+        });
+
+    },
+
+    set_name: function(name) {
+        // set project name
+        if (name) {
+            $('#project-chooser-name').editable('setValue', name);
+        } else {
+            $('#project-chooser-name').hide();
+        }
     },
 
 });
@@ -269,14 +311,17 @@ opsChooserApp.addInitializer(function(options) {
 
     this.projects = new ProjectCollection();
 
+    this.listenTo(this, 'project:load', function(projectname) {
+        $.when(this.projects.get_or_create(projectname)).done(function(project) {
+            _this.trigger('project:ready', project);
+        });
+    });
+
     console.log('App.projects.fetch');
     this.projects.fetch({success: function(response) {
         var projectname = today_iso();
-        $.when(_this.projects.get_or_create(projectname)).done(function(project) {
-            _this.trigger('project:ready', project);
-        });
+        _this.trigger('project:load', projectname);
     }});
-
 
     /*
     TODO

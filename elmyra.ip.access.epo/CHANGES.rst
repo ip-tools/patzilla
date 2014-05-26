@@ -6,6 +6,7 @@ development
 ===========
 - meta: add OpenSearch description
 - ui, storage: improved robustness, honor asynchronous callback flow
+- ui, storage: delete project
 
 0.10.2
 ======
