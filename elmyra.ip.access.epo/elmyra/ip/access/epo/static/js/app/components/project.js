@@ -250,7 +250,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
             var modified = project.get('modified');
             var entry = _.template(
                 '<li>' +
-                    '<a class="span12" href="javascript: void(0);" data-value="<%= name %>">' +
+                    '<a class="span3 incognito" href="javascript: void(0);" data-value="<%= name %>">' +
                     '<%= name %> ' +
                     '<span class="pull-right"><%= modified %></span>' +
                     '</a>' +

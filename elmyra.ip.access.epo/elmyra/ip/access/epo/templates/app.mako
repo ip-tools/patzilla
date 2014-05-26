@@ -31,14 +31,19 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
 ## title / headline
 <div class="container-fluid">
-    <div class="span8">
+    <div class="span9">
         <div class="pull-left">
-        <h3 style="display: inline-block">${page_title | n}</h3>
-        &nbsp;&nbsp;&nbsp;
-        ${page_subtitle}
+
+            <h3 style="display: inline-block">${page_title | n}</h3>
+            &nbsp;&nbsp;&nbsp;
+            ${page_subtitle}
+
+            <!-- project chooser -->
+            <div id="project-chooser-area" style="display: inline;"></div>
+
         </div>
     </div>
-    <div class="span4">
+    <div class="span3">
         <div class="pull-right">
             <h3>${app_productname | n}</h3>
         </div>
@@ -56,13 +61,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
             <div class="row-fluid">
 
-                <!-- project chooser -->
-                <div class="span7">
-                    <div id="project-chooser-area"></div>
-                </div>
-
                 <!-- data source chooser -->
-                <div class="span5">
+                <div class="span12">
                     <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                         <button class="btn active" data-value="ops">
                             <img src="/static/img/icons/epo-logo-small.svg" width="20" height="20"/> OPS
@@ -961,9 +961,6 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <%include file="project.html"/>
 
 
-<!-- application -->
-<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
-
 <!-- storage -->
 <script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
 <script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
@@ -983,6 +980,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <script type="text/javascript" src="/static/widget/bootstrap-editable/js/bootstrap-editable.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
 
+<!-- application -->
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
