@@ -8,6 +8,7 @@ development
 - ui, storage: improved robustness, honor asynchronous callback flow
 - ui, storage: delete project
 - ui: reposition and redesign project chooser
+- ui: trigger project reload when window gets focus
 
 0.10.2
 ======

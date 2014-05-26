@@ -240,6 +240,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             project.record_query(arguments);
         });
 
+        // trigger project reload when window gets focus
+        $(window).off('focus', this.project_reload);
+        $(window).on('focus', this.project_reload);
+
         // setup views
         var projectChooserView = new ProjectChooserView({
             el: $('#project-chooser-area'),
@@ -257,6 +261,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             _this.basket_activate(basket);
         }});
 
+    },
+
+    project_reload: function() {
+        // reload project
+        var projectname = opsChooserApp.project.get('name');
+        opsChooserApp.trigger('project:load', projectname);
     },
 
     basket_activate: function(basket) {
@@ -298,6 +308,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // create and render view based on model
         // TODO: should the old view be killed first?
+        // hint: view.remove() or view.stopListening()
+        // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
         var basketView = new BasketView({
             el: $('#basket-area'),
             model: basket,
