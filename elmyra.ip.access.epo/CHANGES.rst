@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.10.3
+======
 - meta: add OpenSearch description
 - ui, storage: improved robustness, honor asynchronous callback flow
 - ui, storage: delete project
