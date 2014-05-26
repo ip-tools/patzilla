@@ -7,6 +7,10 @@ development
 
 0.10.3
 ======
+- ui, storage: fix nasty bug with basket.remove operation
+
+0.10.3
+======
 - meta: add OpenSearch description
 - ui, storage: improved robustness, honor asynchronous callback flow
 - ui, storage: delete project
