@@ -301,25 +301,31 @@ opsChooserApp.addInitializer(function(options) {
 
     var _this = this;
 
-    // data storage bootstrapper
+    // data storage / project bootstrapper
     // 1. load data from ProjectCollection
-    // 2. get or create current default project (named <today>, e.g. "2014-05-22")
-    // 3. emit "project:ready" event
+    // 2. compute project name to be initialized, from "project=" url query parameter; otherwise use <today>, e.g. "2014-05-22"
+    // 3. get project object; otherwise create a new one
+    // 4. emit "project:ready" event
 
-    // TODO: establish settings store (e.g. JQuery-rememberme)
-    // TODO: run this logic only if not being able to get "current" project name from settings store
+    // TODO: use central location for parsed window.location.href
+    var url = $.url(window.location.href);
+    var projectname = url.param('project');
+    if (!projectname) {
+        projectname = today_iso();
+    }
 
     this.projects = new ProjectCollection();
 
+    // load project when receiving "project:load" event
     this.listenTo(this, 'project:load', function(projectname) {
         $.when(this.projects.get_or_create(projectname)).done(function(project) {
             _this.trigger('project:ready', project);
         });
     });
 
+    // fetch all projects on application start
     console.log('App.projects.fetch');
     this.projects.fetch({success: function(response) {
-        var projectname = today_iso();
         _this.trigger('project:load', projectname);
     }});
 

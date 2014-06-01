@@ -955,6 +955,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 </%text>
 </script>
 
+<!-- application -->
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 <!-- user interface: templates -->
 <%include file="basket.html"/>
@@ -979,9 +981,6 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <!-- user interface: widgets -->
 <script type="text/javascript" src="/static/widget/bootstrap-editable/js/bootstrap-editable.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
-
-<!-- application -->
-<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>

@@ -110,11 +110,24 @@ function listview_bind_actions() {
 
     // run search actions when clicking query-links
     $(".query-link").click(function(event) {
+
+        // v1
+        /*
         event.preventDefault();
         var attr = $(this).data('query-attribute');
         var val = $(this).data('query-value');
         var query = attr + '=' + val;
         opsChooserApp.send_query(query);
+        */
+
+        // v2
+        var href = $(this).attr('href');
+        var url = $.url(href);
+        if (!url.param('project')) {
+            var projectname = opsChooserApp.project.get('name');
+            href += '&project=' + encodeURIComponent(projectname);
+            $(this).attr('href', href);
+        }
     });
 
 
@@ -286,6 +299,7 @@ function boot_application() {
 
     // compute default data source
     // set to DEPATISnet, if called with empty query; otherwise, use OPS
+    // TODO: use central location for parsed window.location.href
     var url = $.url(window.location.href);
     var datasource = url.param('datasource');
 

@@ -35,14 +35,6 @@ a.editable-click {
     border-bottom: dashed 1px #333333;
 }
 
-a.query-link {
-    color: #333333;
-    /*
-    color: black;
-    text-decoration: none;
-    text-decoration-color: green;
-    */
-}
 
 /* header */
 .header-compact {
