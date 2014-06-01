@@ -5,7 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
-0.10.3
+0.10.4
 ======
 - ui, storage: fix nasty bug with basket.remove operation
 
