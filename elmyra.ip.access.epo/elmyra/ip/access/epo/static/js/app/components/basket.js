@@ -126,7 +126,24 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         // basket sharing
         $('#share-numberlist-email').click(function() {
-            _this.future_premium_feature();
+
+            var projectname = opsChooserApp.project.get('name');
+
+            var numberlist = _this.model.get('numberlist');
+            var numberlist_count = numberlist.length;
+            var numberlist_string = numberlist.join('\n');
+
+            var subject = _.template('[IPSUITE] Shared <%= count %> patent numbers through project <%= projectname %> at <%= date %>')({
+                count: numberlist_count,
+                date: now_iso_human(),
+                projectname: projectname,
+            });
+            var body = numberlist_string + '\r\n\r\n--\r\nPowered by https://patentsearch.elmyra.de/';
+            var mailto_link = _.template('mailto:?subject=<%= subject %>&body=<%= body %>')({
+                subject: encodeURIComponent(subject),
+                body: encodeURIComponent(body),
+            });
+            $(this).attr('href', mailto_link);
         });
         $('#share-documents-transfer').click(function() {
             _this.future_premium_feature();

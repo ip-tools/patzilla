@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: propagate project context across inline query links
+- ui: share basket via email
 
 0.10.4
 ======
