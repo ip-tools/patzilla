@@ -382,6 +382,8 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         get_patent_citatory_query: function() {
             var items = this.get_patent_citation_list(false, 'epodoc');
+            // FIXME: limit query to 10 items due to ops restriction
+            items = items.slice(0, 10);
             items = items.map(function(item) { return 'ct=' + item; });
             return items.join(' OR ');
         },
