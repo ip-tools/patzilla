@@ -1,5 +1,9 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2013,2014 Andreas Motl, Elmyra UG
+
+function to_list(value) {
+    return _.isArray(value) && value || [value];
+}
 
 function now_iso() {
     return moment().format();
