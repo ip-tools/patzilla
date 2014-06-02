@@ -24,45 +24,13 @@
     console.log(data);
 
 
-    // 2.1 utility functions
-
-    // date values inside publication|application-reference
-    function search_date(node) {
-        var value = null;
-        _.each(node, function(item) {
-            if (!value && item['date'] && item['date']['$']) {
-                value = item['date']['$'];
-            }
-        });
-        return value;
-    }
-
-    function format_date(value) {
-        if (value) {
-            return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 8);
-        }
-    }
-
-
     // 2.2 prepare some template variables
 
     var patent_number = data.get_patent_number();
-    var drawing_url = data.get_drawing_url();
-    var fullimage_url = data.get_fullimage_url();
-    var espacenet_pdf_url = data.get_espacenet_pdf_url();
-    var ops_pdf_url = data.get_ops_pdf_url();
-    var depatisnet_pdf_url = data.get_depatisnet_pdf_url();
-    var epo_register_url = data.get_epo_register_url();
-    var inpadoc_legal_url = data.get_inpadoc_legal_url();
-    var dpma_register_url = data.get_dpma_register_url();
-    var uspto_pair_url = data.get_uspto_pair_url();
-    var inpadoc_family_url = data.get_inpadoc_family_url();
-    var ops_family_url = data.get_ops_family_url();
-    var ccd_viewer_url = data.get_ccd_viewer_url();
-    var depatisnet_url = data.get_depatisnet_url();
+    var linkmaker = data.get_linkmaker();
 
-    var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
-    var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
+    var publication_date = data.format_date(data.search_date(data['bibliographic-data']['publication-reference']['document-id']));
+    var application_date = data.format_date(data.search_date(data['bibliographic-data']['application-reference']['document-id']));
 
     // title
     var title_list = [];
@@ -144,17 +112,17 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<%= ops_pdf_url %>" target="ipsuite-pdf">
+                                <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf">
                                     [PDF] <%= patent_number %> @ OPS
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= espacenet_pdf_url %>" target="ipsuite-pdf">
+                                <a href="<%= linkmaker.espacenet_pdf_url() %>" target="ipsuite-pdf">
                                     [PDF] <%= patent_number %> @ Espacenet
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= depatisnet_pdf_url %>" target="ipsuite-pdf">
+                                <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="ipsuite-pdf">
                                     [PDF] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
@@ -182,7 +150,7 @@
                             </div>
                             </li>
                             <li>
-                                <a href="<%= depatisnet_url %>" target="_blank">
+                                <a href="<%= linkmaker.depatisnet_url() %>" target="_blank">
                                     [BIBLIO] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
@@ -195,22 +163,22 @@
                             </div>
                             </li>
                             <li>
-                                <a href="<%= inpadoc_legal_url %>" target="_blank">
+                                <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank">
                                     [LEGAL] <%= patent_number %> @ INPADOC legal status
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= epo_register_url %>" target="_blank">
+                                <a href="<%= linkmaker.epo_register_url() %>" target="_blank">
                                     [LEGAL] <%= patent_number %> @ European Patent Register
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= dpma_register_url %>" target="_blank">
+                                <a href="<%= linkmaker.dpma_register_url() %>" target="_blank">
                                     [LEGAL] <%= patent_number %> @ DPMAregister
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= uspto_pair_url %>" target="_blank">
+                                <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank">
                                     [LEGAL] USPTO PAIR
                                 </a>
                             </li>
@@ -223,17 +191,17 @@
                             </div>
                             </li>
                             <li>
-                                <a href="<%= ccd_viewer_url %>" target="_blank">
+                                <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank">
                                     [FAMILY] <%= patent_number %> @ CCD Viewer
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= inpadoc_family_url %>" target="_blank">
+                                <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank">
                                     [FAMILY] <%= patent_number %> @ INPADOC patent family
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= ops_family_url %>" target="_blank">
+                                <a href="<%= linkmaker.ops_family_url() %>" target="_blank">
                                     [FAMILY] <%= patent_number %> @ OPS biblio,legal
                                 </a>
                             </li>
@@ -313,7 +281,7 @@
 
                     <!-- first drawing only -->
                     <!--
-                    <img src="<%= drawing_url %>" alt="No drawing available."/>
+                    <img src="<% //linkmaker.drawing_url() %>" alt="No drawing available."/>
                     -->
 
                     <!-- carousel for all drawings -->
@@ -328,7 +296,7 @@
                         <!-- carousel items -->
                         <div class="carousel-inner">
                             <div class="active item">
-                                <img src="<%= drawing_url %>" alt="No drawing available."/>
+                                <img src="<%= linkmaker.drawing_url() %>" alt="No drawing available."/>
                             </div>
                         </div>
                         <!-- carousel navigation -->

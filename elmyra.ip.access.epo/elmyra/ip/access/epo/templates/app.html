@@ -474,6 +474,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:
+    <script type="text/javascript" src="/static/js/ipsuite/linkmaker.js"></script>
     <script type="text/javascript" src="/static/js/app/util.js"></script>
     <script type="text/javascript" src="/static/js/app/core.js"></script>
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>

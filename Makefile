@@ -6,6 +6,8 @@ js:
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/**/*.js \
 		--preamble "// (c) 2013,2014 Elmyra UG" \
 		--mangle --compress --define \
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
