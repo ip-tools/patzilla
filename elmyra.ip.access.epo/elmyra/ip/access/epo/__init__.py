@@ -20,6 +20,7 @@ def main(global_config, **settings):
     config.include(".views")
     #config.include("akhet.static")
 
+    config.add_renderer('.html', 'pyramid.mako_templating.renderer_factory')
     config.add_renderer('xml', XmlRenderer)
     config.add_renderer('png', PngRenderer)
     config.add_renderer('pdf', PdfRenderer)

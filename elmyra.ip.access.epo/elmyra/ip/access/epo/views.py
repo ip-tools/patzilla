@@ -16,7 +16,7 @@ def includeme(config):
     config.add_route('angry-cats', '/angry-cats')
 
 
-@view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/app.mako')
+@view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/app.html')
 def opsbrowser(request):
     printmode = asbool(request.params.get('print'))
     return {'project': 'elmyra.ip.access.epo', 'printmode': printmode}
@@ -58,7 +58,7 @@ def jump_dpmaregister(request):
     return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
 
 
-@view_config(name='patentsearch-old', renderer='elmyra.ip.access.epo:templates/app.mako')
+@view_config(name='patentsearch-old', renderer='elmyra.ip.access.epo:templates/app.html')
 def ops_chooser(request):
     url = route_path('patentsearch', request, _query=request.params)
     return HTTPFound(location=url)
