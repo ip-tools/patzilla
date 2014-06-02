@@ -317,21 +317,21 @@
                             (71)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
+                            <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') || '&nbsp;' %>
                         </dd>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
                             (72)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') %>
+                            <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') || '&nbsp;' %>
                         </dd>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="ipc classes">
                             (51)
                         </dt>
                         <dd>
-                            <%= data.get_ipc_list(true).join(', ') %>
+                            <%= data.get_ipc_list(true).join(', ') || '&nbsp;' %>
                         </dd>
 
                         <br/>
@@ -341,7 +341,7 @@
                         </dt>
                         <dd class="keyword">
                             <div class="abstract">
-                                <%= abstract_list.join('<br/><br/>') %>
+                                <%= abstract_list.join('<br/><br/>') || '&nbsp;' %>
                             </div>
                         </dd>
 
@@ -351,18 +351,41 @@
                             (56)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_patent_citation_list(true).join(', ') %>
-                            <br/>
-                            <%
-                            var citatory_query = data.get_patent_citatory_query();
-                            if (citatory_query) {
-                            %>
-                            <a href="?query=<%= encodeURIComponent(citatory_query) %>" target="_blank" role="button" class="btn btn-small">
-                                Citatory documents
-                            </a>
-                            <%
-                            }
-                            %>
+                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
+                            <br/><br/>
+
+                            <!-- citation queries -->
+                            <% if (data.has_citations()) { %>
+                            <div class="btn-group btn-popover do-not-print"
+                                 data-toggle="popover" data-trigger="hover" data-placement="right"
+                                 data-content="Explore citations in various directions"
+                                 >
+                                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-search"></i> &nbsp; Citation environment
+                                </button>
+                                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="?query=<%= encodeURIComponent(data.get_citing_query()) %>" target="_blank">
+                                            Citing: ct=pn
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="?query=<%= encodeURIComponent(data.get_same_citations_query()) %>" target="_blank">
+                                            Same citations: ct in (56)
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="?query=<%= encodeURIComponent(data.get_all_citations_query()) %>" target="_blank">
+                                            All citations: pn in (56)
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <% } %>
+
                             <br/><br/>
                             <table class="table table-striped table-condensed">
                                 <%= data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>

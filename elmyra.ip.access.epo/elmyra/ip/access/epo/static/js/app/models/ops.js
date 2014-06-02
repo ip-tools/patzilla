@@ -169,6 +169,11 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this.get_patent_number();
         },
 
+        get_publication_number: function(source) {
+            var publication_id = this.get_publication_reference(source);
+            return (publication_id.country || '') + (publication_id.number || '') + (publication_id.kind || '');
+        },
+
         get_linkmaker: function() {
             return new Ipsuite.LinkMaker(this);
         },
@@ -194,6 +199,7 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_publication_reference: function(source) {
+            // source = docdb|epodoc
             var entries = this['bibliographic-data']['publication-reference']['document-id'];
             var document_id = _(entries).find(function(item) {
                 return item['@document-id-type'] == source;
@@ -202,6 +208,7 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         get_application_reference: function(source) {
+            // source = docdb|epodoc
             var entries = this['bibliographic-data']['application-reference']['document-id'];
             var document_id = _(entries).find(function(item) {
                 return item['@document-id-type'] == source;
@@ -370,6 +377,10 @@ OpsExchangeDocument = Backbone.Model.extend({
             }
         },
 
+        has_citations: function() {
+            return Boolean(this['bibliographic-data']['references-cited']);
+        },
+
         get_patent_citation_list: function(links, id_type) {
             id_type = id_type || 'docdb';
             var self = this;
@@ -388,12 +399,24 @@ OpsExchangeDocument = Backbone.Model.extend({
             return results;
         },
 
-        get_patent_citatory_query: function() {
+        get_citing_query: function() {
+            var query = 'ct=' + this.get_publication_number('epodoc');
+            return query;
+        },
+        get_same_citations_query: function() {
             var items = this.get_patent_citation_list(false, 'epodoc');
+            return this.get_items_query(items, 'ct', 'OR');
+        },
+        get_all_citations_query: function() {
+            var items = this.get_patent_citation_list(false, 'epodoc');
+            return this.get_items_query(items, 'pn', 'OR');
+        },
+        get_items_query: function(items, fieldname, operator) {
             // FIXME: limit query to 10 items due to ops restriction
             items = items.slice(0, 10);
-            items = items.map(function(item) { return 'ct=' + item; });
-            return items.join(' OR ');
+            items = items.map(function(item) { return fieldname + '=' + item; });
+            var query = items.join(' ' + operator + ' ');
+            return query;
         },
 
         _expand_links: function(text) {
