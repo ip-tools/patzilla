@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.11.0
+======
 - ui: propagate project context across inline query links
 - ui: share basket via email
 - ui: link to citatory documents
