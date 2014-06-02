@@ -800,6 +800,17 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                             </dt>
                             <dd class="keyword">
                                 <%= data.get_patent_citation_list(true).join(', ') %>
+                                <br/>
+                                <%
+                                var citatory_query = data.get_patent_citatory_query();
+                                if (citatory_query) {
+                                %>
+                                    <a href="?query=<%= encodeURIComponent(citatory_query) %>" target="_blank" role="button" class="btn btn-small">
+                                        Citatory documents
+                                    </a>
+                                <%
+                                }
+                                %>
                                 <br/><br/>
                                 <table class="table table-striped table-condensed">
                                     <%= data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>

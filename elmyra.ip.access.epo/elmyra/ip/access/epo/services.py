@@ -151,6 +151,7 @@ def scan_keywords(op, keywords):
         'txt',
         'applicant', 'pa',
         'inventor', 'in',
+        'ct', 'citation',
 
         # TODO: due to different formatting, ipc classes can not be matched yet
         #'ipc', 'ic',

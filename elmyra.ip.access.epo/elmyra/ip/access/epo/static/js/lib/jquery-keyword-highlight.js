@@ -68,6 +68,9 @@
                     // do per-word highlighting
                     html_new = '';
 
+                    // TODO:
+                    // do proper html parsing here; just splitting by space can replace inside html attributes,
+                    // which goes haywire within href attributes and the like
                     var words = html.split(' ');
                     $(words).each(function(i,e) {
 

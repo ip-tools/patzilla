@@ -355,14 +355,15 @@ OpsExchangeDocument = Backbone.Model.extend({
                 if (item['@document-id-type'] == id_type) {
                     var docnumber =
                         (item['country'] ? item['country']['$'] : '') +
-                            (item['doc-number'] ? item['doc-number']['$'] : '') +
-                            (item['kind'] ? item['kind']['$'] : '');
+                        (item['doc-number'] ? item['doc-number']['$'] : '') +
+                        (item['kind'] ? item['kind']['$'] : '');
                     return docnumber;
                 }
             }
         },
 
-        get_patent_citation_list: function(links) {
+        get_patent_citation_list: function(links, id_type) {
+            id_type = id_type || 'docdb';
             var self = this;
             var results = [];
             var container_top = this['bibliographic-data']['references-cited'];
@@ -370,13 +371,19 @@ OpsExchangeDocument = Backbone.Model.extend({
                 var container = to_list(container_top['citation']);
                 results = container
                     .filter(function(item) { return item['patcit']; })
-                    .map(function(item) { return self._find_document_number(item['patcit']['document-id'], 'docdb'); })
+                    .map(function(item) { return self._find_document_number(item['patcit']['document-id'], id_type); })
                 ;
             }
             if (links) {
                 results = this.enrich_links(results, 'pn');
             }
             return results;
+        },
+
+        get_patent_citatory_query: function() {
+            var items = this.get_patent_citation_list(false, 'epodoc');
+            items = items.map(function(item) { return 'ct=' + item; });
+            return items.join(' OR ');
         },
 
         _expand_links: function(text) {

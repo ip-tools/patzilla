@@ -6,6 +6,7 @@ development
 ===========
 - ui: propagate project context across inline query links
 - ui: share basket via email
+- ui: link to citatory documents
 
 0.10.4
 ======
