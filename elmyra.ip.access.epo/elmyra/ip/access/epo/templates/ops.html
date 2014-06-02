@@ -1,0 +1,531 @@
+## -*- coding: utf-8 -*-
+## (c) 2013,2014 Andreas Motl, Elmyra UG
+
+## ------------------------------------------
+##   result list template
+## ------------------------------------------
+<script id="ops-collection-template" type="text/x-underscore-template">
+    <!--
+    <div id="ops-collection-entry" class="row"/>
+    -->
+</script>
+
+
+
+## ------------------------------------------
+##   result item template
+## ------------------------------------------
+<script id="ops-entry-template" type="text/x-underscore-template">
+
+    <%text>
+    <%
+
+    // 1. log model item to assist in data exploration
+    console.log(data);
+
+
+    // 2.1 utility functions
+
+    // date values inside publication|application-reference
+    function search_date(node) {
+        var value = null;
+        _.each(node, function(item) {
+            if (!value && item['date'] && item['date']['$']) {
+                value = item['date']['$'];
+            }
+        });
+        return value;
+    }
+
+    function format_date(value) {
+        if (value) {
+            return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 8);
+        }
+    }
+
+
+    // 2.2 prepare some template variables
+
+    var patent_number = data.get_patent_number();
+    var drawing_url = data.get_drawing_url();
+    var fullimage_url = data.get_fullimage_url();
+    var espacenet_pdf_url = data.get_espacenet_pdf_url();
+    var ops_pdf_url = data.get_ops_pdf_url();
+    var depatisnet_pdf_url = data.get_depatisnet_pdf_url();
+    var epo_register_url = data.get_epo_register_url();
+    var inpadoc_legal_url = data.get_inpadoc_legal_url();
+    var dpma_register_url = data.get_dpma_register_url();
+    var uspto_pair_url = data.get_uspto_pair_url();
+    var inpadoc_family_url = data.get_inpadoc_family_url();
+    var ops_family_url = data.get_ops_family_url();
+    var ccd_viewer_url = data.get_ccd_viewer_url();
+    var depatisnet_url = data.get_depatisnet_url();
+
+    var publication_date = format_date(search_date(data['bibliographic-data']['publication-reference']['document-id']));
+    var application_date = format_date(search_date(data['bibliographic-data']['application-reference']['document-id']));
+
+    // title
+    var title_list = [];
+    var title_node = data['bibliographic-data']['invention-title'];
+    if (title_node) {
+        title_list = _.map(to_list(title_node), function(title) {
+            var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '';
+            return lang_prefix + title['$'];
+        });
+    }
+
+    var abstract_list = [];
+    if (data['abstract']) {
+        var abstract_node = to_list(data['abstract']);
+        var abstract_list = abstract_node.map(function(node) {
+        var text_nodelist = to_list(node['p']);
+        var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
+            var lang_prefix = node['@lang'] && '[' + node['@lang'].toUpperCase() + '] ' || '';
+            return lang_prefix + text;
+        });
+    }
+
+    %>
+    </%text>
+
+
+    <%text>
+    <div class="container-fluid ops-collection-entry" data-document-number="<%= patent_number %>" style="page-break-after: always;">
+
+        <div class="ops-collection-entry-heading row-fluid">
+
+            <!-- patent number -->
+            <div class="span3">
+                <h3 class="header-compact">
+                    <%= data.enrich_link(patent_number, 'pn') %>
+                </h3>
+            </div>
+
+            <!-- dates -->
+            <div class="span4 container-fluid">
+                <div class="span6">
+                    <dl class="dl-horizontal dl-horizontal-biblio">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="application date">
+                            (22)
+                        </dt>
+                        <dd>
+                            <%= application_date %>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="span6">
+                    <dl class="dl-horizontal dl-horizontal-biblio">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="publication date">
+                            (45)
+                        </dt>
+                        <dd>
+                            <%= data.enrich_link(publication_date, 'publicationdate') %>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- actions -->
+            <div class="span5 container-fluid pull-right document-actions do-not-print">
+                <div class="span8">
+
+
+                    <!-- pdf document -->
+                    <div class="btn-group btn-popover span5"
+                         data-toggle="popover" data-trigger="hover" data-placement="top"
+                         data-content="Download full pdf documents from various sources"
+                            >
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <img src="/static/img/icons/pdf.svg" width="16" height="16"/>
+                            PDF
+                        </button>
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="<%= ops_pdf_url %>" target="ipsuite-pdf">
+                                    [PDF] <%= patent_number %> @ OPS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= espacenet_pdf_url %>" target="ipsuite-pdf">
+                                    [PDF] <%= patent_number %> @ Espacenet
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= depatisnet_pdf_url %>" target="ipsuite-pdf">
+                                    [PDF] <%= patent_number %> @ DEPATISnet
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+                    <!-- external links -->
+                    <div class="btn-group btn-popover span7"
+                         data-toggle="popover" data-trigger="hover" data-placement="top"
+                         data-content="Show more information from various patent offices"
+                            >
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-globe icon-large"></i> More
+                        </button>
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+
+                            <!-- bibliographic data -->
+                            <li><div style="padding-left: 10px">
+                                <h5><i class="icon-list"></i> &nbsp; Bibliographic data</h5>
+                            </div>
+                            </li>
+                            <li>
+                                <a href="<%= depatisnet_url %>" target="_blank">
+                                    [BIBLIO] <%= patent_number %> @ DEPATISnet
+                                </a>
+                            </li>
+                            <li class="divider"/>
+
+
+                            <!-- legal status -->
+                            <li><div style="padding-left: 10px">
+                                <h5>§ &nbsp; Legal information</h5>
+                            </div>
+                            </li>
+                            <li>
+                                <a href="<%= inpadoc_legal_url %>" target="_blank">
+                                    [LEGAL] <%= patent_number %> @ INPADOC legal status
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= epo_register_url %>" target="_blank">
+                                    [LEGAL] <%= patent_number %> @ European Patent Register
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= dpma_register_url %>" target="_blank">
+                                    [LEGAL] <%= patent_number %> @ DPMAregister
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= uspto_pair_url %>" target="_blank">
+                                    [LEGAL] USPTO PAIR
+                                </a>
+                            </li>
+                            <li class="divider"/>
+
+
+                            <!-- patent family -->
+                            <li><div style="padding-left: 10px">
+                                <h5><i class="icon-group"></i> &nbsp; Patent family information</h5>
+                            </div>
+                            </li>
+                            <li>
+                                <a href="<%= ccd_viewer_url %>" target="_blank">
+                                    [FAMILY] <%= patent_number %> @ CCD Viewer
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= inpadoc_family_url %>" target="_blank">
+                                    [FAMILY] <%= patent_number %> @ INPADOC patent family
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= ops_family_url %>" target="_blank">
+                                    [FAMILY] <%= patent_number %> @ OPS biblio,legal
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="span4">
+                    </%text>
+
+                    % if ship_mode == 'multi-numberlist':
+                    <%text>
+                    <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
+                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn add-patent-number"
+                       data-patent-number="<%= patent_number %>"
+                       data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Add document number to basket"
+                            >
+                        <i class="icon-white icon-plus"></i> Add
+                    </a>
+                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn remove-patent-number"
+                       data-patent-number="<%= patent_number %>"
+                       data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Remove document number from basket"
+                            >
+                        <i class="icon-white icon-minus"></i> Remove
+                    </a>
+                    </%text>
+                    % endif
+
+
+                    % if ship_mode == 'single-bibdata':
+                    <%text>
+                    <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
+                        <input name="query" type="hidden" value="<%= $('#query').val().replace(/"/g, '&quot;') %>"/>
+                        <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
+                        <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
+                        <input name="applicants" type="hidden" value="<%= data.get_applicants().join('\n') %>"/>
+                        <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
+                        <input name="application_date" type="hidden" value="<%= application_date %>"/>
+                        <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
+                        <input name="ipcs" type="hidden" value="<%= data.get_ipc_list().join('\n') %>"/>
+                        <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
+                        <!--
+                        <input name="ship_action" type="submit" value="rate" class="btn"/>
+                        -->
+                        <button type="submit" role="button" class="btn btn-popover"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                data-content="Submit details of document to origin or 3rd-party system"
+                                >
+                            <i class="icon-share"/>
+                            Submit
+                        </button>
+
+                    </form>
+                    </%text>
+                    % endif
+
+                    <%text>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="ops-collection-entry-inner container-fluid">
+
+            <div class="row-fluid">
+                <div class="span12 keyword">
+                    <strong><%= title_list.join('<br/>') %></strong>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span5">
+
+                    <!-- first drawing only -->
+                    <!--
+                    <img src="<%= drawing_url %>" alt="No drawing available."/>
+                    -->
+
+                    <!-- carousel for all drawings -->
+                    <div id="drawings-carousel-<%= patent_number %>" class="carousel slide drawings-carousel">
+                        <!--
+                        <ol class="carousel-indicators">
+                            <li data-target="#drawings-carousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#drawings-carousel" data-slide-to="1"></li>
+                            <li data-target="#drawings-carousel" data-slide-to="2"></li>
+                        </ol>
+                        -->
+                        <!-- carousel items -->
+                        <div class="carousel-inner">
+                            <div class="active item">
+                                <img src="<%= drawing_url %>" alt="No drawing available."/>
+                            </div>
+                        </div>
+                        <!-- carousel navigation -->
+                        <a class="carousel-control left do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
+                        <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
+                    </div>
+
+                    <div class="drawing-info span12 text-center">
+                        Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"/>
+                    </div>
+
+                </div>
+                <div class="span7 document_details">
+
+                    <dl class="dl-horizontal dl-horizontal-biblio">
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="applicants">
+                            (71)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') %>
+                        </dd>
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
+                            (72)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') %>
+                        </dd>
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="ipc classes">
+                            (51)
+                        </dt>
+                        <dd>
+                            <%= data.get_ipc_list(true).join(', ') %>
+                        </dd>
+
+                        <br/>
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
+                            (57)
+                        </dt>
+                        <dd class="keyword">
+                            <div class="abstract">
+                                <%= abstract_list.join('<br/><br/>') %>
+                            </div>
+                        </dd>
+
+                        <br/>
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
+                            (56)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.get_patent_citation_list(true).join(', ') %>
+                            <br/>
+                            <%
+                            var citatory_query = data.get_patent_citatory_query();
+                            if (citatory_query) {
+                            %>
+                            <a href="?query=<%= encodeURIComponent(citatory_query) %>" target="_blank" role="button" class="btn btn-small">
+                                Citatory documents
+                            </a>
+                            <%
+                            }
+                            %>
+                            <br/><br/>
+                            <table class="table table-striped table-condensed">
+                                <%= data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>
+                            </table>
+                        </dd>
+
+                    </dl>
+
+                    <!-- embed 3rd-party component -->
+                    <div class="embed-item" data-embed-url="<%= embed_item_url %>" data-document-number="<%= patent_number %>">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    </%text>
+
+</script>
+
+
+## ------------------------------------------
+##   metadata template
+## ------------------------------------------
+<%text>
+<script type="text/x-underscore-template" id="ops-metadata-template">
+    <!--
+    <div class="row-fluid" id="pagination-info">
+        <div class="span12 pagination-centered">
+
+            &nbsp;&nbsp;
+            current = <span class="badge badge-info"><%= result_range %></span>
+        </div>
+    </div>
+    -->
+
+    <div class="row-fluid container-fluid ops-collection-entry" id="pagination-info">
+
+        <div class="ops-collection-entry-heading row-fluid">
+
+            <!-- total result count -->
+            <div class="span1">
+                Total:
+                <br/>
+                <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
+
+                <% if (debugmode && searchmode == 'subsearch') { %>
+                <br/>
+                View:
+                <br/>
+                <span style="font-size: x-large"><%= result_count_received %></span>
+                <% } %>
+            </div>
+
+            <!-- current display range -->
+            <div class="span2">
+                Range:
+                <br/>
+                <span style="font-size: x-large"><%= result_range %></span>
+            </div>
+
+            <!-- current cql query string -->
+            <div class="span7">
+                Query:
+                <br/>
+                <span style="font-size: small" class="cql-query">
+                    <%= query_origin %>
+                </span>
+
+                <% if (debugmode && searchmode == 'subsearch' && query_real) { %>
+                <br/>
+                Query OPS:
+                <br/>
+                <span style="font-size: small" class="cql-query"><%= query_real %></span>
+                <% } %>
+
+            </div>
+
+            <div class="span2">
+
+                <!-- result list actions -->
+                <div class="btn-group btn-popover span7 result-actions do-not-print"
+                     data-toggle="popover" data-trigger="hover" data-placement="left"
+                     data-content="Export results"
+                        >
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-download-alt icon-large2"></i> &nbsp; Export
+                    </button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        <!-- PDF export and print view -->
+                        <li>
+                            <a href="<%= get_url_pdf() %>" target="_blank">
+                                <img src="/static/img/icons/pdf.svg" width="16" height="16"/> PDF
+                            </a>
+                            <a href="<%= get_url_print() %>" target="_blank">
+                                <i class="icon-print icon-large"></i> Print
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</script>
+</%text>
+
+
+## ------------------------------------------
+##   modal dialog for viewing pdf
+## ------------------------------------------
+<div id="ops-pdf-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ops-pdf-modal-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="ops-pdf-modal-label"></h3>
+    </div>
+    <div class="modal-body" id="pdf">
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group pull-left">
+            <button class="btn btn-primary" id="pdf-previous">Previous</button>
+            <button class="btn btn-primary" id="pdf-next">Next</button>
+        </div>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
