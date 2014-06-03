@@ -7,6 +7,7 @@ development
 - ui: don't display application number
 - ui: improve header title style
 - ui: improvements to basket status- and action buttons/displays
+- ui: fix: citation environment links didn't propagate project context
 
 0.12.0
 ======
