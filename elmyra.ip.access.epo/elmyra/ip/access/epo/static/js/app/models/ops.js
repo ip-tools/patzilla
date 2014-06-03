@@ -174,6 +174,11 @@ OpsExchangeDocument = Backbone.Model.extend({
             return (publication_id.country || '') + (publication_id.number || '') + (publication_id.kind || '');
         },
 
+        get_application_number: function(source) {
+            var application_id = this.get_application_reference(source);
+            return (application_id.country || '') + (application_id.number || '') + (application_id.kind || '');
+        },
+
         get_linkmaker: function() {
             return new Ipsuite.LinkMaker(this);
         },
@@ -382,11 +387,10 @@ OpsExchangeDocument = Backbone.Model.extend({
             if (container) {
                 var nodelist = to_list(container['priority-claim']);
                 _(nodelist).each(function(node) {
-                    //return node['text']['$'];
                     var priority = _this.get_priority_claim_document_id(node, 'epodoc');
                     var entry =
-                        _this.enrich_link(priority.number, 'spr', priority.number) + '&nbsp;' +
-                        '[' + moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD') + ']';
+                        _this.enrich_link(priority.number, 'spr', priority.number) + '&nbsp;&nbsp;&nbsp;' +
+                        '<strong>(32)</strong> ' + moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD');
                     entries.push(entry);
                 });
             }

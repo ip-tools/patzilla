@@ -10,6 +10,7 @@ development
 - ui: display number of entries in basket
 - ui: improve classification display: add ipc and cpc classes
 - ui: display priority claims
+- ui: display application number
 
 0.11.0
 ======

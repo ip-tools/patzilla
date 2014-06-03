@@ -73,16 +73,6 @@
             <div class="span4 container-fluid">
                 <div class="span6">
                     <dl class="dl-horizontal dl-horizontal-biblio">
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="application date">
-                            (22)
-                        </dt>
-                        <dd>
-                            <%= application_date %>
-                        </dd>
-                    </dl>
-                </div>
-                <div class="span6">
-                    <dl class="dl-horizontal dl-horizontal-biblio">
                         <dt class="inid-tooltip" data-toggle="tooltip" title="publication date">
                             (45)
                         </dt>
@@ -90,6 +80,8 @@
                             <%= data.enrich_link(publication_date, 'publicationdate') %>
                         </dd>
                     </dl>
+                </div>
+                <div class="span6">
                 </div>
             </div>
 
@@ -371,8 +363,25 @@
                             </dl>
                         </dd>
 
+                        <br/>
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="application number">
+                            (21)
+                        </dt>
+                        <dd class="keyword">
+                            <%
+                            var sap = data.get_application_number('epodoc');
+                            print(data.enrich_link(sap, 'sap', sap));
+                            %>
+                            &nbsp;&nbsp;&nbsp;
+                            <span class="inid-tooltip" data-toggle="tooltip" title="application date">
+                                <strong>(22)</strong>
+                            </span>
+                            <%= application_date %>
+                        </dd>
+
                         <dt class="inid-tooltip" data-toggle="tooltip" title="priority claims">
-                            (30)
+                            (31)
                         </dt>
                         <dd class="keyword">
                             <%= data.get_priority_claims(true).join('<br/>') || '&nbsp;' %>
