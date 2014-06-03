@@ -165,6 +165,9 @@ BasketView = Backbone.Marionette.ItemView.extend({
             _this.future_premium_feature();
         });
 
+        // display number of entries in basket
+        $('#basket-entry-count').text(this.model.get('numberlist').length);
+
     },
 
     future_premium_feature: function() {
