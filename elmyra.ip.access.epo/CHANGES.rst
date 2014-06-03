@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.12.0
+======
 - limit citatory query to 10 items due to ops restriction
 - ui: modify/extend citation link buttons
 - ui: "new project" action
