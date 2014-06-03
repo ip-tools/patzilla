@@ -139,7 +139,8 @@ a.editable-click {
 {
     background-color:#FFFF66;
     color:#333;
-    padding:2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .highlight-circle

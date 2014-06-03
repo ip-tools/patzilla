@@ -10,6 +10,7 @@ development
 - ui: fix: citation environment links didn't propagate project context
 - ui: improve style of citation environment links
 - ui: improve style of priority display
+- ui: improve style of highlighting
 
 0.12.0
 ======
