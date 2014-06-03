@@ -9,6 +9,7 @@ development
 - ui: improvements to basket status- and action buttons/displays
 - ui: fix: citation environment links didn't propagate project context
 - ui: improve style of citation environment links
+- ui: improve style of priority display
 
 0.12.0
 ======

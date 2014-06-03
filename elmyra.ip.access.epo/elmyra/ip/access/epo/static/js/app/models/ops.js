@@ -389,8 +389,8 @@ OpsExchangeDocument = Backbone.Model.extend({
                 _(nodelist).each(function(node) {
                     var priority = _this.get_priority_claim_document_id(node, 'epodoc');
                     var entry =
-                        _this.enrich_link(priority.number, 'spr', priority.number) + '&nbsp;&nbsp;&nbsp;' +
-                        '<strong>(32)</strong> ' + moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD');
+                        _this.enrich_link(priority.number, 'spr', priority.number) + ', ' +
+                        moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD');
                     entries.push(entry);
                 });
             }
