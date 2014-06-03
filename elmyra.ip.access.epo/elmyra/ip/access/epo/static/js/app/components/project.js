@@ -208,6 +208,21 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         console.log('ProjectChooserView.onDomRefresh');
     },
 
+    projectname_validate: function(projectname) {
+
+        // reject empty project names
+        if (!projectname) {
+            return 'Project name must not be empty';
+        }
+
+        // reject renaming if project name already exists
+        var results = this.collection.where({name: projectname});
+        if (!_.isEmpty(results)) {
+            return 'Project name already exists';
+        }
+
+    },
+
     setup_ui: function() {
         console.log('ProjectChooserView.setup_ui');
 
@@ -216,19 +231,14 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         // 1. rename a project by making the project name inline-editable
         $('#project-chooser-name').editable({
             mode: 'inline',
-            success: function(response, projectname_new) {
-
-                // reject renaming if project name already exists
-                var results = _this.collection.where({name: projectname_new});
-                if (!_.isEmpty(results)) {
-                    $('.editable-container input').tooltip({title: 'Project already exists'}).tooltip('show');
-                    changeTooltipColorTo('#DF0101');
-                    return false;
-                }
-
+            placeholder: 'Enter project name',
+            success: function(response, projectname) {
                 // rename project
-                _this.model.set('name', projectname_new);
+                _this.model.set('name', projectname);
                 _this.model.save();
+            },
+            validate: function(value) {
+                return _this.projectname_validate(value);
             },
         });
 
@@ -236,7 +246,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         this.set_name(this.model.get('name'));
 
 
-        // 3. populate dropdown-menu
+        // 3. populate dropdown-menu for switching the current project
 
         // where to append the project entries
         var container = $(this.data_list_selector);
@@ -265,10 +275,9 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         });
 
 
-        // 4. activate project-delete-button
+        // 4. activate project action buttons
         $(this.el).find('#project-delete-button').click(function(e) {
             _this.model.destroy({success: function() {
-
                 var selected = collection.sortByField('modified', 'desc').first();
                 if (selected) {
                     var projectname = selected.get('name');
@@ -277,8 +286,43 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                     _this.set_name(null);
                     $(_this.data_list_selector).empty();
                 }
-
             }});
+        });
+
+        $(this.el).find('#project-create-button').unbind();
+        $(this.el).find('#project-create-button').click(function(e) {
+
+            e.stopPropagation();
+            e.preventDefault();
+            $(this).popover('hide');
+
+            // swap projectname chooser from renaming to creation functionality
+            var chooser = $('#project-chooser-name');
+            chooser.unbind();
+
+            var value_old = chooser.editable('getValue', true);
+            chooser.editable('destroy');
+            chooser.editable({
+                mode: 'inline',
+                toggle: 'manual',
+                placeholder: 'Enter project name',
+                success: function(response, projectname) {
+                    opsChooserApp.trigger('project:load', projectname);
+                },
+                validate: function(value) {
+                    return _this.projectname_validate(value);
+                },
+            });
+
+            chooser.editable('show');
+            chooser.editable('setValue', '');
+
+            chooser.on('hidden', function(event, reason) {
+                if (reason != 'save') {
+                    chooser.editable('destroy');
+                    _this.setup_ui();
+                }
+            });
 
         });
 

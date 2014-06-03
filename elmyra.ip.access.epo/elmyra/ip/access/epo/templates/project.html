@@ -2,7 +2,7 @@
 <%text>
     <h4 style="display: inline">
         <sup>｢</sup>
-        <a id="project-chooser-name" href="#" data-type="text" data-pk="1" data-title="Rename project"></a>
+        <a id="project-chooser-name" href="#" data-type="text" data-pk="1" data-title="Project name"></a>
         <sub>｣</sub>
     </h4>
 
@@ -16,13 +16,23 @@
         <ul class="span4 dropdown-menu">
         </ul>
     </div>
-    <button
-            id="project-delete-button"
-            class="btn btn-popover"
-            data-toggle="popover" data-trigger="hover" data-placement="bottom"
-            data-content="Delete project"
-            >
-        <i class="icon-trash icon-large"></i>
-    </button>
+    <div class="btn-group btn-popover">
+        <button
+                id="project-delete-button"
+                class="btn btn-popover"
+                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                data-content="Delete project"
+                >
+            <i class="icon-trash icon-large"></i>
+        </button>
+        <button
+                id="project-create-button"
+                class="btn btn-popover"
+                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                data-content="Create project"
+                >
+            <i class="icon-plus icon-large"></i>
+        </button>
+    </div>
 </%text>
 </script>

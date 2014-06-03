@@ -6,6 +6,7 @@ development
 ===========
 - limit citatory query to 10 items due to ops restriction
 - ui: modify/extend citation link buttons
+- ui: "new project" action
 
 0.11.0
 ======

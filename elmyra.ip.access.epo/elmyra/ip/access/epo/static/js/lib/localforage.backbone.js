@@ -81,6 +81,7 @@
                         _this._fix_bbrelational_id_mismatch(model);
                         return model.id ? _this.find(model, options) : _this.findAll(model, options);
                     case "create":
+                        _this._fix_bbrelational_id_mismatch(model);
                         return _this.create(model, options);
                     case "update":
                         return _this.update(model, options);
