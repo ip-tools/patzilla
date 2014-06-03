@@ -337,15 +337,15 @@
                         <dt class="inid-tooltip" data-toggle="tooltip" title="classifications">
                             (51)
                         </dt>
-                        <dd>
+                        <dd class="dl-horizontal-inline-container">
                             <span class="clearfix"></span>
-                            <dl class="dl-horizontal dl-horizontal-class">
+                            <dl class="dl-horizontal dl-horizontal-inline">
 
                                 <% if (data.has_ipc()) { %>
                                 <dt>
                                     IPC
                                 </dt>
-                                <dd>
+                                <dd class="keyword">
                                     <%= data.get_ipc_list(true).join(', ') || '&nbsp;' %>
                                 </dd>
                                 <% } %>
@@ -354,7 +354,7 @@
                                 <dt>
                                     IPC-R
                                 </dt>
-                                <dd>
+                                <dd class="keyword">
                                     <%= data.get_ipcr_list(true).join(', ') || '&nbsp;' %>
                                 </dd>
                                 <% } %>
@@ -370,8 +370,6 @@
 
                             </dl>
                         </dd>
-
-                        <br/>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="priority claims">
                             (31)

@@ -326,10 +326,12 @@ OpsExchangeDocument = Backbone.Model.extend({
                 });
             }
 
+            entries = _(entries).map(function(entry) {
+                return entry.substring(0, 15).replace(/ /g, '');
+            });
+
             if (links) {
-                entries = this.enrich_links(entries, 'ipc', function(value) {
-                    return quotate(value.substring(0, 15).replace(/ /g, ''));
-                });
+                entries = this.enrich_links(entries, 'ipc', quotate);
             }
             return entries;
         },

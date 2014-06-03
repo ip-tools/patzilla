@@ -155,10 +155,10 @@ def scan_keywords(op, keywords):
         'ct', 'citation',
 
         # classifications
-        # TODO: due to different formatting, ipc classes can not be matched yet
-        #'ipc', 'ic',
+        'ipc', 'ic',
         'cpc', 'cpci', 'cpca', 'cl',
 
+        # application and priority
         'ap', 'applicantnumber', 'sap',
         'pr', 'prioritynumber', 'spr',
 

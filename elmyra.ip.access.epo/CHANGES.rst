@@ -11,6 +11,7 @@ development
 - ui: improve style of citation environment links
 - ui: improve style of priority display
 - ui: improve style of highlighting
+- ui: improve display of classifications
 
 0.12.0
 ======

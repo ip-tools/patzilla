@@ -106,21 +106,34 @@ a.editable-click {
     border-top: 1px solid #e5e5e5;
 }
 
-
 .dl-horizontal-biblio {
     margin-bottom: 0px;
 }
 .dl-horizontal-biblio dt {
     width: 30px;
+    text-align: left;
 }
 .dl-horizontal-biblio dd {
     margin-left: 40px;
 }
 
-.dl-horizontal-class dt {
-    width: 40px;
+
+dl.dl-horizontal-inline {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
 }
-.dl-horizontal-class dd {
+@media (min-width: 768px) {
+    .dl-horizontal-inline-container {
+        position: relative;
+        top: -1.4em;
+    }
+}
+
+.dl-horizontal-inline dt {
+    width: 40px;
+    text-align: left;
+}
+.dl-horizontal-inline dd {
     margin-left: 50px;
 }
 
