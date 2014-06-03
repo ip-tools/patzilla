@@ -167,12 +167,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         // display number of entries in basket
         var entry_count = this.model.get('numberlist').length;
-        var entry_count_label = 'entries';
-        $('#basket-entry-count').text(entry_count);
-        if (entry_count == 1) {
-            entry_count_label = 'entry';
-        }
-        $('#basket-entry-count-label').text(entry_count_label);
+        $('.basket-entry-count').text(entry_count);
 
     },
 

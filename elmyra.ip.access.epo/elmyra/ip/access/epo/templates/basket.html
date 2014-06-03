@@ -2,19 +2,11 @@
     <%text>
         <form id="basket-form" name="basket-form" method="post" action="<%= ship_url %>">
 
-            <!-- basket ingress controls -->
+            <!-- xxx -->
             <div class="row-fluid">
                 <div class="span6">
-                    <span id="basket-entry-count" class="badge"></span> <span id="basket-entry-count-label"></span>
                 </div>
                 <div class="span6">
-                        <button id="basket-import-button"
-                                role="button" class="btn btn-popover pull-right"
-                                data-toggle="popover" data-trigger="hover" data-placement="right"
-                                data-content="Import numberlist from clipboard, url or filesystem"
-                                >
-                            Import
-                        </button>
                 </div>
             </div>
 
@@ -25,19 +17,17 @@
                 </div>
             </div>
 
-            <!-- basket egress controls -->
+            <!-- basket controls -->
             <div class="row-fluid">
 
                 <div class="span6">
 
-                    <button
-                        id="basket-submit-button"
-                        type="submit" role="button" class="btn btn-popover"
-                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                        data-content="Submit selected documents to origin or 3rd-party system"
-                        >
-                        <i class="icon-share icon-large"></i>
-                        Submit
+                    <button id="basket-import-button"
+                            role="button" class="btn btn-popover do-not-print"
+                            data-toggle="popover" data-trigger="hover" data-placement="right"
+                            data-content="Import numberlist from clipboard, url or filesystem"
+                            >
+                        Import
                     </button>
 
                 </div>
@@ -49,8 +39,21 @@
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Share selected documents"
                             >
+
+                        <button class="btn">
+                            <span class="basket-entry-count"></span>
+                        </button>
+                        <button
+                                id="basket-submit-button"
+                                type="submit" role="button" class="btn btn-popover"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                data-content="Submit selected documents to origin or 3rd-party system"
+                                >
+                            <i class="icon-share"></i>
+                            Submit
+                        </button>
                         <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-share icon-large"></i>
+                            <i class="icon-external-link"></i>
                             Share
                         </button>
                         <button class="btn dropdown-toggle" data-toggle="dropdown">
