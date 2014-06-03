@@ -375,6 +375,33 @@ OpsExchangeDocument = Backbone.Model.extend({
             return entries;
         },
 
+        get_priority_claims: function(links) {
+            var _this = this;
+            var entries = [];
+            var container = this['bibliographic-data']['priority-claims'];
+            if (container) {
+                var nodelist = to_list(container['priority-claim']);
+                _(nodelist).each(function(node) {
+                    //return node['text']['$'];
+                    var priority = _this.get_priority_claim_document_id(node, 'epodoc');
+                    var entry =
+                        _this.enrich_link(priority.number, 'spr', priority.number) + '&nbsp;' +
+                        '[' + moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD') + ']';
+                    entries.push(entry);
+                });
+            }
+            return entries;
+        },
+        get_priority_claim_document_id: function(node, source) {
+            // source = docdb|epodoc
+            var entries = to_list(node['document-id']);
+            var document_id = _(entries).find(function(item) {
+                return item['@document-id-type'] == source;
+            });
+            return this._flatten_textstrings(document_id);
+        },
+
+
         enrich_links: function(container, attribute, value_modifier) {
             var self = this;
             return _.map(container, function(item) {

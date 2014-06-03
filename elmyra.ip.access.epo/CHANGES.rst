@@ -9,6 +9,7 @@ development
 - ui: "new project" action
 - ui: display number of entries in basket
 - ui: improve classification display: add ipc and cpc classes
+- ui: display priority claims
 
 0.11.0
 ======

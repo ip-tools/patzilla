@@ -159,6 +159,8 @@ def scan_keywords(op, keywords):
         #'ipc', 'ic',
         'cpc', 'cpci', 'cpca', 'cl',
 
+        'pr', 'prioritynumber', 'spr',
+
         # DEPATISnet
         'ti', 'ab', 'de', 'bi',
         'pa', 'in',
