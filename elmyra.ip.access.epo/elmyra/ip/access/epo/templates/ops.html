@@ -397,17 +397,13 @@
                             (56)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
-                            <br/><br/>
-
                             <!-- citation queries -->
-                            <% if (data.has_citations()) { %>
                             <div class="btn-group btn-popover do-not-print"
-                                 data-toggle="popover" data-trigger="hover" data-placement="right"
+                                 data-toggle="popover" data-trigger="hover" data-placement="top"
                                  data-content="Explore citations in various directions"
-                                 >
+                                    >
                                 <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-search"></i> &nbsp; Citation environment
+                                    <i class="icon-search"></i>
                                 </button>
                                 <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
                                     <span class="caret"></span>
@@ -418,6 +414,7 @@
                                             Citing: ct=<%= data.get_publication_number('epodoc') %>
                                         </a>
                                     </li>
+                                    <% if (data.has_citations()) { %>
                                     <li>
                                         <a href="?query=<%= encodeURIComponent(data.get_same_citations_query()) %>" class="query-link" target="_blank">
                                             Same citations: ct in (56)
@@ -428,9 +425,10 @@
                                             All citations: pn in (56)
                                         </a>
                                     </li>
+                                    <% } %>
                                 </ul>
                             </div>
-                            <% } %>
+                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
 
                             <br/><br/>
                             <table class="table table-striped table-condensed">

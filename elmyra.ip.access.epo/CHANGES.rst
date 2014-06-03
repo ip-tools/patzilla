@@ -8,6 +8,7 @@ development
 - ui: improve header title style
 - ui: improvements to basket status- and action buttons/displays
 - ui: fix: citation environment links didn't propagate project context
+- ui: improve style of citation environment links
 
 0.12.0
 ======
