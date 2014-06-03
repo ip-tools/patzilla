@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: don't display application number
+- ui: improve header title style
 
 0.12.0
 ======
