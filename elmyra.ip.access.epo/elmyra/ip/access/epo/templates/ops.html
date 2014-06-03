@@ -214,6 +214,11 @@
                 <div class="span4">
                     </%text>
 
+                    <%
+                    # FIXME: use javascript-only variables, get rid of the pyramid request object
+                    ship_mode = request.params.get('ship-mode', 'multi-numberlist')
+                    %>
+
                     % if ship_mode == 'multi-numberlist':
                     <%text>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
@@ -369,7 +374,7 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="?query=<%= encodeURIComponent(data.get_citing_query()) %>" target="_blank">
-                                            Citing: ct=pn
+                                            Citing: ct=<%= data.get_publication_number('epodoc') %>
                                         </a>
                                     </li>
                                     <li>

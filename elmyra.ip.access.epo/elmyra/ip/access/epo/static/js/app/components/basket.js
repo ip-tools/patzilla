@@ -7,8 +7,6 @@ BasketModel = Backbone.RelationalModel.extend({
 
     defaults: {
         numberlist: [],
-        ship_url: '',
-        ship_param: 'payload',
     },
 
     initialize: function() {
@@ -18,23 +16,14 @@ BasketModel = Backbone.RelationalModel.extend({
 
     // initialize model from url query parameters
     init_from_query: function() {
-        var basket_option_names = ['numberlist', 'ship-url', 'ship-param'];
-        var _this = this;
         var url = $.url(window.location.href);
-        _(basket_option_names).each(function(query_name) {
-            var attribute_name = query_name.replace('-', '_');
-            var value = url.param(query_name);
-            // fall back to deprecated parameter name for backwards compatibility
-            if (!value) {
-                value = url.param(attribute_name);
-            }
-            if (value) {
-                value = decodeURIComponent(value);
-                value = value.split(',');
-                _this.set(attribute_name, value);
-            }
-        });
-
+        var attribute_name = 'numberlist';
+        var value = url.param(attribute_name);
+        if (value) {
+            value = decodeURIComponent(value);
+            value = value.split(',');
+            this.set(attribute_name, value);
+        }
     },
 
     // add item to basket
@@ -97,7 +86,34 @@ BasketView = Backbone.Marionette.ItemView.extend({
             data['numberlist'] = numberlist.join('\n');
         }
 
+        _(data).extend(this.params_from_query());
+
         return data;
+    },
+
+    // initialize more template variables from url query parameters
+    params_from_query: function() {
+        var tplvars = {};
+        var basket_option_names = ['ship-url', 'ship-param'];
+        var _this = this;
+        var url = $.url(window.location.href);
+        _(basket_option_names).each(function(query_name) {
+            var attribute_name = query_name.replace('-', '_');
+            var value = url.param(query_name);
+            // fall back to deprecated parameter name for backwards compatibility
+            if (!value) {
+                value = url.param(attribute_name);
+            }
+            if (value) {
+                value = decodeURIComponent(value);
+                value = value.split(',');
+                tplvars[attribute_name] = value;
+            }
+        });
+
+        _(tplvars).defaults({ship_param: 'payload'});
+
+        return tplvars;
     },
 
     setup_ui: function() {
@@ -112,8 +128,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // only enable submit button, if ship url is given
-        var ship_url = this.model.get('ship_url');
-        if (ship_url) {
+        var params = this.params_from_query();
+        if (params.ship_url) {
             $('#basket-submit-button').prop('disabled', false);
         } else {
             $('#basket-submit-button').prop('disabled', true);
