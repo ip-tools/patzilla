@@ -289,23 +289,90 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         },
 
+        has_ipc: function() {
+            return Boolean(this['bibliographic-data']['classification-ipc']);
+        },
         get_ipc_list: function(links) {
-            var ipc_list = [];
-            var ipc_node_top = this['bibliographic-data']['classifications-ipcr'];
-            if (ipc_node_top) {
-                var ipc_node = to_list(ipc_node_top['classification-ipcr']);
-                ipc_list = _.map(ipc_node, function(ipc) {
-                    return ipc['text']['$'];
+            var entries = [];
+            var container = this['bibliographic-data']['classification-ipc'];
+            if (container) {
+                var nodelist = to_list(container['text']);
+                entries = _.map(nodelist, function(node) {
+                    return node['$'];
                 });
             }
 
             if (links) {
-                ipc_list = this.enrich_links(ipc_list, 'ipc', function(value) {
-                    return value.substring(0, 15).replace(/ /g, '')
+                entries = this.enrich_links(entries, 'ipc', quotate);
+            }
+            return entries;
+        },
+
+        has_ipcr: function() {
+            return Boolean(this['bibliographic-data']['classifications-ipcr']);
+        },
+        get_ipcr_list: function(links) {
+            var entries = [];
+            var container = this['bibliographic-data']['classifications-ipcr'];
+            if (container) {
+                var nodelist = to_list(container['classification-ipcr']);
+                entries = _.map(nodelist, function(node) {
+                    return node['text']['$'];
                 });
             }
-            return ipc_list;
 
+            if (links) {
+                entries = this.enrich_links(entries, 'ipc', function(value) {
+                    return quotate(value.substring(0, 15).replace(/ /g, ''));
+                });
+            }
+            return entries;
+        },
+
+        has_cpc: function() {
+            return Boolean(this['bibliographic-data']['patent-classifications']);
+        },
+        get_cpc_list: function(links) {
+            var entries = [];
+            var container = this['bibliographic-data']['patent-classifications'];
+            var cpc_fieldnames = ['section', 'class', 'subclass', 'main-group', '/', 'subgroup'];
+
+            var _this = this;
+
+            if (container) {
+                var nodelist = to_list(container['patent-classification']);
+                _(nodelist).each(function(node) {
+                    var scheme = node['classification-scheme']['@scheme'];
+                    if (scheme == 'CPC') {
+                        var entry_parts = [];
+                        _(cpc_fieldnames).each(function(cpc_fieldname) {
+                            if (cpc_fieldname == '/') {
+                                entry_parts.push('/');
+                                return;
+                            }
+                            if (node[cpc_fieldname]) {
+                                var part = node[cpc_fieldname]['$'];
+                                entry_parts.push(part);
+                            } else {
+                                console.error('Unknown cpc classification field "' + cpc_fieldname + '" for document "' + _this.get_document_number() + '":', node);
+                            }
+                        });
+                        var entry = entry_parts.join('');
+                        entries.push(entry);
+
+                    } else if (scheme == 'FI' || scheme == 'FTERM') {
+                        // TODO: JP documents carry these
+
+                    } else {
+                        console.error('Unknown classification scheme "' + scheme + '" for document "' + _this.get_document_number() + '":', node);
+                    }
+                });
+            }
+
+            if (links) {
+                entries = this.enrich_links(entries, 'cpc', quotate);
+            }
+            return entries;
         },
 
         enrich_links: function(container, attribute, value_modifier) {

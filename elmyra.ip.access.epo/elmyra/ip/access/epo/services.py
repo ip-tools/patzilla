@@ -144,6 +144,7 @@ def scan_keywords(op, keywords):
     #print "op:", dir(op)
 
     keyword_fields = [
+
         # OPS
         'title', 'ti',
         'abstract', 'ab',
@@ -153,8 +154,10 @@ def scan_keywords(op, keywords):
         'inventor', 'in',
         'ct', 'citation',
 
+        # classifications
         # TODO: due to different formatting, ipc classes can not be matched yet
         #'ipc', 'ic',
+        'cpc', 'cpci', 'cpca', 'cl',
 
         # DEPATISnet
         'ti', 'ab', 'de', 'bi',

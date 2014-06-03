@@ -63,10 +63,9 @@ function listview_bind_actions() {
     // use jquery.shorten on "abstract" text
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
 
-    // use jquery-keyword-highlight on "abstract" text
-    // FIXME: also highlight in applicant, inventor, etc.; (hint: this currently interferes with inline linking)
+    // apply jquery-keyword-highlight
     _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
-        //console.log('keyword: ' + item);
+        //console.log('keyword: ' + keyword);
         $('.keyword').keywordHighlight({
             keyword: keyword,
             caseSensitive: 'false',

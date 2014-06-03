@@ -117,6 +117,13 @@ a.editable-click {
     margin-left: 40px;
 }
 
+.dl-horizontal-class dt {
+    width: 40px;
+}
+.dl-horizontal-class dd {
+    margin-left: 50px;
+}
+
 
 /* carousel for drawings */
 /* move control arrows to bottom of image */

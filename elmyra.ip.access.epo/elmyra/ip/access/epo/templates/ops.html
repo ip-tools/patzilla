@@ -248,7 +248,7 @@
                         <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
                         <input name="application_date" type="hidden" value="<%= application_date %>"/>
                         <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
-                        <input name="ipcs" type="hidden" value="<%= data.get_ipc_list().join('\n') %>"/>
+                        <input name="ipcs" type="hidden" value="<%= data.get_ipcr_list().join('\n') %>"/>
                         <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
                         <!--
                         <input name="ship_action" type="submit" value="rate" class="btn"/>
@@ -332,11 +332,43 @@
                             <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') || '&nbsp;' %>
                         </dd>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="ipc classes">
+                        <br/>
+
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="classifications">
                             (51)
                         </dt>
                         <dd>
-                            <%= data.get_ipc_list(true).join(', ') || '&nbsp;' %>
+                            <span class="clearfix"></span>
+                            <dl class="dl-horizontal dl-horizontal-class">
+
+                                <% if (data.has_ipc()) { %>
+                                <dt>
+                                    IPC
+                                </dt>
+                                <dd>
+                                    <%= data.get_ipc_list(true).join(', ') || '&nbsp;' %>
+                                </dd>
+                                <% } %>
+
+                                <% if (data.has_ipcr()) { %>
+                                <dt>
+                                    IPC-R
+                                </dt>
+                                <dd>
+                                    <%= data.get_ipcr_list(true).join(', ') || '&nbsp;' %>
+                                </dd>
+                                <% } %>
+
+                                <% if (data.has_cpc()) { %>
+                                <dt>
+                                    CPC
+                                </dt>
+                                <dd class="keyword">
+                                    <%= data.get_cpc_list(true).join(', ') || '&nbsp;' %>
+                                </dd>
+                                <% } %>
+
+                            </dl>
                         </dd>
 
                         <br/>

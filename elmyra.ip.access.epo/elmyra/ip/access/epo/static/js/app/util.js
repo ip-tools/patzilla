@@ -24,3 +24,7 @@ function changeTooltipColorTo(color) {
     $('.tooltip.left .tooltip-arrow').css('border-left-color', color);
     $('.tooltip.bottom .tooltip-arrow').css('border-bottom-color', color);
 }
+
+function quotate(value) {
+    return '"' + value + '"';
+}
