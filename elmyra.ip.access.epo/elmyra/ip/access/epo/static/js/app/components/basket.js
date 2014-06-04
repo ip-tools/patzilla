@@ -40,7 +40,7 @@ BasketModel = Backbone.RelationalModel.extend({
         var numberlist = this.get('numberlist');
         if (!_(numberlist).contains(item)) { return; }
         this.set('numberlist', _.without(numberlist, item));
-        this.trigger('change', this);
+        //this.trigger('change', this);
         this.trigger('change:remove', item);
     },
 

@@ -306,11 +306,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         basketView.render();
 
         // update some other gui components after basket view is ready
-        this.basket_update_downstreams();
+        this.basket_bind_actions();
 
     },
 
-    basket_update_downstreams: function() {
+    basket_bind_actions: function() {
 
         // TODO: maybe use an event handler for this, instead of a direct method call (e.g. "item:rendered")
 
@@ -339,9 +339,20 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             _this.basketModel.remove(patent_number);
         });
 
+        // handle "add all documents"
+        $("#basket-add-all-documents").unbind('click');
+        $("#basket-add-all-documents").click(function() {
+            // collect all document numbers
+            _this.documents.each(function(document) {
+                var number = document.attributes.get_patent_number();
+                _this.basketModel.add(number);
+            });
+
+        });
+
         // propagate numberlist to Add/Remove button states once when activating the basket
         this.documents.each(function(document) {
-            var entry = document.attributes.get_patent_number()
+            var entry = document.attributes.get_patent_number();
             // TODO: maybe refactor "basket_update_ui_entry" elsewhere
             _this.collectionView.basket_update_ui_entry(entry);
         });

@@ -14,6 +14,7 @@ development
 - ui: improve display of classifications
 - ui, middleware: display fulltext: description and claims
 - ui: proper highlighting for description and claims
+- ui: "Add all" action for adding the whole page of shown documents to the basket
 
 0.12.0
 ======

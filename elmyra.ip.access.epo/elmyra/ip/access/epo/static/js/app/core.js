@@ -69,7 +69,7 @@ function listview_bind_actions() {
     // ------------------------------------------
     //   result list
     // ------------------------------------------
-    opsChooserApp.basket_update_downstreams();
+    opsChooserApp.basket_bind_actions();
 
     // use jquery.shorten on "abstract" text
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
@@ -78,10 +78,11 @@ function listview_bind_actions() {
     apply_highlighting();
 
     // popovers
-    $('.add-patent-number').popover();
-    $('.remove-patent-number').popover();
     // TODO: rename to just "popover" or similar, since not just buttons may have popovers
     $('.btn-popover').popover();
+
+    // tooltips
+    // TODO: rename to just "tooltip" or similar, since tooltipping is universal
     $('.inid-tooltip').tooltip();
 
     // pdf action button

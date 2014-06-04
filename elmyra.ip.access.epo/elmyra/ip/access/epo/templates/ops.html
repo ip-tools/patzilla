@@ -248,13 +248,13 @@
                     % if ship_mode == 'multi-numberlist':
                     <%text>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
-                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn add-patent-number pull-right"
+                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number pull-right"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Add document number to basket"
                             >
                         <i class="icon-white icon-plus"></i> Add
                     </a>
-                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn remove-patent-number pull-right"
+                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number pull-right"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Remove document number from basket"
                             >
@@ -525,14 +525,14 @@
             </div>
 
             <!-- current display range -->
-            <div class="span2">
+            <div class="span1">
                 Range:
                 <br/>
                 <span style="font-size: x-large"><%= result_range %></span>
             </div>
 
             <!-- current cql query string -->
-            <div class="span7">
+            <div class="span6">
                 Query:
                 <br/>
                 <span style="font-size: small" class="cql-query">
@@ -548,10 +548,18 @@
 
             </div>
 
-            <div class="span2">
+            <div class="span4">
+
+                <div class="span4 pull-right">
+                    <a id="basket-add-all-documents" role="button" class="btn btn-popover"
+                       data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Add all documents to basket"
+                       >
+                        <i class="icon-white icon-plus"></i> Add all
+                    </a>
+                </div>
 
                 <!-- result list actions -->
-                <div class="btn-group btn-popover span7 result-actions do-not-print"
+                <div class="btn-group btn-popover result-actions do-not-print span5 pull-right"
                      data-toggle="popover" data-trigger="hover" data-placement="left"
                      data-content="Export results"
                         >
