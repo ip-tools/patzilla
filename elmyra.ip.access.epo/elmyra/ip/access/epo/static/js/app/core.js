@@ -292,7 +292,6 @@ function listview_bind_actions() {
         // e.relatedTarget // previous tab
 
         var content_container = $($(e.target).attr('href'));
-        console.log('container:', content_container);
 
         var document_number = $(this).data('document-number');
         var details_type = $(this).data('document-details-type');
@@ -317,7 +316,12 @@ function display_description(document_number, container) {
         $.ajax({url: url, async: true}).success(function(payload) {
             if (payload) {
                 var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
-                var content_parts = _(description.p).map(function(item) { return '<p>' + item['$'] + '</p>'; } );
+                console.log('description', document_number, description);
+
+                // TODO: unify with display_claims
+                var content_parts = _(description.p).map(function(item) {
+                    return '<p>' + _(item['$']).escape().replace('\n', '<br/>') + '</p>';
+                });
                 var content_text = content_parts.join('\n');
                 $(content_element).html(content_text);
                 $(language_element).html('[' + description['@lang'] + ']');
@@ -343,7 +347,12 @@ function display_claims(document_number, container) {
         $.ajax({url: url, async: true}).success(function(payload) {
             if (payload) {
                 var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
-                var content_parts = _(claims['claim']['claim-text']).map(function(item) { return '<p>' + item['$'] + '</p>'; } );
+                console.log('claims', document_number, claims);
+
+                // TODO: unify with display_description
+                var content_parts = _(claims['claim']['claim-text']).map(function(item) {
+                    return '<p>' + _(item['$']).escape().replace('\n', '<br/>') + '</p>';
+                });
                 var content_text = content_parts.join('\n');
                 $(content_element).html(content_text);
                 $(language_element).html('[' + claims['@lang'] + ']');
