@@ -56,14 +56,7 @@ def ops_published_data_search(constituents, query, range):
         else:
             return
     else:
-        request = get_current_request()
-        response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
-        response_dict['url'] = response_dict['url'].replace(ops_service_url, '/')
-        request.errors.add('ops-published-data-search', 'http-response', response_dict)
-        response = json_error(request.errors)
-        response.status = 500
-        #print "response:", response
-        log.warn(request.errors)
+        response = handle_error(response, 'ops-published-data-search')
         raise response
 
 
@@ -195,6 +188,59 @@ def get_ops_image(document, page, kind, format):
         error.explanation = msg
         error.status_code = response.status_code
         raise error
+
+
+@cache_region('static')
+def ops_description(document_number):
+
+    # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666/description.json
+
+    url_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{document_number}/description.json'
+    url = url_tpl.format(document_number=document_number)
+
+    client = get_ops_client()
+    response = client.get(url, headers={'Accept': 'application/json'})
+
+    if response.status_code == 200:
+        if response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            return
+    else:
+        response = handle_error(response, 'ops-description')
+        raise response
+
+@cache_region('static')
+def ops_claims(document_number):
+
+    # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666/claims.json
+
+    url_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{document_number}/claims.json'
+    url = url_tpl.format(document_number=document_number)
+
+    client = get_ops_client()
+    response = client.get(url, headers={'Accept': 'application/json'})
+
+    if response.status_code == 200:
+        if response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            return
+    else:
+        response = handle_error(response, 'ops-claims')
+        raise response
+
+
+def handle_error(response, name):
+    request = get_current_request()
+    response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
+    response_dict['url'] = response_dict['url'].replace(ops_service_url, '/')
+    request.errors.add(name, 'http-response', response_dict)
+    response = json_error(request.errors)
+    response.status = 500
+    #print "response:", response
+    log.warn(request.errors)
+    return response
 
 
 @cache_region('static')

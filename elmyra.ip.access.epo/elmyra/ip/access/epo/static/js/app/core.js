@@ -279,6 +279,76 @@ function listview_bind_actions() {
         }
     });
 
+
+    // --------------------------------------------
+    //   toggle detail view (description, claims)
+    // --------------------------------------------
+    $('button[data-toggle="tab"]').on('show', function (e) {
+        // e.target // activated tab
+        // e.relatedTarget // previous tab
+
+        var content_container = $($(e.target).attr('href'));
+        console.log('container:', content_container);
+
+        var document_number = $(this).data('document-number');
+        var details_type = $(this).data('document-details-type');
+        if (details_type == 'description') {
+            display_description(document_number, content_container);
+        } else if (details_type == 'claims') {
+            display_claims(document_number, content_container);
+        }
+    })
+
+}
+
+function display_description(document_number, container) {
+
+    var content_element = container.find('.document-details-content')[0];
+    var language_element = container.find('.document-details-language')[0];
+
+    if (content_element) {
+
+        // TODO: move to ops.js
+        var url = _.template('/api/ops/<%= document_number %>/description')({ document_number: document_number});
+        $.ajax({url: url, async: true}).success(function(payload) {
+            if (payload) {
+                var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
+                var content_parts = _(description.p).map(function(item) { return '<p>' + item['$'] + '</p>'; } );
+                var content_text = content_parts.join('\n');
+                $(content_element).html(content_text);
+                $(language_element).html('[' + description['@lang'] + ']');
+            }
+        }).error(function(error) {
+            console.warn('Error while fetching description: ' + error);
+        });
+
+    }
+
+}
+
+function display_claims(document_number, container) {
+
+    var content_element = container.find('.document-details-content')[0];
+    var language_element = container.find('.document-details-language')[0];
+
+    if (content_element) {
+
+        // TODO: move to ops.js
+        var url = _.template('/api/ops/<%= document_number %>/claims')({ document_number: document_number});
+        $.ajax({url: url, async: true}).success(function(payload) {
+            if (payload) {
+                var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
+                var content_parts = _(claims['claim']['claim-text']).map(function(item) { return '<p>' + item['$'] + '</p>'; } );
+                var content_text = content_parts.join('\n');
+                $(content_element).html(content_text);
+                $(language_element).html('[' + claims['@lang'] + ']');
+            }
+        }).error(function(error) {
+                console.warn('Error while fetching claims: ' + error);
+            });
+
+    }
+
 }
 
 function reset_content(options) {

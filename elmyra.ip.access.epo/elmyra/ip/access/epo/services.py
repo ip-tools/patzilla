@@ -6,7 +6,7 @@ from beaker.cache import cache_region
 from cornice import Service
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
 
@@ -44,6 +44,16 @@ ops_pdf_service = Service(
     name='ops-pdf',
     path='/api/ops/{patent}/pdf/{parts}',
     description="OPS pdf interface")
+
+ops_description_service = Service(
+    name='ops-description',
+    path='/api/ops/{patent}/description',
+    description="OPS description interface")
+
+ops_claims_service = Service(
+    name='ops-claims',
+    path='/api/ops/{patent}/claims',
+    description="OPS claims interface")
 
 depatisnet_published_data_search_service = Service(
     name='depatisnet-published-data-search',
@@ -258,3 +268,18 @@ def ops_pdf_handler(request):
     request.response.headers['Content-Disposition'] = 'inline; filename={0}.pdf'.format(patent)
 
     return pdf_payload
+
+
+@ops_description_service.get()
+def ops_description_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+    patent = request.matchdict['patent']
+    description = ops_description(patent)
+    return description
+
+@ops_claims_service.get()
+def ops_claims_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+    patent = request.matchdict['patent']
+    description = ops_claims(patent)
+    return description

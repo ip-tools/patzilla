@@ -169,3 +169,7 @@ dl.dl-horizontal-inline {
 #project-chooser-actions button {
     margin-bottom: 1em;
 }
+
+.document-details.tab-content {
+    overflow: visible;
+}

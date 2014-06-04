@@ -12,6 +12,7 @@ development
 - ui: improve style of priority display
 - ui: improve style of highlighting
 - ui: improve display of classifications
+- ui, middleware: display fulltext: description and claims
 
 0.12.0
 ======
