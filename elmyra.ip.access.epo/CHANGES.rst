@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.13.0
+======
 - ui: don't display application number
 - ui: improve header title style
 - ui: improvements to basket status- and action buttons/displays
