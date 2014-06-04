@@ -35,12 +35,12 @@
 
         , show: function () {
             var $this = this.element
-                , $ul = $this.closest('ul:not(.dropdown-menu)')
+                , $ul = $this.closest('div:not(.dropdown-menu)')
                 , href = $this.attr('data-target') || $this.attr('href')
                 , previous
                 , $href
 
-            if ( $this.parent('li').hasClass('active') ) return
+            if ( $this.parent('button').hasClass('active') ) return
 
             previous = $ul.find('.active a').last()[0]
 
@@ -51,7 +51,7 @@
 
             $href = $(href)
 
-            this.activate($this.parent('li'), $ul)
+            this.activate($this.parent('button'), $ul)
             this.activate($href, $href.parent(), function () {
                 $this.trigger({
                     type: 'shown'
@@ -73,6 +73,7 @@
                     .removeClass('active')
 
                 element.addClass('active')
+                if (element.context) $(element.context).addClass('active')
 
                 if (transition) {
                     element[0].offsetWidth // reflow for transition
@@ -82,7 +83,7 @@
                 }
 
                 if ( element.parent('.dropdown-menu') ) {
-                    element.closest('li.dropdown').addClass('active')
+                    element.closest('button.dropdown').addClass('active')
                 }
 
                 callback && callback()
@@ -117,6 +118,7 @@
 
     $(function () {
         $('body').on('click.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', function (e) {
+            e.stopPropagation()
             e.preventDefault()
             $(this).tab('show')
         })
