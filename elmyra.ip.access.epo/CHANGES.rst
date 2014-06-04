@@ -13,6 +13,7 @@ development
 - ui: improve style of highlighting
 - ui: improve display of classifications
 - ui, middleware: display fulltext: description and claims
+- ui: proper highlighting for description and claims
 
 0.12.0
 ======

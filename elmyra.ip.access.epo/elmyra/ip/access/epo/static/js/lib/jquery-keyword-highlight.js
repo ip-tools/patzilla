@@ -91,10 +91,10 @@
                         }
 
                         // don't replace keywords found in links
-                        var is_href = _.str.contains(e, 'href=');
+                        var is_href = _.string.contains(e, 'href=');
                         //console.log('is_href:', e, is_href);
 
-                        if (found && !is_href) {
+                        if (found && !is_href && !self.is_highlighted(e, currentHighlightClass)) {
                             // add span class around found word and add to new content
                             html_new += self.wrap_highlight(e, currentHighlightClass);
                         } else {
@@ -113,7 +113,11 @@
 
         wrap_highlight: function(content, highlight_class) {
             return '<span class="' + highlight_class + '">' + content + '</span>' + ' ';
-        }
+        },
+
+        is_highlighted: function(content, highlight_class) {
+            return _.string.contains(content, 'class="' + highlight_class + '"');
+        },
 
     });
 })(jQuery);

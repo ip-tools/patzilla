@@ -33,6 +33,17 @@ function pdf_set_headline(document_number, page) {
     $(".modal-header #ops-pdf-modal-label").empty().append(headline);
 }
 
+function apply_highlighting() {
+    _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
+        //console.log('keyword: ' + keyword);
+        $('.keyword').keywordHighlight({
+            keyword: keyword,
+            caseSensitive: 'false',
+            contains: 'true',
+        });
+    });
+}
+
 function listview_bind_actions() {
 
     // hide all navigational- and action-elements when in print mode
@@ -64,14 +75,7 @@ function listview_bind_actions() {
     $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
 
     // apply jquery-keyword-highlight
-    _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
-        //console.log('keyword: ' + keyword);
-        $('.keyword').keywordHighlight({
-            keyword: keyword,
-            caseSensitive: 'false',
-            contains: 'true',
-        });
-    });
+    apply_highlighting();
 
     // popovers
     $('.add-patent-number').popover();
@@ -317,6 +321,7 @@ function display_description(document_number, container) {
                 var content_text = content_parts.join('\n');
                 $(content_element).html(content_text);
                 $(language_element).html('[' + description['@lang'] + ']');
+                apply_highlighting();
             }
         }).error(function(error) {
             console.warn('Error while fetching description: ' + error);
@@ -342,6 +347,7 @@ function display_claims(document_number, container) {
                 var content_text = content_parts.join('\n');
                 $(content_element).html(content_text);
                 $(language_element).html('[' + claims['@lang'] + ']');
+                apply_highlighting();
             }
         }).error(function(error) {
                 console.warn('Error while fetching claims: ' + error);
