@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.13.1
+======
 - ui: improve layout of publication date and application date
 - ui: fix missing popover after switching inline detail view
 - ui: disable button which shows basket entry count
