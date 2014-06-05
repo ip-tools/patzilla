@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: improve layout of publication date and application date
 
 0.13.0
 ======

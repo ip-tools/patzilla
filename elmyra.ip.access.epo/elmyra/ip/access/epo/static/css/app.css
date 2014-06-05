@@ -173,3 +173,7 @@ dl.dl-horizontal-inline {
 .document-details.tab-content {
     overflow: visible;
 }
+
+.inid {
+    font-weight: bold;
+}
