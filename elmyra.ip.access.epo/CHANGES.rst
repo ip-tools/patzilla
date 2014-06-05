@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: improve layout of publication date and application date
+- ui: fix missing popover after switching inline detail view
 
 0.13.0
 ======

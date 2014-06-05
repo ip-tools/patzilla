@@ -301,6 +301,9 @@ function listview_bind_actions() {
         } else if (details_type == 'claims') {
             display_claims(document_number, content_container);
         }
+
+        // fix missing popover after switching inline detail view
+        $('.btn-popover').popover();
     })
 
 }
