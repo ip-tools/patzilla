@@ -6,6 +6,7 @@ development
 ===========
 - ui: improve layout of publication date and application date
 - ui: fix missing popover after switching inline detail view
+- ui: disable button which shows basket entry count
 
 0.13.0
 ======
