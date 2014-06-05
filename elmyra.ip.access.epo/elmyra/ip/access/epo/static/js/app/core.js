@@ -247,7 +247,7 @@ function listview_bind_actions() {
                     update_carousel(carousel);
                 }
             }).error(function(error) {
-                console.warn('Error while fetching total count of drawings: ' + error);
+                console.warn('Error while fetching total count of drawings', error);
             });
             carousel.data('totalcount', totalcount);
             update_carousel(carousel);
@@ -329,7 +329,7 @@ function display_description(document_number, container) {
                 apply_highlighting();
             }
         }).error(function(error) {
-            console.warn('Error while fetching description: ' + error);
+            console.warn('Error while fetching description', error);
         });
 
     }
@@ -360,7 +360,7 @@ function display_claims(document_number, container) {
                 apply_highlighting();
             }
         }).error(function(error) {
-                console.warn('Error while fetching claims: ' + error);
+                console.warn('Error while fetching claims', error);
             });
 
     }
