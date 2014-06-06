@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- attempt to fix result list pdf export
 
 0.13.1
 ======
