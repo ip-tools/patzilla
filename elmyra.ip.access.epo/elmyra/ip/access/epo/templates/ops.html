@@ -429,18 +429,18 @@
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="?query=<%= encodeURIComponent(data.get_citing_query()) %>" class="query-link" target="_blank">
-                                            Citing: ct=<%= data.get_publication_number('epodoc') %>
+                                            Documents which cite ct=<%= data.get_publication_number('epodoc') %>
                                         </a>
                                     </li>
                                     <% if (data.has_citations()) { %>
                                     <li>
                                         <a href="?query=<%= encodeURIComponent(data.get_same_citations_query()) %>" class="query-link" target="_blank">
-                                            Same citations: ct in (56)
+                                            Documents with same citations: ct in (56)
                                         </a>
                                     </li>
                                     <li>
                                         <a href="?query=<%= encodeURIComponent(data.get_all_citations_query()) %>" class="query-link" target="_blank">
-                                            All citations: pn in (56)
+                                            All cited documents: pn in (56)
                                         </a>
                                     </li>
                                     <% } %>
