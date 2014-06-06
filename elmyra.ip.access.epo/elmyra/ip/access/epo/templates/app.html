@@ -15,7 +15,7 @@ html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(q
 page_title = request.params.get('page-title', 'Patent search')
 page_subtitle = request.params.get('page-subtitle', '')
 page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG')
-app_productname = request.params.get('app-productname', 'elmyra <i class="circle-icon">IP</i> suite')
+app_productname = request.params.get('app-productname', 'Elmyra <i class="circle-icon">IP</i> suite')
 app_versionstring = request.params.get('app-versionstring', '<br/>Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''))
 ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
@@ -34,13 +34,8 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <div class="container-fluid">
     <div class="span9">
         <div class="pull-left">
-
             <h3 style="display: inline-block">${page_title | n}</h3>
             ${page_subtitle}
-
-            <!-- project chooser -->
-            <div id="project-chooser-area" style="display: inline;"></div>
-
         </div>
     </div>
     <div class="span3">
@@ -155,6 +150,14 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
             </div>
 
+        </div>
+
+        <!-- xxx -->
+        <div class="span4 row-fluid">
+            <div class="span12">
+                <!-- project chooser -->
+                <div id="project-chooser-area" class="pull-right"></div>
+            </div>
         </div>
 
         % if ship_mode != 'single-bibdata':

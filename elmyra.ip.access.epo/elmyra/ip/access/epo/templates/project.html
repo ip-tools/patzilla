@@ -1,39 +1,39 @@
 <script type="text/x-underscore-template" id="project-chooser-template">
 <%text>
-    <h3 style="display: inline">
+    <div style="display: inline">
         <sup>｢</sup>
         <a id="project-chooser-name" href="#" data-type="text" data-pk="1" data-title="Project name"></a>
         <sub>｣</sub>
-    </h3>
+    </div>
 
     <span id="project-chooser-actions" class="do-not-print">
         <div id="project-chooser-list" class="btn-group">
             <button class="btn dropdown-toggle hidden" data-toggle="dropdown">
                 <!-- dummy, makes caret narrower -->
             </button>
-            <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+            <a class="btn btn-small dropdown-toggle" data-toggle="dropdown">
                 <span class="caret"></span>
-            </button>
-            <ul class="span4 dropdown-menu">
+            </a>
+            <ul class="dropdown-menu pull-right">
             </ul>
         </div>
         <div class="btn-group btn-popover">
-            <button
+            <a
                     id="project-delete-button"
                     class="btn btn-small btn-popover"
                     data-toggle="popover" data-trigger="hover" data-placement="bottom"
                     data-content="Delete project"
                     >
                 <i class="icon-trash icon-large"></i>
-            </button>
-            <button
+            </a>
+            <a
                     id="project-create-button"
                     class="btn btn-small btn-popover"
                     data-toggle="popover" data-trigger="hover" data-placement="bottom"
                     data-content="Create project"
                     >
                 <i class="icon-plus icon-large"></i>
-            </button>
+            </a>
         </div>
     </span>
 

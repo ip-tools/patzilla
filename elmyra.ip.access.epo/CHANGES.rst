@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - attempt to fix result list pdf export
+- ui: move project chooser above basket
 
 0.13.1
 ======

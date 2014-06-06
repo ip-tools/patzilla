@@ -258,13 +258,14 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         collection.sortByField('modified', 'desc').each(function(project) {
             var name = project.get('name');
             var modified = project.get('modified');
+            // TODO: refactor to project.html
             var entry = _.template(
                 '<li>' +
-                    '<a class="span3 incognito" href="javascript: void(0);" data-value="<%= name %>">' +
-                    '<%= name %> ' +
-                    '<span class="pull-right"><%= modified %></span>' +
+                    '<a class="incognito" href="javascript: void(0);" data-value="<%= name %>">' +
+                        '<%= name %> ' +
+                        '<span class="pull-right"><%= modified %></span>' +
                     '</a>' +
-                    '</li>')({name: name, modified: moment(modified).fromNow()});
+                '</li>')({name: name, modified: moment(modified).fromNow()});
             container.append(entry);
         });
 
