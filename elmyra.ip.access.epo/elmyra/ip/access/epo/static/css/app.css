@@ -95,9 +95,15 @@ a.editable-click {
     border-radius: 4px;
 }
 
+.ops-collection-meta {
+    padding: 9px 15px;
+    border-bottom: 0px;
+}
+
 .ops-collection-entry-heading {
     padding: 9px 15px;
-    border-bottom: 0;
+    border-bottom: 0px;
+    padding-bottom: 0px;
 }
 
 .ops-collection-entry-inner {
@@ -176,4 +182,9 @@ dl.dl-horizontal-inline {
 
 .inid {
     font-weight: bold;
+}
+
+
+.document-actions .btn-group + .btn-group {
+    margin-left: 0px;
 }

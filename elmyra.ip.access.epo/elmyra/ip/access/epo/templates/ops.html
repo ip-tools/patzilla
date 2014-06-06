@@ -71,66 +71,54 @@
 
             <!-- dates -->
             <div class="span3 container-fluid" style="line-height: 2.7em">
-                <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">
-                    (45)
-                </span>
-                <span>
-                    <%= data.enrich_link(publication_date, 'publicationdate') %>
-                </span>
+                <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>&nbsp;<span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
                 &nbsp;&nbsp;
-                <span class="inid inid-tooltip" data-toggle="tooltip" title="application date">
-                    (22)
-                </span>
-                <span class="keyword">
-                    <%= application_date %>
-                </span>
+                <span class="inid inid-tooltip" data-toggle="tooltip" title="application date">(22)</span>&nbsp;&nbsp;<span class="keyword"><%= application_date %></span>
             </div>
 
             <!-- actions -->
-            <div class="span6 container-fluid pull-right document-actions do-not-print">
-                <div class="span9">
+            <div class="span6 container-fluid pull-right2 document-actions do-not-print">
 
-                    <!-- details / fulltext -->
-                    <div class="span6">
+                <!-- details / fulltext -->
+                <div class="span6">
 
-                        <% if (data.has_fulltext()) { %>
-                        <div class="span3 btn-group btn-popover nav tabs"
-                             data-toggle="popover" data-trigger="hover" data-placement="top"
-                             data-content="Toggle detail view"
-                             >
-                            <button class="btn active" data-toggle="tab"
-                                    href="#document-details-biblio-container-<%= patent_number %>">
-                                Biblio
-                            </button>
-                            <button class="btn" data-toggle="tab"
-                                    href="#document-details-description-container-<%= patent_number %>"
-                                    data-document-details-type="description"
-                                    data-document-number="<%= data.get_publication_number('epodoc') %>">
-                                Desc
-                            </button>
-                            <button class="btn" data-toggle="tab"
-                                    href="#document-details-claims-container-<%= patent_number %>"
-                                    data-document-details-type="claims"
-                                    data-document-number="<%= data.get_publication_number('epodoc') %>">
-                                Claims
-                            </button>
-                        </div>
-                        <% } %>
-
+                    <% if (data.has_fulltext()) { %>
+                    <div class="span3 btn-group btn-popover nav tabs"
+                         data-toggle="popover" data-trigger="hover" data-placement="top"
+                         data-content="Toggle detail view"
+                         >
+                        <button class="btn active" data-toggle="tab"
+                                href="#document-details-biblio-container-<%= patent_number %>">
+                            Biblio
+                        </button>
+                        <button class="btn" data-toggle="tab"
+                                href="#document-details-description-container-<%= patent_number %>"
+                                data-document-details-type="description"
+                                data-document-number="<%= data.get_publication_number('epodoc') %>">
+                            Desc
+                        </button>
+                        <button class="btn" data-toggle="tab"
+                                href="#document-details-claims-container-<%= patent_number %>"
+                                data-document-details-type="claims"
+                                data-document-number="<%= data.get_publication_number('epodoc') %>">
+                            Claims
+                        </button>
                     </div>
+                    <% } %>
+
+                </div>
+
+                <!-- pdf, external links and add/remove -->
+                <div class="span3">
 
                     <!-- pdf document -->
-                    <div class="btn-group btn-popover span3"
+                    <div class="btn-group btn-popover"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Download full pdf documents from various sources"
                             >
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown">
                             <img src="/static/img/icons/pdf.svg" width="16" height="16"/>
-                            PDF
-                        </button>
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                        </button>
+                        </a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf">
@@ -151,16 +139,13 @@
                     </div>
 
                     <!-- external links -->
-                    <div class="btn-group btn-popover span3"
+                    <div class="btn-group btn-popover"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Show more information from various patent offices"
-                            >
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-globe icon-large"></i> More
-                        </button>
-                        <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            <span class="caret"></span>
-                        </button>
+                         >
+                        <a class="btn dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-globe icon-large"></i>
+                        </a>
                         <ul class="dropdown-menu">
 
                             <!-- bibliographic data -->
@@ -227,11 +212,11 @@
 
                         </ul>
                     </div>
+                    </%text>
+
 
                 </div>
-
                 <div class="span3">
-                    </%text>
 
                     <%
                     # FIXME: use javascript-only variables, get rid of the pyramid request object
@@ -241,17 +226,17 @@
                     % if ship_mode == 'multi-numberlist':
                     <%text>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
-                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number pull-right"
+                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
                        data-patent-number="<%= patent_number %>"
-                       data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Add document number to basket"
-                            >
-                        <i class="icon-white icon-plus"></i> Add
+                       data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to basket"
+                       >
+                        <i class="icon-white icon-plus"></i>
                     </a>
-                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number pull-right"
+                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number"
                        data-patent-number="<%= patent_number %>"
-                       data-toggle="popover" data-trigger="hover" data-placement="bottom" data-content="Remove document number from basket"
-                            >
-                        <i class="icon-white icon-minus"></i> Remove
+                       data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remove document number from basket"
+                       >
+                        <i class="icon-white icon-minus"></i>
                     </a>
                     </%text>
                     % endif
@@ -501,7 +486,7 @@
 
     <div class="row-fluid container-fluid ops-collection-entry" id="pagination-info">
 
-        <div class="ops-collection-entry-heading row-fluid">
+        <div class="ops-collection-meta row-fluid">
 
             <!-- total result count -->
             <div class="span1">
@@ -543,7 +528,7 @@
 
             <div class="span4">
 
-                <div class="span4 pull-right">
+                <div class="span4 pull-right do-not-print">
                     <a id="basket-add-all-documents" role="button" class="btn btn-popover"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add all documents of current result page to basket"
                        >
