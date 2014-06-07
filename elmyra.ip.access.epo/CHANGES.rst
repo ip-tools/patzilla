@@ -6,6 +6,7 @@ development
 ===========
 - attempt to fix result list pdf export
 - ui: move project chooser above basket
+- ui: cql history chooser
 
 0.13.1
 ======

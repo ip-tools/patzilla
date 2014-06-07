@@ -188,3 +188,7 @@ dl.dl-horizontal-inline {
 .document-actions .btn-group + .btn-group {
     margin-left: 0px;
 }
+
+#cql-history-chooser-container {
+    width: 420px;
+}

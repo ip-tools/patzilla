@@ -129,6 +129,25 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                 <!-- query content transformation and clearing -->
                 <div class="span2">
                     <div id="query-action" class="btn-group pull-right">
+
+                        <div id="cql-history-chooser" class="btn-group">
+
+                            <button
+                                    id="btn-query-history"
+                                    class="btn dropdown-toggle" data-toggle="dropdown"
+                                    >
+                                <i class="icon-time icon-large btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="top"
+                                   data-content="Query history"
+                                        ></i>
+                            </button>
+
+                            <div id="cql-history-chooser-container" class="dropdown-menu pull-right">
+                                <div id="cql-history-chooser-select2" class="span12"></div>
+                            </div>
+
+                        </div>
+
                         <button
                             id="btn-query-transform"
                             class="btn btn-popover"

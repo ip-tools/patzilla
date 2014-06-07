@@ -502,6 +502,31 @@ function boot_application() {
         }
     });
 
+    // open query chooser
+    $('#btn-query-history').click(function(e) {
+
+        // setup select2 widget
+        cql_history_chooser_setup();
+
+        var opened = $('#cql-history-chooser').hasClass('open');
+        var chooser_widget = $('#cql-history-chooser-select2');
+
+        // if already opened, skip event propagation and just reopen the widget again
+        if (opened) {
+            e.preventDefault();
+            e.stopPropagation();
+            chooser_widget.select2('open');
+
+        // open select2 widget *after* dropdown has been opened
+        } else {
+            // TODO: use "shown.bs.dropdown" event when migrating to bootstrap3
+            setTimeout(function() {
+                chooser_widget.select2('open');
+            });
+        }
+    });
+
+
     // transform query: modifier kind selected in dialog
     $('.btn-clipboard-modifier').click(function() {
 
@@ -618,7 +643,7 @@ function cql_field_chooser_setup() {
     var datasource = opsChooserApp.get_datasource();
     var data = cql_field_chooser_get_data(datasource);
     $('#cql-field-chooser').select2({
-        placeholder: 'CQL field symbols ' + '(' + datasource + ')',
+        placeholder: 'CQL field symbols' + ' (' + datasource + ')',
         data: { results: data },
         dropdownCssClass: "bigdrop",
         escapeMarkup: function(text) { return text; },
@@ -642,6 +667,47 @@ function cql_field_chooser_setup() {
 
         $('#query').caret(value + '=');
         $(this).data('select2').clear();
+
+    });
+
+}
+
+function cql_history_chooser_get_data() {
+    var queries = opsChooserApp.project.get('queries');
+    var chooser_data = _(queries).unique().map(function(query) {
+        return { id: query, text: query };
+    });
+    return chooser_data;
+}
+
+function cql_history_chooser_setup() {
+    var projectname = opsChooserApp.project.get('name');
+    var data = cql_history_chooser_get_data();
+
+    var chooser_widget = $('#cql-history-chooser-select2');
+
+    // initialize cql history chooser
+    chooser_widget.select2({
+        placeholder: 'CQL history' + ' (' + projectname + ')',
+        data: { results: data },
+        dropdownCssClass: "bigdrop",
+        escapeMarkup: function(text) { return text; },
+    });
+
+    // when query was selected, put it into cql query input field
+    chooser_widget.unbind('change');
+    chooser_widget.on('change', function(event) {
+
+        $(this).unbind('change');
+
+        var value = $(this).val();
+        if (value) {
+            $('#query').val(value);
+        }
+
+        // destroy widget and close dropdown container
+        $(this).data('select2').destroy();
+        $(this).dropdown().toggle();
 
     });
 
