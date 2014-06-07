@@ -601,21 +601,22 @@ function boot_application() {
 
 }
 
-function cql_field_chooser_toggle(datasource) {
+function cql_field_chooser_get_data(datasource) {
     if (datasource == 'ops') {
-        cql_field_chooser_setup(OPS_CQL_FIELDS);
+        return OPS_CQL_FIELDS;
 
     } else if (datasource == 'depatisnet') {
-        cql_field_chooser_setup(DEPATISNET_CQL_FIELDS);
+        return DEPATISNET_CQL_FIELDS;
 
     } else {
-        cql_field_chooser_setup([]);
+        return [];
 
     }
 }
 
-function cql_field_chooser_setup(data) {
+function cql_field_chooser_setup() {
     var datasource = opsChooserApp.get_datasource();
+    var data = cql_field_chooser_get_data(datasource);
     $('#cql-field-chooser').select2({
         placeholder: 'CQL field symbols ' + '(' + datasource + ')',
         data: { results: data },
