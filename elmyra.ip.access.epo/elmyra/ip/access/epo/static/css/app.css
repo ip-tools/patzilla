@@ -172,6 +172,10 @@ dl.dl-horizontal-inline {
     font-weight:600;
 }
 
+#project-chooser-list .dropdown-menu {
+    width: 300px;
+}
+
 #project-chooser-actions button {
     margin-bottom: 1em;
 }
