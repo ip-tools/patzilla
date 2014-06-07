@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.14.0
+======
 - attempt to fix result list pdf export
 - ui: move project chooser above basket
 - ui: cql history chooser
