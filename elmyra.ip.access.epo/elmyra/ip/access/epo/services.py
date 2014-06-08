@@ -76,7 +76,7 @@ def ops_published_data_search_handler(request):
     log.info('query raw: ' + query)
 
     # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
+    if ('=' not in query and 'within' not in query) and ' ' in query and query[0] != '"' and query[-1] != '"':
         query = '"%s"' % query
 
     # Parse and recompile CQL query string to apply number normalization

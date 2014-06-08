@@ -4,6 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ux: new quick- and vanity urls
+    - /publicationdate/2013-03-03/2013-04-03
+    - /publicationdate/2014W10
+    - /today, /week, /month, /year
+    - /country/us
 
 0.15.0
 ======
