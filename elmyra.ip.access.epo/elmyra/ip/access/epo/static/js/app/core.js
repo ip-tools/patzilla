@@ -467,6 +467,7 @@ function boot_application() {
         opsChooserApp.perform_search({reviewmode: false});
     });
 
+    // select datasource
     _([document, '#query']).each(function (selector) {
         $(selector).on('keydown', null, 'ctrl+shift+d', function(event) {
             $('#datasource button[data-value="depatisnet"]').button('toggle');
@@ -479,6 +480,13 @@ function boot_application() {
         $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
             opsChooserApp.basketModel.review();
         });
+    });
+
+    $(document).on('keydown', null, '+', function() {
+        opsChooserApp.document_add_basket();
+    });
+    $(document).on('keydown', null, '-', function() {
+        opsChooserApp.document_remove_basket();
     });
 
     /*

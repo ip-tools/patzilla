@@ -84,7 +84,7 @@ a.editable-click {
 
 /* result entry */
 
-.ops-collection-entry {
+.ops-collection-entry, .ops-collection-meta {
     position: relative;
     margin: 15px 0;
     padding: 0px;
@@ -95,7 +95,7 @@ a.editable-click {
     border-radius: 4px;
 }
 
-.ops-collection-meta {
+.ops-collection-meta:first-child {
     padding: 9px 15px;
     border-bottom: 0px;
 }

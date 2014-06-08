@@ -372,6 +372,30 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     },
 
+
+    // ux: hotkeys + and - for adding/removing the document in viewport to/from basket
+    get_document_number_in_focus: function() {
+        var document_in_focus = _.last($('.ops-collection-entry:in-viewport'));
+        var document_number = $(document_in_focus).data('document-number');
+        return document_number;
+    },
+    document_add_basket: function() {
+        console.log('document_add_basket');
+        var document_number = this.get_document_number_in_focus();
+        console.log(document_number);
+        if (document_number) {
+            this.basketModel.add(document_number);
+        }
+    },
+    document_remove_basket: function() {
+        console.log('document_remove_basket');
+        var document_number = this.get_document_number_in_focus();
+        console.log(document_number);
+        if (document_number) {
+            this.basketModel.remove(document_number);
+        }
+    },
+
 });
 
 
