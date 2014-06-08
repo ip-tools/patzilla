@@ -27,7 +27,9 @@ def opspdf(request):
     filename = slugify(name, strip_equals=False, lowercase=False)
     suffix = '.pdf'
     request.response.headers['Content-Disposition'] = 'inline; filename={filename}{suffix}'.format(**locals())
-    print_url = request.url.replace('pdf=true', 'print=true').replace('ops/browser', '')
+    print_url = request.url.replace('pdf=true', 'print=true')
+    if request.headers.get('Host') == 'patentsearch.elmyra.de':
+        print_url = print_url.replace('ops/browser', '')
     return render_pdf(print_url)
 
 @view_config(route_name='patentsearch-quick')
