@@ -323,8 +323,8 @@ function display_description(document_number, container) {
                 console.log('description', document_number, description);
 
                 // TODO: unify with display_claims
-                var content_parts = _(description.p).map(function(item) {
-                    return '<p>' + _(item['$']).escape().replace('\n', '<br/>') + '</p>';
+                var content_parts = _(to_list(description.p)).map(function(item) {
+                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/><br/>') + '</p>';
                 });
                 var content_text = content_parts.join('\n');
                 $(content_element).html(content_text);
@@ -354,8 +354,8 @@ function display_claims(document_number, container) {
                 console.log('claims', document_number, claims);
 
                 // TODO: unify with display_description
-                var content_parts = _(claims['claim']['claim-text']).map(function(item) {
-                    return '<p>' + _(item['$']).escape().replace('\n', '<br/>') + '</p>';
+                var content_parts = _(to_list(claims['claim']['claim-text'])).map(function(item) {
+                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
                 });
                 var content_text = content_parts.join('\n');
                 $(content_element).html(content_text);

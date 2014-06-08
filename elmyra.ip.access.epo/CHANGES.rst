@@ -6,6 +6,7 @@ development
 ===========
 - ui: add “notify.js”
 - ui: improve basket, add BasketEntryModel
+- ui: fix fulltext display, raw content nodes might not be lists
 
 0.14.0
 ======
