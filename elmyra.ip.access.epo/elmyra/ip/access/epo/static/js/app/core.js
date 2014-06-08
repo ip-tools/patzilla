@@ -482,11 +482,53 @@ function boot_application() {
         });
     });
 
+    // add/remove the document in viewport to/from basket
     $(document).on('keydown', null, '+', function() {
         opsChooserApp.document_add_basket();
     });
     $(document).on('keydown', null, '-', function() {
         opsChooserApp.document_remove_basket();
+    });
+
+    // intercept space key scrolling, snap to our grid
+    $(document).on('keydown', null, null, function(event) {
+
+        if (event.keyCode == 32 && event.target.localName == 'body') {
+            event.preventDefault();
+
+            // compute the best next target element to scroll to
+            if (event.shiftKey == false) {
+                var origin = $('.ops-collection-entry:in-viewport').first();
+                if ($(window).scrollTop() < origin.offset().top) {
+                    target = origin;
+                } else {
+                    var target = origin.closest('.ops-collection-entry').last();
+                    if (target[0] === origin[0]) {
+                        target = $('.ops-collection-entry:below-the-fold').first();
+                    }
+                }
+
+            // compute the best previous target element to scroll to
+            } else if (event.shiftKey == true) {
+                var origin = $('.ops-collection-entry:in-viewport').last();
+                if ($(window).scrollTop() > origin.offset().top) {
+                    target = origin;
+                } else {
+                    var target = origin.closest('.ops-collection-entry').first();
+                    if (target[0] === origin[0]) {
+                        target = $('.ops-collection-entry:above-the-top').last();
+                    }
+                }
+            }
+
+            // perform animated scrolling
+            if ($(target).offset()) {
+                $('html, body').animate({
+                    scrollTop: $(target).offset().top
+                }, 500);
+
+            }
+        }
     });
 
     /*

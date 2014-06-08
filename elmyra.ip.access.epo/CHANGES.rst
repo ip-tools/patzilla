@@ -12,6 +12,7 @@ development
 - ui: fix highlighting edge case again
 - ux: add jquery.viewport
 - ux: hotkeys + and - for adding/removing the document in viewport to/from basket
+- ux: snapped scrolling with spacebar
 
 0.14.0
 ======

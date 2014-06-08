@@ -375,7 +375,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     // ux: hotkeys + and - for adding/removing the document in viewport to/from basket
     get_document_number_in_focus: function() {
-        var document_in_focus = _.last($('.ops-collection-entry:in-viewport'));
+        var document_in_focus = _.first($('.document-actions:in-viewport').closest('.ops-collection-entry'));
         var document_number = $(document_in_focus).data('document-number');
         return document_number;
     },
