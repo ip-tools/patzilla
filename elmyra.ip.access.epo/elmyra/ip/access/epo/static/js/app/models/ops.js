@@ -35,11 +35,19 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var search_result = response['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
 
                 // unwrap response by creating a list of model objects from records
-                var entries;
+                var entries = [];
                 if (search_result) {
                     $(opsChooserApp.paginationViewBottom.el).show();
                     var exchange_documents = to_list(search_result['exchange-documents']);
-                    entries = _.map(exchange_documents, function(entry) { return new OpsExchangeDocument(entry['exchange-document']); });
+                    _(exchange_documents).each(function(entry) {
+                        var exchange_document = entry['exchange-document'];
+                        if (exchange_document['@status'] == 'invalid result') {
+                            console.error('OPS INVALID RESULT:', entry);
+                        } else {
+                            var document = new OpsExchangeDocument(exchange_document);
+                            entries.push(document);
+                        }
+                    });
                 }
 
                 // propagate data to model collection instance

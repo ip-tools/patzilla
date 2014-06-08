@@ -203,6 +203,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $('#info-area').append(alert_html);
     },
 
+
+    // TODO: move to project.js
     project_activate: function(project) {
 
         var _this = this;
@@ -247,7 +249,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // refetch basket to work around localforage.backbone vs. backbone-relational woes
         // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
         basket.fetch({success: function() {
-            _this.basket_activate(basket);
+            $.when(basket.fetch_entries()).then(function() {
+                _this.basket_activate(basket);
+            });
         }});
 
     },
@@ -258,6 +262,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         opsChooserApp.trigger('project:load', projectname);
     },
 
+
+    // TODO: move to basket.js
     basket_activate: function(basket) {
 
         console.log('App.basket_activate');
@@ -267,43 +273,52 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
+        // propagate "numberlist" query parameter to basket content
+        basket.init_from_query();
+
+
+        // A. model and view
+
         // TODO: how to decouple this? is there something like a global utility registry?
+        // TODO: is old model killed properly?
         if (this.basketModel) {
             this.stopListening(this.basketModel);
             delete this.basketModel;
         }
         this.basketModel = basket;
 
-
-        // A. event listeners
-
-        // toggle appropriate Add/Remove button when entries get added or removed from basket
-        // TODO: should old bindings be killed first using .stopListening?
-        this.listenTo(basket, "change:add", this.collectionView.basket_update_ui_entry);
-        this.listenTo(basket, "change:remove", this.collectionView.basket_update_ui_entry);
-
-        // save basket when changed
-        this.listenTo(basket, "change", function() {
-            basket.save();
+        // TODO: is old view killed properly?
+        // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
+        if (this.basketView) {
+            this.stopListening(this.basketView);
+            //this.basketView.destroy();
+            //this.basketView.remove();
+            delete this.basketView;
+        }
+        this.basketView = new BasketView({
+            el: $('#basket-area'),
+            model: basket,
         });
 
-        // also save project when basket changed, to update the "modified" attribute
+
+        // B. event listeners
+
+        // toggle appropriate Add/Remove button when entries get added or removed from basket
+        // TODO: are old bindings killed properly?
+        this.stopListening(null, "change:add");
+        this.stopListening(null, "change:remove");
+        this.listenTo(basket, "change:add", this.basketView.link_document);
+        this.listenTo(basket, "change:remove", this.basketView.link_document);
+
+        // save project when basket changed to update the "modified" attribute
+        this.stopListening(null, "change");
         this.listenTo(basket, "change", function() {
             this.project.save();
         });
 
 
-        // B. user interface
-
-        // create and render view based on model
-        // TODO: should the old view be killed first?
-        // hint: view.remove() or view.stopListening()
-        // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
-        var basketView = new BasketView({
-            el: $('#basket-area'),
-            model: basket,
-        });
-        basketView.render();
+        // C. user interface
+        this.basketView.render();
 
         // update some other gui components after basket view is ready
         this.basket_bind_actions();
@@ -350,11 +365,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         });
 
-        // propagate numberlist to Add/Remove button states once when activating the basket
+        // propagate basket contents to Add/Remove button states once when activating the basket
         this.documents.each(function(document) {
             var entry = document.attributes.get_patent_number();
-            // TODO: maybe refactor "basket_update_ui_entry" elsewhere
-            _this.collectionView.basket_update_ui_entry(entry);
+            _this.basketView.link_document(entry);
         });
 
     },
@@ -377,7 +391,7 @@ opsChooserApp.addRegions({
     paginationRegionBottom: "#ops-pagination-region-bottom",
 });
 
-// model initializer
+// initialize models
 opsChooserApp.addInitializer(function(options) {
 
     // application domain model objects
@@ -387,7 +401,7 @@ opsChooserApp.addInitializer(function(options) {
 
 });
 
-// view initializer
+// initialize views
 opsChooserApp.addInitializer(function(options) {
 
     // bind model objects to view objects
@@ -404,7 +418,6 @@ opsChooserApp.addInitializer(function(options) {
         model: this.metadata
     });
 
-
     // bind view objects to region objects
     opsChooserApp.metadataRegion.show(this.metadataView);
     opsChooserApp.listRegion.show(this.collectionView);
@@ -412,20 +425,23 @@ opsChooserApp.addInitializer(function(options) {
     opsChooserApp.paginationRegionBottom.show(this.paginationViewBottom);
 });
 
-// activate default basket (non-persistent/project-associated)
+// activate anonymous basket (non-persistent/project-associated)
 opsChooserApp.addInitializer(function(options) {
-    // activate basket component
     // remark: the model instance created here will get overwritten later
     //         by a project-specific basket when activating a project
     // reason: we still do it here for the case we decide to deactivate the project
     //         subsystem in certain modes (dunno whether this will work out)
-    this.basket_activate(new BasketModel());
+    // update [2014-06-08]: deactivated anonymous basket until further
+    //this.basket_activate(new BasketModel());
 });
 
-// component connect initializer
+// main component event wiring
 opsChooserApp.addInitializer(function(options) {
-    // kick off the search process immediately after initial project was created
+
+    // activate project as soon it's loaded from the datastore
     this.listenTo(this, "project:ready", this.project_activate);
+
+    // kick off the search process immediately after initial project was created
     this.listenToOnce(this, "project:ready", this.perform_search);
 });
 
@@ -444,10 +460,11 @@ $(document).ready(function() {
 
     boot_application();
 
-    // automatically run search after bootstrapping application
-    // gets triggered by "project:ready" events from now on [2014-05-21]
-    // We keep this here in case we want to switch gears / provide a non-storage
-    // version of the tool for which the chance is likely.
+    // Automatically run search after bootstrapping application.
+    // However, from now on [2014-05-21] this gets triggered by "project:ready" events.
+    // We keep this here in case we want to switch gears / provide a non-persistency
+    // version of the tool for which the chance is likely, i.e. for a website embedding
+    // component.
     //opsChooserApp.perform_search();
 
 });

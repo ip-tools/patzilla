@@ -419,6 +419,9 @@ function boot_application() {
     // auto-shorten some texts
     $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
 
+    // defaults for notification popups
+    $.notify.defaults({showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 2000, showDuration: 300});
+
 
     // ------------------------------------------
     //   cql query area

@@ -74,6 +74,15 @@ ProjectModel = Backbone.RelationalModel.extend({
     destroy: function(options) {
         var basket = this.get('basket');
         if (basket) {
+
+            // remove basket entries
+            basket.get('entries').each(function(entry) {
+                if (entry) {
+                    entry.destroy();
+                }
+            });
+
+            // remove basket
             basket.destroy();
         }
         return Backbone.Model.prototype.destroy.call(this, options);
@@ -278,14 +287,28 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
         // 4. activate project action buttons
         $(this.el).find('#project-delete-button').click(function(e) {
+
             _this.model.destroy({success: function() {
-                var selected = collection.sortByField('modified', 'desc').first();
+
+                // select the next available project
+                var selected = _this.collection.sortByField('modified', 'desc').first();
                 if (selected) {
                     var projectname = selected.get('name');
                     opsChooserApp.trigger('project:load', projectname);
+
+                // if no project is left, autocreate the canonical one (named by current date) again
                 } else {
-                    _this.set_name(null);
-                    $(_this.data_list_selector).empty();
+
+                    // HACK: aid in destroying a freshly created BasketModel
+                    opsChooserApp.basketModel.destroy();
+                    delete opsChooserApp.basketModel;
+
+                    var projectname = today_iso();
+                    opsChooserApp.trigger('project:load', projectname);
+
+                    var notification_container = $('#project-chooser-name').parent().parent();
+                    $(notification_container).notify('recreated default project', {className: 'info', position: 'left'});
+
                 }
             }});
         });

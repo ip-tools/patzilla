@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: add “notify.js”
+- ui: improve basket, add BasketEntryModel
 
 0.14.0
 ======
