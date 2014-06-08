@@ -9,6 +9,7 @@ development
     - /publicationdate/2014W10
     - /today, /week, /month, /year
     - /country/us
+    - /cpc/"H04B7-15542"
 
 0.15.0
 ======

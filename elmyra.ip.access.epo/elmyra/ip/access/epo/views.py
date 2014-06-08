@@ -79,6 +79,9 @@ def compute_query(field, value, value2):
     if field == 'country':
         field = 'pn'
 
+    if field in ['cl', 'ipc', 'ic', 'cpc', 'cpci', 'cpca']:
+        value = value.replace('-', '/')
+
     query = '{field}={value}'.format(**locals())
 
     if field in ['pd', 'publicationdate']:
