@@ -37,7 +37,6 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // unwrap response by creating a list of model objects from records
                 var entries = [];
                 if (search_result) {
-                    $(opsChooserApp.paginationViewBottom.el).show();
                     var exchange_documents = to_list(search_result['exchange-documents']);
                     _(exchange_documents).each(function(entry) {
                         var exchange_document = entry['exchange-document'];

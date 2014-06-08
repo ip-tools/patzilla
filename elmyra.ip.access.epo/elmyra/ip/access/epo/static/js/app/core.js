@@ -67,6 +67,12 @@ function listview_bind_actions() {
 
 
     // ------------------------------------------
+    //   second pagination at bottom
+    // ------------------------------------------
+    $(opsChooserApp.paginationViewBottom.el).show();
+
+
+    // ------------------------------------------
     //   result list
     // ------------------------------------------
     opsChooserApp.basket_bind_actions();
