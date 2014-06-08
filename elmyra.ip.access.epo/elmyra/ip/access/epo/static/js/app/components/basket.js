@@ -10,7 +10,6 @@ BasketModel = Backbone.RelationalModel.extend({
             type: Backbone.HasMany,
             key: 'entries',
             relatedModel: 'BasketEntryModel',
-            autoFetch: true,
             includeInJSON: Backbone.Model.prototype.idAttribute,
 
             /*
