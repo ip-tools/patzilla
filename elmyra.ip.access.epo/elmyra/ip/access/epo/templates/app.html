@@ -209,8 +209,10 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
             <div style="text-align: right">
                 ${page_footer | n}
                 ${app_versionstring | n}
-                <br/>
-                Help: <a id="link-help" class="incognito"><i class="icon-question-sign icon-large"></i></a>
+                <span class="do-not-print">
+                    <br/>
+                    Help: <a id="link-help" class="incognito"><i class="icon-question-sign icon-large"></i></a>
+                </span>
             </div>
         </small>
     </div>
