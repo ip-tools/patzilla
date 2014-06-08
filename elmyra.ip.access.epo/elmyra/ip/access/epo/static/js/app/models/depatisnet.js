@@ -6,16 +6,21 @@ DepatisnetSearch = Backbone.Model.extend({
     keywords: [],
     perform: function(query, range) {
 
+        indicate_activity(true);
+
         var self = this;
         return this.fetch({
             //async: false,
             data: $.param({ query: query, range: range}),
             success: function (payload, response, options) {
+                indicate_activity(false);
+                reset_content();
                 self.keywords = jQuery.parseJSON(options.xhr.getResponseHeader('X-Elmyra-Query-Keywords'));
             },
             error: function(e, xhr) {
 
                 //console.log("error: " + xhr.responseText);
+                indicate_activity(false);
                 reset_content();
 
                 $('#alert-area').empty();

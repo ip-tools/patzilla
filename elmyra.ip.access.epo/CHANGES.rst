@@ -7,6 +7,7 @@ development
 - ui: add “notify.js”
 - ui: improve basket, add BasketEntryModel
 - ui: fix fulltext display, raw content nodes might not be lists
+- ui: also record depatisnet queries, improved query recording in general
 
 0.14.0
 ======

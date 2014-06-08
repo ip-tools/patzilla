@@ -50,8 +50,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             if (datasource == 'ops') {
                 var range = this.compute_range(options);
-                console.log('App.perform_search: trigger search:before');
-                this.trigger('search:before', query, range);
+                this.trigger('search:before', {datasource: datasource, query: query, range: range});
                 opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
 
                     self.metadata.set('keywords', opsChooserApp.search.keywords);
@@ -62,7 +61,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             } else if (datasource == 'depatisnet') {
 
-                indicate_activity(true);
+                this.trigger('search:before', {datasource: datasource, query: query});
 
                 // make the pager display the original query
                 this.metadata.set('query_origin', query);
@@ -72,7 +71,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                     self.propagate_depatisnet_message(response);
                     self.metadata.set('keywords', depatisnet.keywords);
-                    console.log(response);
+                    console.log('depatisnet response:', response);
 
                     var publication_numbers = response['data'];
                     var hits = response['hits'];

@@ -44,7 +44,10 @@ ProjectModel = Backbone.RelationalModel.extend({
         console.log('ProjectModel.initialize');
     },
 
-    record_query: function(query, range) {
+    record_query: function(query_data) {
+
+        var query = query_data.query + ' (' + query_data.datasource + ')';
+
         console.log('ProjectModel.record_query: ' + query);
 
         var dirty = false;

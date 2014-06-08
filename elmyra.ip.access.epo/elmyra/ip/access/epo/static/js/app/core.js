@@ -711,6 +711,16 @@ function cql_history_chooser_setup() {
 
         var value = $(this).val();
         if (value) {
+
+            // HACK: cut away suffix
+            // TODO: move to QueryModel
+            if (_.string.endsWith(value, '(ops)')) {
+                opsChooserApp.set_datasource('ops');
+            } else if (_.string.endsWith(value, '(depatisnet)')) {
+                opsChooserApp.set_datasource('depatisnet');
+            }
+            value = value.replace(' (ops)', '').replace(' (depatisnet)', '');
+
             $('#query').val(value);
         }
 
