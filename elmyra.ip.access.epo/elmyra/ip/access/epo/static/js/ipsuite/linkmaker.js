@@ -164,6 +164,14 @@
             return url;
         },
 
+        espacenet_worldwide_url: function() {
+            // http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=US&NR=2014140267A1&KC=A1
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
+            var url = url_tpl(document_id);
+            return url;
+        },
+
         /*
         query_link: function(label, value, attribute) {
             var link_tpl = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
