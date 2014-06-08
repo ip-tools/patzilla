@@ -9,6 +9,7 @@ development
 - ui: fix fulltext display, raw content nodes might not be lists
 - ui: also record depatisnet queries, improved query recording in general
 - ui: don’t use depatisnet as default datasource
+- ui: fix highlighting edge case again
 
 0.14.0
 ======
