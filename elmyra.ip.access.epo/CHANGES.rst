@@ -8,6 +8,7 @@ development
 - ui: improve basket, add BasketEntryModel
 - ui: fix fulltext display, raw content nodes might not be lists
 - ui: also record depatisnet queries, improved query recording in general
+- ui: don’t use depatisnet as default datasource
 
 0.14.0
 ======

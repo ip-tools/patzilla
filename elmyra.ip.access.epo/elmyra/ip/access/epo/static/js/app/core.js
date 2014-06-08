@@ -397,12 +397,14 @@ function boot_application() {
     var url = $.url(window.location.href);
     var datasource = url.param('datasource');
 
+    /*
     if (!datasource) {
         var query = $('#query').val();
         if (query.trim() == '') {
             datasource = 'depatisnet';
         }
     }
+    */
 
     if (!datasource) {
         datasource = 'ops';
