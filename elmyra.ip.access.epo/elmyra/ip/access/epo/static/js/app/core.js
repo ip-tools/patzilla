@@ -498,7 +498,7 @@ function boot_application() {
 
             // compute the best next target element to scroll to
             if (event.shiftKey == false) {
-                var origin = $('.ops-collection-entry:in-viewport').first();
+                var origin = $('.ops-collection-entry:in-viewport');
                 if ($(window).scrollTop() < origin.offset().top) {
                     target = origin;
                 } else {
@@ -510,7 +510,7 @@ function boot_application() {
 
             // compute the best previous target element to scroll to
             } else if (event.shiftKey == true) {
-                var origin = $('.ops-collection-entry:in-viewport').last();
+                var origin = $('.ops-collection-entry:in-viewport');
                 if ($(window).scrollTop() > origin.offset().top) {
                     target = origin;
                 } else {
