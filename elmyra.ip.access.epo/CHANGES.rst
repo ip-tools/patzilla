@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.15.0
+======
 - ui: add “notify.js”
 - ui: improve basket, add BasketEntryModel
 - ui: fix fulltext display, raw content nodes might not be lists
