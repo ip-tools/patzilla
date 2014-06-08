@@ -10,6 +10,7 @@ development
 - ui: also record depatisnet queries, improved query recording in general
 - ui: don’t use depatisnet as default datasource
 - ui: fix highlighting edge case again
+- ux: add jquery.viewport
 - ux: hotkeys + and - for adding/removing the document in viewport to/from basket
 
 0.14.0
