@@ -469,13 +469,13 @@ function boot_application() {
 
     // select datasource
     _([document, '#query']).each(function (selector) {
+        $(selector).on('keydown', null, 'ctrl+shift+e', function(event) {
+            $('#datasource button[data-value="ops"]').button('toggle');
+            opsChooserApp.set_datasource('ops');
+        });
         $(selector).on('keydown', null, 'ctrl+shift+d', function(event) {
             $('#datasource button[data-value="depatisnet"]').button('toggle');
             opsChooserApp.set_datasource('depatisnet');
-        });
-        $(selector).on('keydown', null, 'ctrl+shift+o', function(event) {
-            $('#datasource button[data-value="ops"]').button('toggle');
-            opsChooserApp.set_datasource('ops');
         });
         $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
             opsChooserApp.basketModel.review();

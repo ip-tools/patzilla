@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: fix "review" regression
+- ui: rename OPS => EPO, DEPATISnet => DPMA, adapt hotkeys
 
 0.16.0
 ======
