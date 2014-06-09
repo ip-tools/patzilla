@@ -196,3 +196,7 @@ dl.dl-horizontal-inline {
 #cql-history-chooser-container {
     width: 420px;
 }
+
+#basket {
+    font-family: "Courier New";
+}

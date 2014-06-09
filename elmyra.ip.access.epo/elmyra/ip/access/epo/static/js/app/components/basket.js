@@ -56,31 +56,50 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     // add item to basket
-    add: function(item) {
+    add: function(number) {
         var _this = this;
 
-        if (this.get_entry_by_number(item)) {
-            return;
+        var deferred = $.Deferred();
+
+        var entry = this.get_entry_by_number(number);
+        if (entry) {
+
+            // refetch entry to work around localforage.backbone vs. backbone-relational woes
+            // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
+            entry.fetch({success: function() {
+                deferred.resolve(entry);
+
+                // refresh gui, update timestamp
+                _this.trigger('change', _this);
+            }});
+
+            return deferred.promise();
         }
 
-        var entries = this.get('entries');
-        var entry = new BasketEntryModel({number: item /*, basket: this*/});
+        entry = new BasketEntryModel({number: number /*, basket: this*/});
         entry.save(null, {success: function() {
+            var entries = _this.get('entries');
             entries.add(entry);
-            _this.save({'entries': entries}, {success: function() {
-                $.when(_this.fetch_entries()).then(function() {
-                    _this.trigger('change', _this);
-                    _this.trigger('change:add', item);
-                });
-            }});
+            _this.save({'entries': entries}, {
+                success: function() {
+                    $.when(_this.fetch_entries()).then(function() {
+                        //deferred.resolve(entry);
+                        deferred.resolve(_this.get_entry_by_number(entry.get('number')));
+                        _this.trigger('change', _this);
+                        _this.trigger('change:add', entry, number);
+                    });
+                },
+            });
         }});
+
+        return deferred.promise();
     },
 
     // remove item from basket
-    remove: function(item) {
+    remove: function(number) {
         var _this = this;
 
-        var entry = this.get_entry_by_number(item);
+        var entry = this.get_entry_by_number(number);
         if (!entry) {
             return;
         }
@@ -90,7 +109,7 @@ BasketModel = Backbone.RelationalModel.extend({
         entry.destroy();
         _this.save({'entries': entries}, {success: function() {
             $.when(_this.fetch_entries()).then(function() {
-                _this.trigger('change:remove', item);
+                _this.trigger('change:remove', entry, number);
                 _this.trigger('change', _this);
             });
         }});
@@ -176,7 +195,7 @@ BasketEntryModel = Backbone.RelationalModel.extend({
         number: undefined,
         timestamp: undefined,
         title: undefined,
-        rating: undefined,
+        score: undefined,
         dismiss: undefined,
         // TODO: link to QueryModel
         //query: undefined,
@@ -199,6 +218,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
     serializeData: function() {
 
+        console.log('serializeData');
+
         var _this = this;
 
         var data = {};
@@ -206,9 +227,17 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         _(data).extend(this.params_from_query());
 
-        var numbers = this.model.get_numbers();
-        if (numbers) {
-            data['numbers_display'] = numbers.join('\n');
+        var entries = this.model.get('entries').map(function(entry) {
+            var line =
+                _.string.ljust(entry.get('number'), 20, ' ') +
+                _.string.ljust(entry.get('dismiss') ? '∅' : '', 5, ' ') +
+                _.string.repeat('★', entry.get('score'));
+            return line;
+        });
+
+        //var numbers = this.model.get_numbers();
+        if (entries) {
+            data['numbers_display'] = entries.join('\n');
         }
 
         return data;
@@ -311,30 +340,49 @@ BasketView = Backbone.Marionette.ItemView.extend({
     },
 
     // backpropagate current basket entries into checkbox state
-    link_document: function(entry) {
+    link_document: function(entry, number) {
 
         // why do we have to access the global object here?
         // maybe because of the event machinery which dispatches to us?
         var numbers = opsChooserApp.basketModel.get_numbers();
 
-        var checkbox_element = $('#' + 'chk-patent-number-' + entry);
-        var add_button_element = $('#' + 'add-patent-number-' + entry);
-        var remove_button_element = $('#' + 'remove-patent-number-' + entry);
+        var checkbox_element = $('#' + 'chk-patent-number-' + number);
+        var add_button_element = $('#' + 'add-patent-number-' + number);
+        var remove_button_element = $('#' + 'remove-patent-number-' + number);
+        var rating_widget = $('#' + 'rate-patent-number-' + number);
 
         // number is not in basket, show "add" button
-        if (!_(numbers).contains(entry)) {
+        if (!_(numbers).contains(number)) {
             checkbox_element && checkbox_element.prop('checked', false);
             add_button_element && add_button_element.show();
             remove_button_element && remove_button_element.hide();
 
-        // number is already in basket, show "remove" button
+        // number is already in basket, show "remove" button and propagate rating values
         } else {
             checkbox_element && checkbox_element.prop('checked', true);
             add_button_element && add_button_element.hide();
             remove_button_element && remove_button_element.show();
 
+            // if we have a model, propagate "score" and "dismiss" values
+            if (entry) {
+                rating_widget.raty('score', entry.get('score'));
+                rating_widget.raty('dismiss', entry.get('dismiss'));
+            }
+
         }
 
+    },
+
+    textarea_scroll_bottom: function() {
+        $('#basket').scrollTop($('#basket')[0].scrollHeight);
+    },
+
+    textarea_scroll_text: function(text) {
+        var textArea = $('#basket');
+        var index = textArea.text().search(text);
+        if (index) {
+            textArea.scrollTop(index);
+        }
     },
 
 });

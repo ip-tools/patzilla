@@ -315,6 +315,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             this.project.save();
         });
 
+        // focus added number in basket
+        this.listenTo(basket, "change:add", function(entry, number) {
+            this.basketView.textarea_scroll_text(number);
+        });
+
+
 
         // C. user interface
         this.basketView.render();
@@ -349,8 +355,14 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
         $(".remove-patent-number").unbind('click');
         $(".remove-patent-number").click(function() {
+
+            // remove basket entry
             var patent_number = $(this).data('patent-number');
             _this.basketModel.remove(patent_number);
+
+            // reset rating widget
+            var rating_widget = $(this).siblings('.rating-widget');
+            $(rating_widget).raty('reload');
         });
 
         // handle "add all documents"
@@ -364,10 +376,42 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         });
 
+        // setup rating widget
+        console.log('setup rating widget');
+        //$('.rating-widget').raty('destroy');
+        $('.rating-widget').raty({
+            number: 3,
+            hints: ['slightly relevant', 'relevant', 'important'],
+            cancel: true,
+            cancelHint: 'not relevant',
+            dismissible: true,
+            space: false,
+            path: '/static/widget/raty/img',
+            action: function(data, evt) {
+                var score = data.score;
+                var dismiss = data.dismiss;
+                var document_number = $(this).data('document-number');
+                opsChooserApp.basketModel.add(document_number).then(function(item) {
+                    item.save({score: score, dismiss: dismiss}, {
+                        success: function() {
+                            console.log('rating save success');
+                            //opsChooserApp.basketModel.trigger('change', opsChooserApp.basketModel);
+                            _this.basketView.textarea_scroll_text(document_number);
+
+                        }, error: function() {
+                            console.log('rating save error');
+                        }
+                    });
+
+                });
+            },
+        });
+
         // propagate basket contents to Add/Remove button states once when activating the basket
         this.documents.each(function(document) {
-            var entry = document.attributes.get_patent_number();
-            _this.basketView.link_document(entry);
+            var number = document.attributes.get_patent_number();
+            var entry = opsChooserApp.basketModel.get_entry_by_number(number);
+            _this.basketView.link_document(entry, number);
         });
 
     },
@@ -378,6 +422,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var document_in_focus = _.first($('.document-actions:in-viewport').closest('.ops-collection-entry'));
         var document_number = $(document_in_focus).data('document-number');
         return document_number;
+    },
+    get_rating_widget: function(document_number) {
+        return $('#rate-patent-number-' + document_number);
     },
     document_add_basket: function() {
         console.log('document_add_basket');
@@ -393,6 +440,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         console.log(document_number);
         if (document_number) {
             this.basketModel.remove(document_number);
+            this.get_rating_widget(document_number).raty('reload');
         }
     },
 

@@ -26,5 +26,24 @@ function changeTooltipColorTo(color) {
 }
 
 function quotate(value) {
+    // TODO: use _.string.surround(str, wrapper)
     return '"' + value + '"';
+}
+
+// http://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/21976486#21976486
+function asbool(value) {
+    if (typeof(value) == 'string') {
+        value = value.trim().toLowerCase();
+    }
+    switch(value){
+        case true:
+        case "true":
+        case 1:
+        case "1":
+        case "on":
+        case "yes":
+            return true;
+        default:
+            return false;
+    }
 }

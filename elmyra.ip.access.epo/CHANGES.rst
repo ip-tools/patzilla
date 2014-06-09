@@ -11,8 +11,9 @@ development
     - /country/us
     - /cpc/"H04B7-15542"
 - ux: link to espacenet worldwide (biblio data)
-- ui: add rating widget “jQuery Raty”
+- ui: add library “jQuery Raty”
 - ui: “dismissible" extension to “jQuery Raty”
+- ui: rating widget for BasketEntryModel
 
 0.15.0
 ======

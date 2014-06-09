@@ -231,6 +231,7 @@
 
                     % if ship_mode == 'multi-numberlist':
                     <%text>
+                    <span id="rate-patent-number-<%= patent_number %>" class="rating-widget" data-document-number="<%= patent_number %>"></span>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
                     <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
                        data-patent-number="<%= patent_number %>"
