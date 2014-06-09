@@ -357,7 +357,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         var add_button_element = $('#add-patent-number-' + number);
         var remove_button_element = $('#remove-patent-number-' + number);
         var rating_widget = $('#rate-patent-number-' + number);
-        var indicator_element = rating_widget.closest('.ops-collection-entry-heading').siblings('.ops-collection-entry-inner');
+        var indicator_element = rating_widget.closest('.ops-collection-entry-heading');
 
         // number is not in basket, show "add" button
         if (!_(numbers).contains(number)) {

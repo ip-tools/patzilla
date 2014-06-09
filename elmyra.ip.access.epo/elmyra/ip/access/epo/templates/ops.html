@@ -46,17 +46,19 @@
         <div class="ops-collection-entry-heading row-fluid">
 
             <!-- patent number -->
-            <div class="span3">
-                <h3 class="header-compact">
+            <div class="span3 container-fluid">
+                <div class="header-compact">
                     <%= data.enrich_link(patent_number, 'pn') %>
-                </h3>
+                </div>
             </div>
 
             <!-- dates -->
-            <div class="span3 container-fluid" style="line-height: 2.7em">
-                <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>&nbsp;<span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
-                &nbsp;&nbsp;
-                <span class="inid inid-tooltip" data-toggle="tooltip" title="application date">(22)</span>&nbsp;&nbsp;<span class="keyword"><%= application_date %></span>
+            <div class="span3 container-fluid">
+                <div class="header-biblio">
+                    <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>&nbsp;<span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
+                    &nbsp;&nbsp;
+                    <span class="inid inid-tooltip" data-toggle="tooltip" title="application date">(22)</span>&nbsp;&nbsp;<span class="keyword"><%= application_date %></span>
+                </div>
             </div>
 
             <!-- actions -->

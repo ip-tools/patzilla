@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: color indicator for score/dismiss state
+- ui: improve document header layout
 
 0.16.1
 ======
