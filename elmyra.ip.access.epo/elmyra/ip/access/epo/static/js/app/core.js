@@ -593,7 +593,7 @@ function boot_application() {
 
 
     // open pdf on "p"
-    $(document).on('keydown', null, 'p', function(event) {
+    $(document).on('keydown', null, 'shift+p', function(event) {
         event.preventDefault();
         var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-pdf-ops');
         anchor[0].click();

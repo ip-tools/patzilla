@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ux: make the pdf open on shift+p
 
 0.17.0
 ======
@@ -14,7 +15,7 @@ development
     - shift+right, shift+left: navigate the drawings carousel
     - p: open the ops pdf
     - shift+e, shift+d: open espacenet re. depatisnet
-    - alt+shit+e, alt+shit+d: open epo register re. dpma register
+    - alt+shift+e, alt+shift+d: open epo register re. dpma register
     - shift+c: open ccd viewer
 
 0.16.1
