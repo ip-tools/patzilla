@@ -386,7 +386,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             cancel: true,
             cancelHint: 'not relevant',
             dismissible: true,
-            space: false,
             path: '/static/widget/raty/img',
             action: function(data, evt) {
                 var score = data.score;

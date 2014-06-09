@@ -63,7 +63,7 @@
             <div class="span6 container-fluid document-actions do-not-print">
 
                 <!-- details / fulltext -->
-                <div class="span9">
+                <div class="span8">
 
                     <% if (data.has_fulltext()) { %>
                     <div class="btn-group btn-popover tabs"
@@ -204,7 +204,7 @@
                 </div>
 
                 <!-- add/remove -->
-                <div class="span3" style="line-height: 200%">
+                <div class="span4" style="line-height: 200%">
 
                     <%
                     # FIXME: use javascript-only variables, get rid of the pyramid request object
@@ -213,7 +213,12 @@
 
                     % if ship_mode == 'multi-numberlist':
                     <%text>
-                    <span id="rate-patent-number-<%= patent_number %>" class="rating-widget" data-document-number="<%= patent_number %>"></span>
+                    <span
+                            class="rating-widget"
+                            id="rate-patent-number-<%= patent_number %>"
+                            data-document-number="<%= patent_number %>"
+                            style="display: inline-block;"
+                            ></span>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
                     <!--
                     <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
@@ -223,7 +228,7 @@
                         <i class="icon-white icon-plus"></i>
                     </a>
                     -->
-                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number"
+                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number pull-right"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remove document number from basket"
                        >

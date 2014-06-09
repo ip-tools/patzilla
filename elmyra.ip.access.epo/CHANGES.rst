@@ -11,6 +11,7 @@ development
     - get rid of "plus" button, just leave "trash" button for removing an item
 - ux: improve hotkey assignments
 - ui: improve document header layout
+- ui: improve rating widget layout
 
 0.16.0
 ======
