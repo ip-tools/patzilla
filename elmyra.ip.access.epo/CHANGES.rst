@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.16.1
+======
 - ui: fix "review" regression
 - ui: rename OPS => EPO, DEPATISnet => DPMA, adapt hotkeys
 - ui: improve rating:
