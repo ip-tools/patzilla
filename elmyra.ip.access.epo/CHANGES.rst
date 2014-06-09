@@ -6,6 +6,13 @@ development
 ===========
 - ui: color indicator for score/dismiss state
 - ui: improve document header layout
+- ux: improve hotkey assignments
+    - right, left: navigate the tabs
+    - shift+right, shift+left: navigate the drawings carousel
+    - p: open the ops pdf
+    - shift+e, shift+d: open espacenet re. depatisnet
+    - alt+shit+e, alt+shit+d: open epo register re. dpma register
+    - shift+c: open ccd viewer
 
 0.16.1
 ======

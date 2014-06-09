@@ -68,7 +68,7 @@
                 <div class="span8">
 
                     <% if (data.has_fulltext()) { %>
-                    <div class="btn-group btn-popover tabs"
+                    <div class="btn-group btn-popover tabs document-tab-chooser"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Toggle detail view"
                          >
@@ -102,7 +102,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf">
+                                <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf" class="anchor-pdf-ops">
                                     [PDF] <%= patent_number %> @ OPS
                                 </a>
                             </li>
@@ -135,12 +135,12 @@
                             </div>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank">
+                                <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet">
                                     [BIBLIO] <%= patent_number %> @ Espacenet
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.depatisnet_url() %>" target="_blank">
+                                <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" class="anchor-biblio-depatisnet">
                                     [BIBLIO] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
@@ -159,12 +159,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.epo_register_url() %>" target="_blank">
+                                <a href="<%= linkmaker.epo_register_url() %>" target="_blank" class="anchor-register-epo">
                                     [LEGAL] <%= patent_number %> @ European Patent Register
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.dpma_register_url() %>" target="_blank">
+                                <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" class="anchor-register-dpma">
                                     [LEGAL] <%= patent_number %> @ DPMAregister
                                 </a>
                             </li>
@@ -182,7 +182,7 @@
                             </div>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank">
+                                <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" class="anchor-ccd">
                                     [FAMILY] <%= patent_number %> @ CCD Viewer
                                 </a>
                             </li>
@@ -230,7 +230,7 @@
                         <i class="icon-white icon-plus"></i>
                     </a>
                     -->
-                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number pull-right"
+                    <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remove document number from basket"
                        >

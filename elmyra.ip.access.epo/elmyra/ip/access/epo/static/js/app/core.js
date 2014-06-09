@@ -554,6 +554,82 @@ function boot_application() {
     });
 
 
+    // navigate the Biblio, Desc, Claims with left/right arrow keys
+    $(document).on('keydown', null, 'right', function(event) {
+        event.preventDefault();
+        var tab_chooser = $('.ops-collection-entry:in-viewport').find('.document-actions .document-tab-chooser').first();
+        var active_button = tab_chooser.find('button.active');
+        var next = active_button.next('button');
+        if (!next.length) {
+            next = active_button.siblings('button').first();
+        }
+        next.tab('show');
+    });
+    $(document).on('keydown', null, 'left', function(event) {
+        event.preventDefault();
+        var tab_chooser = $('.ops-collection-entry:in-viewport').find('.document-actions .document-tab-chooser').first();
+        var active_button = tab_chooser.find('button.active');
+        var next = active_button.prev('button');
+        if (!next.length) {
+            next = active_button.siblings('button').last();
+        }
+        next.tab('show');
+    });
+
+
+    // navigate the carousel with shift+left/right arrow keys
+    $(document).on('keydown', null, 'shift+right', function(event) {
+        event.preventDefault();
+        var drawings_carousel = $('.ops-collection-entry:in-viewport').find('.drawings-carousel').first();
+        var carousel_button_more = drawings_carousel.find('.carousel-control.right');
+        carousel_button_more.trigger('click');
+    });
+    $(document).on('keydown', null, 'shift+left', function(event) {
+        event.preventDefault();
+        var drawings_carousel = $('.ops-collection-entry:in-viewport').find('.drawings-carousel').first();
+        var carousel_button_more = drawings_carousel.find('.carousel-control.left');
+        carousel_button_more.trigger('click');
+    });
+
+
+    // open pdf on "p"
+    $(document).on('keydown', null, 'p', function(event) {
+        event.preventDefault();
+        var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-pdf-ops');
+        anchor[0].click();
+    });
+
+
+    // links to various patent offices
+    // open Espacenet on "shift+e"
+    $(document).on('keydown', null, 'shift+e', function(event) {
+        event.preventDefault();
+        var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-biblio-espacenet');
+        anchor[0].click();
+    });
+    // open DEPATISnet on "shift+d"
+    $(document).on('keydown', null, 'shift+d', function(event) {
+        event.preventDefault();
+        var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-biblio-depatisnet');
+        anchor[0].click();
+    });
+    // open epo register information on "shift+alt+e"
+    $(document).on('keydown', null, 'alt+shift+e', function(event) {
+        event.preventDefault();
+        $('.ops-collection-entry:in-viewport').find('a.anchor-register-epo')[0].click();
+    });
+    // open dpma register information on "shift+alt+d"
+    $(document).on('keydown', null, 'alt+shift+d', function(event) {
+        event.preventDefault();
+        $('.ops-collection-entry:in-viewport').find('a.anchor-register-dpma')[0].click();
+    });
+    // open ccd on "shift+c"
+    $(document).on('keydown', null, 'shift+c', function(event) {
+        event.preventDefault();
+        $('.ops-collection-entry:in-viewport').find('a.anchor-ccd')[0].click();
+    });
+
+
     /*
     // intercept and reformat clipboard content
     $("#query").on("paste", function(e) {
