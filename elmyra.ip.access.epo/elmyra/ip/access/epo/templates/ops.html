@@ -29,29 +29,12 @@
     var patent_number = data.get_patent_number();
     var linkmaker = data.get_linkmaker();
 
+    // TODO: refactor to ops.js
     var publication_date = data.format_date(data.search_date(data['bibliographic-data']['publication-reference']['document-id']));
     var application_date = data.format_date(data.search_date(data['bibliographic-data']['application-reference']['document-id']));
 
-    // title
-    var title_list = [];
-    var title_node = data['bibliographic-data']['invention-title'];
-    if (title_node) {
-        title_list = _.map(to_list(title_node), function(title) {
-            var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '';
-            return lang_prefix + title['$'];
-        });
-    }
-
-    var abstract_list = [];
-    if (data['abstract']) {
-        var abstract_node = to_list(data['abstract']);
-        var abstract_list = abstract_node.map(function(node) {
-        var text_nodelist = to_list(node['p']);
-        var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
-            var lang_prefix = node['@lang'] && '[' + node['@lang'].toUpperCase() + '] ' || '';
-            return lang_prefix + text;
-        });
-    }
+    var title_list = data.get_title_list();
+    var abstract_list = data.get_abstract_list();
 
     %>
     </%text>

@@ -14,6 +14,7 @@ development
 - ui: add library “jQuery Raty”
 - ui: “dismissible" extension to “jQuery Raty”
 - ui: rating widget for BasketEntryModel
+- ui, storage: add title of selected document to BasketEntryModel
 
 0.15.0
 ======

@@ -76,7 +76,24 @@ BasketModel = Backbone.RelationalModel.extend({
             return deferred.promise();
         }
 
-        entry = new BasketEntryModel({number: number /*, basket: this*/});
+        // get title of selected document
+        // TODO: stop iteration if desired patent was found
+        // TODO: maybe prebuild/maintain an index in collection
+        var title = undefined;
+        opsChooserApp.documents.each(function(document) {
+            var document_number = document.attributes.get_patent_number();
+            if (number == document_number) {
+                title = document.attributes.get_title_list();
+            }
+        });
+
+        entry = new BasketEntryModel({
+            number: number,
+            timestamp: now_iso(),
+            title: title,
+            /*basket: this,*/
+            /*query: null,*/
+        });
         entry.save(null, {success: function() {
             var entries = _this.get('entries');
             entries.add(entry);

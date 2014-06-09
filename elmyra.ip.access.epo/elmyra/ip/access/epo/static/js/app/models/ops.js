@@ -228,6 +228,32 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this._flatten_textstrings(document_id);
         },
 
+        get_title_list: function() {
+            var title_list = [];
+            var title_node = this['bibliographic-data']['invention-title'];
+            if (title_node) {
+                title_list = _.map(to_list(title_node), function(title) {
+                    var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '';
+                    return lang_prefix + title['$'];
+                });
+            }
+            return title_list;
+        },
+
+        get_abstract_list: function() {
+            var abstract_list = [];
+            if (this['abstract']) {
+                var abstract_node = to_list(this['abstract']);
+                var abstract_list = abstract_node.map(function(node) {
+                    var text_nodelist = to_list(node['p']);
+                    var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
+                    var lang_prefix = node['@lang'] && '[' + node['@lang'].toUpperCase() + '] ' || '';
+                    return lang_prefix + text;
+                });
+            }
+            return abstract_list;
+        },
+
         get_applicants: function(links) {
 
             try {
