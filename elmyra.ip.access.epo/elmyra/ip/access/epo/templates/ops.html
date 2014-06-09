@@ -216,17 +216,19 @@
                     <%text>
                     <span id="rate-patent-number-<%= patent_number %>" class="rating-widget" data-document-number="<%= patent_number %>"></span>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
+                    <!--
                     <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to basket"
                        >
                         <i class="icon-white icon-plus"></i>
                     </a>
+                    -->
                     <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn btn-popover remove-patent-number"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remove document number from basket"
                        >
-                        <i class="icon-white icon-minus"></i>
+                        <i class="icon-trash icon-large"></i>
                     </a>
                     </%text>
                     % endif

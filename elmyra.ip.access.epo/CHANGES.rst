@@ -6,6 +6,9 @@ development
 ===========
 - ui: fix "review" regression
 - ui: rename OPS => EPO, DEPATISnet => DPMA, adapt hotkeys
+- ui: improve rating:
+    - get rid of "added, but not rated" state
+    - get rid of "plus" button, just leave "trash" button for removing an item
 
 0.16.0
 ======
