@@ -60,13 +60,13 @@
             </div>
 
             <!-- actions -->
-            <div class="span6 container-fluid pull-right2 document-actions do-not-print">
+            <div class="span6 container-fluid document-actions do-not-print">
 
                 <!-- details / fulltext -->
-                <div class="span6">
+                <div class="span9">
 
                     <% if (data.has_fulltext()) { %>
-                    <div class="span3 btn-group btn-popover nav tabs"
+                    <div class="btn-group btn-popover tabs"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Toggle detail view"
                          >
@@ -89,10 +89,6 @@
                     </div>
                     <% } %>
 
-                </div>
-
-                <!-- pdf, external links and add/remove -->
-                <div class="span3">
 
                     <!-- pdf document -->
                     <div class="btn-group btn-popover"
@@ -201,10 +197,13 @@
 
                         </ul>
                     </div>
+
                     </%text>
 
 
                 </div>
+
+                <!-- add/remove -->
                 <div class="span3">
 
                     <%

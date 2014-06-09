@@ -10,6 +10,7 @@ development
     - get rid of "added, but not rated" state
     - get rid of "plus" button, just leave "trash" button for removing an item
 - ux: improve hotkey assignments
+- ui: improve document header layout
 
 0.16.0
 ======
