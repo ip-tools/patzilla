@@ -346,17 +346,18 @@ BasketView = Backbone.Marionette.ItemView.extend({
         console.log('BasketView.onDomRefresh');
     },
 
-    // backpropagate current basket entries into checkbox state
+    // backpropagate current basket entries into action state (rating, signal coloring, etc.)
     link_document: function(entry, number) {
 
         // why do we have to access the global object here?
         // maybe because of the event machinery which dispatches to us?
         var numbers = opsChooserApp.basketModel.get_numbers();
 
-        var checkbox_element = $('#' + 'chk-patent-number-' + number);
-        var add_button_element = $('#' + 'add-patent-number-' + number);
-        var remove_button_element = $('#' + 'remove-patent-number-' + number);
-        var rating_widget = $('#' + 'rate-patent-number-' + number);
+        var checkbox_element = $('#chk-patent-number-' + number);
+        var add_button_element = $('#add-patent-number-' + number);
+        var remove_button_element = $('#remove-patent-number-' + number);
+        var rating_widget = $('#rate-patent-number-' + number);
+        var indicator_element = rating_widget.closest('.ops-collection-entry-heading').siblings('.ops-collection-entry-inner');
 
         // number is not in basket, show "add" button
         if (!_(numbers).contains(number)) {
@@ -364,7 +365,16 @@ BasketView = Backbone.Marionette.ItemView.extend({
             add_button_element && add_button_element.show();
             remove_button_element && remove_button_element.hide();
 
-        // number is already in basket, show "remove" button and propagate rating values
+            // clear rating widget
+            rating_widget.raty('reload');
+
+            // clear color indicators
+            indicator_element.toggleClass('dismiss', false);
+            indicator_element.toggleClass('score1', false);
+            indicator_element.toggleClass('score2', false);
+            indicator_element.toggleClass('score3', false);
+
+            // number is already in basket, show "remove" button and propagate rating values
         } else {
             checkbox_element && checkbox_element.prop('checked', true);
             add_button_element && add_button_element.hide();
@@ -372,8 +382,19 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
             // if we have a model, propagate "score" and "dismiss" values
             if (entry) {
-                rating_widget.raty('score', entry.get('score'));
-                rating_widget.raty('dismiss', entry.get('dismiss'));
+                var score = entry.get('score');
+                var dismiss = entry.get('dismiss');
+
+                // a) to rating widget
+                rating_widget.raty('score', score);
+                rating_widget.raty('dismiss', dismiss);
+
+                // b) to color indicator
+                indicator_element.toggleClass('dismiss', dismiss);
+                indicator_element.toggleClass('score1', score == 1);
+                indicator_element.toggleClass('score2', score == 2);
+                indicator_element.toggleClass('score3', score == 3);
+
             }
 
         }

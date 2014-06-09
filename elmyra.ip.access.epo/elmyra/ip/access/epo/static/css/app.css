@@ -109,8 +109,21 @@ a.editable-click {
 .ops-collection-entry-inner {
     display: block;
     padding: 9px 15px;
-    border-top: 1px solid #e5e5e5;
+    border-top: 3px solid #e5e5e5;
 }
+.dismiss {
+    border-top: 3px solid #51a351;
+}
+.score1 {
+    border-top: 3px solid #ffe303;
+}
+.score2 {
+    border-top: 3px solid #f89406;
+}
+.score3 {
+    border-top: 3px solid #bd362f;
+}
+
 
 .dl-horizontal-biblio {
     margin-bottom: 0px;

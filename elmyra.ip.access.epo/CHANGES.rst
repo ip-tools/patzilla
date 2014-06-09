@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: color indicator for score/dismiss state
 
 0.16.1
 ======

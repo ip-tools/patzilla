@@ -356,14 +356,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
         $(".remove-patent-number").unbind('click');
         $(".remove-patent-number").click(function() {
-
-            // remove basket entry
             var patent_number = $(this).data('patent-number');
             _this.basketModel.remove(patent_number);
-
-            // reset rating widget
-            var rating_widget = $(this).siblings('.rating-widget');
-            $(rating_widget).raty('reload');
         });
 
         // handle "add all documents"
@@ -428,7 +422,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var document_number = this.get_document_number_in_focus();
         if (document_number) {
             this.basketModel.remove(document_number);
-            this.get_rating_widget(document_number).raty('reload');
         }
     },
     viewport_document_rate: function(score, dismiss) {
