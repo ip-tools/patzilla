@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix "review" regression
 
 0.16.0
 ======

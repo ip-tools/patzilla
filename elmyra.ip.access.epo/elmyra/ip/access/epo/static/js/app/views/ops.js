@@ -57,7 +57,8 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
 MetadataView = Backbone.Marionette.ItemView.extend({
     tagName: "div",
     //id: "paginationview",
-    template: "#ops-metadata-template",
+    //template: "#ops-metadata-template",
+    template: _.template($('#ops-metadata-template').html(), this.model, {variable: 'data'}),
 
     initialize: function() {
         this.listenTo(this.model, "change", this.render);

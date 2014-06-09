@@ -138,17 +138,7 @@ BasketModel = Backbone.RelationalModel.extend({
 
     review: function(options) {
 
-        // compute cql query from entries in basket
-        var basket = $('#basket').val();
-        if (!basket) {
-            return;
-        }
-
-        var options = options || {};
-        var query = null;
-        var publication_numbers = basket
-            .split('\n')
-            .filter(function(entry) { return entry; });
+        var publication_numbers = this.get_numbers();
         var hits = publication_numbers.length;
 
         // TODO: decouple from referencing the main application object e.g. by using events!?
