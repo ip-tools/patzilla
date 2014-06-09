@@ -9,6 +9,7 @@ development
 - ui: improve rating:
     - get rid of "added, but not rated" state
     - get rid of "plus" button, just leave "trash" button for removing an item
+- ux: improve hotkey assignments
 
 0.16.0
 ======

@@ -308,6 +308,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.stopListening(null, "change:remove");
         this.listenTo(basket, "change:add", this.basketView.link_document);
         this.listenTo(basket, "change:remove", this.basketView.link_document);
+        this.listenTo(basket, "change:rate", this.basketView.link_document);
 
         // save project when basket changed to update the "modified" attribute
         this.stopListening(null, "change");
@@ -391,27 +392,19 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 var score = data.score;
                 var dismiss = data.dismiss;
                 var document_number = $(this).data('document-number');
-                opsChooserApp.basketModel.add(document_number).then(function(item) {
-                    item.save({score: score, dismiss: dismiss}, {
-                        success: function() {
-                            console.log('rating save success');
-                            //opsChooserApp.basketModel.trigger('change', opsChooserApp.basketModel);
-                            _this.basketView.textarea_scroll_text(document_number);
-
-                        }, error: function() {
-                            console.log('rating save error');
-                        }
-                    });
-
-                });
+                _this.document_rate(document_number, score, dismiss);
             },
         });
 
         // propagate basket contents to Add/Remove button states once when activating the basket
         this.documents.each(function(document) {
             var number = document.attributes.get_patent_number();
-            var entry = opsChooserApp.basketModel.get_entry_by_number(number);
-            _this.basketView.link_document(entry, number);
+            if (_this.basketModel) {
+                var entry = _this.basketModel.get_entry_by_number(number);
+                _this.basketView.link_document(entry, number);
+            } else {
+                _this.basketView.link_document(undefined, number);
+            }
         });
 
     },
@@ -426,21 +419,40 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     get_rating_widget: function(document_number) {
         return $('#rate-patent-number-' + document_number);
     },
-    document_add_basket: function() {
-        console.log('document_add_basket');
+    viewport_document_add_basket: function() {
         var document_number = this.get_document_number_in_focus();
-        console.log(document_number);
         if (document_number) {
             this.basketModel.add(document_number);
         }
     },
-    document_remove_basket: function() {
-        console.log('document_remove_basket');
+    viewport_document_remove_basket: function() {
         var document_number = this.get_document_number_in_focus();
-        console.log(document_number);
         if (document_number) {
             this.basketModel.remove(document_number);
             this.get_rating_widget(document_number).raty('reload');
+        }
+    },
+    viewport_document_rate: function(score, dismiss) {
+        var _this = this;
+        dismiss = dismiss || false;
+        var document_number = this.get_document_number_in_focus();
+        return this.document_rate(document_number, score, dismiss);
+    },
+    document_rate: function(document_number, score, dismiss) {
+        var _this = this;
+        if (document_number) {
+            this.basketModel.add(document_number).then(function(item) {
+                item.save({score: score, dismiss: dismiss}, {
+                    success: function() {
+                        _this.basketModel.trigger('change:rate', item, document_number);
+                        _this.basketView.textarea_scroll_text(document_number);
+
+                    }, error: function() {
+                        console.error('rating save error', document_number, item);
+                    }
+                });
+
+            });
         }
     },
 
