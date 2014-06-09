@@ -12,6 +12,7 @@ development
     - /cpc/"H04B7-15542"
 - ux: link to espacenet worldwide (biblio data)
 - ui: add rating widget “jQuery Raty”
+- ui: “dismissible" extension to “jQuery Raty”
 
 0.15.0
 ======

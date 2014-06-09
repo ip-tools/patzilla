@@ -6,10 +6,14 @@
  *
  * Licensed under The MIT License
  *
- * @version        2.5.2
+ * @version        2.5.2-elmyra
  * @since          2010.06.11
  * @author         Washington Botelho
  * @documentation  wbotelhos.com/raty
+ *
+ * @date           2014-06-09
+ * @author         Andreas Motl, Elmyra UG
+ * @documentation  "dismissible" extension
  *
  * ------------------------------------------------------------------
  *
@@ -29,7 +33,7 @@
         this.opt = $.extend(true, {}, $.fn.raty.defaults, settings);
 
         var that  = $(this),
-            inits = ['number', 'readOnly', 'score', 'scoreName'];
+            inits = ['number', 'readOnly', 'score', 'scoreName', 'dismiss', 'dismissName'];
 
         methods._callback.call(this, inits);
 
@@ -47,6 +51,11 @@
 
         this.stars = methods._createStars.call(this);
         this.score = methods._createScore.call(this);
+        this.dismiss = methods._createDismiss.call(this);
+
+        this.dismiss_val = function() {
+            return methods._asbool(this.dismiss.val());
+        }
 
         methods._apply.call(this, this.opt.score);
 
@@ -90,6 +99,22 @@
       }
     }, _between: function(value, min, max) {
       return Math.min(Math.max(parseFloat(value), min), max);
+    }, _asbool: function(value) {
+      // http://stackoverflow.com/questions/263965/how-can-i-convert-a-string-to-boolean-in-javascript/21976486#21976486
+      if (typeof(value) == 'string') {
+          value = value.trim().toLowerCase();
+      }
+      switch(value){
+          case true:
+          case "true":
+          case 1:
+          case "1":
+          case "on":
+          case "yes":
+              return true;
+          default:
+              return false;
+      }
     }, _binds: function() {
       if (this.cancel) {
         methods._bindCancel.call(this);
@@ -109,9 +134,20 @@
       self.stars.on('click.raty', function(evt) {
         self.score.val((self.opt.half || self.opt.precision) ? that.data('score') : this.alt);
 
+        // disable "dismiss" state
+        if (self.opt.dismissible && self.dismiss_val() == true) {
+          self.dismiss.val(false);
+          $(self.cancel).attr('src', self.opt.path + self.opt.cancelOff);
+        }
+
         if (self.opt.click) {
           self.opt.click.call(self, parseFloat(self.score.val()), evt);
         }
+
+        if (self.opt.action) {
+          self.opt.action.call(self, {score: self.score.val(), dismiss: self.dismiss_val()}, evt);
+        }
+
       });
     }, _bindClickCancel: function() {
       var self = this;
@@ -122,6 +158,24 @@
         if (self.opt.click) {
           self.opt.click.call(self, null, evt);
         }
+
+        // toggle "dismiss" state
+        if (self.opt.dismissible) {
+          var dismiss_state_new = !self.dismiss_val();
+          self.dismiss.val(dismiss_state_new);
+          if (dismiss_state_new == true) {
+            $(self.cancel).attr('src', self.opt.path + self.opt.cancelOn);
+          } else {
+            $(self.cancel).attr('src', self.opt.path + self.opt.cancelOff);
+          }
+        } else {
+          $(self.cancel).attr('src', self.opt.path + self.opt.cancelOff);
+        }
+
+        if (self.opt.action) {
+          self.opt.action.call(self, {score: null, dismiss: self.dismiss_val()}, evt);
+        }
+
       });
     }, _bindOut: function() {
       var self = this;
@@ -140,7 +194,11 @@
       var self = this;
 
       self.cancel.on('mouseleave.raty', function(evt) {
-        $(this).attr('src', self.opt.path + self.opt.cancelOff);
+
+        // turn off dismiss indicator
+        if (self.opt.dismissible && self.dismiss_val() == false) {
+          $(this).attr('src', self.opt.path + self.opt.cancelOff);
+        }
 
         if (self.opt.mouseout) {
           self.opt.mouseout.call(self, self.score.val() || null, evt);
@@ -200,8 +258,15 @@
         }
       }
     }, _createCancel: function() {
+
+      var icon;
+      if (this.opt.dismissible) {
+        icon = this.opt.path + this.opt[(this.dismiss_val()) ? 'cancelOn' : 'cancelOff'];
+      } else {
+        icon = this.opt.path + this.opt.cancelOff;
+      }
+
       var that   = $(this),
-          icon   = this.opt.path + this.opt.cancelOff,
           cancel = $('<img />', { src: icon, alt: 'x', title: this.opt.cancelHint, 'class': 'raty-cancel' });
 
       if (this.opt.cancelPlace == 'left') {
@@ -213,6 +278,8 @@
       return cancel;
     }, _createScore: function() {
       return $('<input />', { type: 'hidden', name: this.opt.scoreName }).appendTo(this);
+    }, _createDismiss: function() {
+      return $('<input />', { type: 'hidden', name: this.opt.dismissName }).appendTo(this);
     }, _createStars: function() {
       var that = $(this);
 
@@ -385,6 +452,16 @@
       });
 
       return (score.length > 1) ? score : score[0];
+    }, getDismiss: function() {
+      var dismiss = [],
+          value ;
+
+      $(this).each(function() {
+        value = this.dismiss.val();
+        dismiss.push(value ? methods._asbool(value) : undefined);
+      });
+
+      return (score.length > 1) ? score : score[0];
     }, readOnly: function(readonly) {
       return this.each(function() {
         var that = $(this);
@@ -406,6 +483,8 @@
       return methods.set.call(this, {});
     }, score: function() {
       return arguments.length ? methods.setScore.apply(this, arguments) : methods.getScore.call(this);
+    }, dismiss: function() {
+      return arguments.length ? methods.setDismiss.apply(this, arguments) : methods.getDismiss.call(this);
     }, set: function(settings) {
       return this.each(function() {
         var that   = $(this),
@@ -417,11 +496,28 @@
     }, setScore: function(score) {
       return $(this).each(function() {
         if ($(this).data('readonly') !== true) {
-          methods._apply.call(this, score);
-          methods._target.call(this, score);
+          if (score !== undefined) {
+            methods._apply.call(this, score);
+            methods._target.call(this, score);
+          }
         }
       });
-    }
+    }, setDismiss: function(dismiss) {
+      return $(this).each(function() {
+        if ($(this).data('readonly') !== true) {
+
+          if (dismiss !== undefined) {
+            this.dismiss.val(dismiss);
+            if (dismiss) {
+              $(this.cancel).attr('src', this.opt.path + this.opt.cancelOn);
+            } else {
+              $(this.cancel).attr('src', this.opt.path + this.opt.cancelOff);
+            }
+          }
+
+        }
+      });
+    },
   };
 
   $.fn.raty = function(method) {
@@ -456,6 +552,9 @@
     round         : { down: .25, full: .6, up: .76 },
     score         : undefined,
     scoreName     : 'score',
+    dismiss       : undefined,
+    dismissName   : 'dismiss',
+    dismissible   : false,
     single        : false,
     size          : 16,
     space         : true,
