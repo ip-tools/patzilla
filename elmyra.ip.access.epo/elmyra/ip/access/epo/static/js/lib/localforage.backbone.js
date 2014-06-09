@@ -103,8 +103,9 @@
             // fall back to remembered collection instance in case model.collection has already been unset
             var collection = model.collection || model.sync.collection;
 
-            if (!collection) {
+            if (!collection || !collection.sync.localforageKey) {
                 callback();
+                return;
             }
 
             // Create an array of `model.collection` models' ids.
