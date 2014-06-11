@@ -7,6 +7,7 @@ development
 - ux: make the pdf open on shift+p
 - ui, storage: update backbone-relational to b8ab71a449ff (2014-06-10)
 - ui, storage: presumably fix object corruption woes with localforage.backbone
+- ui, storage: comments plugin, alpha
 
 0.17.0
 ======

@@ -8,6 +8,7 @@ function to_list(value) {
 function now_iso() {
     return moment().format();
 }
+timestamp = now_iso;
 
 function now_iso_human() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
@@ -47,3 +48,11 @@ function asbool(value) {
             return false;
     }
 }
+
+// http://stackoverflow.com/questions/5538972/console-log-apply-not-working-in-ie9/5539378#5539378
+var log = Function.prototype.bind.call(console.log, console);
+
+// http://stackoverflow.com/questions/572604/javascript-how-to-extend-array-prototype-push/572631#572631
+_.clear = function(array) {
+    array.length = 0;
+};

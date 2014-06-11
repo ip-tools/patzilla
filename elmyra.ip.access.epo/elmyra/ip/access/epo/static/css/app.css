@@ -218,3 +218,11 @@ dl.dl-horizontal-inline {
 #basket {
     font-family: "Courier New";
 }
+
+.form-single-bibdata {
+    display: inline;
+}
+
+.area-comment-text {
+    padding: 10px;
+}

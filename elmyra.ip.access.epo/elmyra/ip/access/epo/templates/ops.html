@@ -65,7 +65,7 @@
             <div class="span6 container-fluid document-actions do-not-print">
 
                 <!-- details / fulltext -->
-                <div class="span8">
+                <div class="span7">
 
                     <% if (data.has_fulltext()) { %>
                     <div class="btn-group btn-popover tabs document-tab-chooser"
@@ -206,7 +206,7 @@
                 </div>
 
                 <!-- add/remove -->
-                <div class="span4" style="line-height: 200%">
+                <div class="span5" style="line-height: 200%">
 
                     <%
                     # FIXME: use javascript-only variables, get rid of the pyramid request object
@@ -236,13 +236,15 @@
                        >
                         <i class="icon-trash icon-large"></i>
                     </a>
+
                     </%text>
                     % endif
 
+                    <span id="region-comment-button"/>
 
                     % if ship_mode == 'single-bibdata':
                     <%text>
-                    <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>">
+                    <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>" class="form-single-bibdata">
                         <input name="query" type="hidden" value="<%= $('#query').val().replace(/"/g, '&quot;') %>"/>
                         <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
                         <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
@@ -274,6 +276,8 @@
             </div>
 
         </div>
+
+        <span id="region-comment-text"/>
 
         <div class="ops-collection-entry-inner container-fluid">
 

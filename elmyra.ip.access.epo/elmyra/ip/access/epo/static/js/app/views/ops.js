@@ -1,11 +1,16 @@
 // -*- coding: utf-8 -*-
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
-OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
+OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     //template: "#ops-entry-template",
     template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
     tagName: 'div',
     className: 'row-fluid',
+
+    regions: {
+        region_comment_button: '#region-comment-button',
+        region_comment_text: '#region-comment-text',
+    },
 
     initialize: function() {
         console.log('OpsExchangeDocumentView.initialize');

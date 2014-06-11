@@ -590,6 +590,10 @@ OpsExchangeDocument = Backbone.Model.extend({
 
     },
 
+    get_document_number: function() {
+        return this.attributes.get_patent_number();
+    },
+
     select: function() {
         this.set('selected', true);
     },
