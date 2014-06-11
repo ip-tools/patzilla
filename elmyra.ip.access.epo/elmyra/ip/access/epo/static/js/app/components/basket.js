@@ -29,6 +29,8 @@ BasketModel = Backbone.RelationalModel.extend({
 
     initialize: function() {
         console.log('BasketModel.initialize');
+        // backbone-relational backward-compat
+        if (!this.fetchRelated) this.fetchRelated = this.getAsync;
     },
 
     // initialize model from url query parameters

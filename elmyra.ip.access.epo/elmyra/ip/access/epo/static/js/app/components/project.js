@@ -42,6 +42,8 @@ ProjectModel = Backbone.RelationalModel.extend({
     // initialize model
     initialize: function() {
         console.log('ProjectModel.initialize');
+        // backbone-relational backward-compat
+        if (!this.fetchRelated) this.fetchRelated = this.getAsync;
     },
 
     record_query: function(query_data) {
