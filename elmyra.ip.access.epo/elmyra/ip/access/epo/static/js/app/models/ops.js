@@ -8,7 +8,6 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
         indicate_activity(true);
 
-        documents.reset();
         //$('.pager-area').hide();
         $(opsChooserApp.paginationViewBottom.el).hide();
 
@@ -26,6 +25,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 console.log(response);
 
                 if (_.isEmpty(response)) {
+                    documents.reset();
                     return;
                 }
 
@@ -74,7 +74,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 //console.log("error: " + response.responseText);
 
                 indicate_activity(false);
-                reset_content();
+                reset_content({documents: true});
 
                 var response = jQuery.parseJSON(response.responseText);
                 if (response['status'] == 'error') {

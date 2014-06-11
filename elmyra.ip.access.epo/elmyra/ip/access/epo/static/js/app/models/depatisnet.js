@@ -22,6 +22,7 @@ DepatisnetSearch = Backbone.Model.extend({
                 //console.log("error: " + xhr.responseText);
                 indicate_activity(false);
                 reset_content();
+                opsChooserApp.documents.reset();
 
                 $('#alert-area').empty();
                 try {

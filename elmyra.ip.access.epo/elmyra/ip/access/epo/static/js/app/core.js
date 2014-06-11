@@ -379,11 +379,13 @@ function display_claims(document_number, container) {
 function reset_content(options) {
     $('#alert-area').empty();
     $('#info-area').empty();
-    opsChooserApp.documents.reset();
     $('#pagination-info').hide();
     options = options || {};
     if (!options.keep_pager) {
         $('.pager-area').hide();
+    }
+    if (options.documents) {
+        opsChooserApp.documents.reset();
     }
 }
 
