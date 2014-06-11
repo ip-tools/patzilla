@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ux: make the pdf open on shift+p
+- update backbone-relational to b8ab71a449ff (2014-06-10)
 
 0.17.0
 ======
