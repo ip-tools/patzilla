@@ -71,10 +71,8 @@
                         model.id = model.attributes.id = guid();
                     }
 
-                    // If there's no localforageKey for this model create it
-                    if (!model.sync.localforageKey) {
-                        model.sync.localforageKey = name + "/" + model.id;
-                    }
+                    // Compute localforageKey from model id
+                    model.sync.localforageKey = name + "/" + model.id;
                 }
                 switch (method) {
                     case "read":
