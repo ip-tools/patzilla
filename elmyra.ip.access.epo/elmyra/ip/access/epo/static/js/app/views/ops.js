@@ -7,6 +7,10 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
     className: 'row-fluid',
 
+    initialize: function() {
+        console.log('OpsExchangeDocumentView.initialize');
+    },
+
     templateHelpers: {
 
         // date values inside publication|application-reference
@@ -31,12 +35,7 @@ OpsExchangeDocumentView = Backbone.Marionette.ItemView.extend({
     events: {
         'click .rank_up img': 'rankUp',
         'click .rank_down img': 'rankDown',
-        'click a.disqualify': 'disqualify'
-    },
-
-    // actions to run after populating the view
-    // e.g. to bind click handlers on individual records
-    onDomRefresh: function() {
+        'click a.disqualify': 'disqualify',
     },
 
 });
@@ -48,8 +47,22 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     template: "#ops-collection-template",
     itemView: OpsExchangeDocumentView,
 
-    appendHtml: function(collectionView, itemView) {
-        $(collectionView.el).append(itemView.el);
+    initialize: function(options) {
+        console.log('OpsExchangeDocumentCollectionView.initialize');
+    },
+
+    // Override and disable add:render event, see also:
+    // https://github.com/marionettejs/backbone.marionette/issues/640
+    _initialEvents: function(){
+        if (this.collection){
+            //this.listenTo(this.collection, "add", this.addChildView, this);
+            this.listenTo(this.collection, "remove", this.removeItemView, this);
+            this.listenTo(this.collection, "reset", this.render, this);
+        }
+    },
+
+    onRender: function() {
+        console.log('OpsExchangeDocumentCollectionView.onRender');
     },
 
 });
@@ -62,9 +75,6 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         this.listenTo(this.model, "change", this.render);
-    },
-
-    onDomRefresh: function() {
     },
 
 });
