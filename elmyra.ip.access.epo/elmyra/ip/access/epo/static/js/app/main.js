@@ -244,14 +244,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // activate basket
         var basket = project.get('basket');
-
-        // refetch basket to work around localforage.backbone vs. backbone-relational woes
-        // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
-        basket.fetch({success: function() {
-            $.when(basket.fetch_entries()).then(function() {
-                _this.basket_activate(basket);
-            });
-        }});
+        this.basket_activate(basket);
 
     },
 
@@ -390,6 +383,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
 
         // propagate basket contents to Add/Remove button states once when activating the basket
+        // TODO: do this conditionally - only if Basket is enabled
         this.documents.each(function(document) {
             var number = document.attributes.get_patent_number();
             if (_this.basketModel) {
