@@ -308,8 +308,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                     opsChooserApp.basketModel.destroy();
                     delete opsChooserApp.basketModel;
 
-                    var projectname = today_iso();
-                    opsChooserApp.trigger('project:load', projectname);
+                    opsChooserApp.trigger('projects:initialize');
 
                     var notification_container = $('#project-chooser-name').parent().parent();
                     $(notification_container).notify('recreated default project', {className: 'info', position: 'left'});
@@ -380,27 +379,36 @@ opsChooserApp.addInitializer(function(options) {
     // 3. get project object; otherwise create a new one
     // 4. emit "project:ready" event
 
+    // load project when receiving "project:load" event
+    this.listenTo(this, 'project:load', function(projectname) {
+        var _this = this;
+        $.when(this.projects.get_or_create(projectname)).done(function(project) {
+            _this.trigger('project:ready', project);
+        });
+    });
+
+    // fetch all projects and activate designated one
+    this.listenTo(this, 'projects:initialize', function(projectname) {
+
+        console.log('projects:initialize');
+
+        var _this = this;
+        this.projects = new ProjectCollection();
+        this.projects.fetch({success: function(response) {
+            if (projectname) {
+                _this.trigger('project:load', projectname);
+            }
+        }});
+    });
+
+    // fetch all projects on application start
     // TODO: use central location for parsed window.location.href
     var url = $.url(window.location.href);
     var projectname = url.param('project');
     if (!projectname) {
         projectname = today_iso();
     }
-
-    this.projects = new ProjectCollection();
-
-    // load project when receiving "project:load" event
-    this.listenTo(this, 'project:load', function(projectname) {
-        $.when(this.projects.get_or_create(projectname)).done(function(project) {
-            _this.trigger('project:ready', project);
-        });
-    });
-
-    // fetch all projects on application start
-    console.log('App.projects.fetch');
-    this.projects.fetch({success: function(response) {
-        _this.trigger('project:load', projectname);
-    }});
+    this.trigger('projects:initialize', projectname);
 
     /*
     TODO

@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: improved application vs. project bootstrapping
 
 0.18.0
 ======
