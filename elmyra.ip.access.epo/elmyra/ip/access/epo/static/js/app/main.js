@@ -467,6 +467,25 @@ opsChooserApp.addRegions({
     paginationRegionBottom: "#ops-pagination-region-bottom",
 });
 
+
+// global universal helpers
+opsChooserApp.addInitializer(function(options) {
+    var url = $.url(window.location.href);
+    this.url = url;
+});
+
+// data storage
+opsChooserApp.addInitializer(function(options) {
+
+    // Set driver (optional)
+    // We use Local Storage here to make introspection easier.
+    // TODO: disable on production
+    localforage.setDriver('localStorageWrapper');
+
+    // set database name from "context" query parameter
+    localforage.config({name: this.url.param('context') || 'ipsuite-default'});
+});
+
 // initialize models
 opsChooserApp.addInitializer(function(options) {
 

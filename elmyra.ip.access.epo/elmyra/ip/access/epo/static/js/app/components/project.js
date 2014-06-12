@@ -1,10 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2014 Andreas Motl, Elmyra UG
 
-// Set driver (optional, but we use Local Storage here so developers can more easily inspect it).
-// TODO: disable on production
-localforage.setDriver('localStorageWrapper');
-
 QueryModel = Backbone.Model.extend({
 
 });

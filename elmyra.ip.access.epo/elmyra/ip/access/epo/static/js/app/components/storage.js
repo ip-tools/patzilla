@@ -4,63 +4,132 @@
 StoragePlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
-
         console.log('StoragePlugin.initialize');
+        this.database_version = '0.0.1';
     },
 
-    // register global hotkeys
-    setup_ui: function() {
+    dbexport: function(notifybox) {
 
-        // export database
-        $('#data-export-button').unbind('click');
-        $('#data-export-button').click(function(e) {
+        var _this = this;
 
-            var _this = this;
+        localforage.keys().then(function(keys) {
+            var database = {};
+            var deferreds = [];
 
-            localforage.keys().then(function(keys) {
-                var database = {};
-                var deferreds = [];
+            // gather all entries
+            _.each(keys, function(key) {
+                var deferred = $.Deferred();
+                deferreds.push(deferred);
+                localforage.getItem(key).then(function(value) {
+                    database[key] = value;
+                    deferred.resolve();
+                });
+            });
 
-                // gather all entries
-                _.each(keys, function(key) {
-                    var deferred = $.Deferred();
-                    deferreds.push(deferred);
-                    localforage.getItem(key).then(function(value) {
-                        database[key] = value;
+            // save to file
+            $.when.apply($, deferreds).then(function() {
+
+                // prepare database dump structure
+                var backup = {
+                    database: database,
+                    metadata: {
+                        type: 'elmyra.ipsuite.navigator.database',
+                        description: 'Database dump of Elmyra IP suite navigator',
+                        software_version: software_version,
+                        database_version: _this.database_version,
+                        database_name: localforage.config('name'),
+                        created: timestamp(),
+                        useragent: navigator.userAgent,
+                    },
+                };
+
+                // compute payload and filename
+                var payload = JSON.stringify(backup, undefined, 4);
+                var now = now_iso_human();
+                var filename = 'elmyra-ipsuite-navigator.' + now + '.database.json';
+
+                // write file
+                if (!payload) {
+                    $(notifybox).qnotify('Database export failed', {error: true});
+                    return;
+                }
+                var blob = new Blob([payload], {type: "application/json"});
+                saveAs(blob, filename);
+
+                // notify user
+                $(notifybox).qnotify('Database exported successfully');
+
+            });
+        });
+
+    },
+
+    dbimport: function(backup, notifybox) {
+
+        // more sanity checks
+        //var filetype = backup && backup['metadata'] && backup['metadata']['type'];
+        var filetype = dotresolve(backup, 'metadata.type');
+        var database = dotresolve(backup, 'database');
+        if (filetype != 'elmyra.ipsuite.navigator.backup' || !database) {
+            $(notifybox).qnotify('ERROR: Invalid backup format', {error: true});
+            return;
+        }
+
+        var deferreds = [];
+        _.each(_.keys(database), function(key) {
+            var deferred = $.Deferred();
+            deferreds.push(deferred.promise());
+            var value = database[key];
+
+            // datamodel-specific restore behavior
+            // merge project lists to get a union of (original, imported)
+            if (key == 'Project') {
+                localforage.getItem(key).then(function(original) {
+                    if (original && value) {
+                        value = _.union(original, value);
+                    }
+                    localforage.setItem(key, value).then(function() {
                         deferred.resolve();
                     });
                 });
 
-                // save to file
-                $.when.apply($, deferreds).then(function() {
-
-                    // prepare backup structure
-                    var backup = {
-                        database: database,
-                        metadata: {
-                            type: 'elmyra.ipsuite.navigator.backup',
-                            description: 'Backupfile of Elmyra IP suite navigator',
-                            software_version: software_version,
-                            database_version: '1.0.0',
-                            created: timestamp(),
-                            useragent: navigator.userAgent,
-                        },
-                    };
-
-                    // compute payload and filename
-                    var payload = JSON.stringify(backup, undefined, 4);
-                    var now = now_iso_human();
-                    var filename = 'elmyra-navigator-backup ' + now + '.json';
-
-                    // write file
-                    var blob = new Blob([payload], {type: "application/json"});
-                    saveAs(blob, filename);
-
-                    // notify user
-                    $(_this).parent().qnotify('Database exported successfully');
-
+            } else {
+                localforage.setItem(key, value).then(function(value) {
+                    deferred.resolve();
                 });
-            });
+            }
+        });
+        $.when.apply($, deferreds).then(function() {
+
+            Backbone.Relational.store.reset();
+
+            // compute any (first) valid project to be activated after import
+            try {
+                var project = backup['Project'] ? backup[backup['Project'][0]] : undefined;
+                var projectname = project.name;
+            } catch(error) {
+            }
+            if (!projectname) {
+                projectname = opsChooserApp.project.get('name');
+            }
+
+            // activate project
+            opsChooserApp.trigger('projects:initialize', projectname);
+
+            $(notifybox).qnotify('Database imported successfully');
+
+        });
+
+    },
+
+    setup_ui: function() {
+
+        var _this = this;
+
+        // export database
+        $('#data-export-button').unbind('click');
+        $('#data-export-button').on('click', function(e) {
+            _this.dbexport($(this).parent());
         });
 
 
@@ -98,59 +167,8 @@ StoragePlugin = Marionette.Controller.extend({
                     return;
                 }
 
-                // more sanity checks
-                //var filetype = backup && backup['metadata'] && backup['metadata']['type'];
-                var filetype = dotresolve(backup, 'metadata.type');
-                var database = dotresolve(backup, 'database');
-                if (filetype != 'elmyra.ipsuite.navigator.backup' || !database) {
-                    $(notifybox).qnotify('ERROR: Invalid backup format', {error: true});
-                    return;
-                }
+                _this.dbimport(backup, notifybox);
 
-                var deferreds = [];
-                _.each(_.keys(database), function(key) {
-                    var deferred = $.Deferred();
-                    deferreds.push(deferred.promise());
-                    var value = database[key];
-
-                    // datamodel-specific restore behavior
-                    // merge project lists to get a union of (original, imported)
-                    if (key == 'Project') {
-                        localforage.getItem(key).then(function(original) {
-                            if (original && value) {
-                                value = _.union(original, value);
-                            }
-                            localforage.setItem(key, value).then(function() {
-                                deferred.resolve();
-                            });
-                        });
-
-                    } else {
-                        localforage.setItem(key, value).then(function(value) {
-                            deferred.resolve();
-                        });
-                    }
-                });
-                $.when.apply($, deferreds).then(function() {
-
-                    Backbone.Relational.store.reset();
-
-                    // compute any (first) valid project to be activated after import
-                    try {
-                        var project = backup['Project'] ? backup[backup['Project'][0]] : undefined;
-                        var projectname = project.name;
-                    } catch(error) {
-                    }
-                    if (!projectname) {
-                        projectname = opsChooserApp.project.get('name');
-                    }
-
-                    // activate project
-                    opsChooserApp.trigger('projects:initialize', projectname);
-
-                    $(notifybox).qnotify('Database imported successfully');
-
-                });
             };
             reader.onerror = function(e) {
                 $(notifybox).qnotify('ERROR: Could not read file ' + file.name + ', message=' + e.getMessage(), {error: true});
@@ -160,14 +178,14 @@ StoragePlugin = Marionette.Controller.extend({
         });
 
         $('#data-import-button').unbind('dblclick');
-        $('#data-import-button').dblclick(function(e) {
+        $('#data-import-button').on('dblclick', function(e) {
             $('#data-import-file').click();
         });
 
 
         // reset database
         $('#factory-reset-button').unbind('dblclick');
-        $('#factory-reset-button').dblclick(function(e) {
+        $('#factory-reset-button').on('dblclick', function(e) {
             localforage.clear();
             Backbone.Relational.store = new Backbone.Store();
             if (opsChooserApp.projectChooserView) {
@@ -185,6 +203,6 @@ opsChooserApp.addInitializer(function(options) {
 
     // handles the mechanics for all comment widgets on a whole result list
     var storage_plugin = new StoragePlugin();
-    this.listenTo(this, 'application:ready', storage_plugin.setup_ui);
+    this.listenTo(this, 'application:ready', function() { storage_plugin.setup_ui(); });
 
 });
