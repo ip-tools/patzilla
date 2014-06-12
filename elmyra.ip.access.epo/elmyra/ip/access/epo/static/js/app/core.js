@@ -537,13 +537,6 @@ function boot_application() {
                 scroll_smooth(mainlist_previous_element());
             }
 
-            // perform animated scrolling
-            if ($(target).offset()) {
-                $('html, body').animate({
-                    scrollTop: $(target).offset().top
-                }, 500);
-
-            }
         }
     });
     $(document).on('keydown', null, 'pagedown', function(event) {

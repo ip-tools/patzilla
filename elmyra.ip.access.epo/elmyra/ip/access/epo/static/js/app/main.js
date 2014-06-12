@@ -244,7 +244,14 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // activate basket
         var basket = project.get('basket');
-        this.basket_activate(basket);
+
+        // refetch basket to work around localforage.backbone vs. backbone-relational woes
+        // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
+        basket.fetch({success: function() {
+            $.when(basket.fetch_entries()).then(function() {
+                _this.basket_activate(basket);
+            });
+        }});
 
     },
 

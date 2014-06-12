@@ -54,77 +54,30 @@ CommentModel = Backbone.RelationalModel.extend({
         data.modified = now;
         this.set(data);
 
-        /*
-         var success = options.success;
-         options.success = function(model, resp, options) {
-         if (isNew) {
-         _this.collection.create(model, {success: function() {
-         _this.collection.add(model);
-         options.isnew = isNew;
-         _this.trigger('saved', model, resp, options);
-         if (success) success(model, resp, options);
-         }});
-         } else {
-         _this.trigger('saved', model, resp, options);
-         if (success) success(model, resp, options);
-         }
-         };
-
-         return Backbone.Model.prototype.save.call(this, attrs, options);
-         */
 
         var project = this.get('project');
-        log('MODEL BEFORE SAVE:', this, this.get('project'));
 
         var success = options.success;
         options.success = function(model, resp, options) {
-            log('MODEL AFTER SAVE:', model, model.get('project'));
-
-            /*
-            model.fetch({success: function(m) {
-                log('=========== MODEL REFETCH SUCCESS');
-                log(m);
-                log(model);
-                $.when(model.fetchRelated('project')).then(function() {
-                    log('=========== MODEL RELATED REFETCH SUCCESS');
-                    log(model);
-                });
-            }});
-
-            if (success) success(model, resp, options);
-            return;
-             */
 
             if (isNew) {
-                //model.set('project', project);
-                log('before create:', model.get('project'));
+
                 _this.collection.create(model, {success: function() {
+
+                    // forward "isNew" indicator via options object
+                    options.isNew = isNew;
+
+                    // FIXME: HACK ported from project/basket saving; check whether this is really required
                     _this.collection.add(model);
-                    options.isnew = isNew;
 
                     // FIXME: IMPORTANT HACK to reset project reference after it has vanished through collection.create
                     model.set('project', project);
 
-                    //Backbone.Relational.store.reset();
-                    //_this.collection.fetch({reset: true, success: function(res) {
-                        log('=========== MODEL COLLECTION REFETCH SUCCESS');
-                        //log(res);
-                        log(_this.collection);
-                        //model.fetch({success: function(m) {
-                            log('=========== MODEL REFETCH SUCCESS');
-                            //log(m);
-                            log(model);
-                            if (!model.fetchRelated) model.fetchRelated = model.getAsync;
-                            //$.when(model.fetchRelated('project')).then(function() {
-                                log('=========== MODEL RELATED REFETCH SUCCESS');
-                                log(model);
-                                log(model.get('project'));
-                                _this.trigger('saved', model, resp, options);
-                                if (success) success(model, resp, options);
-                            //});
-                        //}});
-                    //}});
+                    _this.trigger('saved', model, resp, options);
+                    if (success) success(model, resp, options);
+
                 }});
+
             } else {
                 _this.trigger('saved', model, resp, options);
                 if (success) success(model, resp, options);
@@ -147,17 +100,17 @@ CommentCollection = Backbone.Collection.extend({
         console.log('ModelCollection.initialize');
     },
 
-    by_project_and_document_number: function(project, document_number) {
-        var model = _(this.where({project: project, parent: document_number})).first();
-        log('CommentCollection.by_project_and_document_number:', project.get('name'), document_number, model);
+    // TODO: refactor to common base class or mixin
+    get_or_create: function(attributes) {
+        var model = _(this.where(attributes)).first();
         if (!model) {
-            var now = timestamp();
-            model = new CommentModel({
-                project: project,
-                parent: document_number,
-            }, { collection: this });
+            model = this.model.build(attributes, { collection: this, parsed: false });
         }
         return model;
+    },
+
+    by_project_and_document_number: function(project, document_number) {
+        return this.get_or_create({project: project, parent: document_number});
     },
 
 });
@@ -169,10 +122,6 @@ CommentButtonView = Backbone.Marionette.ItemView.extend({
     // forward the "click" dom event to a "toggle" application event
     triggers: {
         'click': 'toggle',
-    },
-
-    onClose: function() {
-        log('====================== CommentButtonView.onClose');
     },
 
 });
@@ -259,9 +208,6 @@ CommentManager = Marionette.Controller.extend({
         // show text on button press
         this.listenTo(this.comment_button, 'toggle', this.toggle_edit);
 
-        // save comment
-        this.listenTo(this.comment_text, 'model:saved', this.save);
-
     },
 
     toggle_edit: function() {
@@ -300,8 +246,6 @@ CommentsPlugin = Marionette.Controller.extend({
         // forward control to a new item-specific CommentManager after itemview got rendered
         this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
 
-            log('itemview:item:rendered');
-
             // place CommentManager inside itemview for external access (e.g. viewport)
             itemview.comment_manager = this.comment_factory(itemview);
 
@@ -311,21 +255,15 @@ CommentsPlugin = Marionette.Controller.extend({
 
         // clear remembered itemviews
         this.listenTo(this.view, 'collection:before:render', function() {
-            log('before:render');
-            log('1');
             _.clear(this.itemviews);
-            log('2');
         });
         this.listenTo(this.view, 'collection:before:close', function() {
-            log('before:close');
             _.clear(this.itemviews);
         });
 
-        // renew all CommentManagers when project gets ready
+        // renew all CommentManagers in remembered itemviews when new project gets ready
         this.listenTo(opsChooserApp, 'project:ready', function(project) {
             var _this = this;
-            log('project:ready - itemviews:', this.itemviews);
-            log('project:ready - collection:', this.store);
             _(this.itemviews).each(function(itemview) {
                 itemview.comment_manager = _this.comment_factory(itemview);
             });
