@@ -235,12 +235,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $(window).on('focus', this.project_reload);
 
         // setup views
-        var projectChooserView = new ProjectChooserView({
+        this.projectChooserView = new ProjectChooserView({
             el: $('#project-chooser-area'),
             model: project,
             collection: project.collection,
         });
-        projectChooserView.render();
+        this.projectChooserView.render();
 
         // activate basket
         var basket = project.get('basket');

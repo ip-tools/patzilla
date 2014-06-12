@@ -6,6 +6,7 @@ development
 ===========
 - ui: improved application vs. project bootstrapping
 - ui: improved quick notification helper
+- ui, storage: database import
 
 0.18.0
 ======
@@ -15,7 +16,7 @@ development
 - ui, storage: comments plugin, alpha, also opens on "c" key
 - ui, storage: update to latest localforage 3ef964cda96 for getting an array of all keys for backup feature
 - js: add Blob.js and FileSaver.js for saving files locally without user interaction
-- ui, storage: data export, data wipe
+- ui, storage: database export, database wipe
 
 0.17.0
 ======

@@ -179,17 +179,26 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
                     <a
                             id="data-export-button"
                             class="btn btn-small btn-popover"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-toggle="popover" data-trigger="hover" data-placement="top"
                             data-content="Export all data"
                             >
                         <i class="icon-save icon-large"></i>
                     </a>
                     % if debugmode:
                     <a
+                            id="data-import-button"
+                            class="btn btn-small btn-danger btn-popover"
+                            data-toggle="popover" data-trigger="hover" data-placement="top"
+                            data-content="IMPORT ALL DATA (doubleclick)"
+                            >
+                        <i class="icon-folder-open-alt icon-large"></i>
+                    </a>
+                    <input type="file" id="data-import-file" class="hide"/>
+                    <a
                             id="factory-reset-button"
                             class="btn btn-small btn-danger btn-popover"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                            data-content="WIPE ALL DATA, doubleclick to activate"
+                            data-toggle="popover" data-trigger="hover" data-placement="top"
+                            data-content="WIPE ALL DATA (doubleclick)"
                             >
                         <i class="icon-trash icon-large"></i>
                         <i class="icon-trash icon-large"></i>
@@ -543,6 +552,7 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
     <script type="text/javascript" src="/static/js/app/components/basket.js"></script>
     <script type="text/javascript" src="/static/js/app/components/project.js"></script>
     <script type="text/javascript" src="/static/js/app/components/comment.js"></script>
+    <script type="text/javascript" src="/static/js/app/components/storage.js"></script>
 % endif
 
 </%block>
