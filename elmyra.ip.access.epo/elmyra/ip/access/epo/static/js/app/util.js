@@ -68,3 +68,12 @@ _.clear = function(array) {
 
     });
 })(jQuery);
+
+// http://stackoverflow.com/questions/3344392/dynamic-deep-selection-for-a-javascript-object/3344487#3344487
+function dotresolve(cur, ns) {
+    var undef;
+    ns = ns.split('.');
+    while (cur && ns[0])
+        cur = cur[ns.shift()] || undefined;
+    return cur;
+}

@@ -7,6 +7,7 @@ development
 - ui: improved application vs. project bootstrapping
 - ui: improved quick notification helper
 - ui, storage: database import
+- ui, storage: improve backup format
 
 0.18.0
 ======

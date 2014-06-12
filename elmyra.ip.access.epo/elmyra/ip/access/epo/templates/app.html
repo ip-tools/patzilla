@@ -22,6 +22,7 @@ ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
 ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
 embed_item_url = request.params.get('embed-item-url', '')
 debugmode = request.params.get('debug', '')
+software_version = request.registry.settings.get('SOFTWARE_VERSION', '')
 %>
 <script type="application/javascript">
 var ship_mode = decodeURIComponent('${ship_mode}');
@@ -29,6 +30,7 @@ var ship_url = decodeURIComponent('${ship_url}');
 var ship_frame = decodeURIComponent('${ship_frame}');
 var embed_item_url = decodeURIComponent('${embed_item_url}');
 var PRINTMODE = '${printmode}' == 'True' ? true : false;
+var software_version = '${software_version}';
 </script>
 
 ## title / headline

@@ -18,7 +18,7 @@ StoragePlugin = Marionette.Controller.extend({
             var _this = this;
 
             localforage.keys().then(function(keys) {
-                var data = {};
+                var database = {};
                 var deferreds = [];
 
                 // gather all entries
@@ -26,23 +26,38 @@ StoragePlugin = Marionette.Controller.extend({
                     var deferred = $.Deferred();
                     deferreds.push(deferred);
                     localforage.getItem(key).then(function(value) {
-                        data[key] = value;
+                        database[key] = value;
                         deferred.resolve();
                     });
                 });
 
                 // save to file
                 $.when.apply($, deferreds).then(function() {
-                    $(_this).parent().qnotify('Database exported successfully');
 
-                    // TODO: enrich with metadata (timestamp, user-agent, etc.)
-                    var backup = JSON.stringify(data, undefined, 4);
+                    // prepare backup structure
+                    var backup = {
+                        database: database,
+                        metadata: {
+                            type: 'elmyra.ipsuite.navigator.backup',
+                            description: 'Backupfile of Elmyra IP suite navigator',
+                            software_version: software_version,
+                            database_version: '1.0.0',
+                            created: timestamp(),
+                            useragent: navigator.userAgent,
+                        },
+                    };
+
+                    // compute payload and filename
+                    var payload = JSON.stringify(backup, undefined, 4);
                     var now = now_iso_human();
                     var filename = 'elmyra-navigator-backup ' + now + '.json';
 
-                    //var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
-                    var blob = new Blob([backup], {type: "application/json"});
+                    // write file
+                    var blob = new Blob([payload], {type: "application/json"});
                     saveAs(blob, filename);
+
+                    // notify user
+                    $(_this).parent().qnotify('Database exported successfully');
 
                 });
             });
@@ -61,16 +76,20 @@ StoragePlugin = Marionette.Controller.extend({
 
             var notifybox = $(this).parent();
 
+
+            // sanity checks
             if (file.type != 'application/json') {
                 $(notifybox).qnotify('ERROR: File type is ' + file.type + ', but should be application/json', {error: true});
                 return;
             }
+
 
             var reader = new FileReader();
             reader.onload = function(e) {
                 var payload = e.target.result;
                 try {
                     var backup = jQuery.parseJSON(payload);
+
                 } catch(error) {
                     var msg = error.message;
                     var message = 'ERROR: Could not parse JSON, ' + msg;
@@ -78,11 +97,21 @@ StoragePlugin = Marionette.Controller.extend({
                     $(notifybox).qnotify(message, {error: true});
                     return;
                 }
+
+                // more sanity checks
+                //var filetype = backup && backup['metadata'] && backup['metadata']['type'];
+                var filetype = dotresolve(backup, 'metadata.type');
+                var database = dotresolve(backup, 'database');
+                if (filetype != 'elmyra.ipsuite.navigator.backup' || !database) {
+                    $(notifybox).qnotify('ERROR: Invalid backup format', {error: true});
+                    return;
+                }
+
                 var deferreds = [];
-                _.each(_.keys(backup), function(key) {
+                _.each(_.keys(database), function(key) {
                     var deferred = $.Deferred();
                     deferreds.push(deferred.promise());
-                    var value = backup[key];
+                    var value = database[key];
 
                     // datamodel-specific restore behavior
                     // merge project lists to get a union of (original, imported)
@@ -107,9 +136,11 @@ StoragePlugin = Marionette.Controller.extend({
                     Backbone.Relational.store.reset();
 
                     // compute any (first) valid project to be activated after import
-                    log('backup:', backup);
-                    var project = backup['Project'] ? backup[backup['Project'][0]] : undefined;
-                    var projectname = project.name;
+                    try {
+                        var project = backup['Project'] ? backup[backup['Project'][0]] : undefined;
+                        var projectname = project.name;
+                    } catch(error) {
+                    }
                     if (!projectname) {
                         projectname = opsChooserApp.project.get('name');
                     }
