@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: improved application vs. project bootstrapping
+- ui: improved quick notification helper
 
 0.18.0
 ======

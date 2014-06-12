@@ -56,3 +56,15 @@ var log = Function.prototype.bind.call(console.log, console);
 _.clear = function(array) {
     array.length = 0;
 };
+
+(function($) {
+    $.fn.extend({
+        qnotify: function(message, options) {
+            options = options || {};
+            _.defaults(options, {className: 'info', position: 'bottom'});
+            if (options.error) options.className = 'error';
+            $(this).notify(message, options);
+        },
+
+    });
+})(jQuery);

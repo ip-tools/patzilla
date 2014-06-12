@@ -430,7 +430,7 @@ function boot_application() {
     $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
 
     // defaults for notification popups
-    $.notify.defaults({showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 2000, showDuration: 300});
+    $.notify.defaults({className: 'info', showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 4000, showDuration: 300});
 
 
     // ------------------------------------------

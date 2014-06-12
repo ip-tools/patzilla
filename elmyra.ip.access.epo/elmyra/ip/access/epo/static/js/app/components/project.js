@@ -311,7 +311,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                     opsChooserApp.trigger('projects:initialize');
 
                     var notification_container = $('#project-chooser-name').parent().parent();
-                    $(notification_container).notify('recreated default project', {className: 'info', position: 'left'});
+                    $(notification_container).notify('recreated default project', {className: 'info', position: 'top'});
 
                 }
             }});
