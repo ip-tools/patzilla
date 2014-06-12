@@ -779,6 +779,8 @@ function boot_application() {
         $('#help-modal').modal('show');
     });
 
+    global_data_buttons_setup();
+
 }
 
 // compute the best next list item
@@ -916,4 +918,39 @@ function cql_history_chooser_setup() {
 
     });
 
+}
+
+function global_data_buttons_setup() {
+
+    $('#data-export-button').unbind('click');
+    $('#data-export-button').click(function(e) {
+        localforage.keys().then(function(keys) {
+            var data = {};
+            var deferreds = [];
+            _.each(keys, function(key) {
+                var deferred = $.Deferred();
+                deferreds.push(deferred);
+                localforage.getItem(key).then(function(value) {
+                    data[key] = value;
+                    deferred.resolve();
+                });
+            });
+            $.when.apply($, deferreds).then(function() {
+                var backup = JSON.stringify(data, undefined, 4);
+                var now = now_iso_human();
+                var filename = 'elmyra-navigator-backup ' + now + '.json';
+
+                //var blob = new Blob(["Hello, world!"], {type: "text/plain;charset=utf-8"});
+                var blob = new Blob([backup], {type: "application/json"});
+                saveAs(blob, filename);
+            });
+        });
+    });
+
+    $('#factory-reset-button').unbind('dblclick');
+    $('#factory-reset-button').dblclick(function(e) {
+        localforage.clear();
+        var notification_container = $(this).parent(); //.parent();
+        $(notification_container).notify('ALL DATA WIPED', {className: 'error', position: 'right'});
+    });
 }

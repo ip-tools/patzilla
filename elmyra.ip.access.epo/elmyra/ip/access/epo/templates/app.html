@@ -21,6 +21,7 @@ ship_mode = request.params.get('ship-mode', 'multi-numberlist')
 ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
 ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
 embed_item_url = request.params.get('embed-item-url', '')
+debugmode = request.params.get('debug', '')
 %>
 <script type="application/javascript">
 var ship_mode = decodeURIComponent('${ship_mode}');
@@ -173,7 +174,31 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 
         <!-- xxx -->
         <div class="span4 row-fluid">
-            <div class="span12">
+            <div class="span1">
+                <div class="btn-group btn-popover">
+                    <a
+                            id="data-export-button"
+                            class="btn btn-small btn-popover"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="Export all data"
+                            >
+                        <i class="icon-save icon-large"></i>
+                    </a>
+                    % if debugmode:
+                    <a
+                            id="factory-reset-button"
+                            class="btn btn-small btn-danger btn-popover"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="WIPE ALL DATA, doubleclick to activate"
+                            >
+                        <i class="icon-trash icon-large"></i>
+                        <i class="icon-trash icon-large"></i>
+                        <i class="icon-trash icon-large"></i>
+                    </a>
+                    % endif
+                </div>
+            </div>
+            <div class="span11">
                 <!-- project chooser -->
                 <div id="project-chooser-area" class="pull-right"></div>
             </div>
@@ -475,10 +500,13 @@ var PRINTMODE = '${printmode}' == 'True' ? true : false;
 <%include file="comment.html"/>
 <%include file="ops.html"/>
 
+<!-- common -->
+<script type="text/javascript" src="/static/js/lib/Blob.js"></script>
+<script type="text/javascript" src="/static/js/lib/FileSaver.js"></script>
 
 <!-- storage -->
 <script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
-<script type="text/javascript" src="/static/js/lib/localforage-0.8.1.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/localforage.min.js"></script>
 <!-- TODO: minify again, but currently includes an important patch -->
 <!-- <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script> -->
 <script type="text/javascript" src="/static/js/lib/localforage.backbone.js"></script>

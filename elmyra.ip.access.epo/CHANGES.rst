@@ -10,6 +10,7 @@ development
 - ui, storage: comments plugin, alpha
 - ui, storage: update to latest localforage 3ef964cda96 for getting an array of all keys for backup feature
 - js: add Blob.js and FileSaver.js for saving files locally without user interaction
+- ui, storage: data export, data wipe
 
 0.17.0
 ======
