@@ -4,10 +4,13 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.18.0
+======
 - ux: make the pdf open on shift+p
 - ui, storage: update backbone-relational to b8ab71a449ff (2014-06-10)
 - ui, storage: presumably fix object corruption woes with localforage.backbone
-- ui, storage: comments plugin, alpha
+- ui, storage: comments plugin, alpha, also opens on "c" key
 - ui, storage: update to latest localforage 3ef964cda96 for getting an array of all keys for backup feature
 - js: add Blob.js and FileSaver.js for saving files locally without user interaction
 - ui, storage: data export, data wipe
