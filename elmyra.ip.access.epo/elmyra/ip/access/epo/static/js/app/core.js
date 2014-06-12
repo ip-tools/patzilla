@@ -438,7 +438,7 @@ function boot_application() {
     // ------------------------------------------
 
     // set cursor to end of query string, also focuses element
-    $('#query').caret($('#query').val().length);
+    //$('#query').caret($('#query').val().length);
 
     // application action: perform search
     $('.btn-query-perform').click(function() {

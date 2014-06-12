@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: disable autofocus of query textarea on page load
 
 0.19.0
 ======
