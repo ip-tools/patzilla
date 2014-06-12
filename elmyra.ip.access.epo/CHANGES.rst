@@ -9,6 +9,7 @@ development
 - ui, storage: presumably fix object corruption woes with localforage.backbone
 - ui, storage: comments plugin, alpha
 - ui, storage: update to latest localforage 3ef964cda96 for getting an array of all keys for backup feature
+- js: add Blob.js and FileSaver.js for saving files locally without user interaction
 
 0.17.0
 ======
