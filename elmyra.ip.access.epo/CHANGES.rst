@@ -8,6 +8,7 @@ development
 - ui, storage: update backbone-relational to b8ab71a449ff (2014-06-10)
 - ui, storage: presumably fix object corruption woes with localforage.backbone
 - ui, storage: comments plugin, alpha
+- ui, storage: update to latest localforage 3ef964cda96 for getting an array of all keys for backup feature
 
 0.17.0
 ======
