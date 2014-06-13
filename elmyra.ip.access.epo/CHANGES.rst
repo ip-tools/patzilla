@@ -12,6 +12,7 @@ development
 - ui, storage: add stripped-down dataurl library
 - ui: make review mode available via url parameter datasource=review
 - ui: improve application configuration and bootstrapping
+- ui, storage: export and import database to/from "data" URL scheme, see RFC 2397
 
 0.19.0
 ======

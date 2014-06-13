@@ -84,13 +84,27 @@ StoragePlugin = Marionette.Controller.extend({
         var backup = payload;
 
         if (typeof(payload) == 'string') {
+
+            if (_.string.startsWith(payload, 'data:')) {
+                var payload_dataurl = dataurl.parse(payload);
+                if (payload_dataurl) {
+                    payload = payload_dataurl.data;
+                }
+                if (!payload_dataurl || !payload) {
+                    var message = 'ERROR: data URL format is invalid';
+                    console.error(message + '; payload=' + payload);
+                    $(notifybox).qnotify(message, {error: true});
+                    return;
+                }
+            }
+
             try {
                 backup = jQuery.parseJSON(payload);
 
             } catch(error) {
                 var msg = error.message;
-                var message = 'ERROR: Could not parse JSON, ' + msg;
-                console.error(message);
+                var message = 'ERROR: JSON format is invalid, ' + msg;
+                console.error(message + '; payload=' + payload);
                 $(notifybox).qnotify(message, {error: true});
                 return;
             }
@@ -101,7 +115,7 @@ StoragePlugin = Marionette.Controller.extend({
         var filetype = dotresolve(backup, 'metadata.type');
         var database = dotresolve(backup, 'database');
         if (filetype != 'elmyra.ipsuite.navigator.database' || !database) {
-            var message = 'ERROR: Invalid backup format';
+            var message = 'ERROR: Database dump format is invalid';
             console.error(message);
             $(notifybox).qnotify(message, {error: true});
             return;
@@ -160,6 +174,17 @@ StoragePlugin = Marionette.Controller.extend({
 
         });
 
+    },
+
+    dataurl: function() {
+        // produce representation like "data:application/json;base64,ewogICAgImRhdGF..."
+        var deferred = $.Deferred();
+        this.dump().then(function(backup) {
+            var payload = JSON.stringify(backup);
+            var content = dataurl.format({data: payload, mimetype: 'application/json', charset: 'utf-8'});
+            return deferred.resolve(content);
+        });
+        return deferred.promise();
     },
 
     setup_ui: function() {

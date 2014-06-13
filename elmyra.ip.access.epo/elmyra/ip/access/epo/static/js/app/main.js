@@ -506,6 +506,8 @@ opsChooserApp.addRegions({
 
 // global universal helpers, able to boot early
 opsChooserApp.addInitializer(function(options) {
+
+    this.storage = new StoragePlugin();
 });
 
 // data storage
@@ -518,6 +520,15 @@ opsChooserApp.addInitializer(function(options) {
 
     // set database name from "context" query parameter
     localforage.config({name: this.config.get('context')});
+
+    // import database from url :-)
+    var database_dump = this.config.get('database_dump');
+    if (database_dump) {
+        // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
+        this.LOAD_IN_PROGRESS = true;
+        this.storage.dbimport(database_dump);
+    }
+
 });
 
 // initialize models
