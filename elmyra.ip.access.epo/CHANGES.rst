@@ -8,6 +8,7 @@ development
 - ui, storage: refactor database import, export, reset
 - ui, storage: introduce multi-tenancy by "context" query parameter
 - ui, storage: fix localForage keys() bug
+- ui, storage: add jquery.base64 library
 
 0.19.0
 ======
