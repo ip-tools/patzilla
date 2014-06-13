@@ -14,6 +14,7 @@ development
 - ui: improve application configuration and bootstrapping
 - ui, storage: export and import database to/from "data" URL scheme, see RFC 2397
 - ui: permalink button for liveview mode
+- ui: propagate state of (mode, context, project, datasource=ops) into query parameters of inline links
 
 0.19.0
 ======

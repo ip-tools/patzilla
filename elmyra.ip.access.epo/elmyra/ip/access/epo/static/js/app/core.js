@@ -143,13 +143,24 @@ function listview_bind_actions() {
         */
 
         // v2
-        var href = $(this).attr('href');
-        var url = $.url(href);
-        if (!url.param('project')) {
-            var projectname = opsChooserApp.project.get('name');
-            href += '&project=' + encodeURIComponent(projectname);
-            $(this).attr('href', href);
+        // propagate state of (mode, context, project, datasource=ops) into query parameters
+
+        // build state payload
+        var state = {
+            mode: opsChooserApp.config.get('mode'),
+            context: opsChooserApp.config.get('context'),
+            project: opsChooserApp.config.get('projectname'),
+            datasource: 'ops',
         }
+        if (opsChooserApp.project) {
+            state.project = opsChooserApp.project.get('name');
+        }
+
+        // serialize state into query parameters and attach to href
+        var href = $(this).attr('href');
+        href += '&' + jQuery.param(state);
+        $(this).attr('href', href);
+
     });
 
 
