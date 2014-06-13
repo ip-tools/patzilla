@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui [fix]: don't rebuild comments everytime list gets focus
+- ui, ux: improve post database wipe experience
 
 0.20.0
 ======

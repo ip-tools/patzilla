@@ -247,6 +247,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // refetch basket to work around localforage.backbone vs. backbone-relational woes
         // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
+        // FIXME: it's ridiculous that we can't catch any errors from within "then()"
         basket.fetch({success: function() {
             $.when(basket.fetch_entries()).then(function() {
                 _this.basket_activate(basket);
@@ -304,6 +305,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // toggle appropriate Add/Remove button when entries get added or removed from basket
         // TODO: are old bindings killed properly?
+        // FIXME: this stopListening is brutal!
         this.stopListening(null, "change:add");
         this.stopListening(null, "change:remove");
         this.listenTo(basket, "change:add", this.basketView.link_document);
@@ -449,6 +451,23 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             });
         }
+    },
+
+    // tear down user interface, clear all widgets
+    shutdown_gui: function() {
+
+        // basket and associated document indicators
+        this.basketModel.destroy();
+        this.basket_bind_actions();
+        this.basketView.render();
+
+        // comments
+        this.comments.store.set();
+
+        // projects
+        this.projects.reset();
+        this.projectChooserView.clear();
+
     },
 
 });

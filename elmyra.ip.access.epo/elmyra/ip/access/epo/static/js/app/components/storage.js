@@ -176,6 +176,19 @@ StoragePlugin = Marionette.Controller.extend({
 
     },
 
+    dbreset: function() {
+
+        // make all data control widgets empty
+        opsChooserApp.shutdown_gui();
+
+        // reset state of orm
+        Backbone.Relational.store.reset();
+        //Backbone.Relational.store = new Backbone.Store();
+
+        // wipe the data store
+        localforage.clear();
+    },
+
     dataurl: function() {
         // produce representation like "data:application/json;base64,ewogICAgImRhdGF..."
         var deferred = $.Deferred();
@@ -254,12 +267,14 @@ StoragePlugin = Marionette.Controller.extend({
         // reset database
         $('#factory-reset-button').unbind('dblclick');
         $('#factory-reset-button').on('dblclick', function(e) {
-            localforage.clear();
-            Backbone.Relational.store = new Backbone.Store();
-            if (opsChooserApp.projectChooserView) {
-                opsChooserApp.projectChooserView.set_name();
-            }
+
+            // wipe the database
+            _this.dbreset();
+
+            // send some notifications
+            $(this).parent().find('.notifyjs-container').remove();
             $(this).parent().qnotify('Database wiped successfully', {error: true});
+            $(this).parent().parent().find('.notifyjs-container').last().qnotify('You should create a new project before starting over');
         });
 
     },

@@ -132,6 +132,18 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         console.log('CommentTextView.initialize');
+        this.listenTo(this.model, 'remove', this.clear);
+    },
+
+    // propagate the stored comment text into the widget
+    onRender: function() {
+        var textarea = this.get_textarea();
+        textarea.val(this.model.get('text'));
+    },
+
+    // clear widget value
+    clear: function() {
+        this.get_textarea().val(undefined);
     },
 
     // TODO: refactor this to a common base class or ItemView mixin
@@ -150,12 +162,9 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
         // show the widget with animation
         this.get_widget().slideToggle();
 
-        // propagate the stored comment text into the widget
-        var textarea = this.get_textarea();
-        textarea.val(this.model.get('text'));
-
         // save the comment when loosing focus by connecting
         // the textarea element's blur event to the item save action
+        var textarea = this.get_textarea();
         textarea.off('blur');
         textarea.on('blur', function() {
             var text = textarea.val();

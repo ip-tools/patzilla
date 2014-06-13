@@ -361,6 +361,11 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         }
     },
 
+    clear: function() {
+        this.set_name();
+        $(this.data_list_selector).empty();
+    },
+
 });
 
 
