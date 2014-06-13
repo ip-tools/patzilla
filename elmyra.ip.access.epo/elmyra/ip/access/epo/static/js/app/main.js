@@ -31,7 +31,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var query = $('#query').val();
         var datasource = this.get_datasource();
 
-        console.log('App.perform_search: datasource=' + datasource + ', query=' + query);
+        console.log('App.perform_search: datasource=' + datasource, 'query=' + query, 'options=', options);
 
         // handle basket review mode specially
         if (options && options.reviewmode != null) {
@@ -329,6 +329,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // update some other gui components after basket view is ready
         this.basket_bind_actions();
 
+        this.trigger('basket:activated', basket);
+
     },
 
     basket_bind_actions: function() {
@@ -458,7 +460,41 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
  * ------------------------------------------
  */
 
-opsChooserApp = new OpsChooserApp();
+AppConfigModel = Backbone.Model.extend({
+    defaults: {
+        mode: undefined,
+        context: 'default',
+        projectname: 'ad-hoc',
+        datasource: 'ops',
+    },
+
+    initialize: function(options) {
+        var _this = this;
+
+        // only propagate options with defined values
+        _.each(_.keys(options), function(key) {
+            var value = options[key];
+            if (value) {
+                _this.set(key, value);
+            }
+        });
+
+    },
+});
+
+
+var url = $.url(window.location.href);
+config_options = {
+    mode: url.param('mode'),
+    context: url.param('context'),
+    projectname: url.param('project'),
+    datasource: url.param('datasource'),
+    database_dump: url.param('database'),
+};
+var appConfig = new AppConfigModel(config_options);
+
+
+opsChooserApp = new OpsChooserApp({config: appConfig});
 
 opsChooserApp.addRegions({
     metadataRegion: "#ops-metadata-region",
@@ -468,10 +504,8 @@ opsChooserApp.addRegions({
 });
 
 
-// global universal helpers
+// global universal helpers, able to boot early
 opsChooserApp.addInitializer(function(options) {
-    var url = $.url(window.location.href);
-    this.url = url;
 });
 
 // data storage
@@ -483,7 +517,7 @@ opsChooserApp.addInitializer(function(options) {
     localforage.setDriver('localStorageWrapper');
 
     // set database name from "context" query parameter
-    localforage.config({name: this.url.param('context') || 'ipsuite-default'});
+    localforage.config({name: this.config.get('context')});
 });
 
 // initialize models

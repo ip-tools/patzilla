@@ -97,7 +97,7 @@ CommentCollection = Backbone.Collection.extend({
 
     // initialize model
     initialize: function() {
-        console.log('ModelCollection.initialize');
+        console.log('CommentCollection.initialize');
     },
 
     // TODO: refactor to common base class or mixin
@@ -310,7 +310,19 @@ CommentsPlugin = Marionette.Controller.extend({
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
 
-    // handles the mechanics for all comment widgets on a whole result list
-    this.comments = new CommentsPlugin({view: this.collectionView});
+    // Initialize comments plugin
+    // HACK: Postpone initialization until projects:initialize happens, if another
+    //       load operation (e.g. by database-transfer) is already in progress.
+    // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
+    if (!this.LOAD_IN_PROGRESS) {
+        this.comments = new CommentsPlugin({view: this.collectionView});
+
+    } else {
+        this.listenTo(this, 'projects:initialize', function() {
+            this.comments = new CommentsPlugin({view: this.collectionView});
+        });
+
+    }
+
 
 });

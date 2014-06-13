@@ -6,6 +6,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
     keywords: [],
     perform: function(documents, metadata, query, range) {
 
+        log('OpsPublishedDataSearch.perform');
+
         indicate_activity(true);
 
         //$('.pager-area').hide();

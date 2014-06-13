@@ -46,7 +46,7 @@ ProjectModel = Backbone.RelationalModel.extend({
 
         var query = query_data.query + ' (' + query_data.datasource + ')';
 
-        console.log('ProjectModel.record_query: ' + query);
+        console.log('ProjectModel.record_query:', query);
 
         var dirty = false;
 
@@ -385,26 +385,35 @@ opsChooserApp.addInitializer(function(options) {
 
     // fetch all projects and activate designated one
     this.listenTo(this, 'projects:initialize', function(projectname) {
-
         console.log('projects:initialize');
 
-        var _this = this;
+        // use project name from config (propagated from current url)
+        if (!projectname) {
+            projectname = this.config.get('projectname');
+        }
+        // use default project name
+        /*
+        if (!projectname) {
+            projectname = 'ad-hoc;
+        }
+        */
+
         this.projects = new ProjectCollection();
+
+        var _this = this;
         this.projects.fetch({success: function(response) {
-            if (projectname) {
-                _this.trigger('project:load', projectname);
-            }
+            // load designated project
+            _this.trigger('project:load', projectname);
         }});
     });
 
-    // fetch all projects on application start
-    // TODO: use central location for parsed window.location.href
-    var url = $.url(window.location.href);
-    var projectname = url.param('project');
-    if (!projectname) {
-        projectname = today_iso();
+    // Fetch all projects on application start and initialize designated or default project.
+    // HACK: Skip initialization if another load operation (e.g. by database-transfer) is already
+    //       in progress. database-transfer will trigger projects:initialize after import happened.
+    // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
+    if (!this.LOAD_IN_PROGRESS) {
+        this.trigger('projects:initialize');
     }
-    this.trigger('projects:initialize', projectname);
 
     /*
     TODO

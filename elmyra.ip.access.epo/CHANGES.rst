@@ -11,6 +11,7 @@ development
 - ui, storage: add jquery.base64 library
 - ui, storage: add stripped-down dataurl library
 - ui: make review mode available via url parameter datasource=review
+- ui: improve application configuration and bootstrapping
 
 0.19.0
 ======

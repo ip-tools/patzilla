@@ -44,13 +44,25 @@ function apply_highlighting() {
     });
 }
 
-function listview_bind_actions() {
+function hide_elements() {
 
     // hide all navigational- and action-elements when in print mode
     if (PRINTMODE) {
         $('.do-not-print').hide();
-        return;
     }
+
+    // hide all navigational- and action-elements when in view-only mode
+    var MODE_VIEWONLY = opsChooserApp.config.get('mode') == 'liveview';
+    if (MODE_VIEWONLY) {
+        $('.non-liveview').hide();
+    }
+}
+
+function listview_bind_actions() {
+
+    hide_elements();
+
+    if (PRINTMODE) return;
 
     //console.log('listview_bind_actions');
 
@@ -391,27 +403,14 @@ function reset_content(options) {
 
 function boot_application() {
 
-    console.log('boot_application');
-
-    // compute default data source
-    // set to DEPATISnet, if called with empty query; otherwise, use OPS
-    // TODO: use central location for parsed window.location.href
-    var url = $.url(window.location.href);
-    var datasource = url.param('datasource');
-
     /*
-    if (!datasource) {
-        var query = $('#query').val();
-        if (query.trim() == '') {
-            datasource = 'depatisnet';
-        }
+    if (PRINTMODE) {
+        $('.do-not-print').hide();
+        return;
     }
     */
 
-    if (!datasource) {
-        datasource = 'ops';
-    }
-
+    console.log('boot_application');
 
 
     // hide pagination- and metadata-area to start from scratch
@@ -765,6 +764,7 @@ function boot_application() {
     //   cql field chooser
     // ------------------------------------------
     // propagate "datasource" query parameter
+    var datasource = opsChooserApp.config.get('datasource')
     if (datasource) {
         opsChooserApp.set_datasource(datasource);
     }
@@ -780,6 +780,8 @@ function boot_application() {
     });
 
     opsChooserApp.trigger('application:ready');
+
+    hide_elements();
 
 }
 
