@@ -364,7 +364,6 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 });
 
 
-// TODO: how to make this not reference "opsChooserApp"?
 opsChooserApp.addInitializer(function(options) {
 
     var _this = this;
@@ -377,10 +376,23 @@ opsChooserApp.addInitializer(function(options) {
 
     // load project when receiving "project:load" event
     this.listenTo(this, 'project:load', function(projectname) {
+
+        // remember current project name to detect project-switch later
+        var projectname_before;
+        if (this.project) {
+            projectname_before = this.project.get('name');
+        }
+
         var _this = this;
         $.when(this.projects.get_or_create(projectname)).done(function(project) {
             _this.trigger('project:ready', project);
+
+            // if project names differ, emit changed event
+            if (projectname != projectname_before) {
+                _this.trigger('project:changed', project);
+            }
         });
+
     });
 
     // fetch all projects and activate designated one

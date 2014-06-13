@@ -261,8 +261,9 @@ CommentsPlugin = Marionette.Controller.extend({
             _.clear(this.itemviews);
         });
 
+        // handle switching projects
         // renew all CommentManagers in remembered itemviews when new project gets ready
-        this.listenTo(opsChooserApp, 'project:ready', function(project) {
+        this.listenTo(opsChooserApp, 'project:changed', function(project) {
             var _this = this;
             _(this.itemviews).each(function(itemview) {
                 itemview.comment_manager = _this.comment_factory(itemview);

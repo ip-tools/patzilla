@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui [fix]: don't rebuild comments everytime list gets focus
 
 0.20.0
 ======
