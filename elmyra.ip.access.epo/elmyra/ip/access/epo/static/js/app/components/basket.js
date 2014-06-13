@@ -393,7 +393,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
                 rating_widget.raty('dismiss', dismiss);
 
                 // b) to color indicator
-                indicator_element.toggleClass('dismiss', dismiss);
+                indicator_element.toggleClass('dismiss', Boolean(dismiss));
                 indicator_element.toggleClass('score1', score == 1);
                 indicator_element.toggleClass('score2', score == 2);
                 indicator_element.toggleClass('score3', score == 3);
