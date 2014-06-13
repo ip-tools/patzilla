@@ -3,12 +3,12 @@
 
 function indicate_activity(active) {
     if (active) {
-        $('#idler').hide();
-        $('#spinner').show();
+        $('.idler').hide();
+        $('.spinner').show();
 
     } else {
-        $('#spinner').hide();
-        $('#idler').show();
+        $('.spinner').hide();
+        $('.idler').show();
     }
 }
 

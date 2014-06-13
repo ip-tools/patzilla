@@ -122,8 +122,8 @@ var software_version = '${software_version}';
                         data-content="Send query to database"
                         >
                         <button type="submit" role="button" class="btn btn-query-perform">
-                            <i class="icon-search" id="idler"></i>
-                            <i class="icon-refresh icon-spin" style="display: none" id="spinner"></i>
+                            <i class="idler icon-search"></i>
+                            <i class="spinner icon-refresh icon-spin" style="display: none"></i>
                         </button>
                         <button type="submit" role="button" class="btn btn-query-perform">
                             Send query
@@ -358,8 +358,11 @@ var software_version = '${software_version}';
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
-
             <div class="span12 pagination">
+                <button type="submit" role="button" class="btn btn-query-perform">
+                    <i class="idler icon-search"></i>
+                    <i class="spinner icon-refresh icon-spin" style="display: none"></i>
+                </button>
                 <ul class="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>

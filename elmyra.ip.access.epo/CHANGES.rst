@@ -7,6 +7,7 @@ development
 - ui [fix]: don't rebuild comments everytime list gets focus
 - ui, ux: improve post database wipe experience
 - ui: fix document color indicator when document is just added to basket, without any score or dismiss flag set
+- ui, ux: display activity indicator also in mode=liveview
 
 0.20.0
 ======
