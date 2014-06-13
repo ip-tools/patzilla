@@ -417,3 +417,20 @@ BasketView = Backbone.Marionette.ItemView.extend({
     },
 
 });
+
+
+// setup plugin
+opsChooserApp.addInitializer(function(options) {
+
+    // Special bootstrap handling for datasource=review:
+    // This activates the review after both the application
+    // and the basket signal readyness.
+    this.listenTo(this, 'application:ready', function() {
+        if (this.config.get('datasource') == 'review') {
+            this.listenToOnce(this, 'basket:activated', function(basket) {
+                basket.review();
+            });
+        }
+    });
+
+});

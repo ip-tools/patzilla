@@ -10,6 +10,7 @@ development
 - ui, storage: fix localForage keys() bug
 - ui, storage: add jquery.base64 library
 - ui, storage: add stripped-down dataurl library
+- ui: make review mode available via url parameter datasource=review
 
 0.19.0
 ======
