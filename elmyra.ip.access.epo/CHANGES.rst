@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.20.0
+======
 - ui: disable autofocus of query textarea on page load
 - ui, storage: refactor database import, export, reset
 - ui, storage: introduce multi-tenancy by "context" query parameter
