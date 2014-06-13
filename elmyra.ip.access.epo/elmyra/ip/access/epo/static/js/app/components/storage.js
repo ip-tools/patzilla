@@ -8,9 +8,10 @@ StoragePlugin = Marionette.Controller.extend({
         this.database_version = '0.0.1';
     },
 
-    dbexport: function(notifybox) {
+    dump: function() {
 
         var _this = this;
+        var deferred = $.Deferred();
 
         localforage.keys().then(function(keys) {
             var database = {};
@@ -43,35 +44,66 @@ StoragePlugin = Marionette.Controller.extend({
                     },
                 };
 
-                // compute payload and filename
-                var payload = JSON.stringify(backup, undefined, 4);
-                var now = now_iso_human();
-                var filename = 'elmyra-ipsuite-navigator.' + now + '.database.json';
-
-                // write file
-                if (!payload) {
-                    $(notifybox).qnotify('Database export failed', {error: true});
-                    return;
-                }
-                var blob = new Blob([payload], {type: "application/json"});
-                saveAs(blob, filename);
-
-                // notify user
-                $(notifybox).qnotify('Database exported successfully');
+                deferred.resolve(backup);
 
             });
         });
 
+        return deferred.promise();
+
     },
 
-    dbimport: function(backup, notifybox) {
+    dbexport: function(notifybox) {
+
+        var _this = this;
+
+        this.dump().then(function(backup) {
+
+            // compute payload and filename
+            var payload = JSON.stringify(backup, undefined, 4);
+            var now = now_iso_human();
+            var filename = 'elmyra-ipsuite-navigator.' + now + '.database.json';
+
+            // write file
+            if (!payload) {
+                $(notifybox).qnotify('Database export failed', {error: true});
+                return;
+            }
+            var blob = new Blob([payload], {type: "application/json"});
+            saveAs(blob, filename);
+
+            // notify user
+            $(notifybox).qnotify('Database exported successfully');
+
+        });
+
+    },
+
+    dbimport: function(payload, notifybox) {
+
+        var backup = payload;
+
+        if (typeof(payload) == 'string') {
+            try {
+                backup = jQuery.parseJSON(payload);
+
+            } catch(error) {
+                var msg = error.message;
+                var message = 'ERROR: Could not parse JSON, ' + msg;
+                console.error(message);
+                $(notifybox).qnotify(message, {error: true});
+                return;
+            }
+        }
 
         // more sanity checks
         //var filetype = backup && backup['metadata'] && backup['metadata']['type'];
         var filetype = dotresolve(backup, 'metadata.type');
         var database = dotresolve(backup, 'database');
-        if (filetype != 'elmyra.ipsuite.navigator.backup' || !database) {
-            $(notifybox).qnotify('ERROR: Invalid backup format', {error: true});
+        if (filetype != 'elmyra.ipsuite.navigator.database' || !database) {
+            var message = 'ERROR: Invalid backup format';
+            console.error(message);
+            $(notifybox).qnotify(message, {error: true});
             return;
         }
 
@@ -101,6 +133,10 @@ StoragePlugin = Marionette.Controller.extend({
         });
         $.when.apply($, deferreds).then(function() {
 
+            // TODO: get rid of this! here!
+            // This should trigger a complete application model bootstrap (coll1.fetch(), coll2.fetch(), etc.),
+            // which should most probably be implemented at a central place.
+
             Backbone.Relational.store.reset();
 
             // compute any (first) valid project to be activated after import
@@ -109,8 +145,12 @@ StoragePlugin = Marionette.Controller.extend({
                 var projectname = project.name;
             } catch(error) {
             }
+
+            // use last selected project name
             if (!projectname) {
-                projectname = opsChooserApp.project.get('name');
+                if (opsChooserApp.project) {
+                    projectname = opsChooserApp.project.get('name');
+                }
             }
 
             // activate project
@@ -131,7 +171,6 @@ StoragePlugin = Marionette.Controller.extend({
         $('#data-export-button').on('click', function(e) {
             _this.dbexport($(this).parent());
         });
-
 
         // import database
         // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
@@ -156,18 +195,7 @@ StoragePlugin = Marionette.Controller.extend({
             var reader = new FileReader();
             reader.onload = function(e) {
                 var payload = e.target.result;
-                try {
-                    var backup = jQuery.parseJSON(payload);
-
-                } catch(error) {
-                    var msg = error.message;
-                    var message = 'ERROR: Could not parse JSON, ' + msg;
-                    console.error(message);
-                    $(notifybox).qnotify(message, {error: true});
-                    return;
-                }
-
-                _this.dbimport(backup, notifybox);
+                _this.dbimport(payload, notifybox);
 
             };
             reader.onerror = function(e) {
@@ -200,9 +228,7 @@ StoragePlugin = Marionette.Controller.extend({
 
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
-
-    // handles the mechanics for all comment widgets on a whole result list
-    var storage_plugin = new StoragePlugin();
-    this.listenTo(this, 'application:ready', function() { storage_plugin.setup_ui(); });
-
+    this.listenTo(this, 'application:ready', function() {
+        this.storage.setup_ui();
+    });
 });
