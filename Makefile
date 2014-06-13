@@ -7,7 +7,7 @@ js:
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
-		--preamble "// (c) 2013,2014 Elmyra UG" \
+		--preamble "// (c) 2013,2014 Elmyra UG - All rights reserved" \
 		--mangle --compress --define \
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
 		--source-map-url /static/js/app.min.map \
