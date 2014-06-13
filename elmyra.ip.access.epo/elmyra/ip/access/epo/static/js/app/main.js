@@ -55,8 +55,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                     self.metadata.set('keywords', opsChooserApp.search.keywords);
 
-                    // run action bindings here after rendering data entries
-                    listview_bind_actions();
+                    // signal the results are ready
+                    self.trigger('results:ready');
+
                 });
 
             } else if (datasource == 'depatisnet') {
@@ -158,8 +159,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             $('.pagination').removeClass('span10');
             $('.pagination').addClass('span12');
 
-            // run action bindings here after rendering data entries
-            listview_bind_actions();
+            // signal the results are ready
+            self.trigger('results:ready');
 
             // TODO: selecting page size with DEPATISnet is currently not possible
             //$('.page-size-chooser').parent().remove();
@@ -596,6 +597,15 @@ opsChooserApp.addInitializer(function(options) {
 
 // main component event wiring
 opsChooserApp.addInitializer(function(options) {
+
+    this.listenTo(this, 'results:ready', function() {
+
+        // commit metadata, this will trigger e.g. PaginationView rendering
+        this.metadata.trigger('commit');
+
+        // run action bindings on listview after rendering data entries
+        listview_bind_actions();
+    });
 
     // activate project as soon it's loaded from the datastore
     this.listenTo(this, "project:ready", this.project_activate);

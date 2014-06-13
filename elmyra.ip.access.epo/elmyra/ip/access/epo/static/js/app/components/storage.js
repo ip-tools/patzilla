@@ -205,8 +205,8 @@ StoragePlugin = Marionette.Controller.extend({
         var _this = this;
 
         // permalink
-        $('#data-permalink-button').unbind('click');
-        $('#data-permalink-button').on('click', function(e) {
+        $('.permalink-review-liveview').unbind('click');
+        $('.permalink-review-liveview').on('click', function(e) {
             var projectname = opsChooserApp.project.get('name');
             _this.dataurl().then(function(dataurl) {
                 var url =
@@ -283,7 +283,13 @@ StoragePlugin = Marionette.Controller.extend({
 
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
+
     this.listenTo(this, 'application:ready', function() {
         this.storage.setup_ui();
     });
+
+    this.listenTo(this, 'results:ready', function() {
+        this.storage.setup_ui();
+    });
+
 });

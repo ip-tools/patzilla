@@ -75,14 +75,15 @@ var software_version = '${software_version}';
                             >
                             <i class="icon-pencil"></i> Review
                         </button>
-                        <a
-                                id="data-permalink-button"
-                                class="btn btn-popover"
+
+                        <!-- permalink for review -->
+                        <a class="btn btn-popover permalink-review-liveview"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                 data-content="Open permalink to review page in liveview mode"
                                 >
                             <i class="icon-external-link"></i>
                         </a>
+
                     </div>
                 </div>
             </div>
@@ -121,10 +122,13 @@ var software_version = '${software_version}';
                         data-toggle="popover" data-trigger="hover" data-placement="right"
                         data-content="Send query to database"
                         >
+
+                        <!-- activity indicator -->
                         <button type="submit" role="button" class="btn btn-query-perform">
                             <i class="idler icon-search"></i>
                             <i class="spinner icon-refresh icon-spin" style="display: none"></i>
                         </button>
+
                         <button type="submit" role="button" class="btn btn-query-perform">
                             Send query
                         </button>
@@ -358,11 +362,47 @@ var software_version = '${software_version}';
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
+
             <div class="span12 pagination">
-                <button type="submit" role="button" class="btn btn-query-perform">
+
+                <ul class="pull-right">
+                    <!--
+                    <li><a href="#" action="previous">Prev</a></li>
+                    -->
+                    <!--
+                    <li><a href="#" action="next">Next</a></li>
+                    -->
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</script>
+
+<script type="text/x-underscore-template" id="ops-pagination-template-liveview">
+    <div id="pagination-widget">
+
+        <div class="row-fluid" id="pagination-chooser">
+            <div class="span2">
+
+                <!-- activity indicator (secondary) -->
+                <button role="button" class="btn">
                     <i class="idler icon-search"></i>
                     <i class="spinner icon-refresh icon-spin" style="display: none"></i>
                 </button>
+
+                <!-- permalink for review (secondary) -->
+                <a class="btn btn-popover permalink-review-liveview"
+                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                   data-content="Open permalink to review page in liveview mode"
+                        >
+                    <i class="icon-external-link"></i>
+                </a>
+
+            </div>
+
+            <div class="span10 pagination">
+
                 <ul class="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>

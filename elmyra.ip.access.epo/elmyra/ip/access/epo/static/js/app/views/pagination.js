@@ -6,27 +6,38 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     template: '#ops-pagination-template',
 
     initialize: function() {
-        //console.log('PaginationView::initialize');
-        this.listenTo(this.model, "change", this.render);
+        console.log('PaginationView.initialize');
+        this.listenTo(this.model, "commit", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
     },
 
-    setup_ui: function() {
-        //console.log('PaginationView::setup_ui');
+    // Change Which Template Is Rendered For A View
+    // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.view.md#change-which-template-is-rendered-for-a-view
+    getTemplate: function(){
+        if (opsChooserApp.config.get('mode') == 'liveview'){
+            return '#ops-pagination-template-liveview';
+        } else if (this.model.get('searchmode') == 'subsearch'){
+            return '#ops-pagination-template-nopagesize';
+        } else {
+            return '#ops-pagination-template';
+        }
+    },
 
-        var searchmode = opsChooserApp.metadata.get('searchmode');
-        var datasource = opsChooserApp.metadata.get('datasource');
-        var pagesize_choices = opsChooserApp.metadata.get('pagination_pagesize_choices');
-        var page_size = opsChooserApp.metadata.get('page_size');
-        var result_count = opsChooserApp.metadata.get('result_count');
-        var page_count_max = opsChooserApp.metadata.get('pagination_entry_count');
-        var result_range = opsChooserApp.metadata.get('result_range');
+    setup_ui: function() {
+
+        console.log('PaginationView.setup_ui');
+
+        var _this = this;
+
+        var datasource = this.model.get('datasource');
+        var pagesize_choices = this.model.get('pagination_pagesize_choices');
+        var page_size = this.model.get('page_size');
+        var result_count = this.model.get('result_count');
+        var page_count_max = this.model.get('pagination_entry_count');
+        var result_range = this.model.get('result_range');
 
         // compute number of pagination entries
         var page_count = 0;
-        if (searchmode == 'subsearch') {
-            this.template = '#ops-pagination-template-nopagesize';
-        }
         if (result_count > 0 && page_size > 0) {
             var need_pages = result_count / page_size;
             if (need_pages >= 1) {
@@ -59,7 +70,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         // pager: make links from page size chooser entries
         $(this.el).find('.page-size-chooser a').click(function() {
             var value = $(this).data('value');
-            opsChooserApp.metadata.set('page_size', value);
+            _this.model.set('page_size', value);
             opsChooserApp.perform_search();
             return false;
         });
@@ -98,7 +109,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     onDomRefresh: function() {
-        //console.log('PaginationView::onDomRefresh');
+        console.log('PaginationView.onDomRefresh');
     },
 
 });
