@@ -13,6 +13,7 @@ development
 - ui: make review mode available via url parameter datasource=review
 - ui: improve application configuration and bootstrapping
 - ui, storage: export and import database to/from "data" URL scheme, see RFC 2397
+- ui: permalink button for liveview mode
 
 0.19.0
 ======

@@ -53,7 +53,7 @@ var software_version = '${software_version}';
 <div class="container-fluid span12">
 
     ## query builder and basket
-    <div class="row-fluid do-not-print" id="querybuilder-basket-area">
+    <div class="row-fluid do-not-print non-liveview" id="querybuilder-basket-area">
 
         <div class="span8" id="querybuilder-area">
 
@@ -75,6 +75,14 @@ var software_version = '${software_version}';
                             >
                             <i class="icon-pencil"></i> Review
                         </button>
+                        <a
+                                id="data-permalink-button"
+                                class="btn btn-popover"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                data-content="Open permalink to review page in liveview mode"
+                                >
+                            <i class="icon-external-link"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -202,8 +210,6 @@ var software_version = '${software_version}';
                             data-toggle="popover" data-trigger="hover" data-placement="top"
                             data-content="WIPE ALL DATA (doubleclick)"
                             >
-                        <i class="icon-trash icon-large"></i>
-                        <i class="icon-trash icon-large"></i>
                         <i class="icon-trash icon-large"></i>
                     </a>
                     % endif

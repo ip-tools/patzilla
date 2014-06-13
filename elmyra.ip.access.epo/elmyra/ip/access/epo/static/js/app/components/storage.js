@@ -191,6 +191,21 @@ StoragePlugin = Marionette.Controller.extend({
 
         var _this = this;
 
+        // permalink
+        $('#data-permalink-button').unbind('click');
+        $('#data-permalink-button').on('click', function(e) {
+            var projectname = opsChooserApp.project.get('name');
+            _this.dataurl().then(function(dataurl) {
+                var url =
+                    '?mode=liveview' +
+                    '&context=viewer' +
+                    '&project=' + encodeURIComponent(projectname) +
+                    '&datasource=review' +
+                    '&database=' + encodeURIComponent(dataurl);
+                window.open(url);
+            });
+        });
+
         // export database
         $('#data-export-button').unbind('click');
         $('#data-export-button').on('click', function(e) {
