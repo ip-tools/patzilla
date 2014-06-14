@@ -52,8 +52,8 @@ function hide_elements() {
     }
 
     // hide all navigational- and action-elements when in view-only mode
-    var MODE_VIEWONLY = opsChooserApp.config.get('mode') == 'liveview';
-    if (MODE_VIEWONLY) {
+    var MODE_LIVEVIEW = opsChooserApp.config.get('mode') == 'liveview';
+    if (MODE_LIVEVIEW) {
         $('.non-liveview').hide();
     }
 }
@@ -131,7 +131,8 @@ function listview_bind_actions() {
     });
 
     // run search actions when clicking query-links
-    $(".query-link").click(function(event) {
+    $(".query-link").unbind('click');
+    $(".query-link").on('click', function(event) {
 
         // v1
         /*
@@ -156,10 +157,29 @@ function listview_bind_actions() {
             state.project = opsChooserApp.project.get('name');
         }
 
-        // serialize state into query parameters and attach to href
+        var MODE_LIVEVIEW = opsChooserApp.config.get('mode') == 'liveview';
+
         var href = $(this).attr('href');
-        href += '&' + jQuery.param(state);
-        $(this).attr('href', href);
+
+        // serialize state into opaque parameter token when in liveview
+        if (MODE_LIVEVIEW) {
+            var _this = this;
+            opaqueurl_amend(href, state).then(function(href_opaque) {
+                log('href_opaque:', href_opaque);
+                $(_this).attr('href', href_opaque);
+            })
+
+        // serialize state into regular query parameters otherwise
+        } else {
+            if (_.string.includes('?')) {
+                href += '&';
+            } else {
+                href += '?';
+            }
+            href += jQuery.param(state);
+            $(this).attr('href', href);
+        }
+
 
     });
 

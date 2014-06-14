@@ -10,7 +10,9 @@
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
 <%
-query = request.params.get('query', '')
+query = request.opaque.get('query', '')
+if not query and query_allowed:
+    query = request.params.get('query', '')
 html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
 page_title = request.params.get('page-title', 'Patent search')
 page_subtitle = request.params.get('page-subtitle', '')

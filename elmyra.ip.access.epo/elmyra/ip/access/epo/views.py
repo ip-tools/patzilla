@@ -24,7 +24,18 @@ def includeme(config):
 @view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/app.html')
 def opsbrowser(request):
     printmode = asbool(request.params.get('print'))
-    return {'project': 'elmyra.ip.access.epo', 'printmode': printmode}
+
+    print '=========== opaque:', request.opaque
+
+    query_allowed = request.headers.get('Host') != 'patentview.elmyra.de'
+
+    payload = {
+        'project': 'elmyra.ip.access.epo',
+        'printmode': printmode,
+        'query_allowed': query_allowed,
+    }
+    return payload
+
 
 @view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
 def opspdf(request):
