@@ -15,7 +15,7 @@ def main(global_config, **settings):
     config.include('pyramid_beaker')
     config.include('cornice')
 
-    # Configure subscribers: URL generator, renderer globals.
+    # Register generic components: URL generator, renderer globals
     config.include(".subscribers")
     config.include(".views")
     #config.include("akhet.static")

@@ -35,6 +35,7 @@
 
         viewType = viewType || Backbone.View;
 
+        // FIXME: this has the potential yielding an infinite busy loop
         while ($el.length) {
             $el = $el.closest(':backboneView');
             ret = $el.length ? $el.data('backboneView') : null;
