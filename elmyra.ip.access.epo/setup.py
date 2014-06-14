@@ -28,6 +28,10 @@ requires = [
     # web services
     'cornice==0.15',
 
+    # authorization
+    'jws==0.1.2',
+    'python_jwt==0.3.1',
+
     # ----------------------------------------------
     #   business logic
     # ----------------------------------------------
