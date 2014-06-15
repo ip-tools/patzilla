@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.22.2
+======
+- ui: add “lz-string” library
+
 0.22.1
 ======
 - ui, middleware: fix viewer lockdown mode for patentview.elmyra.de
