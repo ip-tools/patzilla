@@ -9,43 +9,29 @@
 ## http://davidsulc.com/blog/2012/04/15/a-simple-backbone-marionette-tutorial/
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
+<script type="text/javascript" src="/static/js/app/config.js"></script>
+
 <%
-query = request.opaque.get('query', '')
-if not query and query_allowed:
-    query = request.params.get('query', '')
-html_title = request.params.get('html-title', 'Patent search for "{0}"'.format(query))
-page_title = request.params.get('page-title', 'Patent search')
-page_subtitle = request.params.get('page-subtitle', '')
-page_footer = request.params.get('page-footer', 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG')
-app_productname = request.params.get('app-productname', 'Elmyra <i class="circle-icon">IP</i> suite')
-app_versionstring = request.params.get('app-versionstring', '<br/>Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''))
-ship_mode = request.params.get('ship-mode', 'multi-numberlist')
-ship_url = request.params.get('ship-url', request.params.get('ship_url', ''))
-ship_frame = request.params.get('ship-frame', 'opsbrowser_right_frame')
-embed_item_url = request.params.get('embed-item-url', '')
-debugmode = request.params.get('debug', '')
-software_version = request.registry.settings.get('SOFTWARE_VERSION', '')
+# FIXME: this is the last thing we have to keep until this bunch of html got refactored into a template
+debugmode = h.asbool(request.params.get('debug'))
 %>
+
 <script type="application/javascript">
-var ship_mode = decodeURIComponent('${ship_mode}');
-var ship_url = decodeURIComponent('${ship_url}');
-var ship_frame = decodeURIComponent('${ship_frame}');
-var embed_item_url = decodeURIComponent('${embed_item_url}');
-var PRINTMODE = '${printmode}' == 'True' ? true : false;
-var software_version = '${software_version}';
+${ h.fiddler.render() | n }
 </script>
+
 
 ## title / headline
 <div class="container-fluid">
     <div class="span9">
         <div class="pull-left">
-            <h3 style="display: inline-block">${page_title | n}</h3>
-            ${page_subtitle}
+            <h3 id="ui-title" style="display: inline-block"></h3>
+            <span id="ui-subtitle"></span>
         </div>
     </div>
     <div class="span3">
         <div class="pull-right">
-            <h3>${app_productname | n}</h3>
+            <h3 id="ui-productname"></h3>
         </div>
     </div>
 </div>
@@ -94,7 +80,7 @@ var software_version = '${software_version}';
 
                 <!-- query string -->
                 <div class="span12">
-                    <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5">${query}</textarea>
+                    <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="5"></textarea>
                 </div>
 
                 <!--
@@ -255,10 +241,9 @@ var software_version = '${software_version}';
     <div class="page-footer pull-right">
         <small>
             <div style="text-align: right">
-                ${page_footer | n}
-                ${app_versionstring | n}
+                <span id="ui-footer"></span>
+                <span id="ui-footer-version"></span>
                 <span class="do-not-print">
-                    <br/>
                     Help: <a id="link-help" class="incognito"><i class="icon-question-sign icon-large"></i></a>
                 </span>
             </div>
@@ -570,8 +555,8 @@ var software_version = '${software_version}';
 <!-- storage -->
 <script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
 <script type="text/javascript" src="/static/js/lib/localforage.js"></script>
-<!-- TODO: minify again, but currently includes an important patch -->
-<!-- <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script> -->
+## <!-- TODO: minify again, but currently includes an important patch -->
+## <!-- <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script> -->
 <script type="text/javascript" src="/static/js/lib/localforage.backbone.js"></script>
 <script type="text/javascript" src="/static/js/lib/backbone-dom-to-view.js"></script>
 
@@ -592,6 +577,7 @@ var software_version = '${software_version}';
 <link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
 <script type="text/javascript" src="/static/widget/raty/jquery.raty.js"></script>
 
+    <!-- application -->
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:

@@ -6,6 +6,7 @@ development
 ===========
 - middleware, ui: "opaquelinks" subsystem on top of JSON Web Tokens
 - ui: use "opaquelinks" subsystem for generating inline links in liveview mode
+- ui, middleware: major parameter fiddling overhaul
 
 0.20.1
 ======

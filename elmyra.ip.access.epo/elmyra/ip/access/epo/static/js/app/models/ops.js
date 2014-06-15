@@ -9,8 +9,9 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         log('OpsPublishedDataSearch.perform');
 
         indicate_activity(true);
-
         //$('.pager-area').hide();
+
+        // TODO: enhance this as soon as we're in AMD land
         $(opsChooserApp.paginationViewBottom.el).hide();
 
         var self = this;
@@ -97,7 +98,6 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
         // these carry state, so switching the navigator into a special mode, currently
-        debugmode: false,
         reviewmode: false,
 
         datasource: null,
@@ -120,7 +120,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
             return url;
         },
         get_url_print: function() {
-            return this.get_url() + '&print=true';
+            return this.get_url() + '&mode=print';
         },
         get_url_pdf: function() {
             var url = this.get_url() + '&pdf=true';
@@ -139,12 +139,6 @@ OpsExchangeMetadata = Backbone.Model.extend({
         }
 
         // TODO: propagate page number from url
-
-        // propagate debugmode from url
-        var debug = url.param('debug');
-        if (debug) {
-            this.set('debugmode', true);
-        }
 
     },
 
@@ -463,7 +457,7 @@ OpsExchangeDocument = Backbone.Model.extend({
 
             // skip enriching links when in print mode
             // due to phantomjs screwing them up when rendering to pdf
-            if (PRINTMODE) {
+            if (this.printmode) {
                 return value;
             }
 
@@ -590,6 +584,11 @@ OpsExchangeDocument = Backbone.Model.extend({
             return _(countries_allowed).contains(country);
         },
 
+    },
+
+    initialize: function(options) {
+        // TODO: enhance this as soon as we're in AMD land
+        this.printmode = opsChooserApp.config.get('mode') == 'print';
     },
 
     get_document_number: function() {

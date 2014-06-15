@@ -1,11 +1,11 @@
 <script type="text/x-underscore-template" id="basket-template">
     <%text>
-        <form id="basket-form" name="basket-form" method="post" action="<%= ship_url %>">
+        <form id="basket-form" name="basket-form" method="post" action="<%= config.get('ship-url') %>" target="<%= config.get('ship-frame') %>">
 
             <!-- basket content -->
             <div class="row-fluid">
                 <div class="span12">
-                    <textarea class="span12" id="basket" name="<%= ship_param %>" rows="5" placeholder="Selection, match list"><%= numbers_display %></textarea>
+                    <textarea class="span12" id="basket" name="<%= config.get('ship-param') %>" rows="5" placeholder="Selection, match list"><%= numbers_display %></textarea>
                 </div>
             </div>
 

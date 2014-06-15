@@ -47,7 +47,8 @@ function apply_highlighting() {
 function hide_elements() {
 
     // hide all navigational- and action-elements when in print mode
-    if (PRINTMODE) {
+    var MODE_PRINT = opsChooserApp.config.get('mode') == 'print';
+    if (MODE_PRINT) {
         $('.do-not-print').hide();
     }
 
@@ -62,7 +63,10 @@ function listview_bind_actions() {
 
     hide_elements();
 
-    if (PRINTMODE) return;
+    var MODE_PRINT = opsChooserApp.config.get('mode') == 'print';
+    if (MODE_PRINT) {
+        return;
+    }
 
     //console.log('listview_bind_actions');
 
@@ -150,7 +154,7 @@ function listview_bind_actions() {
         var state = {
             mode: opsChooserApp.config.get('mode'),
             context: opsChooserApp.config.get('context'),
-            project: opsChooserApp.config.get('projectname'),
+            project: opsChooserApp.config.get('project'),
             datasource: 'ops',
         }
         if (opsChooserApp.project) {
@@ -165,13 +169,12 @@ function listview_bind_actions() {
         if (MODE_LIVEVIEW) {
             var _this = this;
             opaqueurl_amend(href, state).then(function(href_opaque) {
-                log('href_opaque:', href_opaque);
                 $(_this).attr('href', href_opaque);
             })
 
         // serialize state into regular query parameters otherwise
         } else {
-            if (_.string.includes('?')) {
+            if (_.string.contains(href, '?')) {
                 href += '&';
             } else {
                 href += '?';
@@ -432,21 +435,38 @@ function reset_content(options) {
     }
 }
 
-function boot_application() {
-
-    /*
-    if (PRINTMODE) {
-        $('.do-not-print').hide();
-        return;
+function getconfig(name, options) {
+    options = options || {};
+    var label = opsChooserApp.config.get(name);
+    if (label) {
+        if (options.before) {
+            label = options.before + label;
+        }
+        if (options.after) {
+            label = label + options.after;
+        }
     }
-    */
+    return label;
+}
+
+function boot_application() {
 
     console.log('boot_application');
 
+    // ------------------------------------------
+    //   intro
+    // ------------------------------------------
+
+    // initialize content which still resides on page level (i.e. no template yet)
+    $('#query').val(opsChooserApp.config.get('query'));
+    $('#ui-title').html(getconfig('setting.ui.page.title'));
+    $('#ui-subtitle').html(getconfig('setting.ui.page.subtitle'));
+    $('#ui-productname').html(getconfig('setting.ui.productname'));
+    $('#ui-footer').html(getconfig('setting.ui.page.footer', {after: '<br/>'}));
+    $('#ui-footer-version').html(getconfig('setting.ui.version', {after: '<br/>'}));
 
     // hide pagination- and metadata-area to start from scratch
     reset_content();
-
 
 
     // ------------------------------------------
@@ -772,7 +792,7 @@ function boot_application() {
             // don't insert operation if there's already one left of the cursor
             var fiveleftchar = query.substring(position - 5, position).toLowerCase();
             //console.log('fiveleftchar: ' + fiveleftchar);
-            if (_.string.include(fiveleftchar, 'and') || _.string.include(fiveleftchar, 'or')) {
+            if (_.string.contains(fiveleftchar, 'and') || _.string.contains(fiveleftchar, 'or')) {
                 do_op = false;
             }
 

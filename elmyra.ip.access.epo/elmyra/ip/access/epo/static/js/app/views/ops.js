@@ -14,6 +14,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
     initialize: function() {
         console.log('OpsExchangeDocumentView.initialize');
+        this.templateHelpers.config = opsChooserApp.config;
     },
 
     templateHelpers: {
@@ -79,7 +80,9 @@ MetadataView = Backbone.Marionette.ItemView.extend({
     template: _.template($('#ops-metadata-template').html(), this.model, {variable: 'data'}),
 
     initialize: function() {
+        this.templateHelpers.config = opsChooserApp.config;
         this.listenTo(this.model, "change", this.render);
     },
+    templateHelpers: {},
 
 });

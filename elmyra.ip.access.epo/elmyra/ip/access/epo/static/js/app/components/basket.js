@@ -224,18 +224,15 @@ BasketView = Backbone.Marionette.ItemView.extend({
         console.log('BasketView.initialize');
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
+        this.templateHelpers.config = opsChooserApp.config;
     },
+
+    templateHelpers: {},
 
     serializeData: function() {
 
-        console.log('serializeData');
-
-        var _this = this;
-
         var data = {};
         data = this.model.toJSON();
-
-        _(data).extend(this.params_from_query());
 
         var entries = this.model.get('entries').map(function(entry) {
             var line =
@@ -254,32 +251,6 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
     },
 
-    // initialize more template variables from url query parameters
-    // TODO: refactor to utils.js modulo basket_option_names
-    params_from_query: function() {
-        var tplvars = {};
-        var basket_option_names = ['ship-url', 'ship-param'];
-        var _this = this;
-        var url = $.url(window.location.href);
-        _(basket_option_names).each(function(query_name) {
-            var attribute_name = query_name.replace('-', '_');
-            var value = url.param(query_name);
-            // fall back to deprecated parameter name for backwards compatibility
-            if (!value) {
-                value = url.param(attribute_name);
-            }
-            if (value) {
-                value = decodeURIComponent(value);
-                value = value.split(',');
-                tplvars[attribute_name] = value;
-            }
-        });
-
-        _(tplvars).defaults({ship_param: 'payload'});
-
-        return tplvars;
-    },
-
     setup_ui: function() {
         console.log('BasketView.setup_ui');
 
@@ -292,8 +263,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // only enable submit button, if ship url is given
-        var params = this.params_from_query();
-        if (params.ship_url) {
+        var ship_url = opsChooserApp.config.get('ship-url');
+        if (ship_url) {
             $('#basket-submit-button').prop('disabled', false);
         } else {
             $('#basket-submit-button').prop('disabled', true);

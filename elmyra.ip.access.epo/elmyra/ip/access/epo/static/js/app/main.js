@@ -480,41 +480,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
  * ------------------------------------------
  */
 
-AppConfigModel = Backbone.Model.extend({
-    defaults: {
-        mode: undefined,
-        context: 'default',
-        projectname: 'ad-hoc',
-        datasource: 'ops',
-    },
-
-    initialize: function(options) {
-        var _this = this;
-
-        // only propagate options with defined values
-        _.each(_.keys(options), function(key) {
-            var value = options[key];
-            if (value) {
-                _this.set(key, value);
-            }
-        });
-
-    },
-});
-
-
-var url = $.url(window.location.href);
-config_options = {
-    mode: url.param('mode'),
-    context: url.param('context'),
-    projectname: url.param('project'),
-    datasource: url.param('datasource'),
-    database_dump: url.param('database'),
-};
-var appConfig = new AppConfigModel(config_options);
-
-
-opsChooserApp = new OpsChooserApp({config: appConfig});
+opsChooserApp = new OpsChooserApp({config: ipsuiteNavigatorConfig});
 
 opsChooserApp.addRegions({
     metadataRegion: "#ops-metadata-region",
@@ -526,7 +492,6 @@ opsChooserApp.addRegions({
 
 // global universal helpers, able to boot early
 opsChooserApp.addInitializer(function(options) {
-
     this.storage = new StoragePlugin();
 });
 
@@ -542,7 +507,9 @@ opsChooserApp.addInitializer(function(options) {
     localforage.config({name: this.config.get('context')});
 
     // import database from url :-)
-    var database_dump = this.config.get('database_dump');
+    // TODO: i'd like this to have storage.js make it on its own, but that'd be too late :-(
+    //       check again what we could achieve...
+    var database_dump = this.config.get('database');
     if (database_dump) {
         // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
         this.LOAD_IN_PROGRESS = true;

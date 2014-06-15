@@ -244,7 +244,7 @@
 
                     % if ship_mode == 'single-bibdata':
                     <%text>
-                    <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= ship_url %>" target="<%= ship_frame %>" class="form-single-bibdata">
+                    <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= data.config.get('ship-url') %>" target="<%= data.config.get('ship-frame') %>" class="form-single-bibdata">
                         <input name="query" type="hidden" value="<%= $('#query').val().replace(/"/g, '&quot;') %>"/>
                         <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
                         <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
@@ -457,7 +457,7 @@
                     </div>
 
                     <!-- embed 3rd-party component -->
-                    <div class="embed-item" data-embed-url="<%= embed_item_url %>" data-document-number="<%= patent_number %>">
+                    <div class="embed-item" data-embed-url="<%= data.config.get('embed-item-url') %>" data-document-number="<%= patent_number %>">
                     </div>
 
                 </div>
@@ -496,7 +496,7 @@
                 <br/>
                 <span style="font-size: x-large" id="result-count-total"><%= data.result_count %></span>
 
-                <% if (data.debugmode && data.searchmode == 'subsearch') { %>
+                <% if (asbool(data.config.get('debug')) && data.searchmode == 'subsearch') { %>
                 <br/>
                 View:
                 <br/>
@@ -526,7 +526,7 @@
                     %>
                 </span>
 
-                <% if (data.debugmode && (data.searchmode == 'subsearch') && data.query_real) { %>
+                <% if (asbool(data.config.get('debug')) && (data.searchmode == 'subsearch') && data.query_real) { %>
                 <br/>
                 Query OPS:
                 <br/>

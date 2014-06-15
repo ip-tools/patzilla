@@ -406,7 +406,7 @@ opsChooserApp.addInitializer(function(options) {
 
         // use project name from config (propagated from current url)
         if (!projectname) {
-            projectname = this.config.get('projectname');
+            projectname = this.config.get('project');
         }
         // use default project name
         /*
