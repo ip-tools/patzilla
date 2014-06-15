@@ -20,7 +20,8 @@ def install(version):
         version = pkg_version
 
     print 'Installing package ' + yellow(pkg_name) + ', version ' + yellow(version)
-    response = ask('Proceed (y/n)? ', ('y', 'n'))
+    #response = ask('Proceed (y/n)? ', ('y', 'n'))
+    response = 'y'
 
     if response == 'y':
 
