@@ -66,10 +66,17 @@ ${ h.fiddler.render() | n }
 
                         <!-- permalink for review -->
                         <a class="btn btn-popover permalink-review-liveview"
-                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                                data-content="Open permalink to review page in liveview mode"
-                                >
-                            <i class="icon-external-link"></i>
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="Permalink to review page in liveview mode"
+                            >
+                            <i class="icon-unlink"></i>
+                        </a>
+                        <a class="btn btn-popover permalink-review-liveview-ttl"
+                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                            data-content="Permalink to review page in liveview mode, with TTL"
+                            >
+                            <i class="icon-unlink"></i>
+                            <i class="icon-time"></i>
                         </a>
 
                     </div>
@@ -379,11 +386,20 @@ ${ h.fiddler.render() | n }
                 </button>
 
                 <!-- permalink for review (secondary) -->
+                <% if (!viewer_lockdown()) { %>
                 <a class="btn btn-popover permalink-review-liveview"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                   data-content="Open permalink to review page in liveview mode"
-                        >
-                    <i class="icon-external-link"></i>
+                   data-content="Permalink to review page in liveview mode"
+                   >
+                    <i class="icon-unlink"></i>
+                </a>
+                <% } %>
+                <a class="btn btn-popover permalink-review-liveview-ttl"
+                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                   data-content="Permalink to review page in liveview mode, with TTL"
+                   >
+                    <i class="icon-unlink"></i>
+                    <i class="icon-time"></i>
                 </a>
 
             </div>

@@ -23,6 +23,14 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         }
     },
 
+    templateHelpers: {
+
+        // when running on patentview.elmyra.de, let's lock down to viewer-only mode
+        viewer_lockdown: function() {
+            return $.url(window.location.href).attr('host') == 'patentview.elmyra.de';
+        },
+    },
+
     setup_ui: function() {
 
         console.log('PaginationView.setup_ui');

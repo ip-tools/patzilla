@@ -45,13 +45,13 @@ class BackboneModelParameterFiddler(object):
         request_opaque = dict(request.opaque)
 
 
-        # A. parameter firewall
+        # A. parameter firewall, INPUT
         host = request.headers.get('Host')
         isviewer = host == 'patentview.elmyra.de'
 
         # 1. don't allow "query" from outside on viewer-only domains
         if request_params.has_key('query') and isviewer:
-            log.warn('parameter "query=%s" not allowed on this instance, deleting it', request_params['query'])
+            log.warn('parameter "query=%s" not allowed on this vhost, deleting it', request_params['query'])
             del request_params['query']
 
 
@@ -64,7 +64,12 @@ class BackboneModelParameterFiddler(object):
         params.update(request_opaque)
 
 
-        # C. special customizations
+        # C. parameter firewall, OUTPUT
+        if params.has_key('op'):
+            del params['op']
+
+
+        # D. special customizations
 
         # 1. on patentview.elmyra.de, only run liveview
         if isviewer:

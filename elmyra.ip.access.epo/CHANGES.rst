@@ -6,6 +6,8 @@ development
 ===========
 - middleware: attempt to fix url routing re. undesired infinite redirect loops
 - middleware: bind host=patentview.elmyra.de to mode=liveview and title=Patent view
+- ui: interactively generate opaque permalinks
+- ui: use "opaquelinks" subsystem for review-in-liveview-with-ttl permalinks
 
 0.21.1
 ======

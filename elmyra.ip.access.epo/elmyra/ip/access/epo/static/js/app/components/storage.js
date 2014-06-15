@@ -200,21 +200,53 @@ StoragePlugin = Marionette.Controller.extend({
         return deferred.promise();
     },
 
+    // generate a permalink to the current state (project)
+    permalink: function(params) {
+        var deferred = $.Deferred();
+        var projectname = opsChooserApp.project.get('name');
+        this.dataurl().then(function(dataurl) {
+            _(params).extend({
+                project: projectname,
+                database: dataurl,
+            });
+            var url = '?' + jQuery.param(params);
+            deferred.resolve(url);
+        });
+        return deferred.promise();
+    },
+
+    // generate an opaque permalink to the current state (project)
+    permalink_opaque: function(params) {
+        var deferred = $.Deferred();
+        this.permalink(params).then(function(url) {
+            opaqueurl_amend(url).then(function(opaqueurl) {
+                deferred.resolve(opaqueurl);
+            });
+        });
+        return deferred.promise();
+    },
+
     setup_ui: function() {
 
         var _this = this;
 
+        var url = $.url(window.location.href);
+        var host = url.attr('host');
+
         // permalink
         $('.permalink-review-liveview').unbind('click');
         $('.permalink-review-liveview').on('click', function(e) {
-            var projectname = opsChooserApp.project.get('name');
-            _this.dataurl().then(function(dataurl) {
-                var url =
-                    '?mode=liveview' +
-                    '&context=viewer' +
-                    '&project=' + encodeURIComponent(projectname) +
-                    '&datasource=review' +
-                    '&database=' + encodeURIComponent(dataurl);
+            _this.permalink({mode: 'liveview', context: 'viewer', datasource: 'review'}).then(function(url) {
+                window.open(url);
+            });
+        });
+        $('.permalink-review-liveview-ttl').unbind('click');
+        $('.permalink-review-liveview-ttl').on('click', function(e) {
+            _this.permalink_opaque({mode: 'liveview', context: 'viewer', datasource: 'review'}).then(function(url) {
+                // when generating review-in-liveview-with-ttl links on patentsearch, let's view them on patentview
+                if (host == 'patentsearch.elmyra.de') {
+                    url = 'https://patentview.elmyra.de/' + url;
+                }
                 window.open(url);
             });
         });
