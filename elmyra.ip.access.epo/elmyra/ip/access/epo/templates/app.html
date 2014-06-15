@@ -386,7 +386,7 @@ ${ h.fiddler.render() | n }
                 </button>
 
                 <!-- permalink for review (secondary) -->
-                <% if (!viewer_lockdown()) { %>
+                <% if (!config.get('isviewer')) { %>
                 <a class="btn btn-popover permalink-review-liveview"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Permalink to review page in liveview mode"

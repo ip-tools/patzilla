@@ -9,7 +9,10 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         console.log('PaginationView.initialize');
         this.listenTo(this.model, "commit", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
+        this.templateHelpers.config = opsChooserApp.config;
     },
+
+    templateHelpers: {},
 
     // Change Which Template Is Rendered For A View
     // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.view.md#change-which-template-is-rendered-for-a-view
@@ -21,14 +24,6 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         } else {
             return '#ops-pagination-template';
         }
-    },
-
-    templateHelpers: {
-
-        // when running on patentview.elmyra.de, let's lock down to viewer-only mode
-        viewer_lockdown: function() {
-            return $.url(window.location.href).attr('host') == 'patentview.elmyra.de';
-        },
     },
 
     setup_ui: function() {

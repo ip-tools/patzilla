@@ -161,12 +161,10 @@ function listview_bind_actions() {
             state.project = opsChooserApp.project.get('name');
         }
 
-        var MODE_LIVEVIEW = opsChooserApp.config.get('mode') == 'liveview';
-
         var href = $(this).attr('href');
 
         // serialize state into opaque parameter token when in liveview
-        if (MODE_LIVEVIEW) {
+        if (opsChooserApp.config.get('isviewer')) {
             var _this = this;
             opaqueurl_amend(href, state).then(function(href_opaque) {
                 $(_this).attr('href', href_opaque);

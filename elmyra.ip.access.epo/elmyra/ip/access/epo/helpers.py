@@ -47,7 +47,7 @@ class BackboneModelParameterFiddler(object):
 
         # A. parameter firewall, INPUT
         host = request.headers.get('Host')
-        isviewer = host == 'patentview.elmyra.de'
+        isviewer = host in ['patentview.elmyra.de']
 
         # 1. don't allow "query" from outside on viewer-only domains
         if request_params.has_key('query') and isviewer:
@@ -72,6 +72,7 @@ class BackboneModelParameterFiddler(object):
         # D. special customizations
 
         # 1. on patentview.elmyra.de, only run liveview
+        params['isviewer'] = isviewer
         if isviewer:
             params['mode'] = 'liveview'
             params['setting.ui.page.title'] = 'Patent view'

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.22.1
+======
+- ui, middleware: fix viewer lockdown mode for patentview.elmyra.de
+
 0.22.0
 ======
 - middleware: attempt to fix url routing re. undesired infinite redirect loops
