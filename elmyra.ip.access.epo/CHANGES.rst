@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.21.0
+======
 - middleware, ui: "opaquelinks" subsystem on top of JSON Web Tokens
 - ui: use "opaquelinks" subsystem for generating inline links in liveview mode
 - ui, middleware: major parameter fiddling overhaul
