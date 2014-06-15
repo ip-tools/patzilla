@@ -190,11 +190,11 @@ StoragePlugin = Marionette.Controller.extend({
     },
 
     dataurl: function() {
-        // produce representation like "data:application/json;base64,ewogICAgImRhdGF..."
+        // produce "data" url representation like "data:application/json;base64,ewogICAgImRhdGF..."
         var deferred = $.Deferred();
         this.dump().then(function(backup) {
             var payload = JSON.stringify(backup);
-            var content = dataurl.format({data: payload, mimetype: 'application/json', charset: 'utf-8'});
+            var content = dataurl.format({data: payload, mimetype: 'application/json+lz-string', charset: 'utf-8'});
             return deferred.resolve(content);
         });
         return deferred.promise();

@@ -1,6 +1,10 @@
-// https://github.com/brianloveswords/dataurl
-// Stripped down, now also runs on non-node.js, therefore it relies
-// on the jquery-base64 plugin and stopped supporting streams.
+// -*- coding: utf-8 -*-
+// (c) 2014 Andreas Motl, Elmyra UG
+
+// taken from https://github.com/brianloveswords/dataurl
+// 2014-06-13 Stripped down, now also runs on non-node.js, therefore it relies
+//            on the jquery-base64 plugin and stopped supporting streams.
+// 2014-06-15 Add lz-string compression
 
 const REGEX = {
   dataurl: /data:(.*?)(?:;charset=(.*?))?(;base64)?,(.+)/i,
@@ -31,13 +35,16 @@ function makeHeader(options) {
   return dataUrlTemplate;
 }
 
-function makeDataUrlSync(header, data) {
-  return (header + $.base64.encode(data));
+function makeDataUrlSync(header, options) {
+  var data = options.data;
+  if (options.encoded !== false)
+    data = LZString.compressToBase64(data);
+  return (header + data);
 }
 
 dataurl.convert = function (options) {
   const header = makeHeader(options);
-  return makeDataUrlSync(header, options.data);
+  return makeDataUrlSync(header, options);
 };
 dataurl.format = dataurl.convert;
 
@@ -50,7 +57,9 @@ dataurl.parse = function (string) {
     return false;
   const encoded = !!match[ENCODED_INDEX];
   const base64 = (encoded ? 'base64' : null);
-  const data = $.base64.decode(match[DATA_INDEX]);
+  var data = match[DATA_INDEX];
+  if (encoded !== false)
+    data = LZString.decompressFromBase64(data);
   const charset = match[CHARSET_INDEX];
   const mimetype = match[MIME_INDEX] || 'text/plain';
   return {

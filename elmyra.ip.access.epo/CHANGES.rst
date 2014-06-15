@@ -8,6 +8,7 @@ development
 0.22.2
 ======
 - ui: add “lz-string” library
+- ui: compress "data" url with "lz-string"
 
 0.22.1
 ======
