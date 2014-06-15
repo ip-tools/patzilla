@@ -15,11 +15,17 @@ def includeme(config):
     config.add_route('patentsearch', '/ops/browser')
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
-    config.add_route('patentsearch-quick2',  '/ops/browser/{field}/{value}/{value2}')
+    config.add_route('patentsearch-quick2',  '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('jump-dpmaregister2', '/ops/browser/office/dpma/register/application/{document_number}')
     config.add_route('angry-cats', '/angry-cats')
 
+    # at route "patentsearch-quick2", exclude access to javascript .map files, these would match, see::
+    #   $ curl --silent -i http://localhost:6543/ops/browser/fanstatic/jquery/jquery.min.map | grep Location
+    #   Location: http://localhost:6543/ops/browser?query=fanstatic%3Djquery
+    #
+    # negative lookahead to the rescue:
+    # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
 
 @view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/app.html')
 def opsbrowser(request):
@@ -65,6 +71,7 @@ def opsbrowser_vanity(request):
         value = year()
 
     query = compute_query(field, value, value2)
+    print 'vanity:', query
     return get_redirect_query(request, query)
 
 @view_config(route_name='patentsearch-quick')
@@ -75,6 +82,7 @@ def opsbrowser_quick(request):
     value2 = request.matchdict.get('value2')
 
     query = compute_query(field, value, value2)
+    print 'quick:', query
     return get_redirect_query(request, query)
 
 def compute_query(field, value, value2):
@@ -106,7 +114,8 @@ def get_redirect_query(request, query):
 
     # FIXME: this is a hack
     path = '/'
-    if request.headers.get('Host') != 'patentsearch.elmyra.de':
+    host = request.headers.get('Host')
+    if host not in ['patentsearch.elmyra.de', 'patentview.elmyra.de']:
         path = '/ops/browser'
     redirect_url = location=path + '?' + urlencode({'query': query})
     return HTTPFound(redirect_url)

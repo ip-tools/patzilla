@@ -12,7 +12,6 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
     },
 
     initialize: function(options) {
-        console.error('config');
         var _this = this;
 
         options = options || {};

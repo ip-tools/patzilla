@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: attempt to fix url routing re. undesired infinite redirect loops
 
 0.21.1
 ======
