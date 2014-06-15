@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.22.0
+======
 - middleware: attempt to fix url routing re. undesired infinite redirect loops
 - middleware: bind host=patentview.elmyra.de to mode=liveview and title=Patent view
 - ui: interactively generate opaque permalinks
