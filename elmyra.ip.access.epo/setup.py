@@ -29,6 +29,7 @@ requires = [
     'cornice==0.15',
 
     # authorization
+    'PyCrypto==2.6.1',
     'jws==0.1.2',
     'python_jwt==0.3.1',
 

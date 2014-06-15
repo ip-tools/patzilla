@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.21.1
+======
+- ui, middleware: deployment aftermath fixes (setup.py dependencies, config.js woes)
+
 0.21.0
 ======
 - middleware, ui: "opaquelinks" subsystem on top of JSON Web Tokens
