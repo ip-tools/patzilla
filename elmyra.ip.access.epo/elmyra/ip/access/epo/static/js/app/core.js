@@ -156,7 +156,7 @@ function listview_bind_actions() {
             context: opsChooserApp.config.get('context'),
             project: opsChooserApp.config.get('project'),
             datasource: 'ops',
-        }
+        };
         if (opsChooserApp.project) {
             state.project = opsChooserApp.project.get('name');
         }
