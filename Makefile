@@ -3,17 +3,36 @@
 
 js:
 	@#echo bundling javascript for release=$(VERSION)
+
+	# application
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
 		--preamble "// (c) 2013,2014 Elmyra UG - All rights reserved" \
-		--mangle --compress --define \
+		--mangle --compress \
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
 		--source-map-url /static/js/app.min.map \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.js
-	git commit elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.* \
-		--message='release: update minified main javascript application and source map'
+
+	# configuration
+	node_modules/.bin/uglifyjs \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.js \
+		--preamble "// (c) 2013,2014 Elmyra UG - All rights reserved" \
+		--mangle --compress \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js
+
+	# url cleaner
+	node_modules/.bin/uglifyjs \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.js \
+		--mangle --compress \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js
+
+	git commit \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.{js,map} \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js \
+		--message='release: minify javascript resources'
 
 sdist:
 	cd elmyra.ip.access.epo; python setup.py sdist
