@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: add “translogger” to development.ini to have an access.log
 
 0.22.2
 ======
