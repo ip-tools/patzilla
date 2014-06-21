@@ -18,8 +18,16 @@
     <meta itemprop="name" content="elmyra.ip.access.epo">
     <%block name="plus_description"></%block>
 
-    <link rel="search" type="application/opensearchdescription+xml" title="Elmyra patent search" href="/static/meta/opensearch.xml" />
+    <script type="application/javascript">
+## this must be rendered inline to get rid of monster url parameters as early as possible
+% if request.registry.settings.get('ipsuite.production') == 'true':
+<%include file="urlcleaner.min.js"/>
+% else:
+<%include file="urlcleaner.js"/>
+% endif
+    </script>
 
+    <link rel="search" type="application/opensearchdescription+xml" title="Elmyra patent search" href="/static/meta/opensearch.xml" />
     <link rel="shortcut icon" href="${url.app}/favicon.ico" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -35,6 +43,7 @@
     ##       sizes="72x72" href="${url.app}/ico/apple-touch-icon-72-precomposed.png" />
     ## <link rel="apple-touch-icon-precomposed"
     ##       href="${url.app}/ico/apple-touch-icon-57-precomposed.png" />
+
 </head>
 
 <body>

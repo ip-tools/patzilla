@@ -89,8 +89,21 @@ class BackboneModelParameterFiddler(object):
 
     def render(self):
         """transfer parameters to Backbone model"""
+
         parameters = self.compute_parameters()
-        javascript = self.name + '.set(' + json.dumps(parameters) + ');\n'
+
+        # serialize parameters to json
+        # merge hidden request parameters, e.g. "database=" gets stripped away form site.mako to avoid referrer spam
+        # push current configuration state to browser history
+        tplvars = self.__dict__.copy()
+        tplvars['parameters_json'] = json.dumps(parameters)
+        javascript = """
+            {name} = new IpsuiteNavigatorConfig();
+            {name}.set({parameters_json});
+            {name}.set(window.request_hidden);
+            {name}.history_pushstate();
+        """.format(**tplvars)
+
         return javascript
 
 fiddler = BackboneModelParameterFiddler('ipsuiteNavigatorConfig')

@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: add “translogger” to development.ini to have an access.log
+- ui: clean huge url parameters like “database” or “op” from url at an early stage using the HTML5 history API to avoid referrer spam
 
 0.22.2
 ======
