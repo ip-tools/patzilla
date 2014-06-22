@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
+import ago
 import datetime
 
 def now():
@@ -7,6 +8,9 @@ def now():
 
 def date_iso(date):
     return date.strftime('%Y-%m-%d')
+
+def datetime_iso(date):
+    return date.strftime('%Y-%m-%d %H:%M:%S')
 
 def today_iso():
     return date_iso(now())
@@ -31,3 +35,9 @@ def parse_weekrange(datestring):
         'end': parse_dateweek(datestring, 0),
     }
     return payload
+
+def unixtime_to_datetime(unixtime):
+    return datetime.datetime.fromtimestamp(unixtime)
+
+def unixtime_to_human(unixtime):
+    return ago.human(unixtime_to_datetime(unixtime))

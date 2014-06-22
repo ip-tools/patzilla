@@ -23,8 +23,9 @@ class JwtSigner(object):
 
     def __init__(self, key=None, ttl=None):
         self.key = key
+        self.ttl = ttl or datetime.timedelta(seconds=1)
         #self.ttl = ttl or datetime.timedelta(minutes=60)
-        self.ttl = ttl or datetime.timedelta(hours=24)
+        #self.ttl = ttl or datetime.timedelta(hours=24)
 
     # http://stackoverflow.com/questions/20483504/making-rsa-keys-from-a-password-in-python/20484325#20484325
     def genkey(self, password, salt='', keysize=2048):
@@ -71,6 +72,15 @@ class JwtSigner(object):
 
             return payload['data'], metadata
 
+        except ValueError as ex:
+            error_payload = {
+                'location': 'JSON Web Signature',
+                'name': ex.__class__.__name__,
+                'description': ex.message,
+                'token': token,
+            }
+            raise JwtVerifyError(error_payload)
+
         except jws.exceptions.SignatureError as ex:
             error_payload = {
                 'location': 'JSON Web Signature',
@@ -83,16 +93,29 @@ class JwtSigner(object):
             raise JwtVerifyError(error_payload)
 
         except jwt._JWTError as ex:
-            error_payload = {
-                'location': 'JSON Web Token',
-                'name': ex.__class__.__name__,
-                'description': ex.message,
-                'token': token,
-                'jwt_header': header_future,
-                'jwt_payload': payload_future,
-            }
-            raise JwtVerifyError(error_payload)
+            if ex.message == 'expired':
+                error_payload = {
+                    'location': 'JSON Web Token',
+                    'name': ex.__class__.__name__,
+                    'description': ex.message,
+                    'jwt_header': header_future,
+                    'jwt_expiry': payload_future['exp'],
+                }
+                raise JwtExpiryError(error_payload)
+            else:
+                error_payload = {
+                    'location': 'JSON Web Token',
+                    'name': ex.__class__.__name__,
+                    'description': ex.message,
+                    'token': token,
+                    'jwt_header': header_future,
+                    'jwt_payload': payload_future,
+                }
+                raise JwtVerifyError(error_payload)
 
 
 class JwtVerifyError(Exception):
+    pass
+
+class JwtExpiryError(Exception):
     pass

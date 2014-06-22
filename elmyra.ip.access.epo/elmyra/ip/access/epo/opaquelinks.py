@@ -2,7 +2,8 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
-from elmyra.ip.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner
+from elmyra.ip.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
+from elmyra.ip.util.date import datetime_iso, unixtime_to_datetime
 from pyramid.httpexceptions import HTTPBadRequest
 from simplejson.scanner import JSONDecodeError
 from zope.interface.declarations import implements
@@ -53,11 +54,22 @@ def create_request_interceptor(event):
             log.error('opaque parameter token is empty. data=%s, token=%s', data, op_token)
         if meta:
             request.opaque_meta.update(meta)
+            request.opaque_meta.update({'status': 'ok'})
         else:
             log.error('metadata of opaque parameter token is empty. meta=%s, token=%s', meta, op_token)
 
+    except JwtExpiryError as ex:
+        expiry_unixtime = ex.message['jwt_expiry']
+        expiry_iso = datetime_iso(unixtime_to_datetime(expiry_unixtime))
+        ex.message['jwt_expiry_iso'] = expiry_iso
+        log.error('Opaque parameter token expired: expiry=%s, message=%s', expiry_iso, ex.message)
+        request.opaque_meta.update({'status': 'error', 'errors': [ex.message]})
+        # TODO: log/send full stacktrace
+
     except JwtVerifyError as ex:
         log.error('Error while decoding opaque parameter token: %s', ex.message)
+        request.opaque_meta.update({'status': 'error', 'errors': [ex.message]})
+        # TODO: log/send full stacktrace
 
 
 # ------------------------------------------

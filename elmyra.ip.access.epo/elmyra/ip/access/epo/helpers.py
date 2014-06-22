@@ -2,9 +2,8 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import json
 import logging
-from ago import human
-from datetime import datetime
 from elmyra.ip.access.epo.util import dict_prefix_key
+from elmyra.ip.util.date import unixtime_to_human
 from pyramid.settings import asbool     # required by template
 from pyramid.threadlocal import get_current_request
 
@@ -59,6 +58,7 @@ class BackboneModelParameterFiddler(object):
         request_params = dict(request.params)
         request_opaque = dict(request.opaque)
         request_opaque['link_expires'] = request.opaque_meta.get('exp')
+        request_opaque_meta = dict_prefix_key(dict(request.opaque_meta), 'opaque.meta.')
 
         # A. parameter firewall, INPUT
         host = request.headers.get('Host')
@@ -71,12 +71,14 @@ class BackboneModelParameterFiddler(object):
 
 
         # B. merge parameters
-        # 1. use "environment" as foundation
-        # 2. merge "settings"
-        # 3. merge "request parameters"
-        # 4. merge "opaque parameters" taking the highest precedence
+        # 1. use "environment" as foundation (prefixed "request.")
+        # 2. merge "settings" (prefixed "setting.")
+        # 3. merge "opaque meta" parameters (prefixed "opaque.meta.")
+        # 4. merge "request parameters"
+        # 5. merge "opaque parameters" taking the highest precedence
         params = environment
         params.update(setting_params)
+        params.update(request_opaque_meta)
         params.update(request_params)
         params.update(request_opaque)
 
@@ -102,13 +104,10 @@ class BackboneModelParameterFiddler(object):
 
             link_expires = params.get('link_expires')
             if link_expires:
-                print "link_expires-1:", link_expires
-                link_expires = datetime.fromtimestamp(link_expires)
-                print "link_expires-2:", link_expires
-                params['setting.ui.page.subtitle'] += ' Link expires ' + human(link_expires) + '.';
+                params['setting.ui.page.subtitle'] += ' Link expires ' + unixtime_to_human(link_expires) + '.';
 
 
-        # D. backward-compat amendments
+        # E. backward-compat amendments
         for key, value in params.iteritems():
             if key.startswith('ship_'):
                 newkey = key.replace('ship_', 'ship-')
@@ -131,7 +130,9 @@ class BackboneModelParameterFiddler(object):
             {name} = new IpsuiteNavigatorConfig();
             {name}.set({parameters_json});
             {name}.set(window.request_hidden);
-            {name}.history_pushstate();
+            if ({name}.get('opaque.meta.status') != 'error') {{
+                {name}.history_pushstate();
+            }}
         """.format(**tplvars)
 
         return javascript

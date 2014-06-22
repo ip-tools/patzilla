@@ -485,6 +485,32 @@ function boot_application() {
     $.notify.defaults({className: 'info', showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 4000, showDuration: 300});
 
 
+
+    // -------------------------------------------------
+    //   propagate opaque error messages to alert area
+    // -------------------------------------------------
+    var status = opsChooserApp.config.get('opaque.meta.status');
+    if (status == 'error') {
+        var errors = opsChooserApp.config.get('opaque.meta.errors');
+        _.each(errors, function(error) {
+
+            if (error.location == 'JSON Web Token' && error.description == 'expired') {
+                error.description =
+                    'We are sorry, it looks like the validity time of this link has expired at ' + error.jwt_expiry_iso + '.' +
+                    '<br/><br/>' +
+                    'Please contact us at <a href="mailto:support@elmyra.de">support@elmyra.de</a> for any commercial plans.';
+            }
+            if (error.location == 'JSON Web Signature') {
+                error.description = 'It looks like the token used to encode this request is invalid.' + ' (' + error.description + ')'
+            }
+
+            var tpl = _.template($('#cornice-error-template').html());
+            var alert_html = tpl(error);
+            $('#alert-area').append(alert_html);
+        });
+    }
+
+
     // ------------------------------------------
     //   cql query area
     // ------------------------------------------
