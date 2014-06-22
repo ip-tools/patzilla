@@ -52,13 +52,13 @@ install:
 package-and-install: sdist upload upload-config install
 
 bumpversion:
-	bumpversion $(BUMP)
+	bumpversion $(bump)
 
 push:
 	git push && git push --tags
 
 release:
 	$(MAKE) js
-	$(MAKE) bumpversion BUMP=$(BUMP)
+	$(MAKE) bumpversion bump=$(bump)
 	$(MAKE) push
 	$(MAKE) package-and-install
