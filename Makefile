@@ -28,10 +28,11 @@ js:
 		--mangle --compress \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js
 
-	git commit --untracked=no \
+	git commit \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.{js,map} \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js \
+		-uno \
 		--message='release: minify javascript resources'
 
 sdist:
