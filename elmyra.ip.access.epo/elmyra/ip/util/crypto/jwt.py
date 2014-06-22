@@ -65,7 +65,11 @@ class JwtSigner(object):
                     }
                 raise JwtVerifyError(error_payload)
 
-            return payload['data']
+            # compute metadata without payload data
+            metadata = payload.copy()
+            del metadata['data']
+
+            return payload['data'], metadata
 
         except jws.exceptions.SignatureError as ex:
             error_payload = {

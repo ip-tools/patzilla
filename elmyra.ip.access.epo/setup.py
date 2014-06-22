@@ -41,6 +41,7 @@ requires = [
     'requests-oauthlib==0.4.0',
     'mechanize==0.2.5',
     'BeautifulSoup==3.2.1',
+    'ago==0.0.6',
 
     # ----------------------------------------------
     #   user interface

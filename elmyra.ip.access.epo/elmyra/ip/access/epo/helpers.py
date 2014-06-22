@@ -2,6 +2,8 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import json
 import logging
+from ago import human
+from datetime import datetime
 from elmyra.ip.access.epo.util import dict_prefix_key
 from pyramid.settings import asbool     # required by template
 from pyramid.threadlocal import get_current_request
@@ -56,7 +58,7 @@ class BackboneModelParameterFiddler(object):
         setting_params = dict_prefix_key(self.settings(), 'setting.')
         request_params = dict(request.params)
         request_opaque = dict(request.opaque)
-
+        request_opaque['link_expires'] = request.opaque_meta.get('exp')
 
         # A. parameter firewall, INPUT
         host = request.headers.get('Host')
@@ -94,7 +96,13 @@ class BackboneModelParameterFiddler(object):
         if params.get('mode') == 'liveview':
             params['setting.ui.page.title'] = 'Patent view'
             if params.get('datasource') == 'review':
-                params['setting.ui.page.subtitle'] = 'Review for project "' + params.get('project', '') + '", <span id="ui-project-dates"></span>'
+                params['setting.ui.page.subtitle'] = \
+                    'Review for project "' + params.get('project', '') + '"' + \
+                    ', <span id="ui-project-dates"></span>.'
+            link_expires = params.get('link_expires')
+            if link_expires is not None:
+                link_expires = datetime.fromtimestamp(link_expires)
+                params['setting.ui.page.subtitle'] += ' Link expires ' + human(link_expires) + '.';
 
 
         # D. backward-compat amendments

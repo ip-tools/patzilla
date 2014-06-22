@@ -167,7 +167,8 @@ function listview_bind_actions() {
         _(params).extend(state);
 
         // serialize state into opaque parameter token when in liveview
-        if (opsChooserApp.config.get('isviewer')) {
+        var force_viewer = false;
+        if (force_viewer || opsChooserApp.config.get('isviewer')) {
             var _this = this;
             opaque_param(params).then(function(opaque_query) {
                 $(_this).attr('href', '?' + opaque_query);

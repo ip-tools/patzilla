@@ -33,6 +33,7 @@ def create_request_interceptor(event):
     request = event.request
 
     request.opaque = {}
+    request.opaque_meta = {}
 
     # extract opaque parameters token from request
     op_token = request.params.get('op')
@@ -45,11 +46,15 @@ def create_request_interceptor(event):
     signer = registry.getUtility(ISigner)
 
     try:
-        data = signer.unsign(op_token)
+        data, meta = signer.unsign(op_token)
         if data:
             request.opaque.update(data)
         else:
             log.error('opaque parameter token is empty. data=%s, token=%s', data, op_token)
+        if meta:
+            request.opaque_meta.update(meta)
+        else:
+            log.error('metadata of opaque parameter token is empty. meta=%s, token=%s', meta, op_token)
 
     except JwtVerifyError as ex:
         log.error('Error while decoding opaque parameter token: %s', ex.message)
@@ -90,7 +95,8 @@ def opaquelinks_verify_handler(request):
         return HTTPBadRequest('Token missing')
 
     signer = request.registry.getUtility(ISigner)
-    return signer.unsign(token)
+    data, meta = signer.unsign(token)
+    return data
 
 
 # ------------------------------------------
