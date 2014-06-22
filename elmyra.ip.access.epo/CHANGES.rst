@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.24.1
+======
 - ui, middleware: propagate metadata of signed opaque parameter token downstream to show link expiry time (ttl) in user interface
 
 0.24.0
