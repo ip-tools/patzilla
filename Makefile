@@ -28,7 +28,7 @@ js:
 		--mangle --compress \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js
 
-	git commit \
+	git commit -uno \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.{js,map} \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js \
