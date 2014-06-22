@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.23.2
+======
+- ui: attempt to fix opaque parameter mechanics for inline “query-link”s
+
 0.23.1
 ======
 - ui: attempt to fix permalinks re. baseurl linking

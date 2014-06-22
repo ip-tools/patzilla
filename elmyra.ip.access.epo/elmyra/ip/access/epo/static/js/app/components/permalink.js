@@ -20,6 +20,9 @@ PermalinkPlugin = Marionette.Controller.extend({
 
     // generate a permalink to the current state (project)
     permalink_params: function(params) {
+
+        params = params || {};
+
         var deferred = $.Deferred();
         var projectname = opsChooserApp.project.get('name');
         // TODO: use in future: var projectname = opsChooserApp.config.get('project');

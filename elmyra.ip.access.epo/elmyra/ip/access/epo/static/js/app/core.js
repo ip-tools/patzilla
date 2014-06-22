@@ -162,12 +162,15 @@ function listview_bind_actions() {
         }
 
         var href = $(this).attr('href');
+        var url = $.url(href);
+        var params = url.param();
+        _(params).extend(state);
 
         // serialize state into opaque parameter token when in liveview
         if (opsChooserApp.config.get('isviewer')) {
             var _this = this;
-            opaqueurl_amend(href, state).then(function(href_opaque) {
-                $(_this).attr('href', href_opaque);
+            opaque_param(params).then(function(permalink) {
+                $(_this).attr('href', '?' + permalink);
             })
 
         // serialize state into regular query parameters otherwise
