@@ -99,9 +99,12 @@ class BackboneModelParameterFiddler(object):
                 params['setting.ui.page.subtitle'] = \
                     'Review for project "' + params.get('project', '') + '"' + \
                     ', <span id="ui-project-dates"></span>.'
+
             link_expires = params.get('link_expires')
-            if link_expires is not None:
+            if link_expires:
+                print "link_expires-1:", link_expires
                 link_expires = datetime.fromtimestamp(link_expires)
+                print "link_expires-2:", link_expires
                 params['setting.ui.page.subtitle'] += ' Link expires ' + human(link_expires) + '.';
 
 
