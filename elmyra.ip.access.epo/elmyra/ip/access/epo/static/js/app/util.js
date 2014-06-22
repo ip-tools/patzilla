@@ -114,3 +114,12 @@ _.mixin({
         }, {}, context);
     }
 });
+
+function deferreds_bundle(deferreds) {
+    // wait for all add operations to finish before signalling success
+    var deferred = $.Deferred();
+    $.when.apply($, deferreds).then(function() {
+        deferred.resolve();
+    });
+    return deferred.promise();
+}

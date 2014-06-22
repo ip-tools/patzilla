@@ -33,19 +33,24 @@ BasketModel = Backbone.RelationalModel.extend({
         if (!this.fetchRelated) this.fetchRelated = this.getAsync;
     },
 
-    // initialize model from url query parameters
+    // initialize model from url query parameters ("numberlist")
     init_from_query: function() {
+        var deferreds = [];
         var _this = this;
-        var url = $.url(window.location.href);
-        var attribute_name = 'numberlist';
-        var value = url.param(attribute_name);
-        if (value) {
-            value = decodeURIComponent(value);
-            var entries = value.split(/[,\n]/);
+
+        var numberlist = opsChooserApp.config.get('numberlist');
+
+        if (numberlist) {
+            numberlist = decodeURIComponent(numberlist);
+            var entries = numberlist.split(/[,\n]/);
             _(entries).each(function(entry) {
-                _this.add(entry.trim());
+                var deferred = _this.add(entry.trim());
+                deferreds.push(deferred);
             });
         }
+
+        // wait for all add operations to finish before signalling success
+        return deferreds_bundle(deferreds);
     },
 
     get_entry_by_number: function(item) {
@@ -403,7 +408,9 @@ opsChooserApp.addInitializer(function(options) {
     this.listenTo(this, 'application:ready', function() {
         if (this.config.get('datasource') == 'review') {
             this.listenToOnce(this, 'basket:activated', function(basket) {
-                basket.review();
+                $.when(basket.init_from_query()).then(function() {
+                    basket.review();
+                });
             });
         }
     });

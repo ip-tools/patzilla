@@ -28,7 +28,7 @@ StoragePlugin = Marionette.Controller.extend({
             });
 
             // save to file
-            $.when.apply($, deferreds).then(function() {
+            $.when(deferreds_bundle(deferreds)).then(function() {
 
                 // prepare database dump structure
                 var backup = {
@@ -146,7 +146,8 @@ StoragePlugin = Marionette.Controller.extend({
                 });
             }
         });
-        $.when.apply($, deferreds).then(function() {
+
+        $.when(deferreds_bundle(deferreds)).then(function() {
 
             // TODO: get rid of this! here!
             // This should trigger a complete application model bootstrap (coll1.fetch(), coll2.fetch(), etc.),

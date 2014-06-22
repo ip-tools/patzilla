@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.23.4
+======
+- ui, parameters: fix bootstrapping via "numberlist" query parameter
+
 0.23.3
 ======
 - ui: minor fix when displaying the current project name without having one

@@ -282,9 +282,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        // propagate "numberlist" query parameter to basket content
-        basket.init_from_query();
-
 
         // A. model and view
 
