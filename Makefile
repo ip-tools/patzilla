@@ -52,7 +52,7 @@ install:
 package-and-install: sdist upload upload-config install
 
 bumpversion:
-	bumpversion minor
+	bumpversion $(BUMP)
 
 push:
 	git push && git push --tags
