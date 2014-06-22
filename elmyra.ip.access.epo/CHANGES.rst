@@ -12,6 +12,7 @@ development
 - ui: make permalink buttons show popovers with full uris in text input form elements
 - ui, storage: resolve “duplicate project name problem” when importing database to "context=viewer"
 - ui: improve permalink mechanics
+- middleware: deactivate translogger (for access.log)
 
 0.22.2
 ======
