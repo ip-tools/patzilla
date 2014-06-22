@@ -6,6 +6,7 @@ development
 ===========
 - ui, parameters: add button to popover for opening permalinks, tune urlcleaner regex
 - ui: added “ZeroClipboard 2.1.2”
+- ui: add button to copy permalink to clipboard
 
 0.23.4
 ======

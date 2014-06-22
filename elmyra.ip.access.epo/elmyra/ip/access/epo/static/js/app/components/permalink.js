@@ -101,21 +101,61 @@ PermalinkPlugin = Marionette.Controller.extend({
         }
     },
 
-    popover_toggle: function(element, uri) {
+    // setup permalink popover
+    popover_toggle: function(element, uri, options) {
+
+        options = options || {};
+
+        // toggle tip
         $(element).popover('toggle');
 
-        // focus permalink text input element and select text
+        // get popover tip, that is the visible overlay
         var tip = $(element).popover().data('popover').$tip;
+
+        // check if popover tip is active
         var popover_active = tip.hasClass('in');
         if (popover_active) {
             if (uri) {
+
+                // set the uri
                 $(tip).find('#permalink-uri').val(uri);
+
+                // open permalink on click
+                $(tip).find('#permalink-open').unbind('click');
                 $(tip).find('#permalink-open').click(function(e) {
                     e.preventDefault();
                     window.open(uri);
                 });
+
+                // copy permalink to clipboard
+                var clipboard_button = $(tip).find('#permalink-copy')[0];
+                var zeroclipboard = new ZeroClipboard(clipboard_button);
+                zeroclipboard.on('ready', function(readyEvent) {
+
+                    // intercept the copy event to set custom data
+                    zeroclipboard.on('copy', function(event) {
+                        var clipboard = event.clipboardData;
+                        clipboard.setData('text/plain', uri);
+                    });
+
+                    // when content was copied to clipboard, notify user
+                    zeroclipboard.on('aftercopy', function(event) {
+                        // `this` === `client`
+                        // `event.target` === the element that was clicked
+                        //event.target.style.display = "none";
+                        var message = "Copied permalink to clipboard, size is " + Math.round(event.data['text/plain'].length / 1000) + 'kB.';
+                        $(tip).find('#permalink-message').qnotify(message, {success: true});
+                    });
+                });
             }
+
+            // focus permalink text input element and select text
             $(tip).find('#permalink-uri').select();
+
+            // show ttl message if desired
+            if (options.ttl) {
+                $(tip).find('#ttl-24').show();
+            }
         }
     },
 
@@ -162,7 +202,7 @@ PermalinkPlugin = Marionette.Controller.extend({
                 //window.open(url);
 
                 // v2: show permalink
-                _this.popover_toggle(_button, url);
+                _this.popover_toggle(_button, url, {ttl: true});
             });
         });
 

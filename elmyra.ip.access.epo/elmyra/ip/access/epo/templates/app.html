@@ -561,16 +561,22 @@ ${ h.fiddler.render() | n }
 <script id="permalink-popover-template" type="text/x-underscore-template">
     <textarea id="permalink-uri" rows="1"></textarea>
     <br/>
-    <small>Please copy the link above for sharing.</small>
+    <p><small>Please copy the link above for sharing.</small></p>
+    <p id="ttl-24" class="hide"><small>The link is valid for 24 hours.</small></p>
     <hr/>
 
-    <a id="permalink-open" class="btn btn-small" role="button" target="_blank">
+    <a id="permalink-open" class="btn btn-small pull-right" role="button" target="_blank">
         <i class="icon icon-external-link"></i>
         &nbsp;
         Open link
     </a>
-    &nbsp;
-
+    <button id="permalink-copy" class="btn btn-small" role="button" target="_blank">
+        <i class="icon icon-copy"></i>
+        &nbsp;
+        Copy link
+    </button>
+    <br/>
+    <div id="permalink-message"></div>
 </script>
 
 

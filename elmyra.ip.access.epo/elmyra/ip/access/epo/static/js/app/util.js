@@ -63,6 +63,7 @@ _.clear = function(array) {
             options = options || {};
             _.defaults(options, {className: 'info', position: 'bottom'});
             if (options.error) options.className = 'error';
+            if (options.success) options.className = 'success';
             if (options.warn || options.warning) options.className = 'warning';
             $(this).notify(message, options);
         },
