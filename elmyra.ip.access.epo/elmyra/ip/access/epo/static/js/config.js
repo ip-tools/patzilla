@@ -24,6 +24,16 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
             }
         });
 
+        this.update_baseurl();
+
+    },
+
+    update_baseurl: function() {
+        var url = $.url(window.location.href);
+        var baseurl = url.attr('protocol') + '://' + url.attr('host');
+        if (url.attr('port')) baseurl += ':' + url.attr('port');
+        baseurl += url.attr('path');
+        this.set('baseurl', baseurl);
     },
 
     // send current state of config to browser history.pushState

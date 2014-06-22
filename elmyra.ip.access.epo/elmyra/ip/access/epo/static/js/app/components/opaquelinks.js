@@ -41,7 +41,6 @@ function opaque_param(params) {
     params = params || {};
 
     // skip if "op" is already in url
-    var url = $.url(href);
     if (params['op']) {
         return $.Deferred().resolve('op=' + params['op']);
     }

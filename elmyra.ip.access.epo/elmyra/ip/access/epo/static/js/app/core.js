@@ -890,6 +890,11 @@ function cql_field_chooser_get_data(datasource) {
 
 function cql_field_chooser_setup() {
     var datasource = opsChooserApp.get_datasource();
+    if (!datasource || datasource == 'review') {
+        var container = $('#cql-field-chooser')[0].previousSibling;
+        $(container).hide();
+        return;
+    }
     var data = cql_field_chooser_get_data(datasource);
     $('#cql-field-chooser').select2({
         placeholder: 'CQL field symbols' + ' (' + datasource + ')',

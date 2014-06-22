@@ -51,10 +51,10 @@ PermalinkPlugin = Marionette.Controller.extend({
     // generate a permalink to the current state (project)
     permalink_uri: function(params) {
         var deferred = $.Deferred();
-        var path_url = opsChooserApp.config.get('request.path_url');
+        var baseurl = opsChooserApp.config.get('baseurl');
 
         this.permalink_params(params).then(function(params_computed) {
-            var permalink = path_url + '?' + jQuery.param(params_computed);
+            var permalink = baseurl + '?' + jQuery.param(params_computed);
             deferred.resolve(permalink);
         });
         return deferred.promise();
@@ -63,19 +63,19 @@ PermalinkPlugin = Marionette.Controller.extend({
     // generate an opaque permalink to the current state (project)
     permalink_uri_opaque: function(params) {
         var deferred = $.Deferred();
-        var path_url = opsChooserApp.config.get('request.path_url');
+        var baseurl = opsChooserApp.config.get('baseurl');
 
         // when generating review-in-liveview-with-ttl links on patentsearch,
         // let's view them on a pinned domain "patentview.elmyra.de"
         var host = opsChooserApp.config.get('request.host');
         if (host == 'patentsearch.elmyra.de') {
-            path_url = 'https://patentview.elmyra.de/';
+            baseurl = 'https://patentview.elmyra.de/';
         }
 
         // compute opaque parameter variant of permalink parameters
         this.permalink_params(params).then(function(params_computed) {
             opaque_param(params_computed).then(function(params_opaque) {
-                var permalink = path_url + '?' + params_opaque;
+                var permalink = baseurl + '?' + params_opaque;
                 deferred.resolve(permalink);
             });
         });

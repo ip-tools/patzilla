@@ -4,6 +4,13 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.23.1
+======
+- ui: attempt to fix permalinks re. baseurl linking
+
+0.23.0
+======
 - middleware: add “translogger” to development.ini to have an access.log
 - ui: clean huge url parameters like “database” or “op” from url at an early stage using the HTML5 history API to avoid referrer spam
 - ui/javascript infrastructure: adapt Makefile and MANIFEST
