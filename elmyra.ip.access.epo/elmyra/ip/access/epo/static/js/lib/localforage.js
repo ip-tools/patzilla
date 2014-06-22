@@ -1104,7 +1104,15 @@ requireModule('promise/polyfill').polyfill();
         var _this = this;
         return new Promise(function(resolve) {
             _this.ready().then(function() {
-                localStorage.clear();
+                var length = localStorage.length;
+                var keys = [];
+
+                for (var i = 0; i < length; i++) {
+                    var key = localStorage.key(i);
+                    if (key.indexOf(keyPrefix) == 0) {
+                        localStorage.removeItem(key);
+                    }
+                }
 
                 if (callback) {
                     callback();

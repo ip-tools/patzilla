@@ -7,6 +7,7 @@ development
 - middleware: add “translogger” to development.ini to have an access.log
 - ui: clean huge url parameters like “database” or “op” from url at an early stage using the HTML5 history API to avoid referrer spam
 - ui/javascript infrastructure: adapt Makefile and MANIFEST
+- ui, storage: fix localforage.clear on localStorage to only wipe the current database
 
 0.22.2
 ======
