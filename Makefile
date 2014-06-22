@@ -57,4 +57,8 @@ bumpversion:
 push:
 	git push && git push --tags
 
-release: js bumpversion push package-and-install
+release:
+	$(MAKE) js
+	$(MAKE) bumpversion BUMP=$(BUMP)
+	$(MAKE) push
+	$(MAKE) package-and-install
