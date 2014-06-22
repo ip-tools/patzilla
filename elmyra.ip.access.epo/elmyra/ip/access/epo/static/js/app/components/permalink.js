@@ -110,16 +110,17 @@ PermalinkPlugin = Marionette.Controller.extend({
         if (popover_active) {
             if (uri) {
                 $(tip).find('#permalink-uri').val(uri);
+                $(tip).find('#permalink-open').click(function(e) {
+                    e.preventDefault();
+                    window.open(uri);
+                });
             }
             $(tip).find('#permalink-uri').select();
         }
     },
 
     get_popover_content: function() {
-        var html =
-            '<input id="permalink-uri" type="text"></input>' +
-                '<br/>' +
-                '<small>Please copy the link above for sharing.</small>'
+        var html = _.template($('#permalink-popover-template').html());
         return html;
     },
 

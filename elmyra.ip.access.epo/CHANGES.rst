@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui, parameters: add button to popover for opening permalinks, tune urlcleaner regex
 
 0.23.4
 ======
