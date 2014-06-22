@@ -10,6 +10,7 @@ development
 - ui, storage: fix localforage.clear on localStorage to only wipe the current database
 - middleware: add some request variables (host-, and path-information) to application configuration
 - ui: make permalink buttons show popovers with full uris in text input form elements
+- ui, storage: resolve “duplicate project name problem” when importing database to "context=viewer"
 
 0.22.2
 ======

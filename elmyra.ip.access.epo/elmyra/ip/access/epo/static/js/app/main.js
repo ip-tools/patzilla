@@ -519,8 +519,18 @@ opsChooserApp.addInitializer(function(options) {
     //       check again what we could achieve...
     var database_dump = this.config.get('database');
     if (database_dump) {
+
+        // When importing a database dump, we assign "context=viewer" a special meaning here:
+        // the database scope will always be cleared beforehand to avoid project name collisions.
+        // Ergo the "viewer" context is considered a *very transient* datastore.
+        if (this.config.get('context') == 'viewer') {
+            this.storage.dbreset();
+        }
+
         // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
         this.LOAD_IN_PROGRESS = true;
+
+        // TODO: resolve project name collisions!
         this.storage.dbimport(database_dump);
     }
 
