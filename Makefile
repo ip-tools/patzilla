@@ -60,7 +60,4 @@ push:
 	git push && git push --tags
 
 release:
-	$(MAKE) js
-	$(MAKE) bumpversion bump=$(bump)
-	$(MAKE) push
-	$(MAKE) package-and-install
+	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push && $(MAKE) package-and-install
