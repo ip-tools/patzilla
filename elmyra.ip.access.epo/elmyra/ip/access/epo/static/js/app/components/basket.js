@@ -146,7 +146,7 @@ BasketModel = Backbone.RelationalModel.extend({
         // TODO: decouple from referencing the main application object e.g. by using events!?
         opsChooserApp.set_datasource('review');
         opsChooserApp.metadata.set('reviewmode', true);
-        opsChooserApp.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR');
+        opsChooserApp.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
     },
 
     // fetch all basket entries from datastore, one by one; this is nasty
@@ -271,11 +271,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
         }
 
         // review feature: trigger search from basket content
+        $('.basket-review-button').unbind('click');
         $('.basket-review-button').click(function() {
             _this.model.review();
         });
 
         // basket sharing
+        $('#share-numberlist-email').unbind('click');
         $('#share-numberlist-email').click(function() {
 
             var projectname = opsChooserApp.project.get('name');
@@ -296,6 +298,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
             });
             $(this).attr('href', mailto_link);
         });
+
+        $('#share-documents-transfer').unbind('click');
         $('#share-documents-transfer').click(function() {
             _this.future_premium_feature();
         });

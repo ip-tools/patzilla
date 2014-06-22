@@ -90,7 +90,11 @@ class BackboneModelParameterFiddler(object):
         params['isviewer'] = isviewer
         if isviewer:
             params['mode'] = 'liveview'
+
+        if params.get('mode') == 'liveview':
             params['setting.ui.page.title'] = 'Patent view'
+            if params.get('datasource') == 'review':
+                params['setting.ui.page.subtitle'] = 'Review for project "' + params.get('project') + '", <span id="ui-project-dates"></span>'
 
 
         # D. backward-compat amendments

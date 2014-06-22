@@ -102,7 +102,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         indicate_activity(false);
         //reset_content();
-        reset_content({keep_pager: true});
+        reset_content({keep_pager: true, documents: true});
 
 
         // compute slice values
@@ -115,15 +115,17 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         if (entries && (entries.length == 0 || sstart > entries.length)) {
 
+            var deferred = $.Deferred();
+            deferred.resolve();
+
             //self.metadata.set('result_count', 0);
 
-            var msg = _.template(
-                'No results with query "<%= query %>", range "<%= range %>".')
-                ({query: query, range: range});
-            console.warn(msg);
+            if (_.isEmpty(query_origin) && _.isEmpty(entries)) {
+                reset_content({keep_pager: false, documents: true});
+                this.user_alert('No results.', 'info');
+                return deferred.promise();
+            }
 
-            this.user_alert(msg, 'warning');
-            return;
         }
 
         var query_ops_constraints = _(_.map(entries, function(entry) { return field + '=' + entry}));
@@ -242,6 +244,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             collection: project.collection,
         });
         this.projectChooserView.render();
+
+        // update project information metadata display
+        $('#ui-project-dates').html(
+            'created ' + moment(project.get('created')).fromNow() + ', ' +
+            'modified ' + moment(project.get('modified')).fromNow()
+        );
 
         // activate basket
         var basket = project.get('basket');

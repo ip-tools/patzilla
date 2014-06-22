@@ -19,23 +19,49 @@ PermalinkPlugin = Marionette.Controller.extend({
     },
 
     // generate a permalink to the current state (project)
-    permalink: function(params) {
+    permalink_params: function(params) {
         var deferred = $.Deferred();
-        var path_url = opsChooserApp.config.get('request.path_url');
         var projectname = opsChooserApp.project.get('name');
+        // TODO: use in future: var projectname = opsChooserApp.config.get('project');
+
+        var params_computed = {};
+
+        // collect parameters from url
+        var url = $.url(window.location.href);
+        _(params_computed).extend(url.param());
+
+        // merge / overwrite with local params
+        _(params_computed).extend(params);
+
+        // merge "dataurl" representation of the whole database
         this.dataurl().then(function(dataurl) {
-            _(params).extend({
+            _(params_computed).extend({
                 project: projectname,
                 database: dataurl,
             });
-            var url = path_url + '?' + jQuery.param(params);
-            deferred.resolve(url);
+
+            // clear parameters having empty values
+            params_computed = _.objReject(params_computed, function(value, key) { return _.isEmpty(value); })
+
+            deferred.resolve(params_computed);
+        });
+        return deferred.promise();
+    },
+
+    // generate a permalink to the current state (project)
+    permalink_uri: function(params) {
+        var deferred = $.Deferred();
+        var path_url = opsChooserApp.config.get('request.path_url');
+
+        this.permalink_params(params).then(function(params_computed) {
+            var permalink = path_url + '?' + jQuery.param(params_computed);
+            deferred.resolve(permalink);
         });
         return deferred.promise();
     },
 
     // generate an opaque permalink to the current state (project)
-    permalink_opaque: function(params) {
+    permalink_uri_opaque: function(params) {
         var deferred = $.Deferred();
         var path_url = opsChooserApp.config.get('request.path_url');
 
@@ -47,10 +73,10 @@ PermalinkPlugin = Marionette.Controller.extend({
         }
 
         // compute opaque parameter variant of permalink parameters
-        this.permalink(params).then(function(url) {
-            opaque_param(url).then(function(opaque_query) {
-                var opaqueurl = path_url + '?' + opaque_query;
-                deferred.resolve(opaqueurl);
+        this.permalink_params(params).then(function(params_computed) {
+            opaque_param(params_computed).then(function(params_opaque) {
+                var permalink = path_url + '?' + params_opaque;
+                deferred.resolve(permalink);
             });
         });
         return deferred.promise();
@@ -72,19 +98,23 @@ PermalinkPlugin = Marionette.Controller.extend({
         }
     },
 
-    popover_toggle: function(element) {
+    popover_toggle: function(element, uri) {
         $(element).popover('toggle');
 
         // focus permalink text input element and select text
-        var popover_active = $(element).popover().data('popover').$tip.hasClass('in');
+        var tip = $(element).popover().data('popover').$tip;
+        var popover_active = tip.hasClass('in');
         if (popover_active) {
-            $('#permalink-uri').select();
+            if (uri) {
+                $(tip).find('#permalink-uri').val(uri);
+            }
+            $(tip).find('#permalink-uri').select();
         }
     },
 
-    get_textinput: function(uri) {
+    get_popover_content: function() {
         var html =
-            '<input id="permalink-uri" type="text" value="' + uri + '"></input>' +
+            '<input id="permalink-uri" type="text"></input>' +
                 '<br/>' +
                 '<small>Please copy the link above for sharing.</small>'
         return html;
@@ -98,25 +128,18 @@ PermalinkPlugin = Marionette.Controller.extend({
         $('.permalink-review-liveview').unbind('click');
         $('.permalink-review-liveview').on('click', function(e) {
 
-            // provide callback function to generate permalink uri in this scope
-            var permalink_uri = undefined;
-            function get_permalink() {
-                return _this.get_textinput(permalink_uri);
-            }
-
             // switch from info popover (button not yet pressed) to popover offering the permalink uri
-            _this.popover_switch(this, get_permalink);
+            _this.popover_switch(this, _this.get_popover_content);
 
             // generate permalink uri and toggle popover
             var _button = this;
-            _this.permalink({mode: 'liveview', context: 'viewer', datasource: 'review'}).then(function(url) {
+            _this.permalink_uri({mode: 'liveview', context: 'viewer', datasource: 'review', query: undefined}).then(function(url) {
 
                 // v1: open permalink
                 //window.open(url);
 
                 // v2: show permalink
-                permalink_uri = url;
-                _this.popover_toggle(_button);
+                _this.popover_toggle(_button, url);
             });
         });
 
@@ -124,25 +147,18 @@ PermalinkPlugin = Marionette.Controller.extend({
         $('.permalink-review-liveview-ttl').unbind('click');
         $('.permalink-review-liveview-ttl').on('click', function(e) {
 
-            // provide callback function to generate permalink uri in this scope
-            var permalink_uri = undefined;
-            function get_permalink() {
-                return _this.get_textinput(permalink_uri);
-            }
-
             // switch from info popover (button not yet pressed) to popover offering the permalink uri
-            _this.popover_switch(this, get_permalink);
+            _this.popover_switch(this, _this.get_popover_content);
 
             // generate permalink uri and toggle popover
             var _button = this;
-            _this.permalink_opaque({mode: 'liveview', context: 'viewer', datasource: 'review'}).then(function(url) {
+            _this.permalink_uri_opaque({mode: 'liveview', context: 'viewer', datasource: 'review', query: undefined}).then(function(url) {
 
                 // v1: open permalink
                 //window.open(url);
 
                 // v2: show permalink
-                permalink_uri = url;
-                _this.popover_toggle(_button);
+                _this.popover_toggle(_button, url);
             });
         });
 

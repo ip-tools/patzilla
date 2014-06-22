@@ -26,13 +26,13 @@ function opaquetoken(params) {
 function opaquetoken_query(params) {
     var deferred = $.Deferred();
     opaquetoken(params).then(function(token) {
-        var liveview_url = 'op=' + token;
-        deferred.resolve(liveview_url);
+        var query_part = 'op=' + token;
+        deferred.resolve(query_part);
     });
     return deferred.promise();
 }
 
-function opaque_param(href, params) {
+function opaque_param(params) {
     // serialize state into opaque parameter token
     // TODO: make this idempotent by saving the original "href" contents into a "data" attribute
     // if we can reperform the token generation on each click, liveview documents will live forever
@@ -42,13 +42,9 @@ function opaque_param(href, params) {
 
     // skip if "op" is already in url
     var url = $.url(href);
-    if (url.param('op')) {
-        return $.Deferred().resolve(href);
+    if (params['op']) {
+        return $.Deferred().resolve('op=' + params['op']);
     }
-
-    // collect all vanilla url parameters
-    // TODO: maybe just collect a deterministic list?
-    _(params).extend(url.param());
 
     // sign parameters, generate JWT token and opaque parameter url
     return opaquetoken_query(params);

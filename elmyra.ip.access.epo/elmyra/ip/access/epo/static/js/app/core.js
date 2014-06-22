@@ -499,6 +499,7 @@ function boot_application() {
     // ------------------------------------------
 
     // switch cql field chooser when selecting datasource
+    // TODO: do it properly on the configuration data model
     $('#datasource').on('click', '.btn', function(event) {
         opsChooserApp.set_datasource($(this).data('value'));
     });

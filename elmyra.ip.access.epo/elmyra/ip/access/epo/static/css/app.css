@@ -37,6 +37,10 @@ a.editable-click {
 
 
 /* header */
+#ui-subtitle {
+    margin-left: 10px;
+}
+
 .header-compact {
     font-size: 24.5px;
     font-weight: bold;

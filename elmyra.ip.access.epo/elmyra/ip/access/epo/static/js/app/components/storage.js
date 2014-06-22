@@ -154,23 +154,8 @@ StoragePlugin = Marionette.Controller.extend({
 
             Backbone.Relational.store.reset();
 
-            // compute any (first) valid project to be activated after import
-            try {
-                var project = backup['Project'] ? backup[backup['Project'][0]] : undefined;
-                var projectname = project.name;
-            } catch(error) {
-                console.error('Could not compute project name to be activated from first project in database dump', backup);
-            }
-
-            // fallback to last selected project name as project to be activated
-            if (!projectname) {
-                if (opsChooserApp.project) {
-                    projectname = opsChooserApp.project.get('name');
-                }
-            }
-
             // activate project
-            opsChooserApp.trigger('projects:initialize', projectname);
+            opsChooserApp.trigger('projects:initialize');
 
             $(notifybox).qnotify('Database imported successfully');
 
