@@ -9,6 +9,7 @@ development
 - ui/javascript infrastructure: adapt Makefile and MANIFEST
 - ui, storage: fix localforage.clear on localStorage to only wipe the current database
 - middleware: add some request variables (host-, and path-information) to application configuration
+- ui: make permalink buttons show popovers with full uris in text input form elements
 
 0.22.2
 ======

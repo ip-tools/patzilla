@@ -493,6 +493,14 @@ opsChooserApp.addRegions({
 // global universal helpers, able to boot early
 opsChooserApp.addInitializer(function(options) {
     this.storage = new StoragePlugin();
+
+    this.listenTo(this, 'application:ready', function() {
+        this.storage.setup_ui();
+    });
+
+    this.listenTo(this, 'results:ready', function() {
+        this.storage.setup_ui();
+    });
 });
 
 // data storage

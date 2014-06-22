@@ -31,6 +31,14 @@ def dict_subset(bigdict, *wanted_keys):
     #return dict([(i, safe_value(bigdict[i])) for i in wanted_keys if i in bigdict])
     return dict([(i, safe_value(bigdict[i])) for i in wanted_keys])
 
+def dict_prefix_key(d, prefix):
+    # prefix keys in dictionary
+    new = {}
+    for key, value in d.iteritems():
+        key = prefix + key
+        new[key] = value
+    return new
+
 def object_attributes_to_dict(obj, attribute_names):
     return dict([(attr, safe_value(getattr(obj, attr))) for attr in attribute_names if hasattr(obj, attr)])
 

@@ -129,6 +129,7 @@ StoragePlugin = Marionette.Controller.extend({
 
             // datamodel-specific restore behavior
             // merge project lists to get a union of (original, imported)
+            // TODO: resolve project name collisions!
             if (key == 'Project') {
                 localforage.getItem(key).then(function(original) {
                     if (original && value) {
@@ -158,9 +159,10 @@ StoragePlugin = Marionette.Controller.extend({
                 var project = backup['Project'] ? backup[backup['Project'][0]] : undefined;
                 var projectname = project.name;
             } catch(error) {
+                console.error('Could not compute project name to be activated from first project in database dump', backup);
             }
 
-            // use last selected project name
+            // fallback to last selected project name as project to be activated
             if (!projectname) {
                 if (opsChooserApp.project) {
                     projectname = opsChooserApp.project.get('name');
@@ -176,10 +178,14 @@ StoragePlugin = Marionette.Controller.extend({
 
     },
 
-    dbreset: function() {
+    dbreset: function(options) {
+
+        options = options || {};
 
         // make all data control widgets empty
-        opsChooserApp.shutdown_gui();
+        if (options.shutdown_gui) {
+            opsChooserApp.shutdown_gui();
+        }
 
         // reset state of orm
         Backbone.Relational.store.reset();
@@ -189,67 +195,9 @@ StoragePlugin = Marionette.Controller.extend({
         localforage.clear();
     },
 
-    dataurl: function() {
-        // produce "data" url representation like "data:application/json;base64,ewogICAgImRhdGF..."
-        var deferred = $.Deferred();
-        this.dump().then(function(backup) {
-            var payload = JSON.stringify(backup);
-            var content = dataurl.format({data: payload, mimetype: 'application/json+lz-string', charset: 'utf-8'});
-            return deferred.resolve(content);
-        });
-        return deferred.promise();
-    },
-
-    // generate a permalink to the current state (project)
-    permalink: function(params) {
-        var deferred = $.Deferred();
-        var projectname = opsChooserApp.project.get('name');
-        this.dataurl().then(function(dataurl) {
-            _(params).extend({
-                project: projectname,
-                database: dataurl,
-            });
-            var url = '?' + jQuery.param(params);
-            deferred.resolve(url);
-        });
-        return deferred.promise();
-    },
-
-    // generate an opaque permalink to the current state (project)
-    permalink_opaque: function(params) {
-        var deferred = $.Deferred();
-        this.permalink(params).then(function(url) {
-            opaqueurl_amend(url).then(function(opaqueurl) {
-                deferred.resolve(opaqueurl);
-            });
-        });
-        return deferred.promise();
-    },
-
     setup_ui: function() {
 
         var _this = this;
-
-        var url = $.url(window.location.href);
-        var host = url.attr('host');
-
-        // permalink
-        $('.permalink-review-liveview').unbind('click');
-        $('.permalink-review-liveview').on('click', function(e) {
-            _this.permalink({mode: 'liveview', context: 'viewer', datasource: 'review'}).then(function(url) {
-                window.open(url);
-            });
-        });
-        $('.permalink-review-liveview-ttl').unbind('click');
-        $('.permalink-review-liveview-ttl').on('click', function(e) {
-            _this.permalink_opaque({mode: 'liveview', context: 'viewer', datasource: 'review'}).then(function(url) {
-                // when generating review-in-liveview-with-ttl links on patentsearch, let's view them on patentview
-                if (host == 'patentsearch.elmyra.de') {
-                    url = 'https://patentview.elmyra.de/' + url;
-                }
-                window.open(url);
-            });
-        });
 
         // export database
         $('#data-export-button').unbind('click');
@@ -301,7 +249,7 @@ StoragePlugin = Marionette.Controller.extend({
         $('#factory-reset-button').on('dblclick', function(e) {
 
             // wipe the database
-            _this.dbreset();
+            _this.dbreset({shutdown_gui: true});
 
             // send some notifications
             $(this).parent().find('.notifyjs-container').remove();
@@ -313,15 +261,8 @@ StoragePlugin = Marionette.Controller.extend({
 
 });
 
-// setup plugin
+// setup plugin (DONE in app/main.js, because we need it early!)
+/*
 opsChooserApp.addInitializer(function(options) {
-
-    this.listenTo(this, 'application:ready', function() {
-        this.storage.setup_ui();
-    });
-
-    this.listenTo(this, 'results:ready', function() {
-        this.storage.setup_ui();
-    });
-
 });
+*/
