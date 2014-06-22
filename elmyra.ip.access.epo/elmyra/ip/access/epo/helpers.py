@@ -2,6 +2,7 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import json
 import logging
+from elmyra.ip.access.epo.util import dict_prefix_key
 from pyramid.settings import asbool     # required by template
 from pyramid.threadlocal import get_current_request
 
@@ -14,6 +15,21 @@ class BackboneModelParameterFiddler(object):
 
     def __init__(self, name):
         self.name = name
+
+    def environment(self):
+        """create default environment"""
+
+        request = get_current_request()
+
+        data = {
+            'host': request.host,
+            'host_port': request.host_port,
+            'host_url': request.host_url,
+            'path': request.path,
+            'path_url': request.path_url,
+        }
+
+        return data
 
     def settings(self):
         """define default settings"""
@@ -29,18 +45,15 @@ class BackboneModelParameterFiddler(object):
             'ui.productname': 'elmyra <i class="circle-icon">IP</i> suite',
         }
 
-        # prefix settings in confiuration model
-        realdata = {}
-        for key, value in data.iteritems():
-            key = 'setting.' + key
-            realdata[key] = value
-        return realdata
+        return data
 
     def compute_parameters(self):
 
         request = get_current_request()
 
-        setting_params = dict(self.settings())
+        # prefix environment and settings in configuration model
+        environment = dict_prefix_key(self.environment(), 'request.')
+        setting_params = dict_prefix_key(self.settings(), 'setting.')
         request_params = dict(request.params)
         request_opaque = dict(request.opaque)
 
@@ -56,10 +69,12 @@ class BackboneModelParameterFiddler(object):
 
 
         # B. merge parameters
-        # 1. use "settings" as foundation
-        # 2. merge "request parameters"
-        # 3. merge "opaque parameters" taking the highest precedence
-        params = setting_params
+        # 1. use "environment" as foundation
+        # 2. merge "settings"
+        # 3. merge "request parameters"
+        # 4. merge "opaque parameters" taking the highest precedence
+        params = environment
+        params.update(setting_params)
         params.update(request_params)
         params.update(request_opaque)
 
