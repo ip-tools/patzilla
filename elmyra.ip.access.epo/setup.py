@@ -73,7 +73,7 @@ requires = [
 ]
 
 setup(name='elmyra.ip.access.epo',
-      version='0.24.1',
+      version='0.24.2',
       description='elmyra.ip.access.epo',
       long_description=README,
       classifiers=[
