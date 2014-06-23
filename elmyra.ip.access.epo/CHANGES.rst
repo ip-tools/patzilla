@@ -16,6 +16,7 @@ development
 - ui: begin refactoring some global helpers to generic UiController to keep up DRY
 - ui, middleware: add some generic utils
 - ui: improve permalink popover widget and subsystem
+- ui: basket sharing via url
 
 0.24.3
 ======

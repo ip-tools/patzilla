@@ -199,6 +199,29 @@ BasketModel = Backbone.RelationalModel.extend({
 
     },
 
+    get_view_state: function(more) {
+
+        more = more || {};
+
+        var projectname = opsChooserApp.project.get('name');
+        var numbers = this.get_numbers();
+        var numbers_string = numbers.join(',');
+
+        var state = {
+            //mode: 'liveview',
+            context: 'viewer',
+            project: projectname,
+            query: undefined,
+            datasource: 'review',
+            numberlist: numbers_string,
+        };
+
+        _(state).extend(more);
+
+        return state;
+
+    },
+
 });
 
 
@@ -286,6 +309,12 @@ BasketView = Backbone.Marionette.ItemView.extend({
         $('#share-numberlist-email').click(function() {
 
             var projectname = opsChooserApp.project.get('name');
+        // share via url
+        $('#share-numberlist-url').unbind('click');
+        $('#share-numberlist-url').click(function() {
+            var url = opsChooserApp.permalink.make_uri(_this.model.get_view_state());
+            $(this).attr('href', url);
+        });
 
             var numbers = _this.model.get_numbers();
             var numbers_count = numbers.length;
@@ -304,6 +333,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $(this).attr('href', mailto_link);
         });
 
+        // share via document transfer
         $('#share-documents-transfer').unbind('click');
         $('#share-documents-transfer').click(function() {
             _this.future_premium_feature();

@@ -81,6 +81,8 @@ StoragePlugin = Marionette.Controller.extend({
 
     dbimport: function(payload, notifybox) {
 
+        log('StoragePlugin.dbimport');
+
         var backup = payload;
 
         if (typeof(payload) == 'string') {
