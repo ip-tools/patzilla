@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui, middleware: user-facing error messages for opaque parameter subsystem
+- ui: only push url parameters to history api if they differ from their defaults
 
 0.24.3
 ======

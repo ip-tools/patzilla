@@ -16,6 +16,9 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
 
         options = options || {};
 
+        // preserve original/default attributes
+        this._originalAttributes = _.clone(this.attributes);
+
         // only propagate options with defined values
         _.each(_.keys(options), function(key) {
             var value = options[key];
@@ -54,10 +57,10 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
         // merge current viewer state
         _(params).extend(state);
 
-        // clear empty parameters
+        // clear empty parameters and parameters not differing from defaults
         for (key in params) {
             var value = params[key];
-            if (_.isEmpty(value)) {
+            if (_.isEmpty(value) || this._originalAttributes[key] == value) {
                 delete params[key];
             }
         }
