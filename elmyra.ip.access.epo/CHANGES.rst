@@ -8,6 +8,7 @@ development
 - ui: only push url parameters to history api if they differ from their defaults
 - ui: add "beta" badge again
 - middleware: increase review-in-liveview link ttl to 24 hours again
+- ui: fix project name display in liveview mode
 
 0.24.3
 ======

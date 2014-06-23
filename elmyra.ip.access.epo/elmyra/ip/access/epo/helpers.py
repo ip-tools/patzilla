@@ -98,8 +98,9 @@ class BackboneModelParameterFiddler(object):
         if params.get('mode') == 'liveview':
             params['setting.ui.page.title'] = 'Patent view'
             if params.get('datasource') == 'review':
+                # TODO: move this elsewhere, as soon as we have a common place for displaying status information
                 params['setting.ui.page.subtitle'] = \
-                    'Review for project "' + params.get('project', '') + '"' + \
+                    'Review for project "<span id="ui-project-name"></span>"' + \
                     ', <span id="ui-project-dates"></span>.'
 
             link_expires = params.get('link_expires')

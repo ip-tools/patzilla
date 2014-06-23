@@ -246,6 +246,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.projectChooserView.render();
 
         // update project information metadata display
+        $('#ui-project-name').html(
+            project.get('name')
+        );
         $('#ui-project-dates').html(
             'created ' + moment(project.get('created')).fromNow() + ', ' +
             'modified ' + moment(project.get('modified')).fromNow()
