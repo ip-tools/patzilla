@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
 import logging
+from pkg_resources import resource_filename
 from cornice.service import Service
 from elmyra.ip.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
 from elmyra.ip.util.date import datetime_iso, unixtime_to_datetime
 from pyramid.httpexceptions import HTTPBadRequest
 from simplejson.scanner import JSONDecodeError
-from zope.interface.declarations import implements
-from zope.interface.interface import Interface
 
 
 log = logging.getLogger(__name__)
@@ -16,7 +15,14 @@ def includeme(config):
 
     # register a signer object used throughout this place
     signer = JwtSigner()
-    signer.genkey('12345', salt='elmyra.ipsuite.navigator.opaquelinks', keysize=1024)
+
+    # v1: always create a key
+    #signer.genkey('12345', salt='elmyra.ipsuite.navigator.opaquelinks', keysize=768)
+
+    # v2: have a key on the filesystem
+    keyfile = resource_filename(__name__, 'resources/opaquelinks.pem')
+    signer.readkey(keyfile)
+
     config.registry.registerUtility(signer)
 
     # attempt to decode opaque parameter tokens on each request

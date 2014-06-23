@@ -91,6 +91,7 @@ setup(name='elmyra.ip.access.epo',
       include_package_data=True,
       package_data={
           'elmyra.ip.access.epo': [
+              'resources/*.*',
               'templates/*.mako',
               'static/js/**/*.js', 'static/js/**/*.map', '**/**/*.css',
               '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg',

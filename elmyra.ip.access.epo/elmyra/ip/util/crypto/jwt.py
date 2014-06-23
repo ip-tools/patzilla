@@ -42,11 +42,22 @@ class JwtSigner(object):
 
         return self.key
 
+    def readkey(self, pemfile):
+        # read a key generated with openssl, e.g.::
+        #
+        #     openssl genrsa -out opaquelinks.pem 256
+        f = open(pemfile, 'r')
+        self.key = RSA.importKey(f.read())
+        f.close()
+
+        return self.key
+
     def sign(self, data, ttl=None):
-        # FIXME: what to do in error case?
+        # TODO: handle error conditions
+        # TODO: maybe croak if self.key is None
         ttl = ttl or self.ttl
         payload = {'data': data}
-        token = jwt.generate_jwt(payload, self.key, 'PS256', ttl)
+        token = jwt.generate_jwt(payload, priv_key=self.key, algorithm='PS256', lifetime=ttl)
         return token
 
     def unsign(self, token):
