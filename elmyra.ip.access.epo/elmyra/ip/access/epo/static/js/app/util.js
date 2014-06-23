@@ -113,7 +113,15 @@ _.mixin({
             }
             return obj;
         }, {}, context);
-    }
+    },
+    // ### _.objRejectEmpty
+    //
+    // reject all items with empty values
+    objRejectEmpty: function(input) {
+        return _.objReject(input, function(value, key) {
+            return _.isEmpty(value);
+        });
+    },
 });
 
 function deferreds_bundle(deferreds) {

@@ -14,6 +14,7 @@ development
 - ui, middleware: show expiry time and improve statusline formatting in liveview mode
 - ui: refactor permalink popover template
 - ui: begin refactoring some global helpers to generic UiController to keep up DRY
+- ui, middleware: add some generic utils
 
 0.24.3
 ======

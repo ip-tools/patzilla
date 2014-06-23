@@ -12,6 +12,11 @@ def date_iso(date):
 def datetime_iso(date):
     return date.strftime('%Y-%m-%d %H:%M:%S')
 
+def datetime_isoformat(date, microseconds=False):
+    if not microseconds:
+        date = date - datetime.timedelta(microseconds=date.microsecond)
+    return date.isoformat()
+
 def today_iso():
     return date_iso(now())
 
