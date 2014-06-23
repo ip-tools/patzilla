@@ -43,7 +43,7 @@ sdist:
 	cd js.underscore_string; python setup.py sdist
 
 upload:
-	rsync -auv */dist/* root@almera.elmyra.de:/root/install/ops-chooser/
+	rsync -auv */dist/elmyra.ip.access.epo-* root@almera.elmyra.de:/root/install/ops-chooser/
 
 upload-config:
 	rsync elmyra.ip.access.epo/production.ini root@almera.elmyra.de:/opt/ops-chooser/

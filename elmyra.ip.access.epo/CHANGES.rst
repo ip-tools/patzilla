@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.25.1
+======
+- fix/improve build and deployment infrastructure
+
 0.25.0
 ======
 - ui, middleware: user-facing error messages for opaque parameter subsystem

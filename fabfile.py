@@ -26,10 +26,10 @@ def install(version):
     if response == 'y':
 
         #--index-url=http://c.pypi.python.org/simple
-        pip_cmd = 'source /opt/ops-chooser/.venv/bin/activate; sh -c "pip install --download-cache=/var/cache/pip --verbose {options} {requirement}"'
+        pip_cmd = 'source /opt/ops-chooser/.venv27/bin/activate; sh -c "pip install --download-cache=/var/cache/pip --verbose {options} {requirement}"'
 
-        run(pip_cmd.format(requirement='which', options=''))
-        run(pip_cmd.format(requirement='/root/install/ops-chooser/js.*', options=''))
+        #run(pip_cmd.format(requirement='which', options=''))
+        #run(pip_cmd.format(requirement='/root/install/ops-chooser/js.*', options=''))
         run(pip_cmd.format(requirement='/root/install/ops-chooser/elmyra.ip.access.epo-{version}.tar.gz'.format(version=version), options=''))
 
 
