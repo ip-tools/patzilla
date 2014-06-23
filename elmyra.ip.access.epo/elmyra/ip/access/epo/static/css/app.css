@@ -35,6 +35,10 @@ a.editable-click {
     border-bottom: dashed 1px #333333;
 }
 
+.container-fluid.nopadding {
+    padding: 0px;
+}
+
 
 /* header */
 .beta-badge {
@@ -235,4 +239,17 @@ dl.dl-horizontal-inline {
 
 .area-comment-text {
     padding: 10px;
+}
+
+/* permalink */
+#permalink-uri-textinput {
+    font-size: 8px;
+    line-height: 8px;
+    padding: 0px;
+    margin: 0px;
+}
+#permalink-uri-textinput.uneditable-input {
+    overflow: scroll;
+    white-space: normal;
+    height: auto;
 }

@@ -15,6 +15,7 @@ development
 - ui: refactor permalink popover template
 - ui: begin refactoring some global helpers to generic UiController to keep up DRY
 - ui, middleware: add some generic utils
+- ui: improve permalink popover widget and subsystem
 
 0.24.3
 ======

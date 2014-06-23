@@ -69,21 +69,6 @@ ${ h.fiddler.render() | n }
                             <i class="icon-pencil"></i> Review
                         </button>
 
-                        <!-- permalink for review -->
-                        <a class="btn btn-popover permalink-review-liveview"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                            data-content="Permalink to review page in liveview mode"
-                            >
-                            <i class="icon-unlink"></i>
-                        </a>
-                        <a class="btn btn-popover permalink-review-liveview-ttl"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                            data-content="Permalink to review page in liveview mode, with TTL"
-                            >
-                            <i class="icon-unlink"></i>
-                            <i class="icon-time"></i>
-                        </a>
-
                     </div>
                 </div>
             </div>
@@ -186,10 +171,12 @@ ${ h.fiddler.render() | n }
 
         </div>
 
-        <!-- xxx -->
+        <!-- database actions -->
         <div class="span4 row-fluid">
             <div class="span1">
                 <div class="btn-group btn-popover">
+
+                    <!-- save/export database -->
                     <a
                             id="data-export-button"
                             class="btn btn-small btn-popover"
@@ -198,6 +185,22 @@ ${ h.fiddler.render() | n }
                             >
                         <i class="icon-save icon-large"></i>
                     </a>
+
+                    <!-- permalink for review -->
+                    <a class="btn btn-small btn-popover permalink-review-liveview"
+                       data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                       data-content="Project review, permalink"
+                            >
+                        <i class="icon-external-link"></i>
+                    </a>
+                    <a class="btn btn-small btn-popover permalink-review-liveview-ttl"
+                       data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                       data-content="Project review, external link"
+                            >
+                        <i class="icon-external-link"></i>
+                        <i class="icon-time"></i>
+                    </a>
+
                     % if debugmode:
                     <a
                             id="data-import-button"
@@ -396,14 +399,14 @@ ${ h.fiddler.render() | n }
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Permalink to review page in liveview mode"
                    >
-                    <i class="icon-unlink"></i>
+                    <i class="icon-external-link"></i>
                 </a>
                 <% } %>
                 <a class="btn btn-popover permalink-review-liveview-ttl"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Permalink to review page in liveview mode, with TTL"
                    >
-                    <i class="icon-unlink"></i>
+                    <i class="icon-external-link"></i>
                     <i class="icon-time"></i>
                 </a>
 
