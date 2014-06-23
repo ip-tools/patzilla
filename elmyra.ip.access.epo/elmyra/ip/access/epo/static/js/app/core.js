@@ -479,8 +479,7 @@ function boot_application() {
     // apply popovers to all desired buttons
     $('.btn-popover').popover();
 
-    // auto-shorten some texts
-    $(".very-short").shorten({showChars: 5, moreText: 'more', lessText: 'less'});
+    opsChooserApp.ui.setup_text_tools();
 
     // defaults for notification popups
     $.notify.defaults({className: 'info', showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 4000, showDuration: 300});
