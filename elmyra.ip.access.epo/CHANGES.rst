@@ -12,6 +12,7 @@ development
 - ui: enhance basket activation/deactivation in case project has no basket
 - middleware: use static signing key for opaque parameter subsystem
 - ui, middleware: show expiry time and improve statusline formatting in liveview mode
+- ui: refactor permalink popover template
 
 0.24.3
 ======

@@ -1,0 +1,42 @@
+<script id="permalink-popover-template" type="text/x-underscore-template">
+    <div class="container-fluid nopadding popover-container">
+        <div class="row-fluid">
+            <p id="permalink-popover-intro"></p>
+            <p id="ttl-24" class="hide">
+                <small>
+                    The link will expire in 24 hours.
+            <span class="very-short">
+                However, once the data is received by the web browser, it will be
+                persisted there and will not expire anymore.
+            </span>
+                </small>
+            </p>
+        </div>
+        <div class="row-fluid">
+            <br/>
+        </div>
+        <div class="row-fluid">
+            <textarea id="permalink-uri-textinput" rows="5" class="uneditable-input"></textarea>
+            <br/>
+            <p><small>Please copy the link above for sharing.</small></p>
+        </div>
+        <div class="row-fluid">
+            <br/>
+        </div>
+        <div class="row-fluid">
+            <a id="permalink-open" class="btn btn-small pull-right">
+                <i class="icon icon-external-link"></i>
+                &nbsp;
+                Open link
+            </a>
+            <button id="permalink-copy" class="btn btn-small">
+                <i class="icon icon-copy"></i>
+                &nbsp;
+                Copy link
+            </button>
+        </div>
+        <div class="row-fluid">
+            <div id="permalink-popover-message"></div>
+        </div>
+    </div>
+</script>

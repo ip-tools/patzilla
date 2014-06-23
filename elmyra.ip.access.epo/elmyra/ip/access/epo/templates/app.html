@@ -559,27 +559,6 @@ ${ h.fiddler.render() | n }
 </%text>
 </script>
 
-<script id="permalink-popover-template" type="text/x-underscore-template">
-    <textarea id="permalink-uri" rows="1"></textarea>
-    <br/>
-    <p><small>Please copy the link above for sharing.</small></p>
-    <p id="ttl-24" class="hide"><small>The link is valid for 24 hours.</small></p>
-    <hr/>
-
-    <a id="permalink-open" class="btn btn-small pull-right" role="button" target="_blank">
-        <i class="icon icon-external-link"></i>
-        &nbsp;
-        Open link
-    </a>
-    <button id="permalink-copy" class="btn btn-small" role="button" target="_blank">
-        <i class="icon icon-copy"></i>
-        &nbsp;
-        Copy link
-    </button>
-    <br/>
-    <div id="permalink-message"></div>
-</script>
-
 
 <!-- application -->
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
@@ -589,6 +568,7 @@ ${ h.fiddler.render() | n }
 <%include file="project.html"/>
 <%include file="comment.html"/>
 <%include file="ops.html"/>
+<%include file="permalink.html"/>
 
 <!-- common -->
 <script type="text/javascript" src="/static/js/lib/Blob.js"></script>
