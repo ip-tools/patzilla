@@ -3,7 +3,8 @@
 import json
 import logging
 from elmyra.ip.access.epo.util import dict_prefix_key
-from elmyra.ip.util.date import unixtime_to_human
+from elmyra.ip.util.date import unixtime_to_human, datetime_isoformat, unixtime_to_datetime
+from elmyra.ip.util.python import _exception_traceback
 from pyramid.settings import asbool     # required by template
 from pyramid.threadlocal import get_current_request
 
@@ -12,10 +13,12 @@ log = logging.getLogger(__name__)
 class BackboneModelParameterFiddler(object):
     """all parameter fiddling in one single place :-)"""
 
+    # TODO: refactor this out of helpers.py, just import here
     # TODO: refactor IpsuiteNavigatorConfig.defaults here as well, trim down config.js
 
     def __init__(self, name):
         self.name = name
+        self.beta_badge = '<div class="label label-success beta-badge">BETA</div>'
 
     def environment(self):
         """create default environment"""
@@ -40,7 +43,7 @@ class BackboneModelParameterFiddler(object):
         data = {
             'app.software.version': request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
-            'ui.page.title': 'Patent search &nbsp; <div class="label label-success beta-badge">BETA</div>',
+            'ui.page.title': 'Patent search' + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
             'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG',
             'ui.productname': 'elmyra <i class="circle-icon">IP</i> suite',
@@ -57,8 +60,16 @@ class BackboneModelParameterFiddler(object):
         setting_params = dict_prefix_key(self.settings(), 'setting.')
         request_params = dict(request.params)
         request_opaque = dict(request.opaque)
-        request_opaque['link_expires'] = request.opaque_meta.get('exp')
         request_opaque_meta = dict_prefix_key(dict(request.opaque_meta), 'opaque.meta.')
+
+        try:
+            unixtime = request.opaque_meta.get('exp')
+            if unixtime:
+                request_opaque['link_expires'] = datetime_isoformat(unixtime_to_datetime(int(unixtime)))
+        except Exception as ex:
+            log.error(
+                'Could not compute opaque parameter link expiry time, unixtime=%s. '
+                'Exception was: %s\n%s', unixtime, ex, _exception_traceback())
 
         # A. parameter firewall, INPUT
         host = request.headers.get('Host')
@@ -84,6 +95,8 @@ class BackboneModelParameterFiddler(object):
 
 
         # C. parameter firewall, OUTPUT
+
+        # remove "opaque parameter"
         if params.has_key('op'):
             del params['op']
 
@@ -95,17 +108,17 @@ class BackboneModelParameterFiddler(object):
         if isviewer:
             params['mode'] = 'liveview'
 
+        # TODO: move the html stuff elsewhere!
         if params.get('mode') == 'liveview':
-            params['setting.ui.page.title'] = 'Patent view'
+            params['setting.ui.page.title'] = 'Patent view' + ' &nbsp; ' + self.beta_badge
             if params.get('datasource') == 'review':
-                # TODO: move this elsewhere, as soon as we have a common place for displaying status information
-                params['setting.ui.page.subtitle'] = \
-                    'Review for project "<span id="ui-project-name"></span>"' + \
-                    ', <span id="ui-project-dates"></span>.'
+                params['setting.ui.page.statusline'] = \
+                    '<span id="ui-project-name"></span>' + \
+                    ' <span id="ui-project-dates"></span>'
 
             link_expires = params.get('link_expires')
             if link_expires:
-                params['setting.ui.page.subtitle'] += ' Link expires ' + unixtime_to_human(link_expires) + '.';
+                params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
 
 
         # E. backward-compat amendments

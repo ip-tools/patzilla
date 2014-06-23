@@ -463,6 +463,7 @@ function boot_application() {
     $('#query').val(opsChooserApp.config.get('query'));
     $('#ui-title').html(getconfig('setting.ui.page.title'));
     $('#ui-subtitle').html(getconfig('setting.ui.page.subtitle'));
+    $('#ui-statusline').html(getconfig('setting.ui.page.statusline'));
     $('#ui-productname').html(getconfig('setting.ui.productname'));
     $('#ui-footer').html(getconfig('setting.ui.page.footer', {after: '<br/>'}));
     $('#ui-footer-version').html(getconfig('setting.ui.version', {after: '<br/>'}));

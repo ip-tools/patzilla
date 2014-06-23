@@ -234,6 +234,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
 
         // trigger project reload when window gets focus
+        // FIXME: this interferes with rating actions into unfocused windows
         $(window).off('focus', this.project_reload);
         $(window).on('focus', this.project_reload);
 
@@ -247,11 +248,14 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // update project information metadata display
         $('#ui-project-name').html(
-            project.get('name')
+            'Review for project "' + project.get('name') + '".'
         );
         $('#ui-project-dates').html(
-            'created ' + moment(project.get('created')).fromNow() + ', ' +
-            'modified ' + moment(project.get('modified')).fromNow()
+            'Created ' + moment(project.get('created')).fromNow() + ', ' +
+            'modified ' + moment(project.get('modified')).fromNow() + '.'
+        );
+        $('#ui-opaquelink-expiry').html(
+            'Link expires ' + moment(this.config.get('link_expires')).fromNow() + '.'
         );
 
         // activate basket
