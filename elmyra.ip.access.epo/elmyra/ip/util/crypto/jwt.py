@@ -23,9 +23,9 @@ class JwtSigner(object):
 
     def __init__(self, key=None, ttl=None):
         self.key = key
-        self.ttl = ttl or datetime.timedelta(seconds=1)
+        #self.ttl = ttl or datetime.timedelta(seconds=1)
         #self.ttl = ttl or datetime.timedelta(minutes=60)
-        #self.ttl = ttl or datetime.timedelta(hours=24)
+        self.ttl = ttl or datetime.timedelta(hours=24)
 
     # http://stackoverflow.com/questions/20483504/making-rsa-keys-from-a-password-in-python/20484325#20484325
     def genkey(self, password, salt='', keysize=2048):
