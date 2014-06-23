@@ -259,12 +259,17 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // refetch basket to work around localforage.backbone vs. backbone-relational woes
         // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
-        // FIXME: it's ridiculous that we can't catch any errors from within "then()"
-        basket.fetch({success: function() {
-            $.when(basket.fetch_entries()).then(function() {
-                _this.basket_activate(basket);
-            });
-        }});
+        // FIXME: it's ridiculous that we don't receive stacktraces from within "then()"
+        basket.fetch({
+            success: function() {
+                $.when(basket.fetch_entries()).then(function() {
+                    _this.basket_activate(basket);
+                });
+            },
+            error: function(e) {
+                _this.basket_deactivate();
+            },
+        });
 
     },
 
@@ -274,8 +279,27 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         opsChooserApp.trigger('project:load', projectname);
     },
 
-
     // TODO: move to basket.js
+    basket_deactivate: function() {
+
+        // TODO: how to decouple this? is there something like a global utility registry?
+        // TODO: is old model killed properly?
+        if (this.basketModel) {
+            this.stopListening(this.basketModel);
+            delete this.basketModel;
+        }
+
+        // TODO: is old view killed properly?
+        // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
+        if (this.basketView) {
+            this.basketView.close();
+            this.stopListening(this.basketView);
+            //this.basketView.destroy();
+            //this.basketView.remove();
+            delete this.basketView;
+        }
+    },
+
     basket_activate: function(basket) {
 
         console.log('App.basket_activate');
@@ -285,29 +309,15 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
+        this.basket_deactivate();
 
         // A. model and view
-
-        // TODO: how to decouple this? is there something like a global utility registry?
-        // TODO: is old model killed properly?
-        if (this.basketModel) {
-            this.stopListening(this.basketModel);
-            delete this.basketModel;
-        }
         this.basketModel = basket;
-
-        // TODO: is old view killed properly?
-        // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
-        if (this.basketView) {
-            this.stopListening(this.basketView);
-            //this.basketView.destroy();
-            //this.basketView.remove();
-            delete this.basketView;
-        }
         this.basketView = new BasketView({
-            el: $('#basket-area'),
+            //el: $('#basket-area'),
             model: basket,
         });
+        this.basketRegion.show(this.basketView);
 
 
         // B. event listeners
@@ -491,6 +501,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 opsChooserApp = new OpsChooserApp({config: ipsuiteNavigatorConfig});
 
 opsChooserApp.addRegions({
+    basketRegion: "#basket-region",
     metadataRegion: "#ops-metadata-region",
     listRegion: "#ops-collection-region",
     paginationRegionTop: "#ops-pagination-region-top",

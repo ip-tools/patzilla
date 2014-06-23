@@ -9,6 +9,7 @@ development
 - ui: add "beta" badge again
 - middleware: increase review-in-liveview link ttl to 24 hours again
 - ui: fix project name display in liveview mode
+- ui: enhance basket activation/deactivation in case project has no basket
 
 0.24.3
 ======
