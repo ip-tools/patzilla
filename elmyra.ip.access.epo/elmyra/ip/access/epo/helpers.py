@@ -40,7 +40,7 @@ class BackboneModelParameterFiddler(object):
         data = {
             'app.software.version': request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
-            'ui.page.title': 'Patent search',
+            'ui.page.title': 'Patent search &nbsp; <div class="label label-success beta-badge">BETA</div>',
             'ui.page.subtitle': '',
             'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG',
             'ui.productname': 'elmyra <i class="circle-icon">IP</i> suite',

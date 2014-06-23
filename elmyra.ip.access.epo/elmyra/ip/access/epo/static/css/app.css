@@ -37,6 +37,12 @@ a.editable-click {
 
 
 /* header */
+.beta-badge {
+    position: relative; top: -3px;
+    font-size: large;
+    padding: 7px;
+}
+
 #ui-subtitle {
     margin-left: 10px;
 }
