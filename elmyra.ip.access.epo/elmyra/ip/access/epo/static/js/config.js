@@ -27,12 +27,13 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
             }
         });
 
+        this.uri = $.url(window.location.href);
         this.update_baseurl();
 
     },
 
     update_baseurl: function() {
-        var url = $.url(window.location.href);
+        var url = this.uri;
         var baseurl = url.attr('protocol') + '://' + url.attr('host');
         if (url.attr('port')) baseurl += ':' + url.attr('port');
         baseurl += url.attr('path');
@@ -43,8 +44,7 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
     history_pushstate: function() {
 
         // get current parameters from url
-        var url = $.url(window.location.href);
-        var params = url.param();
+        var params = this.uri.param();
 
         // aggregate parameters comprising viewer state, currently a 4-tuple
         var state = {
@@ -54,19 +54,27 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
             datasource: this.get('datasource'),
         };
 
-        // merge current viewer state
-        _(params).extend(state);
-
-        // clear empty parameters and parameters not differing from defaults
-        for (key in params) {
-            var value = params[key];
-            if (_.isEmpty(value) || this._originalAttributes[key] == value) {
-                delete params[key];
-            }
+        // merge current viewer state, but only if
+        // - parameter does not differ from its default
+        // - the current state is not already described by opaque parameters,
+        //   i.e. "op" is not in url or config
+        if (!this.uri.param('op')) {
+            _.each(state, function(value, key) {
+                if (this._originalAttributes[key] != value) {
+                    params[key] = value;
+                }
+            }, this);
         }
 
+        // finally, clear empty parameters
+        _.each(params, function(value, key) {
+            if (_.isEmpty(value)) {
+                delete params[key];
+            }
+        });
+
         // push parameters to browser history, changing the url in the location bar
-        history.pushState({id: 'url-clean'}, '', '?' + $.param(params));
+        history.pushState({id: 'url-clean'}, '', '?' + jQuery.param(params));
 
     },
 
