@@ -108,3 +108,25 @@
         </form>
     </%text>
 </script>
+
+<script type="text/x-underscore-template" id="basket-mail-template">
+<%text>
+<%= subject %>
+
+1. Human readable:
+<%= basket_stars %>
+
+2. CSV format:
+# columns: id,score,dismiss
+<%= basket_csv %>
+
+3. Plain list:
+<%= basket_plain %>
+
+4. More information:
+URL: <%= url %>
+
+--
+Powered by https://patentsearch.elmyra.de/
+</%text>
+</script>

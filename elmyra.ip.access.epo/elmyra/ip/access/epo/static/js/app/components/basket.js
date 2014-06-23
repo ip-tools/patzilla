@@ -143,6 +143,39 @@ BasketModel = Backbone.RelationalModel.extend({
         return this.get('entries').invoke('get', 'number');
     },
 
+    csv_list: function() {
+        return this.get('entries').map(function(entry) {
+            var parts = [
+                entry.get('number'),
+                entry.get('score'),
+                entry.get('dismiss')
+            ];
+            var line = parts.join(',');
+            return line;
+        });
+    },
+
+    unicode_stars_list: function() {
+        return this.get('entries').map(function(entry) {
+            var line =
+                    _.string.ljust(entry.get('number'), 20, ' ') +
+                    _.string.ljust(entry.get('dismiss') ? '∅' : '', 5, ' ') +
+                    _.string.repeat('★', entry.get('score'));
+            return line;
+        });
+    },
+
+    unicode_stars_list_email: function() {
+        var nbsp = String.fromCharCode(160);
+        return this.get('entries').map(function(entry) {
+            var dismiss_and_score = (entry.get('dismiss') ? '∅' : '') + _.string.repeat('★', entry.get('score'));
+            var padlen = 10 - dismiss_and_score.length * 1.7;
+            var padding = _.string.repeat(nbsp, padlen);
+            var line = dismiss_and_score + padding + entry.get('number');
+            return line;
+        });
+    },
+
     review: function(options) {
 
         var publication_numbers = this.get_numbers();
@@ -222,6 +255,40 @@ BasketModel = Backbone.RelationalModel.extend({
 
     },
 
+    share_email_params: function() {
+
+        var projectname = opsChooserApp.project.get('name');
+        var url = opsChooserApp.permalink.make_uri(this.get_view_state({project: 'via-email'}));
+
+        var numbers = this.get_numbers();
+        var numbers_count = numbers.length;
+
+        var basket_csv = this.csv_list();
+        var basket_stars = this.unicode_stars_list_email();
+
+        var subject = _.template('Shared <%= count %> patent numbers through project "<%= projectname %>" at <%= date %>')({
+            count: numbers_count,
+            date: now_iso_human(),
+            projectname: projectname,
+        });
+
+        var body_tpl = _.template($('#basket-mail-template').html().trim());
+        var body = body_tpl({
+            subject: subject,
+            basket_plain: numbers.join('\n'),
+            basket_csv: basket_csv.join('\n'),
+            basket_stars: basket_stars.join('\n'),
+            url: url,
+        });
+
+        var data = {
+            subject: '[IPSUITE] ' + subject,
+            body: body,
+        };
+
+        return data;
+    },
+
 });
 
 
@@ -262,13 +329,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         var data = {};
         data = this.model.toJSON();
 
-        var entries = this.model.get('entries').map(function(entry) {
-            var line =
-                _.string.ljust(entry.get('number'), 20, ' ') +
-                _.string.ljust(entry.get('dismiss') ? '∅' : '', 5, ' ') +
-                _.string.repeat('★', entry.get('score'));
-            return line;
-        });
+        var entries = this.model.unicode_stars_list();
 
         //var numbers = this.model.get_numbers();
         if (entries) {
@@ -304,11 +365,15 @@ BasketView = Backbone.Marionette.ItemView.extend({
             _this.model.review();
         });
 
-        // basket sharing
+        // share via mail
         $('#share-numberlist-email').unbind('click');
         $('#share-numberlist-email').click(function() {
+            var params = _this.model.share_email_params();
+            var mailto_link = 'mailto:?' + jQuery.param(params).replace(/\+/g, '%20');
+            log('mailto_link:', mailto_link);
+            $(this).attr('href', mailto_link);
+        });
 
-            var projectname = opsChooserApp.project.get('name');
         // share via url
         $('#share-numberlist-url').unbind('click');
         $('#share-numberlist-url').click(function() {
@@ -316,21 +381,30 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $(this).attr('href', url);
         });
 
-            var numbers = _this.model.get_numbers();
-            var numbers_count = numbers.length;
-            var numbers_string = numbers.join('\n');
+        // share via url, with ttl
+        $('#share-numberlist-url-ttl').unbind('click');
+        $('#share-numberlist-url-ttl').click(function(e) {
+            var anchor = this;
+            opsChooserApp.permalink.make_uri_opaque(_this.model.get_view_state({mode: 'liveview'})).then(function(url) {
 
-            var subject = _.template('[IPSUITE] Shared <%= count %> patent numbers through project <%= projectname %> at <%= date %>')({
-                count: numbers_count,
-                date: now_iso_human(),
-                projectname: projectname,
+                // v1: open url
+                //$(anchor).attr('href', url);
+
+                // v2: open permalink popover
+                e.preventDefault();
+                e.stopPropagation();
+
+                opsChooserApp.permalink.popover_show(anchor, url, {
+                    title: 'External document review',
+                    intro:
+                        '<small>' +
+                            'This offers a link for external/anonymous users to review the collected documents. ' +
+                            'It will just transfer the plain numberlist without any rating scores.' +
+                        '</small>',
+                    ttl: true,
+                });
+
             });
-            var body = numbers_string + '\r\n\r\n--\r\nPowered by https://patentsearch.elmyra.de/';
-            var mailto_link = _.template('mailto:?subject=<%= subject %>&body=<%= body %>')({
-                subject: encodeURIComponent(subject),
-                body: encodeURIComponent(body),
-            });
-            $(this).attr('href', mailto_link);
         });
 
         // share via document transfer
@@ -359,12 +433,32 @@ BasketView = Backbone.Marionette.ItemView.extend({
         console.log('BasketView.onDomRefresh');
     },
 
+    textarea_scroll_bottom: function() {
+        $('#basket').scrollTop($('#basket')[0].scrollHeight);
+    },
+
+    textarea_scroll_text: function(text) {
+        var textArea = $('#basket');
+        var index = textArea.text().search(text);
+        if (index) {
+            textArea.scrollTop(index);
+        }
+    },
+
+});
+
+BasketController = Marionette.Controller.extend({
+
+    initialize: function(options) {
+        console.log('BasketController.initialize');
+    },
+
     // backpropagate current basket entries into action state (rating, signal coloring, etc.)
     link_document: function(entry, number) {
 
         // why do we have to access the global object here?
         // maybe because of the event machinery which dispatches to us?
-        var numbers = opsChooserApp.basketModel.get_numbers();
+        var numbers = opsChooserApp.basketModel ? opsChooserApp.basketModel.get_numbers() : [];
 
         var checkbox_element = $('#chk-patent-number-' + number);
         var add_button_element = $('#add-patent-number-' + number);
@@ -414,23 +508,12 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
     },
 
-    textarea_scroll_bottom: function() {
-        $('#basket').scrollTop($('#basket')[0].scrollHeight);
-    },
-
-    textarea_scroll_text: function(text) {
-        var textArea = $('#basket');
-        var index = textArea.text().search(text);
-        if (index) {
-            textArea.scrollTop(index);
-        }
-    },
-
 });
-
 
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
+
+    this.basketController = new BasketController();
 
     // Special bootstrap handling for datasource=review:
     // This activates the review after both the application

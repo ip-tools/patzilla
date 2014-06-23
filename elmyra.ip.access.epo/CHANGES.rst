@@ -17,6 +17,7 @@ development
 - ui, middleware: add some generic utils
 - ui: improve permalink popover widget and subsystem
 - ui: basket sharing via url
+- ui: basket sharing via email: improve content details
 
 0.24.3
 ======

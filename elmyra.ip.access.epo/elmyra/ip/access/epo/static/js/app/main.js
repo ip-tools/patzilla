@@ -331,9 +331,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // FIXME: this stopListening is brutal!
         this.stopListening(null, "change:add");
         this.stopListening(null, "change:remove");
-        this.listenTo(basket, "change:add", this.basketView.link_document);
-        this.listenTo(basket, "change:remove", this.basketView.link_document);
-        this.listenTo(basket, "change:rate", this.basketView.link_document);
+        this.listenTo(basket, "change:add", this.basketController.link_document);
+        this.listenTo(basket, "change:remove", this.basketController.link_document);
+        this.listenTo(basket, "change:rate", this.basketController.link_document);
 
         // save project when basket changed to update the "modified" attribute
         this.stopListening(null, "change");
@@ -422,9 +422,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             var number = document.attributes.get_patent_number();
             if (_this.basketModel) {
                 var entry = _this.basketModel.get_entry_by_number(number);
-                _this.basketView.link_document(entry, number);
+                _this.basketController.link_document(entry, number);
             } else {
-                _this.basketView.link_document(undefined, number);
+                _this.basketController.link_document(undefined, number);
             }
         });
 
