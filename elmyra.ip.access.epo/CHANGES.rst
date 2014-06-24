@@ -6,6 +6,7 @@ development
 ===========
 - ui: add "keyboarder" library
 - ui: add “list-group” css from bootstrap3
+- ui: add help page
 
 0.25.1
 ======

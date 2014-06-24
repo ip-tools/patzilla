@@ -601,7 +601,7 @@ function boot_application() {
     });
 
 
-    // snap scrolling to our items
+    // snap scrolling to our items (space key)
     $(document).on('keydown', null, null, function(event) {
 
         if (event.keyCode == 32 && event.target.localName == 'body') {
@@ -651,7 +651,7 @@ function boot_application() {
     });
 
 
-    // navigate the carousel with shift+left/right arrow keys
+    // navigate the drawings carousel with shift+left/right arrow keys
     $(document).on('keydown', null, 'shift+right', function(event) {
         event.preventDefault();
         var drawings_carousel = $('.ops-collection-entry:in-viewport').find('.drawings-carousel').first();
@@ -666,7 +666,7 @@ function boot_application() {
     });
 
 
-    // open pdf on "p"
+    // open pdf on "shift+p"
     $(document).on('keydown', null, 'shift+p', function(event) {
         event.preventDefault();
         var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-pdf-ops');
@@ -701,6 +701,15 @@ function boot_application() {
     $(document).on('keydown', null, 'shift+c', function(event) {
         event.preventDefault();
         $('.ops-collection-entry:in-viewport').find('a.anchor-ccd')[0].click();
+    });
+
+
+    // open help on "h"
+    $(document).on('keydown', null, 'h', function(event) {
+        event.preventDefault();
+        var baseurl = opsChooserApp.config.get('baseurl');
+        var url = baseurl + '/help';
+        window.open(url);
     });
 
 
@@ -856,7 +865,14 @@ function boot_application() {
 
     // transform query: open modal dialog to choose transformation kind
     $('#link-help').click(function() {
-        $('#help-modal').modal('show');
+
+        // v1: modal dialog
+        //$('#help-modal').modal('show');
+
+        // v2: different page
+        var baseurl = opsChooserApp.config.get('baseurl');
+        var url = baseurl + '/help';
+        $(this).attr('href', url);
     });
 
     opsChooserApp.trigger('application:ready');

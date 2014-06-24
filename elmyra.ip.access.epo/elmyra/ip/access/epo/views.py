@@ -12,6 +12,7 @@ from pyramid.url import route_path
 from pyramid.view import view_config
 
 def includeme(config):
+    config.add_route('help', '/ops/browser/help')
     config.add_route('patentsearch', '/ops/browser')
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
@@ -133,6 +134,11 @@ def jump_dpmaregister(request):
             return HTTPFound(location=url)
 
     return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
+
+
+@view_config(route_name='help', renderer='elmyra.ip.access.epo:templates/help.html')
+def help_page(request):
+    return {}
 
 
 @view_config(name='patentsearch-old', renderer='elmyra.ip.access.epo:templates/app.html')

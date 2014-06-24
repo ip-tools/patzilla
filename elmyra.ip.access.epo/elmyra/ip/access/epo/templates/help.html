@@ -1,0 +1,36 @@
+## -*- coding: utf-8 -*-
+## (c) 2014 Andreas Motl, Elmyra UG
+
+<%inherit file="site.mako" />
+
+<%block name="body">
+
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/bs3-list-group.css" />
+<script type="text/javascript" src="/static/widget/keyboarder/keyboarder.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/widget/keyboarder/keyboarder.css" />
+
+<script type="text/javascript" src="/static/widget/help/help.js"></script>
+<script type="text/javascript" src="/static/widget/help/hotkeys.js"></script>
+
+<%include file="help/hotkeys.html"/>
+
+## title / headline
+<div class="container-fluid">
+    <div class="span6">
+        <div class="pull-left">
+            <h3 id="ui-title" style="display: inline-block">Patent search help</h3>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="pull-right">
+            <h3 id="ui-productname">elmyra <i class="circle-icon">IP</i> suite</h3>
+        </div>
+    </div>
+</div>
+
+
+## help
+<div id="help-hotkeys-region"></div>
+
+</%block>
