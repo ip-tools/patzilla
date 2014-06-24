@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: add "keyboarder" library
 
 0.25.1
 ======
