@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.26.1
+======
+- ui: fix query-links in liveview mode
+
 0.26.0
 ======
 - ui: add "keyboarder" library

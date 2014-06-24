@@ -147,7 +147,11 @@ function listview_bind_actions() {
         // when in liveview, scrumble database query and viewstate parameters into opaque parameter token
         if (opsChooserApp.config.get('isviewer')) {
 
-            // nail to liveview mode
+            // regardless where the query originates from (e.g. datasource=review),
+            // requests for query-links need switching to ops
+            params['datasource'] = 'ops';
+
+            // nail to liveview mode in any case
             params['mode'] = 'liveview';
 
             // compute opaque parameter token and reset href
