@@ -258,6 +258,14 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             'Link expires ' + moment(this.config.get('link_expires')).fromNow() + '.'
         );
 
+
+        // Also update current application configuration model.
+        // Be aware that the basket is not properly initialized yet at this point.
+        // So potential listeners to configuration model change events currently
+        // must not expect a *fully* initialized project/basket structure.
+        this.config.set('project', project.get('name'));
+
+
         // activate basket
         var basket = project.get('basket');
 

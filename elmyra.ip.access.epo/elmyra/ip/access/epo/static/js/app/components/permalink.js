@@ -20,14 +20,15 @@ PermalinkPlugin = Marionette.Controller.extend({
 
     // build query parameters
     // TODO: refactor this elsewhere, e.g. some UrlBuilder?
-    query_parameters: function(params) {
+    query_parameters: function(params, uri) {
 
         params = params || {};
+        uri = uri || window.location.href;
 
         var params_computed = {};
 
         // collect parameters from url
-        var url = $.url(window.location.href);
+        var url = $.url(uri);
         _(params_computed).extend(url.param());
 
         // merge / overwrite with local params
@@ -35,6 +36,32 @@ PermalinkPlugin = Marionette.Controller.extend({
 
         // clear parameters having empty values
         params_computed = _.objRejectEmpty(params_computed);
+
+        return params_computed;
+    },
+
+    // build query parameters to view state
+    // TODO: refactor this elsewhere, e.g. some UrlBuilder?
+    query_parameters_viewstate: function(uri) {
+
+        // aggregate parameters comprising viewer state, currently a 4-tuple
+        // see also config.js:history_pushstate
+        var config = opsChooserApp.config;
+        var state = {
+            mode: config.get('mode'),
+            context: config.get('context'),
+            project: config.get('project'),
+            datasource: config.get('datasource'),
+        };
+
+        // remove parameters which do not differ from their default
+        _.each(state, function(value, key) {
+            if (config._originalAttributes[key] == value) {
+                delete state[key];
+            }
+        }, this);
+
+        var params_computed = this.query_parameters(state, uri);
 
         return params_computed;
     },

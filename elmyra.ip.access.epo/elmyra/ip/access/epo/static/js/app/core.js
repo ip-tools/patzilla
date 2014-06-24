@@ -138,37 +138,19 @@ function listview_bind_actions() {
     $(".query-link").unbind('click');
     $(".query-link").on('click', function(event) {
 
-        // v1
-        /*
-        event.preventDefault();
-        var attr = $(this).data('query-attribute');
-        var val = $(this).data('query-value');
-        var query = attr + '=' + val;
-        opsChooserApp.send_query(query);
-        */
-
-        // v2
-        // propagate state of (mode, context, project, datasource=ops) into query parameters
-
-        // build state payload
-        var state = {
-            mode: opsChooserApp.config.get('mode'),
-            context: opsChooserApp.config.get('context'),
-            project: opsChooserApp.config.get('project'),
-            datasource: 'ops',
-        };
-        if (opsChooserApp.project) {
-            state.project = opsChooserApp.project.get('name');
-        }
-
         var href = $(this).attr('href');
-        var url = $.url(href);
-        var params = url.param();
-        _(params).extend(state);
+        var params = opsChooserApp.permalink.query_parameters_viewstate(href);
 
-        // serialize state into opaque parameter token when in liveview
-        var force_viewer = false;
-        if (force_viewer || opsChooserApp.config.get('isviewer')) {
+        // debugging
+        //opsChooserApp.config.set('isviewer', true);
+
+        // when in liveview, scrumble database query and viewstate parameters into opaque parameter token
+        if (opsChooserApp.config.get('isviewer')) {
+
+            // nail to liveview mode
+            params['mode'] = 'liveview';
+
+            // compute opaque parameter token and reset href
             var _this = this;
             opaque_param(params).then(function(opaque_query) {
                 $(_this).attr('href', '?' + opaque_query);
@@ -176,15 +158,8 @@ function listview_bind_actions() {
 
         // serialize state into regular query parameters otherwise
         } else {
-            if (_.string.contains(href, '?')) {
-                href += '&';
-            } else {
-                href += '?';
-            }
-            href += jQuery.param(state);
-            $(this).attr('href', href);
+            $(this).attr('href', '?' + jQuery.param(params));
         }
-
 
     });
 

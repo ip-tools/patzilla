@@ -8,6 +8,7 @@ development
 - ui: add “list-group” css from bootstrap3
 - ui: add help page
 - ui: add hotkey overview to help page
+- ui: fix/improve inline query-link parameter building
 
 0.25.1
 ======

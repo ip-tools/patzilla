@@ -118,6 +118,7 @@ class BackboneModelParameterFiddler(object):
 
             link_expires = params.get('link_expires')
             if link_expires:
+                params.setdefault('setting.ui.page.statusline', '')
                 params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
 
 

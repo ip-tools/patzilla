@@ -47,6 +47,7 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
         var params = this.uri.param();
 
         // aggregate parameters comprising viewer state, currently a 4-tuple
+        // see also components/permalink.js:PermalinkPlugin.query_parameters_viewstate
         var state = {
             mode: this.get('mode'),
             context: this.get('context'),
