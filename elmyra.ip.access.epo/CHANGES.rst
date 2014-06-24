@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.26.0
+======
 - ui: add "keyboarder" library
 - ui: add “list-group” css from bootstrap3
 - ui: add help page
