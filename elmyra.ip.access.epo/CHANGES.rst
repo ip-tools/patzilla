@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: updated cheshire cql parser from upstream re. “style: PEP8 fixes for core modules”
 
 0.26.1
 ======

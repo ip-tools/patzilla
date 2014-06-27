@@ -9,6 +9,10 @@ With thanks to Adam Dickmeiss and Mike Taylor for their valuable input.
 Source:  https://github.com/cheshire3/cheshire3/blob/develop/cheshire3/cqlParser.py
 License: Proprietary (Cheshire3 License)
          https://github.com/cheshire3/cheshire3/blob/develop/LICENSE.rst
+
+See also: https://github.com/asl2/PyZ3950/blob/master/apache/CQLParser.py (v1.2)
+          https://github.com/asl2/PyZ3950/blob/master/PyZ3950/CQLParser.py (v1.7)
+License: Distributed and Usable under the GPL
 """
 
 import types
@@ -16,6 +20,7 @@ import types
 from shlex import shlex
 from xml.sax.saxutils import escape
 from StringIO import StringIO
+from __builtin__ import isinstance
 
 serverChoiceRelation = "="
 serverChoiceIndex = "cql.serverchoice"
@@ -80,8 +85,10 @@ class PrefixableObject:
                                    ident=escape(self.prefixes[p]))
 
     def addPrefix(self, name, identifier):
-        if (errorOnDuplicatePrefix and (self.prefixes.has_key(name) or
-                                        reservedPrefixes.has_key(name))):
+        if (
+            errorOnDuplicatePrefix and
+            (name in self.prefixes or name in reservedPrefixes)
+        ):
             # Maybe error
             diag = Diagnostic()
             diag.code = 45
@@ -91,13 +98,13 @@ class PrefixableObject:
 
     def resolvePrefix(self, name):
         # Climb tree
-        if (reservedPrefixes.has_key(name)):
+        if name in reservedPrefixes:
             return reservedPrefixes[name]
-        elif (self.prefixes.has_key(name)):
+        elif name in self.prefixes:
             return self.prefixes[name]
-        elif (self.parent <> None):
+        elif self.parent is not None:
             return self.parent.resolvePrefix(name)
-        elif (self.config <> None):
+        elif self.config is not None:
             # Config is some sort of server config which specifies defaults
             return self.config.resolvePrefix(name)
         else:
@@ -164,7 +171,7 @@ class ModifiableObject:
     modifiers = []
 
     def __getitem__(self, k):
-        if (type(k) == types.IntType):
+        if isinstance(k, int):
             try:
                 return self.modifiers[k]
             except:
@@ -215,7 +222,7 @@ class Triple (PrefixableObject):
         if (self.prefixes):
             ptxt = []
             for p in self.prefixes.keys():
-                if (p <> ''):
+                if p != '':
                     ptxt.append('>%s="%s"' % (p, self.prefixes[p]))
                 else:
                     ptxt.append('>"%s"' % (self.prefixes[p]))
@@ -232,8 +239,10 @@ class Triple (PrefixableObject):
         return "({0})".format(" ".join(txt))
 
     def getResultSetId(self, top=None):
-        if (fullResultSetNameCheck == 0 or
-            self.boolean.value in ['not', 'prox']):
+        if (
+            fullResultSetNameCheck == 0 or
+            self.boolean.value in ['not', 'prox']
+        ):
             return ""
 
         if top is None:
@@ -307,7 +316,7 @@ class SearchClause (PrefixableObject):
     def toCQL(self):
         text = []
         for p in self.prefixes.keys():
-            if (p <> ''):
+            if p != '':
                 text.append('>%s="%s"' % (p, self.prefixes[p]))
             else:
                 text.append('>"%s"' % (self.prefixes[p]))
@@ -324,8 +333,10 @@ class SearchClause (PrefixableObject):
     def getResultSetId(self, top=None):
         idx = self.index
         idx.resolvePrefix()
-        if (idx.prefixURI == reservedPrefixes['cql'] and
-            idx.value.lower() == 'resultsetid'):
+        if (
+            idx.prefixURI == reservedPrefixes['cql'] and
+            idx.value.lower() == 'resultsetid'
+        ):
             return self.term.value
         else:
             return ""
@@ -535,7 +546,7 @@ class ModifierClause:
                               ])
         else:
             return '\n'.join(["%s<modifier>" % ("  " * depth),
-                "             %s<type>%s</type>" %
+                              "             %s<type>%s</type>" %
                               ("  " * (depth + 1), escape(str(self.type))),
                               "%s</modifier>" % ("  " * depth)
                               ])
@@ -730,9 +741,11 @@ class CQLParser:
                 identifier.append(self.currentToken)
                 self.fetch_token()
             identifier = ''.join(identifier)
-            if (len(identifier) > 1 and
+            if (
+                len(identifier) > 1 and
                 identifier[0] == '"' and
-                identifier.endswith('"')):
+                identifier.endswith('"')
+            ):
                 identifier = identifier[1:-1]
             prefs[name.lower()] = identifier
         return prefs

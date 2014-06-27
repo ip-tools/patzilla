@@ -14,7 +14,7 @@ class SmartSearchClause(SearchClause):
 
         text = []
         for p in self.prefixes.keys():
-            if (p <> ''):
+            if (p != ''):
                 text.append('>%s="%s"' % (p, self.prefixes[p]))
             else:
                 text.append('>"%s"' % (self.prefixes[p]))
