@@ -75,7 +75,9 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
         });
 
         // push parameters to browser history, changing the url in the location bar
-        history.pushState({id: 'url-clean'}, '', '?' + jQuery.param(params));
+        if (!_.isEmpty(params)) {
+            history.pushState({id: 'url-state'}, '', '?' + jQuery.param(params));
+        }
 
     },
 
