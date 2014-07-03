@@ -5,6 +5,8 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: updated cheshire cql parser from upstream re. “style: PEP8 fixes for core modules”
+- middleware: make cheshire cql parser smarter by allowing value shortcut notations
+  like 'index=(term)' or 'index=(term1 and term2 or term3)'
 
 0.26.1
 ======

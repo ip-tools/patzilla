@@ -830,9 +830,12 @@ class CQLParser:
                 diag = Diagnostic()
                 diag.details = "Expected Term, got end of query."
                 raise(diag)
+
+            self.before_clause()
             term = termType(self.currentToken)
             self.fetch_token()   # Skip Term
             irt = searchClauseType(index, rel, term)
+            self.after_clause(irt)
 
         elif (self.currentToken and
               (bool or sort or self.nextToken in [')', ''])):
@@ -854,6 +857,12 @@ class CQLParser:
                             self.currentToken)
             raise diag
         return irt
+
+    def before_clause(self):
+        pass
+
+    def after_clause(self, irt):
+        pass
 
     def modifiers(self):
         mods = []
