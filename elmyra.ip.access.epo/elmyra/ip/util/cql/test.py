@@ -54,5 +54,8 @@ class TestCqlParser(unittest.TestCase):
     def test_boolean_german(self):
         self.assertEqual(self.do_parse('bi=foo und bi=bar'), '(bi = "foo" und bi = "bar")')
 
+    def test_utf8(self):
+        self.assertEqual(self.do_parse('ab=radaufstandskraft or ab=radaufstandskräfte?'), u'(ab = "radaufstandskraft" or ab = "radaufstandskr\xe4fte?")')
+
 if __name__ == '__main__':
     unittest.main()

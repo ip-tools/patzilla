@@ -236,7 +236,7 @@ class Triple (PrefixableObject):
             txt.append("sortBy")
             for sk in self.sortKeys:
                 txt.append(sk.toCQL())
-        return "({0})".format(" ".join(txt))
+        return u"({0})".format(u" ".join(txt))
 
     def getResultSetId(self, top=None):
         if (

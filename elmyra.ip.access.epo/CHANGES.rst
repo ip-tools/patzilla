@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: make cheshire3 cql parser unicode aware
 
 0.28.0
 ======
