@@ -5,6 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.28.0
+======
+- middleware: fix charset encoding when propagating cql query to DEPATISnet
+  and extracting keywords; enhance keyword processing
+
 0.27.0
 ======
 - middleware: updated cheshire cql parser from upstream re. “style: PEP8 fixes for core modules”

@@ -9,6 +9,7 @@ from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
+from elmyra.ip.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
 
@@ -119,10 +120,13 @@ def depatisnet_published_data_search_handler(request):
     query_object = None
     try:
         query_object = cql_parse(query)
-        query = query_object.toCQL().strip()
-    except Diagnostic as ex:
+        query_recompiled = query_object.toCQL().strip()
+        if query_recompiled:
+            query = query_recompiled
+
+    except Exception as ex:
         # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
-        log.warn('CQL parse error: query="{0}", reason={1}'.format(query, str(ex)))
+        log.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
 
     log.info('query cql: ' + query)
 
@@ -145,7 +149,7 @@ def compute_keywords(query_object):
     keywords = []
     scan_keywords(query_object, keywords)
     keywords = list(set(keywords))
-    #print "keywords:", keywords
+    log.info("keywords: %s", keywords)
     return keywords
 
 def scan_keywords(op, keywords):
@@ -181,7 +185,8 @@ def scan_keywords(op, keywords):
         #print "op.index:", op.index
         #print "op.term:", op.term
         if str(op.index) in keyword_fields:
-            keywords.append(str(op.term))
+            keyword = unicode(op.term).strip('?').strip('*')
+            keywords.append(keyword)
 
     hasattr(op, 'leftOperand') and scan_keywords(op.leftOperand, keywords)
     hasattr(op, 'rightOperand') and scan_keywords(op.rightOperand, keywords)

@@ -47,7 +47,7 @@ class DpmaDepatisnetAccess:
         self.browser.select_form(nr=0)
         #self.browser.select_form(name='form')
 
-        self.browser['query'] = query
+        self.browser['query'] = query.encode('iso-8859-1')
         self.browser['hitsPerPage'] = [str(hits_per_page)]
 
         # sort by publication date, descending
