@@ -17,7 +17,7 @@ First, check parsing and reproducing a query for a publication number without no
 u'pn=EP666666'
 
 
-Then, check whether normalization works correctly:
+Then, check whether normalization works correctly. Here, the EP document number should get zero-padded properly:
 
 >>> CQL('pn=EP666666').normalize_numbers().dumps()
 u'pn=EP0666666'
@@ -47,7 +47,7 @@ That's the reason for "de" not appearing in the list of keywords above,
 because index name "pc" is not whitelisted.
 
 We can have a look at the layer below, where raw triples got extracted from the query string,
-that's the step just before collecting the keywords from them:
+that's the step just before collecting the keywords:
 
 >>> CQL('bi=greifer and pc=de').triples()
 [[u'bi', u'=', u'greifer'], [u'pc', u'=', u'de']]
@@ -90,7 +90,7 @@ u'BI=Socke und PA=onion'
 All together now!
 =================
 
-In this section, we try to demonstrate using multiple features at once by making up a query containing:
+In this section, multiple features are used at once by making up a query containing:
 
 - a value shortcut notation for patent numbers which should be normalized after shortcut expansion,
 - a CPC class containing a forward slash and
@@ -122,7 +122,7 @@ Terms from conditions for classification- or fulltext-indexes should count towar
 
 Details
 -------
-Even without improving the query, the keywords should be the same,
+Even without polishing the query, the keywords should be the same,
 since "cpc" and "txt" conditions both are not in value shortcut notation.
 
 >>> CQL(query).keywords()
