@@ -133,3 +133,13 @@ obviously does not work when not having shortcut expansion applied before:
 
 >>> CQL('pn=(EP666666 or EP666667)').normalize_numbers().dumps()
 u'pn=(EP666666 or EP666667)'
+
+
+Nesting and keywords
+--------------------
+
+We especially want to properly extract keywords from nested expressions,
+even when they are in value shortcut notation.
+
+>>> CQL('bi=(socke and (Inlay or Teile)) and pc=de').polish().keywords()
+[u'socke', u'Inlay', u'Teile']
