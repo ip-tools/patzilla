@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+.. -*- coding: utf-8 -*-
+.. (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
 ===========================================
 CQL pyparsing parser tests: Foundation spec

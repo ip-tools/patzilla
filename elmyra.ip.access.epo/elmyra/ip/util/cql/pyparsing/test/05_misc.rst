@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+.. -*- coding: utf-8 -*-
+.. (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
 ====================================================
 CQL pyparsing parser tests: Miscellaneous and errors
@@ -66,7 +66,6 @@ Traceback (most recent call last):
     ...
 ParseException: Expected ")" (at char 8), (line:1, col:9)
 
-Query has unbalanced parentheses:
 >>> CQL('foo=bar)', logging=False).dumps()
 Traceback (most recent call last):
     ...

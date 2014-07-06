@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+.. -*- coding: utf-8 -*-
+.. (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
 ==============================================
 CQL pyparsing parser tests: Generic extensions
@@ -90,26 +90,41 @@ u'BI=Socke und PA=onion'
 All together now!
 =================
 
-In this section, we try to demonstrate using multiple features at once by making up a query containing
+In this section, we try to demonstrate using multiple features at once by making up a query containing:
+
 - a value shortcut notation for patent numbers which should be normalized after shortcut expansion,
 - a CPC class containing a forward slash and
 - a fulltext search condition with wildcard.
+
 >>> query = 'pn=(EP666666 or EP666667) or (cpc=H04L12/433 and txt=communication?)'
 
+
+Verbatim reproduction
+---------------------
 The query should be reproduced verbatim when not applying any expansion or normalization:
+
 >>> CQL(query).dumps()
 u'pn=(EP666666 or EP666667) or (cpc=H04L12/433 and txt=communication?)'
 
+
+Polishing
+---------
 After shortcut expansion and number normalization, we should see zero-padded EP document numbers:
+
 >>> CQL(query).polish().dumps()
 u'(pn=EP0666666 or pn=EP0666667) or (cpc=H04L12/433 and txt=communication?)'
 
 Terms from conditions for classification- or fulltext-indexes should count towards keywords:
+
 >>> CQL(query).polish().keywords()
 [u'H04L12/433', u'communication']
 
+
+Details
+-------
 Even without improving the query, the keywords should be the same,
 since "cpc" and "txt" conditions both are not in value shortcut notation.
+
 >>> CQL(query).keywords()
 [u'H04L12/433', u'communication']
 
