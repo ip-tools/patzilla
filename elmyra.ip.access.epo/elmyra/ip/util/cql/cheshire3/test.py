@@ -26,6 +26,11 @@ class TestCheshire3CqlParser(unittest.TestCase):
     def test_simple_multiple(self):
         self.assertEqual(self.do_parse('ti=foo and ti=bar and pc=qux'), '((ti = "foo" and ti = "bar") and pc = qux)')
 
+    def test_nested(self):
+        self.assertEqual(self.do_parse(
+            '(bi=foo and (bi=bar or bi=baz)) and pc=qux'),
+            '((bi = "foo" and (bi = "bar" or bi = "baz")) and pc = qux)')
+
     def test_value_parentheses(self):
         self.assertEqual(self.do_parse('pn=(foo) and pc=bar'), '(pn = "foo" and pc = bar)')
 

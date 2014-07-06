@@ -9,7 +9,7 @@ class TestMyView(unittest.TestCase):
         testing.tearDown()
 
     def test_it(self):
-        from .views import my_view
+        from .views import opsbrowser
         request = testing.DummyRequest()
-        info = my_view(request)
+        info = opsbrowser(request)
         self.assertEqual(info['project'], 'elmyra.ip.access.epo')
