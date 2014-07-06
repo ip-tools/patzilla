@@ -42,6 +42,7 @@ requires = [
     'mechanize==0.2.5',
     'BeautifulSoup==3.2.1',
     'ago==0.0.6',
+    'pyparsing==2.0.2',
 
     # ----------------------------------------------
     #   user interface
