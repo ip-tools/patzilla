@@ -7,3 +7,4 @@ MANIFEST
 dist/
 /var
 /node_modules
+.coverage

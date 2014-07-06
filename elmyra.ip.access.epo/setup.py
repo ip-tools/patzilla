@@ -70,6 +70,16 @@ requires = [
     # marionette, backbone and prerequisites
     'js.marionette==1.1.0a2',
     'js.underscore_string==2.3.0a1',
+
+]
+
+test_requires = [
+    # ----------------------------------------------
+    #   testing
+    # ----------------------------------------------
+    'nose==1.3.3',
+    'nose-exclude==0.2.0',
+    'nose2-cov==1.0a4',
 ]
 
 setup(name='elmyra.ip.access.epo',
@@ -100,8 +110,9 @@ setup(name='elmyra.ip.access.epo',
           'elmyra.ip.util.render': ['*.js'],
       },
       zip_safe=False,
-      test_suite='elmyra.ip.access.epo',
+      test_suite='nose.collector',
       install_requires=requires,
+      tests_require=test_requires,
       dependency_links=[
         'https://github.com/elmyra-org/js.marionette/tarball/1.1.0a2#egg=js.marionette-1.1.0a2',
       ],

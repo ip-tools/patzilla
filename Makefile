@@ -61,3 +61,22 @@ push:
 
 release:
 	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push && $(MAKE) package-and-install
+
+test:
+	@nosetests                  \
+		--all-modules           \
+		--traverse-namespace    \
+		--with-doctest          \
+		--doctest-tests         \
+		--doctest-extension=rst \
+		--where=elmyra.ip.access.epo \
+		--exclude-dir=elmyra/ip/util/database \
+		--exclude-dir=elmyra/ip/access/epo/static \
+		--exclude-dir=elmyra/ip/access/epo/templates \
+		$(options)
+
+test-cover:
+	$(MAKE) test options="--with-coverage"
+
+test-setup:
+	pip install nose==1.3.3 nose-exclude==0.2.0 nose2-cov==1.0a4
