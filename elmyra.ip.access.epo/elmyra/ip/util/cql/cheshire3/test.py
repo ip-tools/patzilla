@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import unittest
-from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
+from elmyra.ip.util.cql.cheshire3.parser import parse as cql_parse, Diagnostic
 
 
-class TestCqlParser(unittest.TestCase):
+class TestCheshire3CqlParser(unittest.TestCase):
 
     suppress_stacktraces = True
 

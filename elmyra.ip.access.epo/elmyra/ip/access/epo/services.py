@@ -8,7 +8,7 @@ from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
 from elmyra.ip.util.numbers.common import split_patent_number
-from elmyra.ip.util.cql.cheshire3_parser import parse as cql_parse, Diagnostic
+from elmyra.ip.util.cql.cheshire3.parser import parse as cql_parse, Diagnostic
 from elmyra.ip.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
