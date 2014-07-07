@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
+import sys
 import re
 import types
+import logging
 import StringIO
 from pyparsing import ParseResults
 from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards, termop, parse_cql
-from elmyra.ip.util.cql.pyparsing.util import walk_token_results
+from elmyra.ip.util.cql.pyparsing.util import walk_token_results, token_to_triple
 from elmyra.ip.util.cql.knowledge import indexes_publication_number, indexes_keywords
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.data.convert import shrink_list
+
+log = logging.getLogger(__name__)
 
 def tokens_to_cql(tokens):
     """
@@ -32,22 +36,27 @@ def tokens_to_cql_buffer(tokens, buffer):
         if tokentype is ParseResults:
             name = token.getName()
             if name.startswith('triple'):
-                if len(token) == 3:
-                    triple = list(token)
+                triple = token_to_triple(token)
+                if triple:
                     index, binop, term = triple
 
                     # surround binop with spaces for all operators but equality (=)
                     if binop != '=':
-                        token[1] = u' {0} '.format(binop)
+                        triple[1] = u' {0} '.format(binop)
 
-                buffer.write(u''.join(token))
+                    payload = u''.join(triple)
+
+                else:
+                    payload = u''.join(token)
+
+                buffer.write(payload)
 
             elif name.startswith('subquery'):
                 tokens_to_cql_buffer(token, buffer)
 
         elif tokentype in types.StringTypes:
             out = token
-            # surround all boolean operators with spaces
+            # surround all boolean operators with whitespace
             if token in booleans:
                 out = u' {0} '.format(token)
             buffer.write(out)
@@ -124,8 +133,8 @@ def trim_keywords(keywords):
     """
     keywords_trimmed = []
     for keyword in keywords:
-        matches = re.split(termop.pattern, keyword)
-        matches = [match.strip(wildcards + '"\' ') for match in matches]
+        matches = re.split(termop.pattern, keyword, flags=termop.flags)
+        matches = [match.strip(wildcards + '"\'() ') for match in matches]
         keywords_trimmed.append(shrink_list(matches))
     return keywords_trimmed
 
@@ -143,7 +152,8 @@ def get_triples(tokens, triples):
         if tokentype is ParseResults:
             name = token.getName()
             if name.startswith('triple'):
-                triples.append(list(token))
+                triple = token_to_triple(token) or list(token)
+                triples.append(triple)
             elif name.startswith('subquery'):
                 get_triples(token, triples)
 
@@ -164,6 +174,14 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
             name = token.getName()
 
             if name == 'triple-short':
+
+                # HACK / workaround:
+                # Check whether term contains neighbourhood operators.
+                # If it does, put term inside parenthesis, which got lost while performing shortcut expansion.
+                if token:
+                    if re.match('.*(?:' + termop.pattern + ').*', token[0], flags=termop.flags):
+                        token[0] = u'({0})'.format(token[0])
+
                 # Process triple in value shortcut notation (contains only the single term).
                 # Take action: Insert index and binop from subquery context.
                 if index and binop:
@@ -176,6 +194,6 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
             elif name == 'subquery-short':
                 # Dive into a subquery containing values in shortcut notation.
                 # Remember index and binop for nested triple processing.
-                index = token.pop(0)
-                binop = token.pop(0)
-                expand_shortcut_notation(token, index, binop)
+                index_ = token.pop(0)
+                binop_ = token.pop(0)
+                expand_shortcut_notation(token, index_, binop_)

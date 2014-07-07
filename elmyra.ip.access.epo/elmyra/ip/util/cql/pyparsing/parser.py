@@ -21,8 +21,8 @@ from pyparsing import \
     Regex, \
     alphas, nums, alphanums, quotedString, \
     oneOf, upcaseTokens, delimitedList, restOfLine, \
-    Forward, Group, Combine, Optional, ZeroOrMore, \
-    NotAny, FollowedBy, StringEnd, \
+    Forward, Group, Combine, Optional, ZeroOrMore, OneOrMore, \
+    NotAny, Suppress, FollowedBy, StringEnd, \
     ParseResults, ParseException
 from elmyra.ip.util.cql.pyparsing.util import get_literals
 
@@ -86,6 +86,7 @@ neighbourhood_symbols = ['\s?' + re.escape(symbol).replace('\#', '\d+') + '\s?' 
 # ------------------------------------------
 termop = Regex( "|".join(neighbourhood_symbols), re.IGNORECASE ).setParseAction( upcaseTokens ).setName("termop")
 termword = Word(unicode_printables + separators + wildcards).setName("term")
+termword_termop = (termword + OneOrMore( termop + termword ))
 
 
 # ------------------------------------------
@@ -93,7 +94,22 @@ termword = Word(unicode_printables + separators + wildcards).setName("term")
 # ------------------------------------------
 index = Word(alphanums).setName("index")
 binop = oneOf(binop_symbols, caseless=True).setName("binop")
-term  = ( Combine(termword + ZeroOrMore( termop + termword )).setName("term") ^ quotedString.setName("term") )
+term = (
+
+    # term is a quoted string, easy peasy
+    quotedString.setName("term") ^
+
+    # term is just a termword, easy too
+    termword.setName("term") ^
+
+    # term contains neighbourhood operators, so should have been wrapped in parenthesis
+    Combine('(' + Suppress(ZeroOrMore(' ')) + termword_termop + Suppress(ZeroOrMore(' ')) + ')').setName("term") ^
+
+    # convenience/gracefulness: we also allow terms containing
+    # neighbourhood operators without being wrapped in parenthesis
+    Combine(termword_termop).setName("term")
+
+)
 
 
 # ------------------------------------------

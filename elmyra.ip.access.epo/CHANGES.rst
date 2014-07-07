@@ -12,6 +12,7 @@ development
 - middleware: make cql parser understand neighbourhood term operators
 - middleware: add doctests for testing DEPATISnet CQL features
 - middleware: add doctests for testing OPS CQL features
+- middleware: fix neighborhood operator problems in value shortcut notations
 
 0.28.0
 ======

@@ -180,14 +180,41 @@ u'PA=(Anna(L)Huber)'
 Keywords
 ========
 
-Try some more complex queries containing neighbourhood term operators, wildcards and value shortcut notations.
+Try some more complex queries containing *value shortcut notations*, *neighbourhood term operators* and *wildcards*.
 
->>> CQL("""
+>>> largequery = """
 ...     (PA= siemens UND IN= Braun UND PUB>= 01.03.2010) or
 ...     (PUB=M11-2009 UND PA=daimler?) or
 ...     (AB = (!!!lösung or ###heizung or ?fahrzeug)) or
 ...     (ICB='F17D 5/00' or ICB=F04D13-?) or
 ...     bi=(mechanische (NOTW) Regler) or
 ...     bi=(Cry1?(L)resist? or Cry1?(5A)tox? or Misch?(P)?wasser)
-...     """).polish().keywords()
+... """
+
+>>> CQL(largequery).dumps()
+u"(PA=siemens UND IN=Braun UND PUB >= 01.03.2010) or (PUB=M11-2009 UND PA=daimler?) or (AB=(!!!l\xf6sung or ###heizung or ?fahrzeug)) or (ICB='F17D 5/00' or ICB=F04D13-?) or bi=(mechanische (NOTW) Regler) or bi=(Cry1?(L)resist? or Cry1?(5A)tox? or Misch?(P)?wasser)"
+
+>>> CQL(largequery).keywords()
+[u'siemens', u'Braun', u'daimler', [u'mechanische', u'Regler']]
+
+
+Polishing
+=========
+
+Polising a query, especially the shortcut notation expansion, should not corrupt query syntax.
+
+>>> CQL('TI = ( DVB(W)T )').polish().dumps()
+u'TI=(DVB(W)T)'
+
+>>> CQL('Bi= (personalcomputer oder (personal(W)computer))').polish().dumps()
+u'(Bi=personalcomputer ODER (Bi=(personal(W)computer)))'
+
+>>> CQL('bi=(Cry1?(L)resist?)').polish().dumps()
+u'bi=(Cry1?(L)resist?)'
+
+
+>>> CQL(largequery).polish().dumps()
+u"(PA=siemens UND IN=Braun UND PUB >= 01.03.2010) or (PUB=M11-2009 UND PA=daimler?) or ((AB=!!!l\xf6sung or AB=###heizung or AB=?fahrzeug)) or (ICB='F17D 5/00' or ICB=F04D13-?) or bi=(mechanische (NOTW) Regler) or (bi=(Cry1?(L)resist?) or bi=(Cry1?(5A)tox?) or bi=(Misch?(P)?wasser))"
+
+>>> CQL(largequery).polish().keywords()
 [u'siemens', u'Braun', u'daimler', u'l\xf6sung', u'heizung', u'fahrzeug', [u'mechanische', u'Regler'], [u'Cry1', u'resist'], [u'Cry1', u'tox'], [u'Misch', u'wasser']]
