@@ -7,7 +7,10 @@
 # Derived from simpleSQL.py, Copyright (c) 2003, Paul McGuire
 # http://pyparsing.wikispaces.com/file/view/simpleSQL.py
 #
-# http://pyparsing.wikispaces.com/HowToUsePyparsing
+# See also:
+#
+# - http://pyparsing.wikispaces.com/HowToUsePyparsing
+# - http://pyparsing.wikispaces.com/file/view/searchparser.py
 #
 import re
 import logging

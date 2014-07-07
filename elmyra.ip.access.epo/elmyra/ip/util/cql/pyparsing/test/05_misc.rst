@@ -43,6 +43,9 @@ Weird queries
 >>> CQL('   foobar   ').dumps()
 u'foobar'
 
+>>> CQL('(((foobar)))').dumps()
+u'(((foobar)))'
+
 
 Queries with errors
 ===================

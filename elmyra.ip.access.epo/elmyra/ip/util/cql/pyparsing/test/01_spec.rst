@@ -28,7 +28,7 @@ u'"complete dinosaur"'
 >>> CQL('title = "complete dinosaur"').dumps()
 u'title="complete dinosaur"'
 
-.. note:: currently disabled (FIXME)
+.. note:: **FIXME: enhance grammar**
 >>> #CQL('title exact "the complete dinosaur"').dumps()
 
 
@@ -38,7 +38,7 @@ Queries using Boolean logic
 >>> CQL('dinosaur or bird').dumps()
 u'dinosaur or bird'
 
-.. note:: currently disabled (FIXME)
+.. note:: **FIXME: enhance grammar**
 
 >>> #CQL('Palomar assignment and "ice age"').dumps()
 
@@ -71,7 +71,7 @@ u'bioMass >= 100'
 Queries based on the proximity of words to each other in a document
 ===================================================================
 
-.. note:: currently disabled (FIXME)
+.. note:: **FIXME: enhance grammar**
 
 >>> #CQL('ribs prox/distance<=5 chevrons').dumps()
 >>> #CQL('ribs prox/unit=sentence chevrons').dumps()
@@ -91,7 +91,7 @@ u'dateRange encloses 2003'
 Queries based on relevance
 ==========================
 
-.. note:: currently disabled (FIXME)
+.. note:: **FIXME: enhance grammar**
 
 >>> #CQL('subject any/relevant "fish frog"').dumps()
 >>> #CQL('subject any/rel.lr "fish frog"').dumps()
