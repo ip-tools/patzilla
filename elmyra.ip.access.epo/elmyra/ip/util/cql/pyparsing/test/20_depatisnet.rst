@@ -1,17 +1,21 @@
 .. -*- coding: utf-8 -*-
 .. (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
-================================================
-CQL pyparsing parser tests: DEPATISnet specifics
-================================================
+===============================================
+CQL pyparsing parser tests: DEPATISnet features
+===============================================
 
-.. see also:: https://depatisnet.dpma.de/prod/de/hilfe/recherchemodi/experten-recherche/index.html
+see also:
+- https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
+- https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
 >>> from elmyra.ip.util.cql.pyparsing import CQL
 
 
-German logic operators
-======================
+Logic operators localized
+=========================
+
+Test some logic operators localized to german.
 
 Getting started
 ---------------
@@ -20,8 +24,12 @@ u'bi=(greifer ODER bagger)'
 
 Made up
 -------
+Try to understand the query.
+
 >>> CQL('bi=((wasser UND Getränk) NICHT (?hahn oder ?zapf oder (kühl? oder ?kühl)))').dumps()
 u'bi=((wasser UND Getr\xe4nk) NICHT (?hahn ODER ?zapf ODER (k\xfchl? ODER ?k\xfchl)))'
+
+Extract keywords from query.
 
 >>> CQL('bi=((wasser UND Getränk) NICHT (?hahn oder ?zapf oder (kühl? oder ?kühl)))').polish().keywords()
 [u'wasser', u'Getr\xe4nk', u'hahn', u'zapf', u'k\xfchl', u'k\xfchl']
@@ -38,7 +46,7 @@ Try a bareword query string containing a neighbourhood term operator:
 >>> CQL('L(W)Serine').dumps()
 u'L(W)Serine'
 
-Try the same in the context of a real condition:
+Try the same in the context of a real condition (triple):
 
 >>> CQL('ab=(L(W)Serine)').dumps()
 u'ab=(L(W)Serine)'
@@ -52,6 +60,8 @@ u'L(W)Serine'
 Made up
 -------
 
+Try some more complex queries containing neighbourhood term operators and wildcards.
+
 >>> CQL('bi=(Cry1?(L)resist?)').dumps()
 u'bi=(Cry1?(L)resist?)'
 
@@ -63,13 +73,12 @@ u'bi=(Misch?(P)?wasser)'
 
 
 
-Examples from the spec
-======================
+Examples from DEPATISnet help
+=============================
 
-.. see also::
-
-    - https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
-    - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
+see also::
+- https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
+- https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
 
 Search examples
@@ -163,8 +172,10 @@ Searches in the fields "Applicant/Owner", "Inventor"
 u'PA=(Anna(L)Huber)'
 
 
-Keywords from query containing proximity operators
-==================================================
+Keywords
+========
+
+Try some more complex queries containing neighbourhood term operators, wildcards and value shortcut notations.
 
 >>> CQL("""
 ...     (PA= siemens UND IN= Braun UND PUB>= 01.03.2010) or
