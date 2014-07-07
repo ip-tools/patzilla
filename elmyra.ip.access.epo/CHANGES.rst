@@ -11,6 +11,7 @@ development
 - middleware: add more inline doctests to pyparsing cql parser
 - middleware: make cql parser understand neighbourhood term operators
 - middleware: add doctests for testing DEPATISnet CQL features
+- middleware: add doctests for testing OPS CQL features
 
 0.28.0
 ======

@@ -14,6 +14,8 @@ indexes_keywords = [
     'txt',
     'applicant', 'pa',
     'inventor', 'in',
+    'inventorandapplicant', 'ia',
+
     'ct', 'citation',
 
     # classifications

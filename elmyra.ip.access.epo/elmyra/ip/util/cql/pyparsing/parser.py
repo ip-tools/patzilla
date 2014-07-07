@@ -56,7 +56,10 @@ unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isal
 # ------------------------------------------
 
 # B.1 binary comparison operators
-binop_symbols = u'= != < > <= >= eq ne lt gt le ge within encloses'.split()
+cmp_single = u'= != < > <= >='.split()
+cmp_perl = u'eq ne lt gt le ge'.split()
+cmp_cql = u'within encloses all any'.split()
+binop_symbols = cmp_single + cmp_perl + cmp_cql
 
 # B.2 boolean operators
 and_ = CaselessKeyword("and") | CaselessKeyword("UND")
