@@ -10,6 +10,7 @@ development
 - middleware: make pyparsing cql parser unicode aware, tweak and cleanup things
 - middleware: add more inline doctests to pyparsing cql parser
 - middleware: make cql parser understand neighbourhood term operators
+- middleware: add doctests for testing DEPATISnet CQL features
 
 0.28.0
 ======
