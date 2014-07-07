@@ -6,6 +6,7 @@ CQL pyparsing parser tests: DEPATISnet features
 ===============================================
 
 see also:
+
 - https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
 - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
@@ -76,7 +77,8 @@ u'bi=(Misch?(P)?wasser)'
 Examples from DEPATISnet help
 =============================
 
-see also::
+see also:
+
 - https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
 - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
