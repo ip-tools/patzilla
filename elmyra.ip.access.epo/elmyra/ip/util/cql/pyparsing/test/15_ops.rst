@@ -34,6 +34,8 @@ see also:
 CQL examples
 ------------
 
+Original CQL examples from reference guide.
+
 >>> CQL('ti all "green, energy"').dumps()
 u'ti all "green, energy"'
 
@@ -82,6 +84,7 @@ u'EP and 2009 and Smith'
 >>> #CQL('cpc=/low A01B').dumps()
 
 
+
 Shortcut notation expansion
 ---------------------------
 
@@ -95,3 +98,35 @@ u'pa all "central, intelligence, agency" and US and pd > 2000'
 
 >>> CQL('EP and 2009 and Smith').polish().dumps()
 u'EP and 2009 and Smith'
+
+
+Keyword extraction
+------------------
+
+>>> CQL('pa all "central, intelligence, agency" and US').polish().keywords()
+[u'central', u'intelligence', u'agency']
+
+>>> CQL('pa all "central intelligence agency" and US').polish().keywords()
+[u'central', u'intelligence', u'agency']
+
+.. note:: **FIXME: enhance parser smartness: follow rules outlined on p. 148, section 4.2. CQL index catalogue**
+
+    4. If the index and a relation is missing then an equality relation is assumed and the
+    index is determined based on the following rules:
+    • If a search term is a 2 letter ISO country code, the num index is assumed.
+    • If a search term matches one of the following date formats: yyyy, yyyyMM,
+      yyyyMMdd or dd/MM/yyyy then the pd index is assumed.
+      The 4-digits year (yyyy) is assumed to be within the range 1800-2999,
+      both a month number (MM) and a day number (dd) are having leading zero if necessary.
+    • If a search term matches one of the following patterns: x, xdd, xddw, xddwd, xddwdd,
+      xddwdd/h, the cl index is assumed: x refers to one letter (either upper or lower case)
+      of a classification group within the range a-h or y, d is a digit,
+      w refers to any alphanumeric character and h is a hexadecimal number up to 6 digit long.
+    • If a search term matches \\w{2,4}\\d{1,}[a-zA-Z]?\\d? or is composed of digits only, then the num index is assumed.
+    • If a search term is composed of letters only, then the ia index is assumed
+    • txt index is assumed.
+
+We can figure stuff from queries like that if we could determine whether "ia" or "txt" index
+gets assigned to a specific term after evaluating the rules above on the search term.
+
+>>> #CQL('EP and 2009 and Smith').polish().keywords()

@@ -79,13 +79,25 @@ def get_keywords(triples):
     >>> get_keywords(triples)
     [u'foo', u'bar', u'baz']
 
+    >>> triples = []; get_triples(parse_cql('pa all "central, intelligence, agency"'), triples)
+    >>> get_keywords(triples)
+    [u'central', u'intelligence', u'agency']
+
     """
     keywords = []
     for triple in triples:
         try:
             index, binop, term = triple
             if index.lower() in indexes_keywords:
-                keywords.append(term)
+                # for "any" or "all" relations ...
+                if binop in ['any', 'all']:
+                    # strip single and double quotes from term
+                    # split by comma or whitespace
+                    # iterate subterms
+                    for subterm in re.split('(?:,\s|,|\s)', term.strip('"\'')):
+                        keywords.append(subterm)
+                else:
+                    keywords.append(term)
         except ValueError as ex:
             pass
 
@@ -106,11 +118,14 @@ def trim_keywords(keywords):
     >>> trim_keywords([u'!!!daimler?', u'Misch?(P)?wasser'])
     [u'daimler', [u'Misch', u'wasser']]
 
+    >>> trim_keywords([u'"foo"', u'"   bar   "'])
+    [u'foo', u'bar']
+
     """
     keywords_trimmed = []
     for keyword in keywords:
         matches = re.split(termop.pattern, keyword)
-        matches = [match.strip(wildcards) for match in matches]
+        matches = [match.strip(wildcards + '"\' ') for match in matches]
         keywords_trimmed.append(shrink_list(matches))
     return keywords_trimmed
 
