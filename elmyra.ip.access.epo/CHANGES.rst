@@ -8,6 +8,7 @@ development
 - middleware: add nosetest environment
 - middleware: add alternative cql parser implementation based on pyparsing, with doctests
 - middleware: make pyparsing cql parser unicode aware, tweak and cleanup things
+- middleware: add more inline doctests to pyparsing cql parser
 
 0.28.0
 ======

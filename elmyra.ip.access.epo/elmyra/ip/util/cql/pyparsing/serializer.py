@@ -9,7 +9,14 @@ from elmyra.ip.util.cql.knowledge import indexes_publication_number, indexes_key
 from elmyra.ip.util.numbers.normalize import normalize_patent
 
 def tokens_to_cql(tokens):
-    """Reproduce CQL query string from parsed tokens"""
+    """
+    Reproduce CQL query string from parsed tokens
+
+    >>> tokens = parse_cql('foo=bar and baz=(qux or quux)')
+    >>> tokens_to_cql(tokens)
+    u'foo=bar and baz=(qux or quux)'
+
+    """
     buffer = StringIO.StringIO()
     tokens_to_cql_buffer(tokens, buffer)
     buffer.seek(0)
@@ -44,7 +51,15 @@ def tokens_to_cql_buffer(tokens, buffer):
             buffer.write(out)
 
 def normalize_patentnumbers(tokens):
-    """normalize patent numbers in query"""
+    """
+    normalize patent numbers in query
+
+    >>> tokens = parse_cql('pn=EP666666')
+    >>> normalize_patentnumbers(tokens)
+    >>> tokens_to_cql(tokens)
+    u'pn=EP0666666'
+
+    """
     def action(token, index, binop, term):
         # apply document number normalization to values of certain indexes only
         if index.lower() in indexes_publication_number:
@@ -55,7 +70,14 @@ def normalize_patentnumbers(tokens):
     walk_token_results(tokens, triple_callback=action)
 
 def get_keywords(triples):
-    """compute list of keywords"""
+    """
+    compute list of keywords
+
+    >>> triples = []; get_triples(parse_cql('txt=foo or (bi=bar or bi=baz)'), triples)
+    >>> get_keywords(triples)
+    [u'foo', u'bar', u'baz']
+
+    """
     keywords = []
     for triple in triples:
         try:
@@ -69,7 +91,14 @@ def get_keywords(triples):
     return keywords
 
 def get_triples(tokens, triples):
-    """compute flattened list of triples"""
+    """
+    compute flattened list of triples
+
+    >>> triples = []; get_triples(parse_cql('foo=bar and baz=(qux or quux)'), triples)
+    >>> triples
+    [['foo', u'=', 'bar'], ['qux'], ['quux']]
+
+    """
     for token in tokens:
         tokentype = type(token)
         if tokentype is ParseResults:
@@ -82,6 +111,12 @@ def get_triples(tokens, triples):
 def expand_shortcut_notation(tokens, index=None, binop=None):
     """
     Expand value shortcut notations like 'index=(term)' or 'index=(term1 and term2 or term3)'
+
+    >>> tokens = parse_cql('foo=bar and baz=(qux or quux)')
+    >>> expand_shortcut_notation(tokens)
+    >>> tokens_to_cql(tokens)
+    u'foo=bar and (baz=qux or baz=quux)'
+
     """
     for token in tokens:
         tokentype = type(token)

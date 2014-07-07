@@ -112,6 +112,15 @@ cqlStatement.ignore(cqlComment)
 
 
 def parse_cql(cql, logging=True):
+    """
+    Parse a CQL query string.
+
+    >>> tokens = parse_cql('foo=bar')
+    >>> tokens
+    ([(['foo', u'=', 'bar'], {'triple': [((['foo', u'=', 'bar'], {}), 0)]})], {})
+
+    """
+
     tokens = []
     try:
         # make sure the whole query is parsed, otherwise croak
