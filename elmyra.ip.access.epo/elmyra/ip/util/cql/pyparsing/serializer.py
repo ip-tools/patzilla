@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
+import re
 import types
 import StringIO
 from pyparsing import ParseResults
-from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards as wildcardchars
+from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards, termop, parse_cql
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results
 from elmyra.ip.util.cql.knowledge import indexes_publication_number, indexes_keywords
 from elmyra.ip.util.numbers.normalize import normalize_patent
+from elmyra.ip.util.data.convert import shrink_list
 
 def tokens_to_cql(tokens):
     """
@@ -83,12 +85,34 @@ def get_keywords(triples):
         try:
             index, binop, term = triple
             if index.lower() in indexes_keywords:
-                keyword = term.strip(wildcardchars)
-                keywords.append(keyword)
+                keywords.append(term)
         except ValueError as ex:
             pass
 
+    keywords = trim_keywords(keywords)
+
     return keywords
+
+def trim_keywords(keywords):
+    """
+    trim list of keywords
+
+    - split search term by any term operator symbol
+    - strip wildcard characters from each keyword element
+    - reconstruct a list of keywords with simple scalars for single-term
+      keywords and a list of keyword elements for multi-term keywords
+
+    Example:
+    >>> trim_keywords([u'!!!daimler?', u'Misch?(P)?wasser'])
+    [u'daimler', [u'Misch', u'wasser']]
+
+    """
+    keywords_trimmed = []
+    for keyword in keywords:
+        matches = re.split(termop.pattern, keyword)
+        matches = [match.strip(wildcards) for match in matches]
+        keywords_trimmed.append(shrink_list(matches))
+    return keywords_trimmed
 
 def get_triples(tokens, triples):
     """

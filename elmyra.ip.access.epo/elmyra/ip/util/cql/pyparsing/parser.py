@@ -9,6 +9,7 @@
 #
 # http://pyparsing.wikispaces.com/HowToUsePyparsing
 #
+import re
 import logging
 from pyparsing import \
     Word, \
@@ -16,7 +17,7 @@ from pyparsing import \
     Keyword, CaselessKeyword, \
     Regex, \
     alphas, nums, alphanums, quotedString, \
-    Upcase, oneOf, delimitedList, restOfLine, \
+    oneOf, upcaseTokens, delimitedList, restOfLine, \
     Forward, Group, Combine, Optional, ZeroOrMore, \
     NotAny, FollowedBy, StringEnd, \
     ParseResults, ParseException
@@ -61,12 +62,34 @@ not_ = CaselessKeyword("not") | CaselessKeyword("NICHT")
 prox_ = CaselessKeyword("prox") | CaselessKeyword("NAHE")
 booleans = get_literals(and_, or_, not_, prox_)
 
+# B.3 neighbourhood term operators
+# see also:
+# - https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
+# - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
+
+# v1: this would work for simple term operators only
+#termop = oneOf("(W) (NOTW) (A) (P) (L)", caseless=True).setName("termop")
+
+# v2: use regexes for describing term operators like "(10A)"
+neighbourhood_symbols = '(W) (NOTW) (#W) (A) (#A) (P) (L)'.split()
+neighbourhood_symbols = ['\s?' + re.escape(symbol).replace('\#', '\d+') + '\s?' for symbol in neighbourhood_symbols]
+
+
+# ------------------------------------------
+#   C. building blocks
+# ------------------------------------------
+termop = Regex( "|".join(neighbourhood_symbols), re.IGNORECASE ).setParseAction( upcaseTokens ).setName("termop")
+termword = Word(unicode_printables + separators + wildcards).setName("term")
+
+
 # ------------------------------------------
 #   D. triple
 # ------------------------------------------
 index = Word(alphanums).setName("index")
 binop = oneOf(binop_symbols, caseless=True).setName("binop")
-term  = ( Word(unicode_printables + separators + wildcards).setName("term") ^ quotedString.setName("term") )
+term  = ( Combine(termword + ZeroOrMore( termop + termword )).setName("term") ^ quotedString.setName("term") )
+
+
 # ------------------------------------------
 #   E. condition
 # ------------------------------------------
