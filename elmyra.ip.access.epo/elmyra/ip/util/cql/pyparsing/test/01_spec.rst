@@ -28,8 +28,8 @@ u'"complete dinosaur"'
 >>> CQL('title = "complete dinosaur"').dumps()
 u'title="complete dinosaur"'
 
-.. note:: **FIXME: enhance grammar**
->>> #CQL('title exact "the complete dinosaur"').dumps()
+>>> CQL('title exact "the complete dinosaur"').dumps()
+u'title exact "the complete dinosaur"'
 
 
 Queries using Boolean logic
@@ -91,7 +91,8 @@ u'dateRange encloses 2003'
 Queries based on relevance
 ==========================
 
-.. note:: **FIXME: enhance grammar**
+>>> CQL('subject any/relevant "fish frog"').dumps()
+u'subject any/relevant "fish frog"'
 
->>> #CQL('subject any/relevant "fish frog"').dumps()
->>> #CQL('subject any/rel.lr "fish frog"').dumps()
+>>> CQL('subject any/rel.lr "fish frog"').dumps()
+u'subject any/rel.lr "fish frog"'

@@ -58,7 +58,7 @@ unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isal
 # B.1 binary comparison operators
 cmp_single = u'= != < > <= >='.split()
 cmp_perl = u'eq ne lt gt le ge'.split()
-cmp_cql = u'within encloses all any'.split()
+cmp_cql = u'exact within encloses all any any/relevant any/rel.lr'.split()
 binop_symbols = cmp_single + cmp_perl + cmp_cql
 
 # B.2 boolean operators
