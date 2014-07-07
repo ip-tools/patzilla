@@ -7,8 +7,11 @@ CQL pyparsing parser tests: DEPATISnet features
 
 see also:
 
-- https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
-- https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
+- english: `Expert mode`_
+- german: `Expertenrecherche`_
+
+.. _Expertenrecherche: https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
+.. _Expert mode: https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
 >>> from elmyra.ip.util.cql.pyparsing import CQL
 
@@ -79,8 +82,8 @@ Examples from DEPATISnet help
 
 see also:
 
-- https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
-- https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
+- english: `Expert mode`_
+- german: `Expertenrecherche`_
 
 
 Search examples
