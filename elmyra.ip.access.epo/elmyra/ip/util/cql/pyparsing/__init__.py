@@ -13,7 +13,7 @@ class CQL(object):
             self.loads(cql)
 
     def loads(self, cql):
-        cql = cql.decode('utf-8')
+        cql = cql.decode('utf-8').strip()
         self.cql = cql
         self.tokens = parse_cql(self.cql, self.logging)
 

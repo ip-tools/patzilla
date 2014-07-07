@@ -24,6 +24,7 @@ u'inventor="CEGARRA SERRANO JOS\xc9 MARIANO"'
 >>> CQL('ab=radaufstandskraft or ab=radaufstandskräfte?').dumps()
 u'ab=radaufstandskraft or ab=radaufstandskr\xe4fte?'
 
+# TODO: use more esoteric utf-8 characters, e.g. special chars et al.
 
 
 Query with comments
@@ -35,6 +36,12 @@ Query with comments
 ...
 ...    """).dumps()
 u'foo=(bar and (baz or qux))'
+
+
+Weird queries
+=============
+>>> CQL('   foobar   ').dumps()
+u'foobar'
 
 
 Queries with errors

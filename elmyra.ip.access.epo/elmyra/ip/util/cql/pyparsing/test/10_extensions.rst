@@ -82,7 +82,7 @@ Boolean operators (binops) in german
 ------------------------------------
 
 >>> CQL('BI=Socke und PA=onion').dumps()
-u'BI=Socke und PA=onion'
+u'BI=Socke UND PA=onion'
 
 
 
@@ -141,5 +141,5 @@ Nesting and keywords
 We especially want to properly extract keywords from nested expressions,
 even when they are in value shortcut notation.
 
->>> CQL('bi=(socke and (Inlay or Teile)) and pc=de').polish().keywords()
+>>> CQL('bi=(socke and (Inlay or Teile)) and pc=de').expand_shortcuts().keywords()
 [u'socke', u'Inlay', u'Teile']

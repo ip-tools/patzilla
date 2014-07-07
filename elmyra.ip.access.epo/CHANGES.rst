@@ -7,6 +7,7 @@ development
 - middleware: make cheshire3 cql parser unicode aware
 - middleware: add nosetest environment
 - middleware: add alternative cql parser implementation based on pyparsing, with doctests
+- middleware: make pyparsing cql parser unicode aware, tweak and cleanup things
 
 0.28.0
 ======

@@ -3,7 +3,7 @@
 import types
 import StringIO
 from pyparsing import ParseResults
-from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcardchars
+from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards as wildcardchars
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results
 from elmyra.ip.util.cql.knowledge import indexes_publication_number, indexes_keywords
 from elmyra.ip.util.numbers.normalize import normalize_patent
