@@ -201,7 +201,7 @@ u"(PA=siemens UND IN=Braun UND PUB >= 01.03.2010) or (PUB=M11-2009 UND PA=daimle
 Polishing
 =========
 
-Polising a query, especially the shortcut notation expansion, should not corrupt query syntax.
+Polishing a query, especially the shortcut notation expansion, should not corrupt query syntax.
 
 >>> CQL('TI = ( DVB(W)T )').polish().dumps()
 u'TI=(DVB(W)T)'
@@ -218,3 +218,18 @@ u"(PA=siemens UND IN=Braun UND PUB >= 01.03.2010) or (PUB=M11-2009 UND PA=daimle
 
 >>> CQL(largequery).polish().keywords()
 [u'siemens', u'Braun', u'daimler', u'l\xf6sung', u'heizung', u'fahrzeug', [u'mechanische', u'Regler'], [u'Cry1', u'resist'], [u'Cry1', u'tox'], [u'Misch', u'wasser']]
+
+
+From the wild
+=============
+
+Some queries picked up from customers.
+
+>>> CQL('bi=((warm(P)walzen) and (band(P)mitte and messung) or ((warm and walzen) and (band and säbel and messung)))').dumps()
+u'bi=((warm(P)walzen) and (band(P)mitte and messung) or ((warm and walzen) and (band and s\xe4bel and messung)))'
+
+>>> CQL('bi=((warm(P)walzen) and (band(P)mitte and messung) or ((warm and walzen) and (band and säbel and messung)))').polish().dumps()
+u'((bi=(warm(P)walzen)) and (bi=(band(P)mitte) and bi=messung) or ((bi=warm and bi=walzen) and (bi=band and bi=s\xe4bel and bi=messung)))'
+
+>>> CQL('bi=((warm(P)walzen) and (band(P)mitte and messung) or ((warm and walzen) and (band and säbel and messung)))').polish().keywords()
+[[u'warm', u'walzen'], [u'band', u'mitte'], u'messung', u'warm', u'walzen', u'band', u's\xe4bel', u'messung']
