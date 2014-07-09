@@ -13,6 +13,7 @@ development
 - middleware: add doctests for testing DEPATISnet CQL features
 - middleware: add doctests for testing OPS CQL features
 - middleware: fix neighborhood operator problems in value shortcut notations
+- middleware: add more complex, unrefurbished cql queries from the wild to depatisnet doctests
 
 0.28.0
 ======
