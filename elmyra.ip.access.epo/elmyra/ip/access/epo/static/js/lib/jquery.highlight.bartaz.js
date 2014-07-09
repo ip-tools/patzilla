@@ -11,8 +11,10 @@
  *
  * Changes:
  *
- * Version 0.5, Andreas Motl
+ * Version 0.5, Andreas Motl (2014)
  *  - Introduce option to expand highlighting to whole words (wholeWords - false by default)
+ *  - Implement callback functionality to attach DOM things to the matches
+ *    Inspired by jQuery highlight plugin by Fabrice Weinberg, see https://github.com/FWeinb/jqueryhighlight
  *
  * Version 0.4, Bartek Szopka (2009)
  * Code a little bit refactored and cleaned (in my humble opinion).
@@ -24,6 +26,11 @@
  * Version 0.1 - 0.3, Johann Burkard (2007)
  * We're standing on the shoulders of giants.
  * Johann did the initial implementation, thanks a bunch!
+ *
+ *
+ * Todo:
+ *  - Reintegrate with Bower wrapper project by Ilya Radchenko
+ *    https://github.com/knownasilya/jquery-highlight
  *
  *
  * Usage:
@@ -49,6 +56,11 @@
  *   // with <em class='important'>
  *   $('#content').highlight('ipsum', { element: 'em', className: 'important' });
  *
+ *   // attach DOM things to the matches
+ *   $('#content').highlight('lorem', {callback: function(element) {
+ *       $(element).append($('<div class="custom"/>').html("hello world"));
+ *   })
+ *
  *   // remove default highlight
  *   $('#content').unhighlight();
  *
@@ -64,7 +76,7 @@
  */
 
 jQuery.extend({
-    highlight: function (node, re, nodeName, className) {
+    highlight: function (node, re, nodeName, className, callback) {
         if (node.nodeType === 3) {
             var match = node.data.match(re);
             if (match) {
@@ -75,13 +87,14 @@ jQuery.extend({
                 var wordClone = wordNode.cloneNode(true);
                 highlight.appendChild(wordClone);
                 wordNode.parentNode.replaceChild(highlight, wordNode);
+                typeof(callback) === "function" && callback(highlight);
                 return 1; //skip added node in parent
             }
         } else if ((node.nodeType === 1 && node.childNodes) && // only element nodes that have children
             !/(script|style)/i.test(node.tagName) && // ignore script and style nodes
             !(node.tagName === nodeName.toUpperCase() && node.className === className)) { // skip if already highlighted
             for (var i = 0; i < node.childNodes.length; i++) {
-                i += jQuery.highlight(node.childNodes[i], re, nodeName, className);
+                i += jQuery.highlight(node.childNodes[i], re, nodeName, className, callback);
             }
         }
         return 0;
@@ -100,7 +113,14 @@ jQuery.fn.unhighlight = function (options) {
 };
 
 jQuery.fn.highlight = function (words, options) {
-    var settings = { className: 'highlight', element: 'span', caseSensitive: false, wordsOnly: false, wholeWords: false };
+    var settings = {
+        className: 'highlight',
+        element: 'span',
+        caseSensitive: false,
+        wordsOnly: false,
+        wholeWords: false,
+        callback: function () {},
+    };
     jQuery.extend(settings, options);
 
     if (words.constructor === String) {
@@ -138,6 +158,6 @@ jQuery.fn.highlight = function (words, options) {
     var re = new RegExp(pattern, flag);
 
     return this.each(function () {
-        jQuery.highlight(this, re, settings.element, settings.className);
+        jQuery.highlight(this, re, settings.element, settings.className, settings.callback);
     });
 };
