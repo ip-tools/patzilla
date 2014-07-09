@@ -1,12 +1,18 @@
 /*
  * jQuery Highlight plugin
  *
- * http://bartaz.github.io/sandbox.js/jquery.highlight.html
  *
  * Based on highlight v3 by Johann Burkard
  * http://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html
  *
+ * Based on refurbishment by Bartek Szopka
+ * http://bartaz.github.io/sandbox.js/jquery.highlight.html
+ *
+ *
  * Changes:
+ *
+ * Version 0.5, Andreas Motl
+ *  - Introduce option to expand highlighting to whole words (wholeWords - false by default)
  *
  * Version 0.4, Bartek Szopka (2009)
  * Code a little bit refactored and cleaned (in my humble opinion).
@@ -33,6 +39,9 @@
  *   // search only for entire word 'lorem'
  *   $('#content').highlight('lorem', { wordsOnly: true });
  *
+ *   // search for part of word 'lorem', but highlight the whole word
+ *   $('#content').highlight('rem', { wholeWords: true });
+ *
  *   // don't ignore case during search of term 'lorem'
  *   $('#content').highlight('lorem', { caseSensitive: true });
  *
@@ -48,6 +57,7 @@
  *
  *
  * Copyright (c) 2009 Bartek Szopka
+ * Copyright (c) 2014 Andreas Motl
  *
  * Licensed under MIT license.
  *
@@ -90,7 +100,7 @@ jQuery.fn.unhighlight = function (options) {
 };
 
 jQuery.fn.highlight = function (words, options) {
-    var settings = { className: 'highlight', element: 'span', caseSensitive: false, wordsOnly: false };
+    var settings = { className: 'highlight', element: 'span', caseSensitive: false, wordsOnly: false, wholeWords: false };
     jQuery.extend(settings, options);
 
     if (words.constructor === String) {
@@ -102,13 +112,29 @@ jQuery.fn.highlight = function (words, options) {
     words = jQuery.map(words, function(word, i) {
         return word.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     });
+    // TODO: shouldn't each word be properly escaped here when doing regex matching later?
+    // e.g. use _.string.escapeRegExp(word) from underscore.string
     if (words.length == 0) { return this; };
 
     var flag = settings.caseSensitive ? "" : "i";
-    var pattern = "(" + words.join("|") + ")";
+
+    // compute search pattern
+    var wordpattern = words.join("|");
+    var pattern = wordpattern;
+
+    // only match entire words
     if (settings.wordsOnly) {
-        pattern = "\\b" + pattern + "\\b";
+        pattern = "\\b" + wordpattern + "\\b";
+
+    // expand highlighting to whole word when matching a part of it
+    } else if (settings.wholeWords) {
+        var subpatterns = ["\\w+" + wordpattern, wordpattern + "\\w+", wordpattern];
+        pattern = subpatterns.join('|');
     }
+
+    // surround with parenthesis for capturing the search term
+    pattern = "(" + pattern + ")";
+
     var re = new RegExp(pattern, flag);
 
     return this.each(function () {
