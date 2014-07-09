@@ -238,7 +238,7 @@ Reproduce with polishing:
 >>> print CQL('bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').polish().dumps().encode('utf-8')
 ((bi=(warm(P)walzen)) and (bi=(band(P)mitte) and bi=messung)) ODER ((bi=warm and bi=walzen) and (bi=band and bi=säbel and bi=messung)) ODER ((bi=warm and bi=walzen) and (bi=mitten UND bi=messung)) ODER ((BI=reversiergerüst) UND (BI=breitenmessung))
 
-Keywords:
+Extract keywords after polishing:
 
 >>> CQL('bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').polish().keywords()
 [[u'warm', u'walzen'], [u'band', u'mitte'], u'messung', u'warm', u'walzen', u'band', u's\xe4bel', u'messung', u'warm', u'walzen', u'mitten', u'messung', u'reversierger\xfcst', u'breitenmessung']
@@ -257,7 +257,7 @@ Reproduce with polishing:
 >>> print CQL('bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().dumps().encode('utf-8')
 ((bi=(hot(P)rolling)) and (bi=(strip(P)center) and bi=measurement) ODER (bi=hot and bi=rolling) and (bi=strip and bi=camber and bi=measurement)) ODER ((bi=reversing and bi=mill) and (bi=camber)) ODER ((bi=hot and bi=steel) and (bi=center and bi=measurement)) ODER ((BI=(hot(P)slab)) UND (BI=(position(P)measurement))) ODER ((BI=(hot(P)strip)) UND (BI=(position(P)measurement)))
 
-Keywords:
+Extract keywords after polishing:
 
 >>> CQL('bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().keywords()
 [[u'hot', u'rolling'], [u'strip', u'center'], u'measurement', u'hot', u'rolling', u'strip', u'camber', u'measurement', u'reversing', u'mill', u'camber', u'hot', u'steel', u'center', u'measurement', [u'hot', u'slab'], [u'position', u'measurement'], [u'hot', u'strip'], [u'position', u'measurement']]
