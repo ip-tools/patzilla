@@ -63,7 +63,7 @@ release:
 	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push && $(MAKE) package-and-install
 
 test:
-	@nosetests                  \
+	@python runtests.py          \
 		--all-modules           \
 		--traverse-namespace    \
 		--with-doctest          \
@@ -73,6 +73,7 @@ test:
 		--exclude-dir=elmyra/ip/util/database \
 		--exclude-dir=elmyra/ip/access/epo/static \
 		--exclude-dir=elmyra/ip/access/epo/templates \
+		--doctest-options=doctestencoding=utf-8 \
 		$(options)
 
 test-cover:

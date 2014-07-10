@@ -18,6 +18,7 @@ development
     - don't crash html
     - option to expand highlighting to whole words (wholeWords - false by default)
     - option to restrict highlighting to words with minimum length (minLength - undefined by default)
+- middleware/tests: infrastructure for reading utf-8 encoded doctest files (from NLTK)
 
 0.28.0
 ======
