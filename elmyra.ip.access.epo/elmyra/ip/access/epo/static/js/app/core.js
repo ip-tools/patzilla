@@ -35,12 +35,8 @@ function pdf_set_headline(document_number, page) {
 
 function apply_highlighting() {
     _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
-        //console.log('keyword: ' + keyword);
-        $('.keyword').keywordHighlight({
-            keyword: keyword,
-            caseSensitive: 'false',
-            contains: 'true',
-        });
+        log('keyword:', keyword);
+        $('.keyword').highlight(keyword, {className: 'highlight', wholeWords: true, minLength: 3});
     });
 }
 

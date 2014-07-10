@@ -22,6 +22,7 @@ development
 - middleware/tests: fix utf-8 encoding problem for doctests
 - middleware: minor tweaks to cql parser
 - middleware: activate new cql parser
+- ui: activate new highlighting component
 
 0.28.0
 ======
