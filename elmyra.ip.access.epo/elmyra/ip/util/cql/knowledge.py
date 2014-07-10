@@ -27,7 +27,7 @@ indexes_keywords = [
     'pr', 'prioritynumber', 'spr',
 
     # DEPATISnet
-    'ti', 'ab', 'de', 'bi',
-    'pa', 'in',
+    'ti', 'pa', 'in',
+    'ab', 'de', 'cl', 'bi',
 
 ]

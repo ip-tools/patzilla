@@ -186,16 +186,24 @@ dl.dl-horizontal-inline {
 
 
 /* https://github.com/alanphoon/jquery-keyword-highlight */
-.highlight
-{
+.highlight {
     background-color:#FFFF66;
     color:#333;
     padding-top: 2px;
     padding-bottom: 2px;
 }
 
-.highlight-circle
-{
+.highlight .highlight-mouseover {
+    display: none;
+    background-color: white;
+}
+
+.highlight:hover .highlight-mouseover {
+    display: inline-block;
+    padding-left: 0.5em;
+}
+
+.highlight-circle {
     border:solid 1px #eee;
     border-radius:3px;
     padding:2px;
