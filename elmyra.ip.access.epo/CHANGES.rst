@@ -23,6 +23,8 @@ development
 - middleware: minor tweaks to cql parser
 - middleware: activate new cql parser
 - ui: activate new highlighting component
+- middleware/caching [fix]: Beaker hashes keys with length > 250 by default which croaks when processing unicode values;
+  prevent that by increasing to key_length=16384
 
 0.28.0
 ======
