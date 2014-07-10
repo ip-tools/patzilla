@@ -132,9 +132,10 @@ def trim_keywords(keywords):
 
     """
     keywords_trimmed = []
+    stripchars = wildcards + '"\'() '
     for keyword in keywords:
         matches = re.split(termop.pattern, keyword, flags=termop.flags)
-        matches = [match.strip(wildcards + '"\'() ') for match in matches]
+        matches = [match.strip(stripchars) for match in matches]
         keywords_trimmed.append(shrink_list(matches))
     return keywords_trimmed
 

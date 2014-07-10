@@ -20,6 +20,7 @@ development
     - option to restrict highlighting to words with minimum length (minLength - undefined by default)
 - middleware/tests: infrastructure for reading utf-8 encoded doctest files (from NLTK)
 - middleware/tests: fix utf-8 encoding problem for doctests
+- middleware: minor tweaks to cql parser
 
 
 0.28.0

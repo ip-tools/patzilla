@@ -11,6 +11,7 @@
 #
 # - http://pyparsing.wikispaces.com/HowToUsePyparsing
 # - http://pyparsing.wikispaces.com/file/view/searchparser.py
+# - http://pyparsing-public.wikispaces.com/file/view/aql.py
 #
 import re
 import logging
@@ -34,9 +35,24 @@ log = logging.getLogger(__name__)
 #   A. characters
 # ------------------------------------------
 
-# DEPATISnet uses "?!#"
-# TODO: check OPS
-wildcards = u'?!#'
+"""
+Truncation / Wildcards
+
+OPS - see `Open Patent Services RESTful Web Services Reference Guide`_, p. 149::
+
+    7. A word might contain truncation characters:
+    • unlimited truncation (*) which represents a string of any length including any character,
+    • limited truncation (?) which represents any character or no character,
+    • masking truncation (#) which represents any character which is mandatory present,
+    • it is possible to use truncation at the beginning of a word.
+
+DEPATISnet - see `DEPATISnet Expert mode guide`_::
+
+    ?   no characters to any number of characters
+    !   precisely one character
+    #   zero or one character
+"""
+wildcards = u'*?#!'
 
 # - classification terms (IPC, CPC) may contain forward slashes and dashes, e.g. H04L12/433, F17D5-00
 # - numeric terms may contain punctuation (,.), e.g. 2.45
