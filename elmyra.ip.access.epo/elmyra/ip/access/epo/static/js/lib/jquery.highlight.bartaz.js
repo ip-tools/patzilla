@@ -12,7 +12,8 @@
  * Changes:
  *
  * Version 0.5, Andreas Motl (2014)
- *  - Introduce option to expand highlighting to whole words (wholeWords - false by default)
+ *  - Option to expand highlighting to whole words (wholeWords - false by default)
+ *  - Option to restrict highlighting to words with minimum length (minLength - undefined by default)
  *  - Implement callback functionality to attach DOM things to the matches
  *    Inspired by jQuery highlight plugin by Fabrice Weinberg, see https://github.com/FWeinb/jqueryhighlight
  *
@@ -51,6 +52,9 @@
  *
  *   // don't ignore case during search of term 'lorem'
  *   $('#content').highlight('lorem', { caseSensitive: true });
+ *
+ *   // ignore search term 'lorem', its length is less than 6 characters
+ *   $('#content').highlight('lorem', { minLength: 6 });
  *
  *   // wrap every occurrance of term 'ipsum' in content
  *   // with <em class='important'>
@@ -119,41 +123,50 @@ jQuery.fn.highlight = function (words, options) {
         caseSensitive: false,
         wordsOnly: false,
         wholeWords: false,
+        minLength: undefined,
         callback: function () {},
     };
     jQuery.extend(settings, options);
 
+    // convert single-string argument to array
     if (words.constructor === String) {
         words = [words];
     }
+
+    // skip empty words
     words = jQuery.grep(words, function(word, i){
         return word != '';
     });
+
+    // apply minLength predicate
+    words = jQuery.grep(words, function(word, i) {
+        return settings.minLength != undefined ? word.length >= settings.minLength : true;
+    });
+
+    // escape each word for later regex matching
     words = jQuery.map(words, function(word, i) {
         return word.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     });
-    // TODO: shouldn't each word be properly escaped here when doing regex matching later?
-    // e.g. use _.string.escapeRegExp(word) from underscore.string
+
+    // skip highlighting when no keywords were found
     if (words.length == 0) { return this; };
 
     var flag = settings.caseSensitive ? "" : "i";
 
     // compute search pattern
-    var wordpattern = words.join("|");
-    var pattern = wordpattern;
+    var pattern = words.join("|");
 
     // only match entire words
     if (settings.wordsOnly) {
-        pattern = "\\b" + wordpattern + "\\b";
+        pattern = "\\b" + pattern + "\\b";
 
     // expand highlighting to whole word when matching a part of it
     } else if (settings.wholeWords) {
-        var subpatterns = ["\\w+" + wordpattern, wordpattern + "\\w+", wordpattern];
+        var subpatterns = jQuery.map(words, function(word, i) {
+            return "\\w*" + word + "\\w*";
+        });
         pattern = subpatterns.join('|');
     }
-
-    // surround with parenthesis for capturing the search term
-    pattern = "(" + pattern + ")";
 
     var re = new RegExp(pattern, flag);
 
