@@ -34,9 +34,39 @@ function pdf_set_headline(document_number, page) {
 }
 
 function apply_highlighting() {
+    // http://hslpicker.com/
+    var styles = {
+        yellow:     {backgroundColor: 'hsla( 66, 100%, 82%, 1)'},
+        green:      {backgroundColor: 'hsla(118, 100%, 82%, 1)'},
+        orange:     {backgroundColor: 'hsla( 16, 100%, 82%, 1)'},
+        turquoise:  {backgroundColor: 'hsla(174, 100%, 82%, 1)'},
+        blue:       {backgroundColor: 'hsla(195, 100%, 82%, 1)'},
+        violet:     {backgroundColor: 'hsla(247, 100%, 82%, 1)'},
+        magenta:    {backgroundColor: 'hsla(315, 100%, 82%, 1)'},
+    };
+    var style_queue = ['yellow', 'green', 'orange', 'turquoise', 'blue', 'violet', 'magenta'];
+    var style_queue_work;
     _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
         log('keyword:', keyword);
-        $('.keyword').highlight(keyword, {className: 'highlight', wholeWords: true, minLength: 3});
+        if (keyword) {
+
+            // refill style queue
+            if (_.isEmpty(style_queue_work)) {
+                style_queue_work = style_queue.slice(0);
+            }
+
+            // get next style available
+            var style_name = style_queue_work.shift();
+            var style = styles[style_name];
+
+            var class_name = 'highlight-' + style_name;
+
+            // perform highlighting
+            $('.keyword').highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
+
+            // apply style
+            $('.' + class_name).css(style);
+        }
     });
 }
 

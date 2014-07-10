@@ -25,6 +25,7 @@ development
 - ui: activate new highlighting component
 - middleware/caching [fix]: Beaker hashes keys with length > 250 by default which croaks when processing unicode values;
   prevent that by increasing to key_length=16384
+- ui: multicolor keyword highlighting
 
 0.28.0
 ======

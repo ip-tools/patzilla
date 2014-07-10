@@ -186,11 +186,8 @@ dl.dl-horizontal-inline {
 
 
 /* https://github.com/alanphoon/jquery-keyword-highlight */
-.highlight {
-    background-color:#FFFF66;
-    color:#333;
-    padding-top: 2px;
-    padding-bottom: 2px;
+.highlight-base {
+    padding: 2px;
 }
 
 .highlight .highlight-mouseover {
