@@ -30,12 +30,12 @@ Made up
 -------
 Try to understand the query.
 
->>> CQL('bi=((wasser UND Getränk) NICHT (?hahn oder ?zapf oder (kühl? oder ?kühl)))').dumps()
+>>> CQL(u'bi=((wasser UND Getränk) NICHT (?hahn oder ?zapf oder (kühl? oder ?kühl)))').dumps()
 u'bi=((wasser UND Getr\xe4nk) NICHT (?hahn ODER ?zapf ODER (k\xfchl? ODER ?k\xfchl)))'
 
 Extract keywords from query.
 
->>> CQL('bi=((wasser UND Getränk) NICHT (?hahn oder ?zapf oder (kühl? oder ?kühl)))').polish().keywords()
+>>> CQL(u'bi=((wasser UND Getränk) NICHT (?hahn oder ?zapf oder (kühl? oder ?kühl)))').polish().keywords()
 [u'wasser', u'Getr\xe4nk', u'hahn', u'zapf', u'k\xfchl', u'k\xfchl']
 
 
@@ -47,17 +47,17 @@ Getting started
 
 Try a bareword query string containing a neighbourhood term operator:
 
->>> CQL('L(W)Serine').dumps()
+>>> CQL(u'L(W)Serine').dumps()
 u'L(W)Serine'
 
 Try the same in the context of a real condition (triple):
 
->>> CQL('ab=(L(W)Serine)').dumps()
+>>> CQL(u'ab=(L(W)Serine)').dumps()
 u'ab=(L(W)Serine)'
 
 Check this works caseless as well:
 
->>> CQL('L(w)Serine').dumps()
+>>> CQL(u'L(w)Serine').dumps()
 u'L(W)Serine'
 
 
@@ -66,13 +66,13 @@ Made up
 
 Try some more complex queries containing neighbourhood term operators and wildcards.
 
->>> CQL('bi=(Cry1?(L)resist?)').dumps()
+>>> CQL(u'bi=(Cry1?(L)resist?)').dumps()
 u'bi=(Cry1?(L)resist?)'
 
->>> CQL('bi=(Cry1?(5A)tox?)').dumps()
+>>> CQL(u'bi=(Cry1?(5A)tox?)').dumps()
 u'bi=(Cry1?(5A)tox?)'
 
->>> CQL('bi=(Misch?(P)?wasser)').dumps()
+>>> CQL(u'bi=(Misch?(P)?wasser)').dumps()
 u'bi=(Misch?(P)?wasser)'
 
 
@@ -101,7 +101,7 @@ u'PA=siemens UND IN=Braun UND PUB >= 01.03.2010'
 >>> CQL('PUB= M11-2009 UND PA= daimler?').dumps()
 u'PUB=M11-2009 UND PA=daimler?'
 
->>> CQL('AB = !!!lösung').dumps()
+>>> CQL(u'AB = !!!lösung').dumps()
 u'AB=!!!l\xf6sung'
 
 >>> CQL('TI = ###heizung').dumps()
@@ -182,7 +182,7 @@ Keywords
 
 Try some more complex queries containing *value shortcut notations*, *neighbourhood term operators* and *wildcards*.
 
->>> largequery = """
+>>> largequery = u"""
 ...     (PA= siemens UND IN= Braun UND PUB>= 01.03.2010) or
 ...     (PUB=M11-2009 UND PA=daimler?) or
 ...     (AB = (!!!lösung or ###heizung or ?fahrzeug)) or
@@ -230,18 +230,18 @@ Query 1
 
 Reproduce verbatim:
 
->>> print CQL('bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').dumps().encode('utf-8')
-bi=((warm(P)walzen) and (band(P)mitte and messung)) ODER bi=((warm and walzen) and (band and säbel and messung)) ODER bi=((warm and walzen) and (mitten UND messung)) ODER BI=((reversiergerüst) UND (breitenmessung))
+>>> print(CQL(u'(ab=radaufstandskraft or ab=radaufstandskräfte?)').dumps())
+(ab=radaufstandskraft or ab=radaufstandskräfte?)
 
 Reproduce with polishing:
 
->>> print CQL('bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').polish().dumps().encode('utf-8')
-((bi=(warm(P)walzen)) and (bi=(band(P)mitte) and bi=messung)) ODER ((bi=warm and bi=walzen) and (bi=band and bi=säbel and bi=messung)) ODER ((bi=warm and bi=walzen) and (bi=mitten UND bi=messung)) ODER ((BI=reversiergerüst) UND (BI=breitenmessung))
+>>> print(CQL(u'(ab=radaufstandskraft or ab=radaufstandskräfte?)').polish().dumps())
+(ab=radaufstandskraft or ab=radaufstandskräfte?)
 
 Extract keywords after polishing:
 
->>> CQL('bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').polish().keywords()
-[[u'warm', u'walzen'], [u'band', u'mitte'], u'messung', u'warm', u'walzen', u'band', u's\xe4bel', u'messung', u'warm', u'walzen', u'mitten', u'messung', u'reversierger\xfcst', u'breitenmessung']
+>>> CQL(u'(ab=radaufstandskraft or ab=radaufstandskräfte?)').polish().keywords()
+[u'radaufstandskraft', u'radaufstandskr\xe4fte']
 
 
 Query 2
@@ -249,15 +249,34 @@ Query 2
 
 Reproduce verbatim:
 
->>> print CQL('bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').dumps().encode('utf-8')
+>>> print(CQL(u'bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').dumps())
+bi=((warm(P)walzen) and (band(P)mitte and messung)) ODER bi=((warm and walzen) and (band and säbel and messung)) ODER bi=((warm and walzen) and (mitten UND messung)) ODER BI=((reversiergerüst) UND (breitenmessung))
+
+Reproduce with polishing:
+
+>>> print(CQL(u'bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').polish().dumps())
+((bi=(warm(P)walzen)) and (bi=(band(P)mitte) and bi=messung)) ODER ((bi=warm and bi=walzen) and (bi=band and bi=säbel and bi=messung)) ODER ((bi=warm and bi=walzen) and (bi=mitten UND bi=messung)) ODER ((BI=reversiergerüst) UND (BI=breitenmessung))
+
+Extract keywords after polishing:
+
+>>> CQL(u'bi=( ( warm(P)walzen)  AND ( band(P)mitte and messung) )  oder  bi=( ( warm  and walzen)  AND ( band and säbel and messung) ) oder bi=((warm and walzen)and (mitten und messung)) oder  BI =((reversiergerüst)und(breitenmessung))').polish().keywords()
+[[u'warm', u'walzen'], [u'band', u'mitte'], u'messung', u'warm', u'walzen', u'band', u's\xe4bel', u'messung', u'warm', u'walzen', u'mitten', u'messung', u'reversierger\xfcst', u'breitenmessung']
+
+
+Query 3
+-------
+
+Reproduce verbatim:
+
+>>> print(CQL(u'bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').dumps())
 bi=((hot(P)rolling) and (strip(P)center and measurement) ODER (hot and rolling) and (strip and camber and measurement)) ODER bi=((reversing and mill) and (camber)) ODER bi=((hot and steel) and (center and measurement)) ODER BI=((hot(P)slab) UND (position(P)measurement)) ODER BI=((hot(P)strip) UND (position(P)measurement))
 
 Reproduce with polishing:
 
->>> print CQL('bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().dumps().encode('utf-8')
+>>> print(CQL(u'bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().dumps())
 ((bi=(hot(P)rolling)) and (bi=(strip(P)center) and bi=measurement) ODER (bi=hot and bi=rolling) and (bi=strip and bi=camber and bi=measurement)) ODER ((bi=reversing and bi=mill) and (bi=camber)) ODER ((bi=hot and bi=steel) and (bi=center and bi=measurement)) ODER ((BI=(hot(P)slab)) UND (BI=(position(P)measurement))) ODER ((BI=(hot(P)strip)) UND (BI=(position(P)measurement)))
 
 Extract keywords after polishing:
 
->>> CQL('bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().keywords()
+>>> CQL(u'bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().keywords()
 [[u'hot', u'rolling'], [u'strip', u'center'], u'measurement', u'hot', u'rolling', u'strip', u'camber', u'measurement', u'reversing', u'mill', u'camber', u'hot', u'steel', u'center', u'measurement', [u'hot', u'slab'], [u'position', u'measurement'], [u'hot', u'strip'], [u'position', u'measurement']]

@@ -49,7 +49,7 @@ because index name "pc" is not whitelisted.
 We can have a look at the layer below, where raw triples got extracted from the query string,
 that's the step just before collecting the keywords:
 
->>> CQL('bi=greifer and pc=de').triples()
+>>> CQL(u'bi=greifer and pc=de').triples()
 [[u'bi', u'=', u'greifer'], [u'pc', u'=', u'de']]
 
 This shows we also have access to the "pc=de" condition if
