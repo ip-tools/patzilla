@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.29.0
+======
 - middleware: make cheshire3 cql parser unicode aware
 - middleware/tests: add nosetest environment
 - middleware: add alternative cql parser implementation based on pyparsing, with doctests
