@@ -60,7 +60,10 @@ push:
 	git push && git push --tags
 
 release:
-	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push && $(MAKE) package-and-install
+	$(MAKE) cut-release && $(MAKE) package-and-install
+
+cut-release:
+	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
 
 test:
 	@python runtests.py          \
