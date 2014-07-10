@@ -5,15 +5,19 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: make cheshire3 cql parser unicode aware
-- middleware: add nosetest environment
+- middleware/tests: add nosetest environment
 - middleware: add alternative cql parser implementation based on pyparsing, with doctests
 - middleware: make pyparsing cql parser unicode aware, tweak and cleanup things
-- middleware: add more inline doctests to pyparsing cql parser
+- middleware/tests: add more inline doctests to pyparsing cql parser
 - middleware: make cql parser understand neighbourhood term operators
-- middleware: add doctests for testing DEPATISnet CQL features
-- middleware: add doctests for testing OPS CQL features
+- middleware/tests: add doctests for testing DEPATISnet CQL features
+- middleware/tests: add doctests for testing OPS CQL features
 - middleware: fix neighborhood operator problems in value shortcut notations
-- middleware: add more complex, unrefurbished cql queries from the wild to depatisnet doctests
+- middleware/tests: add more complex, unrefurbished cql queries from the wild to depatisnet doctests
+- ui: overhaul highlighting component
+    - don't crash html
+    - option to expand highlighting to whole words (wholeWords - false by default)
+    - option to restrict highlighting to words with minimum length (minLength - undefined by default)
 
 0.28.0
 ======
