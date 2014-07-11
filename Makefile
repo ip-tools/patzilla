@@ -48,8 +48,12 @@ upload:
 upload-config:
 	rsync elmyra.ip.access.epo/production.ini root@almera.elmyra.de:/opt/ops-chooser/
 
+setup-maintenance:
+	source .venv27/bin/activate; pip install cuisine
+
 install:
-	source .venv27/bin/activate; pip install cuisine; fab install:version=$(version)
+	@# make install target=patoffice version=0.29.0
+	source .venv27/bin/activate; fab install:target=$(target),version=$(version)
 
 package-and-install: sdist upload upload-config install
 

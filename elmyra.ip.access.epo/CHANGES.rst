@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- infrastructure: enable multi-site deployment
 
 0.29.0
 ======
