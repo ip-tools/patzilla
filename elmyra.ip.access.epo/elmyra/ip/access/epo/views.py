@@ -137,7 +137,8 @@ def get_redirect_query(request, query=None):
     # FIXME: this is a hack
     path = '/'
     host = request.headers.get('Host')
-    if host not in ['patentsearch.elmyra.de', 'patentview.elmyra.de']:
+
+    if 'localhost' in host:
         path = '/ops/browser'
 
     redirect_url = path

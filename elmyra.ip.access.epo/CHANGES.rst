@@ -6,6 +6,7 @@ development
 ===========
 - infrastructure: enable multi-site deployment
 - middleware: improve serving of vanity urls vs. favicon.ico
+- middleware: try to fix vanity url redirect routine
 
 0.29.0
 ======
