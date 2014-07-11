@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - infrastructure: enable multi-site deployment
+- middleware: improve serving of vanity urls vs. favicon.ico
 
 0.29.0
 ======

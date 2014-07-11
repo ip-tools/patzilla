@@ -1,25 +1,43 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
+import os
+import logging
+from pkg_resources import resource_filename
 from elmyra.ip.access.dpma.dpmaregister import DpmaRegisterAccess
 from elmyra.ip.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
 from elmyra.ip.util.render.phantomjs import render_pdf
 from elmyra.ip.util.text.format import slugify
 from pyramid.encode import urlencode
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.response import Response
+from pyramid.response import Response, FileResponse
 from pyramid.settings import asbool
 from pyramid.url import route_path
 from pyramid.view import view_config
 
+log = logging.getLogger(__name__)
+
 def includeme(config):
+
+    # serve favicon.ico
+    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
+    config.add_route('favicon', '/ops/browser/favicon.ico')
+    config.add_view('elmyra.ip.access.epo.views.favicon_view', route_name='favicon')
+
+    # serve help page
     config.add_route('help', '/ops/browser/help')
+
+    # serve application
     config.add_route('patentsearch', '/ops/browser')
+
+    # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
     config.add_route('patentsearch-quick2',  '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('jump-dpmaregister2', '/ops/browser/office/dpma/register/application/{document_number}')
-    config.add_route('angry-cats', '/angry-cats')
+
+    # demo stuff
+    #config.add_route('angry-cats', '/angry-cats')
 
     # at route "patentsearch-quick2", exclude access to javascript .map files, these would match, see::
     #   $ curl --silent -i http://localhost:6543/ops/browser/fanstatic/jquery/jquery.min.map | grep Location
@@ -53,7 +71,6 @@ def opsbrowser_vanity(request):
 
     field = None
     value = None
-    value2 = None
 
     if label == 'today':
         field = 'publicationdate'
@@ -71,8 +88,12 @@ def opsbrowser_vanity(request):
         field = 'publicationdate'
         value = year()
 
-    query = compute_query(field, value, value2)
-    print 'vanity:', query
+    else:
+        return get_redirect_query(request)
+
+    query = compute_query(field, value)
+    log.info('vanity url: "{0}" => "{1}"'.format(label, query))
+
     return get_redirect_query(request, query)
 
 @view_config(route_name='patentsearch-quick')
@@ -86,7 +107,7 @@ def opsbrowser_quick(request):
     print 'quick:', query
     return get_redirect_query(request, query)
 
-def compute_query(field, value, value2):
+def compute_query(field, value, value2=None):
 
     if field == 'country':
         field = 'pn'
@@ -107,7 +128,7 @@ def compute_query(field, value, value2):
 
     return query
 
-def get_redirect_query(request, query):
+def get_redirect_query(request, query=None):
 
     # FIXME: does not work due reverse proxy anomalies, tune it to make it work!
     #query = '{field}={value}'.format(**locals())
@@ -118,7 +139,11 @@ def get_redirect_query(request, query):
     host = request.headers.get('Host')
     if host not in ['patentsearch.elmyra.de', 'patentview.elmyra.de']:
         path = '/ops/browser'
-    redirect_url = location=path + '?' + urlencode({'query': query})
+
+    redirect_url = path
+    if query:
+        redirect_url += '?' + urlencode({'query': query})
+
     return HTTPFound(redirect_url)
 
 
@@ -140,6 +165,13 @@ def jump_dpmaregister(request):
 def help_page(request):
     return {}
 
+def favicon_view(request):
+    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
+    icon = resource_filename('elmyra.ip.access.epo', 'static/favicon.ico')
+    if os.path.isfile(icon):
+        return FileResponse(icon, request=request)
+    else:
+        return HTTPNotFound()
 
 @view_config(name='patentsearch-old', renderer='elmyra.ip.access.epo:templates/app.html')
 def ops_chooser(request):
