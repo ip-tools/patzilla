@@ -72,12 +72,14 @@ class BackboneModelParameterFiddler(object):
                 'Exception was: %s\n%s', unixtime, ex, _exception_traceback())
 
         # A. parameter firewall, INPUT
-        host = request.headers.get('Host')
-        isviewer = host in ['patentview.elmyra.de']
 
-        # 1. don't allow "query" from outside on viewer-only domains
+        # determine if we're in view-only mode by matching against the hostname
+        host = request.headers.get('Host')
+        isviewer = 'patentview' in host
+
+        # 1. don't allow "query" from outside on view-only domains
         if request_params.has_key('query') and isviewer:
-            log.warn('parameter "query=%s" not allowed on this vhost, deleting it', request_params['query'])
+            log.warn('parameter "query=%s" not allowed on this vhost, purging it', request_params['query'])
             del request_params['query']
 
 

@@ -80,10 +80,10 @@ PermalinkPlugin = Marionette.Controller.extend({
         var baseurl = opsChooserApp.config.get('baseurl');
 
         // when generating review-in-liveview-with-ttl links on patentsearch,
-        // let's view them on a pinned domain "patentview.elmyra.de"
+        // let's view them on a pinned domain like "patentview.elmyra.de"
         var host = opsChooserApp.config.get('request.host');
-        if (host == 'patentsearch.elmyra.de') {
-            baseurl = 'https://patentview.elmyra.de/';
+        if (_.string.contains(host, 'patentsearch')) {
+            baseurl = basurl.replace('patentsearch', 'patentview');
         }
 
         // compute opaque parameter variant of permalink parameters

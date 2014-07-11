@@ -7,6 +7,7 @@ development
 - infrastructure: enable multi-site deployment
 - middleware: improve serving of vanity urls vs. favicon.ico
 - middleware: try to fix vanity url redirect routine
+- middleware/ui: generalize patentsearch vs. patentview mechanism
 
 0.29.0
 ======
