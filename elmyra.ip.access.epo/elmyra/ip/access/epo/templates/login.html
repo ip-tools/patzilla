@@ -6,30 +6,142 @@
 <%block name="body">
 
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+<script type="text/javascript" src="/static/js/lib/jquery.jrumble.1.3.min.js"></script>
 
 ## login form
-<div class="container">
+<div class="login-box container-fluid">
 
     <form class="form-signin" method="post" action="/auth">
-        <h2 class="form-signin-heading">Please sign in</h2>
-        <input name="username" type="text" class="input-block-level" placeholder="Email address" value="${username}">
-        <input name="password" type="password" class="input-block-level" placeholder="Password">
-        <!--
-        <label class="checkbox">
-            <input type="checkbox" value="remember-me"> Remember me
-        </label>
-        -->
-        % if error == True:
-            <div class="alert alert-block">
-                <button type="button" class="close" data-dismiss="alert">&times;</button>
-                <h4>Login failed</h4>
-                <br/>
-                Please check your credentials or <a id="login-failed-mail" href="mailto:support@elmyra.de">contact us for support</a>.
+
+        <div class="row-fluid">
+
+            <div class="span12">
+                <h2 class="form-signin-heading">Please sign in</h2>
+                <input name="username" type="text" class="input-block-level" placeholder="Email address" value="${username}">
+                <input name="password" type="password" class="input-block-level" placeholder="Password">
+                <!--
+                <label class="checkbox">
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+                -->
+                % if error == True:
+                    <div class="alert alert-block">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <h4>Login failed</h4>
+                        <br/>
+                        Please check your credentials or
+                        <a id="mail-login-failed" href="mailto:support@elmyra.de">contact us for support</a>.
+                    </div>
+                % endif
             </div>
-        % endif
-        <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+
+        </div>
+
+        <div class="row-fluid">
+            <div class="span6">
+                <button class="btn btn-large btn-primary" type="submit">Sign in</button>
+            </div>
+            <div class="span6">
+                <a class="btn btn-large pull-right" id="mail-register" href="mailto:purchase@elmyra.de" role="button">Register</a>.
+            </div>
+        </div>
+
     </form>
 
 </div> <!-- /container -->
+
+<script type="application/javascript">
+
+    $(document).ready(function() {
+        console.log("document.ready");
+
+        var url = $.url(window.location.href);
+
+        if (url.param('error') == 'true') {
+            $('.login-box').jrumble();
+            $('.login-box').trigger('startRumble');
+            window.setTimeout(function() {
+                $('.login-box').trigger('stopRumble');
+            }, 400);
+        }
+
+        $('#mail-register').unbind('click');
+        $('#mail-register').bind('click', function() {
+
+            var domain = url.attr('host');
+            var tplvars = {username: '${username}', domain: domain};
+
+            <%text>
+            var subject = _.template('Elmyra patent search: Account registration on domain "<%= domain %>"')(tplvars);
+            </%text>
+            var body = _.template(_.string.ltrim($('#template-mail-register').html()))(tplvars);
+
+            tweak_mailto(this, subject, body);
+
+        });
+
+        $('#mail-login-failed').unbind('click');
+        $('#mail-login-failed').bind('click', function() {
+
+            var domain = url.attr('host');
+            var tplvars = {username: '${username}', domain: domain};
+
+            <%text>
+            var subject = _.template('Elmyra patent search: Login keeps failing for account "<%= username %>" on domain "<%= domain %>"')(tplvars);
+            </%text>
+            var body = _.template(_.string.ltrim($('#template-mail-login-failed').html()))(tplvars);
+
+            tweak_mailto(this, subject, body);
+
+        });
+
+    });
+
+    function tweak_mailto(element, subject, body) {
+
+        // prevent double tweaking
+        if ($(element).data('tweaked')) {
+            return;
+        }
+        $(element).data('tweaked', true);
+
+        var mailto_data = {
+            'subject': subject,
+            'body': body,
+        };
+
+        var href = $(element).attr('href');
+        href += '?' + jQuery.param(mailto_data).replace(/\+/g, '%20');
+        $(element).attr('href', href);
+    }
+</script>
+
+<script type="text/x-underscore-template" id="template-mail-register">
+<%text>
+Dear Elmyra support team,
+
+please register a new account to your patent search application on domain "<%= domain %>"
+using the provided email address as my username.
+
+Thank you in advance, looking forward to hearing from you soon.
+
+With kind regards,
+
+</%text>
+</script>
+
+<script type="text/x-underscore-template" id="template-mail-login-failed">
+<%text>
+Dear Elmyra support team,
+
+i tried to login into my account "<%= username %>" on domain "<%= domain %>" multiple times without success.
+Please get back to me to clear things up.
+
+Thank you in advance, looking forward to hearing from you soon.
+
+With kind regards,
+
+</%text>
+</script>
 
 </%block>

@@ -260,7 +260,7 @@ dl.dl-horizontal-inline {
 }
 
 /* login form */
-.form-signin {
+.login-box {
     max-width: 300px;
     padding: 19px 29px 29px;
     margin: 0 auto 20px;

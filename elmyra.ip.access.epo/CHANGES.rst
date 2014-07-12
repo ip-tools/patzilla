@@ -9,7 +9,8 @@ development
 - middleware: try to fix vanity url redirect routine
 - middleware/ui: generalize patentsearch vs. patentview mechanism
 - middleware/auth: nginx-lua-auth proof-of-concept (http basic auth)
-- middleware/auth/ui: nginx-lua-auth enhancements (login-form)
+- middleware/ui/auth: nginx-lua-auth enhancements (login-form)
+- ui/auth: enhance login box: integrate actions (login failed, register account) via email; rumble on error
 
 0.29.0
 ======
