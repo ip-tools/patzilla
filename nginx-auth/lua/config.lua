@@ -5,8 +5,19 @@
 local users = { foo = "bar" };
 
 config = {
-    --authmode = 'basic-auth',
-    authmode = 'login-form',
+
+    auth = {
+
+        -- the secret used for signing cookies with hmac
+        hmac_secret = 'franz jagt im komplett verwahrlosten taxi quer durch bayern.',
+
+        -- http basic authentication
+        --mode = 'basic-auth',
+
+        -- login-form authentication
+        mode = 'login-form',
+    },
+
     users = users,
 };
 

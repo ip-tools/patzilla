@@ -10,11 +10,7 @@ https://github.com/phaer/nginx-lua-auth
 
 ]]
 
--- Some variable declarations.
-local cookie = ngx.var.cookie_Auth
-local hmac = ""
-local timestamp = ""
-
+local isis = require('lib/isis')
 
 -- always permit access to the authentication endpoint
 if ngx.var.request_uri == "/auth" then
@@ -31,22 +27,8 @@ if (string.find(ngx.var.request_uri, "^/fanstatic/.*$") ~= nil or string.find(ng
     return
 end
 
--- Check that the cookie exists.
-if cookie ~= nil and cookie:find(":") ~= nil then
-    -- If there's a cookie, split off the HMAC signature
-    -- and timestamp.
-    local divider = cookie:find(":")
-    hmac = ngx.decode_base64(cookie:sub(divider+1))
-    timestamp = cookie:sub(0, divider-1)
-
-    -- Verify that the signature is valid.
-    if ngx.hmac_sha1(ngx.var.lua_auth_secret, timestamp) == hmac and tonumber(timestamp) >= ngx.time() then
-
-        -- TODO: propagate userid/username to upstream service using http headers
-        -- TODO: automatic token renewal
-
-        return
-    end
+if isis.verify_cookie() then
+    return
 end
 
 -- Internally rewrite the URL so that we serve
