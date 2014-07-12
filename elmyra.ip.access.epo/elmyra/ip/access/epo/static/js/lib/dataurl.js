@@ -1,10 +1,19 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
-
-// taken from https://github.com/brianloveswords/dataurl
-// 2014-06-13 Stripped down, now also runs on non-node.js, therefore it relies
-//            on the jquery-base64 plugin and stopped supporting streams.
-// 2014-06-15 Add lz-string compression
+/*
+ * module for dealing with dataurls
+ * see also: http://en.wikipedia.org/wiki/Data_URI_scheme
+ *
+ * (c) 2013 Brian J Brennan
+ * https://github.com/brianloveswords/dataurl
+ *
+ * (c) 2014 Andreas Motl, Elmyra UG
+ *
+ * Changes:
+ * 2014-06-13 Stripped down, now also runs on non-node.js, therefore it relies
+ *            on the jquery-base64 plugin and stopped supporting streams.
+ * 2014-06-15 Add lz-string compression
+ *
+ */
 
 const REGEX = {
   dataurl: /data:(.*?)(?:;charset=(.*?))?(;base64)?,(.+)/i,
