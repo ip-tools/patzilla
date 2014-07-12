@@ -5,7 +5,9 @@
 local users = { foo = "bar" };
 
 config = {
-    users = users
+    --authmode = 'basic-auth',
+    authmode = 'login-form',
+    users = users,
 };
 
 return config;

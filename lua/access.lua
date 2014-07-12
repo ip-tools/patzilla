@@ -15,8 +15,19 @@ local cookie = ngx.var.cookie_Auth
 local hmac = ""
 local timestamp = ""
 
+
 -- always permit access to the authentication endpoint
-if ngx.var.uri == "/auth" then
+if ngx.var.request_uri == "/auth" then
+    return
+end
+
+-- TODO: better use request_uri here?
+if string.find(ngx.var.uri, "^/login$") ~= nil or string.find(ngx.var.uri, "^/ops/browser/login$") ~= nil then
+    return
+end
+
+if (string.find(ngx.var.request_uri, "^/fanstatic/.*$") ~= nil or string.find(ngx.var.request_uri, "^/static.*$") ~= nil)
+    and string.find(ngx.var.request_uri, "app.min.") == nil then
     return
 end
 
@@ -30,6 +41,10 @@ if cookie ~= nil and cookie:find(":") ~= nil then
 
     -- Verify that the signature is valid.
     if ngx.hmac_sha1(ngx.var.lua_auth_secret, timestamp) == hmac and tonumber(timestamp) >= ngx.time() then
+
+        -- TODO: propagate userid/username to upstream service using http headers
+        -- TODO: automatic token renewal
+
         return
     end
 end

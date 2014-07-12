@@ -8,7 +8,8 @@ development
 - middleware: improve serving of vanity urls vs. favicon.ico
 - middleware: try to fix vanity url redirect routine
 - middleware/ui: generalize patentsearch vs. patentview mechanism
-- middleware/auth: nginx-only auth layer proof-of-concept
+- middleware/auth: nginx-lua-auth proof-of-concept (http basic auth)
+- middleware/auth/ui: nginx-lua-auth enhancements (loginform)
 
 0.29.0
 ======

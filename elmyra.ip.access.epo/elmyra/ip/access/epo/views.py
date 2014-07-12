@@ -23,6 +23,9 @@ def includeme(config):
     config.add_route('favicon', '/ops/browser/favicon.ico')
     config.add_view('elmyra.ip.access.epo.views.favicon_view', route_name='favicon')
 
+    # serve login page
+    config.add_route('login', '/ops/browser/login')
+
     # serve help page
     config.add_route('help', '/ops/browser/help')
 
@@ -161,6 +164,14 @@ def jump_dpmaregister(request):
 
     return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
 
+
+@view_config(route_name='login', renderer='elmyra.ip.access.epo:templates/login.html')
+def login_page(request):
+    tplvars = {
+        'username': request.params.get('username', ''),
+        'error': asbool(request.params.get('error')),
+    }
+    return tplvars
 
 @view_config(route_name='help', renderer='elmyra.ip.access.epo:templates/help.html')
 def help_page(request):
