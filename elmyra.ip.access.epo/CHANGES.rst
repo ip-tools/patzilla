@@ -8,6 +8,7 @@ development
 - middleware: improve serving of vanity urls vs. favicon.ico
 - middleware: try to fix vanity url redirect routine
 - middleware/ui: generalize patentsearch vs. patentview mechanism
+- middleware/auth: nginx-only auth layer proof-of-concept
 
 0.29.0
 ======
@@ -511,7 +512,6 @@ development
 - ui: gray background, refactor query area
 - ui: link to legal status information from various patent offices
   (European Patent Register, INPADOC legal status, DPMAregister)
-
 
 0.2.0
 =====

@@ -1,3 +1,18 @@
+-- -*- coding: utf-8 -*-
+-- (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+--[[
+
+(c) 2013, Stavros Korokithakis
+http://www.stavros.io/posts/writing-an-nginx-authentication-module-in-lua/
+
+(c) 2013, phear
+https://github.com/phaer/nginx-lua-auth
+
+]]
+
+local config = require('config');
+local users = config.users;
+
 headers = ngx.req.get_headers();
 
 function get_user()
@@ -19,7 +34,7 @@ function get_user()
    divider = auth:find(':')
    local user = auth:sub(0, divider-1)
    local pass = auth:sub(divider+1)
-   if ngx.var.users[user] ~= pass
+   if users[user] ~= pass then
       return
    end
 
@@ -31,7 +46,7 @@ function set_cookie()
    local expiration = ngx.time() + expires_after
    local token = expiration .. ":" .. ngx.encode_base64(ngx.hmac_sha1(
        ngx.var.lua_auth_secret,
-       expiration))
+       tostring(expiration)))
    local cookie = "Auth=" .. token .. "; "
    -- @TODO: Don't include subdomains
    cookie = cookie .. "Path=/; Domain=" .. ngx.var.server_name .. "; "
@@ -43,7 +58,7 @@ end
 local user = get_user()
 
 if user then
-   ngx.log(ngx.INFO, 'Authenticated' .. user)
+   ngx.log(ngx.INFO, 'Authenticated user "' .. user .. '"')
    set_cookie()
    ngx.header.content_type = 'text/html'
    ngx.say("<html><head><script>location.reload()</script></head></html>")
