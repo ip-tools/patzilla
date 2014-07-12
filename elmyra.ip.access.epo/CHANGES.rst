@@ -9,7 +9,7 @@ development
 - middleware: try to fix vanity url redirect routine
 - middleware/ui: generalize patentsearch vs. patentview mechanism
 - middleware/auth: nginx-lua-auth proof-of-concept (http basic auth)
-- middleware/auth/ui: nginx-lua-auth enhancements (loginform)
+- middleware/auth/ui: nginx-lua-auth enhancements (login-form)
 
 0.29.0
 ======

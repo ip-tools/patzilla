@@ -91,4 +91,4 @@ test-setup:
 
 nginx_path=/Users/amo/dev/celeraone/sources/c1-ocb-integrator/rem_rp/parts/openresty
 nginx-start:
-	@$(nginx_path)/nginx/sbin/nginx -p $(nginx_path)/nginx -c `pwd`/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
+	@$(nginx_path)/nginx/sbin/nginx -p $(nginx_path)/nginx -c `pwd`/nginx-auth/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
