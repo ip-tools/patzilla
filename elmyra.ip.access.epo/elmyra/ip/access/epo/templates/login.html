@@ -58,11 +58,13 @@
         var url = $.url(window.location.href);
 
         if (url.param('error') == 'true') {
-            $('.login-box').jrumble();
-            $('.login-box').trigger('startRumble');
             window.setTimeout(function() {
-                $('.login-box').trigger('stopRumble');
-            }, 400);
+                $('.login-box').jrumble();
+                $('.login-box').trigger('startRumble');
+                window.setTimeout(function() {
+                    $('.login-box').trigger('stopRumble');
+                }, 400);
+            }, 50);
         }
 
         $('#mail-register').unbind('click');
@@ -120,8 +122,8 @@
 <%text>
 Dear Elmyra support team,
 
-please register a new account to your patent search application on domain "<%= domain %>"
-using the provided email address as my username.
+please register a new account for accessing the Elmyra patent search service
+on domain "<%= domain %>" using the provided email address as my username.
 
 Thank you in advance, looking forward to hearing from you soon.
 
@@ -134,8 +136,8 @@ With kind regards,
 <%text>
 Dear Elmyra support team,
 
-i tried to login into my account "<%= username %>" on domain "<%= domain %>" multiple times without success.
-Please get back to me to clear things up.
+i tried to login into my account "<%= username %>" on domain "<%= domain %>"
+multiple times without success. Please get back to me to clear things up.
 
 Thank you in advance, looking forward to hearing from you soon.
 

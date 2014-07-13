@@ -74,7 +74,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
             },
             error: function(model, response) {
 
-                //console.log("error: " + response.responseText);
+                //console.log("api error: " + response.responseText);
 
                 indicate_activity(false);
                 reset_content({documents: true});
@@ -83,6 +83,14 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 if (response['status'] == 'error') {
                     _.each(response['errors'], function(error) {
                         var tpl = _.template($('#backend-error-template').html());
+
+                        // convert simple error format to detailed error format
+                        error.description = error.description || {};
+                        if (_.isString(error.description)) {
+                            error.description = {content: error.description};
+                        }
+                        _(error.description).defaults({headers: {}});
+
                         var alert_html = tpl(error);
                         $('#alert-area').append(alert_html);
                     });

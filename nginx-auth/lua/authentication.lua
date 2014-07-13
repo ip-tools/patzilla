@@ -23,14 +23,14 @@ if config.auth.mode == 'basic-auth' then
     local user = isis.authenticate_user(config.auth.mode, username, password)
 
     if user then
-        util.set_cookie()
+        isis.set_cookie()
         ngx.header.content_type = 'text/html'
         ngx.say("<html><head><script>location.reload()</script></head></html>")
     else
         ngx.header.content_type = 'text/plain'
         ngx.header.www_authenticate = 'Basic realm=""'
         ngx.status = ngx.HTTP_UNAUTHORIZED
-        ngx.say('401 Access Denied')
+        ngx.say('401 Unauthorized')
     end
 
 elseif config.auth.mode == 'login-form' then
@@ -56,7 +56,7 @@ elseif config.auth.mode == 'login-form' then
         local user = isis.authenticate_user(config.auth.mode, args.username, args.password)
 
         if user then
-            set_cookie()
+            isis.set_cookie()
 
             -- TODO: remember me
 

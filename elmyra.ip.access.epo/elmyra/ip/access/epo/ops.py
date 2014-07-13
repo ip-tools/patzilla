@@ -236,11 +236,13 @@ def handle_error(response, name):
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
     response_dict['url'] = response_dict['url'].replace(ops_service_url, '/')
     request.errors.add(name, 'http-response', response_dict)
-    response = json_error(request.errors)
-    response.status = 500
+
+    response_json = json_error(request.errors)
+    response_json.status = response.status
+
     #print "response:", response
     log.warn(request.errors)
-    return response
+    return response_json
 
 
 @cache_region('static')

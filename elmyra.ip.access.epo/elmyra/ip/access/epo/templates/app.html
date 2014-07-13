@@ -442,7 +442,7 @@ ${ h.fiddler.render() | n }
                 Message
             </dt>
             <dd>
-                <h4><%= description['content'] %></h4>
+                <h4><%= description['content'] || '&nbsp;' %></h4>
             </dd>
 
             <br/>
@@ -451,35 +451,35 @@ ${ h.fiddler.render() | n }
                 Date
             </dt>
             <dd>
-                <%= description['headers']['date'] %>
+                <%= description['headers']['date'] || '&nbsp;' %>
             </dd>
 
             <dt>
                 Status
             </dt>
             <dd>
-                <%= description['status_code'] %> <%= description['reason'] %>
+                <%= description['status_code'] || '&nbsp;' %> <%= description['reason'] || '&nbsp;' %>
             </dd>
 
             <dt>
                 Name
             </dt>
             <dd>
-                <%= name %>
+                <%= name || '&nbsp;' %>
             </dd>
 
             <dt>
                 Location
             </dt>
             <dd>
-                <%= location %>
+                <%= location || '&nbsp;' %>
             </dd>
 
             <dt>
                 URL
             </dt>
             <dd>
-                <%= description['url'] %>
+                <%= description['url'] || '&nbsp;' %>
             </dd>
 
         </dl>

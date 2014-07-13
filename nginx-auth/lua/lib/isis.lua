@@ -52,6 +52,9 @@ function get_basic_credentials()
     return user, pass
 end
 
+-- TODO: encode_token(), decode_token()
+-- TODO: put username or userid into token
+
 function set_cookie()
 
     local expires_after = config.auth.cookie_expiration
@@ -82,11 +85,17 @@ function verify_cookie()
         local hmac = ngx.decode_base64(cookie:sub(divider+1))
         local timestamp = cookie:sub(0, divider-1)
 
-        -- Verify that the signature is valid.
-        if ngx.hmac_sha1(config.auth.hmac_secret, timestamp) == hmac and tonumber(timestamp) >= ngx.time() then
+        -- Verify that the signature is valid and the token did not expire.
+        local ttl = tonumber(timestamp) - ngx.time()
+        if ngx.hmac_sha1(config.auth.hmac_secret, timestamp) == hmac and ttl >= 0 then
 
             -- TODO: propagate userid/username to upstream service using http headers
-            -- TODO: automatic token renewal
+
+            -- automatic token renewal
+            if ttl <= config.auth.cookie_renewal then
+                ngx.log(ngx.INFO, 'Renewed cookie')
+                set_cookie()
+            end
 
             return true
         end
