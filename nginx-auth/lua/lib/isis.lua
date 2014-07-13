@@ -54,13 +54,12 @@ end
 
 function set_cookie()
 
-    --local expires_after = 60 * 60
-    local expires_after = 60 * 1
+    local expires_after = config.auth.cookie_expiration
 
     local expiration = ngx.time() + expires_after
     local signature = ngx.encode_base64(ngx.hmac_sha1(config.auth.hmac_secret, tostring(expiration)))
     local token = expiration .. ":" .. signature
-    local cookie = "Auth=" .. token .. "; "
+    local cookie = config.auth.cookie_name .. "=" .. token .. "; "
     -- @TODO: Don't include subdomains
     cookie = cookie .. "Path=/; "
     -- cookie = cookie .. "Domain=" .. ngx.var.server_name .. "; "
@@ -72,18 +71,16 @@ end
 
 function verify_cookie()
 
-    -- Some variable declarations.
-    local cookie = ngx.var.cookie_Auth
-    local hmac = ""
-    local timestamp = ""
+    local var_name = "cookie_" .. config.auth.cookie_name
+    local cookie = ngx.var[var_name]
 
     -- Check that the cookie exists.
     if cookie ~= nil and cookie:find(":") ~= nil then
         -- If there's a cookie, split off the HMAC signature
         -- and timestamp.
         local divider = cookie:find(":")
-        hmac = ngx.decode_base64(cookie:sub(divider+1))
-        timestamp = cookie:sub(0, divider-1)
+        local hmac = ngx.decode_base64(cookie:sub(divider+1))
+        local timestamp = cookie:sub(0, divider-1)
 
         -- Verify that the signature is valid.
         if ngx.hmac_sha1(config.auth.hmac_secret, timestamp) == hmac and tonumber(timestamp) >= ngx.time() then
