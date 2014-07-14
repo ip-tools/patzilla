@@ -38,7 +38,7 @@ if static_resource and not request_uri:find("^/static/js/app.*$") then
     return
 end
 
--- *some* api endpoints resources
+-- some api endpoints
 if request_uri:find("^/api/identity/pwhash.*$") then
     return
 end

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.31.4
+======
+- minor fixes and updates
+
 0.31.3
 ======
 - middleware: "RNG must be re-initialized after fork()" fixing again
