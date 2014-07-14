@@ -6,6 +6,7 @@ development
 ===========
 - auth/ui: make login screen more appealing
 - auth/ui: sign out with button
+- ui: permalink to current query
 
 0.30.0
 ======

@@ -516,6 +516,15 @@ function boot_application() {
     }
 
 
+
+    // ------------------------------------------
+    //   logout button
+    // ------------------------------------------
+    if (opsChooserApp.config.get('mode') == 'liveview') {
+        $('.logout-button').hide();
+    }
+
+
     // ------------------------------------------
     //   cql query area
     // ------------------------------------------
@@ -772,6 +781,40 @@ function boot_application() {
                 chooser_widget.select2('open');
             });
         }
+    });
+
+    // share via url, with ttl
+    $('#btn-query-permalink').unbind('click');
+    $('#btn-query-permalink').click(function(e) {
+        var anchor = this;
+
+        var query_state = {
+            mode: 'liveview',
+            context: 'viewer',
+            project: 'query-permalink',
+            query: opsChooserApp.get_query(),
+            datasource: opsChooserApp.get_datasource(),
+        };
+
+        opsChooserApp.permalink.make_uri_opaque(query_state).then(function(url) {
+
+            // v1: open url
+            //$(anchor).attr('href', url);
+
+            // v2: open permalink popover
+            e.preventDefault();
+            e.stopPropagation();
+
+            opsChooserApp.permalink.popover_show(anchor, url, {
+                title: 'External query review',
+                intro:
+                    '<small>' +
+                        'This offers a link for external/anonymous users to review the current query. ' +
+                    '</small>',
+                ttl: true,
+            });
+
+        });
     });
 
 

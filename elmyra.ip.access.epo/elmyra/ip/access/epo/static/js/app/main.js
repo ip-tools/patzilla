@@ -23,6 +23,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
     },
 
+    get_query: function() {
+        return $('#query').val();
+    },
+
     // perform ops search and process response
     perform_search: function(options) {
 

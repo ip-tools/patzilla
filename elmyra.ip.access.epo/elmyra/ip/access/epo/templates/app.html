@@ -106,7 +106,7 @@ ${ h.fiddler.render() | n }
             <div class="row-fluid">
 
                 <!-- send query to database -->
-                <div class="span4">
+                <div class="span3">
 
                     <div
                         class="btn-group btn-popover"
@@ -132,10 +132,20 @@ ${ h.fiddler.render() | n }
                     <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
                 </div>
 
-                <!-- query content transformation and clearing -->
-                <div class="span2">
+                <!-- query permalink, history, content transformation and clearing -->
+                <div class="span3">
                     <div id="query-action" class="btn-group pull-right">
 
+                        <!-- permalink -->
+                        <a id="btn-query-permalink" href="#" target="_blank" role="button"
+                           class="btn btn-popover"
+                           data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                           data-content="Query permalink, with expiration time"
+                            >
+                            <i class="icon-external-link"></i>
+                        </a>
+
+                        <!-- history -->
                         <div id="cql-history-chooser" class="btn-group">
 
                             <button
@@ -154,6 +164,7 @@ ${ h.fiddler.render() | n }
 
                         </div>
 
+                        <!-- content transformation -->
                         <button
                             id="btn-query-transform"
                             class="btn btn-popover"
@@ -162,6 +173,8 @@ ${ h.fiddler.render() | n }
                             >
                             <i class="icon-exchange icon-large"></i>
                         </button>
+
+                        <!-- clear -->
                         <button
                             id="btn-query-clear"
                             class="btn btn-popover"
@@ -373,7 +386,7 @@ ${ h.fiddler.render() | n }
 
             <div class="span12 pagination">
 
-                <ul class="pull-right">
+                <ul class2="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>
                     -->
@@ -388,9 +401,12 @@ ${ h.fiddler.render() | n }
 </script>
 
 <script type="text/x-underscore-template" id="ops-pagination-template-liveview">
+
+    <!-- this template gets used in liveview mode -->
+
     <div id="pagination-widget">
 
-        <div class="row-fluid" id="pagination-chooser">
+        <div class="row-fluid">
             <div class="span2">
 
                 <!-- activity indicator (secondary) -->
@@ -400,27 +416,36 @@ ${ h.fiddler.render() | n }
                 </button>
 
                 <!-- permalink for review (secondary) -->
+                <% if (config.get('datasource') == 'review') { %>
                 <% if (!config.get('isviewer')) { %>
                 <a class="btn btn-popover permalink-review-liveview"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Permalink to review page in liveview mode"
-                   >
+                        >
                     <i class="icon-external-link"></i>
                 </a>
                 <% } %>
                 <a class="btn btn-popover permalink-review-liveview-ttl"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Permalink to review page in liveview mode, with TTL"
-                   >
+                        >
                     <i class="icon-external-link"></i>
                     <i class="icon-time"></i>
                 </a>
+                <% } %>
 
             </div>
+        </div>
 
-            <div class="span10 pagination">
+        <div class="row-fluid">
+            <br/>
+        </div>
 
-                <ul class="pull-right">
+        <div class="row-fluid" id="pagination-chooser">
+
+            <div class="span12 pagination">
+
+                <ul class2="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>
                     -->
