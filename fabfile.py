@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2013 Andreas Motl, Elmyra UG
+from fabric.contrib.project import rsync_project
 import os
 from distutils.core import run_setup
 from fabric.decorators import task, hosts
@@ -58,10 +59,10 @@ def install(version, target):
 
         setup_package(source_package, venv_path)
         upload_config(source_config, target_path)
+        restart_service(target)
 
     else:
         print yellow('Skipped package install due to user request.')
-
 
 def setup_package(package, virtualenv, options=''):
     #--index-url=http://c.pypi.python.org/simple
@@ -74,6 +75,21 @@ def setup_package(package, virtualenv, options=''):
 def upload_config(config_path, target_path):
     file_upload(target_path, config_path)
 
+def restart_service(target):
+    uwsgi_names = {
+        'staging': 'patentsearch-staging',
+        'patoffice': 'patentsearch.patoffice',
+        }
+    uwsgi_name = uwsgi_names.get(target)
+    if uwsgi_name:
+        run('service uwsgi reload %s' % uwsgi_name)
+    else:
+        print('WARNING: Could not restart service "%s"' % target)
+
+@task
+@hosts('root@almera.elmyra.de')
+def upload_nginx_auth():
+    rsync_project('/opt/elmyra/patentsearch', './nginx-auth')
 
 def setuptools_get_version(project_path):
     setup_script = os.path.join(project_path, 'setup.py')
