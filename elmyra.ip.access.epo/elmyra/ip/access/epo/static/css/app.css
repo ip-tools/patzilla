@@ -231,7 +231,7 @@ dl.dl-horizontal-inline {
 }
 
 #cql-history-chooser-container {
-    width: 420px;
+    width: 488px;
 }
 
 #basket {
@@ -263,12 +263,14 @@ dl.dl-horizontal-inline {
 .login-modal {
     z-index: 1050;
     position: fixed;
-    top: 25%;
+    top: 10%;
     left: 38%;
 }
 .login-box {
-    max-width: 300px;
-    padding: 19px 29px 29px;
+    max-width: 310px;
+    padding-top: 9px;
+    padding-left: 29px;
+    padding-right: 29px;
     margin: 0 auto 20px;
     background-color: #fff;
     border: 1px solid #e5e5e5;
@@ -282,6 +284,9 @@ dl.dl-horizontal-inline {
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
     margin-bottom: 10px;
+}
+.form-signin-heading-logo {
+    margin-bottom: 20px;
 }
 .form-signin input[type="text"],
 .form-signin input[type="password"] {

@@ -26,6 +26,7 @@
         <div class="row-fluid">
 
             <div class="span12">
+                <h3 class="form-signin-heading-logo text-right">elmyra <i class="circle-icon">IP</i> suite</h3>
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <input name="username" type="text" class="input-block-level" placeholder="Email address" value="${username}">
                 <input name="password" type="password" class="input-block-level" placeholder="Password">
@@ -35,7 +36,7 @@
                 </label>
                 -->
                 % if error == True:
-                    <div class="alert alert-block">
+                    <div class="alert alert-error alert-block">
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <h4>Login failed</h4>
                         <br/>
@@ -53,6 +54,33 @@
             </div>
             <div class="span6">
                 <a class="btn btn-large pull-right" id="mail-register" href="mailto:purchase@elmyra.de" role="button">Register</a>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Elmyra patent search</h4>
+                    <br/>
+                    You are welcome to register for a free account while the application is in closed beta.
+                    <br/><br/>
+                    Otherwise, please take a glimpse by visiting the <a id="visit-demo" href="/" target="_blank">demo page</a>.
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <hr class="clear-margin" style="margin-top: 10px"/>
+                <div class="page-footer pull-left">
+                    &copy; 2013-2014, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.
+                </div>
             </div>
         </div>
 
@@ -111,6 +139,21 @@
             tweak_mailto(this, subject, body);
 
         });
+
+        $('#visit-demo').unbind('click');
+        $('#visit-demo').bind('click', function() {
+
+            var demourl = url.attr('protocol') + '://' + url.attr('host');
+            if (url.attr('port')) demourl += ':' + url.attr('port');
+            demourl = demourl.replace('patentsearch', 'patentview');
+            demourl += '?op=eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiUmIwWGtSTVp5RVRhbEFOVm9PSm1WR2o5M1ZUazdVU1FvLXpZNXVCRWRGR0EtWnF2eV9pQ1h4WURaaTN0RW14WXg1QllYMDdYd3NaNU10cVV4cjNUZFF6THhKbFpOYmV5dWsydjlLWFZyTHU1UzlxZFBaWlNiUDZrb0h1SFhHN0JEeTlTLU92U2Vvakg4TEFscWR0SVozbVhUYWJldTVfbmxqTC1ERERiWnlzPSIsICJkYXRhIjogeyJwcm9qZWN0IjogInF1ZXJ5LXBlcm1hbGluayIsICJxdWVyeSI6ICJiaT1ncmVpZmVyIiwgIm1vZGUiOiAibGl2ZXZpZXciLCAiY29udGV4dCI6ICJ2aWV3ZXIiLCAiZGF0YXNvdXJjZSI6ICJkZXBhdGlzbmV0In0sICJuYmYiOiAxNDA1MzIwOTIzLCAiZXhwIjogMTU2MDg0MDkyMywgImlhdCI6IDE0MDUzMjA5MjN9.bWD4sw8ta_w6t-SpnEIGubXlX-DWB-n_O3hAb2zbMBkzycFvWbdGRIGCfH9PwrXHIxSKqi2ZQrDCV8vDYypqSZabP06K1KUb96IPYtLZB3Mk2U5nI3GbIKsJ-AmAVP6y';
+
+            //console.log(demourl);
+            $(this).attr('href', demourl);
+
+        });
+
+
 
     });
 

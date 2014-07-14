@@ -4,7 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-- ui: make login screen more appealing
+- auth/ui: make login screen more appealing
+- auth/ui: sign out with button
 
 0.30.0
 ======
