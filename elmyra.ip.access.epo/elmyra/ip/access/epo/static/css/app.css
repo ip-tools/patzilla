@@ -260,6 +260,12 @@ dl.dl-horizontal-inline {
 }
 
 /* login form */
+.login-modal {
+    z-index: 1050;
+    position: fixed;
+    top: 25%;
+    left: 38%;
+}
 .login-box {
     max-width: 300px;
     padding: 19px 29px 29px;

@@ -5,8 +5,18 @@
 
 <%block name="body">
 
+<style type="text/css">
+    body {
+        background-image: url(/static/img/login-background.jpg);
+        background-repeat: no-repeat;
+        background-position: top;
+    }
+</style>
+
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 <script type="text/javascript" src="/static/js/lib/jquery.jrumble.1.3.min.js"></script>
+
+<div class="login-modal">
 
 ## login form
 <div class="login-box container-fluid">
@@ -42,13 +52,18 @@
                 <button class="btn btn-large btn-primary" type="submit">Sign in</button>
             </div>
             <div class="span6">
-                <a class="btn btn-large pull-right" id="mail-register" href="mailto:purchase@elmyra.de" role="button">Register</a>.
+                <a class="btn btn-large pull-right" id="mail-register" href="mailto:purchase@elmyra.de" role="button">Register</a>
             </div>
         </div>
 
     </form>
 
 </div> <!-- /container -->
+
+</div>
+
+<div class="modal-backdrop fade in"></div>
+
 
 <script type="application/javascript">
 
@@ -63,8 +78,8 @@
                 $('.login-box').trigger('startRumble');
                 window.setTimeout(function() {
                     $('.login-box').trigger('stopRumble');
-                }, 400);
-            }, 50);
+                }, 500);
+            }, 150);
         }
 
         $('#mail-register').unbind('click');

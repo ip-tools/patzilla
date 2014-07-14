@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: make login screen more appealing
 
 0.30.0
 ======
