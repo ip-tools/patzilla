@@ -83,7 +83,7 @@ PermalinkPlugin = Marionette.Controller.extend({
         // let's view them on a pinned domain like "patentview.elmyra.de"
         var host = opsChooserApp.config.get('request.host');
         if (_.string.contains(host, 'patentsearch')) {
-            baseurl = basurl.replace('patentsearch', 'patentview');
+            baseurl = baseurl.replace('patentsearch', 'patentview');
         }
 
         // compute opaque parameter variant of permalink parameters

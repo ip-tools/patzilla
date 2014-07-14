@@ -68,8 +68,8 @@ TODO: maybe use Jwt for token encoding, see also:
 - https://github.com/webscriptio/lib/blob/master/jwt.lua
 ]]
 
-function encode_token(data, timestamp)
-    local data = util.deepcopy(data)
+function encode_token(user, timestamp)
+    local data = util.deepcopy(user)
     local payload = cjson.encode(data)
     local hmac = ngx.hmac_sha1(config.auth.hmac_secret, payload)
 

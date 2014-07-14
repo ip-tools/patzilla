@@ -244,7 +244,7 @@ def handle_error(response, name):
     request.errors.add(name, 'http-response', response_dict)
 
     response_json = json_error(request.errors)
-    response_json.status = response.status
+    response_json.status = response.status_code
 
     #print "response:", response
     log.warn(request.errors)
