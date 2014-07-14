@@ -8,10 +8,17 @@ from cornice.service import Service
 from pyramid.httpexceptions import HTTPBadRequest
 from elmyra.ip.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
 from elmyra.ip.util.date import datetime_iso, unixtime_to_datetime
-from elmyra.web.uwsgi.decorators import postfork
-
+try:
+    from elmyra.web.uwsgi.uwsgidecorators import postfork
+except ImportError:
+    class postfork(object):
+        def __init__(self, f):
+            pass
+        def __call__(self, *args, **kwargs):
+            pass
 
 log = logging.getLogger(__name__)
+
 
 @postfork
 def init_random():

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.31.3
+======
+- middleware: "RNG must be re-initialized after fork()" fixing again
+
 0.31.2
 ======
 - middleware: fix nasty "AssertionError: PID check failed. RNG must be re-initialized after fork(). Hint: Try Random.atfork()"
