@@ -57,6 +57,7 @@ def identity_auth_handler(request):
                 'userid': user.userid,
                 'username': user.username,
                 'fullname': user.fullname,
+                'tags': user.tags,
             }
             return response
 

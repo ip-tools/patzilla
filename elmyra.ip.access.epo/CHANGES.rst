@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.32.0
+======
+- auth/identity/ui: propagate user tags to middleware, implement user create form; only permit for elmyra staff
+
 0.31.4
 ======
 - minor fixes and updates

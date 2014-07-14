@@ -39,6 +39,16 @@ function table_merge(target, new)
     for k,v in pairs(new) do target[k] = v end
 end
 
+-- http://stackoverflow.com/questions/2282444/how-to-check-if-a-table-contains-an-element-in-lua
+function table_contains(table, element)
+  for _, value in pairs(table) do
+    if value == element then
+      return true
+    end
+  end
+  return false
+end
+
 -- http://lua-users.org/wiki/CopyTable
 function deepcopy(orig)
     local orig_type = type(orig)
@@ -61,8 +71,10 @@ function log(message, level)
 end
 
 return {
+    table_merge=table_merge,
+    table_contains=table_contains,
+    deepcopy=deepcopy,
     decode_referer=decode_referer,
     get_uri=get_uri,
     log=log,
-    deepcopy=deepcopy,
 }

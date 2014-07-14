@@ -12,6 +12,7 @@ https://github.com/phaer/nginx-lua-auth
 
 local cjson = require('cjson')
 local isis = require('lib/isis')
+local util = require('lib/util')
 
 local request_uri = ngx.var.request_uri
 local static_resource = request_uri:find("^/fanstatic/.*$") or request_uri:find("^/static.*$")
@@ -60,9 +61,17 @@ end
 -- ------------------------------------------
 --  verify cookie
 -- ------------------------------------------
+local user = isis.verify_cookie()
+if user then
 
-if isis.verify_cookie() then
-    return
+    -- permit admin access to elmyra staff only
+    if request_uri:find("^/admin.*$") then
+        if user.tags and util.table_contains(user.tags, 'elmyra-staff') then
+            return
+        end
+    else
+        return
+    end
 end
 
 

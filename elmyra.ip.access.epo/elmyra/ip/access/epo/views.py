@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
+from mongoengine.errors import NotUniqueError
 import os
 import logging
 from pkg_resources import resource_filename
@@ -13,6 +14,7 @@ from pyramid.response import Response, FileResponse
 from pyramid.settings import asbool
 from pyramid.url import route_path
 from pyramid.view import view_config
+from elmyra.web.identity.store import User
 
 log = logging.getLogger(__name__)
 
@@ -22,6 +24,9 @@ def includeme(config):
     # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
     config.add_route('favicon', '/ops/browser/favicon.ico')
     config.add_view('elmyra.ip.access.epo.views.favicon_view', route_name='favicon')
+
+    # serve admin page
+    config.add_route('admin-user-create', '/ops/browser/admin/user/create')
 
     # serve login page
     config.add_route('login', '/ops/browser/login')
@@ -165,6 +170,61 @@ def jump_dpmaregister(request):
 
     return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
 
+
+@view_config(route_name='admin-user-create', renderer='elmyra.ip.access.epo:templates/admin/user-create.html')
+def admin_user_create_get(request):
+
+    success = False
+    success_message = ''
+    error = False
+    error_messages = []
+
+    if request.method == 'POST':
+        fullname = request.params.get('fullname').strip()
+        username = request.params.get('username').strip()
+        password = request.params.get('password')
+
+        if not fullname:
+            error = True
+            error_messages.append('Full name must not be empty.')
+
+        if not username:
+            error = True
+            error_messages.append('Email address / Username must not be empty.')
+
+        if not password:
+            error = True
+            error_messages.append('Password must not be empty.')
+
+        if not error:
+            user = User(username = username, password = password, fullname = fullname, tags = ['customer-beta'])
+            try:
+                user.save()
+                success = True
+                success_message = 'User "%s" created.' % username
+
+                fullname = ''
+                username = ''
+
+            except NotUniqueError as ex:
+                error = True
+                error_messages.append('User already exists: %s' % ex)
+
+    tplvars = {
+        'username': '',
+        'fullname': '',
+        'success': success,
+        'success_message': success_message,
+        'error': error,
+        'error_message': '<ul><li>' + '</li><li>'.join(error_messages) + '</li></ul>',
+    }
+
+    tplvars.update(dict(request.params))
+    tplvars.update(**locals())
+
+    tplvars['success'] = asbool(tplvars['success'])
+    tplvars['error'] = asbool(tplvars['error'])
+    return tplvars
 
 @view_config(route_name='login', renderer='elmyra.ip.access.epo:templates/login.html')
 def login_page(request):

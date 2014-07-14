@@ -1,0 +1,97 @@
+## -*- coding: utf-8 -*-
+## (c) 2014 Andreas Motl, Elmyra UG
+
+<%inherit file="../site.mako" />
+
+<%block name="body">
+
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+
+<div class="login-modal">
+
+    ## login form
+    <div class="login-box container-fluid">
+
+        <form class="form-signin" method="post">
+
+            <div class="row-fluid">
+
+                <div class="span12">
+                    <h3 class="form-signin-heading-logo text-right">elmyra <i class="circle-icon">IP</i> suite</h3>
+                    <h2 class="form-signin-heading">Create User</h2>
+                    <input name="fullname" type="text" class="input-block-level" placeholder="Full name" value="${fullname}">
+                    <input name="username" type="text" class="input-block-level" placeholder="Email address / Username" value="${username}">
+                    <input name="password" type="password" class="input-block-level" placeholder="Password">
+                    <!--
+                    <label class="checkbox">
+                        <input type="checkbox" value="remember-me"> Remember me
+                    </label>
+                    -->
+                </div>
+
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <button class="btn btn-large btn-primary" type="submit">Submit</button>
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    % if success == True:
+                    <br/>
+                    <div class="alert alert-success alert-block">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <h4>Action succeeded</h4>
+                        <br/>
+                        ${success_message | n}
+                    </div>
+                    % endif
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    % if error == True:
+                    <br/>
+                    <div class="alert alert-error alert-block">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <h4>Action failed</h4>
+                        <br/>
+                        ${error_message or '' | n}
+                    </div>
+                    % endif
+                </div>
+            </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <hr class="clear-margin" style="margin-top: 10px"/>
+                    <div class="page-footer pull-left">
+                        &copy; 2013-2014, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div> <!-- /container -->
+
+</div>
+
+<div class="modal-backdrop fade in"></div>
+
+
+<script type="application/javascript">
+
+    $(document).ready(function() {
+        console.log("document.ready");
+
+        var url = $.url(window.location.href);
+
+    });
+
+</script>
+
+</%block>
