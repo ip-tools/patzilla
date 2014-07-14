@@ -35,15 +35,6 @@
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>
                 -->
-                % if error == True:
-                    <div class="alert alert-error alert-block">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <h4>Login failed</h4>
-                        <br/>
-                        Please check your credentials or
-                        <a id="mail-login-failed" href="mailto:support@elmyra.de">contact us for support</a>.
-                    </div>
-                % endif
             </div>
 
         </div>
@@ -59,6 +50,16 @@
 
         <div class="row-fluid">
             <div class="span12">
+                % if error == True:
+                <br/>
+                <div class="alert alert-error alert-block">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Login failed</h4>
+                    <br/>
+                    Please check your credentials or
+                    <a id="mail-login-failed" href="mailto:support@elmyra.de">contact us for support</a>.
+                </div>
+                % endif
             </div>
         </div>
 
@@ -70,7 +71,7 @@
                     <br/>
                     You are welcome to register for a free account while the application is in closed beta.
                     <br/><br/>
-                    Otherwise, please take a glimpse by visiting the <a id="visit-demo" href="/" target="_blank">demo page</a>.
+                    Otherwise, please take a glimpse by exploring a <a id="visit-demo" href="/" target="_blank">demo query</a>.
                 </div>
             </div>
         </div>

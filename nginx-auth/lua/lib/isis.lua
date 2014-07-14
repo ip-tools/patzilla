@@ -133,6 +133,12 @@ function verify_cookie()
         local timestamp = payload.meta.timestamp
         local user = payload.data
 
+        -- user must be present in cookie
+        if user == cjson.null then
+            ngx.log(ngx.WARN, 'user is empty')
+            return false
+        end
+
         -- Verify that the signature is valid and the token did not expire.
         local ttl = timestamp - ngx.time()
 
@@ -156,7 +162,7 @@ function verify_cookie()
             -- automatic token renewal
             if ttl <= config.auth.cookie_renewal then
                 ngx.log(ngx.INFO, 'Renewed cookie')
-                set_cookie()
+                set_cookie(user)
             end
 
             return true

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.31.1
+======
+- auth/ui: tweak login form, fix cookie renewal
+
 0.31.0
 ======
 - auth/ui: make login screen more appealing
