@@ -55,7 +55,8 @@ def identity_auth_handler(request):
         if user.check_password(password):
             response = {
                 'userid': user.userid,
-                'username': username,
+                'username': user.username,
+                'fullname': user.fullname,
             }
             return response
 

@@ -87,7 +87,7 @@ signals.pre_save.connect(User.hash_password)
 def provision_users(event):
     users = [
         User(username = '***REMOVED***', password = '***REMOVED***', fullname = '***REMOVED***', tags = ['elmyra-staff']),
-        User(username = 'andi', password = 'elmyraandi', fullname = 'Andreas Motl', tags = ['elmyra-staff']),
+        User(username = '***REMOVED***', password = '***REMOVED***', fullname = 'Andreas Motl', tags = ['elmyra-staff']),
     ]
     for user in users:
         try:

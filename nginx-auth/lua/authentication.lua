@@ -13,7 +13,6 @@ https://github.com/phaer/nginx-lua-auth
 local config = require('config')
 local util = require('lib/util')
 local isis = require('lib/isis')
-local users = config.users
 
 headers = ngx.req.get_headers()
 
@@ -23,7 +22,7 @@ if config.auth.mode == 'basic-auth' then
     local user = isis.authenticate_user(config.auth.mode, username, password)
 
     if user then
-        isis.set_cookie()
+        isis.set_cookie(user)
         ngx.header.content_type = 'text/html'
         ngx.say("<html><head><script>location.reload()</script></head></html>")
     else
@@ -56,7 +55,7 @@ elseif config.auth.mode == 'login-form' then
         local user = isis.authenticate_user(config.auth.mode, args.username, args.password)
 
         if user then
-            isis.set_cookie()
+            isis.set_cookie(user)
 
             -- TODO: remember me
 

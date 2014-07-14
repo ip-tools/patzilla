@@ -13,7 +13,7 @@ function get_uri(path, args, args_more)
 end
 
 function decode_uri(uri)
-    local path, args = string.match(uri, '(.+)?(.+)')
+    local path, args = uri:match('(.+)?(.+)')
     if not path then
         path = uri
     end
@@ -55,8 +55,14 @@ function deepcopy(orig)
     return copy
 end
 
+function log(message, level)
+    level = level or ngx.INFO
+    ngx.log(level, message)
+end
 
 return {
     decode_referer=decode_referer,
     get_uri=get_uri,
+    log=log,
+    deepcopy=deepcopy,
 }
