@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
 from pyramid.threadlocal import get_current_request
 from pyramid.url import route_url

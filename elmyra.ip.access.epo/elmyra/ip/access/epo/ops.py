@@ -87,11 +87,14 @@ def inquire_images(patent):
             log.error(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
             error = HTTPError(error_msg_access)
             error.status_code = response.status_code
+
+        # TODO: respond with proper json error
         raise error
 
     try:
         data = response.json()
     except JSONDecodeError as ex:
+        # TODO: respond with proper json error
         error_msg_process += ': {0}'.format(str(ex))
         log.error(error_msg_process)
         error = HTTPError(error_msg_process)
@@ -169,10 +172,12 @@ def get_ops_image(document, page, kind, format):
         else:
             msg = 'No image information for document={0}, kind={1}'.format(document, kind)
             log.warn(msg)
+            # TODO: respond with proper json error
             raise HTTPNotFound(msg)
     else:
         msg = 'No image information for document={0}'.format(document)
         #log.warn(msg)
+        # TODO: respond with proper json error
         raise HTTPNotFound(msg)
 
     client = get_ops_client()
@@ -187,6 +192,7 @@ def get_ops_image(document, page, kind, format):
         error = HTTPError()
         error.explanation = msg
         error.status_code = response.status_code
+        # TODO: respond with proper json error
         raise error
 
 
@@ -252,6 +258,7 @@ def pdf_document_build(patent):
     image_info = inquire_images(patent)
     if not image_info:
         msg = 'No image information for document={0}'.format(patent)
+        # TODO: respond with proper json error
         raise HTTPNotFound(msg)
 
     page_count = int(image_info['FullDocument']['@number-of-pages'])

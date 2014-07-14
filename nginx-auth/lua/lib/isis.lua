@@ -87,6 +87,16 @@ function verify_cookie()
 
         -- Verify that the signature is valid and the token did not expire.
         local ttl = tonumber(timestamp) - ngx.time()
+
+        -- TODO: prevent timing attacks, see also:
+        --[[
+        http://codahale.com/a-lesson-in-timing-attacks/
+        http://emerose.com/timing-attacks-explained
+        http://seb.dbzteam.org/crypto/python-oauth-timing-hmac.pdf
+        http://carlos.bueno.org/2011/10/timing.html
+        http://www.levigross.com/2014/02/07/constant-time-comparison-functions-in-python-haskell-clojure-java-etc/
+        see also: elmyra.web.identity
+        ]]
         if ngx.hmac_sha1(config.auth.hmac_secret, timestamp) == hmac and ttl >= 0 then
 
             -- TODO: propagate userid/username to upstream service using http headers
