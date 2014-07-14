@@ -101,7 +101,6 @@ function decode_token(token)
 end
 
 function set_cookie(user)
-
     local expires_after = config.auth.cookie_expiration
     local expiration = ngx.time() + expires_after
     local token = encode_token(user, expiration)
@@ -113,6 +112,11 @@ function set_cookie(user)
     cookie = cookie .. "Expires=" .. ngx.cookie_time(expiration) .. "; "
     cookie = cookie .. "Max-Age=" .. expires_after .. "; "
     cookie = cookie .. "HttpOnly"
+    ngx.header['Set-Cookie'] = cookie
+end
+
+function delete_cookie()
+    local cookie = config.auth.cookie_name .. "=; "
     ngx.header['Set-Cookie'] = cookie
 end
 
@@ -166,6 +170,7 @@ return {
     authenticate_user=authenticate_user,
     get_basic_credentials=get_basic_credentials,
     set_cookie=set_cookie,
+    delete_cookie=delete_cookie,
     verify_cookie=verify_cookie,
     decode_referer=decode_referer,
 }

@@ -18,6 +18,7 @@ development
 - auth: automatic cookie renewal, proper error responses for /api and /static routes
 - middleware: simple user identity subsystem
 - auth: authenticate against identity service, propagate userid/username to upstream service via http headers
+- auth/ui: sign out with button
 
 0.29.0
 ======

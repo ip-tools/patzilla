@@ -141,7 +141,8 @@ def get_redirect_query(request, query=None):
     path = '/'
     host = request.headers.get('Host')
 
-    if 'localhost' in host:
+    # TODO: at least look this up in development.ini
+    if 'localhost:6543' in host:
         path = '/ops/browser'
 
     redirect_url = path

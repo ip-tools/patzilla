@@ -290,3 +290,8 @@ dl.dl-horizontal-inline {
     margin-bottom: 15px;
     padding: 7px 9px;
 }
+
+.logout-button {
+    position: relative;
+    top: -6px;
+}
