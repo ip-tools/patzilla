@@ -38,6 +38,11 @@ if static_resource and not request_uri:find("^/static/js/app.*$") then
     return
 end
 
+-- *some* api endpoints resources
+if request_uri:find("^/api/identity/pwhash.*$") then
+    return
+end
+
 -- "patentview" domains
 if ngx.var.host:find("^patentview.*$") then
     return
