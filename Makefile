@@ -45,9 +45,6 @@ sdist:
 upload:
 	rsync -auv */dist/elmyra.ip.access.epo-* root@almera.elmyra.de:/root/install/ops-chooser/
 
-upload-config:
-	rsync elmyra.ip.access.epo/production.ini root@almera.elmyra.de:/opt/ops-chooser/
-
 setup-maintenance:
 	source .venv27/bin/activate; pip install cuisine
 
@@ -55,7 +52,7 @@ install:
 	@# make install target=patoffice version=0.29.0
 	source .venv27/bin/activate; fab install:target=$(target),version=$(version)
 
-package-and-install: sdist upload upload-config install
+package-and-install: sdist upload install
 
 bumpversion:
 	bumpversion $(bump)
@@ -63,11 +60,10 @@ bumpversion:
 push:
 	git push && git push --tags
 
-release:
-	$(MAKE) cut-release && $(MAKE) package-and-install
+#release:
+#	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
 
-cut-release:
-	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
+release: js bumpversion push sdist upload
 
 test:
 	@python runtests.py          \
