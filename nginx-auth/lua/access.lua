@@ -87,4 +87,4 @@ end
 
 -- For all other requests, rewrite the URL so that we serve /auth if there's no valid token.
 ngx.log(ngx.INFO, 'Require authentication to "' .. ngx.var.request_uri .. '"')
-ngx.exec("/auth")
+return ngx.exec("/auth")

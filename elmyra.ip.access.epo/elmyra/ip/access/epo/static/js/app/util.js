@@ -50,7 +50,11 @@ function asbool(value) {
 }
 
 // http://stackoverflow.com/questions/5538972/console-log-apply-not-working-in-ie9/5539378#5539378
-var log = Function.prototype.bind.call(console.log, console);
+if (Function.prototype.bind) {
+    var log = Function.prototype.bind.call(console.log, console);
+} else {
+    var log = function() {};
+}
 
 // http://stackoverflow.com/questions/572604/javascript-how-to-extend-array-prototype-push/572631#572631
 _.clear = function(array) {
