@@ -5,6 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.31.2
+======
+- middleware: fix nasty "AssertionError: PID check failed. RNG must be re-initialized after fork(). Hint: Try Random.atfork()"
+  error with opaque parameter subsystem
+
 0.31.1
 ======
 - auth/ui: tweak login form, fix cookie renewal

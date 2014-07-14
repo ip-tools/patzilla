@@ -1,15 +1,22 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
 import logging
+import Crypto
 from pkg_resources import resource_filename
+from simplejson import JSONDecodeError
 from cornice.service import Service
+from pyramid.httpexceptions import HTTPBadRequest
 from elmyra.ip.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
 from elmyra.ip.util.date import datetime_iso, unixtime_to_datetime
-from pyramid.httpexceptions import HTTPBadRequest
-from simplejson.scanner import JSONDecodeError
+from elmyra.web.uwsgi.decorators import postfork
 
 
 log = logging.getLogger(__name__)
+
+@postfork
+def init_random():
+    Crypto.Random.atfork()
+
 
 def includeme(config):
 
