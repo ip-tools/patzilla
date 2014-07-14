@@ -24,7 +24,9 @@ requires = [
     # caching
     'Beaker==1.6.4',
     'pyramid_beaker==0.8',
-    'pymongo==2.6.3',
+    'pymongo==2.7.1',
+    'mongoengine==0.8.7',
+    'blinker==1.3',
 
     # web services
     'cornice==0.15',
@@ -33,6 +35,7 @@ requires = [
     'PyCrypto==2.6.1',
     'jws==0.1.2',
     'python_jwt==0.3.1',
+    'pbkdf2==1.3',
 
     # ----------------------------------------------
     #   business logic

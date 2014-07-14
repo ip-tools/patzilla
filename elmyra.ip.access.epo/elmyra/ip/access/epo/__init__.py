@@ -21,6 +21,7 @@ def main(global_config, **settings):
     #config.include("akhet.static")
 
     # Register subsystem components
+    config.include("elmyra.web.identity")
     config.include(".opaquelinks")
 
     config.add_renderer('.html', 'pyramid.mako_templating.renderer_factory')

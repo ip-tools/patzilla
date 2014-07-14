@@ -12,6 +12,7 @@ development
 - middleware/ui/auth: nginx-lua-auth enhancements (login-form)
 - ui/auth: enhance login box: integrate actions (login failed, register account) via email; rumble on error
 - auth: automatic cookie renewal, proper error responses for /api and /static routes
+- middleware: simple user identity subsystem
 
 0.29.0
 ======
