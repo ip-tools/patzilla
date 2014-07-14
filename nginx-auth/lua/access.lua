@@ -21,17 +21,25 @@ local static_resource = request_uri:find("^/fanstatic/.*$") or request_uri:find(
 --  route firewall (whitelist)
 -- ------------------------------------------
 
--- always permit access to the authentication endpoint
+-- always permit access to ...
+
+-- the authentication endpoint
 if request_uri == "/auth" then
     return
 end
 
--- TODO: better use request_uri here?
+-- the login form
 if request_uri:find("^/login.*$") then
     return
 end
 
+-- all static resources
 if static_resource and not request_uri:find("^/static/js/app.*$") then
+    return
+end
+
+-- "patentview" domains
+if ngx.var.host:find("^patentview.*$") then
     return
 end
 

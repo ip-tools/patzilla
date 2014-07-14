@@ -7,6 +7,7 @@ development
 - auth/ui: make login screen more appealing
 - auth/ui: sign out with button
 - ui: permalink to current query
+- auth: always permit access to “patentview” domains
 
 0.30.0
 ======
