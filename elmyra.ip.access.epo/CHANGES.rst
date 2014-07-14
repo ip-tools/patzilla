@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.31.0
+======
 - auth/ui: make login screen more appealing
 - auth/ui: sign out with button
 - ui: permalink to current query
