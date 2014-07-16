@@ -7,6 +7,9 @@ development
 - ui: fix patoffice integration; submit basket content without rating stars
 - ui: fix broken inline links; don't propagate "datasource=depatisnet”, but explicitly switch to “datasource=ops” instead
 - ui: better demo query for login panel
+- auth: use session cookies instead of persistent cookies for propagating the authentication token
+- auth: use "Secure" for making cookies https-only
+
 
 0.32.0
 ======

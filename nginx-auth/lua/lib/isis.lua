@@ -101,6 +101,7 @@ function decode_token(token)
 end
 
 function set_cookie(user)
+    -- set a session cookie: https://en.wikipedia.org/wiki/HTTP_cookie#Session_cookie
     local expires_after = config.auth.cookie_expiration
     local expiration = ngx.time() + expires_after
     local token = encode_token(user, expiration)
@@ -109,8 +110,17 @@ function set_cookie(user)
     -- @TODO: Don't include subdomains
     cookie = cookie .. "Path=/; "
     -- cookie = cookie .. "Domain=" .. ngx.var.server_name .. "; "
-    cookie = cookie .. "Expires=" .. ngx.cookie_time(expiration) .. "; "
-    cookie = cookie .. "Max-Age=" .. expires_after .. "; "
+
+    -- don't use expiry when setting session cookies
+    --cookie = cookie .. "Expires=" .. ngx.cookie_time(expiration) .. "; "
+    --cookie = cookie .. "Max-Age=" .. expires_after .. "; "
+
+    -- https://en.wikipedia.org/wiki/HTTP_cookie#Secure_cookie
+    if ngx.var.scheme == 'https' then
+        cookie = cookie .. "Secure; "
+    end
+
+    -- https://en.wikipedia.org/wiki/HTTP_cookie#HttpOnly_cookie
     cookie = cookie .. "HttpOnly"
     ngx.header['Set-Cookie'] = cookie
 end
