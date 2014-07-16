@@ -331,7 +331,6 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         var entries = this.model.unicode_stars_list();
 
-        //var numbers = this.model.get_numbers();
         if (entries) {
             data['numbers_display'] = entries.join('\n');
         }
@@ -363,6 +362,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
         $('.basket-review-button').unbind('click');
         $('.basket-review-button').click(function() {
             _this.model.review();
+        });
+
+        // submit selected documents to origin or 3rd-party system
+        $('#basket-submit-button').unbind('click');
+        $('#basket-submit-button').click(function() {
+            var numbers = _this.model.get_numbers();
+            $('textarea#basket').val(numbers.join('\n'));
         });
 
         // share via mail

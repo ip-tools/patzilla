@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix patoffice integration; submit basket content without rating stars
 
 0.32.0
 ======
