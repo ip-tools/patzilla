@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: fix patoffice integration; submit basket content without rating stars
+- ui: fix broken inline links; don't propagate "datasource=depatisnet”, but explicitly switch to “datasource=ops” instead
 
 0.32.0
 ======

@@ -167,15 +167,15 @@ function listview_bind_actions() {
         var href = $(this).attr('href');
         var params = opsChooserApp.permalink.query_parameters_viewstate(href);
 
+        // regardless where the query originates from (e.g. datasource=review),
+        // requests for query-links need switching to ops
+        params['datasource'] = 'ops';
+
         // debugging
         //opsChooserApp.config.set('isviewer', true);
 
         // when in liveview, scrumble database query and viewstate parameters into opaque parameter token
         if (opsChooserApp.config.get('isviewer')) {
-
-            // regardless where the query originates from (e.g. datasource=review),
-            // requests for query-links need switching to ops
-            params['datasource'] = 'ops';
 
             // nail to liveview mode in any case
             params['mode'] = 'liveview';
