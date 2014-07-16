@@ -25,8 +25,6 @@ requires = [
     'Beaker==1.6.4',
     'pyramid_beaker==0.8',
     'pymongo==2.7.1',
-    'mongoengine==0.8.7',
-    'blinker==1.3',
 
     # web services
     'cornice==0.15',
@@ -46,6 +44,9 @@ requires = [
     'BeautifulSoup==3.2.1',
     'ago==0.0.6',
     'pyparsing==2.0.2',
+    'mongoengine==0.8.7',
+    'blinker==1.3',
+    'python-dateutil==2.2',
 
     # ----------------------------------------------
     #   user interface

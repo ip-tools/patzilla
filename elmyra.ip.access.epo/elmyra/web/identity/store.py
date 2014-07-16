@@ -2,12 +2,13 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import logging
 import uuid
+import datetime
 from pbkdf2 import crypt
 from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
 from mongoengine import connect as mongoengine_connect, signals
 from mongoengine.document import Document
-from mongoengine.fields import StringField, ListField
+from mongoengine.fields import StringField, ListField, DateTimeField
 from mongoengine.errors import NotUniqueError
 
 log = logging.getLogger(__name__)
@@ -48,6 +49,8 @@ class User(Document):
     username = StringField(unique=True)
     password = StringField()
     fullname = StringField()
+    created = DateTimeField()
+    modified = DateTimeField(default=datetime.datetime.now)
     tags = ListField(StringField(max_length=30))
 
     @classmethod
@@ -64,6 +67,11 @@ class User(Document):
     https://github.com/mitsuhiko/python-pbkdf2/blob/master/pbkdf2.py
     """
 
+    @classmethod
+    def assign_created(cls, sender, document, **kwargs):
+        if not document.created:
+            document.created = datetime.datetime.now()
+
     @staticmethod
     def crypt500(password):
         return crypt(password, iterations=500)
@@ -78,6 +86,7 @@ class User(Document):
         return pwhash == crypt(password, pwhash)
 
 signals.post_init.connect(User.assign_userid)
+signals.post_init.connect(User.assign_created)
 signals.pre_save.connect(User.hash_password)
 
 

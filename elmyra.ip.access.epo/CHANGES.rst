@@ -9,7 +9,7 @@ development
 - ui: better demo query for login panel
 - auth: use session cookies instead of persistent cookies for propagating the authentication token
 - auth: use "Secure" for making cookies https-only
-
+- middleware/auth: timestamps  for User (created, modified)
 
 0.32.0
 ======
