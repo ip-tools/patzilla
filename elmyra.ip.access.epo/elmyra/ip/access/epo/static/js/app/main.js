@@ -517,6 +517,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 opsChooserApp = new OpsChooserApp({config: ipsuiteNavigatorConfig});
 
 opsChooserApp.addRegions({
+    queryBuilderRegion: "#querybuilder-region",
     basketRegion: "#basket-region",
     metadataRegion: "#ops-metadata-region",
     listRegion: "#ops-collection-region",
@@ -585,6 +586,8 @@ opsChooserApp.addInitializer(function(options) {
 opsChooserApp.addInitializer(function(options) {
 
     // bind model objects to view objects
+    this.queryBuilderView = new QueryBuilderView({
+    });
     this.metadataView = new MetadataView({
         model: this.metadata
     });
@@ -599,6 +602,7 @@ opsChooserApp.addInitializer(function(options) {
     });
 
     // bind view objects to region objects
+    opsChooserApp.queryBuilderRegion.show(this.queryBuilderView);
     opsChooserApp.metadataRegion.show(this.metadataView);
     opsChooserApp.listRegion.show(this.collectionView);
     opsChooserApp.paginationRegionTop.show(this.paginationViewTop);
