@@ -16,6 +16,11 @@ local isis = require('lib/isis')
 
 headers = ngx.req.get_headers()
 
+-- TODO: maybe combine both modes
+-- http://www.peej.co.uk/articles/http-auth-with-html-forms.html
+-- http://stackoverflow.com/questions/5507234/how-to-use-basic-auth-and-jquery-and-ajax
+-- https://github.com/fiznool/backbone.basicauth
+
 if config.auth.mode == 'basic-auth' then
 
     local username, password = util.get_basic_credentials()

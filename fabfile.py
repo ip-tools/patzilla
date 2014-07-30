@@ -4,7 +4,7 @@ from fabric.contrib.project import rsync_project
 import os
 from distutils.core import run_setup
 from fabric.decorators import task, hosts
-from fabric.colors import yellow
+from fabric.colors import yellow, red
 from fabric.utils import abort
 from fabric.state import env
 from cuisine import run, file_exists, file_is_dir, file_is_file, file_upload
@@ -77,14 +77,15 @@ def upload_config(config_path, target_path):
 
 def restart_service(target):
     uwsgi_names = {
+        'prod': 'patentsearch-prod',
         'staging': 'patentsearch-staging',
         'patoffice': 'patentsearch.patoffice',
-        }
+    }
     uwsgi_name = uwsgi_names.get(target)
     if uwsgi_name:
         run('service uwsgi reload %s' % uwsgi_name)
     else:
-        print('WARNING: Could not restart service "%s"' % target)
+        print(red('WARNING: Could not restart service "%s"' % target))
 
 @task
 @hosts('root@almera.elmyra.de')
