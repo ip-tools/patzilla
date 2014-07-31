@@ -62,50 +62,7 @@ ${ h.fiddler.render() | n }
                 <div class="span1">
                     <div class="btn-group btn-popover">
 
-                        <!-- save/export database -->
-                        <a
-                                id="data-export-button"
-                                class="btn btn-small btn-popover"
-                                data-toggle="popover" data-trigger="hover" data-placement="top"
-                                data-content="Export all data"
-                                >
-                            <i class="icon-save icon-large"></i>
-                        </a>
 
-                        <!-- permalink for review -->
-                        <a class="btn btn-small btn-popover permalink-review-liveview"
-                           data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                           data-content="Project review, permalink"
-                                >
-                            <i class="icon-external-link"></i>
-                        </a>
-                        <a class="btn btn-small btn-popover permalink-review-liveview-ttl"
-                           data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                           data-content="Project review, external link"
-                                >
-                            <i class="icon-external-link"></i>
-                            <i class="icon-time"></i>
-                        </a>
-
-                        % if debugmode:
-                        <a
-                                id="data-import-button"
-                                class="btn btn-small btn-danger btn-popover"
-                                data-toggle="popover" data-trigger="hover" data-placement="top"
-                                data-content="IMPORT ALL DATA (doubleclick)"
-                                >
-                            <i class="icon-folder-open-alt icon-large"></i>
-                        </a>
-                        <input type="file" id="data-import-file" class="hide"/>
-                        <a
-                                id="factory-reset-button"
-                                class="btn btn-small btn-danger btn-popover"
-                                data-toggle="popover" data-trigger="hover" data-placement="top"
-                                data-content="WIPE ALL DATA (doubleclick)"
-                                >
-                            <i class="icon-trash icon-large"></i>
-                        </a>
-                        % endif
                     </div>
                 </div>
 

@@ -250,6 +250,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
         this.projectChooserView.render();
 
+        // activate storage actions
+        this.storage.setup_ui();
+
+        // activate permalink actions
+        this.permalink.setup_ui();
+
         // update project information metadata display
         $('#ui-project-name').html(
             'Review for project "' + project.get('name') + '".'

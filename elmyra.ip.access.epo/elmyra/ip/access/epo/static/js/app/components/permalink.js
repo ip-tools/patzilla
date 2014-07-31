@@ -249,6 +249,9 @@ PermalinkPlugin = Marionette.Controller.extend({
                 // compute permalink
                 var url = _this.make_uri(params);
 
+                e.preventDefault();
+                e.stopPropagation();
+
                 // show permalink overlay
                 _this.popover_show(_button, url, {
                     intro:
@@ -271,6 +274,9 @@ PermalinkPlugin = Marionette.Controller.extend({
 
                 // compute permalink
                 _this.make_uri_opaque(params).then(function(url) {
+
+                    e.preventDefault();
+                    e.stopPropagation();
 
                     // show permalink overlay
                     _this.popover_show(_button, url, {

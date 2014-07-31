@@ -185,6 +185,8 @@ StoragePlugin = Marionette.Controller.extend({
 
     setup_ui: function() {
 
+        console.log('StoragePlugin.setup_ui');
+
         var _this = this;
 
         // export database
@@ -208,7 +210,9 @@ StoragePlugin = Marionette.Controller.extend({
 
             // sanity checks
             if (file.type != 'application/json') {
-                $(notifybox).qnotify('ERROR: File type is ' + file.type + ', but should be application/json', {error: true});
+                var message = 'ERROR: File type is ' + file.type + ', but should be application/json';
+                //log('import message:', message);
+                $(notifybox).qnotify(message, {error: true});
                 return;
             }
 
@@ -220,29 +224,37 @@ StoragePlugin = Marionette.Controller.extend({
 
             };
             reader.onerror = function(e) {
-                $(notifybox).qnotify('ERROR: Could not read file ' + file.name + ', message=' + e.getMessage(), {error: true});
+                var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
+                //log('import message:', message);
+                $(notifybox).qnotify(message, {error: true});
             }
             reader.readAsText(file);
 
         });
 
-        $('#data-import-button').unbind('dblclick');
-        $('#data-import-button').on('dblclick', function(e) {
+        $('#data-import-button').unbind('click');
+        $('#data-import-button').on('click', function(e) {
             $('#data-import-file').click();
         });
 
 
         // reset database
-        $('#factory-reset-button').unbind('dblclick');
-        $('#factory-reset-button').on('dblclick', function(e) {
+        $('#factory-reset-button').unbind();
+        $('#factory-reset-button').click(function(e) {
 
-            // wipe the database
-            _this.dbreset({shutdown_gui: true});
+            bootbox.confirm('<h4><span class="alert alert-danger">This will wipe the whole local database. Are you sure?</span></h4>', function(wipe_ack) {
+                if (wipe_ack) {
 
-            // send some notifications
-            $(this).parent().find('.notifyjs-container').remove();
-            $(this).parent().qnotify('Database wiped successfully', {error: true});
-            $(this).parent().parent().find('.notifyjs-container').last().qnotify('You should create a new project before starting over');
+                    // wipe the database
+                    _this.dbreset({shutdown_gui: true});
+
+                    // send some notifications
+                    $(this).parent().find('.notifyjs-container').remove();
+                    $(this).parent().qnotify('Database wiped successfully', {error: true});
+                    $(this).parent().parent().find('.notifyjs-container').last().qnotify('You should create a new project before starting over');
+                }
+            });
+
         });
 
     },

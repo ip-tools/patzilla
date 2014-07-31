@@ -17,24 +17,66 @@
             <ul class="dropdown-menu pull-right">
             </ul>
         </div>
-        <div class="btn-group btn-popover">
-            <a
-                    id="project-delete-button"
-                    class="btn btn-small btn-popover"
-                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                    data-content="Delete project"
-                    >
-                <i class="icon-trash icon-large"></i>
-            </a>
-            <a
-                    id="project-create-button"
-                    class="btn btn-small btn-popover"
-                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                    data-content="Create project"
-                    >
-                <i class="icon-plus icon-large"></i>
-            </a>
+
+        <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-wrench"></i>
+            </button>
+            <ul class="dropdown-menu">
+
+                <li>
+
+                    <!-- A. project -->
+                    <div class="dropdown-section-header">Project</div>
+
+                    <!-- new project -->
+                    <a id="project-create-button">
+                        <i class="icon-plus"></i> &nbsp; Create
+                    </a>
+
+                    <!-- delete project -->
+                    <a id="project-delete-button">
+                        <i class="icon-trash"></i> &nbsp; Delete
+                    </a>
+
+                    <hr class="divider"/>
+
+
+                    <!-- B. database -->
+                    <div class="dropdown-section-header">Database</div>
+
+                    <!-- import database -->
+                    <a id="data-import-button">
+                        <i class="icon-folder-open-alt"></i> &nbsp; Import
+                    </a>
+                    <input type="file" id="data-import-file" class="hide"/>
+
+                    <!-- save/export database -->
+                    <a id="data-export-button">
+                        <i class="icon-save"></i> &nbsp; Export
+                    </a>
+
+                    <!-- permalink for review -->
+                    <a class="permalink-review-liveview">
+                        <i class="icon-external-link"></i> &nbsp; Review, permalink
+                    </a>
+                    <a class="permalink-review-liveview-ttl">
+                        <i class="icon-external-link"></i>
+                        &nbsp;
+                        Review, anonymous
+                        <i class="icon-time"></i>
+                    </a>
+
+                    <!-- wipe database -->
+                    <a id="factory-reset-button">
+                        <i class="icon-trash"></i> &nbsp; Wipe
+                    </a>
+
+                </li>
+            </ul>
+
         </div>
+
     </span>
 
 </%text>
