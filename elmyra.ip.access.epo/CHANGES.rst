@@ -10,6 +10,7 @@ development
 - ui: basket action button reorganization
 - ui: project action button reorganization
 - ui: swap tabs: Biblio, Claims, Desc
+- ui: rename “basket” to “collection”
 
 0.35.0
 ======
