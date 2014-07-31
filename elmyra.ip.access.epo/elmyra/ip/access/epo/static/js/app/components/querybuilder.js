@@ -36,12 +36,31 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // properly wire "send query" button
             $('.btn-query-perform').unbind('click');
             if (flavor == 'comfort') {
+
+                // hide action tools
+                $('#querybuilder-cql-actions').hide();
+
+                // hide history chooser
+                $('#cql-history-chooser').hide();
+
+                // submit form fields
                 $('.btn-query-perform').click(function() {
                     $( "#querybuilder-comfort-form" ).submit();
                 });
 
             } else if (flavor == 'cql') {
+
+                // show action tools
+                $('#querybuilder-cql-actions').show();
+
+                // show history chooser
+                $('#cql-history-chooser').show();
+                $('#cql-history-chooser').css('display', 'inline');
+
+                // convert query from form fields to cql expression
                 _this.compute_comfort_query();
+
+                // perform regular search when clicking submit
                 $('.btn-query-perform').click(function() {
                     opsChooserApp.perform_search({reviewmode: false});
                 });

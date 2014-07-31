@@ -26,8 +26,55 @@
                     <button class="btn" data-toggle="tab"
                             href="#querybuilder-cql-tab"
                             data-value="cql">
-                        CQL
+                        Expert
                     </button>
+
+                    <!-- history -->
+                    <div id="cql-history-chooser" class="btn-group2 hide" style2="display: inline">
+
+                        <button
+                                id="btn-query-history"
+                                class="btn dropdown-toggle" data-toggle="dropdown"
+                                >
+                            <i class="icon-time icon-large btn-popover"
+                               data-toggle="popover" data-trigger="hover" data-placement="top"
+                               data-content="Query history"
+                                    ></i>
+                        </button>
+
+                        <div id="cql-history-chooser-container" class="dropdown-menu pull-right2">
+                            <div id="cql-history-chooser-select2" class="span12"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn dropdown-toggle hide" id="querybuilder-cql-actions" data-toggle="dropdown" data-value="cql">
+                            <i class="icon-wrench icon-large"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+
+                            <li>
+
+                                <!-- permalink -->
+                                <a id="btn-query-permalink" href="#" target="_blank">
+                                    <i class="icon-external-link"></i> Query permalink, with expiration time
+                                </a>
+
+                                <!-- content transformation -->
+                                <a id="btn-query-transform">
+                                    <i class="icon-exchange"></i> Transform query
+                                </a>
+
+                                <!-- clear -->
+                                <a id="btn-query-clear">
+                                    <i class="icon-trash"></i> Clear query
+                                </a>
+
+                            </li>
+                        </ul>
+
+                    </div>
                 </div>
 
             </div>
@@ -215,62 +262,8 @@
             </div>
 
             <!-- cql field symbol chooser -->
-            <div class="span6">
+            <div class="span9">
                 <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
-            </div>
-
-            <!-- query permalink, history, content transformation and clearing -->
-            <div class="span3">
-                <div id="query-action" class="btn-group pull-right">
-
-                    <!-- permalink -->
-                    <a id="btn-query-permalink" href="#" target="_blank" role="button"
-                       class="btn btn-popover"
-                       data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                       data-content="Query permalink, with expiration time"
-                            >
-                        <i class="icon-external-link"></i>
-                    </a>
-
-                    <!-- history -->
-                    <div id="cql-history-chooser" class="btn-group">
-
-                        <button
-                                id="btn-query-history"
-                                class="btn dropdown-toggle" data-toggle="dropdown"
-                                >
-                            <i class="icon-time icon-large btn-popover"
-                               data-toggle="popover" data-trigger="hover" data-placement="top"
-                               data-content="Query history"
-                                    ></i>
-                        </button>
-
-                        <div id="cql-history-chooser-container" class="dropdown-menu pull-right">
-                            <div id="cql-history-chooser-select2" class="span12"></div>
-                        </div>
-
-                    </div>
-
-                    <!-- content transformation -->
-                    <button
-                            id="btn-query-transform"
-                            class="btn btn-popover"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                            data-content="Transform query"
-                            >
-                        <i class="icon-exchange icon-large"></i>
-                    </button>
-
-                    <!-- clear -->
-                    <button
-                            id="btn-query-clear"
-                            class="btn btn-popover"
-                            data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                            data-content="Clear query"
-                            >
-                        <i class="icon-trash icon-large"></i>
-                    </button>
-                </div>
             </div>
 
         </div>
