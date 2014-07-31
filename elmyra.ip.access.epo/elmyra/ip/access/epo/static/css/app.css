@@ -30,7 +30,7 @@ a.incognito, a.editable-click {
     color: #333333;
 }
 
-a.remove-patent-number {
+a.pointer {
     text-decoration: none;
     cursor: pointer;
 }
@@ -52,16 +52,6 @@ a.editable-click {
     padding: 7px;
 }
 
-#ui-title {
-    margin-left: 25px;
-}
-#ui-subtitle {
-    margin-left: 25px;
-}
-#ui-productname {
-    margin-right: 25px;
-}
-
 .header-compact {
     font-size: 24.5px;
     font-weight: bold;
@@ -74,6 +64,14 @@ a.editable-click {
     background-repeat: no-repeat;
     background-position: 50px;
 }
+
+.header-container #ui-title,#ui-subtitle {
+    margin-left: 25px;
+}
+.header-container #ui-productname {
+    margin-right: 25px;
+}
+
 
 /* query builder */
 #querybuilder-nav {
@@ -351,9 +349,4 @@ dl.dl-horizontal-inline {
     height: auto;
     margin-bottom: 15px;
     padding: 7px 9px;
-}
-
-.logout-button {
-    position: relative;
-    top: -6px;
 }

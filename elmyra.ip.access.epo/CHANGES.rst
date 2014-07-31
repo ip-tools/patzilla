@@ -10,6 +10,9 @@ development
 - ui: refactor querybuilder initializer functions to querybuilder.js
 - ui: enhance header style
 - ui: refactor hotkeys code out of core.js
+- ui: improve header, add link to help page
+- ui: hotkeys for switching querybuilder flavor
+- ui: improve querybuilder flavor event handling
 
 0.36.0
 ======

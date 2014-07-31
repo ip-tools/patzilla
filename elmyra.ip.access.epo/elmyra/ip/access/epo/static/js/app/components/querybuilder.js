@@ -41,9 +41,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //   user interface flavor chooser
         // ------------------------------------------
 
-        $('#querybuilder-flavor-chooser').on('click', '.btn', function(event) {
+        $('#querybuilder-flavor-chooser button[data-toggle="tab"]').on('shown', function (e) {
 
-            var flavor = $(this).data('value');
+            //e.target // activated tab
+            //e.relatedTarget // previous tab
+
+            var flavor = $(e.target).data('value');
             if (!flavor) return;
 
             // show/hide cql field chooser

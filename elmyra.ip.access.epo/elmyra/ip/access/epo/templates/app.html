@@ -34,12 +34,22 @@ ${ h.fiddler.render() | n }
     </div>
     <div class="span4">
         <div class="pull-right">
-            <a href="/logout" role="button" class="btn btn-popover logout-button"
-               data-toggle="popover" data-trigger="hover" data-placement="right"
-               data-content="Sign out"
-                    >
-                <i class="icon-signout"></i>
-            </a>
+            <div class="btn-group">
+                <a href="/logout"
+                   role="button" class="btn btn-popover"
+                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                   data-content="Sign out"
+                   >
+                    <i class="icon-signout"></i>
+                </a>
+                <a target="_blank"
+                   role="button" class="btn btn-popover link-help"
+                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                   data-content="Online help"
+                   >
+                    <i class="icon-question-sign"></i>
+                </a>
+            </div>
             &nbsp;&nbsp;&nbsp;
             <h3 id="ui-productname" style="display: inline-block"></h3>
         </div>
@@ -107,7 +117,7 @@ ${ h.fiddler.render() | n }
                 <span id="ui-footer"></span>
                 <span id="ui-footer-version"></span>
                 <span class="do-not-print">
-                    Help: <a target="_blank" id="link-help" class="incognito"><i class="icon-question-sign icon-large"></i></a>
+                    Help: <a target="_blank" class="incognito pointer link-help"><i class="icon-question-sign icon-large"></i></a>
                 </span>
             </div>
         </small>

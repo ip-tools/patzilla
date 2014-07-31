@@ -563,7 +563,7 @@ function boot_application() {
     // ------------------------------------------
 
     // transform query: open modal dialog to choose transformation kind
-    $('#link-help').click(function() {
+    $('.link-help').click(function() {
 
         // v1: modal dialog
         //$('#help-modal').modal('show');

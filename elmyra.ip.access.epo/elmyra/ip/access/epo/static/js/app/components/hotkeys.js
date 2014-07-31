@@ -25,8 +25,17 @@ HotkeysPlugin = Marionette.Controller.extend({
             _this.app.perform_search({reviewmode: false});
         });
 
-        // select datasource
         _([document, '#query']).each(function (selector) {
+
+            // user interface flavor chooser
+            $(selector).on('keydown', null, 'ctrl+shift+c', function(event) {
+                $('#querybuilder-flavor-chooser button[data-value="comfort"]').tab('show');
+            });
+            $(selector).on('keydown', null, 'ctrl+shift+x', function(event) {
+                $('#querybuilder-flavor-chooser button[data-value="cql"]').tab('show');
+            });
+
+            // datasource selector
             $(selector).on('keydown', null, 'ctrl+shift+e', function(event) {
                 $('#datasource button[data-value="ops"]').button('toggle');
                 _this.app.set_datasource('ops');
