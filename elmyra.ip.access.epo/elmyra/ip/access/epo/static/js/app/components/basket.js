@@ -424,6 +424,9 @@ BasketView = Backbone.Marionette.ItemView.extend({
         var entry_count = this.model.get('entries').length;
         $('.basket-entry-count').text(entry_count);
 
+        // activate permalink actions
+        opsChooserApp.permalink.setup_ui();
+
     },
 
     future_premium_feature: function() {

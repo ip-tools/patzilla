@@ -30,6 +30,11 @@ a.incognito, a.editable-click {
     color: #333333;
 }
 
+a.remove-patent-number {
+    text-decoration: none;
+    cursor: pointer;
+}
+
 a.editable-click {
     color: #333333;
     border-bottom: dashed 1px #333333;
