@@ -40,7 +40,13 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // unwrap response by creating a list of model objects from records
                 var entries = [];
                 if (search_result) {
-                    var exchange_documents = to_list(search_result['exchange-documents']['exchange-document']);
+                    // double flattening
+                    var exchange_documents = [];
+                    var exchange_documents_container = to_list(search_result['exchange-documents']);
+                    _(exchange_documents_container).each(function(exchange_documents_entry) {
+                        var exchange_documents_inner = to_list(exchange_documents_entry['exchange-document']);
+                        exchange_documents = $.merge(exchange_documents, exchange_documents_inner);
+                    });
                     _(exchange_documents).each(function(exchange_document) {
                         if (exchange_document['@status'] == 'invalid result') {
                             console.error('OPS INVALID RESULT:', entry);
