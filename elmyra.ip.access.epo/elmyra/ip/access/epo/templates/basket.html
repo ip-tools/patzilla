@@ -14,6 +14,7 @@
 
                 <div class="span6">
 
+                    <!--
                     <button id="basket-import-button"
                             role="button" class="btn btn-popover do-not-print"
                             data-toggle="popover" data-trigger="hover" data-placement="right"
@@ -21,6 +22,20 @@
                             >
                         Import
                     </button>
+                    -->
+
+                    <div class="btn-group do-not-print">
+                        <button
+                                class="btn btn-popover basket-review-button" data-value="review"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                data-content="Review list of selected documents"
+                                >
+                            <i class="icon-indent-left"></i> Review
+                        </button>
+                        <button class="btn" disabled="disabled">
+                            <span class="basket-entry-count"></span>
+                        </button>
+                    </div>
 
                 </div>
 
@@ -31,17 +46,13 @@
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Share selected documents"
                             >
-
-                        <button class="btn" disabled="disabled">
-                            <span class="basket-entry-count"></span>
-                        </button>
                         <button
                                 id="basket-submit-button"
                                 type="submit" role="button" class="btn btn-popover"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                 data-content="Submit selected documents to origin or 3rd-party system"
                                 >
-                            <i class="icon-share"></i>
+                            <i class="icon-random"></i>
                             Submit
                         </button>
                         <button class="btn dropdown-toggle" data-toggle="dropdown">

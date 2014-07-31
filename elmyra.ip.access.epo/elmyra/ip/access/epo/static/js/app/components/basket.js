@@ -353,14 +353,15 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // only enable submit button, if ship url is given
         var ship_url = opsChooserApp.config.get('ship-url');
         if (ship_url) {
-            $('#basket-submit-button').prop('disabled', false);
+            $('#basket-submit-button').removeClass('hide');
         } else {
-            $('#basket-submit-button').prop('disabled', true);
+            $('#basket-submit-button').addClass('hide');
         }
 
         // review feature: trigger search from basket content
         $('.basket-review-button').unbind('click');
-        $('.basket-review-button').click(function() {
+        $('.basket-review-button').click(function(event) {
+            event.preventDefault();
             _this.model.review();
         });
 

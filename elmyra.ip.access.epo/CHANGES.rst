@@ -7,6 +7,7 @@ development
 - ui/data: properly deserialize ops response reg. nested results
 - ui: compute cql query from comfort form fields already when switching tabs
 - ui: query builder action button reorganization
+- ui: basket action button reorganization
 
 0.35.0
 ======
