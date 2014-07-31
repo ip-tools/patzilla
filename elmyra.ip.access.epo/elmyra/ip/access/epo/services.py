@@ -338,6 +338,8 @@ def cql_tool_handler(request):
             cql_part = None
             format = u'{0}=({1})'
 
+            query_has_booleans = ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
+
             # special processing rules for depatisnet
             if source == 'depatisnet':
 
@@ -361,14 +363,14 @@ def cql_tool_handler(request):
                         value = iso_to_german(value)
 
                 elif key == 'inventor':
-                    if ' ' in value and not ('or' in value.lower() or 'and' in value.lower()):
+                    if ' ' in value and not query_has_booleans:
                         value = value.replace(' ', '(L)')
 
 
             elif source == 'ops':
 
                 if key == 'inventor':
-                    if ' ' in value and not ('or' in value.lower() or 'and' in value.lower()):
+                    if ' ' in value and not query_has_booleans:
                         value = '"{0}"'.format(value)
 
                 if 'within' in value:
