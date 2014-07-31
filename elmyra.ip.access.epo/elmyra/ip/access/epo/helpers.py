@@ -18,7 +18,7 @@ class BackboneModelParameterFiddler(object):
 
     def __init__(self, name):
         self.name = name
-        self.beta_badge = '<div class="label label-success beta-badge">BETA</div>'
+        self.beta_badge = '<div class="label label-success beta-badge do-not-print">BETA</div>'
 
     def environment(self):
         """create default environment"""

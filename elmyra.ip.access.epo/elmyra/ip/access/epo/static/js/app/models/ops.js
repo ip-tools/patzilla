@@ -470,7 +470,8 @@ OpsExchangeDocument = Backbone.Model.extend({
 
             // skip enriching links when in print mode
             // due to phantomjs screwing them up when rendering to pdf
-            if (this.printmode) {
+            var printmode = opsChooserApp.config.get('mode') == 'print';
+            if (printmode) {
                 return value;
             }
 
@@ -492,10 +493,10 @@ OpsExchangeDocument = Backbone.Model.extend({
             // prepare link rendering
             var link_template;
             if (kind == 'internal') {
-                link_template = _.template('<a href="" class="query-link" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"> <%= label %> </a>');
+                link_template = _.template('<a href="" class="query-link" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
             } else if (kind == 'external') {
                 query = encodeURIComponent(attribute + '=' + value);
-                link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>"> <%= label %> </a>');
+                link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>"><%= label %></a>');
             }
 
             // render link

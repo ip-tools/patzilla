@@ -13,6 +13,7 @@ development
 - ui: improve header, add link to help page
 - ui: hotkeys for switching querybuilder flavor
 - ui: improve querybuilder flavor event handling
+- ui: print mode fixes
 
 0.36.0
 ======
