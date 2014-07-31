@@ -26,6 +26,21 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
+        // ------------------------------------------
+        //   datasource selector
+        // ------------------------------------------
+
+        // switch cql field chooser when selecting datasource
+        // TODO: do it properly on the configuration data model
+        $('#datasource').on('click', '.btn', function(event) {
+            opsChooserApp.set_datasource($(this).data('value'));
+        });
+
+
+        // ------------------------------------------
+        //   user interface flavor chooser
+        // ------------------------------------------
+
         $('#querybuilder-flavor-chooser').on('click', '.btn', function(event) {
 
             var flavor = $(this).data('value');
@@ -68,6 +83,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 });
             }
         });
+
+
+        // ------------------------------------------
+        //   submit search
+        // ------------------------------------------
 
         $( "#querybuilder-comfort-form" ).submit(function( event ) {
             event.preventDefault();

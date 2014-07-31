@@ -9,6 +9,7 @@ development
 - ui: add header background image
 - ui: refactor querybuilder initializer functions to querybuilder.js
 - ui: enhance header style
+- ui: refactor hotkeys code out of core.js
 
 0.36.0
 ======
