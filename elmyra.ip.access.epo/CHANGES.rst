@@ -9,6 +9,7 @@ development
 - ui: query builder action button reorganization
 - ui: basket action button reorganization
 - ui: project action button reorganization
+- ui: swap tabs: Biblio, Claims, Desc
 
 0.35.0
 ======
