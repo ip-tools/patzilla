@@ -9,7 +9,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         console.log('QueryBuilderView.initialize');
         //this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
-        this.templateHelpers.config = opsChooserApp.config;
+        this.config = this.templateHelpers.config = opsChooserApp.config;
+        //this.setup_ui();
     },
 
     templateHelpers: {},
@@ -19,6 +20,95 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
+    },
+
+    onDomRefresh: function() {
+        console.log('QueryBuilderView.onDomRefresh');
+        var _this = this;
+
+        $('#querybuilder-flavor-chooser').on('click', '.btn', function(event) {
+            var flavor = $(this).data('value');
+            cql_field_chooser_setup(flavor != 'cql');
+
+            // application action: perform search
+            // properly wire "send query" button
+            $('.btn-query-perform').unbind('click');
+            if (flavor == 'comfort') {
+                $('.btn-query-perform').click(function() {
+                    $( "#querybuilder-comfort-form" ).submit();
+                });
+
+            } else if (flavor == 'cql') {
+                $('.btn-query-perform').click(function() {
+                    opsChooserApp.perform_search({reviewmode: false});
+                });
+            }
+        });
+
+        $( "#querybuilder-comfort-form" ).submit(function( event ) {
+            event.preventDefault();
+            var criteria = _this.read_comfort_form(this);
+            _this.compute_comfort_query(criteria, opsChooserApp.get_datasource());
+        });
+
+        // perform search default action
+        $('.btn-query-perform').unbind('click');
+        $('.btn-query-perform').click(function() {
+            $( "#querybuilder-comfort-form" ).submit();
+        });
+
+    },
+
+    read_comfort_form: function(form) {
+        var fields = $(form).find($('input'));
+        var payload = {};
+        _.each(fields, function(item) {
+            if (item.value) {
+                payload[item.name] = item.value;
+            }
+        });
+        //log('payload:', JSON.stringify(payload));
+        return payload;
+    },
+
+    compute_comfort_query: function(criteria, datasource) {
+
+        var payload = {
+            format: 'comfort',
+            criteria: criteria,
+            datasource: datasource,
+        };
+
+        this.query_api(payload).then(function(cql) {
+            $("#query").val(cql);
+            //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
+            opsChooserApp.perform_search();
+        });
+    },
+
+    query_api: function(payload) {
+        var deferred = $.Deferred();
+        $.ajax({
+            method: 'post',
+            url: '/api/cql',
+            async: false,
+            sync: true,
+            data: JSON.stringify(payload),
+            contentType: "application/json; charset=utf-8",
+        }).success(function(payload) {
+            if (payload) {
+                deferred.resolve(payload);
+            }
+        }).error(function(error) {
+            console.warn('Error while computing cql query', error);
+            deferred.reject(error);
+        });
+        return deferred.promise();
+    },
+
+    get_flavor: function() {
+        var flavor = $('#querybuilder-flavor-chooser > .btn.active').data('value');
+        return flavor;
     },
 
 });

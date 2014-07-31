@@ -532,11 +532,6 @@ function boot_application() {
     // set cursor to end of query string, also focuses element
     //$('#query').caret($('#query').val().length);
 
-    // application action: perform search
-    $('.btn-query-perform').click(function() {
-        opsChooserApp.perform_search({reviewmode: false});
-    });
-
 
     // ------------------------------------------
     //   datasource selector
@@ -982,9 +977,13 @@ function cql_field_chooser_get_data(datasource) {
     }
 }
 
-function cql_field_chooser_setup() {
+function cql_field_chooser_setup(hide) {
+
+    // TODO: refactor to querybuilder.js and reduce conditional weirdness
+
     var datasource = opsChooserApp.get_datasource();
-    if (!datasource || datasource == 'review') {
+    var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
+    if (hide !== false && (hide || !datasource || datasource == 'review' || queryflavor != 'cql')) {
         var container = $('#cql-field-chooser')[0].previousSibling;
         $(container).hide();
         return;

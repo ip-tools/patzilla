@@ -57,7 +57,39 @@ a.editable-click {
     margin-top: 8px;
 }
 
-/* cql field chooser */
+
+/* query builder */
+#querybuilder-nav {
+    margin-bottom: 0px;
+}
+#querybuilder-nav li a {
+    padding-bottom: 0px;
+}
+#querybuilder-comfort-form {
+    padding-top: 5px;
+}
+#querybuilder-comfort-form * {
+    margin-bottom: 1px;
+}
+#querybuilder-comfort-form .add-on {
+    width: 100px;
+}
+#querybuilder-comfort-form input::-webkit-input-placeholder {
+    color: #DDDDDD;
+}
+#querybuilder-comfort-form input:-moz-placeholder {
+    color: #DDDDDD;
+}
+#querybuilder-comfort-form input::-moz-placeholder {
+    color: #DDDDDD;
+}
+#querybuilder-comfort-form input:-ms-input-placeholder {
+    color: #DDDDDD;
+}
+
+
+
+    /* cql field chooser */
 /* .bigdrop .select2-container .select2-results {max-height: 200px;} */
 .bigdrop .select2-results {max-height: 35em;}
 /* .bigdrop .select2-choices {max-height: 150px; overflow-y: auto;} */

@@ -9,6 +9,9 @@ def now():
 def date_iso(date):
     return date.strftime('%Y-%m-%d')
 
+def date_german(date):
+    return date.strftime('%d.%m.%Y')
+
 def datetime_iso(date):
     return date.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -41,8 +44,16 @@ def parse_weekrange(datestring):
     }
     return payload
 
+def parse_date_iso(isodate):
+    return datetime.datetime.strptime(isodate, '%Y-%m-%d')
+
 def unixtime_to_datetime(unixtime):
     return datetime.datetime.fromtimestamp(unixtime)
 
 def unixtime_to_human(unixtime):
     return ago.human(unixtime_to_datetime(unixtime))
+
+def iso_to_german(date):
+    if '-' in date:
+        date = date_german(parse_date_iso(date))
+    return date

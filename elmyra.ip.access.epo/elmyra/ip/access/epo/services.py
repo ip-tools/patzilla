@@ -7,9 +7,10 @@ from cornice import Service
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
+from elmyra.ip.util.cql.knowledge import datasource_indexnames
 from elmyra.ip.util.cql.pyparsing import CQL
+from elmyra.ip.util.date import iso_to_german
 from elmyra.ip.util.numbers.common import split_patent_number
-from elmyra.ip.util.cql.cheshire3.parser import parse as cql_parse, Diagnostic
 from elmyra.ip.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
@@ -61,6 +62,11 @@ depatisnet_published_data_search_service = Service(
     name='depatisnet-published-data-search',
     path='/api/depatisnet/published-data/search',
     description="DEPATISnet search interface")
+
+cql_tool_service = Service(
+    name='cql-tool-service',
+    path='/api/cql',
+    description="CQL tool service")
 
 
 # ------------------------------------------
@@ -312,3 +318,67 @@ def ops_claims_handler(request):
     patent = request.matchdict['patent']
     description = ops_claims(patent)
     return description
+
+
+@cql_tool_service.post()
+def cql_tool_handler(request):
+    data = request.json
+    source = data['datasource']
+
+    cql_parts = []
+
+    if data['format'] == 'comfort':
+        for key, value in data['criteria'].iteritems():
+
+            try:
+                fieldname = datasource_indexnames[key][source]
+            except KeyError:
+                continue
+
+            cql_part = None
+            format = u'{0}=({1})'
+
+            # special processing rules for depatisnet
+            if source == 'depatisnet':
+
+                if key == 'pubdate':
+
+                    if len(value) == 4 and value.isdigit():
+                        fieldname = 'py'
+
+                    elif 'within' in value:
+                        value = value.replace('within', '').strip()
+                        parts = value.split(',')
+                        parts = map(unicode.strip, parts)
+                        print parts
+                        elements_are_years = all([len(part) == 4 and part.isdigit() for part in parts])
+                        if elements_are_years:
+                            fieldname = 'py'
+                        cql_part = '{fieldname} >= {left} and {fieldname} <= {right}'.format(
+                            fieldname=fieldname, left=iso_to_german(parts[0]), right=iso_to_german(parts[1]))
+
+                    else:
+                        value = iso_to_german(value)
+
+                elif key == 'inventor':
+                    if ' ' in value and not ('or' in value.lower() or 'and' in value.lower()):
+                        value = value.replace(' ', '(L)')
+
+
+            elif source == 'ops':
+
+                if key == 'inventor':
+                    if ' ' in value and not ('or' in value.lower() or 'and' in value.lower()):
+                        value = '"{0}"'.format(value)
+
+                if 'within' in value:
+                    format = '{0} {1}'
+
+            if not cql_part:
+                cql_part = format.format(fieldname, value)
+
+            cql_parts.append(cql_part)
+
+
+    cql = ' and '.join(cql_parts)
+    return cql

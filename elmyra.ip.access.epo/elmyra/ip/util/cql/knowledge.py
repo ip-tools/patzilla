@@ -31,3 +31,16 @@ indexes_keywords = [
     'ab', 'de', 'cl', 'bi',
 
 ]
+
+# map canonical field names to datasource-specific ones
+datasource_indexnames = {
+    'patentnumber': {'ops': 'pn',  'depatisnet': 'pn'},
+    'fulltext':     {'ops': 'txt', 'depatisnet': 'bi'},
+    'applicant':    {'ops': 'pa',  'depatisnet': 'pa'},
+    'inventor':     {'ops': 'in',  'depatisnet': 'in'},
+    'class':        {'ops': 'cl',  'depatisnet': 'ic'},
+    'country':      {'ops': 'pn',  'depatisnet': 'pc'},
+    'pubdate':      {'ops': 'pd',  'depatisnet': 'pub'},
+    'appdate':      {'ops': 'ap',  'depatisnet': 'ap'},
+    'citation':     {'ops': 'ct',  'depatisnet': 'ct'},
+}

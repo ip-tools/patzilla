@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: refactor query builder to separate component
+- ui: introduce field-based query builder (comfort flavor)
 
 0.33.0
 ======
