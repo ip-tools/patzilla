@@ -267,7 +267,8 @@ dl.dl-horizontal-inline {
 }
 
 #basket {
-    font-family: "Courier New";
+    font-family: Monaco, "Lucida Console", monospace;
+    font-size: smaller;
 }
 
 .form-single-bibdata {

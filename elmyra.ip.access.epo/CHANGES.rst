@@ -7,6 +7,7 @@ development
 - ui: refactor query builder to separate component
 - ui: introduce field-based query builder (comfort flavor)
 - ui: update cql field chooser for DEPATISnet
+- ui: change font for basket display
 
 0.33.0
 ======
