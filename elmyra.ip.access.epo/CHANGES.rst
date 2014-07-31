@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.35.0
+======
+- middleware: run ops search with "full-cycle" to retrieve A3 and B1 documents and more
+
 0.34.0
 ======
 - ui: refactor query builder to separate component

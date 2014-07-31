@@ -40,9 +40,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // unwrap response by creating a list of model objects from records
                 var entries = [];
                 if (search_result) {
-                    var exchange_documents = to_list(search_result['exchange-documents']);
-                    _(exchange_documents).each(function(entry) {
-                        var exchange_document = entry['exchange-document'];
+                    var exchange_documents = to_list(search_result['exchange-documents']['exchange-document']);
+                    _(exchange_documents).each(function(exchange_document) {
                         if (exchange_document['@status'] == 'invalid result') {
                             console.error('OPS INVALID RESULT:', entry);
                         } else {

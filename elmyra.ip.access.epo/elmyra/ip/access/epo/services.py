@@ -77,7 +77,7 @@ def ops_published_data_search_handler(request):
     """Search for published-data at OPS"""
 
     # constituents: abstract, biblio and/or full-cycle
-    constituents = request.params.get('constituents', 'biblio')
+    constituents = request.params.get('constituents', 'full-cycle')
 
     # CQL query string
     query = request.params.get('query', '')
