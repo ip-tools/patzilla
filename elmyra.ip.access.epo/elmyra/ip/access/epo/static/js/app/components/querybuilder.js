@@ -28,6 +28,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         $('#querybuilder-flavor-chooser').on('click', '.btn', function(event) {
             var flavor = $(this).data('value');
+
+            // show/hide cql field chooser
             cql_field_chooser_setup(flavor != 'cql');
 
             // application action: perform search
@@ -39,6 +41,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 });
 
             } else if (flavor == 'cql') {
+                _this.compute_comfort_query();
                 $('.btn-query-perform').click(function() {
                     opsChooserApp.perform_search({reviewmode: false});
                 });
@@ -47,8 +50,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         $( "#querybuilder-comfort-form" ).submit(function( event ) {
             event.preventDefault();
-            var criteria = _this.read_comfort_form(this);
-            _this.compute_comfort_query(criteria, opsChooserApp.get_datasource());
+            _this.compute_comfort_query();
+            //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
+            opsChooserApp.perform_search();
         });
 
         // perform search default action
@@ -71,7 +75,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         return payload;
     },
 
-    compute_comfort_query: function(criteria, datasource) {
+    compute_comfort_query: function() {
+
+        var criteria = this.read_comfort_form($('#querybuilder-comfort-form'));
+        var datasource = opsChooserApp.get_datasource();
 
         var payload = {
             format: 'comfort',
@@ -81,8 +88,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         this.query_api(payload).then(function(cql) {
             $("#query").val(cql);
-            //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
-            opsChooserApp.perform_search();
         });
     },
 

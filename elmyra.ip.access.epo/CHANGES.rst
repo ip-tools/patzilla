@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui/data: properly deserialize ops response reg. nested results
+- ui: compute cql query from comfort form fields already when switching tabs
 
 0.35.0
 ======
