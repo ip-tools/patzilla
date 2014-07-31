@@ -36,7 +36,7 @@ function pdf_set_headline(document_number, page) {
 function apply_highlighting() {
     // http://hslpicker.com/
     var styles = {
-        yellow:     {backgroundColor: 'hsla( 66, 100%, 82%, 1)'},
+        yellow:     {backgroundColor: 'hsla( 60, 100%, 82%, 1)'},
         green:      {backgroundColor: 'hsla(118, 100%, 82%, 1)'},
         orange:     {backgroundColor: 'hsla( 16, 100%, 82%, 1)'},
         turquoise:  {backgroundColor: 'hsla(174, 100%, 82%, 1)'},

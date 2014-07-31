@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui fix: query history stopped being submittable
+- ui: make highlighting yellow hurt less
 
 0.36.0
 ======
