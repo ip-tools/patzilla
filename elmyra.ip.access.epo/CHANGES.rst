@@ -8,6 +8,7 @@ development
 - ui: make highlighting yellow hurt less
 - ui: add header background image
 - ui: refactor querybuilder initializer functions to querybuilder.js
+- ui: enhance header style
 
 0.36.0
 ======

@@ -26,23 +26,22 @@ ${ h.fiddler.render() | n }
 
 
 ## title / headline
-<div class="container-fluid">
-    <div class="span9">
-        <div class="pull-left">
-            <h3 id="ui-title" style="display: inline-block"></h3>
-            <span id="ui-subtitle"></span>
+<div class="container-fluid header-container">
+    <div class="span8">
+        <h3 id="ui-title" style="display: inline-block"></h3>
+        <span id="ui-subtitle"></span>
+        <div id="ui-statusline"></div>
+    </div>
+    <div class="span4">
+        <div class="pull-right">
             <a href="/logout" role="button" class="btn btn-popover logout-button"
-                    data-toggle="popover" data-trigger="hover" data-placement="right"
-                    data-content="Sign out"
+               data-toggle="popover" data-trigger="hover" data-placement="right"
+               data-content="Sign out"
                     >
                 <i class="icon-signout"></i>
             </a>
-            <div id="ui-statusline"></div>
-        </div>
-    </div>
-    <div class="span3">
-        <div class="pull-right">
-            <h3 id="ui-productname"></h3>
+            &nbsp;&nbsp;&nbsp;
+            <h3 id="ui-productname" style="display: inline-block"></h3>
         </div>
     </div>
 </div>
