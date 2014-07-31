@@ -52,8 +52,14 @@ a.editable-click {
     padding: 7px;
 }
 
+#ui-title {
+    margin-left: 25px;
+}
 #ui-subtitle {
-    margin-left: 10px;
+    margin-left: 25px;
+}
+#ui-productname {
+    margin-right: 25px;
 }
 
 .header-compact {
@@ -62,6 +68,12 @@ a.editable-click {
     margin-top: 8px;
 }
 
+.header-container {
+    background-image: url(/static/img/header-small.jpg);
+    background-size: 1170px;
+    background-repeat: no-repeat;
+    background-position: 50px;
+}
 
 /* query builder */
 #querybuilder-nav {

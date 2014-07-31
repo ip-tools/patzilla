@@ -6,6 +6,7 @@ development
 ===========
 - ui fix: query history stopped being submittable
 - ui: make highlighting yellow hurt less
+- ui: add header background image
 
 0.36.0
 ======
