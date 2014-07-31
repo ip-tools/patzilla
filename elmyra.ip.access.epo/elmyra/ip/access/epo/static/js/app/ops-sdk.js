@@ -126,6 +126,12 @@ var DEPATISNET_CQL_FIELDS = [
         ],
     },
     {
+        text: '<h4>All IPC</h4>',
+        children: [
+            { id: 'ic', text: cql_field_chooser_text('All IPC fields', ['ic'], '') },
+        ],
+    },
+    {
         text: '<h4>Bibliographic IPC</h4>',
         children: [
             { id: 'icb', text: cql_field_chooser_text('Bibliographic IPC', ['icb'], '') },
@@ -151,6 +157,12 @@ var DEPATISNET_CQL_FIELDS = [
             { id: 'mcml', text: cql_field_chooser_text('MCD main class level', ['mcml'], '') },
             { id: 'mcsl', text: cql_field_chooser_text('MCD secondary class level', ['mcsl'], '') },
             { id: 'mcal', text: cql_field_chooser_text('MCD additional class level', ['mcal'], '') },
+        ],
+    },
+    {
+        text: '<h4>Search file IPC</h4>',
+        children: [
+            { id: 'icp', text: cql_field_chooser_text('Search file IPC', ['icp'], '') },
         ],
     },
 ];
