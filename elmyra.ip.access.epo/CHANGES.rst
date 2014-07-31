@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.34.0
+======
 - ui: refactor query builder to separate component
 - ui: introduce field-based query builder (comfort flavor)
 - ui: update cql field chooser for DEPATISnet
