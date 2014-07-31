@@ -65,7 +65,7 @@
             <div class="span6 container-fluid document-actions do-not-print">
 
                 <!-- details / fulltext -->
-                <div class="span7">
+                <div class="span8">
 
                     <% if (data.has_fulltext()) { %>
                     <div class="btn-group btn-popover tabs document-tab-chooser"
@@ -91,6 +91,7 @@
                     </div>
                     <% } %>
 
+                    <span id="region-comment-button"/>
 
                     <!-- pdf document -->
                     <div class="btn-group btn-popover"
@@ -206,7 +207,7 @@
                 </div>
 
                 <!-- add/remove -->
-                <div class="span5" style="line-height: 200%">
+                <div class="span4" style="line-height: 200%">
 
                     <%
                     # FIXME: use javascript-only variables, get rid of the pyramid request object
@@ -215,6 +216,7 @@
 
                     % if ship_mode == 'multi-numberlist':
                     <%text>
+                    <span class="pull-right">
                     <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn-popover incognito remove-patent-number"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Remove document number from collection"
@@ -226,6 +228,7 @@
                             data-document-number="<%= patent_number %>"
                             style="display: inline-block;"
                             ></span>
+                    </span>
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
                     <!--
                     <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
@@ -238,8 +241,6 @@
 
                     </%text>
                     % endif
-
-                    <span id="region-comment-button"/>
 
                     % if ship_mode == 'single-bibdata':
                     <%text>

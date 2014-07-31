@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.36.0
+======
 - ui/data: properly deserialize ops response reg. nested results
 - ui: compute cql query from comfort form fields already when switching tabs
 - ui: query builder action button reorganization
@@ -12,6 +15,7 @@ development
 - ui: swap tabs: Biblio, Claims, Desc
 - ui: rename “basket” to “collection”
 - ui: more action button enhancements
+- ui: put comment button right next to "Biblio, Claims, Desc"
 
 0.35.0
 ======
