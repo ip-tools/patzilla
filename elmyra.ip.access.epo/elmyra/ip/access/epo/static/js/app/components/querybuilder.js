@@ -27,7 +27,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var _this = this;
 
         $('#querybuilder-flavor-chooser').on('click', '.btn', function(event) {
+
             var flavor = $(this).data('value');
+            if (!flavor) return;
 
             // show/hide cql field chooser
             cql_field_chooser_setup(flavor != 'cql');
