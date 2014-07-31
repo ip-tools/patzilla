@@ -7,6 +7,7 @@ development
 - ui fix: query history stopped being submittable
 - ui: make highlighting yellow hurt less
 - ui: add header background image
+- ui: refactor querybuilder initializer functions to querybuilder.js
 
 0.36.0
 ======
