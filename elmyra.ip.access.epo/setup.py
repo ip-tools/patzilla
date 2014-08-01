@@ -20,6 +20,7 @@ requires = [
     'Akhet==2.0',
     'waitress',
     'Paste==1.7.5.1',
+    'PasteScript 1.7.5',
 
     # caching
     'Beaker==1.6.4',
