@@ -53,7 +53,7 @@ StoragePlugin = Marionette.Controller.extend({
 
     },
 
-    dbexport: function(notifybox) {
+    dbexport: function() {
 
         var _this = this;
 
@@ -66,20 +66,20 @@ StoragePlugin = Marionette.Controller.extend({
 
             // write file
             if (!payload) {
-                $(notifybox).qnotify('Database export failed', {error: true});
+                opsChooserApp.ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
                 return;
             }
             var blob = new Blob([payload], {type: "application/json"});
             saveAs(blob, filename);
 
             // notify user
-            $(notifybox).qnotify('Database exported successfully');
+            opsChooserApp.ui.notify('Database exported successfully', {type: 'success', icon: 'icon-save'});
 
         });
 
     },
 
-    dbimport: function(payload, notifybox) {
+    dbimport: function(payload) {
 
         log('StoragePlugin.dbimport');
 
@@ -95,7 +95,7 @@ StoragePlugin = Marionette.Controller.extend({
                 if (!payload_dataurl || !payload) {
                     var message = 'ERROR: data URL format is invalid';
                     console.error(message + '; payload=' + payload);
-                    $(notifybox).qnotify(message, {error: true});
+                    opsChooserApp.ui.notify(message, {type: 'error'});
                     return;
                 }
             }
@@ -107,7 +107,7 @@ StoragePlugin = Marionette.Controller.extend({
                 var msg = error.message;
                 var message = 'ERROR: JSON format is invalid, ' + msg;
                 console.error(message + '; payload=' + payload);
-                $(notifybox).qnotify(message, {error: true});
+                opsChooserApp.ui.notify(message, {type: 'error'});
                 return;
             }
         }
@@ -119,7 +119,7 @@ StoragePlugin = Marionette.Controller.extend({
         if (filetype != 'elmyra.ipsuite.navigator.database' || !database) {
             var message = 'ERROR: Database dump format is invalid';
             console.error(message);
-            $(notifybox).qnotify(message, {error: true});
+            opsChooserApp.ui.notify(message, {type: 'error'});
             return;
         }
 
@@ -160,7 +160,7 @@ StoragePlugin = Marionette.Controller.extend({
             // activate project
             opsChooserApp.trigger('projects:initialize');
 
-            $(notifybox).qnotify('Database imported successfully');
+            opsChooserApp.ui.notify('Database imported successfully', {type: 'success'});
 
         });
 
@@ -205,14 +205,11 @@ StoragePlugin = Marionette.Controller.extend({
             var file = this.files[0];
             $(this).val(undefined);
 
-            var notifybox = $(this).parent();
-
-
             // sanity checks
             if (file.type != 'application/json') {
                 var message = 'ERROR: File type is ' + file.type + ', but should be application/json';
                 //log('import message:', message);
-                $(notifybox).qnotify(message, {error: true});
+                opsChooserApp.ui.notify(message, {type: 'error'});
                 return;
             }
 
@@ -220,13 +217,13 @@ StoragePlugin = Marionette.Controller.extend({
             var reader = new FileReader();
             reader.onload = function(e) {
                 var payload = e.target.result;
-                _this.dbimport(payload, notifybox);
+                _this.dbimport(payload);
 
             };
             reader.onerror = function(e) {
                 var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
                 //log('import message:', message);
-                $(notifybox).qnotify(message, {error: true});
+                opsChooserApp.ui.notify(message, {type: 'error'});
             }
             reader.readAsText(file);
 
@@ -249,9 +246,7 @@ StoragePlugin = Marionette.Controller.extend({
                     _this.dbreset({shutdown_gui: true});
 
                     // send some notifications
-                    $(this).parent().find('.notifyjs-container').remove();
-                    $(this).parent().qnotify('Database wiped successfully', {error: true});
-                    $(this).parent().parent().find('.notifyjs-container').last().qnotify('You should create a new project before starting over');
+                    opsChooserApp.ui.notify('Database wiped successfully. You should create a new project before starting over.', {type: 'success'});
                 }
             });
 

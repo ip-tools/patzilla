@@ -433,9 +433,6 @@ ${ h.fiddler.render() | n }
 </script>
 
 
-<!-- application -->
-<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
-
 <!-- user interface: templates -->
 <%include file="querybuilder.html"/>
 <%include file="basket.html"/>
@@ -481,7 +478,18 @@ ${ h.fiddler.render() | n }
 <link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
 <script type="text/javascript" src="/static/widget/raty/jquery.raty.js"></script>
 
-    <!-- application -->
+<!-- notificator widget -->
+<script type="text/javascript" src="/static/widget/notificator/js/modernizr.custom.js"></script>
+<script type="text/javascript" src="/static/widget/notificator/js/classie.js"></script>
+<script type="text/javascript" src="/static/widget/notificator/js/notificationFx.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/widget/notificator/css/ns-default.css" />
+<link rel="stylesheet" type="text/css" href="/static/widget/notificator/css/ns-style-attached.css" />
+
+
+<!-- application -->
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+
+<!-- application -->
 % if request.registry.settings.get('ipsuite.production') == 'true':
     <script type="text/javascript" src="/static/js/app.min.js"></script>
 % else:

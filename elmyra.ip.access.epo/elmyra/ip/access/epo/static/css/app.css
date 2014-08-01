@@ -102,9 +102,30 @@ a.editable-click {
     color: #DDDDDD;
 }
 
+/* notification box */
+.ns-box {
+    font-size: 130%;
+}
+.ns-type-success {
+    color: #468847;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.ns-type-error {
+    color: #b94a48;
+    background-color: #f2dede;
+    border-color: #eed3d7;
+}
+.ns-type-warning {
+    color: #ffffff;
+    background-color: #f89406;
+    border-color: #c67605;
+}
 
 
-    /* cql field chooser */
+
+
+/* cql field chooser */
 /* .bigdrop .select2-container .select2-results {max-height: 200px;} */
 .bigdrop .select2-results {max-height: 35em;}
 /* .bigdrop .select2-choices {max-height: 150px; overflow-y: auto;} */

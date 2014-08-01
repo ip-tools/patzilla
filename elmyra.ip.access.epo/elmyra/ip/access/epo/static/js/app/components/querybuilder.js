@@ -125,6 +125,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // TODO: this "$('#query').val().trim()" should be kept at a central place
             if ($('#query').val().trim()) {
                 $('#clipboard-modifier-chooser').modal('show');
+            } else {
+                opsChooserApp.ui.notify('CQL expression is empty, nothing to transform.', {type: 'warning', icon: 'icon-exchange'});
             }
         });
 

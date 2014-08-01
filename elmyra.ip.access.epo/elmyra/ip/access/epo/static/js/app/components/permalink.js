@@ -174,7 +174,7 @@ PermalinkPlugin = Marionette.Controller.extend({
                         // `event.target` === the element that was clicked
                         //event.target.style.display = "none";
                         var message = "Copied permalink to clipboard, size is " + Math.round(event.data['text/plain'].length / 1000) + 'kB.';
-                        $(tip).find('#permalink-popover-message').qnotify(message, {success: true});
+                        opsChooserApp.ui.notify(message, {type: 'success', icon: 'icon-copy'});
                     });
                 });
 

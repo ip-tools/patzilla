@@ -14,6 +14,7 @@ development
 - ui: hotkeys for switching querybuilder flavor
 - ui: improve querybuilder flavor event handling
 - ui: print mode fixes
+- ui: enhance notifications
 
 0.36.0
 ======
