@@ -110,7 +110,7 @@ def pdf_join(pages):
     # pdftk in.pdf attach_files table1.html table2.html to_page 6 output out.pdf
 
     command = [
-        'pdftk',
+        get_pdftk_path(),
     ]
     tmpfiles = []
     for page in pages:
@@ -125,24 +125,26 @@ def pdf_join(pages):
 
     #log.info('command={0}'.format(' '.join(command)))
 
-    proc = subprocess.Popen(
-        command,
-        shell = (os.name == 'nt'),
-        #shell = True,
-        stdin = subprocess.PIPE,
-        stdout = subprocess.PIPE,
-        stderr = subprocess.PIPE,
-    )
-
+    cmddebug = ' '.join(command)
     stdout = stderr = ''
 
     try:
+        proc = subprocess.Popen(
+            command,
+            shell = (os.name == 'nt'),
+            #shell = True,
+            stdin = subprocess.PIPE,
+            stdout = subprocess.PIPE,
+            stderr = subprocess.PIPE,
+        )
+
         stdout, stderr = proc.communicate()
         if proc.returncode is not None and proc.returncode != 0:
-            log.error('pdftk joining failed, command={0}, stderr={1}, returncode={2}'.format(command, stderr, proc.returncode))
-    except:
-        log.error('pdftk joining failed, command={0}, stderr={1}'.format(command, stderr))
-        return None
+            log.error('pdftk joining failed, command={0}, stderr={1}, returncode={2}'.format(cmddebug, stderr, proc.returncode))
+
+    except Exception as ex:
+        log.error('pdftk joining failed, command={0}, exception={1}, stderr={2}'.format(cmddebug, ex, stderr))
+        raise
 
     return stdout
 
@@ -163,7 +165,7 @@ def pdf_set_metadata(pdf_payload, metadata):
     tmpfile.flush()
 
     """
-    command = ['pdftk', '-', 'dump_data', 'output', '-']
+    command = [get_pdftk_path(), '-', 'dump_data', 'output', '-']
     proc = subprocess.Popen(
         command,
         shell = (os.name == 'nt'),
@@ -178,28 +180,32 @@ def pdf_set_metadata(pdf_payload, metadata):
     """
 
 
-    command = ['pdftk', '-', 'update_info', tmpfile.name, 'output', '-']
+    command = [get_pdftk_path(), '-', 'update_info', tmpfile.name, 'output', '-']
 
     #log.info('command={0}'.format(' '.join(command)))
 
-    proc = subprocess.Popen(
-        command,
-        shell = (os.name == 'nt'),
-        #shell = True,
-        stdin = subprocess.PIPE,
-        stdout = subprocess.PIPE,
-        stderr = subprocess.PIPE,
-    )
-
+    cmddebug = ' '.join(command)
     stdout = stderr = ''
 
     try:
+
+        proc = subprocess.Popen(
+            command,
+            shell = (os.name == 'nt'),
+            #shell = True,
+            stdin = subprocess.PIPE,
+            stdout = subprocess.PIPE,
+            stderr = subprocess.PIPE,
+        )
+
         stdout, stderr = proc.communicate(pdf_payload)
         if proc.returncode is not None and proc.returncode != 0:
+            log.error('pdftk metadata store failed, command={0}, stderr={1}'.format(cmddebug, stderr))
             raise Exception()
-    except:
-        log.error('pdftk metadata store failed, command={0}, stderr={1}'.format(command, stderr))
-        return None
+
+    except Exception as ex:
+        log.error('pdftk metadata store failed, command={0}, exception={1}, stderr={2}'.format(cmddebug, ex, stderr))
+        raise
 
     return stdout
 
@@ -258,3 +264,7 @@ def pdf_now():
     # D:20150220033046+01'00'
     now = datetime.datetime.now().strftime("D:%Y%m%d%H%M%S+01'00'")
     return now
+
+
+def get_pdftk_path():
+    return '/usr/local/bin/pdftk'
