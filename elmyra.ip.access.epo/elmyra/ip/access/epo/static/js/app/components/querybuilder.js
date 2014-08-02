@@ -96,7 +96,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             event.preventDefault();
             _this.compute_comfort_query();
             //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
-            opsChooserApp.perform_search();
+            opsChooserApp.perform_search({reviewmode: false});
         });
 
         // perform search default action

@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix search interface behavior weirdness
 
 0.37.0
 ======
