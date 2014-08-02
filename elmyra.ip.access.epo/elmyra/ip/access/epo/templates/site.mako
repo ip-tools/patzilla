@@ -13,6 +13,8 @@
     ## <meta name="keywords" content="${_(u'META_SITE_Keywords')}" />
     ## <meta name="description" content="${_(u'META_SITE_Description')}" />
 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
     <meta name="application-name" content="elmyra.ip.access.epo" />
     ## +Snippets
     <meta itemprop="name" content="elmyra.ip.access.epo">

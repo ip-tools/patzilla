@@ -16,6 +16,8 @@ development
 - middleware: fall back to CIPO for Canadian drawings
 - ui: fix snapped scrolling in Internet Explorer, improve snapping behavior in corner cases
 - ui: retrieve US fulltexts from DEPATISconnect
+- ui: fix Internet Explorer SVG scaling in datasource chooser
+- ui: fix/improve pdf.svg
 
 0.37.0
 ======

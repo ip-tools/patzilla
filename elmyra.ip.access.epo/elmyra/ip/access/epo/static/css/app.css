@@ -77,6 +77,9 @@ a.editable-click {
 
 
 /* query builder */
+
+#datasource img[src*=svg] { height/*\**/: 20px; width/*\**/: 30px; }
+
 #querybuilder-nav {
     margin-bottom: 0px;
 }
@@ -169,6 +172,8 @@ a.editable-click {
 
 
 /* result entry */
+
+img.pdf-svg[src*=svg] { height/*\**/: 20px; width/*\**/: 20px; }
 
 .ops-collection-entry, .ops-collection-meta {
     position: relative;

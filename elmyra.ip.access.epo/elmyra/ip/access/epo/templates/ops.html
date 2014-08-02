@@ -101,7 +101,7 @@
                          data-content="Download full pdf documents from various sources"
                             >
                         <a class="btn dropdown-toggle" data-toggle="dropdown">
-                            <img src="/static/img/icons/pdf.svg" width="16" height="16"/>
+                            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                         </a>
                         <ul class="dropdown-menu">
                             <li>
@@ -565,7 +565,7 @@
                         <!-- PDF export and print view -->
                         <li>
                             <a href="<%= data.get_url_pdf() %>" target="_blank">
-                                <img src="/static/img/icons/pdf.svg" width="16" height="16"/> PDF
+                                <img src="/static/img/icons/pdf.svg" class="pdf-svg"/> PDF
                             </a>
                             <a href="<%= data.get_url_print() %>" target="_blank">
                                 <i class="icon-print icon-large"></i> Print
