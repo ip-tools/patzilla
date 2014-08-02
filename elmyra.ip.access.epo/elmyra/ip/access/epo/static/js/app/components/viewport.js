@@ -40,13 +40,21 @@ ViewportPlugin = Marionette.Controller.extend({
     next_item: function() {
         var target;
         var origin = $('.ops-collection-entry:in-viewport');
-        if ($(window).scrollTop() < origin.offset().top) {
-            target = origin;
-        } else {
-            var target = origin.closest('.ops-collection-entry').last();
-            if (target[0] === origin[0]) {
-                target = $('.ops-collection-entry:below-the-fold').first();
+        if (origin.length) {
+            var page_offset = $(window).scrollTop();
+            var item_offset = Math.floor(origin.offset().top);
+            if (page_offset < item_offset) {
+                target = origin;
+            } else {
+                var target = origin.closest('.ops-collection-entry').last();
+                if (target[0] === origin[0]) {
+                    target = $('.ops-collection-entry:below-the-fold').first();
+                }
             }
+
+        } else {
+            target = $('.ops-collection-entry:below-the-fold').first();
+
         }
         return target;
     },
@@ -55,12 +63,17 @@ ViewportPlugin = Marionette.Controller.extend({
     previous_item: function() {
         var target;
         var origin = $('.ops-collection-entry:in-viewport');
-        if ($(window).scrollTop() > origin.offset().top) {
-            target = origin;
-        } else {
-            var target = origin.closest('.ops-collection-entry').first();
-            if (target[0] === origin[0]) {
-                target = $('.ops-collection-entry:above-the-top').last();
+        if (origin.length) {
+            if ($(window).scrollTop() > origin.offset().top) {
+                target = origin;
+            } else {
+                target = origin.closest('.ops-collection-entry').first();
+                if (target[0] === origin[0]) {
+                    target = $('.ops-collection-entry:above-the-top').last();
+                }
+                if (!target.length) {
+                    target = $('body');
+                }
             }
         }
         return target;
