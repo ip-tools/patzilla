@@ -92,7 +92,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         // snap scrolling to our items (space key)
         $(document).on('keydown', null, null, function(event) {
 
-            if (event.keyCode == 32 && _(['body', 'div']).contains(event.target.localName)) {
+            if (event.keyCode == 32 && !_(['input', 'textarea']).contains(event.target.localName)) {
                 event.preventDefault();
 
                 // scroll to the best next target element
