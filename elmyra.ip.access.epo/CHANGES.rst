@@ -4,7 +4,10 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix statusline margin
+- middleware: fix path to pdftk
 - ui: fix search interface behavior weirdness
+- ui: medium refactoring of main/core javascript code to components/*
 
 0.37.0
 ======

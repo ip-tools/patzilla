@@ -14,7 +14,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     set_datasource: function(datasource) {
-        cql_field_chooser_setup();
+        $("#datasource .btn[data-value='" + datasource + "']").button('toggle');
+        this.queryBuilderView.cql_field_chooser_setup();
     },
 
     get_query: function() {
@@ -443,33 +444,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
 
-    // ux: hotkeys + and - for adding/removing the document in viewport to/from basket
-    get_document_number_in_focus: function() {
-        var document_in_focus = _.first($('.document-actions:in-viewport').closest('.ops-collection-entry'));
-        var document_number = $(document_in_focus).data('document-number');
-        return document_number;
-    },
-    get_rating_widget: function(document_number) {
-        return $('#rate-patent-number-' + document_number);
-    },
-    viewport_document_add_basket: function() {
-        var document_number = this.get_document_number_in_focus();
-        if (document_number) {
-            this.basketModel.add(document_number);
-        }
-    },
-    viewport_document_remove_basket: function() {
-        var document_number = this.get_document_number_in_focus();
-        if (document_number) {
-            this.basketModel.remove(document_number);
-        }
-    },
-    viewport_document_rate: function(score, dismiss) {
-        var _this = this;
-        dismiss = dismiss || false;
-        var document_number = this.get_document_number_in_focus();
-        return this.document_rate(document_number, score, dismiss);
-    },
     document_rate: function(document_number, score, dismiss) {
         var _this = this;
         if (document_number) {
@@ -487,6 +461,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             });
         }
     },
+
 
     // tear down user interface, clear all widgets
     shutdown_gui: function() {

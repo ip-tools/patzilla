@@ -26,6 +26,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
+
         // ------------------------------------------
         //   datasource selector
         // ------------------------------------------
@@ -50,7 +51,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (!flavor) return;
 
             // show/hide cql field chooser
-            cql_field_chooser_setup(flavor != 'cql');
+            _this.cql_field_chooser_setup(flavor != 'cql');
 
             // application action: perform search
             // properly wire "send query" button
@@ -63,7 +64,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // hide history chooser
                 $('#cql-history-chooser').hide();
 
-                // submit form fields
+                // perform field-based search
                 $('.btn-query-perform').click(function() {
                     $( "#querybuilder-comfort-form" ).submit();
                 });
@@ -80,7 +81,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // convert query from form fields to cql expression
                 _this.compute_comfort_query();
 
-                // perform regular search when clicking submit
+                // perform cql expression search
                 $('.btn-query-perform').click(function() {
                     opsChooserApp.perform_search({reviewmode: false});
                 });
@@ -109,6 +110,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_ui_actions: function() {
 
+        var _this = this;
+
         // ------------------------------------------
         //   cql query area action tools
         // ------------------------------------------
@@ -135,7 +138,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-query-history').click(function(e) {
 
             // setup select2 widget
-            cql_history_chooser_setup();
+            _this.cql_history_chooser_setup();
 
             var opened = $('#cql-history-chooser').hasClass('open');
             var chooser_widget = $('#cql-history-chooser-select2');
@@ -273,6 +276,112 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
     },
+
+    cql_field_chooser_get_data: function(datasource) {
+        if (datasource == 'ops') {
+            return OPS_CQL_FIELDS;
+
+        } else if (datasource == 'depatisnet') {
+            return DEPATISNET_CQL_FIELDS;
+
+        } else {
+            return [];
+
+        }
+    },
+    cql_field_chooser_setup: function(hide) {
+
+        // TODO: reduce conditional weirdness
+
+        var datasource = opsChooserApp.get_datasource();
+        var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
+        if (hide !== false && (hide || !datasource || datasource == 'review' || queryflavor != 'cql')) {
+            var container = $('#cql-field-chooser')[0].previousSibling;
+            $(container).hide();
+            return;
+        }
+        var data = this.cql_field_chooser_get_data(datasource);
+        $('#cql-field-chooser').select2({
+            placeholder: 'CQL field symbols' + ' (' + datasource + ')',
+            data: { results: data },
+            dropdownCssClass: "bigdrop",
+            escapeMarkup: function(text) { return text; },
+        });
+        $('#cql-field-chooser').on('change', function(event) {
+
+            var value = $(this).val();
+            if (!value) return;
+
+            //console.log(value);
+
+            var query = $('#query').val();
+            var position = $('#query').caret();
+            var leftchar = query.substring(position - 1, position);
+
+            // skip insert if we're right behind a "="
+            if (leftchar == '=') return;
+
+            // insert space before new field if there is none and we're not at the beginning
+            if (leftchar != ' ' && position != 0) value = ' ' + value;
+
+            $('#query').caret(value + '=');
+            $(this).data('select2').clear();
+
+        });
+
+    },
+
+
+    cql_history_chooser_get_data: function() {
+        var queries = opsChooserApp.project.get('queries');
+        var chooser_data = _(queries).unique().map(function(query) {
+            return { id: query, text: query };
+        });
+        return chooser_data;
+    },
+    cql_history_chooser_setup: function() {
+        var projectname = opsChooserApp.project.get('name');
+        var data = this.cql_history_chooser_get_data();
+
+        var chooser_widget = $('#cql-history-chooser-select2');
+
+        // initialize cql history chooser
+        chooser_widget.select2({
+            placeholder: 'CQL history' + ' (' + projectname + ')',
+            data: { results: data },
+            dropdownCssClass: "bigdrop",
+            escapeMarkup: function(text) { return text; },
+        });
+
+        // when query was selected, put it into cql query input field
+        chooser_widget.unbind('change');
+        chooser_widget.on('change', function(event) {
+
+            $(this).unbind('change');
+
+            var value = $(this).val();
+            if (value) {
+
+                // HACK: cut away suffix
+                // TODO: move to QueryModel
+                if (_.string.endsWith(value, '(ops)')) {
+                    opsChooserApp.set_datasource('ops');
+                } else if (_.string.endsWith(value, '(depatisnet)')) {
+                    opsChooserApp.set_datasource('depatisnet');
+                }
+                value = value.replace(' (ops)', '').replace(' (depatisnet)', '');
+
+                $('#query').val(value);
+            }
+
+            // destroy widget and close dropdown container
+            $(this).data('select2').destroy();
+            $(this).dropdown().toggle();
+
+        });
+
+    },
+
 
     read_comfort_form: function(form) {
         var fields = $(form).find($('input'));

@@ -40,6 +40,16 @@ UiController = Marionette.Controller.extend({
         //}, 1200 );
 
     },
+
+    // perform animated scrolling
+    scroll_smooth: function(target) {
+        if ($(target).offset()) {
+            $('html, body').animate({
+                scrollTop: $(target).offset().top
+            }, 500);
+        }
+    },
+
 });
 
 // setup controller

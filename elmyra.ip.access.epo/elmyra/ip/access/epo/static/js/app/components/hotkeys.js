@@ -51,41 +51,43 @@ HotkeysPlugin = Marionette.Controller.extend({
 
         // add/remove/rate the document in viewport to/from basket
         $(document).on('keydown', null, '+', function() {
-            _this.app.viewport_document_add_basket();
+            _this.app.viewport.document_add_basket();
         });
         $(document).on('keydown', null, 'insert', function() {
-            _this.app.viewport_document_rate(1);
+            _this.app.viewport.document_rate(1);
         });
 
         $(document).on('keydown', null, '-', function() {
-            _this.app.viewport_document_remove_basket();
+            _this.app.viewport.document_remove_basket();
         });
         $(document).on('keydown', null, 'r', function() {
-            _this.app.viewport_document_remove_basket();
+            _this.app.viewport.document_remove_basket();
         });
         $(document).on('keydown', null, 'del', function() {
-            _this.app.viewport_document_remove_basket();
+            _this.app.viewport.document_remove_basket();
         });
         $(document).on('keydown', null, 'ctrl+d', function() {
-            _this.app.viewport_document_remove_basket();
+            _this.app.viewport.document_remove_basket();
         });
 
         $(document).on('keydown', null, '0', function() {
-            _this.app.viewport_document_rate(null, true);
+            _this.app.viewport.document_rate(null, true);
         });
         $(document).on('keydown', null, 'd', function() {
-            _this.app.viewport_document_rate(null, true);
+            _this.app.viewport.document_rate(null, true);
         });
         $(document).on('keydown', null, '1', function() {
-            _this.app.viewport_document_rate(1);
+            _this.app.viewport.document_rate(1);
         });
         $(document).on('keydown', null, '2', function() {
-            _this.app.viewport_document_rate(2);
+            _this.app.viewport.document_rate(2);
         });
         $(document).on('keydown', null, '3', function() {
-            _this.app.viewport_document_rate(3);
+            _this.app.viewport.document_rate(3);
         });
 
+
+        var scroll_smooth = _this.app.ui.scroll_smooth;
 
         // snap scrolling to our items (space key)
         $(document).on('keydown', null, null, function(event) {
@@ -95,22 +97,22 @@ HotkeysPlugin = Marionette.Controller.extend({
 
                 // scroll to the best next target element
                 if (event.shiftKey == false) {
-                    scroll_smooth(mainlist_next_element());
+                    scroll_smooth(_this.app.viewport.next_item());
 
                     // scroll to the best previous target element
                 } else if (event.shiftKey == true) {
-                    scroll_smooth(mainlist_previous_element());
+                    scroll_smooth(_this.app.viewport.previous_item());
                 }
 
             }
         });
         $(document).on('keydown', null, 'pagedown', function(event) {
             event.preventDefault();
-            scroll_smooth(mainlist_next_element());
+            scroll_smooth(_this.app.viewport.next_item());
         });
         $(document).on('keydown', null, 'pageup', function(event) {
             event.preventDefault();
-            scroll_smooth(mainlist_previous_element());
+            scroll_smooth(_this.app.viewport.previous_item());
         });
 
 
