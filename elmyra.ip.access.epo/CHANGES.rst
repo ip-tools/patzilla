@@ -12,6 +12,7 @@ development
 - middleware/ui: retrieve german fulltexts from DEPATISconnect
 - ui: major refactoring of javascript code from core.js to components/*
 - ui: indicate activity (spinner) while fetching document details
+- middleware: run document acquisition when document fulltext details yielded no results at DEPATISconnect
 
 0.37.0
 ======
