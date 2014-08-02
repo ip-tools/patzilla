@@ -123,6 +123,9 @@ def compute_query(field, value, value2=None):
     if field in ['cl', 'ipc', 'ic', 'cpc', 'cpci', 'cpca']:
         value = value.replace('-', '/')
 
+    if ' ' in value:
+        value = '"{0}"'.format(value)
+
     query = '{field}={value}'.format(**locals())
 
     if field in ['pd', 'publicationdate']:
