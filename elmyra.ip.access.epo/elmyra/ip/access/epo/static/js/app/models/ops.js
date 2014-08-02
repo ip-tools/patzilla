@@ -595,8 +595,9 @@ OpsExchangeDocument = Backbone.Model.extend({
             */
             var countries_allowed = ['EP', 'WO', 'AT', 'CA', 'CH'];
 
-            // 2014-07-02: Add fulltexts for DE through DEPATISconnect
+            // 2014-07-02: Add fulltexts for DE and US through DEPATISconnect
             countries_allowed.push('DE');
+            countries_allowed.push('US');
 
             return _(countries_allowed).contains(this['@country']);
         },

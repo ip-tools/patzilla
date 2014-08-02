@@ -154,7 +154,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         var document_number = document.get_publication_number('epodoc');
 
         var country = document['@country'];
-        if (country == 'DE') {
+        if (_(['DE', 'US']).contains(country)) {
             clazz = DepatisConnectFulltext;
             document_number = document.get_publication_number('docdb');
         }

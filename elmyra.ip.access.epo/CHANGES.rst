@@ -15,6 +15,7 @@ development
 - middleware: run document acquisition when document fulltext details yielded no results at DEPATISconnect
 - middleware: fall back to CIPO for Canadian drawings
 - ui: fix snapped scrolling in Internet Explorer, improve snapping behavior in corner cases
+- ui: retrieve US fulltexts from DEPATISconnect
 
 0.37.0
 ======
