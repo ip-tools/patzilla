@@ -8,7 +8,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
         log('OpsPublishedDataSearch.perform');
 
-        indicate_activity(true);
+        opsChooserApp.ui.indicate_activity(true);
         //$('.pager-area').hide();
 
         // TODO: enhance this as soon as we're in AMD land
@@ -21,8 +21,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 self.keywords = jQuery.parseJSON(options.xhr.getResponseHeader('X-Elmyra-Query-Keywords'));
 
-                indicate_activity(false);
-                reset_content();
+                opsChooserApp.ui.indicate_activity(false);
+                opsChooserApp.ui.reset_content();
 
                 console.log("response data:");
                 console.log(response);
@@ -81,8 +81,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 //console.log("api error: " + response.responseText);
 
-                indicate_activity(false);
-                reset_content({documents: true});
+                opsChooserApp.ui.indicate_activity(false);
+                opsChooserApp.ui.reset_content({documents: true});
 
                 var response = jQuery.parseJSON(response.responseText);
                 if (response['status'] == 'error') {

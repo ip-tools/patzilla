@@ -99,9 +99,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         //this.set_datasource('ops');
 
-        indicate_activity(false);
-        //reset_content();
-        reset_content({keep_pager: true, documents: true});
+        this.ui.indicate_activity(false);
+        //this.ui.reset_content();
+        this.ui.reset_content({keep_pager: true, documents: true});
 
 
         // compute slice values
@@ -120,7 +120,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             //self.metadata.set('result_count', 0);
 
             if (_.isEmpty(query_origin) && _.isEmpty(entries)) {
-                reset_content({keep_pager: false, documents: true});
+                this.ui.reset_content({keep_pager: false, documents: true});
                 this.user_alert('No results.', 'info');
                 return deferred.promise();
             }
@@ -602,8 +602,6 @@ opsChooserApp.addInitializer(function(options) {
         // commit metadata, this will trigger e.g. PaginationView rendering
         this.metadata.trigger('commit');
 
-        // run action bindings on listview after rendering data entries
-        listview_bind_actions();
     });
 
     // activate project as soon it's loaded from the datastore

@@ -106,6 +106,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $( "#querybuilder-comfort-form" ).submit();
         });
 
+
+        // --------------------------------------------
+        //   intercept and reformat clipboard content
+        // --------------------------------------------
+        /*
+        $("#query").on("paste", function(e) {
+
+            // only run interceptor if content of target element is empty
+            if ($(this).val()) return;
+
+            e.preventDefault();
+
+            var text = (e.originalEvent || e).clipboardData.getData('text');
+
+        });
+        */
+
     },
 
     setup_ui_actions: function() {
