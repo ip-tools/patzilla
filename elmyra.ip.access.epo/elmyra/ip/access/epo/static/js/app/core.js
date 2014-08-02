@@ -373,27 +373,13 @@ function display_description(document_number, container) {
     var language_element = container.find('.document-details-language')[0];
 
     if (content_element) {
-
-        // TODO: move to ops.js
-        var url = _.template('/api/ops/<%= document_number %>/description')({ document_number: document_number});
-        $.ajax({url: url, async: true}).success(function(payload) {
-            if (payload) {
-                var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
-                console.log('description', document_number, description);
-
-                // TODO: unify with display_claims
-                var content_parts = _(to_list(description.p)).map(function(item) {
-                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/><br/>') + '</p>';
-                });
-                var content_text = content_parts.join('\n');
-                $(content_element).html(content_text);
-                $(language_element).html('[' + description['@lang'] + ']');
+        new OpsFulltext().get_description(document_number).then(function(data) {
+            if (data) {
+                $(content_element).html(data['html']);
+                $(language_element).html('[' + data['lang'] + ']');
                 apply_highlighting();
             }
-        }).error(function(error) {
-            console.warn('Error while fetching description', error);
         });
-
     }
 
 }
@@ -404,27 +390,13 @@ function display_claims(document_number, container) {
     var language_element = container.find('.document-details-language')[0];
 
     if (content_element) {
-
-        // TODO: move to ops.js
-        var url = _.template('/api/ops/<%= document_number %>/claims')({ document_number: document_number});
-        $.ajax({url: url, async: true}).success(function(payload) {
-            if (payload) {
-                var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
-                console.log('claims', document_number, claims);
-
-                // TODO: unify with display_description
-                var content_parts = _(to_list(claims['claim']['claim-text'])).map(function(item) {
-                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
-                });
-                var content_text = content_parts.join('\n');
-                $(content_element).html(content_text);
-                $(language_element).html('[' + claims['@lang'] + ']');
+        new OpsFulltext().get_claims(document_number).then(function(data) {
+            if (data) {
+                $(content_element).html(data['html']);
+                $(language_element).html('[' + data['lang'] + ']');
                 apply_highlighting();
             }
-        }).error(function(error) {
-                console.warn('Error while fetching claims', error);
-            });
-
+        });
     }
 
 }

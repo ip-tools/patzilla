@@ -8,6 +8,7 @@ development
 - middleware: fix path to pdftk
 - ui: fix search interface behavior weirdness
 - ui: medium refactoring of main/core javascript code to components/*
+- ui: refactor ops-fulltext specific code from core.js to ops.js
 
 0.37.0
 ======

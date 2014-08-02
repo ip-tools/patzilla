@@ -628,3 +628,70 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
     },
 
 });
+
+
+OpsFulltext = Marionette.Controller.extend({
+
+    initialize: function(options) {
+        log('OpsDescription.initialize');
+    },
+
+    get_claims: function(document_number) {
+
+        var deferred = $.Deferred();
+
+        var url = _.template('/api/ops/<%= document_number %>/claims')({ document_number: document_number});
+        $.ajax({url: url, async: true}).success(function(payload) {
+            if (payload) {
+                var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
+                //console.log('claims', document_number, claims);
+
+                // TODO: maybe unify with display_description
+                var content_parts = _(to_list(claims['claim']['claim-text'])).map(function(item) {
+                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
+                });
+                var content_text = content_parts.join('\n');
+                var response = {
+                    html: content_text,
+                    lang: claims['@lang'],
+                };
+                return deferred.resolve(response);
+            }
+        }).error(function(error) {
+                console.warn('Error while fetching claims from OPS for', document_number, error);
+            });
+
+        return deferred.promise();
+
+    },
+
+    get_description: function(document_number) {
+
+        var deferred = $.Deferred();
+
+        var url = _.template('/api/ops/<%= document_number %>/description')({ document_number: document_number});
+        $.ajax({url: url, async: true}).success(function(payload) {
+            if (payload) {
+                var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
+                //console.log('description', document_number, description);
+
+                // TODO: maybe unify with display_claims
+                var content_parts = _(to_list(description.p)).map(function(item) {
+                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/><br/>') + '</p>';
+                });
+                var content_text = content_parts.join('\n');
+                var response = {
+                    html: content_text,
+                    lang: description['@lang'],
+                };
+                return deferred.resolve(response);
+            }
+        }).error(function(error) {
+            console.warn('Error while fetching description from OPS for', document_number, error);
+        });
+
+        return deferred.promise();
+
+    },
+
+});
