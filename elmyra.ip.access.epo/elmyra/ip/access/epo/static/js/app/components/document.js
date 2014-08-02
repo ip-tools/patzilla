@@ -172,11 +172,15 @@ DocumentDetailsController = Marionette.Controller.extend({
     },
 
     display_details: function(details, container) {
+        var _this = this;
+
         var content_element = container.find('.document-details-content')[0];
         var language_element = container.find('.document-details-language')[0];
 
         if (content_element) {
+            this.indicate_activity(container, true);
             details.then(function(data) {
+                _this.indicate_activity(container, false);
                 if (data) {
                     $(content_element).html(data['html']);
                     data['lang'] && $(language_element).html('[' + data['lang'] + ']');
@@ -185,6 +189,16 @@ DocumentDetailsController = Marionette.Controller.extend({
             });
         }
 
+    },
+
+    indicate_activity: function(container, active) {
+        var spinner = container.find('.document-details-spinner');
+        if (active) {
+            spinner.show();
+
+        } else {
+            spinner.hide();
+        }
     },
 
 });

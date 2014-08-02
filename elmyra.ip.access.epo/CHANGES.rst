@@ -11,6 +11,7 @@ development
 - ui: refactor ops-fulltext specific code from core.js to ops.js
 - middleware/ui: retrieve german fulltexts from DEPATISconnect
 - ui: major refactoring of javascript code from core.js to components/*
+- ui: indicate activity (spinner) while fetching document details
 
 0.37.0
 ======
