@@ -364,12 +364,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // HACK: cut away suffix
                 // TODO: move to QueryModel
-                if (_.string.endsWith(value, '(ops)')) {
+                if (_.string.endsWith(value, '[ops]') || _.string.endsWith(value, '(ops)')) {
                     opsChooserApp.set_datasource('ops');
-                } else if (_.string.endsWith(value, '(depatisnet)')) {
+                } else if (_.string.endsWith(value, '[depatisnet]') || _.string.endsWith(value, '(depatisnet)')) {
                     opsChooserApp.set_datasource('depatisnet');
                 }
-                value = value.replace(' (ops)', '').replace(' (depatisnet)', '');
+                value = value
+                    .replace(' [ops]', '').replace(' [depatisnet]', '')
+                    .replace(' (ops)', '').replace(' (depatisnet)', '');
 
                 $('#query').val(value);
             }
