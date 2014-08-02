@@ -11,7 +11,40 @@ from tempfile import NamedTemporaryFile
 
 log = logging.getLogger(__name__)
 
-def tiff_to_png(tiff_payload):
+def gif_to_tiff(payload):
+
+    infile = NamedTemporaryFile()
+    infile.write(payload)
+    infile.flush()
+
+    outfile = NamedTemporaryFile()
+
+    command = ['gif2tiff', infile.name, outfile.name]
+
+    command_debug = ' '.join(command)
+
+    proc = subprocess.Popen(
+        command,
+        shell = (os.name == 'nt'),
+        stdin = subprocess.PIPE,
+        stdout = subprocess.PIPE,
+        stderr = subprocess.PIPE,
+    )
+
+    stdout = stderr = ''
+
+    try:
+        stdout, stderr = proc.communicate()
+        if proc.returncode is not None and proc.returncode != 0:
+            raise Exception('GIF to TIFF conversion failed')
+        return stdout
+
+    except:
+        log.error('GIF to TIFF conversion failed, {1}. returncode={2}, command="{0}"'.format(command_debug, stderr, proc.returncode))
+        raise Exception('GIF to TIFF conversion failed')
+
+
+def to_png(tiff_payload, format='tif'):
 
     # unfortunately, PIL can not handle G4 compression ...
     # Failure: exceptions.IOError: decoder group4 not available
@@ -32,7 +65,7 @@ def tiff_to_png(tiff_payload):
     # http://www.imagemagick.org/pipermail/magick-users/2003-May/008869.html
     #convert_bin = os.path.join(os.path.dirname(__file__), 'imagemagick', 'convert.exe')
     #command = ['convert', 'tif:-', '+set', 'date:create', '+set', 'date:modify', 'png:-']
-    command = ['convert', 'tif:-',
+    command = ['convert', '{0}:-'.format(format),
                 '+set', 'date:create', '+set', 'date:modify',
                 # FIXME: make this configurable
                 '-resize', '457x',
@@ -41,7 +74,7 @@ def tiff_to_png(tiff_payload):
                 '-level', '30%,100%',
                 'png:-']
 
-    #print command
+    command_debug = ' '.join(command)
 
     proc = subprocess.Popen(
         command,
@@ -57,14 +90,13 @@ def tiff_to_png(tiff_payload):
     try:
         stdout, stderr = proc.communicate(tiff_payload)
         if proc.returncode is not None and proc.returncode != 0:
-            log.error('TIFF to PNG conversion failed, command={0}, stderr={1}, returncode={2}'.format(command, stderr, proc.returncode))
             raise Exception('TIFF to PNG conversion failed')
     except:
-        log.error('TIFF to PNG conversion failed, command={0}, stderr={1}'.format(command, stderr))
+        log.error('TIFF to PNG conversion failed, {1}. returncode={2}, command="{0}"'.format(command_debug, stderr, proc.returncode))
         raise Exception('TIFF to PNG conversion failed')
 
     if 'ImageMagick' in stdout[:200]:
-        log.error('TIFF to PNG conversion failed, command={0}, stdout={1}, stderr={1}'.format(command, stdout, stderr))
+        log.error('TIFF to PNG conversion failed, stdout={1}, stderr={1}. command="{0}"'.format(command_debug, stdout, stderr))
         raise Exception('TIFF to PNG conversion failed')
 
     return stdout

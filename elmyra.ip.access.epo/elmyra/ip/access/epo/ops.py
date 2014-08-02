@@ -8,7 +8,7 @@ from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.client import oauth_client_create
-from elmyra.ip.access.epo.imageutil import tiff_to_png, pdf_join, pdf_set_metadata, pdf_make_metadata
+from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
 from elmyra.ip.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
