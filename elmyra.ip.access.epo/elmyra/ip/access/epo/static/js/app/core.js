@@ -343,63 +343,8 @@ function listview_bind_actions() {
         }
     });
 
-
-    // --------------------------------------------
-    //   toggle detail view (description, claims)
-    // --------------------------------------------
-    $('button[data-toggle="tab"]').on('show', function (e) {
-        // e.target // activated tab
-        // e.relatedTarget // previous tab
-
-        var content_container = $($(e.target).attr('href'));
-
-        var document_number = $(this).data('document-number');
-        var details_type = $(this).data('document-details-type');
-        if (details_type == 'description') {
-            display_description(document_number, content_container);
-        } else if (details_type == 'claims') {
-            display_claims(document_number, content_container);
-        }
-
-        // fix missing popover after switching inline detail view
-        $('.btn-popover').popover();
-    })
-
 }
 
-function display_description(document_number, container) {
-
-    var content_element = container.find('.document-details-content')[0];
-    var language_element = container.find('.document-details-language')[0];
-
-    if (content_element) {
-        new OpsFulltext().get_description(document_number).then(function(data) {
-            if (data) {
-                $(content_element).html(data['html']);
-                $(language_element).html('[' + data['lang'] + ']');
-                apply_highlighting();
-            }
-        });
-    }
-
-}
-
-function display_claims(document_number, container) {
-
-    var content_element = container.find('.document-details-content')[0];
-    var language_element = container.find('.document-details-language')[0];
-
-    if (content_element) {
-        new OpsFulltext().get_claims(document_number).then(function(data) {
-            if (data) {
-                $(content_element).html(data['html']);
-                $(language_element).html('[' + data['lang'] + ']');
-                apply_highlighting();
-            }
-        });
-    }
-
-}
 
 function reset_content(options) {
     $('#alert-area').empty();

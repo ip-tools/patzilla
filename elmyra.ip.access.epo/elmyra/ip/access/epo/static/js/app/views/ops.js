@@ -38,6 +38,19 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
     },
 
+    onDomRefresh: function() {
+        console.log('OpsExchangeDocumentView.onDomRefresh');
+
+        // attach current model reference to buttons
+        // this is needed for fetching country-specific fulltexts when actually triggering the button
+
+        $('#document-details-claims-button-' + this.model.attributes.get_patent_number())
+            .prop('ops-document', this.model.attributes);
+
+        $('#document-details-description-button-' + this.model.attributes.get_patent_number())
+            .prop('ops-document', this.model.attributes);
+    },
+
     events: {
         'click .rank_up img': 'rankUp',
         'click .rank_down img': 'rankDown',

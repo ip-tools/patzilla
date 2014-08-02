@@ -20,7 +20,7 @@ requires = [
     'Akhet==2.0',
     'waitress',
     'Paste==1.7.5.1',
-    'PasteScript 1.7.5',
+    'PasteScript==1.7.5',
 
     # caching
     'Beaker==1.6.4',
@@ -48,6 +48,7 @@ requires = [
     'mongoengine==0.8.7',
     'blinker==1.3',
     'python-dateutil==2.2',
+    'lxml==3.3.5',
 
     # ----------------------------------------------
     #   user interface

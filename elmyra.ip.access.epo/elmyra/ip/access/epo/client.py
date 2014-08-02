@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# (c) 2014 Andreas Motl, Elmyra UG
 import json
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib.oauth2_session import OAuth2Session

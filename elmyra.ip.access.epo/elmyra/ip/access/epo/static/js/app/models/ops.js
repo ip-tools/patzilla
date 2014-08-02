@@ -593,9 +593,12 @@ OpsExchangeDocument = Backbone.Model.extend({
 
                -- http://documents.epo.org/projects/babylon/eponet.nsf/0/7AF8F1D2B36F3056C1257C04002E0AD6/$File/OPS_RWS_ReferenceGuide_version1210_EN.pdf
             */
-            var country = this['@country'];
             var countries_allowed = ['EP', 'WO', 'AT', 'CA', 'CH'];
-            return _(countries_allowed).contains(country);
+
+            // 2014-07-02: Add fulltexts for DE through DEPATISconnect
+            countries_allowed.push('DE');
+
+            return _(countries_allowed).contains(this['@country']);
         },
 
     },
@@ -632,63 +635,70 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 
 OpsFulltext = Marionette.Controller.extend({
 
-    initialize: function(options) {
-        log('OpsDescription.initialize');
+    initialize: function(document_number) {
+        log('OpsFulltext.initialize');
+        this.document_number = document_number;
     },
 
-    get_claims: function(document_number) {
+    get_claims: function() {
 
+        var _this = this;
         var deferred = $.Deferred();
 
-        var url = _.template('/api/ops/<%= document_number %>/claims')({ document_number: document_number});
-        $.ajax({url: url, async: true}).success(function(payload) {
-            if (payload) {
-                var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
-                //console.log('claims', document_number, claims);
+        var url = _.template('/api/ops/<%= document_number %>/claims')({ document_number: this.document_number});
+        $.ajax({url: url, async: true})
+            .success(function(payload) {
+                if (payload) {
+                    var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
+                    //console.log('claims', document_number, claims);
 
-                // TODO: maybe unify with display_description
-                var content_parts = _(to_list(claims['claim']['claim-text'])).map(function(item) {
-                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
-                });
-                var content_text = content_parts.join('\n');
-                var response = {
-                    html: content_text,
-                    lang: claims['@lang'],
-                };
-                return deferred.resolve(response);
-            }
-        }).error(function(error) {
-                console.warn('Error while fetching claims from OPS for', document_number, error);
+                    // TODO: maybe unify with display_description
+                    var content_parts = _(to_list(claims['claim']['claim-text'])).map(function(item) {
+                        return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
+                    });
+                    var content_text = content_parts.join('\n');
+                    var response = {
+                        html: content_text,
+                        lang: claims['@lang'],
+                    };
+                    deferred.resolve(response);
+                }
+            }).error(function(error) {
+                console.warn('Error while fetching claims from OPS for', _this.document_number, error);
+                deferred.resolve({html: 'No data available'});
             });
 
         return deferred.promise();
 
     },
 
-    get_description: function(document_number) {
+    get_description: function() {
 
+        var _this = this;
         var deferred = $.Deferred();
 
-        var url = _.template('/api/ops/<%= document_number %>/description')({ document_number: document_number});
-        $.ajax({url: url, async: true}).success(function(payload) {
-            if (payload) {
-                var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
-                //console.log('description', document_number, description);
+        var url = _.template('/api/ops/<%= document_number %>/description')({ document_number: this.document_number});
+        $.ajax({url: url, async: true})
+            .success(function(payload) {
+                if (payload) {
+                    var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
+                    //console.log('description', document_number, description);
 
-                // TODO: maybe unify with display_claims
-                var content_parts = _(to_list(description.p)).map(function(item) {
-                    return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/><br/>') + '</p>';
-                });
-                var content_text = content_parts.join('\n');
-                var response = {
-                    html: content_text,
-                    lang: description['@lang'],
-                };
-                return deferred.resolve(response);
-            }
-        }).error(function(error) {
-            console.warn('Error while fetching description from OPS for', document_number, error);
-        });
+                    // TODO: maybe unify with display_claims
+                    var content_parts = _(to_list(description.p)).map(function(item) {
+                        return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/><br/>') + '</p>';
+                    });
+                    var content_text = content_parts.join('\n');
+                    var response = {
+                        html: content_text,
+                        lang: description['@lang'],
+                    };
+                    deferred.resolve(response);
+                }
+            }).error(function(error) {
+                console.warn('Error while fetching description from OPS for', _this.document_number, error);
+                deferred.resolve({html: 'No data available'});
+            });
 
         return deferred.promise();
 

@@ -77,15 +77,17 @@
                             Biblio
                         </button>
                         <button class="btn" data-toggle="tab"
+                                id="document-details-claims-button-<%= patent_number %>"
                                 href="#document-details-claims-container-<%= patent_number %>"
-                                data-document-details-type="claims"
-                                data-document-number="<%= data.get_publication_number('epodoc') %>">
+                                data-details-type="claims"
+                                >
                             Claims
                         </button>
                         <button class="btn" data-toggle="tab"
+                                id="document-details-description-button-<%= patent_number %>"
                                 href="#document-details-description-container-<%= patent_number %>"
-                                data-document-details-type="description"
-                                data-document-number="<%= data.get_publication_number('epodoc') %>">
+                                data-details-type="description"
+                                >
                             Desc
                         </button>
                     </div>

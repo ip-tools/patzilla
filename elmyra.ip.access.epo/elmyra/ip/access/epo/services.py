@@ -4,6 +4,8 @@ import json
 import logging
 from beaker.cache import cache_region
 from cornice import Service
+from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
@@ -22,6 +24,11 @@ ops_published_data_search_service = Service(
     name='ops-published-data-search',
     path='/api/ops/published-data/search',
     description="OPS search interface")
+
+depatisnet_published_data_search_service = Service(
+    name='depatisnet-published-data-search',
+    path='/api/depatisnet/published-data/search',
+    description="DEPATISnet search interface")
 
 ops_family_publication_service = Service(
     name='ops-family-publication',
@@ -58,10 +65,15 @@ ops_claims_service = Service(
     path='/api/ops/{patent}/claims',
     description="OPS claims interface")
 
-depatisnet_published_data_search_service = Service(
-    name='depatisnet-published-data-search',
-    path='/api/depatisnet/published-data/search',
-    description="DEPATISnet search interface")
+depatisconnect_description_service = Service(
+    name='depatisconnect-description',
+    path='/api/depatisconnect/{patent}/description',
+    description="DEPATISconnect description interface")
+
+depatisconnect_claims_service = Service(
+    name='depatisconnect-claims',
+    path='/api/depatisconnect/{patent}/claims',
+    description="DEPATISconnect claims interface")
 
 cql_tool_service = Service(
     name='cql-tool-service',
@@ -305,6 +317,13 @@ def ops_pdf_handler(request):
     return pdf_payload
 
 
+@ops_claims_service.get()
+def ops_claims_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+    patent = request.matchdict['patent']
+    description = ops_claims(patent)
+    return description
+
 @ops_description_service.get()
 def ops_description_handler(request):
     # TODO: respond with proper 4xx codes if something fails
@@ -312,11 +331,28 @@ def ops_description_handler(request):
     description = ops_description(patent)
     return description
 
-@ops_claims_service.get()
-def ops_claims_handler(request):
-    # TODO: respond with proper 4xx codes if something fails
+@depatisconnect_claims_service.get()
+def depatisconnect_claims_handler(request):
+    # TODO: use jsonified error responses
     patent = request.matchdict['patent']
-    description = ops_claims(patent)
+    try:
+        description = depatisconnect_claims(patent)
+    except KeyError as ex:
+        raise HTTPNotFound(ex)
+    except ValueError as ex:
+        raise HTTPBadRequest(ex)
+    return description
+
+@depatisconnect_description_service.get()
+def depatisconnect_description_handler(request):
+    # TODO: use jsonified error responses
+    patent = request.matchdict['patent']
+    try:
+        description = depatisconnect_description(patent)
+    except KeyError as ex:
+        raise HTTPNotFound(ex)
+    except ValueError as ex:
+        raise HTTPBadRequest(ex)
     return description
 
 
