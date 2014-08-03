@@ -461,4 +461,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         return flavor;
     },
 
+    set_flavor: function(flavor) {
+        $("#querybuilder-flavor-chooser .btn[data-value='" + flavor + "']").tab('show');
+    },
+
 });

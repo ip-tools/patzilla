@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: improve field autofocus behavior
+- ui: switch to expert mode when receiving url parameter ?query=
 
 0.38.0
 ======

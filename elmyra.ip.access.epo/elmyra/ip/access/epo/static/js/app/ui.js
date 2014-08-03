@@ -21,12 +21,14 @@ UiController = Marionette.Controller.extend({
         // defaults for notification popups
         $.notify.defaults({className: 'info', showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 4000, showDuration: 300});
 
-
-        // ------------------------------------------
-        //   logout button
-        // ------------------------------------------
+        // logout button
         if (opsChooserApp.config.get('mode') == 'liveview') {
             $('.logout-button').hide();
+        }
+
+        // switch query interface flavor to expert mode when receiving query via url
+        if (opsChooserApp.config.get('query')) {
+            opsChooserApp.queryBuilderView.set_flavor('cql');
         }
 
 
