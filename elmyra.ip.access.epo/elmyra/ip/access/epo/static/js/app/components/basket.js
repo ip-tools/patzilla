@@ -143,6 +143,10 @@ BasketModel = Backbone.RelationalModel.extend({
         return this.get('entries').invoke('get', 'number');
     },
 
+    empty: function() {
+        return this.get('entries').length == 0;
+    },
+
     csv_list: function() {
         return this.get('entries').map(function(entry) {
             var parts = [
@@ -414,6 +418,16 @@ BasketView = Backbone.Marionette.ItemView.extend({
             });
         });
 
+        // download zip archive of pdf documents
+        $('#download-documents-pdf-archive').unbind('click');
+        $('#download-documents-pdf-archive').click(function() {
+            if (_this.check_empty()) { return; }
+            var numberlist = opsChooserApp.basketModel.get_numbers();
+            //log('numberlist:', numberlist);
+            $(this).attr('target', '_blank');
+            $(this).attr('href', '/api/pdf/' + numberlist.join(','));
+        });
+
         // share via document transfer
         $('#share-documents-transfer').unbind('click');
         $('#share-documents-transfer').click(function() {
@@ -427,6 +441,20 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // activate permalink actions
         opsChooserApp.permalink.setup_ui();
 
+    },
+
+    check_empty: function(kind) {
+        var verb = 'shared';
+        if (kind == 'review') {
+            verb = 'reviewed';
+        }
+        if (this.model.empty()) {
+            opsChooserApp.ui.notify(
+                "An empty collection can't be " + verb + ", please add some documents.",
+                {type: 'warning', icon: 'icon-external-link icon-large'});
+            return true;
+        }
+        return false;
     },
 
     future_premium_feature: function() {
