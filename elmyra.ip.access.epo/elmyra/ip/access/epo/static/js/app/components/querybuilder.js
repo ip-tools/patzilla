@@ -58,6 +58,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $('.btn-query-perform').unbind('click');
             if (flavor == 'comfort') {
 
+                // focus first field
+                $('#patentnumber').focus();
+
                 // hide action tools
                 $('#querybuilder-cql-actions').hide();
 
@@ -70,6 +73,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 });
 
             } else if (flavor == 'cql') {
+
+                // focus textarea
+                $('#query').focus();
 
                 // show action tools
                 $('#querybuilder-cql-actions').show();

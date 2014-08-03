@@ -20,6 +20,7 @@ development
 - ui: fix/improve pdf.svg
 - middleware/ui: universal pdf endpoint
 - middleware: record user logins with timestamp in preparation to "daily usage plan"
+- ui: improve field autofocus behavior
 
 0.37.0
 ======
