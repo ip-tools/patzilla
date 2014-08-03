@@ -157,7 +157,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         // open pdf on "shift+p"
         $(document).on('keydown', null, 'shift+p', function(event) {
             event.preventDefault();
-            var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-pdf-ops');
+            var anchor = $('.ops-collection-entry:in-viewport').find('a.anchor-pdf');
             anchor[0].click();
         });
 

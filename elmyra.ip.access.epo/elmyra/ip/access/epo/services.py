@@ -8,6 +8,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
+from elmyra.ip.access.epo.core import pdf_universal
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
 from elmyra.ip.util.cql.knowledge import datasource_indexnames
 from elmyra.ip.util.cql.pyparsing import CQL
@@ -49,6 +50,11 @@ ops_fullimage_service = Service(
     name='ops-fullimage',
     path='/api/ops/{patent}/image/full',
     description="OPS fullimage interface")
+
+pdf_service = Service(
+    name='pdf',
+    path='/api/pdf/{patent}',
+    description="Retrieve patent document PDF files")
 
 ops_pdf_service = Service(
     name='ops-pdf',
@@ -297,6 +303,25 @@ def ops_family_publication_handler(request):
     #print "response:", response.content
 
     return response.content
+
+
+@pdf_service.get(renderer='pdf')
+def pdf_handler(request):
+    """request full document as pdf"""
+
+    patent = request.matchdict['patent']
+    #parts = request.matchdict['parts']
+
+    data = pdf_universal(patent)
+
+    if data['pdf']:
+        # http://tools.ietf.org/html/rfc6266#section-4.2
+        request.response.headers['Content-Disposition'] = 'inline; filename={0}.pdf'.format(patent)
+        request.response.headers['X-Pdf-Source'] = data['datasource']
+        return data['pdf']
+
+    else:
+        raise HTTPNotFound('No PDF for document {0}'.format(patent))
 
 
 @ops_pdf_service.get(renderer='pdf')

@@ -173,7 +173,7 @@ a.editable-click {
 
 /* result entry */
 
-img.pdf-svg[src*=svg] { height/*\**/: 20px; width/*\**/: 20px; }
+img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .ops-collection-entry, .ops-collection-meta {
     position: relative;

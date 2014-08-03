@@ -96,31 +96,13 @@
                     <span id="region-comment-button"/>
 
                     <!-- pdf document -->
-                    <div class="btn-group btn-popover"
-                         data-toggle="popover" data-trigger="hover" data-placement="top"
-                         data-content="Download full pdf documents from various sources"
-                            >
-                        <a class="btn dropdown-toggle" data-toggle="dropdown">
-                            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf" class="anchor-pdf-ops">
-                                    [PDF] <%= patent_number %> @ OPS
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.espacenet_pdf_url() %>" target="ipsuite-pdf">
-                                    [PDF] <%= patent_number %> @ Espacenet
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="ipsuite-pdf">
-                                    [PDF] <%= patent_number %> @ DEPATISnet
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <a href="<%= linkmaker.universal_pdf_url() %>" target="ipsuite-pdf"
+                        class="btn btn-popover anchor-pdf" role="button"
+                        data-toggle="popover" data-trigger="hover" data-placement="top"
+                        data-content="Download full pdf document"
+                        >
+                        <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+                    </a>
 
                     <!-- external links -->
                     <div class="btn-group btn-popover"
@@ -197,6 +179,29 @@
                             <li>
                                 <a href="<%= linkmaker.ops_family_url() %>" target="_blank">
                                     [FAMILY] <%= patent_number %> @ OPS biblio,legal
+                                </a>
+                            </li>
+                            <li class="divider"/>
+
+
+                            <!-- PDF -->
+                            <li><div style="padding-left: 10px">
+                                <h5><img src="/static/img/icons/pdf.svg" class="pdf-svg"/> &nbsp; PDF</h5>
+                            </div>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf" class="anchor-pdf-ops">
+                                    [PDF] <%= patent_number %> @ OPS
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.espacenet_pdf_url() %>" target="ipsuite-pdf">
+                                    [PDF] <%= patent_number %> @ Espacenet
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="ipsuite-pdf">
+                                    [PDF] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
 

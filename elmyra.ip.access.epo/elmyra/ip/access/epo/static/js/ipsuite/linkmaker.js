@@ -54,9 +54,9 @@
             return url;
         },
 
-        espacenet_pdf_url: function() {
-            // http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
-            var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
+        universal_pdf_url: function() {
+            // /api/pdf/EP0666666B1
+            var url_tpl = _.template('/api/pdf/<%= country %><%= number %><%= kind %>');
             var url = url_tpl(this);
             return url;
         },
@@ -64,6 +64,13 @@
         ops_pdf_url: function() {
             // /api/ops/EP0666666B1/pdf/all
             var url_tpl = _.template('/api/ops/<%= country %><%= number %><%= kind %>/pdf/all');
+            var url = url_tpl(this);
+            return url;
+        },
+
+        espacenet_pdf_url: function() {
+            // http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
+            var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },

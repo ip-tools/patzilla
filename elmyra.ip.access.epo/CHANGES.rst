@@ -18,6 +18,7 @@ development
 - ui: retrieve US fulltexts from DEPATISconnect
 - ui: fix Internet Explorer SVG scaling in datasource chooser
 - ui: fix/improve pdf.svg
+- middleware/ui: universal pdf endpoint
 
 0.37.0
 ======
