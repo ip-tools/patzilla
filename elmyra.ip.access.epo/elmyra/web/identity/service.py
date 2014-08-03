@@ -2,7 +2,7 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
-from elmyra.web.identity.store import User
+from elmyra.web.identity.store import User, UserHistory
 
 log = logging.getLogger(__name__)
 
@@ -53,6 +53,7 @@ def identity_auth_handler(request):
 
         # check password
         if user.check_password(password):
+            UserHistory(userid=user.userid, action='login').save()
             response = {
                 'userid': user.userid,
                 'username': user.username,

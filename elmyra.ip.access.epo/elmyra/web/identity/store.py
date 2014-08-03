@@ -55,7 +55,7 @@ class User(Document):
 
     @classmethod
     def assign_userid(cls, sender, document, **kwargs):
-        if not document.userid:
+        if sender is User and not document.userid:
             document.userid = str(uuid.uuid4())
 
     """
@@ -69,7 +69,7 @@ class User(Document):
 
     @classmethod
     def assign_created(cls, sender, document, **kwargs):
-        if not document.created:
+        if sender is User and not document.created:
             document.created = datetime.datetime.now()
 
     @staticmethod
@@ -78,7 +78,7 @@ class User(Document):
 
     @classmethod
     def hash_password(cls, sender, document, **kwargs):
-        if not document.password.startswith('$p5k2$'):
+        if sender is User and not document.password.startswith('$p5k2$'):
             document.password = cls.crypt500(document.password)
 
     def check_password(self, password):
@@ -88,6 +88,12 @@ class User(Document):
 signals.post_init.connect(User.assign_userid)
 signals.post_init.connect(User.assign_created)
 signals.pre_save.connect(User.hash_password)
+
+
+class UserHistory(Document):
+    userid = StringField(unique=True)
+    timestamp = DateTimeField(default=datetime.datetime.now)
+    action = StringField()
 
 
 # ------------------------------------------
