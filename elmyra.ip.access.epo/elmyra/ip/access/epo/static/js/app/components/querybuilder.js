@@ -131,6 +131,18 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
+    query_empty: function() {
+        return _.isEmpty($('#query').val().trim());
+    },
+
+    check_query_empty: function(options) {
+        if (this.query_empty()) {
+            opsChooserApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
+            return true;
+        }
+        return false;
+    },
+
     setup_ui_actions: function() {
 
         var _this = this;
@@ -148,12 +160,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // transform query: open modal dialog to choose transformation kind
         $('#btn-query-transform').unbind('click');
         $('#btn-query-transform').click(function() {
-            // TODO: this "$('#query').val().trim()" should be kept at a central place
-            if ($('#query').val().trim()) {
-                $('#clipboard-modifier-chooser').modal('show');
-            } else {
-                opsChooserApp.ui.notify('CQL expression is empty, nothing to transform.', {type: 'warning', icon: 'icon-exchange'});
-            }
+            if (_this.check_query_empty({'icon': 'icon-exchange'})) { return; }
+            $('#clipboard-modifier-chooser').modal('show');
         });
 
         // open query chooser
@@ -184,6 +192,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // share via url, with ttl
         $('#btn-query-permalink').unbind('click');
         $('#btn-query-permalink').click(function(e) {
+
+            e.preventDefault();
+            if (_this.check_query_empty({'icon': 'icon-external-link'})) { return; }
+
             var anchor = this;
 
             var query_state = {
@@ -200,9 +212,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 //$(anchor).attr('href', url);
 
                 // v2: open permalink popover
-                e.preventDefault();
                 e.stopPropagation();
-
                 opsChooserApp.permalink.popover_show(anchor, url, {
                     title: 'External query review',
                     intro:

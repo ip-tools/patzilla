@@ -233,66 +233,8 @@ PermalinkPlugin = Marionette.Controller.extend({
         return deferred.promise();
     },
 
-    // TODO: refactor elsewhere, e.g. to LinkBuilder.setup_project_buttons
     setup_ui: function() {
-
         var _this = this;
-
-        // simple permalink
-        $('.permalink-review-liveview').unbind('click');
-        $('.permalink-review-liveview').on('click', function(e) {
-
-            // generate permalink uri and toggle popover
-            var _button = this;
-            _this.liveview_with_database_params().then(function(params) {
-
-                // compute permalink
-                var url = _this.make_uri(params);
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                // show permalink overlay
-                _this.popover_show(_button, url, {
-                    intro:
-                        '<small>' +
-                            'This offers a persistent link to review the current project. ' +
-                            'It will transfer the whole project structure including queries and basket content with rating scores.' +
-                        '</small>',
-                });
-
-            });
-        });
-
-        // signed permalink with time-to-live
-        $('.permalink-review-liveview-ttl').unbind('click');
-        $('.permalink-review-liveview-ttl').on('click', function(e) {
-
-            // generate permalink uri and toggle popover
-            var _button = this;
-            _this.liveview_with_database_params().then(function(params) {
-
-                // compute permalink
-                _this.make_uri_opaque(params).then(function(url) {
-
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    // show permalink overlay
-                    _this.popover_show(_button, url, {
-                        intro:
-                            '<small>' +
-                                'This offers a link for external/anonymous users to review the current project. ' +
-                                'It will transfer the whole project structure including queries and basket content with rating scores.' +
-                            '</small>',
-                        ttl: true,
-                    });
-                });
-
-            });
-
-        });
-
     },
 
 });

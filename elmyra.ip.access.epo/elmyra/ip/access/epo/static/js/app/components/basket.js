@@ -348,11 +348,9 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
-        // basket import
-        $('#basket-import-button').click(function(e) {
-            _this.future_premium_feature();
-            return false;
-        });
+        // display number of entries in basket
+        var entry_count = this.model.get('entries').length;
+        $('.basket-entry-count').text(entry_count);
 
         // only enable submit button, if ship url is given
         var ship_url = opsChooserApp.config.get('ship-url');
@@ -362,16 +360,24 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $('#basket-submit-button').addClass('hide');
         }
 
+        // basket import
+        $('#basket-import-button').click(function(e) {
+            _this.future_premium_feature();
+            return false;
+        });
+
         // review feature: trigger search from basket content
         $('.basket-review-button').unbind('click');
         $('.basket-review-button').click(function(event) {
             event.preventDefault();
+            if (_this.check_empty('review')) { return; }
             _this.model.review();
         });
 
         // submit selected documents to origin or 3rd-party system
         $('#basket-submit-button').unbind('click');
         $('#basket-submit-button').click(function() {
+            if (_this.check_empty()) { return; }
             var numbers = _this.model.get_numbers();
             $('textarea#basket').val(numbers.join('\n'));
         });
@@ -379,22 +385,31 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // share via mail
         $('#share-numberlist-email').unbind('click');
         $('#share-numberlist-email').click(function() {
+            if (_this.check_empty()) { return; }
             var params = _this.model.share_email_params();
             var mailto_link = 'mailto:?' + jQuery.param(params).replace(/\+/g, '%20');
-            log('mailto_link:', mailto_link);
+            //log('mailto_link:', mailto_link);
             $(this).attr('href', mailto_link);
         });
 
         // share via url
         $('#share-numberlist-url').unbind('click');
         $('#share-numberlist-url').click(function() {
+            if (_this.check_empty()) { return; }
             var url = opsChooserApp.permalink.make_uri(_this.model.get_view_state());
+            $(this).attr('target', '_blank');
             $(this).attr('href', url);
         });
 
         // share via url, with ttl
         $('#share-numberlist-url-ttl').unbind('click');
         $('#share-numberlist-url-ttl').click(function(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (_this.check_empty()) { return; }
+
             var anchor = this;
             opsChooserApp.permalink.make_uri_opaque(_this.model.get_view_state({mode: 'liveview'})).then(function(url) {
 
@@ -402,8 +417,6 @@ BasketView = Backbone.Marionette.ItemView.extend({
                 //$(anchor).attr('href', url);
 
                 // v2: open permalink popover
-                e.preventDefault();
-                e.stopPropagation();
 
                 opsChooserApp.permalink.popover_show(anchor, url, {
                     title: 'External document review',
@@ -434,12 +447,61 @@ BasketView = Backbone.Marionette.ItemView.extend({
             _this.future_premium_feature();
         });
 
-        // display number of entries in basket
-        var entry_count = this.model.get('entries').length;
-        $('.basket-entry-count').text(entry_count);
 
-        // activate permalink actions
-        opsChooserApp.permalink.setup_ui();
+        // simple permalink
+        $('.permalink-review-liveview').unbind('click');
+        $('.permalink-review-liveview').click(function(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // generate permalink uri and toggle popover
+            var _button = this;
+            opsChooserApp.permalink.liveview_with_database_params().then(function(params) {
+
+                // compute permalink
+                var url = opsChooserApp.permalink.make_uri(params);
+
+                // show permalink overlay
+                opsChooserApp.permalink.popover_show(_button, url, {
+                    intro:
+                        '<small>' +
+                            'This offers a persistent link to review the current project. ' +
+                            'It will transfer the whole project structure including queries and basket content with rating scores.' +
+                            '</small>',
+                });
+
+            });
+        });
+
+        // signed permalink with time-to-live
+        $('.permalink-review-liveview-ttl').unbind('click');
+        $('.permalink-review-liveview-ttl').click(function(e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // generate permalink uri and toggle popover
+            var _button = this;
+            opsChooserApp.permalink.liveview_with_database_params().then(function(params) {
+
+                // compute permalink
+                opsChooserApp.permalink.make_uri_opaque(params).then(function(url) {
+
+                    // show permalink overlay
+                    opsChooserApp.permalink.popover_show(_button, url, {
+                        intro:
+                            '<small>' +
+                                'This offers a link for external/anonymous users to review the current project. ' +
+                                'It will transfer the whole project structure including queries and basket content with rating scores.' +
+                                '</small>',
+                        ttl: true,
+                    });
+                });
+
+            });
+
+        });
 
     },
 

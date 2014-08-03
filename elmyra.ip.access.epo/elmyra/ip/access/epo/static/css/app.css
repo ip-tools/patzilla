@@ -44,6 +44,10 @@ a.editable-click {
     padding: 0px;
 }
 
+.dropdown-menu a {
+    cursor: pointer;
+}
+
 
 /* header */
 .beta-badge {
