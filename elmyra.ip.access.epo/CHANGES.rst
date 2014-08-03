@@ -6,6 +6,7 @@ development
 ===========
 - ui: improve field autofocus behavior
 - ui: switch to expert mode when receiving url parameter ?query=
+- middleware: fix UserHistory.userid uniqueness
 
 0.38.0
 ======

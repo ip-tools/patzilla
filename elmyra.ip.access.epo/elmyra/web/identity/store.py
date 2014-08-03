@@ -91,7 +91,7 @@ signals.pre_save.connect(User.hash_password)
 
 
 class UserHistory(Document):
-    userid = StringField(unique=True)
+    userid = StringField()
     timestamp = DateTimeField(default=datetime.datetime.now)
     action = StringField()
 
