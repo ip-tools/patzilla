@@ -8,11 +8,11 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
-from elmyra.ip.access.epo.core import pdf_universal
+from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
 from elmyra.ip.util.cql.knowledge import datasource_indexnames
 from elmyra.ip.util.cql.pyparsing import CQL
-from elmyra.ip.util.date import iso_to_german
+from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.python import _exception_traceback
 
@@ -305,17 +305,27 @@ def ops_family_publication_handler(request):
     return response.content
 
 
-@pdf_service.get(renderer='pdf')
+@pdf_service.get(renderer='null')
 def pdf_handler(request):
-    """request full document as pdf"""
+    """request full document as pdf, universal datasource"""
+
+    if ',' in request.matchdict['patent']:
+        return pdf_serve_multi(request)
+    else:
+        return pdf_serve_single(request)
+
+
+def pdf_serve_single(request):
 
     patent = request.matchdict['patent']
     #parts = request.matchdict['parts']
 
     data = pdf_universal(patent)
 
-    if data['pdf']:
+    if data.get('pdf'):
         # http://tools.ietf.org/html/rfc6266#section-4.2
+        request.response.content_type = 'application/pdf'
+        request.response.charset = None
         request.response.headers['Content-Disposition'] = 'inline; filename={0}.pdf'.format(patent)
         request.response.headers['X-Pdf-Source'] = data['datasource']
         return data['pdf']
@@ -324,9 +334,24 @@ def pdf_handler(request):
         raise HTTPNotFound('No PDF for document {0}'.format(patent))
 
 
+def pdf_serve_multi(request):
+    patents_raw = request.matchdict['patent']
+    patents = patents_raw.split(',')
+    patents = [patent.strip() for patent in patents]
+
+    data = pdf_universal_multi(patents)
+    zipfilename = 'ipsuite_pdf_{0}.zip'.format(datetime_iso_filename(now()))
+
+    # http://tools.ietf.org/html/rfc6266#section-4.2
+    request.response.content_type = 'application/zip'
+    request.response.charset = None
+    request.response.headers['Content-Disposition'] = 'attachment; filename={0}'.format(zipfilename)
+    return data['zip']
+
+
 @ops_pdf_service.get(renderer='pdf')
 def ops_pdf_handler(request):
-    """request full document as pdf"""
+    """request full document as pdf from OPS"""
     # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/A1/fullimage.pdf?Range=1
 
     # TODO: respond with proper 4xx codes if something fails
@@ -338,6 +363,7 @@ def ops_pdf_handler(request):
 
     # http://tools.ietf.org/html/rfc6266#section-4.2
     request.response.headers['Content-Disposition'] = 'inline; filename={0}.pdf'.format(patent)
+    request.response.headers['X-Pdf-Source'] = 'ops'
 
     return pdf_payload
 

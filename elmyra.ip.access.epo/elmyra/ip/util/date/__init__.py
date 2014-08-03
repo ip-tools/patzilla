@@ -15,6 +15,9 @@ def date_german(date):
 def datetime_iso(date):
     return date.strftime('%Y-%m-%d %H:%M:%S')
 
+def datetime_iso_filename(date):
+    return date.strftime('%Y-%m-%d_%H-%M-%S')
+
 def datetime_isoformat(date, microseconds=False):
     if not microseconds:
         date = date - datetime.timedelta(microseconds=date.microsecond)

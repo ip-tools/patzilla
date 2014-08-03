@@ -1,5 +1,5 @@
 from elmyra.ip.version import __VERSION__
-from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer
+from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
 from pyramid.config import Configurator
 
 def main(global_config, **settings):
@@ -28,6 +28,7 @@ def main(global_config, **settings):
     config.add_renderer('xml', XmlRenderer)
     config.add_renderer('png', PngRenderer)
     config.add_renderer('pdf', PdfRenderer)
+    config.add_renderer('null', NullRenderer)
 
     # Views and routes
     #config.add_static_view('static', 'static', cache_max_age=3600)

@@ -92,3 +92,12 @@ class PdfRenderer(object):
             response = request.response
             response.content_type = 'application/pdf'
         return data
+
+class NullRenderer(object):
+
+    def __init__(self, info):
+        pass
+
+    def __call__(self, data, context):
+        request = context.get('request')
+        return data
