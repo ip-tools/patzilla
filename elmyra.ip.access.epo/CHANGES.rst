@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.39.0
+======
 - ui: improve field autofocus behavior
 - ui: switch to expert mode when receiving url parameter ?query=
 - middleware: fix UserHistory.userid uniqueness
