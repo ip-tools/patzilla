@@ -289,28 +289,42 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         // 4. activate project action buttons
         $(this.el).find('#project-delete-button').click(function(e) {
 
-            _this.model.destroy({success: function() {
+            var projectname = opsChooserApp.config.get('project');
+            _ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
 
-                // select the next available project
-                var selected = _this.collection.sortByField('modified', 'desc').first();
-                if (selected) {
-                    var projectname = selected.get('name');
-                    opsChooserApp.trigger('project:load', projectname);
+                _this.model.destroy({success: function() {
 
-                // if no project is left, autocreate the canonical one (named by current date) again
-                } else {
+                    _ui.notify(
+                        'Project "' + _this.model.get('name') + '" deleted.',
+                        {type: 'success', icon: 'icon-trash'});
 
-                    // HACK: aid in destroying a freshly created BasketModel
-                    opsChooserApp.basketModel.destroy();
-                    delete opsChooserApp.basketModel;
+                    // select the next available project
+                    var selected = _this.collection.sortByField('modified', 'desc').first();
+                    if (selected) {
+                        var projectname = selected.get('name');
+                        opsChooserApp.trigger('project:load', projectname);
 
-                    opsChooserApp.trigger('projects:initialize');
+                    // if no project is left, autocreate the canonical one (named by current date) again
+                    } else {
 
-                    var notification_container = $('#project-chooser-name').parent().parent();
-                    $(notification_container).notify('recreated default project', {className: 'info', position: 'top'});
+                        // HACK: aid in destroying a freshly created BasketModel
+                        opsChooserApp.basketModel.destroy();
+                        delete opsChooserApp.basketModel;
 
-                }
-            }});
+                        var projectname = opsChooserApp.config._originalAttributes.project;
+                        opsChooserApp.config.set('project', projectname);
+
+                        opsChooserApp.trigger('projects:initialize');
+
+                        // notify user about the completed action
+                        _ui.notify(
+                            'Project "' + _this.model.get('name') + '" deleted.<br/>Recreated default project.',
+                            {type: 'success', icon: 'icon-trash'});
+
+                    }
+                }});
+
+            });
         });
 
         $(this.el).find('#project-create-button').unbind();
@@ -332,6 +346,9 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                 placeholder: 'Enter project name',
                 success: function(response, projectname) {
                     opsChooserApp.trigger('project:load', projectname);
+                    _ui.notify(
+                        'Project "' + projectname + '" created.',
+                        {type: 'success', icon: 'icon-plus'});
                 },
                 validate: function(value) {
                     return _this.projectname_validate(value);

@@ -173,13 +173,14 @@ PermalinkPlugin = Marionette.Controller.extend({
                         // `this` === `client`
                         // `event.target` === the element that was clicked
                         //event.target.style.display = "none";
-                        var message = "Copied permalink to clipboard, size is " + Math.round(event.data['text/plain'].length / 1000) + 'kB.';
-                        opsChooserApp.ui.notify(message, {type: 'success', icon: 'icon-copy'});
+                        var size_kb = Math.round(event.data['text/plain'].length / 1000);
+                        var message = "Copied permalink to clipboard, size is " + size_kb + 'kB.';
+                        _ui.notify(message, {type: 'success', icon: 'icon-copy'});
                     });
                 });
 
                 // apply more generic augmentations
-                opsChooserApp.ui.setup_text_tools();
+                _ui.setup_text_tools();
 
             }
 

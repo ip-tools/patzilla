@@ -14,6 +14,10 @@ function now_iso_human() {
     return moment().format('YYYY-MM-DD HH:mm:ss');
 }
 
+function now_iso_filename() {
+    return moment().format('YYYY-MM-DD_HH:mm:ss');
+}
+
 function today_iso() {
     return moment().format('YYYY-MM-DD');
 }

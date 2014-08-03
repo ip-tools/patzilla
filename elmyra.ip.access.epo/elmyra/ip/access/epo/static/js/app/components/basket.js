@@ -370,7 +370,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         $('.basket-review-button').unbind('click');
         $('.basket-review-button').click(function(event) {
             event.preventDefault();
-            if (_this.check_empty('review')) { return; }
+            if (_this.check_empty({kind: 'review', icon: 'icon-indent-left'})) { return; }
             _this.model.review();
         });
 
@@ -505,15 +505,19 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
     },
 
-    check_empty: function(kind) {
+    check_empty: function(options) {
+        options = options || {};
         var verb = 'shared';
-        if (kind == 'review') {
+        if (options.kind == 'review') {
             verb = 'reviewed';
+        }
+        if (!options.icon) {
+            options.icon = 'icon-external-link';
         }
         if (this.model.empty()) {
             opsChooserApp.ui.notify(
                 "An empty collection can't be " + verb + ", please add some documents.",
-                {type: 'warning', icon: 'icon-external-link icon-large'});
+                {type: 'warning', icon: options.icon + ' icon-large'});
             return true;
         }
         return false;

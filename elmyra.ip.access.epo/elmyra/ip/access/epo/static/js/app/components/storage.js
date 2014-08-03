@@ -61,19 +61,21 @@ StoragePlugin = Marionette.Controller.extend({
 
             // compute payload and filename
             var payload = JSON.stringify(backup, undefined, 4);
-            var now = now_iso_human();
-            var filename = 'elmyra-ipsuite-navigator.' + now + '.database.json';
+            var filename = 'ipsuite-database_' + now_iso_filename() + '.json';
 
             // write file
             if (!payload) {
-                opsChooserApp.ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
+                _ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
                 return;
             }
             var blob = new Blob([payload], {type: "application/json"});
             saveAs(blob, filename);
 
             // notify user
-            opsChooserApp.ui.notify('Database exported successfully', {type: 'success', icon: 'icon-save'});
+            var size_kb = Math.round(blob.size / 1000);
+            _ui.notify(
+                'Database exported successfully, size is ' + size_kb + 'kB.',
+                {type: 'success', icon: 'icon-save'});
 
         });
 
@@ -95,7 +97,7 @@ StoragePlugin = Marionette.Controller.extend({
                 if (!payload_dataurl || !payload) {
                     var message = 'ERROR: data URL format is invalid';
                     console.error(message + '; payload=' + payload);
-                    opsChooserApp.ui.notify(message, {type: 'error'});
+                    _ui.notify(message, {type: 'error'});
                     return;
                 }
             }
@@ -107,7 +109,7 @@ StoragePlugin = Marionette.Controller.extend({
                 var msg = error.message;
                 var message = 'ERROR: JSON format is invalid, ' + msg;
                 console.error(message + '; payload=' + payload);
-                opsChooserApp.ui.notify(message, {type: 'error'});
+                _ui.notify(message, {type: 'error'});
                 return;
             }
         }
@@ -119,7 +121,7 @@ StoragePlugin = Marionette.Controller.extend({
         if (filetype != 'elmyra.ipsuite.navigator.database' || !database) {
             var message = 'ERROR: Database dump format is invalid';
             console.error(message);
-            opsChooserApp.ui.notify(message, {type: 'error'});
+            _ui.notify(message, {type: 'error'});
             return;
         }
 
@@ -160,7 +162,9 @@ StoragePlugin = Marionette.Controller.extend({
             // activate project
             opsChooserApp.trigger('projects:initialize');
 
-            opsChooserApp.ui.notify('Database imported successfully', {type: 'success'});
+            _ui.notify(
+                'Database imported successfully',
+                {type: 'success', icon: 'icon-folder-open-alt'});
 
         });
 
@@ -209,7 +213,7 @@ StoragePlugin = Marionette.Controller.extend({
             if (file.type != 'application/json') {
                 var message = 'ERROR: File type is ' + file.type + ', but should be application/json';
                 //log('import message:', message);
-                opsChooserApp.ui.notify(message, {type: 'error'});
+                _ui.notify(message, {type: 'error'});
                 return;
             }
 
@@ -223,7 +227,7 @@ StoragePlugin = Marionette.Controller.extend({
             reader.onerror = function(e) {
                 var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
                 //log('import message:', message);
-                opsChooserApp.ui.notify(message, {type: 'error'});
+                _ui.notify(message, {type: 'error'});
             }
             reader.readAsText(file);
 
@@ -236,18 +240,19 @@ StoragePlugin = Marionette.Controller.extend({
 
 
         // reset database
-        $('#factory-reset-button').unbind();
-        $('#factory-reset-button').click(function(e) {
+        $('#database-wipe-button').unbind();
+        $('#database-wipe-button').click(function(e) {
 
-            bootbox.confirm('<h4><span class="alert alert-danger">This will wipe the whole local database. Are you sure?</span></h4>', function(wipe_ack) {
-                if (wipe_ack) {
+            _ui.confirm('This will wipe the whole local database. Are you sure?').then(function() {
 
-                    // wipe the database
-                    _this.dbreset({shutdown_gui: true});
+                // wipe the database
+                _this.dbreset({shutdown_gui: true});
 
-                    // send some notifications
-                    opsChooserApp.ui.notify('Database wiped successfully. You should create a new project before starting over.', {type: 'success'});
-                }
+                // notify user about the completed action
+                _ui.notify(
+                    'Database wiped successfully. You should create a new project before starting over.',
+                    {type: 'success', icon: 'icon-trash'});
+
             });
 
         });

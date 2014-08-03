@@ -109,6 +109,25 @@ UiController = Marionette.Controller.extend({
         }
     },
 
+    confirm: function(message) {
+        var deferred = $.Deferred();
+
+        var dialog = bootbox.confirm('<h4>' + message + '</h4>', function(ack) {
+            if (ack) {
+                deferred.resolve();
+            }
+        });
+
+        // style: danger, error
+        dialog.css({
+            'color': '#b94a48',
+            'background-color': '#f2dede',
+            'border-color': '#eed3d7',
+        });
+
+        return deferred.promise();
+    },
+
     notify: function(message, options) {
 
         if (options.icon) {
@@ -118,10 +137,14 @@ UiController = Marionette.Controller.extend({
             options.type = 'notice';
         }
 
+        if (this.notification) {
+            this.notification.dismiss();
+        }
+
         //setTimeout( function() {
 
             // create the notification
-            var notification = new NotificationFx({
+            this.notification = new NotificationFx({
                 message : message,
                 layout : 'attached',
                 effect : 'bouncyflip',
@@ -133,7 +156,7 @@ UiController = Marionette.Controller.extend({
             });
 
             // show the notification
-            notification.show();
+            this.notification.show();
 
         //}, 1200 );
 
@@ -151,8 +174,11 @@ UiController = Marionette.Controller.extend({
 });
 
 // setup controller
+var _ui;
 opsChooserApp.addInitializer(function(options) {
+
     this.ui = new UiController();
+    _ui = this.ui;
 
     this.listenTo(this, 'application:ready', function() {
         this.ui.setup_ui();
