@@ -100,6 +100,13 @@ UiController = Marionette.Controller.extend({
         }
     },
 
+    do_elements_focus: function() {
+        if (opsChooserApp.documents.length) {
+            $('#patentnumber').blur();
+            $('#query').blur();
+        }
+    },
+
     notify: function(message, options) {
 
         if (options.icon) {
@@ -147,6 +154,10 @@ opsChooserApp.addInitializer(function(options) {
 
     this.listenTo(this, 'application:ready', function() {
         this.ui.setup_ui();
+    });
+
+    this.listenTo(this, 'results:ready', function() {
+        this.ui.do_elements_focus();
     });
 
 });

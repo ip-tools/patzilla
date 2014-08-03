@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: improve field autofocus behavior
 
 0.38.0
 ======
