@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.40.0
+======
 - middleware: api endpoint for downloading a zip archive of multiple pdf documents
 - ui: wire multiple pdf zip archive download
 - ui: various minor improvements, some javascript refactoring
