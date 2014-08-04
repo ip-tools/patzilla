@@ -131,7 +131,7 @@ PermalinkPlugin = Marionette.Controller.extend({
         if (popover_active) {
             if (uri) {
 
-                // TODO: refactor to seperate function
+                // TODO: refactor to separate function
 
                 // set the intro text
                 if (options.intro) {
@@ -159,25 +159,7 @@ PermalinkPlugin = Marionette.Controller.extend({
 
                 // copy permalink to clipboard
                 var clipboard_button = $(tip).find('#permalink-copy')[0];
-                var zeroclipboard = new ZeroClipboard(clipboard_button);
-                zeroclipboard.on('ready', function(readyEvent) {
-
-                    // intercept the copy event to set custom data
-                    zeroclipboard.on('copy', function(event) {
-                        var clipboard = event.clipboardData;
-                        clipboard.setData('text/plain', uri);
-                    });
-
-                    // when content was copied to clipboard, notify user
-                    zeroclipboard.on('aftercopy', function(event) {
-                        // `this` === `client`
-                        // `event.target` === the element that was clicked
-                        //event.target.style.display = "none";
-                        var size_kb = Math.round(event.data['text/plain'].length / 1000);
-                        var message = "Copied permalink to clipboard, size is " + size_kb + 'kB.';
-                        _ui.notify(message, {type: 'success', icon: 'icon-copy'});
-                    });
-                });
+                _ui.copy_to_clipboard('text/plain', uri, {element: clipboard_button});
 
                 // apply more generic augmentations
                 _ui.setup_text_tools();

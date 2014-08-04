@@ -360,7 +360,19 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $('#basket-submit-button').addClass('hide');
         }
 
+        // import clipboard content by intercepting paste event
+        $('#basket').unbind('paste');
+        $("#basket").on('paste', function(e) {
+            e.preventDefault();
+            var text = (e.originalEvent || e).clipboardData.getData('text');
+            var entries = text.split(/[,;\r\n]/);
+            _.each(entries, function(entry) {
+                _this.model.add(entry);
+            });
+        });
+
         // basket import
+        $('#basket-import-button').unbind('click');
         $('#basket-import-button').click(function(e) {
             _this.future_premium_feature();
             return false;
@@ -391,6 +403,20 @@ BasketView = Backbone.Marionette.ItemView.extend({
             //log('mailto_link:', mailto_link);
             $(this).attr('href', mailto_link);
         });
+
+        // share via clipboard
+        _ui.copy_to_clipboard('text/plain', function() {
+            if (_this.check_empty()) { return; }
+            var numbers = _this.model.get_numbers();
+            return numbers.join('\n');
+        }, {element: $('#share-numberlist-clipboard')});
+        /*
+        $('#share-numberlist-clipboard').unbind('click');
+        $('#share-numberlist-clipboard').click(function() {
+            if (_this.check_empty()) { return; }
+            var numbers = _this.model.get_numbers();
+        });
+        */
 
         // share via url
         $('#share-numberlist-url').unbind('click');

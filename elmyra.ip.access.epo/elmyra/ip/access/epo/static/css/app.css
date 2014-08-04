@@ -326,6 +326,10 @@ dl.dl-horizontal-inline {
     font-size: smaller;
 }
 
+#share-numberlist-clipboard {
+    cursor: pointer;
+}
+
 .form-single-bibdata {
     display: inline;
 }

@@ -8,6 +8,7 @@ development
 - ui: wire multiple pdf zip archive download
 - ui: various minor improvements, some javascript refactoring
 - ui/middleware: lots of minor tweaks, more icons for notifications, wording
+- ui: import and share numberlist from/via clipboard
 
 0.39.0
 ======

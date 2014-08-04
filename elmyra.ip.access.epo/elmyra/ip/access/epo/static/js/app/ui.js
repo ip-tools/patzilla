@@ -171,6 +171,44 @@ UiController = Marionette.Controller.extend({
         }
     },
 
+    copy_to_clipboard: function(mimetype, payload, options) {
+        options = options || {};
+        var deferred = $.Deferred();
+        //log('payload:', payload);
+
+        var zeroclipboard = new ZeroClipboard(options.element);
+        zeroclipboard.on('ready', function(readyEvent) {
+
+            // intercept the copy event to set custom data
+            zeroclipboard.on('copy', function(event) {
+                var clipboard = event.clipboardData;
+                if (_.isFunction(payload)) {
+                    payload = payload();
+                }
+                clipboard.setData(mimetype, payload);
+            });
+
+            // when content was copied to clipboard, notify user
+            zeroclipboard.on('aftercopy', function(event) {
+                // `this` === `client`
+                // `event.target` === the element that was clicked
+                //event.target.style.display = "none";
+                var size_value = event.data[mimetype].length;
+                var size_label = 'Bytes';
+                if (size_value >= 1000) {
+                    var size_value = Math.round(size_value / 1000);
+                    var size_label = 'kB';
+                }
+                var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
+                _ui.notify(message, {type: 'success', icon: 'icon-copy'});
+            });
+
+            deferred.resolve(zeroclipboard);
+
+        });
+        return deferred.promise();
+    },
+
 });
 
 // setup controller
