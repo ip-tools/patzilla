@@ -184,7 +184,7 @@ DocumentDetailsController = Marionette.Controller.extend({
                 if (data) {
                     $(content_element).html(data['html']);
                     data['lang'] && $(language_element).html('[' + data['lang'] + ']');
-                    opsChooserApp.document_highlighting.apply();
+                    opsChooserApp.document_highlighting.apply($(content_element).find('*'));
                 }
             });
         }
@@ -415,7 +415,11 @@ HighlightingController = Marionette.Controller.extend({
         console.log('HighlightingController.initialize');
     },
 
-    apply: function() {
+    apply: function(element) {
+
+        var highlight_selector = element;
+        if (!highlight_selector) { highlight_selector = '.keyword'; }
+
         // http://hslpicker.com/
         var styles = {
             yellow:     {backgroundColor: 'hsla( 60, 100%, 82%, 1)'},
@@ -444,7 +448,7 @@ HighlightingController = Marionette.Controller.extend({
                 var class_name = 'highlight-' + style_name;
 
                 // perform highlighting
-                $('.keyword').highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
+                $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
 
                 // apply style
                 $('.' + class_name).css(style);

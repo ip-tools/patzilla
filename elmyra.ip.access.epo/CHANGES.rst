@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- fix highlighting for descriptions from DEPATISconnect
 
 0.40.0
 ======
