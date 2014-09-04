@@ -286,6 +286,7 @@ def pdf_document_build(patent):
     return pdf_document
 
 
+@cache_region('search')
 def ops_document_kindcodes(patent):
 
     p = split_patent_number(patent)
@@ -325,7 +326,7 @@ def ops_document_kindcodes(patent):
         #print "document:", document
 
         # TODO: check whether a single occurrance of "not found" should really raise this exception
-        if document['@status'] == 'not found':
+        if document.has_key('@status') and document['@status'] == 'not found':
             error = HTTPNotFound(error_msg_access)
             raise error
 
