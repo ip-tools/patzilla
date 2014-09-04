@@ -44,6 +44,11 @@ if request_uri:find("^/api/identity/pwhash.*$") then
     return
 end
 
+-- temporarily allow kindcode inquiry
+if request_uri:find("^/api/ops/.+/kindcodes$") then
+    return
+end
+
 -- "patentview" domains
 if ngx.var.host:find("^patentview.*$") then
     return
