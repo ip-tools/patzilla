@@ -9,7 +9,7 @@ from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisc
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes
 from elmyra.ip.util.cql.knowledge import datasource_indexnames
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
@@ -70,6 +70,11 @@ ops_claims_service = Service(
     name='ops-claims',
     path='/api/ops/{patent}/claims',
     description="OPS claims interface")
+
+ops_kindcode_service = Service(
+    name='ops-kindcodes',
+    path='/api/ops/{patent}/kindcodes',
+    description="OPS kindcodes interface")
 
 depatisconnect_description_service = Service(
     name='depatisconnect-description',
@@ -381,6 +386,13 @@ def ops_description_handler(request):
     patent = request.matchdict['patent']
     description = ops_description(patent)
     return description
+
+@ops_kindcode_service.get()
+def ops_kindcode_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+    patent = request.matchdict['patent']
+    kindcodes = ops_document_kindcodes(patent)
+    return kindcodes
 
 @depatisconnect_claims_service.get()
 def depatisconnect_claims_handler(request):

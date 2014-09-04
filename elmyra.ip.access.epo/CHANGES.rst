@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- api: endpoint for inquiring all publication kindcodes by publication reference
 
 0.40.1
 ======

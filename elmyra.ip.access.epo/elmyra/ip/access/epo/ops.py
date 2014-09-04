@@ -79,6 +79,7 @@ def inquire_images(patent):
     if response.status_code != 200:
 
         # make 404s cacheable
+        # FIXME: really!?
         if response.status_code == 404:
             log.warn(error_msg_access)
             return
@@ -283,6 +284,55 @@ def pdf_document_build(patent):
     # TODO: 4. add attachments (e.g. xml)
 
     return pdf_document
+
+
+def ops_document_kindcodes(patent):
+
+    p = split_patent_number(patent)
+    patent = p['country'] + p['number'] # + '.' + p['kind']
+
+    url_biblio_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/docdb/{patent}/biblio/full-cycle'
+    url_biblio = url_biblio_tpl.format(patent=patent)
+
+    error_msg_access = 'No bibliographic information for document={0}'.format(patent)
+    error_msg_process = 'Error while processing bibliographic information for document={0}'.format(patent)
+
+    client = get_ops_client()
+    response = client.get(url_biblio, headers={'Accept': 'application/json'})
+    if response.status_code != 200:
+
+        log.error(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
+        error = HTTPError(error_msg_access)
+        error.status_code = response.status_code
+
+        # TODO: respond with proper json error
+        raise error
+
+    try:
+        data = response.json()
+    except JSONDecodeError as ex:
+        # TODO: respond with proper json error
+        error_msg_process += ': {0}'.format(str(ex))
+        log.error(error_msg_process)
+        error = HTTPError(error_msg_process)
+        error.status_code = 500
+        raise error
+
+    documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
+
+    kindcodes = []
+    for document in documents:
+        #print "document:", document
+
+        # TODO: check whether a single occurrance of "not found" should really raise this exception
+        if document['@status'] == 'not found':
+            error = HTTPNotFound(error_msg_access)
+            raise error
+
+        kindcode = document['@kind']
+        kindcodes.append(kindcode)
+
+    return kindcodes
 
 
 def _summarize_metrics(payload, kind):
