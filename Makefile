@@ -52,7 +52,7 @@ install:
 	@# make install target=patoffice version=0.29.0
 	source .venv27/bin/activate; fab install:target=$(target),version=$(version)
 
-package-and-install: sdist upload install
+#package-and-install: sdist upload install
 
 bumpversion:
 	bumpversion $(bump)
@@ -64,6 +64,9 @@ push:
 #	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
 
 release: js bumpversion push sdist upload
+
+install-nginx-auth:
+	rsync -azuv nginx-auth/* root@almera.elmyra.de:/opt/elmyra/patentsearch/nginx-auth/
 
 test:
 	@python runtests.py          \
