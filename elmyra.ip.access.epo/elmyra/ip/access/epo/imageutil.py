@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2011 ***REMOVED***
-# (c) 2013 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import os
 import logging
 import StringIO
@@ -40,7 +40,7 @@ def gif_to_tiff(payload):
         return stdout
 
     except:
-        log.error('GIF to TIFF conversion failed, {1}. returncode={2}, command="{0}"'.format(command_debug, stderr, proc.returncode))
+        log.error('GIF to TIFF conversion failed. returncode={2}, command="{0}", stderr={1}'.format(command_debug, stderr, proc.returncode))
         raise Exception('GIF to TIFF conversion failed')
 
 
