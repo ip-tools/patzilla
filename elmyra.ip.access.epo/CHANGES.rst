@@ -5,17 +5,17 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
-0.42.0
+0.43.0
 ======
 - data: stay in full-cycle mode, but only use first result document as representative one
 - data: enrich representative document with "also published as" bibliographic data
 - ui: display “also published as” information
 
-0.41.0
+0.42.0
 ======
 - api: endpoint for inquiring all publication kindcodes by publication reference
 
-0.40.1
+0.41.0
 ======
 - fix highlighting for descriptions from DEPATISconnect
 
