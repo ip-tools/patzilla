@@ -416,7 +416,7 @@
                                 &nbsp;&nbsp;
 
                                 <!-- pdf document -->
-                                <a href="<%= linkmaker.universal_pdf_url(entry['document-id']) %>" target="ipsuite-pdf"
+                                <a href="<%= linkmaker.universal_pdf_url(entry.attributes.get_patent_number()) %>" target="ipsuite-pdf"
                                    class="btn btn-small btn-popover anchor-pdf" role="button"
                                    data-toggle="popover" data-trigger="hover" data-placement="top"
                                    data-content="Full pdf document"

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.43.1
+======
+- fix pdf url at new “also published as” bibliographic data
+
 0.43.0
 ======
 - data: stay in full-cycle mode, but only use first result document as representative one
