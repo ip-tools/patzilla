@@ -54,10 +54,15 @@
             return url;
         },
 
-        universal_pdf_url: function() {
+        universal_pdf_url: function(document_id) {
             // /api/pdf/EP0666666B1
-            var url_tpl = _.template('/api/pdf/<%= country %><%= number %><%= kind %>');
-            var url = url_tpl(this);
+            if (!document_id) {
+                var url_tpl = _.template('/api/pdf/<%= country %><%= number %><%= kind %>');
+                var url = url_tpl(this);
+            } else {
+                var url_tpl = _.template('/api/pdf/<%= document_id %>');
+                var url = url_tpl({document_id: document_id});
+            }
             return url;
         },
 

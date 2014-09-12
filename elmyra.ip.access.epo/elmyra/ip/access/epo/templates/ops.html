@@ -28,10 +28,8 @@
 
     var patent_number = data.get_patent_number();
     var linkmaker = data.get_linkmaker();
-
-    // TODO: refactor to ops.js
-    var publication_date = data.format_date(data.search_date(data['bibliographic-data']['publication-reference']['document-id']));
-    var application_date = data.format_date(data.search_date(data['bibliographic-data']['application-reference']['document-id']));
+    var publication_date = data.get_publication_date();
+    var application_date = data.get_application_date();
 
     var title_list = data.get_title_list();
     var abstract_list = data.get_abstract_list();
@@ -99,7 +97,7 @@
                     <a href="<%= linkmaker.universal_pdf_url() %>" target="ipsuite-pdf"
                         class="btn btn-popover anchor-pdf" role="button"
                         data-toggle="popover" data-trigger="hover" data-placement="top"
-                        data-content="Download full pdf document"
+                        data-content="Full pdf document"
                         >
                         <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                     </a>
@@ -405,6 +403,35 @@
 
                         <br/>
 
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="also published as">
+                            (R)
+                        </dt>
+                        <dd class="keyword">
+                            Also published as:
+                            <br/>
+                            <% _(data['bibliographic-data']['also-published-as']).each(function(entry) { %>
+
+                                <%= entry.attributes.get_patent_number() %>, <%= entry.attributes.get_publication_date() %>
+
+                                &nbsp;&nbsp;
+
+                                <!-- pdf document -->
+                                <a href="<%= linkmaker.universal_pdf_url(entry['document-id']) %>" target="ipsuite-pdf"
+                                   class="btn btn-small btn-popover anchor-pdf" role="button"
+                                   data-toggle="popover" data-trigger="hover" data-placement="top"
+                                   data-content="Full pdf document"
+                                        >
+                                    <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+                                </a>
+
+                                <br/>
+
+                            <% }); %>
+
+                        </dd>
+
+                        <br/>
+
                         <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
                             (56)
                         </dt>
@@ -440,6 +467,7 @@
                                     <% } %>
                                 </ul>
                             </div>
+                            &nbsp;
                             <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
 
                             <br/><br/>

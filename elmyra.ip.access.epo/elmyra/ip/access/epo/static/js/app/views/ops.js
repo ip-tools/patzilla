@@ -18,24 +18,6 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     },
 
     templateHelpers: {
-
-        // date values inside publication|application-reference
-        search_date: function(node) {
-            var value = null;
-            _.each(node, function(item) {
-                if (!value && item['date'] && item['date']['$']) {
-                    value = item['date']['$'];
-                }
-            });
-            return value;
-        },
-
-        format_date: function(value) {
-            if (value) {
-                return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 8);
-            }
-        },
-
     },
 
     onDomRefresh: function() {

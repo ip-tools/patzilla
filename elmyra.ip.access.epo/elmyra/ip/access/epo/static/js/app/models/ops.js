@@ -40,14 +40,31 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 // unwrap response by creating a list of model objects from records
                 var entries = [];
                 if (search_result) {
-                    // double flattening
-                    var exchange_documents = [];
-                    var exchange_documents_container = to_list(search_result['exchange-documents']);
-                    _(exchange_documents_container).each(function(exchange_documents_entry) {
-                        var exchange_documents_inner = to_list(exchange_documents_entry['exchange-document']);
-                        exchange_documents = $.merge(exchange_documents, exchange_documents_inner);
+
+                    // search_result is nested, collect representative result documents
+                    // while retaining additional result documents inside ['bibliographic-data']['also-published-as']
+                    var results = [];
+                    var exchange_documents_containers = to_list(search_result['exchange-documents']);
+                    _(exchange_documents_containers).each(function(exchange_documents_container) {
+                        var exchange_documents = to_list(exchange_documents_container['exchange-document']);
+
+                        // v1
+                        //results = $.merge(results, exchange_documents);
+
+                        // v2
+                        // use first result document as representative document
+                        var representative_entry = exchange_documents.shift();
+                        results.push(representative_entry);
+
+                        // collect some information from other result documents
+                        var representations = [];
+                        _(exchange_documents).each(function(exchange_document) {
+                            representations.push(new OpsExchangeDocument(exchange_document));
+                        });
+                        representative_entry['bibliographic-data']['also-published-as'] = representations;
                     });
-                    _(exchange_documents).each(function(exchange_document) {
+
+                    _(results).each(function(exchange_document) {
                         if (exchange_document['@status'] == 'invalid result') {
                             console.error('OPS INVALID RESULT:', entry);
                         } else {
@@ -197,6 +214,16 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         get_linkmaker: function() {
             return new Ipsuite.LinkMaker(this);
+        },
+
+        get_also_published_as: function() {
+            var results = [];
+            var entries = this['bibliographic-data']['also-published-as'];
+            _(entries).each(function(entry) {
+                //entry['document-id'] = entry['country'] + entry['doc-number'] + entry['kind'];
+                results.push(entry);
+            });
+            return results;
         },
 
         _flatten_textstrings: function(dict) {
@@ -602,7 +629,32 @@ OpsExchangeDocument = Backbone.Model.extend({
             return _(countries_allowed).contains(this['@country']);
         },
 
-    },
+        format_date: function(value) {
+            if (value) {
+                return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 8);
+            }
+        },
+
+        // date values inside publication|application-reference
+        search_date: function(node) {
+            var value = null;
+            _.each(node, function(item) {
+                if (!value && item['date'] && item['date']['$']) {
+                    value = item['date']['$'];
+                }
+            });
+            return value;
+        },
+
+        get_publication_date: function() {
+            return this.format_date(this.search_date(this['bibliographic-data']['publication-reference']['document-id']));
+        },
+
+        get_application_date: function() {
+            return this.format_date(this.search_date(this['bibliographic-data']['application-reference']['document-id']));
+        },
+
+},
 
     initialize: function(options) {
         // TODO: enhance this as soon as we're in AMD land
