@@ -5,6 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.43.2
+======
+- middleware: when performing patentnumber normalization, strip leading zeros from JP document numbers
+  (DEPATISnet yields numbers like JP002011251389A)
+
 0.43.1
 ======
 - fix pdf url at new “also published as” bibliographic data

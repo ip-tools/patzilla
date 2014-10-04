@@ -337,6 +337,10 @@ def normalize_patent_jp(patent):
     if len(parts) == 2:
         patched['number'] = pad_left(parts[0], '0', 2) + pad_left(parts[1], '0', 6)
 
+    # 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A)
+    else:
+        patched['number'] = patched['number'].lstrip('0')
+
     return patched
 
 
