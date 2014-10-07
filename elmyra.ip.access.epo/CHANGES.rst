@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware/ui: connect comfort search form with ftpro datasource
 
 0.44.2
 ======

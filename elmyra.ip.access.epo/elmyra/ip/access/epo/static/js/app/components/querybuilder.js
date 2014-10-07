@@ -444,16 +444,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             datasource: datasource,
         };
 
-        this.query_api(payload).then(function(cql) {
-            $("#query").val(cql);
+        this.compute_query_expression(payload).then(function(expression) {
+            $("#query").val(expression);
         });
     },
 
-    query_api: function(payload) {
+    compute_query_expression: function(payload) {
         var deferred = $.Deferred();
         $.ajax({
             method: 'post',
-            url: '/api/cql',
+            url: '/api/util/query-expression',
             async: false,
             sync: true,
             data: JSON.stringify(payload),
@@ -463,7 +463,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 deferred.resolve(payload);
             }
         }).error(function(error) {
-            console.warn('Error while computing cql query', error);
+            console.warn('Error while computing query expression', error);
             deferred.reject(error);
         });
         return deferred.promise();
