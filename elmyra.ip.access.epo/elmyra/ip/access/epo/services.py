@@ -10,6 +10,7 @@ from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes
+from elmyra.ip.access.ftpro.search import FulltextProClient
 from elmyra.ip.util.cql.knowledge import datasource_indexnames
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
@@ -19,17 +20,12 @@ from elmyra.ip.util.python import _exception_traceback
 log = logging.getLogger(__name__)
 
 # ------------------------------------------
-#   services
+#   services: ops
 # ------------------------------------------
 ops_published_data_search_service = Service(
     name='ops-published-data-search',
     path='/api/ops/published-data/search',
     description="OPS search interface")
-
-depatisnet_published_data_search_service = Service(
-    name='depatisnet-published-data-search',
-    path='/api/depatisnet/published-data/search',
-    description="DEPATISnet search interface")
 
 ops_family_publication_service = Service(
     name='ops-family-publication',
@@ -76,6 +72,15 @@ ops_kindcode_service = Service(
     path='/api/ops/{patent}/kindcodes',
     description="OPS kindcodes interface")
 
+
+# ------------------------------------------
+#   services: depatisnet
+# ------------------------------------------
+depatisnet_published_data_search_service = Service(
+    name='depatisnet-published-data-search',
+    path='/api/depatisnet/published-data/search',
+    description="DEPATISnet search interface")
+
 depatisconnect_description_service = Service(
     name='depatisconnect-description',
     path='/api/depatisconnect/{patent}/description',
@@ -86,6 +91,19 @@ depatisconnect_claims_service = Service(
     path='/api/depatisconnect/{patent}/claims',
     description="DEPATISconnect claims interface")
 
+
+# ------------------------------------------
+#   services: ftpro
+# ------------------------------------------
+ftpro_published_data_search_service = Service(
+    name='ftpro-published-data-search',
+    path='/api/ftpro/published-data/search',
+    description=" FulltextPROsearch interface")
+
+
+# ------------------------------------------
+#   services: misc
+# ------------------------------------------
 cql_tool_service = Service(
     name='cql-tool-service',
     path='/api/cql',
@@ -186,6 +204,50 @@ def depatisnet_published_data_search_handler(request):
         request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
 
 
+@ftpro_published_data_search_service.get(accept="application/json")
+def ftpro_published_data_search_handler(request):
+    """Search for published-data at FulltextPRO"""
+
+    # CQL query string
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
+    if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
+        query = '"%s"' % query
+
+    # Parse and recompile CQL query string to apply number normalization
+    query_object = None
+    try:
+
+        pass
+
+        # v1: Cheshire3 CQL parser
+        #query_object = cql_parse(query)
+        #query_recompiled = query_object.toCQL().strip()
+
+        # v2 pyparsing CQL parser
+        #query_object = CQL(query).polish()
+        #query_recompiled = query_object.dumps()
+
+        #if query_recompiled:
+        #    query = query_recompiled
+
+    except Exception as ex:
+        # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
+        log.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+
+    log.info('query cql: ' + query)
+
+    #propagate_keywords(request, query_object)
+
+    try:
+        return ftpro_published_data_search(query, 250)
+
+    except SyntaxError as ex:
+        request.errors.add('ftpro-published-data-search', 'query', str(ex.msg))
+
+
 def propagate_keywords(request, query_object):
     """propagate keywords to client for highlighting"""
     if query_object:
@@ -251,6 +313,20 @@ def dpma_published_data_search(query, hits_per_page):
         return depatisnet.search_patents(query, hits_per_page)
     except SyntaxError as ex:
         log.warn('Invalid query for DEPATISnet: %s' % ex.msg)
+        raise
+
+#@cache_region('search')
+def ftpro_published_data_search(query, hits_per_page):
+
+    # <applicant type="inpadoc">grohe</applicant>
+    # <applicant type="inpadoc">siemens</applicant>
+
+    #ftpro = FulltextProClient(uri='http://62.245.145.108:2000', username='gartzen@elmyra.de', password='fAaVq4GwXi')
+    ftpro = FulltextProClient(uri='http://62.245.145.108:2000', sessionid='MFbZjdAKJ0mfg4VvwFZZbWqeygU=')
+    try:
+        return ftpro.search(query, hits_per_page)
+    except SyntaxError as ex:
+        log.warn('Invalid query for FulltextPRO: %s' % ex.msg)
         raise
 
 @ops_image_info_service.get()

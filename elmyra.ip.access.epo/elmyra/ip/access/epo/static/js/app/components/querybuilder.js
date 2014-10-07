@@ -401,10 +401,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     opsChooserApp.set_datasource('ops');
                 } else if (_.string.endsWith(value, '[depatisnet]') || _.string.endsWith(value, '(depatisnet)')) {
                     opsChooserApp.set_datasource('depatisnet');
+                } else if (_.string.endsWith(value, '[ftpro]') || _.string.endsWith(value, '(ftpro)')) {
+                    opsChooserApp.set_datasource('ftpro');
                 }
                 value = value
-                    .replace(' [ops]', '').replace(' [depatisnet]', '')
-                    .replace(' (ops)', '').replace(' (depatisnet)', '');
+                    .replace(' [ops]', '').replace(' (ops)', '')
+                    .replace(' [depatisnet]', '').replace(' (depatisnet)', '')
+                    .replace(' [ftpro]', '').replace(' (ftpro)', '');
 
                 $('#query').val(value);
             }

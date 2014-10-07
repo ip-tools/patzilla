@@ -69,7 +69,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 var depatisnet = new DepatisnetSearch();
                 depatisnet.perform(query).done(function(response) {
 
-                    self.propagate_depatisnet_message(response);
+                    self.propagate_datasource_message(response);
                     self.metadata.set('keywords', depatisnet.keywords);
                     console.log('depatisnet response:', response);
 
@@ -77,10 +77,36 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     var hits = response['hits'];
 
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-                        self.propagate_depatisnet_message(response);
+                        self.propagate_datasource_message(response);
                     });
 
                 });
+
+            } else if (datasource == 'ftpro') {
+
+                this.trigger('search:before', {datasource: datasource, query: query});
+
+                // make the pager display the original query
+                this.metadata.set('query_origin', query);
+
+                var ftprosearch = new SipSearch();
+                ftprosearch.perform(query).done(function(response) {
+
+                    self.propagate_datasource_message(response);
+                    self.metadata.set('keywords', ftprosearch.keywords);
+                    console.log('ftpro response:', response);
+
+                    var publication_numbers = response['numbers'];
+                    var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
+
+                    self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+                        self.propagate_datasource_message(response);
+                    });
+
+                });
+
+            } else {
+                this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon2: 'icon-copy'});
             }
 
         }
@@ -178,7 +204,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         return range;
     },
 
-    propagate_depatisnet_message: function(response) {
+    propagate_datasource_message: function(response) {
         this.user_alert(response['message'], 'warning');
     },
 
