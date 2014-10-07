@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: lowlevel adapter to search provider "FulltextPRO"
 
 0.43.2
 ======
