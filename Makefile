@@ -91,3 +91,12 @@ test-setup:
 nginx_path=/Users/amo/dev/celeraone/sources/c1-ocb-integrator/rem_rp/parts/openresty
 nginx-start:
 	@$(nginx_path)/nginx/sbin/nginx -p $(nginx_path)/nginx -c `pwd`/nginx-auth/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
+
+mongodb-ftpro-export:
+	mkdir -p var/tmp/mongodb
+	mongoexport --db ipsuite_development --collection ftpro_country > var/tmp/mongodb/ftpro_country.mongodb
+	mongoexport --db ipsuite_development --collection ftpro_ipc_class > var/tmp/mongodb/ftpro_ipc_class.mongodb
+
+mongodb-ftpro-import:
+	mongoimport --db ipsuite_development --collection ftpro_country < var/tmp/mongodb/ftpro_country.mongodb
+	mongoimport --db ipsuite_development --collection ftpro_ipc_class < var/tmp/mongodb/ftpro_ipc_class.mongodb
