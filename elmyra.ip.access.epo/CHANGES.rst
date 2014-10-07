@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.44.1
+======
+- rename file for an attempt on dependency mungling
+
 0.44.0
 ======
 - middleware: lowlevel adapter to search provider "FulltextPRO"
