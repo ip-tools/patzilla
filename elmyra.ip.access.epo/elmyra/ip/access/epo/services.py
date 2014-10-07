@@ -11,7 +11,7 @@ from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes
 from elmyra.ip.access.ftpro.search import FulltextProClient
-from elmyra.ip.util.cql.knowledge import datasource_indexnames
+from elmyra.ip.util.cql.knowledge import datasource_indexnames, ftpro_xml_expression_templates
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -104,10 +104,10 @@ ftpro_published_data_search_service = Service(
 # ------------------------------------------
 #   services: misc
 # ------------------------------------------
-cql_tool_service = Service(
-    name='cql-tool-service',
-    path='/api/cql',
-    description="CQL tool service")
+query_expression_util_service = Service(
+    name='query-expression-utility-service',
+    path='/api/util/query-expression',
+    description="Query expression utility service")
 
 
 # ------------------------------------------
@@ -495,67 +495,155 @@ def depatisconnect_description_handler(request):
     return description
 
 
-@cql_tool_service.post()
-def cql_tool_handler(request):
-    data = request.json
-    source = data['datasource']
+def pair_to_cql(datasource, key, value):
 
-    cql_parts = []
+    try:
+        fieldname = datasource_indexnames[key][datasource]
+    except KeyError:
+        return
+
+    cql_part = None
+    format = u'{0}=({1})'
+
+    query_has_booleans = ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
+
+    # special processing rules for depatisnet
+    if datasource == 'depatisnet':
+
+        if key == 'pubdate':
+
+            if len(value) == 4 and value.isdigit():
+                fieldname = 'py'
+
+            elif 'within' in value:
+                within_dates = parse_date_within(value)
+                elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
+                if elements_are_years:
+                    fieldname = 'py'
+                cql_part = '{fieldname} >= {startdate} and {fieldname} <= {enddate}'.format(
+                    fieldname=fieldname,
+                    startdate=iso_to_german(within_dates['startdate']),
+                    enddate=iso_to_german(within_dates['enddate']))
+
+            else:
+                value = iso_to_german(value)
+
+        elif key == 'inventor':
+            if ' ' in value and not query_has_booleans:
+                value = value.replace(' ', '(L)')
+
+
+    elif datasource == 'ops':
+
+        if key == 'inventor':
+            if ' ' in value and not query_has_booleans:
+                value = '"{0}"'.format(value)
+
+        if 'within' in value:
+            format = '{0} {1}'
+
+
+    if not cql_part:
+        cql_part = format.format(fieldname, value)
+
+    return cql_part
+
+def parse_date_within(value):
+    value = value.replace('within', '').strip()
+    parts = value.split(',')
+    parts = map(unicode.strip, parts)
+    result = {
+        'startdate': parts[0],
+        'enddate': parts[1],
+    }
+    return result
+
+
+def pair_to_ftpro_xml(datasource, key, value):
+
+    if key == 'pubdate':
+
+        if len(value) == 4 and value.isdigit():
+            value = u'within {year}-01-01,{year}-12-31'.format(year=value)
+
+        if 'within' in value:
+            within_dates = parse_date_within(value)
+
+            if len(within_dates['startdate']) == 4 and within_dates['startdate'].isdigit():
+                within_dates['startdate'] = within_dates['startdate'] + '-01-01'
+            if len(within_dates['enddate']) == 4 and within_dates['enddate'].isdigit():
+                within_dates['enddate'] = within_dates['enddate'] + '-12-31'
+
+            if all(within_dates.values()):
+                template = ftpro_xml_expression_templates[key]['both']
+            elif within_dates['startdate']:
+                template = ftpro_xml_expression_templates[key]['startdate']
+            # API not capable of handling "enddate"-only attribute
+            #elif within_dates['enddate']:
+            #    template = ftpro_xml_expression_templates[key]['enddate']
+            else:
+                # TODO: propagate back proper error message
+                pass
+
+            pair_xml = template.format(
+                startdate=iso_to_german(within_dates['startdate']),
+                enddate=iso_to_german(within_dates['enddate']))
+
+            return pair_xml
+
+        else:
+            template = ftpro_xml_expression_templates[key]['both']
+            pair_xml = template.format(
+                startdate=iso_to_german(value),
+                enddate=iso_to_german(value))
+
+            return pair_xml
+
+    elif key in ftpro_xml_expression_templates:
+        template = ftpro_xml_expression_templates[key]
+        pair_xml = template.format(key=key, value=value)
+        return pair_xml
+
+    else:
+        log.warn(' FulltextPROquery: Could not handle pair {0}={1}'.format(key, value))
+
+
+@query_expression_util_service.post()
+def query_expression_util_handler(request):
+    data = request.json
+    datasource = data['datasource']
+
+    expression_parts = []
 
     if data['format'] == 'comfort':
         for key, value in data['criteria'].iteritems():
 
-            try:
-                fieldname = datasource_indexnames[key][source]
-            except KeyError:
+            if not value:
                 continue
 
-            cql_part = None
-            format = u'{0}=({1})'
+            expression_part = None
 
-            query_has_booleans = ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
+            if datasource in ['ops', 'depatisnet']:
+                expression_part = pair_to_cql(datasource, key, value)
 
-            # special processing rules for depatisnet
-            if source == 'depatisnet':
+            elif datasource == 'ftpro':
+                expression_part = pair_to_ftpro_xml(datasource, key, value)
 
-                if key == 'pubdate':
-
-                    if len(value) == 4 and value.isdigit():
-                        fieldname = 'py'
-
-                    elif 'within' in value:
-                        value = value.replace('within', '').strip()
-                        parts = value.split(',')
-                        parts = map(unicode.strip, parts)
-                        print parts
-                        elements_are_years = all([len(part) == 4 and part.isdigit() for part in parts])
-                        if elements_are_years:
-                            fieldname = 'py'
-                        cql_part = '{fieldname} >= {left} and {fieldname} <= {right}'.format(
-                            fieldname=fieldname, left=iso_to_german(parts[0]), right=iso_to_german(parts[1]))
-
-                    else:
-                        value = iso_to_german(value)
-
-                elif key == 'inventor':
-                    if ' ' in value and not query_has_booleans:
-                        value = value.replace(' ', '(L)')
+            if expression_part:
+                expression_parts.append(expression_part)
+            else:
+                log.warn('Could not translate criteria pair "{0}={1}" to native query expression part. datasource={2}'.format(key, value, datasource))
 
 
-            elif source == 'ops':
+    # assemble complete expression from parts, connect them with AND operators
+    if datasource in ['ops', 'depatisnet']:
+        expression = ' and '.join(expression_parts)
 
-                if key == 'inventor':
-                    if ' ' in value and not query_has_booleans:
-                        value = '"{0}"'.format(value)
+    elif datasource == 'ftpro':
+        expression_parts = ['    ' + part for part in expression_parts]
+        expression = '\n'.join(expression_parts)
+        if len(expression_parts) >= 2:
+            expression = '<and>\n' + expression + '\n</and>'
+        expression = expression.strip()
 
-                if 'within' in value:
-                    format = '{0} {1}'
-
-            if not cql_part:
-                cql_part = format.format(fieldname, value)
-
-            cql_parts.append(cql_part)
-
-
-    cql = ' and '.join(cql_parts)
-    return cql
+    return expression

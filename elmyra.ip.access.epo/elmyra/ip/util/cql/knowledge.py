@@ -44,3 +44,15 @@ datasource_indexnames = {
     'appdate':      {'ops': 'ap',  'depatisnet': 'ap'},
     'citation':     {'ops': 'ct',  'depatisnet': 'ct'},
 }
+
+ftpro_xml_expression_templates = {
+    'patentnumber': '<patentnumber>{value}</patentnumber>',
+    'fulltext':     '<text searchintitle="true" searchinabstract="true" searchinclaim="true" searchindescription="true" fullfamily="true">{value}</text>',
+    'applicant':    '<applicant type="epo,inpadoc,original">{value}</applicant>',
+    'inventor':     '<inventor type="epo,inpadoc,original">{value}</inventor>',
+    'pubdate':      {
+        'both': '<date type="publication" startdate="{startdate}" enddate="{enddate}" />',
+        'startdate': '<date type="publication" startdate="{startdate}" />',
+        'enddate': '<date type="publication" enddate="{enddate}" />',
+    }
+}
