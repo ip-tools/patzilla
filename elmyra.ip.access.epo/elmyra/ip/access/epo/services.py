@@ -315,7 +315,7 @@ def dpma_published_data_search(query, hits_per_page):
         log.warn('Invalid query for DEPATISnet: %s' % ex.msg)
         raise
 
-#@cache_region('search')
+@cache_region('search')
 def ftpro_published_data_search(query, hits_per_page):
 
     # <applicant type="inpadoc">grohe</applicant>
