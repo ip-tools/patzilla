@@ -555,11 +555,13 @@
                 <span style="font-size: small" class="cql-query">
                     <%
                     // HACK: workaround required, for whatever reason; WTF!?
+                    var _query;
                     if (data.query_origin && data.query_origin.nodeName == 'TEXTAREA') {
-                        print(data.query_real);
+                        _query = data.query_real;
                     } else {
-                        print(data.query_origin);
+                        _query = data.query_origin;
                     }
+                    print(htmlentities(_query, 'ENT_NOQUOTES'));
                     %>
                 </span>
 
