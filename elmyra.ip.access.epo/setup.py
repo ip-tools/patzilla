@@ -49,6 +49,7 @@ requires = [
     'blinker==1.3',
     'python-dateutil==2.2',
     'lxml==3.3.5',
+    'openpyxl==2.1.0',
 
     # ----------------------------------------------
     #   user interface
