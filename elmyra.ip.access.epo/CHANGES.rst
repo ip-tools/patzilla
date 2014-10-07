@@ -5,6 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.44.2
+======
+- middleware: activate ftpro query caching
+- ui: just parse ftpro results if result count >0
+
 0.44.1
 ======
 - rename file for an attempt on dependency mungling
