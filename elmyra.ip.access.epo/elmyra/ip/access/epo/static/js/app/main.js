@@ -16,6 +16,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     set_datasource: function(datasource) {
         $("#datasource .btn[data-value='" + datasource + "']").button('toggle');
         this.queryBuilderView.cql_field_chooser_setup();
+        this.queryBuilderView.setup_comfort_form();
     },
 
     get_query: function() {

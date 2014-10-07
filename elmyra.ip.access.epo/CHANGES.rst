@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware/ui: connect comfort search form with ftpro datasource
+- middleware:"FulltextPRO "concordance subsystem for resolving countries and ipc classes
 
 0.44.2
 ======

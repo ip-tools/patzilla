@@ -328,7 +328,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var datasource = opsChooserApp.get_datasource();
         var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
-        if (hide !== false && (hide || !datasource || datasource == 'review' || queryflavor != 'cql')) {
+        if (hide !== false && (hide || !datasource || datasource == 'review' || datasource == 'ftpro' || queryflavor != 'cql')) {
             var container = $('#cql-field-chooser')[0].previousSibling;
             $(container).hide();
             return;
@@ -420,6 +420,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
+    setup_comfort_form: function() {
+        var form = $('#querybuilder-comfort-form');
+        var datasource = opsChooserApp.get_datasource();
+        var element = form.find("input[name='citation']").closest("div[class='control-group']");
+        if (datasource == 'ops' || datasource == 'depatisnet') {
+            element.show();
+        } else if (datasource == 'ftpro') {
+            element.hide();
+        }
+    },
 
     read_comfort_form: function(form) {
         var fields = $(form).find($('input'));

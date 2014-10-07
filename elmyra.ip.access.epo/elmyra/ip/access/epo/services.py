@@ -5,15 +5,18 @@ import logging
 from beaker.cache import cache_region
 from cornice import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+import re
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes
+from elmyra.ip.access.ftpro.concordance import SipCountry, SipIpcClass
 from elmyra.ip.access.ftpro.search import FulltextProClient
 from elmyra.ip.util.cql.knowledge import datasource_indexnames, ftpro_xml_expression_templates
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
+from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.python import _exception_traceback
 
@@ -599,6 +602,44 @@ def pair_to_ftpro_xml(datasource, key, value):
 
             return pair_xml
 
+    elif key == 'country':
+        print "country:", value
+        entries = re.split(' or ', value, flags=re.IGNORECASE)
+        entries = [entry.strip() for entry in entries]
+        ccids = []
+        for country in entries:
+            country = country.upper()
+            ftpro_country = SipCountry.objects(cc=country).first()
+            if ftpro_country:
+                ftpro_ccid = ftpro_country.ccid
+                ccids.append(ftpro_ccid)
+            else:
+                # FIXME: propagate warning to user
+                log.warn(' FulltextPROquery: country {0} could not be resolved'.format(country))
+
+        if ccids:
+            pair_xml = '<country>\n' + '\n'.join(['<ccid>{ccid}</ccid>'.format(ccid=ccid) for ccid in ccids]) + '\n</country>'
+            return pair_xml
+
+    elif key == 'class':
+        entries = re.split(' or ', value, flags=re.IGNORECASE)
+        entries = [entry.strip() for entry in entries]
+        ipcids = []
+        for ipc_raw in entries:
+            ipc_raw = ipc_raw.rstrip('?+*/ .')
+            ipc = IpcDecoder(ipc_raw)
+            ipc_ops = ipc.formatOPS()
+            ftpro_ipc = SipIpcClass.objects(ipc=ipc_ops).first()
+            if ftpro_ipc:
+                ipcids.append(ftpro_ipc.itid)
+            else:
+                # FIXME: propagate warning to user
+                log.warn(' FulltextPROquery: ipc {0} could not be resolved'.format(ipc_ops))
+
+        if ipcids:
+            pair_xml = '<ipc>\n' + '\n'.join(['<ipcid>{ipcid}</ipcid>'.format(ipcid=ipcid) for ipcid in ipcids]) + '\n</ipc>'
+            return pair_xml
+
     elif key in ftpro_xml_expression_templates:
         template = ftpro_xml_expression_templates[key]
         pair_xml = template.format(key=key, value=value)
@@ -640,7 +681,7 @@ def query_expression_util_handler(request):
         expression = ' and '.join(expression_parts)
 
     elif datasource == 'ftpro':
-        expression_parts = ['    ' + part for part in expression_parts]
+        #expression_parts = ['    ' + part for part in expression_parts]
         expression = '\n'.join(expression_parts)
         if len(expression_parts) >= 2:
             expression = '<and>\n' + expression + '\n</and>'
