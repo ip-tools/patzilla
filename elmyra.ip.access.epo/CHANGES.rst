@@ -5,6 +5,12 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.46.0
+======
+- middleware/ui: compute keywords from comfort form field values if datasource=ftpro
+- middleware/ui: enhance error handling on invalid field values in"FulltextPRO "comfort form
+- middleware: enable"FulltextPRO "IPC class querying with right truncation, e.g. H04L29*
+
 0.45.0
 ======
 - middleware/ui: connect comfort search form with ftpro datasource

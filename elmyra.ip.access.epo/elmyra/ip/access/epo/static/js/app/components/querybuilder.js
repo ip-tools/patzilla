@@ -454,8 +454,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             datasource: datasource,
         };
 
-        this.compute_query_expression(payload).then(function(expression) {
+        $("#query").val('');
+        $("#keywords").val('[]');
+        this.compute_query_expression(payload).then(function(expression, keywords) {
             $("#query").val(expression);
+            $("#keywords").val(keywords);
         });
     },
 
@@ -468,13 +471,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             sync: true,
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
-        }).success(function(payload) {
+        }).success(function(payload, status, options) {
             if (payload) {
-                deferred.resolve(payload);
+                var keywords = options.getResponseHeader('X-Elmyra-Query-Keywords');
+                deferred.resolve(payload, keywords);
+            } else {
+                deferred.resolve('', '[]');
             }
-        }).error(function(error) {
-            console.warn('Error while computing query expression', error);
-            deferred.reject(error);
+        }).error(function(xhr) {
+            opsChooserApp.ui.propagate_alerts(xhr.responseText);
+            deferred.reject();
         });
         return deferred.promise();
     },
