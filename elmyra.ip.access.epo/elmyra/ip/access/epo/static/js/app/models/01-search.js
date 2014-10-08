@@ -23,27 +23,7 @@ DatasourceSearch = Backbone.Model.extend({
                 opsChooserApp.ui.reset_content();
                 opsChooserApp.documents.reset();
 
-                $('#alert-area').empty();
-                try {
-                    var response = jQuery.parseJSON(xhr.responseText);
-                    if (response['status'] == 'error') {
-                        _.each(response['errors'], function(error) {
-                            var tpl = _.template($('#cornice-error-template').html());
-                            var alert_html = tpl(error);
-                            $('#alert-area').append(alert_html);
-                        });
-                        $(".very-short").shorten({showChars: 0, moreText: 'more', lessText: 'less'});
-
-                    }
-
-                    // SyntaxError when decoding from JSON fails
-                } catch (err) {
-                    // TODO: display more details of xhr response (headers, body, etc.)
-                    // TODO: use class="alert alert-error alert-block"
-                    var response = xhr.responseText;
-                    $('#alert-area').append(response);
-                }
-
+                opsChooserApp.ui.propagate_alerts(xhr.responseText);
             }
         });
 

@@ -51,6 +51,8 @@ DEPATISnet - see `DEPATISnet Expert mode guide`_::
     ?   no characters to any number of characters
     !   precisely one character
     #   zero or one character
+
+TODO: maybe extract this to a different place, since ..services is also using it
 """
 wildcards = u'*?#!'
 

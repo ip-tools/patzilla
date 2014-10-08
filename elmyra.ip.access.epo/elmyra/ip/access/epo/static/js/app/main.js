@@ -94,7 +94,18 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 ftprosearch.perform(query).done(function(response) {
 
                     self.propagate_datasource_message(response);
-                    self.metadata.set('keywords', ftprosearch.keywords);
+
+                    var keywords = ftprosearch.keywords;
+                    // fallback keyword gathering from comfort form
+                    if (!keywords) {
+                        var keywords_json = $('#keywords').val();
+                        if (keywords_json) {
+                            keywords = jQuery.parseJSON(keywords_json);
+                            log('keywords fallback:', keywords);
+                        }
+                    }
+                    self.metadata.set('keywords', keywords);
+
                     console.log('ftpro response:', response);
 
                     var publication_numbers = response['numbers'];

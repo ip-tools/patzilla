@@ -15,6 +15,7 @@ from elmyra.ip.access.ftpro.concordance import SipCountry, SipIpcClass
 from elmyra.ip.access.ftpro.search import FulltextProClient
 from elmyra.ip.util.cql.knowledge import datasource_indexnames, ftpro_xml_expression_templates
 from elmyra.ip.util.cql.pyparsing import CQL
+from elmyra.ip.util.cql.pyparsing.parser import wildcards
 from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
 from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -270,6 +271,9 @@ def compute_keywords(query_object):
     keywords = list(set(keywords))
     return keywords
 
+def clean_keyword(keyword):
+    return keyword.strip(wildcards + ' ')
+
 def scan_keywords(op, keywords):
 
     if not op: return
@@ -303,7 +307,7 @@ def scan_keywords(op, keywords):
         #print "op.index:", op.index
         #print "op.term:", op.term
         if str(op.index) in keyword_fields:
-            keyword = unicode(op.term).strip('?').strip('*')
+            keyword = clean_keyword(unicode(op.term))
             keywords.append(keyword)
 
     hasattr(op, 'leftOperand') and scan_keywords(op.leftOperand, keywords)
@@ -570,7 +574,10 @@ def pair_to_ftpro_xml(datasource, key, value):
             value = u'within {year}-01-01,{year}-12-31'.format(year=value)
 
         if 'within' in value:
-            within_dates = parse_date_within(value)
+            try:
+                within_dates = parse_date_within(value)
+            except:
+                return
 
             if len(within_dates['startdate']) == 4 and within_dates['startdate'].isdigit():
                 within_dates['startdate'] = within_dates['startdate'] + '-01-01'
@@ -585,8 +592,7 @@ def pair_to_ftpro_xml(datasource, key, value):
             #elif within_dates['enddate']:
             #    template = ftpro_xml_expression_templates[key]['enddate']
             else:
-                # TODO: propagate back proper error message
-                pass
+                return
 
             pair_xml = template.format(
                 startdate=iso_to_german(within_dates['startdate']),
@@ -603,7 +609,6 @@ def pair_to_ftpro_xml(datasource, key, value):
             return pair_xml
 
     elif key == 'country':
-        print "country:", value
         entries = re.split(' or ', value, flags=re.IGNORECASE)
         entries = [entry.strip() for entry in entries]
         ccids = []
@@ -626,15 +631,32 @@ def pair_to_ftpro_xml(datasource, key, value):
         entries = [entry.strip() for entry in entries]
         ipcids = []
         for ipc_raw in entries:
-            ipc_raw = ipc_raw.rstrip('?+*/ .')
-            ipc = IpcDecoder(ipc_raw)
+
+            ipc_raw_stripped = ipc_raw.rstrip(wildcards + '/ .')
+
+            right_truncation = False
+            if len(ipc_raw_stripped) >= 5 and (ipc_raw.endswith('?') or ipc_raw.endswith('*')):
+                right_truncation = True
+
+            ipc = IpcDecoder(ipc_raw_stripped)
             ipc_ops = ipc.formatOPS()
-            ftpro_ipc = SipIpcClass.objects(ipc=ipc_ops).first()
-            if ftpro_ipc:
-                ipcids.append(ftpro_ipc.itid)
+
+            if right_truncation:
+                ftpro_ipc_list = SipIpcClass.objects(ipc__startswith=ipc_ops).all()
+                if ftpro_ipc_list:
+                    for entry in ftpro_ipc_list:
+                        ipcids.append(entry.itid)
+                else:
+                    # FIXME: propagate warning to user
+                    log.warn(' FulltextPROquery: right-truncated ipc {0} could not be resolved'.format(ipc_raw))
+
             else:
-                # FIXME: propagate warning to user
-                log.warn(' FulltextPROquery: ipc {0} could not be resolved'.format(ipc_ops))
+                ftpro_ipc = SipIpcClass.objects(ipc=ipc_ops).first()
+                if ftpro_ipc:
+                    ipcids.append(ftpro_ipc.itid)
+                else:
+                    # FIXME: propagate warning to user
+                    log.warn(' FulltextPROquery: ipc {0} could not be resolved'.format(ipc_ops))
 
         if ipcids:
             pair_xml = '<ipc>\n' + '\n'.join(['<ipcid>{ipcid}</ipcid>'.format(ipcid=ipcid) for ipcid in ipcids]) + '\n</ipc>'
@@ -655,6 +677,7 @@ def query_expression_util_handler(request):
     datasource = data['datasource']
 
     expression_parts = []
+    keywords = []
 
     if data['format'] == 'comfort':
         for key, value in data['criteria'].iteritems():
@@ -669,12 +692,17 @@ def query_expression_util_handler(request):
 
             elif datasource == 'ftpro':
                 expression_part = pair_to_ftpro_xml(datasource, key, value)
+                ftpro_register_keyword(keywords, key, value)
 
             if expression_part:
                 expression_parts.append(expression_part)
             else:
-                log.warn('Could not translate criteria pair "{0}={1}" to native query expression part. datasource={2}'.format(key, value, datasource))
+                message = 'Criteria "{0}={1}" has invalid format, datasource={2}.'.format(key, value, datasource)
+                log.warn(message)
+                request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
+    log.info("keywords: %s", keywords)
+    request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
     # assemble complete expression from parts, connect them with AND operators
     if datasource in ['ops', 'depatisnet']:
@@ -688,3 +716,10 @@ def query_expression_util_handler(request):
         expression = expression.strip()
 
     return expression
+
+
+def ftpro_register_keyword(keywords, key, value):
+    if key != 'country':
+        entries = re.split(' or | and | not ', value, flags=re.IGNORECASE)
+        entries = [clean_keyword(entry) for entry in entries]
+        keywords += entries

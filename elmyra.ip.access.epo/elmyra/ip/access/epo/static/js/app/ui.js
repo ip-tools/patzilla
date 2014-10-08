@@ -87,6 +87,31 @@ UiController = Marionette.Controller.extend({
         }
     },
 
+    propagate_alerts: function(response_body) {
+
+        $('#alert-area').empty();
+        try {
+            var response = jQuery.parseJSON(response_body);
+            if (response['status'] == 'error') {
+                _.each(response['errors'], function(error) {
+                    var tpl = _.template($('#cornice-error-template').html());
+                    var alert_html = tpl(error);
+                    $('#alert-area').append(alert_html);
+                });
+                $(".very-short").shorten({showChars: 0, moreText: 'more', lessText: 'less'});
+
+            }
+
+            // SyntaxError when decoding from JSON fails
+        } catch (err) {
+            // TODO: display more details of xhr response (headers, body, etc.)
+            // TODO: use class="alert alert-error alert-block"
+            var response = response_body;
+            $('#alert-area').append(response);
+        }
+
+    },
+
     do_element_visibility: function() {
 
         // hide all navigational- and action-elements when in print mode
