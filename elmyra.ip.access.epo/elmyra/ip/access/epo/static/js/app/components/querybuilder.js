@@ -454,11 +454,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             datasource: datasource,
         };
 
-        $("#query").val('');
+        //$("#query").val('');
         $("#keywords").val('[]');
         this.compute_query_expression(payload).then(function(expression, keywords) {
-            $("#query").val(expression);
-            $("#keywords").val(keywords);
+            expression && $("#query").val(expression);
+            keywords && $("#keywords").val(keywords);
         });
     },
 

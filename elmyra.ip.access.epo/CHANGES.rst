@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix: only set query and keywords if non-empty after computing query expression
 
 0.46.0
 ======
