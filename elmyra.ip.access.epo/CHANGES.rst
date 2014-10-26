@@ -6,6 +6,7 @@ development
 ===========
 - ui: fix: only set query and keywords if non-empty after computing query expression
 
+
 0.46.0
 ======
 - middleware/ui: compute keywords from comfort form field values if datasource=ftpro
