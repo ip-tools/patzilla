@@ -704,6 +704,8 @@ def query_expression_util_handler(request):
     log.info("keywords: %s", keywords)
     request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
+    expression = ''
+
     # assemble complete expression from parts, connect them with AND operators
     if datasource in ['ops', 'depatisnet']:
         expression = ' and '.join(expression_parts)

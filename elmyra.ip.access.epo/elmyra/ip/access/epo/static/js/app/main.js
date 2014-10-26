@@ -90,7 +90,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 // make the pager display the original query
                 this.metadata.set('query_origin', query);
 
-                var ftprosearch = new SipSearch();
+                var ftprosearch = new FulltextProSearch();
                 ftprosearch.perform(query).done(function(response) {
 
                     self.propagate_datasource_message(response);
