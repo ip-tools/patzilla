@@ -2,6 +2,8 @@
 IPSUITE NAVIGATOR
 =================
 
+test
+
 Sandbox
 =======
 
