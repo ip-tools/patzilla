@@ -80,6 +80,7 @@ def restart_service(target):
         'prod': 'patentsearch-prod',
         'staging': 'patentsearch-staging',
         'patoffice': 'patentsearch.patoffice',
+        'vdpm': 'patentsearch.vdpm',
     }
     uwsgi_name = uwsgi_names.get(target)
     if uwsgi_name:
