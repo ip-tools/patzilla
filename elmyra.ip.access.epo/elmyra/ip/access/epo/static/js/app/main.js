@@ -97,22 +97,23 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 var ftprosearch = new FulltextProSearch();
                 ftprosearch.perform(query, options).done(function(response) {
 
-                    options = options || {};
+                    console.log('ftpro response:', response);
 
+                    options = options || {};
                     self.propagate_datasource_message(response);
 
+                    // propagate keywords
                     var keywords = ftprosearch.keywords;
+
                     // fallback keyword gathering from comfort form
-                    if (!keywords) {
+                    if (_.isEmpty(keywords)) {
                         var keywords_json = $('#keywords').val();
                         if (keywords_json) {
                             keywords = jQuery.parseJSON(keywords_json);
-                            log('keywords fallback:', keywords);
+                            log('ftpro keywords fallback:', keywords);
                         }
                     }
                     self.metadata.set('keywords', keywords);
-
-                    console.log('ftpro response:', response);
 
                     var publication_numbers = response['numbers'];
                     var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';

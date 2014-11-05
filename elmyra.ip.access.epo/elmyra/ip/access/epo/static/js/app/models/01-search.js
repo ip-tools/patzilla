@@ -20,10 +20,12 @@ DatasourceSearch = Backbone.Model.extend({
                 opsChooserApp.ui.reset_content();
                 var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
 
-                // fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
-                keywords = keywords.replace(/(.+), \[.+\]/, '$1');
+                if (keywords) {
+                    // fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+                    keywords = keywords.replace(/(.+), \[.+\]/, '$1');
+                    self.keywords = jQuery.parseJSON(keywords);
+                }
 
-                self.keywords = jQuery.parseJSON(keywords);
             },
             error: function(e, xhr) {
 
