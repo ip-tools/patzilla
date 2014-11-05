@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.47.0
+======
 - ui: fix: only set query and keywords if non-empty after computing query expression
 
 - deployment: whitelist FulltextPRO for domain patentsearch.vdpm.elmyra.de
