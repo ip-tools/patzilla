@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.49.0
+======
 - ui/middleware: fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
 - ui: paging layout overflow fix for Internet Explorer
 
