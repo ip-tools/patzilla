@@ -242,6 +242,10 @@ def handle_error(response, name):
     request = get_current_request()
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
     response_dict['url'] = response_dict['url'].replace(ops_service_url, '/')
+
+    if 'SERVER.DomainAccess' in response_dict['content']:
+        response_dict['content'] += ' (OPS might be in maintenance mode)'
+
     request.errors.add(name, 'http-response', response_dict)
 
     response_json = json_error(request.errors)
