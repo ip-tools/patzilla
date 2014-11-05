@@ -6,6 +6,7 @@ development
 ===========
 - ui: fix: only set query and keywords if non-empty after computing query expression
 
+- deployment: whitelist FulltextPRO for domain patentsearch.vdpm.elmyra.de
 
 0.46.0
 ======

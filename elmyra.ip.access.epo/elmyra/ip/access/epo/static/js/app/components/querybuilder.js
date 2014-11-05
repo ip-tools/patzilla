@@ -31,6 +31,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //   datasource selector
         // ------------------------------------------
 
+        if (opsChooserApp.config.get('ftpro_enabled')) {
+            $("#datasource > button[data-value='ftpro']").show();
+        }
+
         // switch cql field chooser when selecting datasource
         // TODO: do it properly on the configuration data model
         $('#datasource').on('click', '.btn', function(event) {
