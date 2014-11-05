@@ -178,127 +178,6 @@ ${ h.fiddler.render() | n }
 </div>
 
 
-## ------------------------------------------
-##   pager template
-## ------------------------------------------
-<%text>
-<script type="text/x-underscore-template" id="ops-pagination-template">
-    <div id="pagination-widget">
-
-        <div class="row-fluid" id="pagination-chooser">
-
-            <div class="span2">
-                <div class="btn-group btn-popover page-size-chooser"
-                            data-toggle="popover" data-trigger="hover" data-placement="right"
-                            data-content="Select page size"
-                    >
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-resize-vertical"></i> &nbsp; Page size
-                    </button>
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                    </ul>
-                </div>
-            </div>
-
-            <div class="span10 pagination">
-                <ul class="pull-right">
-                    <!--
-                    <li><a href="#" action="previous">Prev</a></li>
-                    -->
-                    <!--
-                    <li><a href="#" action="next">Next</a></li>
-                    -->
-                </ul>
-            </div>
-        </div>
-
-    </div>
-</script>
-
-<script type="text/x-underscore-template" id="ops-pagination-template-nopagesize">
-    <div id="pagination-widget">
-
-        <div class="row-fluid" id="pagination-chooser">
-
-            <div class="span12 pagination">
-
-                <ul class2="pull-right">
-                    <!--
-                    <li><a href="#" action="previous">Prev</a></li>
-                    -->
-                    <!--
-                    <li><a href="#" action="next">Next</a></li>
-                    -->
-                </ul>
-            </div>
-        </div>
-
-    </div>
-</script>
-
-<script type="text/x-underscore-template" id="ops-pagination-template-liveview">
-
-    <!-- this template gets used in liveview mode -->
-
-    <div id="pagination-widget">
-
-        <div class="row-fluid">
-            <div class="span2">
-
-                <!-- activity indicator (secondary) -->
-                <button role="button" class="btn">
-                    <i class="idler icon-search"></i>
-                    <i class="spinner icon-refresh icon-spin" style="display: none"></i>
-                </button>
-
-                <!-- permalink for review (secondary) -->
-                <% if (config.get('datasource') == 'review') { %>
-                <% if (!config.get('isviewer')) { %>
-                <a class="btn btn-popover permalink-review-liveview"
-                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                   data-content="Permalink to review page in liveview mode"
-                        >
-                    <i class="icon-external-link"></i>
-                </a>
-                <% } %>
-                <a class="btn btn-popover permalink-review-liveview-ttl"
-                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                   data-content="Permalink to review page in liveview mode, with TTL"
-                        >
-                    <i class="icon-external-link"></i>
-                    <i class="icon-time"></i>
-                </a>
-                <% } %>
-
-            </div>
-        </div>
-
-        <div class="row-fluid">
-            <br/>
-        </div>
-
-        <div class="row-fluid" id="pagination-chooser">
-
-            <div class="span12 pagination">
-
-                <ul class2="pull-right">
-                    <!--
-                    <li><a href="#" action="previous">Prev</a></li>
-                    -->
-                    <!--
-                    <li><a href="#" action="next">Next</a></li>
-                    -->
-                </ul>
-            </div>
-        </div>
-
-    </div>
-</script>
-</%text>
-
 <script id="backend-error-template" type="text/x-underscore-template">
 
     <div class="alert alert-error alert-block">
@@ -437,6 +316,7 @@ ${ h.fiddler.render() | n }
 <%include file="querybuilder.html"/>
 <%include file="basket.html"/>
 <%include file="project.html"/>
+<%include file="pagination.html"/>
 <%include file="comment.html"/>
 <%include file="ops.html"/>
 <%include file="permalink.html"/>
