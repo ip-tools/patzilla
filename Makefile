@@ -100,3 +100,7 @@ mongodb-ftpro-export:
 mongodb-ftpro-import:
 	mongoimport --db ipsuite_development --collection ftpro_country < var/tmp/mongodb/ftpro_country.mongodb
 	mongoimport --db ipsuite_development --collection ftpro_ipc_class < var/tmp/mongodb/ftpro_ipc_class.mongodb
+
+sloccount:
+	sloccount elmyra.ip.access.epo
+	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app
