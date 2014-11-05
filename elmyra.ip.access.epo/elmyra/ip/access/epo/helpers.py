@@ -27,6 +27,7 @@ class BackboneModelParameterFiddler(object):
 
         data = {
             'host': request.host,
+            'host_name': request.host.split(':')[0],
             'host_port': request.host_port,
             'host_url': request.host_url,
             'path': request.path,
@@ -122,6 +123,10 @@ class BackboneModelParameterFiddler(object):
             if link_expires:
                 params.setdefault('setting.ui.page.statusline', '')
                 params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
+
+        # 2. compute whether"FulltextPRO "datasource is allowed
+        ftpro_allowed_hosts = ['patentsearch.vdpm.elmyra.de', 'patentsearch-staging.elmyra.de', 'localhost']
+        params['ftpro_enabled'] = params.get('request.host_name') in ftpro_allowed_hosts
 
 
         # E. backward-compat amendments
