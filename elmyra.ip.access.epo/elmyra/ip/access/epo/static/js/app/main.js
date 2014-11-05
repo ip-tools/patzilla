@@ -26,10 +26,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     // perform ops search and process response
     perform_search: function(options) {
 
-        this.metadata.resetSomeDefaults();
-
         var query = $('#query').val();
         var datasource = this.get_datasource();
+        this.metadata.set('datasource', datasource);
+
+        this.metadata.resetSomeDefaults(options);
 
         console.log('App.perform_search: datasource=' + datasource, 'query=' + query, 'options=', options);
 
@@ -46,13 +47,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         if (!_.isEmpty(query)) {
 
             var self = this;
-            this.metadata.set('datasource', datasource);
 
             if (datasource == 'ops') {
                 var range = this.compute_range(options);
                 this.trigger('search:before', {datasource: datasource, query: query, range: range});
                 opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
 
+                    var hits = self.metadata.get('result_count');
+                    if (hits > self.metadata.get('maximum_results')['ops']) {
+                        self.user_alert('Total hits: ' + hits + '.    The first 2000 hits are accessible from OPS.  You can narrow your search by adding more search criteria.', 'warning');
+                    }
                     self.metadata.set('keywords', opsChooserApp.search.keywords);
 
                     // signal the results are ready
@@ -68,7 +72,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 this.metadata.set('query_origin', query);
 
                 var depatisnet = new DepatisnetSearch();
-                depatisnet.perform(query).done(function(response) {
+                depatisnet.perform(query, options).done(function(response) {
 
                     self.propagate_datasource_message(response);
                     self.metadata.set('keywords', depatisnet.keywords);
@@ -91,7 +95,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 this.metadata.set('query_origin', query);
 
                 var ftprosearch = new FulltextProSearch();
-                ftprosearch.perform(query).done(function(response) {
+                ftprosearch.perform(query, options).done(function(response) {
+
+                    options = options || {};
 
                     self.propagate_datasource_message(response);
 
@@ -110,6 +116,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                     var publication_numbers = response['numbers'];
                     var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
+                    options['remote_limit'] = response['meta']['Limit'];
 
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
                         self.propagate_datasource_message(response);
@@ -135,6 +142,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     // perform ops search and process response
     perform_listsearch: function(options, query_origin, entries, hits, field, operator) {
 
+        //log('perform_listsearch.options:', options);
+
         //this.set_datasource('ops');
 
         this.ui.indicate_activity(false);
@@ -148,7 +157,15 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var range_parts = range.split('-');
         var sstart = parseInt(range_parts[0]) - 1;
         var ssend = parseInt(range_parts[1]);
-        //console.log('range:', sstart, ssend);
+
+        if (options && options.remote_limit) {
+            sstart = sstart % options.remote_limit;
+            ssend = ssend % options.remote_limit;
+            if (ssend == 0) {
+                ssend = options.remote_limit - 1;
+            }
+        }
+        //console.log('local slices:', sstart, ssend);
 
         if (entries && (entries.length == 0 || sstart > entries.length)) {
 
@@ -165,9 +182,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         }
 
-        var query_ops_constraints = _(_.map(entries, function(entry) { return field + '=' + entry}));
+        var entries_sliced = entries.slice(sstart, ssend);
+        var query_ops_constraints = _(_.map(entries_sliced, function(entry) { return field + '=' + entry}));
         var query_ops_cql_full = query_ops_constraints.join(' ' + operator + ' ');
-        var query_ops_cql_sliced = query_ops_constraints.slice(sstart, ssend).join(' ' + operator + ' ');
+        var query_ops_cql_sliced = query_ops_constraints.join(' ' + operator + ' ');
         console.log('OPS sliced CQL query:', query_ops_cql_sliced);
 
         if (!query_origin) {
@@ -646,7 +664,7 @@ opsChooserApp.addInitializer(function(options) {
     this.listenTo(this, "project:ready", this.project_activate);
 
     // kick off the search process immediately after initial project was created
-    this.listenToOnce(this, "project:ready", this.perform_search);
+    this.listenToOnce(this, "project:ready", function() { this.perform_search(); });
 });
 
 
