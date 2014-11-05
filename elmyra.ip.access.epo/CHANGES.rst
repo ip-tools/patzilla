@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix ftpro keyword propagation
 
 0.49.0
 ======
