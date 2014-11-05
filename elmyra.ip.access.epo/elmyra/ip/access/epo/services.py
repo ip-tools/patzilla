@@ -201,8 +201,13 @@ def depatisnet_published_data_search_handler(request):
 
     propagate_keywords(request, query_object)
 
+    # lazy-fetch more entries up to maximum of depatisnet
+    request_size = 250
+    if int(request.params.get('range_begin', 0)) > request_size:
+        request_size = 1000
+
     try:
-        return dpma_published_data_search(query, 250)
+        return dpma_published_data_search(query, request_size)
 
     except SyntaxError as ex:
         request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
@@ -245,8 +250,14 @@ def ftpro_published_data_search_handler(request):
 
     #propagate_keywords(request, query_object)
 
+    # lazy-fetch more entries up to maximum of FulltextPRO
+    limit = 250
+    offset_local = int(request.params.get('range_begin', 1))
+    offset_remote = int(offset_local / limit) * limit
+
     try:
-        return ftpro_published_data_search(query, 250)
+        data = ftpro_published_data_search(query, offset_remote, limit)
+        return data
 
     except SyntaxError as ex:
         request.errors.add('ftpro-published-data-search', 'query', str(ex.msg))
@@ -323,7 +334,7 @@ def dpma_published_data_search(query, hits_per_page):
         raise
 
 @cache_region('search')
-def ftpro_published_data_search(query, hits_per_page):
+def ftpro_published_data_search(query, offset, limit):
 
     # <applicant type="inpadoc">grohe</applicant>
     # <applicant type="inpadoc">siemens</applicant>
@@ -331,7 +342,7 @@ def ftpro_published_data_search(query, hits_per_page):
     #ftpro = FulltextProClient(uri='http://62.245.145.108:2000', username='gartzen@elmyra.de', password='fAaVq4GwXi')
     ftpro = FulltextProClient(uri='http://62.245.145.108:2000', sessionid='MFbZjdAKJ0mfg4VvwFZZbWqeygU=')
     try:
-        return ftpro.search(query, hits_per_page)
+        return ftpro.search(query, offset, limit)
     except SyntaxError as ex:
         log.warn('Invalid query for FulltextPRO: %s' % ex.msg)
         raise

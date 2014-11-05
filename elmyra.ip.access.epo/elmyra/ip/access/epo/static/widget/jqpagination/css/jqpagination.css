@@ -1,9 +1,10 @@
-.pagination {
+.jqpagination {
   display: inline-block;
   border: 1px solid #CDCDCD;
-  border-radius: 3px; }
+  border-radius: 3px;
+}
 
-.pagination a {
+.jqpagination a {
   display: block;
   float: left;
   width: 20px;
@@ -23,12 +24,12 @@
   background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f3f3f3), color-stop(100%, lightgrey));
   background-image: -webkit-linear-gradient(#f3f3f3, lightgrey);
   background-image: linear-gradient(#f3f3f3, lightgrey); }
-  .pagination a:hover, .pagination a:focus, .pagination a:active {
+  .jqpagination a:hover, .jqpagination a:focus, .jqpagination a:active {
     background-color: #cecece;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e4e4e4), color-stop(100%, #cecece));
     background-image: -webkit-linear-gradient(#e4e4e4, #cecece);
     background-image: linear-gradient(#e4e4e4, #cecece); }
-  .pagination a.disabled, .pagination a.disabled:hover, .pagination a.disabled:focus, .pagination a.disabled:active {
+  .jqpagination a.disabled, .jqpagination a.disabled:hover, .jqpagination a.disabled:focus, .jqpagination a.disabled:active {
     background-color: #f3f3f3;
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f3f3f3), color-stop(100%, lightgrey));
     background-image: -webkit-linear-gradient(#f3f3f3, lightgrey);
@@ -36,15 +37,15 @@
     color: #A8A8A8;
     cursor: default; }
 
-.pagination a:first-child {
+.jqpagination a:first-child {
   border: none;
   border-radius: 2px 0 0 2px; }
 
-.pagination a:last-child {
+.jqpagination a:last-child {
   border: none;
   border-radius: 0 2px 2px 0; }
 
-.pagination input {
+.jqpagination input {
   float: left;
   margin: 0;
   padding: 0;
@@ -56,19 +57,39 @@
   text-align: center; }
 
 /* gigantic class for demo purposes */
-.gigantic.pagination {
+.gigantic.jqpagination {
   margin: 30px 0; }
 
-.gigantic.pagination a {
+.gigantic.jqpagination a {
   height: 60px;
   width: 60px;
   font-size: 50px;
   line-height: 50px; }
 
-.gigantic.pagination input {
+.gigantic.jqpagination input {
   width: 300px;
   height: 60px;
   font-size: 30px; }
+
+
+/* medium class for production purposes */
+.medium.jqpagination {
+    /* margin: 10px 0; */
+}
+
+.medium.jqpagination a {
+    height: 30px;
+    width: 30px;
+    font-size: 25px;
+    line-height: 25px;
+}
+
+.medium.jqpagination input {
+    width: 244px;
+    height: 30px;
+    font-size: 15px;
+}
+
 
 /* log element for demo purposes */
 .log {

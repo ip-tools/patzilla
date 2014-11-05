@@ -130,7 +130,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         // these carry state, so switching the navigator into a special mode, currently
         reviewmode: false,
 
-        datasource: null,
+        datasource: 'ops',
         searchmode: null,
         page_size: 25,
         result_count: null,
@@ -140,7 +140,12 @@ OpsExchangeMetadata = Backbone.Model.extend({
         query_real: null,
         pagination_entry_count: 12,
         pagination_pagesize_choices: [25, 50, 75, 100],
+        pagination_current_page: 1,
         keywords: [],
+        maximum_results: {
+            'ops': 2000,
+            'depatisnet': 1000,
+        },
 
         get_url: function() {
             var url =
@@ -177,10 +182,15 @@ OpsExchangeMetadata = Backbone.Model.extend({
         this.set(this.defaults);
     },
 
-    resetSomeDefaults: function() {
+    resetSomeDefaults: function(options) {
         this.set(_(this.defaults).pick(
-            'datasource', 'searchmode', 'result_count', 'result_range', 'result_count_received', 'query_origin', 'query_real', 'keywords'
+            'searchmode', 'result_count', 'result_range', 'result_count_received', 'query_origin', 'query_real', 'keywords'
         ));
+        if (options && options.clear) {
+            this.set(_(this.defaults).pick(
+                'pagination_current_page'
+            ));
+        }
     },
 
 });

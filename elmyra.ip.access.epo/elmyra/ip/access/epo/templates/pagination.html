@@ -3,9 +3,18 @@
 ## ------------------------------------------
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
+
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
+
+            <div class="span4 jqpagination medium">
+                <a href="#" class="first" data-action="first">&laquo;</a>
+                <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+                <input type="text" readonly="readonly" />
+                <a href="#" class="next" data-action="next">&rsaquo;</a>
+                <a href="#" class="last" data-action="last">&raquo;</a>
+            </div>
 
             <div class="span2">
                 <div class="btn-group btn-popover page-size-chooser"
@@ -13,7 +22,7 @@
                      data-content="Select page size"
                         >
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-resize-vertical"></i> &nbsp; Page size
+                        <i class="icon-resize-vertical"></i> &nbsp; Page size: <%= page_size %>
                     </button>
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
@@ -23,29 +32,8 @@
                 </div>
             </div>
 
-            <div class="span10 pagination">
+            <div class="span6 pagination-disabled">
                 <ul class="pull-right">
-                    <!--
-                    <li><a href="#" action="previous">Prev</a></li>
-                    -->
-                    <!--
-                    <li><a href="#" action="next">Next</a></li>
-                    -->
-                </ul>
-            </div>
-        </div>
-
-    </div>
-</script>
-
-<script type="text/x-underscore-template" id="ops-pagination-template-nopagesize">
-    <div id="pagination-widget">
-
-        <div class="row-fluid" id="pagination-chooser">
-
-            <div class="span12 pagination">
-
-                <ul class2="pull-right">
                     <!--
                     <li><a href="#" action="previous">Prev</a></li>
                     -->

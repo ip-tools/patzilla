@@ -93,7 +93,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // perform cql expression search
                 $('.btn-query-perform').click(function() {
-                    opsChooserApp.perform_search({reviewmode: false});
+                    opsChooserApp.perform_search({reviewmode: false, clear: true});
                 });
             }
         });
@@ -105,9 +105,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         $( "#querybuilder-comfort-form" ).submit(function( event ) {
             event.preventDefault();
+
+            // convert query from form fields to cql expression
             _this.compute_comfort_query();
+
             //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
-            opsChooserApp.perform_search({reviewmode: false});
+            opsChooserApp.perform_search({reviewmode: false, clear: true});
         });
 
         // perform search default action
@@ -222,7 +225,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     intro:
                         '<small>' +
                             'This offers a link for external/anonymous users to review the current query. ' +
-                            '</small>',
+                        '</small>',
                     ttl: true,
                 });
 
