@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui/middleware: fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
 
 0.47.0
 ======

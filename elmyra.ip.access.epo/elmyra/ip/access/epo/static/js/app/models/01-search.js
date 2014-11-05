@@ -18,7 +18,12 @@ DatasourceSearch = Backbone.Model.extend({
             success: function (payload, response, options) {
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content();
-                self.keywords = jQuery.parseJSON(options.xhr.getResponseHeader('X-Elmyra-Query-Keywords'));
+                var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+
+                // fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+                keywords = keywords.replace(/(.+), \[.+\]/, '$1');
+
+                self.keywords = jQuery.parseJSON(keywords);
             },
             error: function(e, xhr) {
 
