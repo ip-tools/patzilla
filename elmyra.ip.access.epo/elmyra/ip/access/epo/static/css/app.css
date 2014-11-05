@@ -144,6 +144,7 @@ a.editable-click {
 
 /* pager, pagination */
 .pager-area {
+    margin-top: 10px;
     margin-bottom: 20px;
 }
 .pagination {
