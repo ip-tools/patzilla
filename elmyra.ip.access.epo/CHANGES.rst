@@ -10,6 +10,7 @@ development
 - misc: enhance error message when OPS is in maintenance mode
 - middleware/ui: enhance paging mechanics with propagation to datasource and lazy fetching
 - ui: cosmetic fixes
+- ui: deactivate Export (Report) functionality
 
 0.46.0
 ======
