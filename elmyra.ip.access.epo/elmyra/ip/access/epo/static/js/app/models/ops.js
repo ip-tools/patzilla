@@ -19,7 +19,12 @@ OpsPublishedDataSearch = Backbone.Model.extend({
             data: $.param({ query: query, range: range}),
             success: function (model, response, options) {
 
-                self.keywords = jQuery.parseJSON(options.xhr.getResponseHeader('X-Elmyra-Query-Keywords'));
+                var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+                if (keywords) {
+                    // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+                    keywords = keywords.replace(/(.+), \[.+\]/, '$1');
+                    self.keywords = jQuery.parseJSON(keywords);
+                }
 
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content();

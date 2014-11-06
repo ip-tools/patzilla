@@ -442,6 +442,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var form = $('#querybuilder-comfort-form');
         var datasource = opsChooserApp.get_datasource();
 
+        // hide publication date for certain search backends
         var pubdate = form.find("input[name='pubdate']").closest("div[class='control-group']");
         if (_(['ops', 'depatisnet', 'ftpro']).contains(datasource)) {
             pubdate.show();
@@ -449,12 +450,35 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             pubdate.hide();
         }
 
+        // hide citations for certain search backends
         var citation = form.find("input[name='citation']").closest("div[class='control-group']");
         if (_(['ops', 'depatisnet']).contains(datasource)) {
             citation.show();
         } else if (_(['google', 'ftpro']).contains(datasource)) {
             citation.hide();
         }
+
+        // amend placeholder values for certain search backends
+        var patentnumber = form.find("input[name='patentnumber']");
+        if (_(['google', 'ftpro']).contains(datasource)) {
+            patentnumber.attr('placeholder', patentnumber.data('placeholder-single'));
+        } else {
+            patentnumber.attr('placeholder', patentnumber.data('placeholder-multi'));
+        }
+
+        // populate field value with placeholder value on demand
+        _.each(form.find(".input-prepend"), function(item) {
+            $(item).find('.add-on').on('click', function(ev) {
+                var input_element = $(item).find('input');
+                if (!input_element.val()) {
+                    var demo_value = input_element.attr('placeholder');
+                    if (input_element.data('demo')) {
+                        demo_value = input_element.data('demo');
+                    }
+                    input_element.val(demo_value);
+                }
+            });
+        });
 
     },
 

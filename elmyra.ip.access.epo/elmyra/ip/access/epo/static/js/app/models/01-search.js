@@ -22,7 +22,7 @@ DatasourceSearch = Backbone.Model.extend({
                 var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
 
                 if (keywords) {
-                    // fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+                    // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
                     keywords = keywords.replace(/(.+), \[.+\]/, '$1');
                     self.keywords = jQuery.parseJSON(keywords);
                 }
@@ -31,6 +31,9 @@ DatasourceSearch = Backbone.Model.extend({
                 if (_.isEmpty(self.keywords)) {
                     var keywords_json = _options.keywords;
                     if (keywords_json) {
+                        // workaround for weird Chrome bug: keyword lists get duplicated
+                        keywords_json = keywords_json.replace(/(.+), \[.+\]/, '$1');
+                        log('keywords fallback json:', keywords_json);
                         self.keywords = jQuery.parseJSON(keywords_json);
                         log('keywords fallback:', self.keywords);
                     }
