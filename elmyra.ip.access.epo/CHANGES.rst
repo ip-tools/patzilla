@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.50.0
+======
 - ui: fix ftpro keyword propagation
 - ui: change text on login form: beta => 14 day trial
 - deployment: add target “vdpm”
