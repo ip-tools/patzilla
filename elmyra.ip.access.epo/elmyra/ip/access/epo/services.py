@@ -339,8 +339,8 @@ def ftpro_published_data_search(query, offset, limit):
     # <applicant type="inpadoc">grohe</applicant>
     # <applicant type="inpadoc">siemens</applicant>
 
-    #ftpro = FulltextProClient(uri='http://62.245.145.108:2000', username='gartzen@elmyra.de', password='fAaVq4GwXi')
-    ftpro = FulltextProClient(uri='http://62.245.145.108:2000', sessionid='MFbZjdAKJ0mfg4VvwFZZbWqeygU=')
+    ftpro = FulltextProClient(uri='http://62.245.145.108:2000', username='gartzen@elmyra.de', password='fAaVq4GwXi')
+    #ftpro = FulltextProClient(uri='http://62.245.145.108:2000', sessionid='MFbZjdAKJ0mfg4VvwFZZbWqeygU=')
     try:
         return ftpro.search(query, offset, limit)
     except SyntaxError as ex:
