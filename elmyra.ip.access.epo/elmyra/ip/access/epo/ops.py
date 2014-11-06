@@ -364,7 +364,8 @@ def ops_service_usage():
 
     # all
     #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=26/11/2013~04/03/2014')
-    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=04/03/2014~27/07/2014')
+    #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=04/03/2014~27/07/2014')
+    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=27/07/2014~06/11/2014')
 
     #print response
     #print response.headers
