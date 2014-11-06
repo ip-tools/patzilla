@@ -12,6 +12,7 @@ DatasourceSearch = Backbone.Model.extend({
         opsChooserApp.ui.indicate_activity(true);
 
         var self = this;
+        var _options = options;
         return this.fetch({
             //async: false,
             data: $.param(query_parameters),
@@ -24,6 +25,15 @@ DatasourceSearch = Backbone.Model.extend({
                     // fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
                     keywords = keywords.replace(/(.+), \[.+\]/, '$1');
                     self.keywords = jQuery.parseJSON(keywords);
+                }
+
+                // fallback keyword gathering from comfort form
+                if (_.isEmpty(self.keywords)) {
+                    var keywords_json = _options.keywords;
+                    if (keywords_json) {
+                        self.keywords = jQuery.parseJSON(keywords_json);
+                        log('keywords fallback:', self.keywords);
+                    }
                 }
 
             },

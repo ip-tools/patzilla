@@ -127,6 +127,11 @@
                                     [BIBLIO] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
+                            <li>
+                                <a href="<%= linkmaker.google_url() %>" target="_blank" class="anchor-biblio-google">
+                                    [BIBLIO] <%= patent_number %> @ Google Patents
+                                </a>
+                            </li>
 
                             <li class="divider"/>
 
@@ -200,6 +205,19 @@
                             <li>
                                 <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="ipsuite-pdf">
                                     [PDF] <%= patent_number %> @ DEPATISnet
+                                </a>
+                            </li>
+                            <li class="divider"/>
+
+
+                            <!-- Research -->
+                            <li><div style="padding-left: 10px">
+                                <h5><i class="icon-fullscreen"></i> &nbsp; Prior Art</h5>
+                            </div>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.google_prior_art_url() %>" target="_blank">
+                                    [PDF] <%= patent_number %> @ Google Prior Art Finder
                                 </a>
                             </li>
 
@@ -527,50 +545,54 @@
 
         <div class="row-fluid">
 
-            <!-- total result count -->
-            <div class="span1">
-                Total:
-                <br/>
-                <span style="font-size: x-large" id="result-count-total"><%= data.result_count %></span>
+            <div class="span8">
 
-                <% if (asbool(data.config.get('debug')) && data.searchmode == 'subsearch') { %>
-                <br/>
-                View:
-                <br/>
-                <span style="font-size: x-large"><%= data.result_count_received %></span>
-                <% } %>
-            </div>
+                <!-- total result count -->
+                <div class="span3">
+                    Total:
+                    <br/>
+                    <span style="font-size: x-large" id="result-count-total"><%= data.result_count != null ? data.result_count : '--' %></span>
 
-            <!-- current display range -->
-            <div class="span1">
-                Range:
-                <br/>
-                <span style="font-size: x-large"><%= data.result_range %></span>
-            </div>
+                    <% if (asbool(data.config.get('debug')) && data.searchmode == 'subsearch') { %>
+                    <br/>
+                    View:
+                    <br/>
+                    <span style="font-size: x-large"><%= data.result_count_received %></span>
+                    <% } %>
+                </div>
 
-            <!-- current cql query string -->
-            <div class="span6">
-                Query:
-                <br/>
-                <span style="font-size: small" class="cql-query">
-                    <%
-                    // HACK: workaround required, for whatever reason; WTF!?
-                    var _query;
-                    if (data.query_origin && data.query_origin.nodeName == 'TEXTAREA') {
-                        _query = data.query_real;
-                    } else {
-                        _query = data.query_origin;
-                    }
-                    print(htmlentities(_query, 'ENT_NOQUOTES'));
-                    %>
-                </span>
+                <!-- current display range -->
+                <div class="span3">
+                    Range:
+                    <br/>
+                    <span style="font-size: x-large"><%= data.result_range != null ? data.result_range : '--' %></span>
+                </div>
 
-                <% if (asbool(data.config.get('debug')) && (data.searchmode == 'subsearch') && data.query_real) { %>
-                <br/>
-                Query OPS:
-                <br/>
-                <span style="font-size: small" class="cql-query"><%= data.query_real %></span>
-                <% } %>
+                <!-- current cql query string -->
+                <div class="span6">
+                    Query:
+                    <br/>
+                    <span style="font-size: small" class="cql-query">
+                        <%
+                        // HACK: workaround required, for whatever reason; WTF!?
+                        var _query;
+                        if (data.query_origin && data.query_origin.nodeName == 'TEXTAREA') {
+                            _query = data.query_real;
+                        } else {
+                            _query = data.query_origin;
+                        }
+                        print(htmlentities(_query, 'ENT_NOQUOTES'));
+                        %>
+                    </span>
+
+                    <% if (asbool(data.config.get('debug')) && (data.searchmode == 'subsearch') && data.query_real) { %>
+                    <br/>
+                    Query OPS:
+                    <br/>
+                    <span style="font-size: small" class="cql-query"><%= data.query_real %></span>
+                    <% } %>
+
+                </div>
 
             </div>
 

@@ -125,7 +125,7 @@ class BackboneModelParameterFiddler(object):
                 params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
 
         # 2. compute whether"FulltextPRO "datasource is allowed
-        ftpro_allowed_hosts = ['patentsearch.vdpm.elmyra.de', 'patentsearch-staging.elmyra.de', 'localhost']
+        ftpro_allowed_hosts = ['patentsearch.vdpm.elmyra.de', 'patentsearch-staging.elmyra.de', 'localhost', 'offgrid']
         params['ftpro_enabled'] = params.get('request.host_name') in ftpro_allowed_hosts
 
 

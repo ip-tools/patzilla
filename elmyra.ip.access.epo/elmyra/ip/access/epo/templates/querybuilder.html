@@ -5,7 +5,7 @@
         <div class="row-fluid">
 
             <!-- choose ui flavor -->
-            <div class="span6">
+            <div class="span5">
 
                 <div id="querybuilder-flavor-chooser" class="btn-group btn-popover tabs"
                      data-toggle="popover" data-trigger="hover" data-placement="right"
@@ -80,15 +80,22 @@
             </div>
 
             <!-- data source chooser -->
-            <div class="span6">
+            <div class="span7">
                 <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
                     <button class="btn active" data-value="ops">
-                        <img src="/static/img/icons/epo-logo-small.svg"/> EPO
+                        <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
+                        EPO
                     </button>
                     <button class="btn" data-value="depatisnet">
-                        <img src="/static/img/icons/dpma-logo-small.svg"/> DPMA
+                        <img src="/static/img/icons/dpma-logo-small.svg" class="wider"/>
+                        DPMA
+                    </button>
+                    <button class="btn" data-value="google">
+                        <img src="/static/img/icons/google-g.svg" class="square"/>
+                        Google
                     </button>
                     <button class="btn hide" data-value="ftpro">
+                        <img src="/static/img/icons/pro.svg" class="square"/>
                       "FulltextPRO "
                     </button>
                 </div>

@@ -184,6 +184,22 @@
             return url;
         },
 
+        google_url: function() {
+            // https://www.google.com/patents/EP0666666B1
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('https://www.google.com/patents/<%= country %><%= number %><%= kind %>');
+            var url = url_tpl(document_id);
+            return url;
+        },
+
+        google_prior_art_url: function() {
+            // https://www.google.com/patents/related/EP0666666B1
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('https://www.google.com/patents/related/<%= country %><%= number %><%= kind %>');
+            var url = url_tpl(document_id);
+            return url;
+        },
+
         /*
         query_link: function(label, value, attribute) {
             var link_tpl = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
