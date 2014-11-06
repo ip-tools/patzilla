@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: full-cycle mode chooser
+- middleware: allow searching for discrete ipc classes at FulltextPRO
 
 0.50.1
 ======
