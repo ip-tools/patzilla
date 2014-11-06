@@ -37,7 +37,7 @@ class DpmaDepatisnetAccess:
 
         hits_per_page = hits_per_page or self.hits_per_page
 
-        logger.info("searching documents, query='%s', hits_per_page='%s'" % (query, hits_per_page))
+        logger.info("DEPATISnet: searching documents, query='%s', hits_per_page='%s'" % (query, hits_per_page))
 
         # 1. open search url
         response_searchform = self.browser.open(self.searchurl)
