@@ -46,6 +46,8 @@ class GooglePatentsAccess(object):
         except ValueError:
             parameters['q'] = expression
 
+        if not parameters['q']:
+            parameters['q'] = ''
 
         # 2. perform search
         url = self.baseurl + '&' + urlencode(parameters)
@@ -220,7 +222,9 @@ class GooglePatentsExpression(object):
             if key == 'country':
                 value = value.lower()
             elif key == 'patentnumber':
-                value = normalize_patent(value)
+                value_normalized = normalize_patent(value)
+                if value_normalized:
+                    value = value_normalized
             term = u'{0}:{1}'.format(fieldname, value)
         else:
             term = value

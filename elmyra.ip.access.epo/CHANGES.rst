@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: enhance and stabilize query behavior, user experience and keyword propagation
 
 0.51.0
 ======

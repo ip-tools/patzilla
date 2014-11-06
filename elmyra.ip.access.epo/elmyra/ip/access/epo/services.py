@@ -14,7 +14,7 @@ from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, 
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
 from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression
 from elmyra.ip.util.cql.pyparsing import CQL
-from elmyra.ip.util.cql.util import pair_to_cql
+from elmyra.ip.util.cql.util import pair_to_cql, should_be_quoted
 from elmyra.ip.util.date import datetime_iso_filename, now
 from elmyra.ip.util.expression.keywords import clean_keyword, keywords_from_boolean_expression
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -183,7 +183,7 @@ def depatisnet_published_data_search_handler(request):
     log.info('query raw: ' + query)
 
     # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
+    if should_be_quoted(query):
         query = '"%s"' % query
 
     # Parse and recompile CQL query string to apply number normalization
@@ -230,10 +230,6 @@ def google_published_data_search_handler(request):
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
 
-    # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    #if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
-    #    query = '"%s"' % query
-
     #propagate_keywords(request, query_object)
 
     # lazy-fetch more entries up to maximum of FulltextPRO
@@ -248,6 +244,9 @@ def google_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('google-published-data-search', 'query', str(ex.msg))
+
+    except ValueError as ex:
+        request.errors.add('google-published-data-search', 'query', str(ex))
 
 
 @ftpro_published_data_search_service.get(accept="application/json")

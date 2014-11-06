@@ -37,6 +37,7 @@ def pair_to_cql(datasource, key, value):
                 value = iso_to_german(value)
 
         elif key == 'inventor':
+            value = value.strip(' "')
             if ' ' in value and not query_has_booleans:
                 value = value.replace(' ', '(L)')
 
@@ -44,7 +45,7 @@ def pair_to_cql(datasource, key, value):
     elif datasource == 'ops':
 
         if key == 'inventor':
-            if ' ' in value and not query_has_booleans:
+            if not query_has_booleans and should_be_quoted(value):
                 value = '"{0}"'.format(value)
 
         if 'within' in value:
@@ -55,3 +56,7 @@ def pair_to_cql(datasource, key, value):
         cql_part = format.format(fieldname, value)
 
     return cql_part
+
+def should_be_quoted(value):
+    value = value.strip()
+    return '=' not in value and ' ' in value and value[0] != '"' and value[-1] != '"'
