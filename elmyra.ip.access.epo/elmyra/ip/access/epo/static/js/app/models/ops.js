@@ -48,20 +48,23 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                     _(exchange_documents_containers).each(function(exchange_documents_container) {
                         var exchange_documents = to_list(exchange_documents_container['exchange-document']);
 
-                        // v1
-                        //results = $.merge(results, exchange_documents);
+                        if (opsChooserApp.config.get('mode.full-cycle')) {
+                            // v1: display all documents (full-cycle)
+                            results = $.merge(results, exchange_documents);
 
-                        // v2
-                        // use first result document as representative document
-                        var representative_entry = exchange_documents.shift();
-                        results.push(representative_entry);
+                        } else {
+                            // v2: use first result document as representative document
+                            var representative_entry = exchange_documents.shift();
+                            results.push(representative_entry);
 
-                        // collect some information from other result documents
-                        var representations = [];
-                        _(exchange_documents).each(function(exchange_document) {
-                            representations.push(new OpsExchangeDocument(exchange_document));
-                        });
-                        representative_entry['bibliographic-data']['also-published-as'] = representations;
+                            // collect some information from other result documents
+                            var representations = [];
+                            _(exchange_documents).each(function(exchange_document) {
+                                representations.push(new OpsExchangeDocument(exchange_document));
+                            });
+                            representative_entry['bibliographic-data']['also-published-as'] = representations;
+                        }
+
                     });
 
                     _(results).each(function(exchange_document) {
