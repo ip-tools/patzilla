@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.50.1
+======
+- ui: fix minor typo
+
 0.50.0
 ======
 - ui: fix ftpro keyword propagation
