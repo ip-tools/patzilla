@@ -1,23 +1,22 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
+import re
 import json
 import logging
 from beaker.cache import cache_region
 from cornice import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-import re
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes
-from elmyra.ip.access.ftpro.concordance import SipCountry, SipIpcClass
-from elmyra.ip.access.ftpro.search import FulltextProClient
-from elmyra.ip.util.cql.knowledge import datasource_indexnames, ftpro_xml_expression_templates
+from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
+from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression
 from elmyra.ip.util.cql.pyparsing import CQL
-from elmyra.ip.util.cql.pyparsing.parser import wildcards
-from elmyra.ip.util.date import iso_to_german, datetime_iso_filename, now
-from elmyra.ip.util.ipc.parser import IpcDecoder
+from elmyra.ip.util.cql.util import pair_to_cql
+from elmyra.ip.util.date import datetime_iso_filename, now
+from elmyra.ip.util.expression.keywords import clean_keyword, keywords_from_boolean_expression
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.python import _exception_traceback
 
@@ -94,6 +93,15 @@ depatisconnect_claims_service = Service(
     name='depatisconnect-claims',
     path='/api/depatisconnect/{patent}/claims',
     description="DEPATISconnect claims interface")
+
+
+# ------------------------------------------
+#   services: google
+# ------------------------------------------
+google_published_data_search_service = Service(
+    name='google-published-data-search',
+    path='/api/google/published-data/search',
+    description="Google Patents search interface")
 
 
 # ------------------------------------------
@@ -202,6 +210,7 @@ def depatisnet_published_data_search_handler(request):
     propagate_keywords(request, query_object)
 
     # lazy-fetch more entries up to maximum of depatisnet
+    # TODO: get from elmyra.ip.access.dpma.depatisnet
     request_size = 250
     if int(request.params.get('range_begin', 0)) > request_size:
         request_size = 1000
@@ -211,6 +220,34 @@ def depatisnet_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
+
+
+@google_published_data_search_service.get(accept="application/json")
+def google_published_data_search_handler(request):
+    """Search for published-data at Google Patents"""
+
+    # CQL query string
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
+    #if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
+    #    query = '"%s"' % query
+
+    #propagate_keywords(request, query_object)
+
+    # lazy-fetch more entries up to maximum of FulltextPRO
+    # TODO: get from elmyra.ip.access.google
+    limit = 100
+    offset_local = int(request.params.get('range_begin', 1))
+    offset_remote = int(offset_local / limit) * limit
+
+    try:
+        data = google_published_data_search(query, offset_remote, limit)
+        return data
+
+    except SyntaxError as ex:
+        request.errors.add('google-published-data-search', 'query', str(ex.msg))
 
 
 @ftpro_published_data_search_service.get(accept="application/json")
@@ -225,32 +262,10 @@ def ftpro_published_data_search_handler(request):
     if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
         query = '"%s"' % query
 
-    # Parse and recompile CQL query string to apply number normalization
-    query_object = None
-    try:
-
-        pass
-
-        # v1: Cheshire3 CQL parser
-        #query_object = cql_parse(query)
-        #query_recompiled = query_object.toCQL().strip()
-
-        # v2 pyparsing CQL parser
-        #query_object = CQL(query).polish()
-        #query_recompiled = query_object.dumps()
-
-        #if query_recompiled:
-        #    query = query_recompiled
-
-    except Exception as ex:
-        # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
-        log.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
-
-    log.info('query cql: ' + query)
-
     #propagate_keywords(request, query_object)
 
     # lazy-fetch more entries up to maximum of FulltextPRO
+    # TODO: get from elmyra.ip.access.ftpro
     limit = 250
     offset_local = int(request.params.get('range_begin', 1))
     offset_remote = int(offset_local / limit) * limit
@@ -282,10 +297,9 @@ def compute_keywords(query_object):
     keywords = list(set(keywords))
     return keywords
 
-def clean_keyword(keyword):
-    return keyword.strip(wildcards + ' ')
-
 def scan_keywords(op, keywords):
+
+    # TODO: move to some ops.py
 
     if not op: return
     #print "op:", dir(op)
@@ -331,6 +345,15 @@ def dpma_published_data_search(query, hits_per_page):
         return depatisnet.search_patents(query, hits_per_page)
     except SyntaxError as ex:
         log.warn('Invalid query for DEPATISnet: %s' % ex.msg)
+        raise
+
+@cache_region('search')
+def google_published_data_search(query, offset, limit):
+    google = GooglePatentsAccess()
+    try:
+        return google.search(query, offset, limit)
+    except SyntaxError as ex:
+        log.warn('Invalid query for Google Patents: %s' % ex.msg)
         raise
 
 @cache_region('search')
@@ -513,209 +536,53 @@ def depatisconnect_description_handler(request):
     return description
 
 
-def pair_to_cql(datasource, key, value):
-
-    try:
-        fieldname = datasource_indexnames[key][datasource]
-    except KeyError:
-        return
-
-    cql_part = None
-    format = u'{0}=({1})'
-
-    query_has_booleans = ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
-
-    # special processing rules for depatisnet
-    if datasource == 'depatisnet':
-
-        if key == 'pubdate':
-
-            if len(value) == 4 and value.isdigit():
-                fieldname = 'py'
-
-            elif 'within' in value:
-                within_dates = parse_date_within(value)
-                elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
-                if elements_are_years:
-                    fieldname = 'py'
-                cql_part = '{fieldname} >= {startdate} and {fieldname} <= {enddate}'.format(
-                    fieldname=fieldname,
-                    startdate=iso_to_german(within_dates['startdate']),
-                    enddate=iso_to_german(within_dates['enddate']))
-
-            else:
-                value = iso_to_german(value)
-
-        elif key == 'inventor':
-            if ' ' in value and not query_has_booleans:
-                value = value.replace(' ', '(L)')
-
-
-    elif datasource == 'ops':
-
-        if key == 'inventor':
-            if ' ' in value and not query_has_booleans:
-                value = '"{0}"'.format(value)
-
-        if 'within' in value:
-            format = '{0} {1}'
-
-
-    if not cql_part:
-        cql_part = format.format(fieldname, value)
-
-    return cql_part
-
-def parse_date_within(value):
-    value = value.replace('within', '').strip()
-    parts = value.split(',')
-    parts = map(unicode.strip, parts)
-    result = {
-        'startdate': parts[0],
-        'enddate': parts[1],
-    }
-    return result
-
-
-def pair_to_ftpro_xml(datasource, key, value):
-
-    if key == 'pubdate':
-
-        if len(value) == 4 and value.isdigit():
-            value = u'within {year}-01-01,{year}-12-31'.format(year=value)
-
-        if 'within' in value:
-            try:
-                within_dates = parse_date_within(value)
-            except:
-                return
-
-            if len(within_dates['startdate']) == 4 and within_dates['startdate'].isdigit():
-                within_dates['startdate'] = within_dates['startdate'] + '-01-01'
-            if len(within_dates['enddate']) == 4 and within_dates['enddate'].isdigit():
-                within_dates['enddate'] = within_dates['enddate'] + '-12-31'
-
-            if all(within_dates.values()):
-                template = ftpro_xml_expression_templates[key]['both']
-            elif within_dates['startdate']:
-                template = ftpro_xml_expression_templates[key]['startdate']
-            # API not capable of handling "enddate"-only attribute
-            #elif within_dates['enddate']:
-            #    template = ftpro_xml_expression_templates[key]['enddate']
-            else:
-                return
-
-            pair_xml = template.format(
-                startdate=iso_to_german(within_dates['startdate']),
-                enddate=iso_to_german(within_dates['enddate']))
-
-            return pair_xml
-
-        else:
-            template = ftpro_xml_expression_templates[key]['both']
-            pair_xml = template.format(
-                startdate=iso_to_german(value),
-                enddate=iso_to_german(value))
-
-            return pair_xml
-
-    elif key == 'country':
-        entries = re.split(' or ', value, flags=re.IGNORECASE)
-        entries = [entry.strip() for entry in entries]
-        ccids = []
-        for country in entries:
-            country = country.upper()
-            ftpro_country = SipCountry.objects(cc=country).first()
-            if ftpro_country:
-                ftpro_ccid = ftpro_country.ccid
-                ccids.append(ftpro_ccid)
-            else:
-                # FIXME: propagate warning to user
-                log.warn(' FulltextPROquery: country {0} could not be resolved'.format(country))
-
-        if ccids:
-            pair_xml = '<country>\n' + '\n'.join(['<ccid>{ccid}</ccid>'.format(ccid=ccid) for ccid in ccids]) + '\n</country>'
-            return pair_xml
-
-    elif key == 'class':
-        entries = re.split(' or ', value, flags=re.IGNORECASE)
-        entries = [entry.strip() for entry in entries]
-        ipcids = []
-        for ipc_raw in entries:
-
-            ipc_raw_stripped = ipc_raw.rstrip(wildcards + '/ .')
-
-            right_truncation = False
-            if len(ipc_raw_stripped) >= 5 and (ipc_raw.endswith('?') or ipc_raw.endswith('*')):
-                right_truncation = True
-
-            ipc = IpcDecoder(ipc_raw_stripped)
-            ipc_ops = ipc.formatOPS()
-
-            if right_truncation:
-                ftpro_ipc_list = SipIpcClass.objects(ipc__startswith=ipc_ops).all()
-                if ftpro_ipc_list:
-                    for entry in ftpro_ipc_list:
-                        ipcids.append(entry.itid)
-                else:
-                    # FIXME: propagate warning to user
-                    log.warn(' FulltextPROquery: right-truncated ipc {0} could not be resolved'.format(ipc_raw))
-
-            else:
-                ftpro_ipc = SipIpcClass.objects(ipc=ipc_ops).first()
-                if ftpro_ipc:
-                    ipcids.append(ftpro_ipc.itid)
-                else:
-                    # FIXME: propagate warning to user
-                    log.warn(' FulltextPROquery: ipc {0} could not be resolved'.format(ipc_ops))
-
-        if ipcids:
-            pair_xml = '<ipc>\n' + '\n'.join(['<ipcid>{ipcid}</ipcid>'.format(ipcid=ipcid) for ipcid in ipcids]) + '\n</ipc>'
-            return pair_xml
-
-    elif key in ftpro_xml_expression_templates:
-        template = ftpro_xml_expression_templates[key]
-        pair_xml = template.format(key=key, value=value)
-        return pair_xml
-
-    else:
-        log.warn(' FulltextPROquery: Could not handle pair {0}={1}'.format(key, value))
-
-
 @query_expression_util_service.post()
 def query_expression_util_handler(request):
+
+    # TODO: split functionality between ops/depatisnet, google and ftpro/ftpro
+
     data = request.json
     datasource = data['datasource']
+    query = data.get('query')
 
+    expression = ''
     expression_parts = []
     keywords = []
 
     if data['format'] == 'comfort':
-        for key, value in data['criteria'].iteritems():
 
-            if not value:
-                continue
+        if datasource == 'google':
+            gpe = GooglePatentsExpression(data['criteria'], query)
+            expression = gpe.serialize()
+            keywords = gpe.get_keywords()
 
-            expression_part = None
+        else:
 
-            if datasource in ['ops', 'depatisnet']:
-                expression_part = pair_to_cql(datasource, key, value)
+            for key, value in data['criteria'].iteritems():
 
-            elif datasource == 'ftpro':
-                expression_part = pair_to_ftpro_xml(datasource, key, value)
-                ftpro_register_keyword(keywords, key, value)
+                if not value:
+                    continue
 
-            if expression_part:
-                expression_parts.append(expression_part)
-            else:
-                message = 'Criteria "{0}={1}" has invalid format, datasource={2}.'.format(key, value, datasource)
-                log.warn(message)
-                request.errors.add('query-expression-utility-service', 'comfort-form', message)
+                expression_part = None
+
+                if datasource in ['ops', 'depatisnet']:
+                    expression_part = pair_to_cql(datasource, key, value)
+
+                elif datasource == 'ftpro':
+                    expression_part = FulltextProExpression.pair_to_ftpro_xml(key, value)
+                    keywords += keywords_from_boolean_expression(key, value)
+
+                if expression_part:
+                    expression_parts.append(expression_part)
+                else:
+                    message = 'Criteria "{0}={1}" has invalid format, datasource={2}.'.format(key, value, datasource)
+                    log.warn(message)
+                    request.errors.add('query-expression-utility-service', 'comfort-form', message)
+
 
     log.info("keywords: %s", keywords)
     request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
-    expression = ''
 
     # assemble complete expression from parts, connect them with AND operators
     if datasource in ['ops', 'depatisnet']:
@@ -729,10 +596,3 @@ def query_expression_util_handler(request):
         expression = expression.strip()
 
     return expression
-
-
-def ftpro_register_keyword(keywords, key, value):
-    if key != 'country':
-        entries = re.split(' or | and | not ', value, flags=re.IGNORECASE)
-        entries = [clean_keyword(entry) for entry in entries]
-        keywords += entries

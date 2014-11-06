@@ -335,7 +335,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var datasource = opsChooserApp.get_datasource();
         var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
-        if (hide !== false && (hide || !datasource || datasource == 'review' || datasource == 'ftpro' || queryflavor != 'cql')) {
+        if (hide || !datasource || _(['review', 'google', 'ftpro']).contains(datasource) || queryflavor != 'cql') {
             var container = $('#cql-field-chooser')[0].previousSibling;
             $(container).hide();
             return;
@@ -402,19 +402,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var value = $(this).val();
             if (value) {
 
-                // HACK: cut away suffix
+                // HACK: cut away suffix, currently it's appended to query string => dirty :-(
                 // TODO: move to QueryModel
-                if (_.string.endsWith(value, '[ops]') || _.string.endsWith(value, '(ops)')) {
-                    opsChooserApp.set_datasource('ops');
-                } else if (_.string.endsWith(value, '[depatisnet]') || _.string.endsWith(value, '(depatisnet)')) {
-                    opsChooserApp.set_datasource('depatisnet');
-                } else if (_.string.endsWith(value, '[ftpro]') || _.string.endsWith(value, '(ftpro)')) {
-                    opsChooserApp.set_datasource('ftpro');
-                }
-                value = value
-                    .replace(' [ops]', '').replace(' (ops)', '')
-                    .replace(' [depatisnet]', '').replace(' (depatisnet)', '')
-                    .replace(' [ftpro]', '').replace(' (ftpro)', '');
+                var datasources = ['ops', 'depatisnet', 'google', 'ftpro'];
+                _(datasources).each(function(datasource) {
+                    if (_.string.endsWith(value, '[' + datasource + ']') || _.string.endsWith(value, '(' + datasource + ')')) {
+                        opsChooserApp.set_datasource(datasource);
+                    }
+                    value = value
+                        .replace(' [' + datasource + ']', '').replace(' (' + datasource + ')', '')
+                });
 
                 $('#query').val(value);
             }
@@ -430,12 +427,21 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     setup_comfort_form: function() {
         var form = $('#querybuilder-comfort-form');
         var datasource = opsChooserApp.get_datasource();
-        var element = form.find("input[name='citation']").closest("div[class='control-group']");
-        if (datasource == 'ops' || datasource == 'depatisnet') {
-            element.show();
-        } else if (datasource == 'ftpro') {
-            element.hide();
+
+        var pubdate = form.find("input[name='pubdate']").closest("div[class='control-group']");
+        if (_(['ops', 'depatisnet', 'ftpro']).contains(datasource)) {
+            pubdate.show();
+        } else if (_(['google']).contains(datasource)) {
+            pubdate.hide();
         }
+
+        var citation = form.find("input[name='citation']").closest("div[class='control-group']");
+        if (_(['ops', 'depatisnet']).contains(datasource)) {
+            citation.show();
+        } else if (_(['google', 'ftpro']).contains(datasource)) {
+            citation.hide();
+        }
+
     },
 
     read_comfort_form: function(form) {
@@ -459,6 +465,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             format: 'comfort',
             criteria: criteria,
             datasource: datasource,
+            //query: opsChooserApp.config.get('query'),
         };
 
         //$("#query").val('');

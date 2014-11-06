@@ -7,6 +7,8 @@ development
 - ui: fix ftpro keyword propagation
 - ui: change text on login form: beta => 14 day trial
 - deployment: add target “vdpm”
+- ui/middlware: integrated Google Patents
+- ui/middleware: lots of refactoring
 
 0.49.0
 ======

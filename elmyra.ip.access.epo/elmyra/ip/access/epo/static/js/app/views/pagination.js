@@ -40,6 +40,11 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         var result_range = this.model.get('result_range');
         var current_page = this.model.get('pagination_current_page');
 
+        // google workaround: let's assume 1000 results to make the paging work
+        if (datasource == 'google' && result_count == null) {
+            result_count = 1000;
+        }
+
         // compute number of pagination entries
         var page_count = 0;
         if (result_count > 0 && page_size > 0) {

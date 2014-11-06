@@ -60,3 +60,16 @@ def iso_to_german(date):
     if '-' in date:
         date = date_german(parse_date_iso(date))
     return date
+
+def parse_date_within(value):
+    """
+    parses a date range expression like "within 2014-01-01,2014-01-31"
+    """
+    value = value.replace('within', '').strip()
+    parts = value.split(',')
+    parts = map(unicode.strip, parts)
+    result = {
+        'startdate': parts[0],
+        'enddate': parts[1],
+    }
+    return result

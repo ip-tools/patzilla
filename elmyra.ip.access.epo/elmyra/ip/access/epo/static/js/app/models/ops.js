@@ -142,9 +142,11 @@ OpsExchangeMetadata = Backbone.Model.extend({
         pagination_pagesize_choices: [25, 50, 75, 100],
         pagination_current_page: 1,
         keywords: [],
+        // TODO: move to their respective places
         maximum_results: {
             'ops': 2000,
             'depatisnet': 1000,
+            'google': 1000,
         },
 
         get_url: function() {

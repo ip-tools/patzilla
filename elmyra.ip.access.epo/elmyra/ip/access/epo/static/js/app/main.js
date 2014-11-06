@@ -26,6 +26,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     // perform ops search and process response
     perform_search: function(options) {
 
+        options = options || {};
+
         var query = $('#query').val();
         var datasource = this.get_datasource();
         this.metadata.set('datasource', datasource);
@@ -33,6 +35,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.metadata.resetSomeDefaults(options);
 
         console.log('App.perform_search: datasource=' + datasource, 'query=' + query, 'options=', options);
+
+        // propagate keywords from comfort form for fallback mechanism
+        options.keywords = $('#keywords').val();
 
         // handle basket review mode specially
         if (options && options.reviewmode != null) {
@@ -82,8 +87,57 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     var hits = response['hits'];
 
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+                        // need to propagate again, because "perform_listsearch" clears it; TODO: enhance mechanics!
                         self.propagate_datasource_message(response);
                     });
+
+                });
+
+            } else if (datasource == 'google') {
+
+                this.trigger('search:before', {datasource: datasource, query: query});
+
+                // make the pager display the original query
+                this.metadata.set('query_origin', query);
+
+                var google = new GooglePatentSearch();
+                google.perform(query, options).done(function(response) {
+                    options = options || {};
+
+                    self.propagate_datasource_message(response);
+
+                    // propagate keywords
+                    self.metadata.set('keywords', google.keywords);
+
+                    console.log('google response:', response);
+                    console.log('google keywords:', google.keywords);
+
+                    var publication_numbers = response['data'];
+                    var hits = response['hits'];
+
+                    if (publication_numbers) {
+
+                        // TODO: return pagesize from backend
+                        options.remote_limit = 100;
+
+                        self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+
+                            // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
+                            self.propagate_datasource_message(response);
+
+                            if (hits == null) {
+                                self.user_alert(
+                                    'Result count unknown. At Google Patents, sometimes result counts are not displayed. ' +
+                                    "Let's assume 1000 to make the paging work.", 'warning');
+                            }
+
+                            if (hits > self.metadata.get('maximum_results')['google']) {
+                                self.user_alert(
+                                    'Total results ' + hits + '. From Google Patents, the first 1000 results are accessible. ' +
+                                    'You might want to narrow your search by adding more search criteria.', 'warning');
+                            }
+                        });
+                    }
 
                 });
 
@@ -96,30 +150,21 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                 var ftprosearch = new FulltextProSearch();
                 ftprosearch.perform(query, options).done(function(response) {
+                    options = options || {};
 
                     console.log('ftpro response:', response);
 
-                    options = options || {};
                     self.propagate_datasource_message(response);
 
                     // propagate keywords
-                    var keywords = ftprosearch.keywords;
-
-                    // fallback keyword gathering from comfort form
-                    if (_.isEmpty(keywords)) {
-                        var keywords_json = $('#keywords').val();
-                        if (keywords_json) {
-                            keywords = jQuery.parseJSON(keywords_json);
-                            log('ftpro keywords fallback:', keywords);
-                        }
-                    }
-                    self.metadata.set('keywords', keywords);
+                    self.metadata.set('keywords', ftprosearch.keywords);
 
                     var publication_numbers = response['numbers'];
                     var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
                     options['remote_limit'] = response['meta']['Limit'];
 
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+                        // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
                         self.propagate_datasource_message(response);
                     });
 
@@ -159,6 +204,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var sstart = parseInt(range_parts[0]) - 1;
         var ssend = parseInt(range_parts[1]);
 
+        log('slice options.remote_limit:', options.remote_limit);
         if (options && options.remote_limit) {
             sstart = sstart % options.remote_limit;
             ssend = ssend % options.remote_limit;
@@ -166,7 +212,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 ssend = options.remote_limit - 1;
             }
         }
-        //console.log('local slices:', sstart, ssend);
+        console.log('local slices:', sstart, ssend);
 
         if (entries && (entries.length == 0 || sstart > entries.length)) {
 
@@ -236,6 +282,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     propagate_datasource_message: function(response) {
+        log('propagate_datasource_message');
         this.user_alert(response['message'], 'warning');
     },
 

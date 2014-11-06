@@ -44,6 +44,10 @@ HotkeysPlugin = Marionette.Controller.extend({
                 $('#datasource button[data-value="depatisnet"]').button('toggle');
                 _this.app.set_datasource('depatisnet');
             });
+            $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
+                $('#datasource button[data-value="google"]').button('toggle');
+                _this.app.set_datasource('google');
+            });
             $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
                 $('#datasource button[data-value="ftpro"]').button('toggle');
                 _this.app.set_datasource('ftpro');
