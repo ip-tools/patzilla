@@ -55,9 +55,13 @@ def get_claims_or_description(document_number, xpath):
     xml = get_xml(document_number)
     tree = ET.parse(StringIO(xml))
 
-    element = tree.xpath(xpath)[0]
-    content = ET.tostring(element)
-    content = content.strip(' \n')
+    try:
+        element = tree.xpath(xpath)[0]
+        content = ET.tostring(element)
+        content = content.strip(' \n')
+    except IndexError:
+        element = None
+        content = ''
 
     try:
         lang = tree.xpath(xpath + '/@olan')[0]
@@ -153,5 +157,10 @@ if __name__ == '__main__':
     }
     cache = CacheManager(**parse_cache_config_options(cache_opts))
 
-    print depatisconnect_abstracts('DE19653398A1', 'DE')
+    #print depatisconnect_abstracts('DE19653398A1', 'DE')
     #print depatisconnect_description('DE19653398A1')
+
+    #print depatisconnect_abstracts('DE0001301607B', 'DE')
+    #print depatisconnect_description('DE1301607B')
+    #print depatisconnect_description('DE7909160U1')
+    print depatisconnect_abstracts('DE7909160U1', 'DE')
