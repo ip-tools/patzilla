@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.54.0
+======
+- ui: make google datasource invisible by default
+
 0.53.0
 ======
 - ui/middleware: lazy acquisition of german abstracts for DE documents from DEPATISconnect
