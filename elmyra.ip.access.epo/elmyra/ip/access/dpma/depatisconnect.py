@@ -47,32 +47,63 @@ def get_xml(number):
         raise ValueError('Retrieving XML document for "{0}" from DPMA failed'.format(number))
 
 
-def get_xml_part(document_number, xpath):
+def get_claims_or_description(document_number, xpath):
     """
-    Extract text and language from claims or description XML nodes
+    Extract text and language from "claims" or "description" XML elements
     """
 
     xml = get_xml(document_number)
     tree = ET.parse(StringIO(xml))
 
-    content = tree.xpath(xpath)[0]
-    payload = ET.tostring(content)
+    element = tree.xpath(xpath)[0]
+    content = ET.tostring(element)
+    content = content.strip(' \n')
 
-    lang = tree.xpath(xpath + '/@olan')[0]
+    try:
+        lang = tree.xpath(xpath + '/@olan')[0]
+    except IndexError:
+        lang = None
 
     response = {
-        'xml': payload,
+        'xml': content,
         'lang': lang,
     }
 
-    return response, content
+    return response, element
+
+
+def get_abstracts(document_number, xpath):
+    """
+    Extract text and language from "Ab" XML elements (abstracts)
+    """
+
+    xml = get_xml(document_number)
+    tree = ET.parse(StringIO(xml))
+
+    content = ''
+    elements = tree.xpath(xpath)
+    for element in elements:
+        content += ET.tostring(element)
+    content = content.strip(' \n')
+
+    languages = tree.xpath(xpath + '/@lancode')
+    languages = [item.upper() for item in languages]
+    lang = ','.join(languages)
+
+    response = {
+        'xml': content,
+        'lang': lang,
+    }
+
+    return response, elements
+
 
 def depatisconnect_claims(document_number):
     """
     Return DEPATISconnect claims fulltext
     Manipulate XML to visually enumerate claims sections in HTML
     """
-    response, content = get_xml_part(document_number, '/DocInfoRes/Result/application-body/claims')
+    response, content = get_claims_or_description(document_number, '/DocInfoRes/Result/application-body/claims')
 
     # visually enumerate list of claims
     for claim in content.xpath('claim'):
@@ -96,5 +127,31 @@ def depatisconnect_description(document_number):
     """
     Return DEPATISconnect description fulltext
     """
-    response, content = get_xml_part(document_number, '/DocInfoRes/Result/application-body/description')
+    response, content = get_claims_or_description(document_number, '/DocInfoRes/Result/application-body/description')
     return response
+
+
+def depatisconnect_abstracts(document_number, language=None):
+    """
+    Return DEPATISconnect abstract, optionally filtered by language
+    """
+    xpath = '/DocInfoRes/Result/Bibl/Ab'
+    if language:
+        xpath += '[@lancode="{0}"]'.format(language.lower())
+    response, content = get_abstracts(document_number, xpath)
+    return response
+
+
+if __name__ == '__main__':
+
+    # configure cache manager
+    from beaker.cache import CacheManager
+    from beaker.util import parse_cache_config_options
+    cache_opts = {
+        'cache.type': 'memory',
+        'cache.regions': 'static',
+    }
+    cache = CacheManager(**parse_cache_config_options(cache_opts))
+
+    print depatisconnect_abstracts('DE19653398A1', 'DE')
+    #print depatisconnect_description('DE19653398A1')

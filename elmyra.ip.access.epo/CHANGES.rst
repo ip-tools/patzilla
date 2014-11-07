@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.53.0
+======
+- ui/middleware: lazy acquisition of german abstracts for DE documents from DEPATISconnect
+
 0.52.0
 ======
 - ui: enhance and stabilize query behavior, user experience and keyword propagation
@@ -23,7 +27,7 @@ development
 - ui: fix ftpro keyword propagation
 - ui: change text on login form: beta => 14 day trial
 - deployment: add target “vdpm”
-- ui/middlware: integrated Google Patents
+- ui/middleware: integrated Google Patents
 - ui/middleware: lots of refactoring
 
 0.49.0

@@ -6,7 +6,7 @@ import logging
 from beaker.cache import cache_region
 from cornice import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description
+from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description, depatisconnect_abstracts
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
@@ -93,6 +93,11 @@ depatisconnect_claims_service = Service(
     name='depatisconnect-claims',
     path='/api/depatisconnect/{patent}/claims',
     description="DEPATISconnect claims interface")
+
+depatisconnect_abstract_service = Service(
+    name='depatisconnect-abstract',
+    path='/api/depatisconnect/{patent}/abstract',
+    description="DEPATISconnect abstract interface")
 
 
 # ------------------------------------------
@@ -533,6 +538,19 @@ def depatisconnect_description_handler(request):
     except ValueError as ex:
         raise HTTPBadRequest(ex)
     return description
+
+@depatisconnect_abstract_service.get()
+def depatisconnect_abstract_handler(request):
+    # TODO: use jsonified error responses
+    patent = request.matchdict['patent']
+    language = request.params.get('language')
+    try:
+        abstract = depatisconnect_abstracts(patent, language)
+    except KeyError as ex:
+        raise HTTPNotFound(ex)
+    except ValueError as ex:
+        raise HTTPBadRequest(ex)
+    return abstract
 
 
 @query_expression_util_service.post()

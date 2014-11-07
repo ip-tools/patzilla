@@ -91,6 +91,23 @@ DocumentBaseController = Marionette.Controller.extend({
 
         });
 
+
+        // lazy german abstract acquisition
+        $('.abstract-acquire').on('click', function(event) {
+            event.preventDefault();
+            var lang = $(this).data('lang');
+            var document = $(this).closest('.ops-collection-entry').prop('ops-document');
+            $(this).after('<span class="abstract-acquire-spinner">&nbsp;&nbsp;<i class="icon-refresh icon-spin"></i></span>');
+
+            var ft = opsChooserApp.document_details.get_fulltext(document);
+            var _this = this;
+            ft.get_abstract(lang).then(function(data) {
+                $(_this).replaceWith(data['html']);
+                $('.abstract-acquire-spinner').detach();
+            });
+        });
+
+
         // ------------------------------------------
         //   embed per-item 3rd-party component
         // ------------------------------------------
