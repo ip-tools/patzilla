@@ -59,4 +59,32 @@ DepatisConnectFulltext = Marionette.Controller.extend({
 
     },
 
+    get_abstract: function(language) {
+
+        var _this = this;
+        var deferred = $.Deferred();
+
+        var url_tpl = '/api/depatisconnect/<%= document_number %>/abstract'
+        if (language) {
+            url_tpl += '?language=<%= language %>'
+        }
+        var url = _.template(url_tpl)({ document_number: this.document_number, language: language});
+        $.ajax({url: url, async: true})
+            .success(function(payload) {
+                if (payload) {
+                    var response = {
+                        html: payload['xml'],
+                        lang: payload['lang'],
+                    };
+                    deferred.resolve(response);
+                }
+            }).error(function(error) {
+                console.warn('Error while fetching description from DEPATISconnect for', _this.document_number, error);
+                deferred.resolve({html: 'No data available'});
+            });
+
+        return deferred.promise();
+
+    },
+
 });

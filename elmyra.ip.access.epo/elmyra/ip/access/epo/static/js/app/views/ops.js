@@ -31,6 +31,14 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
         $('#document-details-description-button-' + this.model.attributes.get_patent_number())
             .prop('ops-document', this.model.attributes);
+
+
+        // be more generic:
+        // attach current model reference to result entry dom container instead
+        // of specific elements so it can be used by different subsystems
+        var container = $(this.el).find('.ops-collection-entry');
+        $(container).prop('ops-document', this.model.attributes);
+
     },
 
     events: {

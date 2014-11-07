@@ -298,15 +298,27 @@ OpsExchangeDocument = Backbone.Model.extend({
 
         get_abstract_list: function() {
             var abstract_list = [];
+            var languages_seen = [];
             if (this['abstract']) {
                 var abstract_node = to_list(this['abstract']);
                 var abstract_list = abstract_node.map(function(node) {
                     var text_nodelist = to_list(node['p']);
                     var text = text_nodelist.map(function(node) { return node['$']; }).join(' ');
-                    var lang_prefix = node['@lang'] && '[' + node['@lang'].toUpperCase() + '] ' || '';
+                    var lang = node['@lang'] ? node['@lang'].toUpperCase() : '';
+                    var lang_prefix = lang ? '[' + lang + '] ' : '';
+                    lang && languages_seen.push(lang);
                     return lang_prefix + text;
                 });
             }
+
+            // add possibility to acquire abstracts in german
+            var country = this['@country'];
+            if (country == 'DE' && !_(languages_seen).contains('DE')) {
+                abstract_list.push(
+                    '[DE] <a href="#" class="abstract-acquire" data-lang="de">OPS lacks german abstract, try to ' +
+                    'acquire from different data source.</a>');
+            }
+
             return abstract_list;
         },
 
