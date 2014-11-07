@@ -491,10 +491,12 @@ OpsExchangeDocument = Backbone.Model.extend({
                 var nodelist = to_list(container['priority-claim']);
                 _(nodelist).each(function(node) {
                     var priority = _this.get_priority_claim_document_id(node, 'epodoc');
-                    var entry =
-                        _this.enrich_link(priority.number, 'spr', priority.number) + ', ' +
-                        moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD');
-                    entries.push(entry);
+                    if (!_.isEmpty(priority)) {
+                        var entry =
+                            _this.enrich_link(priority.number, 'spr', priority.number) + ', ' +
+                                moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD');
+                        entries.push(entry);
+                    }
                 });
             }
             return entries;
