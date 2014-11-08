@@ -79,6 +79,22 @@ _.clear = function(array) {
     });
 })(jQuery);
 
+// https://stackoverflow.com/questions/964734/hitting-enter-does-not-post-form-in-ie8/4629047#4629047
+// Recreating normal browser behavior in Javascript. Thank you, Microsoft.
+jQuery.fn.handle_enter_keypress = function() {
+    var msie = _.string.contains(navigator.userAgent, '.NET');
+    if (msie) {
+        $(this).find('input').keypress(function(e) {
+            // If the key pressed was enter
+            if (e.which == '13') {
+                $(this).closest('form')
+                    .find('button[type=submit],input[type=submit]')
+                    .filter(':first').click();
+            }
+        });
+    }
+}
+
 // http://stackoverflow.com/questions/3344392/dynamic-deep-selection-for-a-javascript-object/3344487#3344487
 function dotresolve(cur, ns) {
     var undef;

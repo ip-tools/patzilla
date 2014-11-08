@@ -26,7 +26,8 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
 
         // open cql field chooser
-        $('#query').on('keydown', null, 'ctrl+f', function(event) {
+        $('#query').on('keydown', null, 'alt+ctrl+f', function(event) {
+            event.preventDefault();
             $('#cql-field-chooser').select2('open');
             $('#cql-field-chooser').unbind('select2-close');
             $('#cql-field-chooser').on('select2-close', function(event) {
@@ -37,7 +38,8 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
 
         // zoom input field
-        $('input').on('keydown', null, 'ctrl+z', function(event) {
+        $('input').on('keydown', null, 'shift+return', function(event) {
+            event.preventDefault();
             $(this).parent().find('.add-on.add-on-zoom').click();
         });
 
@@ -233,6 +235,22 @@ HotkeysPlugin = Marionette.Controller.extend({
             _this.app.basketModel.review();
         });
 
+    },
+
+    querybuilder_zoomed_hotkeys: function(selector, regular_element) {
+        // submit on meta+enter
+        $(selector).unbind('keydown');
+        $(selector).on('keydown', null, 'meta+return', function() {
+            $("#querybuilder-comfort-form").submit();
+        });
+        $(selector).on('keydown', null, 'ctrl+return', function(event) {
+            $("#querybuilder-comfort-form").submit();
+        });
+        $(selector).on('keydown', null, 'shift+return', function(event) {
+            event.preventDefault();
+            opsChooserApp.queryBuilderView.comfort_form_zoomed_to_regular_data();
+            opsChooserApp.queryBuilderView.comfort_form_zoomed_to_regular_ui(regular_element);
+        });
     },
 
 });

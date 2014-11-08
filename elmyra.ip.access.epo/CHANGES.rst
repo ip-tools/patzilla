@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: enhance hotkey handling
 
 0.55.1
 ======
