@@ -528,6 +528,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.comfort_form_zoomed_to_regular_data();
             _this.comfort_form_zoomed_to_regular_ui(input_element);
         });
+        opsChooserApp.hotkeys.querybuilder_hotkeys(textarea);
 
     },
 
