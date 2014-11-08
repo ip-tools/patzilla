@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: enhance hotkey handling
+- ui: update jquery.hotkeys.js
 
 0.55.1
 ======
