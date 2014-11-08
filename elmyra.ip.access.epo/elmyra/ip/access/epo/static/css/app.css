@@ -97,7 +97,7 @@ a.editable-click {
 #querybuilder-comfort-form * {
     margin-bottom: 1px;
 }
-#querybuilder-comfort-form .add-on {
+#querybuilder-comfort-form .add-on.add-on-label {
     width: 80px;
 }
 #querybuilder-comfort-form input::-webkit-input-placeholder {

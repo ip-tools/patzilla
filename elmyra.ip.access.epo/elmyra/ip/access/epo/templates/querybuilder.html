@@ -113,13 +113,13 @@
                     <form id="querybuilder-comfort-form">
                         <fieldset>
 
-                            <div class="span6">
+                            <div class="span6 field-regular">
 
                                 <!-- patent number -->
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Number</span>
+                                            <span class="add-on add-on-label">Number</span>
                                             <input id="patentnumber" name="patentnumber" class="input-xlarge" data-placeholder-multi="EP666666 or EP666667" data-placeholder-single="EP666666" type="text" autofocus="autofocus">
                                         </div>
                                     </div>
@@ -128,9 +128,10 @@
                                 <!-- full text -->
                                 <div class="control-group">
                                     <div class="controls">
-                                        <div class="input-prepend">
-                                            <span class="add-on">Full text</span>
-                                            <input name="fulltext" class="input-xlarge" placeholder="rohr or tube or circular" type="text">
+                                        <div class="input-prepend input-append">
+                                            <span class="add-on add-on-label">Full text</span>
+                                            <input name="fulltext" style="width: 245px" placeholder="rohr or tube or circular" type="text"></input>
+                                            <span class="add-on add-on-zoom"><i class="icon-search"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -139,7 +140,7 @@
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Applicant</span>
+                                            <span class="add-on add-on-label">Applicant</span>
                                             <input name="applicant" class="input-xlarge" placeholder="Siemens and Bosch" type="text">
                                         </div>
                                     </div>
@@ -149,7 +150,7 @@
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Inventor</span>
+                                            <span class="add-on add-on-label">Inventor</span>
                                             <input name="inventor" class="input-xlarge" placeholder="&quot;Edison Thomas&quot;" type="text">
                                         </div>
                                     </div>
@@ -157,13 +158,13 @@
 
                             </div>
 
-                            <div class="span6">
+                            <div class="span6 field-regular">
 
                                 <!-- class -->
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Class</span>
+                                            <span class="add-on add-on-label">Class</span>
                                             <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" type="text">
                                         </div>
                                     </div>
@@ -173,7 +174,7 @@
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Country</span>
+                                            <span class="add-on add-on-label">Country</span>
                                             <input name="country" class="input-xlarge" placeholder="DE or EP or US" type="text">
                                         </div>
                                     </div>
@@ -183,7 +184,7 @@
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Publication</span>
+                                            <span class="add-on add-on-label">Publication</span>
                                             <input name="pubdate" class="input-xlarge" placeholder="&quot;within 1978,1986&quot;; &quot;1980-12-28&quot;; &quot;1999&quot;" data-demo="within 1978,1986" type="text">
                                         </div>
                                     </div>
@@ -193,13 +194,19 @@
                                 <div class="control-group">
                                     <div class="controls">
                                         <div class="input-prepend">
-                                            <span class="add-on">Citations</span>
+                                            <span class="add-on add-on-label">Citations</span>
                                             <input name="citation" class="input-xlarge" placeholder="US5155725 or EP0352041" type="text">
                                         </div>
                                     </div>
                                 </div>
 
+                            </div>
 
+                            <div id="fulltext-zoomed" class="field-zoomed hide">
+                                <div class="input-prepend" style="vertical-align: top">
+                                    <span class="add-on">Full text</span>
+                                </div>
+                                <textarea data-name="fulltext" class="span11" style="height: 143px"></textarea>
                             </div>
 
                             <button type="submit" class="btn hide">Submit</button>

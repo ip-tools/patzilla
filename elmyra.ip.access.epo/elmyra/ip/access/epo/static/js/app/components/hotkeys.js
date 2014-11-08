@@ -25,7 +25,23 @@ HotkeysPlugin = Marionette.Controller.extend({
             _this.app.perform_search({reviewmode: false});
         });
 
-        _([document, '#query']).each(function (selector) {
+        // open cql field chooser
+        $('#query').on('keydown', null, 'ctrl+f', function(event) {
+            $('#cql-field-chooser').select2('open');
+            $('#cql-field-chooser').unbind('select2-close');
+            $('#cql-field-chooser').on('select2-close', function(event) {
+                window.setTimeout(function() {
+                    $('#query').focus();
+                }, 100);
+            });
+        });
+
+        // zoom input field
+        $('input').on('keydown', null, 'ctrl+z', function(event) {
+            $(this).parent().find('.add-on.add-on-zoom').click();
+        });
+
+        _([document, '#query', 'input']).each(function (selector) {
 
             // user interface flavor chooser
             $(selector).on('keydown', null, 'ctrl+shift+c', function(event) {

@@ -54,6 +54,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var flavor = $(e.target).data('value');
             if (!flavor) return;
 
+            // transfer values back to regular comfort form
+            _this.comfort_form_zoomed_to_regular_data();
+
             // show/hide cql field chooser
             _this.cql_field_chooser_setup(flavor != 'cql');
 
@@ -61,6 +64,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // properly wire "send query" button
             $('.btn-query-perform').unbind('click');
             if (flavor == 'comfort') {
+
+                _this.comfort_form_zoomed_to_regular_ui();
 
                 // focus first field
                 $('#patentnumber').focus();
@@ -106,6 +111,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $( "#querybuilder-comfort-form" ).submit(function( event ) {
             event.preventDefault();
 
+            // transfer values from zoomed fields
+            _this.comfort_form_zoomed_to_regular_data();
+
             // convert query from form fields to cql expression
             _this.compute_comfort_query();
 
@@ -134,7 +142,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         });
 
-                // --------------------------------------------
+        // --------------------------------------------
         //   intercept and reformat clipboard content
         // --------------------------------------------
         /*
@@ -442,6 +450,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var form = $('#querybuilder-comfort-form');
         var datasource = opsChooserApp.get_datasource();
 
+        var _this = this;
+
         // hide publication date for certain search backends
         var pubdate = form.find("input[name='pubdate']").closest("div[class='control-group']");
         if (_(['ops', 'depatisnet', 'ftpro']).contains(datasource)) {
@@ -466,9 +476,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             patentnumber.attr('placeholder', patentnumber.data('placeholder-multi'));
         }
 
-        // populate field value with placeholder value on demand
+        // enrich form fields with actions
         _.each(form.find(".input-prepend"), function(item) {
-            $(item).find('.add-on').on('click', function(ev) {
+
+            // populate field value with placeholder value on demand
+            $(item).find('.add-on.add-on-label').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 if (!input_element.val()) {
                     var demo_value = input_element.attr('placeholder');
@@ -478,8 +490,63 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     input_element.val(demo_value);
                 }
             });
+
+            // zoom input field to textarea
+            $(item).find('.add-on.add-on-zoom').on('click', function(ev) {
+                var input_element = $(item).find('input');
+                _this.comfort_form_regular_to_zoomed(input_element);
+            });
         });
 
+    },
+
+    comfort_form_regular_to_zoomed: function(input_element) {
+
+        var _this = this;
+
+        var fieldname = input_element.attr('name');
+        var value = input_element.val();
+        var fieldset = $('#querybuilder-comfort-form > fieldset');
+        fieldset.children('.field-regular').hide();
+
+        var zoomed_element = fieldset.children('#' + fieldname + '-zoomed');
+        zoomed_element.fadeIn();
+
+        var textarea = zoomed_element.find('textarea');
+        textarea.val(value);
+        textarea.focus();
+
+        // submit on meta+enter
+        textarea.unbind('keydown');
+        textarea.on('keydown', null, 'meta+return', function() {
+            $("#querybuilder-comfort-form").submit();
+        });
+        textarea.on('keydown', null, 'ctrl+return', function(event) {
+            $("#querybuilder-comfort-form").submit();
+        });
+        textarea.on('keydown', null, 'ctrl+z', function(event) {
+            _this.comfort_form_zoomed_to_regular_data();
+            _this.comfort_form_zoomed_to_regular_ui(input_element);
+        });
+
+    },
+
+    comfort_form_zoomed_to_regular_data: function() {
+        var fieldset = $('#querybuilder-comfort-form > fieldset');
+        var zoomed = fieldset.children('.field-zoomed').is(":visible");
+        if (zoomed) {
+            var textarea = fieldset.children('.field-zoomed:visible').find('textarea');
+            var fieldname = textarea.data('name');
+            var value = textarea.val();
+            fieldset.find('input[name="' + fieldname + '"]').val(value);
+        }
+    },
+
+    comfort_form_zoomed_to_regular_ui: function(input_element) {
+        var fieldset = $('#querybuilder-comfort-form > fieldset');
+        fieldset.children('.field-zoomed').hide();
+        fieldset.children('.field-regular').fadeIn();
+        input_element && input_element.focus();
     },
 
     read_comfort_form: function(form) {
