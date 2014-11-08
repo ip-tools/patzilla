@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.55.1
+======
+- ui: enhancements to zoomed form field hotkey handling
+
 0.55.0
 ======
 - ui: comfort form input field zooming and hotkey improvements

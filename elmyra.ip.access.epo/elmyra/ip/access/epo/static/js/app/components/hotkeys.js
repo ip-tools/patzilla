@@ -42,37 +42,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
 
         _([document, '#query', 'input']).each(function (selector) {
-
-            // user interface flavor chooser
-            $(selector).on('keydown', null, 'ctrl+shift+c', function(event) {
-                $('#querybuilder-flavor-chooser button[data-value="comfort"]').tab('show');
-            });
-            $(selector).on('keydown', null, 'ctrl+shift+x', function(event) {
-                $('#querybuilder-flavor-chooser button[data-value="cql"]').tab('show');
-            });
-
-            // datasource selector
-            $(selector).on('keydown', null, 'ctrl+shift+e', function(event) {
-                $('#datasource button[data-value="ops"]').button('toggle');
-                _this.app.set_datasource('ops');
-            });
-            $(selector).on('keydown', null, 'ctrl+shift+d', function(event) {
-                $('#datasource button[data-value="depatisnet"]').button('toggle');
-                _this.app.set_datasource('depatisnet');
-            });
-            $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
-                var google_button = $('#datasource button[data-value="google"]');
-                google_button.show();
-                google_button.button('toggle');
-                _this.app.set_datasource('google');
-            });
-            $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
-                $('#datasource button[data-value="ftpro"]').button('toggle');
-                _this.app.set_datasource('ftpro');
-            });
-            $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
-                _this.app.basketModel.review();
-            });
+            _this.querybuilder_hotkeys(selector);
         });
 
         // add/remove/rate the document in viewport to/from basket
@@ -224,6 +194,43 @@ HotkeysPlugin = Marionette.Controller.extend({
             var baseurl = _this.app.config.get('baseurl');
             var url = baseurl + '/help';
             window.open(url);
+        });
+
+    },
+
+    querybuilder_hotkeys: function(selector) {
+
+        var _this = this;
+
+        // user interface flavor chooser
+        $(selector).on('keydown', null, 'ctrl+shift+c', function(event) {
+            $('#querybuilder-flavor-chooser button[data-value="comfort"]').tab('show');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+x', function(event) {
+            $('#querybuilder-flavor-chooser button[data-value="cql"]').tab('show');
+        });
+
+        // datasource selector
+        $(selector).on('keydown', null, 'ctrl+shift+e', function(event) {
+            $('#datasource button[data-value="ops"]').button('toggle');
+            _this.app.set_datasource('ops');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+d', function(event) {
+            $('#datasource button[data-value="depatisnet"]').button('toggle');
+            _this.app.set_datasource('depatisnet');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
+            var google_button = $('#datasource button[data-value="google"]');
+            google_button.show();
+            google_button.button('toggle');
+            _this.app.set_datasource('google');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
+            $('#datasource button[data-value="ftpro"]').button('toggle');
+            _this.app.set_datasource('ftpro');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
+            _this.app.basketModel.review();
         });
 
     },
