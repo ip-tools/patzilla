@@ -204,8 +204,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var sstart = parseInt(range_parts[0]) - 1;
         var ssend = parseInt(range_parts[1]);
 
-        log('slice options.remote_limit:', options.remote_limit);
         if (options && options.remote_limit) {
+            log('slice options.remote_limit:', options.remote_limit);
             sstart = sstart % options.remote_limit;
             ssend = ssend % options.remote_limit;
             if (ssend == 0) {

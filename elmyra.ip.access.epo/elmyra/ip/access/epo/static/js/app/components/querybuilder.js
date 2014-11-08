@@ -452,6 +452,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
+        // fix submit by enter for internet explorer
+        form.handle_enter_keypress();
+
         // hide publication date for certain search backends
         var pubdate = form.find("input[name='pubdate']").closest("div[class='control-group']");
         if (_(['ops', 'depatisnet', 'ftpro']).contains(datasource)) {
@@ -516,18 +519,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         textarea.val(value);
         textarea.focus();
 
-        // submit on meta+enter
-        textarea.unbind('keydown');
-        textarea.on('keydown', null, 'meta+return', function() {
-            $("#querybuilder-comfort-form").submit();
-        });
-        textarea.on('keydown', null, 'ctrl+return', function(event) {
-            $("#querybuilder-comfort-form").submit();
-        });
-        textarea.on('keydown', null, 'ctrl+z', function(event) {
-            _this.comfort_form_zoomed_to_regular_data();
-            _this.comfort_form_zoomed_to_regular_ui(input_element);
-        });
+        opsChooserApp.hotkeys.querybuilder_zoomed_hotkeys(textarea, input_element);
         opsChooserApp.hotkeys.querybuilder_hotkeys(textarea);
 
     },
