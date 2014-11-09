@@ -4,8 +4,12 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.56.0
+======
 - ui: enhance hotkey handling
 - ui: update jquery.hotkeys.js
+- ui: add feature to query by numberlist
 
 0.55.1
 ======

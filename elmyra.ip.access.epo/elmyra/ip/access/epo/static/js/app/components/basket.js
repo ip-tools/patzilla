@@ -44,7 +44,7 @@ BasketModel = Backbone.RelationalModel.extend({
             numberlist = decodeURIComponent(numberlist);
             var entries = numberlist.split(/[,\n]/);
             _(entries).each(function(entry) {
-                var deferred = _this.add(entry.trim());
+                var deferred = _this.add(entry);
                 deferreds.push(deferred);
             });
         }
@@ -65,6 +65,9 @@ BasketModel = Backbone.RelationalModel.extend({
     // add item to basket
     add: function(number) {
         var _this = this;
+
+        number = number.trim();
+        if (_.isEmpty(number)) return;
 
         var deferred = $.Deferred();
 
@@ -640,7 +643,7 @@ BasketController = Marionette.Controller.extend({
 
 });
 
-// setup plugin
+// setup component
 opsChooserApp.addInitializer(function(options) {
 
     this.basketController = new BasketController();

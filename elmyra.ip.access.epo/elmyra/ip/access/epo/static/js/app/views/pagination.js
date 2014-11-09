@@ -78,8 +78,13 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                 // page-change occurred
                 paged: function(page) {
                     _this.model.set('pagination_current_page', page);
-                    var range = _this.get_range(page);
-                    opsChooserApp.perform_search(range);
+                    var options = _this.get_range(page);
+                    // TODO: untangle this by doing opsChooserApp.perform_listsearch right here!?
+                    if (opsChooserApp.queryBuilderView.get_flavor() == 'numberlist' && opsChooserApp.metadata.get('reviewmode') != true) {
+                        opsChooserApp.perform_numberlistsearch(options);
+                    } else {
+                        opsChooserApp.perform_search(options);
+                    }
                 },
 
                 //link_string: '/?page={page_number}',

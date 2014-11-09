@@ -98,8 +98,30 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // perform cql expression search
                 $('.btn-query-perform').click(function() {
+                    opsChooserApp.disable_reviewmode();
                     opsChooserApp.perform_search({reviewmode: false, clear: true});
                 });
+
+            } else if (flavor == 'numberlist') {
+
+                // focus textarea
+                $('#numberlist').focus();
+
+                // hide action tools
+                $('#querybuilder-cql-actions').hide();
+
+                // hide history chooser
+                $('#cql-history-chooser').hide();
+
+                // switch datasource to epo
+                opsChooserApp.set_datasource('ops');
+
+                // perform numberlist search
+                $('.btn-query-perform').click(function() {
+                    opsChooserApp.disable_reviewmode();
+                    opsChooserApp.perform_numberlistsearch({reviewmode: false, clear: true});
+                });
+
             }
         });
 
@@ -118,6 +140,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.compute_comfort_query();
 
             //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
+            opsChooserApp.disable_reviewmode();
             opsChooserApp.perform_search({reviewmode: false, clear: true});
         });
 
@@ -605,5 +628,31 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     set_flavor: function(flavor) {
         $("#querybuilder-flavor-chooser .btn[data-value='" + flavor + "']").tab('show');
     },
+
+    set_numberlist: function(numberlist) {
+        if (!_.isEmpty(numberlist)) {
+            this.set_flavor('numberlist');
+            $('#numberlist').html(numberlist);
+            opsChooserApp.perform_numberlistsearch();
+        }
+    },
+
+});
+
+
+// setup component
+opsChooserApp.addInitializer(function(options) {
+
+    this.queryBuilderView = new QueryBuilderView({});
+    this.queryBuilderRegion.show(this.queryBuilderView);
+
+    // Special bootstrap handling for numberlist=EP666666,EP666667:
+    this.listenTo(this, 'application:ready', function() {
+        var numberlist_raw = this.config.get('numberlist');
+        if (numberlist_raw) {
+            var numberlist = decodeURIComponent(numberlist_raw);
+            this.queryBuilderView.set_numberlist(numberlist);
+        }
+    });
 
 });
