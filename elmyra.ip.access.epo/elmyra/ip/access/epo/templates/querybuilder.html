@@ -28,6 +28,11 @@
                             data-value="cql">
                         <i class="icon-edit"></i> Expert
                     </button>
+                    <button class="btn" data-toggle="tab"
+                            href="#querybuilder-numberlist-tab"
+                            data-value="numberlist">
+                        <i class="icon-align-justify"></i> Numberlist
+                    </button>
 
                     <!-- history -->
                     <div id="cql-history-chooser" class="hide">
@@ -131,7 +136,7 @@
                                         <div class="input-prepend input-append">
                                             <span class="add-on add-on-label">Full text</span>
                                             <input name="fulltext" style="width: 245px" placeholder="rohr or tube or circular" type="text"></input>
-                                            <span class="add-on add-on-zoom"><i class="icon-search"></i></span>
+                                            <span class="add-on add-on-zoom"><i class="icon-resize-full"></i></span>
                                         </div>
                                     </div>
                                 </div>
@@ -224,6 +229,11 @@
                 <div class="tab-pane fade" id="querybuilder-cql-tab">
                     <textarea class="span12" id="query" name="query" placeholder="CQL expression" rows="7"></textarea>
                     <input id="keywords" hidden="true" />
+                </div>
+
+                <!-- numberlist -->
+                <div class="tab-pane fade" id="querybuilder-numberlist-tab">
+                    <textarea class="span12" id="numberlist" name="numberlist" placeholder="Numberlist" rows="7"></textarea>
                 </div>
 
             </div>

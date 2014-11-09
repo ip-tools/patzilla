@@ -25,6 +25,11 @@ HotkeysPlugin = Marionette.Controller.extend({
             _this.app.perform_search({reviewmode: false});
         });
 
+        // submit on meta+enter
+        $('#numberlist').on('keydown', null, 'meta+return', function() {
+            _this.app.perform_numberlistsearch();
+        });
+
         // open cql field chooser
         $('#query').on('keydown', null, 'alt+ctrl+f', function(event) {
             event.preventDefault();
@@ -43,7 +48,7 @@ HotkeysPlugin = Marionette.Controller.extend({
             $(this).parent().find('.add-on.add-on-zoom').click();
         });
 
-        _([document, '#query', 'input']).each(function (selector) {
+        _([document, '#query', '#numberlist', 'input']).each(function (selector) {
             _this.querybuilder_hotkeys(selector);
         });
 
@@ -210,6 +215,9 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
         $(selector).on('keydown', null, 'ctrl+shift+x', function(event) {
             $('#querybuilder-flavor-chooser button[data-value="cql"]').tab('show');
+        });
+        $(selector).on('keydown', null, 'ctrl+shift+n', function(event) {
+            $('#querybuilder-flavor-chooser button[data-value="numberlist"]').tab('show');
         });
 
         // datasource selector

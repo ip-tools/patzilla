@@ -23,6 +23,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         return $('#query').val();
     },
 
+    disable_reviewmode: function() {
+        this.metadata.set('reviewmode', false);
+    },
+
     // perform ops search and process response
     perform_search: function(options) {
 
@@ -43,6 +47,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         if (options && options.reviewmode != null) {
             this.metadata.set('reviewmode', options.reviewmode);
         }
+
+        // TODO: maybe move to pagination.js
         var reviewmode = this.metadata.get('reviewmode');
         if (reviewmode == true) {
             this.basketModel.review(options);
@@ -273,6 +279,24 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     },
 
+    // initialize model from url query parameters ("numberlist")
+    parse_numberlist: function(payload) {
+        if (!_.isEmpty(payload)) {
+            var numberlist = _(payload.split(/[,\n]/)).map(function(entry) {
+                return entry.trim();
+            }).filter(function(entry) {
+                return !(_.isEmpty(entry) || _.string.startsWith(entry, '//') || _.string.startsWith(entry, '#'));
+            });
+            return numberlist;
+        }
+    },
+
+    perform_numberlistsearch: function(options) {
+        var publication_numbers = this.parse_numberlist($('#numberlist').val());
+        var hits = publication_numbers.length;
+        //opsChooserApp.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR')
+        this.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
+    },
 
     compute_range: function(options) {
         var page_size = this.metadata.get('page_size');
@@ -665,8 +689,6 @@ opsChooserApp.addInitializer(function(options) {
 opsChooserApp.addInitializer(function(options) {
 
     // bind model objects to view objects
-    this.queryBuilderView = new QueryBuilderView({
-    });
     this.metadataView = new MetadataView({
         model: this.metadata
     });
@@ -681,11 +703,10 @@ opsChooserApp.addInitializer(function(options) {
     });
 
     // bind view objects to region objects
-    opsChooserApp.queryBuilderRegion.show(this.queryBuilderView);
-    opsChooserApp.metadataRegion.show(this.metadataView);
-    opsChooserApp.listRegion.show(this.collectionView);
-    opsChooserApp.paginationRegionTop.show(this.paginationViewTop);
-    opsChooserApp.paginationRegionBottom.show(this.paginationViewBottom);
+    this.metadataRegion.show(this.metadataView);
+    this.listRegion.show(this.collectionView);
+    this.paginationRegionTop.show(this.paginationViewTop);
+    this.paginationRegionBottom.show(this.paginationViewBottom);
 });
 
 // activate anonymous basket (non-persistent/project-associated)
