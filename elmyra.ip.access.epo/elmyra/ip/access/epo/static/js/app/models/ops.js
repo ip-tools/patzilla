@@ -47,7 +47,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 if (search_result) {
 
                     // search_result is nested, collect representative result documents
-                    // while retaining additional result documents inside ['bibliographic-data']['also-published-as']
+                    // while retaining additional result documents inside ['bibliographic-data']['full-cycle']
                     var results = [];
                     var exchange_documents_containers = to_list(search_result['exchange-documents']);
                     _(exchange_documents_containers).each(function(exchange_documents_container) {
@@ -59,7 +59,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                         } else {
                             // v2: use first result document as representative document
-                            var representative_entry = exchange_documents.shift();
+                            var representative_entry = exchange_documents[0];
                             results.push(representative_entry);
 
                             // collect some information from other result documents
@@ -67,7 +67,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                             _(exchange_documents).each(function(exchange_document) {
                                 representations.push(new OpsExchangeDocument(exchange_document));
                             });
-                            representative_entry['bibliographic-data']['also-published-as'] = representations;
+                            representative_entry['bibliographic-data']['full-cycle'] = representations;
                         }
 
                     });
@@ -236,9 +236,9 @@ OpsExchangeDocument = Backbone.Model.extend({
             return new Ipsuite.LinkMaker(this);
         },
 
-        get_also_published_as: function() {
+        get_full_cycle: function() {
             var results = [];
-            var entries = this['bibliographic-data']['also-published-as'];
+            var entries = this['bibliographic-data']['full-cycle'];
             _(entries).each(function(entry) {
                 //entry['document-id'] = entry['country'] + entry['doc-number'] + entry['kind'];
                 results.push(entry);

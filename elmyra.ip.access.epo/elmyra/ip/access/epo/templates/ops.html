@@ -97,7 +97,7 @@
                     <a href="<%= linkmaker.universal_pdf_url() %>" target="ipsuite-pdf"
                         class="btn btn-popover anchor-pdf" role="button"
                         data-toggle="popover" data-trigger="hover" data-placement="top"
-                        data-content="Full pdf document"
+                        data-content="PDF document"
                         >
                         <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                     </a>
@@ -421,23 +421,25 @@
 
                         <br/>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="also published as">
-                            (R)
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="full cycle">
+                            (F)
                         </dt>
                         <dd class="keyword">
-                            Also published as:
+                            Full cycle:
                             <br/>
-                            <% _(data['bibliographic-data']['also-published-as']).each(function(entry) { %>
+                            <% _(data.get_full_cycle()).each(function(entry) { %>
 
-                                <%= entry.attributes.get_patent_number() %>, <%= entry.attributes.get_publication_date() %>
+                                <%= entry.attributes.get_patent_number() %>,
+                                <%= entry.attributes.get_publication_date() %>
+                                <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>
 
                                 &nbsp;&nbsp;
 
                                 <!-- pdf document -->
                                 <a href="<%= linkmaker.universal_pdf_url(entry.attributes.get_patent_number()) %>" target="ipsuite-pdf"
-                                   class="btn btn-small btn-popover anchor-pdf" role="button"
+                                   class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
                                    data-toggle="popover" data-trigger="hover" data-placement="top"
-                                   data-content="Full pdf document"
+                                   data-content="PDF document"
                                         >
                                     <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                                 </a>
