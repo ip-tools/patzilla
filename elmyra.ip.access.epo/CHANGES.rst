@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: renamed “also published as” to “full cycle”
 
 0.56.0
 ======
