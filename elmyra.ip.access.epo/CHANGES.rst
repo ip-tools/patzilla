@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.57.0
+======
 - ui: renamed “also published as” to “full cycle”
 - ftpro backend: use textsearch with fullfamily="false" to satisfy customer requirement
 - ftpro backend: apply intermediary hack to allow for simple concatenation with “and” or
