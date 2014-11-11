@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: renamed “also published as” to “full cycle”
+- ftpro backend: use textsearch with fullfamily="false" to satisfy customer requirement
 
 0.56.0
 ======
