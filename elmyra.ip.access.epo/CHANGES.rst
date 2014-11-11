@@ -6,6 +6,8 @@ development
 ===========
 - ui: renamed “also published as” to “full cycle”
 - ftpro backend: use textsearch with fullfamily="false" to satisfy customer requirement
+- ftpro backend: apply intermediary hack to allow for simple concatenation with “and” or
+  “or” operators of class search expression in comfort form
 
 0.56.0
 ======
