@@ -65,7 +65,15 @@ def split_patent_number(patent_number):
         pattern = '^(\D\D)([\d|\/]+?)(\D.?)?(_.+)?$'
 
     elif patent_number.startswith('JP'):
-        pattern = '^(\D\D)([H\d|-]+?)(\D.?)?(_.+)?$'
+        """
+        Japanese numbers do have "Japanese imperial years vs. Western years":
+        - SHOWA  (SHO, S)
+        - HEISEI (HEI, H)
+
+        See also: http://www.epo.org/searching/asian/japan/numbering.html
+        """
+        # JPS5647318A, JP00000S602468B2
+        pattern = '^(\D\D)([SH\d|-]+?)(\D.?)?(_.+)?$'
 
     else:
         patent_number = modify_invalid_patent_number(patent_number)

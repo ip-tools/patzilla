@@ -64,11 +64,15 @@ def ops_published_data_search(constituents, query, range):
 def inquire_images(patent):
 
     p = split_patent_number(patent)
-    patent = p['country'] + p['number'] + '.' + p['kind']
 
-    #print "inquire_images:", patent
-
+    # v1: docdb
+    patent = p['country'] + '.' + p['number'] + '.' + p['kind']
     url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/docdb/{patent}/images'
+
+    # v2: epodoc
+    #patent = p['country'] + p['number']
+    #url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
+
     url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
 
     error_msg_access = 'No image information for document={0}'.format(patent)

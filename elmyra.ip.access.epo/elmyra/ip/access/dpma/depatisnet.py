@@ -7,6 +7,7 @@ import logging
 import mechanize
 import cookielib
 from BeautifulSoup import BeautifulSoup
+from elmyra.ip.util.numbers.normalize import normalize_patent
 
 
 """
@@ -103,6 +104,8 @@ class DpmaDepatisnetAccess:
             #print "csv:", csv
 
             results = self.csv_parse_publication_numbers(csv_response)
+
+            results = [normalize_patent(result) for result in results]
 
 
         payload = {
