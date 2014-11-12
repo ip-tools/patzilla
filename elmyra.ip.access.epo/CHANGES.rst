@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.60.0
+======
+- ui/middleware: display nice error message if"FulltextPRO "is in maintenance mode
+
 0.59.1
 ======
 - ui: try to make hotkeys work from inside input fields by delaying setup
