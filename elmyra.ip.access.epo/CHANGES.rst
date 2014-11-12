@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: apply number normalization to results from DEPATISnet
+- 
 
 0.57.0
 ======
