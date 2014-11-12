@@ -6,7 +6,6 @@ HotkeysPlugin = Marionette.Controller.extend({
     initialize: function(options) {
         console.log('HotkeysPlugin.initialize');
         this.app = options.app;
-        this.setup_hotkeys();
     },
 
     setup_hotkeys: function() {
@@ -237,10 +236,12 @@ HotkeysPlugin = Marionette.Controller.extend({
                 _this.app.set_datasource('google');
             });
         }
-        $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
-            $('#datasource button[data-value="ftpro"]').button('toggle');
-            _this.app.set_datasource('ftpro');
-        });
+        if (opsChooserApp.config.get('ftpro_enabled')) {
+            $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
+                $('#datasource button[data-value="ftpro"]').button('toggle');
+                _this.app.set_datasource('ftpro');
+            });
+        }
         $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
             _this.app.basketModel.review();
         });
@@ -268,4 +269,9 @@ HotkeysPlugin = Marionette.Controller.extend({
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
     this.hotkeys = new HotkeysPlugin({app: this});
+
+    this.listenTo(this, 'application:ready', function() {
+        this.hotkeys.setup_hotkeys();
+    });
+
 });

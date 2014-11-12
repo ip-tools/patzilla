@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.59.1
+======
+- ui: try to make hotkeys work from inside input fields by delaying setup
+
 0.59.0
 ======
 - ui: disable google datasource activation shortcut on production
