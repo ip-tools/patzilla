@@ -320,26 +320,58 @@ def normalize_patent_us(patent):
 
 def normalize_patent_jp(patent):
     """
-    Normalizes to JP patent number format (FulltextPROO)
-    http://www.cas.org/training/stneasytips/patentnumber2.html#anchor3
+    Normalizes to JP patent number format (JPO)
+    - http://www.epo.org/searching/asian/japan/numbering.html
+    - http://www.cas.org/training/stneasytips/patentnumber2.html#anchor3
+
+    SHOWA (SHO, S) - reign of Emperor Hirohito
+    1926 to 1989
+    Japanese emperor year: 01-64
+    conversion: Western Year - 25
+
+    HEISEI (HEI, H) - reign of Emperor Akihito
+    1989 to date
+    Japanese emperor year: 01-12
+    conversion: Western Year - 88
+
+    Decision: In ambiguity case, let's favor H over S, so very old Japanese documents (1926-1938) get suppressed.
+
+    Examples:
+    - Something yields JP8-179521, which OPS will only accept as JPH08179521
+    -"FulltextPRO "yields JP58002167U, which OPS will only accept as JPS582167U
+    - JP3657641B2 should stay the same
     """
 
     assert patent['country'] == 'JP'
 
     patched = patent.copy()
 
-    r = re.compile('[\/|-]')
-    parts = r.split(patched['number'])
+    #print patched['number']
 
-    # handle special formatting like "JP8-179521"
-    #sys.stderr.write(str(parts) + "\n")
-    #sys.exit()
-    if len(parts) == 2:
-        patched['number'] = pad_left(parts[0], '0', 2) + pad_left(parts[1], '0', 6)
+    # new format, don't touch; e.g. JP2011251389A
+    if len(patched['number']) == 10:
+        return patched
 
-    # 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A)
-    else:
-        patched['number'] = patched['number'].lstrip('0')
+    # 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A or JP00000S602468B2)
+    patched['number'] = patched['number'].lstrip('0')
+
+    # 2014-11-12: handle numbers without emperor year symbols
+    if patched['number'][0] not in ['S', 'H']:
+
+        # handle special formatting like "JP8-179521"
+        if '-' in patched['number'] or '/' in patched['number']:
+            parts = re.split('[\/|-]', patched['number'])
+            if len(parts) == 2:
+                patched['number'] = parts[0].rjust(2, '0') + parts[1].rjust(6, '0')
+
+        if len(patched['number']) == 8:
+            emperor_year = patched['number'][:2]
+            real_number = patched['number'][2:]
+            if int(emperor_year) <= 12:
+                emperor_symbol = 'H'
+            else:
+                emperor_symbol = 'S'
+            patched['number'] = emperor_symbol + emperor_year.rjust(2, '0') + real_number.lstrip('0')
 
     return patched
 
@@ -396,10 +428,15 @@ def test_normalization():
         'AT 401 234 B',
         'AT 001 234 B',
         'DE000019630877C2',
-        ]
+        'JP002011251389A',
+        'JP00000S602468B2',
+        'JP8-179521',
+        'JP58002167U',
+        'JP3657641B2',
+    ]
 
     print "-" * 30
-    print "original\tnormalized"
+    print '{0}{1}'.format("original".ljust(20), "normalized")
     print "-" * 30
     for number in numbers:
         if number.find('---') != -1:
@@ -407,7 +444,7 @@ def test_normalization():
             continue
         result = normalize_patent(number)
         #result = join_patent(patch_patent_old_archive(patent))
-        print "%s\t%s" % (number, result)
+        print "{0}{1}".format(number.ljust(20), result)
 
 if __name__ == "__main__":
     test_normalization()

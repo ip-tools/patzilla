@@ -4,9 +4,10 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-- middleware: apply number normalization to results from DEPATISnet
-- middleware: fall back to “JapaneseAbstract” on image inquiry
-- ui: always show Full cycle inline in bibliographic data, regardless of full-cycle search mode
+
+0.58.0
+======
+- middleware: apply number normalization to results from FulltextPRO, enhance number normalization for JP documents
 
 0.57.0
 ======
