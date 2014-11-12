@@ -5,7 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: apply number normalization to results from DEPATISnet
-- 
+- middleware: fall back to “JapaneseAbstract” on image inquiry
 
 0.57.0
 ======
