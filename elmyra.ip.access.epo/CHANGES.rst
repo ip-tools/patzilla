@@ -6,6 +6,7 @@ development
 ===========
 - middleware: apply number normalization to results from DEPATISnet
 - middleware: fall back to “JapaneseAbstract” on image inquiry
+- ui: always show Full cycle inline in bibliographic data, regardless of full-cycle search mode
 
 0.57.0
 ======
