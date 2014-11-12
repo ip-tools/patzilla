@@ -229,12 +229,14 @@ HotkeysPlugin = Marionette.Controller.extend({
             $('#datasource button[data-value="depatisnet"]').button('toggle');
             _this.app.set_datasource('depatisnet');
         });
-        $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
-            var google_button = $('#datasource button[data-value="google"]');
-            google_button.show();
-            google_button.button('toggle');
-            _this.app.set_datasource('google');
-        });
+        if (opsChooserApp.config.get('google_allowed')) {
+            $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
+                var google_button = $('#datasource button[data-value="google"]');
+                google_button.show();
+                google_button.button('toggle');
+                _this.app.set_datasource('google');
+            });
+        }
         $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
             $('#datasource button[data-value="ftpro"]').button('toggle');
             _this.app.set_datasource('ftpro');

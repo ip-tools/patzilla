@@ -124,10 +124,24 @@ class BackboneModelParameterFiddler(object):
                 params.setdefault('setting.ui.page.statusline', '')
                 params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
 
-        # 2. compute whether"FulltextPRO "datasource is allowed
-        ftpro_allowed_hosts = ['patentsearch.vdpm.elmyra.de', 'patentsearch-staging.elmyra.de', 'localhost', 'offgrid']
+        # 2.a compute whether"FulltextPRO "datasource is enabled
+        ftpro_allowed_hosts = [
+            'patentsearch.vdpm.elmyra.de',
+            'patentsearch-staging.elmyra.de',
+            'patentsearch-develop.elmyra.de',
+            'localhost',
+            'offgrid',
+        ]
         params['ftpro_enabled'] = params.get('request.host_name') in ftpro_allowed_hosts
 
+        # 2.b compute whether Google datasource is allowed
+        google_allowed_hosts = [
+            'patentsearch-staging.elmyra.de',
+            'patentsearch-develop.elmyra.de',
+            'localhost',
+            'offgrid',
+        ]
+        params['google_allowed'] = params.get('request.host_name') in google_allowed_hosts
 
         # E. backward-compat amendments
         for key, value in params.iteritems():

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.59.0
+======
+- ui: disable google datasource activation shortcut on production
+
 0.58.0
 ======
 - middleware: apply number normalization to results from FulltextPRO, enhance number normalization for JP documents
