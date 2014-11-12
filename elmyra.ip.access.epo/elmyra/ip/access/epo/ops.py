@@ -163,8 +163,8 @@ def get_ops_image(document, page, kind, format):
     # 1. inquire images to compute url to image resource
     image_info = inquire_images(document)
     if image_info:
-        drawing_node = image_info.get(kind)
-        if drawing_node:
+        if image_info.has_key(kind):
+            drawing_node = image_info.get(kind)
             link = drawing_node['@link']
 
             # compute offset to first drawing if special kind "FullDocumentDrawing" is requested
@@ -174,6 +174,13 @@ def get_ops_image(document, page, kind, format):
                     page = page + start_page - 1
 
             url = get_ops_image_link_url(link, format, page)
+
+        # fallback chain, if no drawings are available
+        elif image_info.has_key('JapaneseAbstract'):
+            drawing_node = image_info.get('JapaneseAbstract')
+            link = drawing_node['@link']
+            url = get_ops_image_link_url(link, format, 1)
+
         else:
             msg = 'No image information for document={0}, kind={1}'.format(document, kind)
             log.warn(msg)
