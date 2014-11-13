@@ -43,6 +43,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // propagate keywords from comfort form for fallback mechanism
         options.keywords = $('#keywords').val();
 
+        // propagate datasource
+        options.datasource = datasource;
+
         // handle basket review mode specially
         if (options && options.reviewmode != null) {
             this.metadata.set('reviewmode', options.reviewmode);
@@ -89,7 +92,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     self.metadata.set('keywords', depatisnet.keywords);
                     console.log('depatisnet response:', response);
 
-                    var publication_numbers = response['data'];
+                    var publication_numbers = response['numbers'];
                     var hits = response['hits'];
 
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
@@ -118,7 +121,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     console.log('google response:', response);
                     console.log('google keywords:', google.keywords);
 
-                    var publication_numbers = response['data'];
+                    var publication_numbers = response['numbers'];
                     var hits = response['hits'];
 
                     if (publication_numbers) {
@@ -165,7 +168,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     // propagate keywords
                     self.metadata.set('keywords', ftprosearch.keywords);
 
-                    var publication_numbers = response['numbers'];
+                    var publication_numbers = response['details'];
                     var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
                     options['remote_limit'] = response['meta']['Limit'];
 
@@ -235,14 +238,37 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         }
 
+        // result entries to display
         var entries_sliced = entries.slice(sstart, ssend);
-        var query_ops_constraints = _(_.map(entries_sliced, function(entry) { return field + '=' + entry}));
-        var query_ops_cql_full = query_ops_constraints.join(' ' + operator + ' ');
-        var query_ops_cql_sliced = query_ops_constraints.join(' ' + operator + ' ');
-        console.log('OPS sliced CQL query:', query_ops_cql_sliced);
+
+        // propagate to generic result collection view
+        //log('entries_sliced:', entries_sliced);
+        if (!_.isEmpty(entries_sliced) && _.isObject(entries_sliced[0])) {
+            try {
+                this.results.reset(entries_sliced);
+            } catch (ex) {
+                console.error('Problem propagating data to results collection', ex);
+                //throw(ex);
+            }
+        } else {
+            this.results.reset();
+        }
+
+        // compute query expression to display documents from OPS
+        var query_ops_constraints = _(_.map(entries_sliced, function(entry) {
+            var number;
+            if (_.isObject(entry)) {
+                number = entry['publication_number'];
+            } else {
+                number = entry;
+            }
+            return field + '=' + number;
+        }));
+        var query_ops_cql = query_ops_constraints.join(' ' + operator + ' ');
+        console.log('OPS CQL query:', query_ops_cql);
 
         if (!query_origin) {
-            query_origin = query_ops_cql_full;
+            query_origin = query_ops_cql;
         }
 
         //$('#query').val(query_origin);
@@ -255,7 +281,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         var self = this;
         //var range = this.compute_range(options);
-        return opsChooserApp.search.perform(this.documents, this.metadata, query_ops_cql_sliced, '1-10').done(function() {
+        return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10').done(function() {
 
             // show the original query
             self.metadata.set('query_origin', query_origin);
@@ -269,11 +295,20 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             $('.pagination').removeClass('span10');
             $('.pagination').addClass('span12');
 
-            // signal the results are ready
-            self.trigger('results:ready');
-
             // TODO: selecting page size with DEPATISnet is currently not possible
             //$('.page-size-chooser').parent().remove();
+
+            // propagate list of found document numbers to results collection
+            // in order to make it possible to indicate which documents are missing
+            self.results.set_reference_document_numbers(self.documents.get_document_numbers());
+
+            // explicitly switch list view to OPS collection
+            if (self.listRegion.currentView !== self.collectionView) {
+                self.listRegion.show(self.collectionView);
+            }
+
+            // signal the results are ready
+            self.trigger('results:ready');
 
         });
 
@@ -682,6 +717,7 @@ opsChooserApp.addInitializer(function(options) {
     this.search = new OpsPublishedDataSearch();
     this.metadata = new OpsExchangeMetadata();
     this.documents = new OpsExchangeDocumentCollection();
+    this.results = new ResultCollection();
 
 });
 
@@ -695,6 +731,10 @@ opsChooserApp.addInitializer(function(options) {
     this.collectionView = new OpsExchangeDocumentCollectionView({
         collection: this.documents
     });
+    this.resultView = new ResultCollectionView({
+        collection: this.results
+    });
+
     this.paginationViewTop = new PaginationView({
         model: this.metadata
     });
@@ -729,11 +769,17 @@ opsChooserApp.addInitializer(function(options) {
 
     });
 
+    // trigger results:ready to setup ui when switching back to main document list
+    this.listenTo(this.listRegion, "show", function() {
+        this.trigger('results:ready');
+    });
+
     // activate project as soon it's loaded from the datastore
     this.listenTo(this, "project:ready", this.project_activate);
 
     // kick off the search process immediately after initial project was created
     this.listenToOnce(this, "project:ready", function() { this.perform_search(); });
+
 });
 
 

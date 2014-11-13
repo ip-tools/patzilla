@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.61.0
+======
+- ui/middleware: new result view showing all search results from FulltextPRO
+
 0.60.0
 ======
 - ui/middleware: display nice error message if"FulltextPRO "is in maintenance mode

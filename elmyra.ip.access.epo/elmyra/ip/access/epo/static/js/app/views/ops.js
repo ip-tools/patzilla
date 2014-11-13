@@ -18,24 +18,20 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     },
 
     templateHelpers: {
+        enrich_links: function() {
+            return opsChooserApp.document_base.enrich_links.apply(this, arguments);
+        },
+        enrich_link: function() {
+            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
+        },
     },
 
     onDomRefresh: function() {
         console.log('OpsExchangeDocumentView.onDomRefresh');
 
-        // attach current model reference to buttons
-        // this is needed for fetching country-specific fulltexts when actually triggering the button
-
-        $('#document-details-claims-button-' + this.model.attributes.get_patent_number())
-            .prop('ops-document', this.model.attributes);
-
-        $('#document-details-description-button-' + this.model.attributes.get_patent_number())
-            .prop('ops-document', this.model.attributes);
-
-
-        // be more generic:
-        // attach current model reference to result entry dom container instead
-        // of specific elements so it can be used by different subsystems
+        // Attach current model reference to result entry dom container so it can be used by different subsystems
+        // A reference to the model is required for switching between document details (biblio/fulltext)
+        // and for acquiring abstracts from third party data sources.
         var container = $(this.el).find('.ops-collection-entry');
         $(container).prop('ops-document', this.model.attributes);
 
@@ -62,8 +58,8 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
 
     // Override and disable add:render event, see also:
     // https://github.com/marionettejs/backbone.marionette/issues/640
-    _initialEvents: function(){
-        if (this.collection){
+    _initialEvents: function() {
+        if (this.collection) {
             //this.listenTo(this.collection, "add", this.addChildView, this);
             this.listenTo(this.collection, "remove", this.removeItemView, this);
             this.listenTo(this.collection, "reset", this.render, this);
@@ -72,6 +68,10 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
 
     onRender: function() {
         console.log('OpsExchangeDocumentCollectionView.onRender');
+    },
+
+    onDomRefresh: function() {
+        console.log('OpsExchangeDocumentCollectionView.onDomRefresh');
     },
 
 });
@@ -85,7 +85,28 @@ MetadataView = Backbone.Marionette.ItemView.extend({
     initialize: function() {
         this.templateHelpers.config = opsChooserApp.config;
         this.listenTo(this.model, "change", this.render);
+        this.listenTo(this, "render", this.setup_ui);
     },
+
     templateHelpers: {},
+
+    setup_ui: function() {
+        log('MetadataView.setup_ui');
+
+        $('.content-chooser > button[data-toggle="tab"]').on('show', function (e) {
+            // e.target // activated tab
+            // e.relatedTarget // previous tab
+
+            var list_type = $(this).data('list-type');
+            if (list_type == 'ops') {
+                opsChooserApp.listRegion.show(opsChooserApp.collectionView);
+
+            } else if (list_type == 'upstream') {
+                opsChooserApp.listRegion.show(opsChooserApp.resultView);
+            }
+
+        });
+
+    },
 
 });

@@ -119,6 +119,13 @@ ${ h.fiddler.render() | n }
 </div>
 
 
+## ------------------------------------------
+##   generic collection template
+## ------------------------------------------
+<script id="generic-collection-template" type="text/x-underscore-template">
+</script>
+
+
 <!-- modal dialog for viewing online help -->
 <div id="help-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="help-modal-label" aria-hidden="true">
     <div class="modal-header">
@@ -312,6 +319,7 @@ ${ h.fiddler.render() | n }
 <%include file="pagination.html"/>
 <%include file="comment.html"/>
 <%include file="ops.html"/>
+<%include file="ftpro.html"/>
 <%include file="permalink.html"/>
 
 <!-- common -->
@@ -375,12 +383,15 @@ ${ h.fiddler.render() | n }
     <script type="text/javascript" src="/static/js/app/core.js"></script>
     <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
     <script type="text/javascript" src="/static/js/app/models/01-search.js"></script>
+    <script type="text/javascript" src="/static/js/app/models/01-results.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ops.js"></script>
     <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
     <script type="text/javascript" src="/static/js/app/models/google.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ftpro.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/ops.js"></script>
+    <script type="text/javascript" src="/static/js/app/views/01-results.js"></script>
     <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
+    <script type="text/javascript" src="/static/js/app/views/ops.js"></script>
+    <script type="text/javascript" src="/static/js/app/views/ftpro.js"></script>
     <script type="text/javascript" src="/static/js/app/main.js"></script>
     <script type="text/javascript" src="/static/js/app/ui.js"></script>
     <script type="text/javascript" src="/static/js/app/components/document.js"></script>

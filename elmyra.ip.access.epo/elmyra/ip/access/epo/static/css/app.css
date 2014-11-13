@@ -257,6 +257,13 @@ dl.dl-horizontal-inline {
     margin-left: 50px;
 }
 
+.label-document-missing {
+    font-size: large;
+    padding: 7px;
+}
+
+
+
 
 /* carousel for drawings */
 /* move control arrows to bottom of image */

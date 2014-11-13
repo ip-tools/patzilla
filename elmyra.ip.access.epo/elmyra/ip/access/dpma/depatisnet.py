@@ -110,9 +110,9 @@ class DpmaDepatisnetAccess:
 
         payload = {
             'query': query,
-            'data': results,
-            'message': error_message,
+            'numbers': results,
             'hits': hits,
+            'message': error_message,
         }
         return payload
 

@@ -2,7 +2,7 @@
 ## (c) 2013,2014 Andreas Motl, Elmyra UG
 
 ## ------------------------------------------
-##   result list template
+##   ops document collection template
 ## ------------------------------------------
 <script id="ops-collection-template" type="text/x-underscore-template">
     <!--
@@ -13,7 +13,7 @@
 
 
 ## ------------------------------------------
-##   result item template
+##   ops document item template
 ## ------------------------------------------
 <script id="ops-entry-template" type="text/x-underscore-template">
 
@@ -66,7 +66,7 @@
                 <div class="span8">
 
                     <% if (data.has_fulltext()) { %>
-                    <div class="btn-group btn-popover tabs document-tab-chooser"
+                    <div class="btn-group btn-popover tabs document-details-chooser"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Toggle detail view"
                          >
@@ -75,14 +75,12 @@
                             Biblio
                         </button>
                         <button class="btn" data-toggle="tab"
-                                id="document-details-claims-button-<%= patent_number %>"
                                 href="#document-details-claims-container-<%= patent_number %>"
                                 data-details-type="claims"
                                 >
                             Claims
                         </button>
                         <button class="btn" data-toggle="tab"
-                                id="document-details-description-button-<%= patent_number %>"
                                 href="#document-details-description-container-<%= patent_number %>"
                                 data-details-type="description"
                                 >
@@ -599,6 +597,24 @@
             </div>
 
             <div class="span4 do-not-print non-liveview">
+
+                <% if (data.searchmode == 'subsearch' && !data.reviewmode) { %>
+                <div class="span4">
+
+                    <div class="btn-group btn-popover tabs content-chooser"
+                         data-toggle="popover" data-trigger="hover" data-placement="top"
+                         data-content="Toggle result view"
+                            >
+                        <button class="btn active" data-toggle="tab" data-list-type="ops">
+                            View
+                        </button>
+                        <button class="btn" data-toggle="tab" data-list-type="upstream">
+                            Results
+                        </button>
+                    </div>
+
+                </div>
+                <% } %>
 
                 <div class="span4 pull-right">
                     <a id="basket-add-all-documents" role="button" class="btn btn-popover"
