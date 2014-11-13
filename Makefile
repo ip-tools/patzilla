@@ -104,3 +104,6 @@ mongodb-ftpro-import:
 sloccount:
 	sloccount elmyra.ip.access.epo
 	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app
+
+clear-cache:
+	mongo beaker --eval 'db.dropDatabase();'
