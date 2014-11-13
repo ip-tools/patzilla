@@ -17,7 +17,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         var self = this;
         return this.fetch({
             data: $.param({ query: query, range: range}),
-            success: function (model, response, options) {
+            success: function(model, response, options) {
 
                 var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
                 if (keywords) {
@@ -44,7 +44,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 // unwrap response by creating a list of model objects from records
                 var entries = [];
-                if (search_result) {
+                var entries_full = [];
+                if (!_.isEmpty(search_result)) {
 
                     // search_result is nested, collect representative result documents
                     // while retaining additional result documents inside ['bibliographic-data']['full-cycle']
@@ -74,14 +75,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                     });
 
-                    _(results).each(function(exchange_document) {
-                        if (exchange_document['@status'] == 'invalid result') {
-                            console.error('OPS INVALID RESULT:', entry);
-                        } else {
-                            var document = new OpsExchangeDocument(exchange_document);
-                            entries.push(document);
-                        }
-                    });
+                    entries = self.make_models(results);
+
                 }
 
                 // propagate data to model collection instance
@@ -132,6 +127,20 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         });
 
     },
+
+    make_models: function(results) {
+        var models = [];
+        _(results).each(function(exchange_document) {
+            if (exchange_document['@status'] == 'invalid result') {
+                console.error('OPS INVALID RESULT:', exchange_document);
+            } else {
+                var model = new OpsExchangeDocument(exchange_document);
+                models.push(model);
+            }
+        });
+        return models;
+    },
+
 });
 
 OpsExchangeMetadata = Backbone.Model.extend({
@@ -512,64 +521,6 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this._flatten_textstrings(document_id);
         },
 
-
-        enrich_links: function(container, attribute, value_modifier) {
-            var self = this;
-            return _.map(container, function(item) {
-
-                // v1 replace text with links
-                return self.enrich_link(item, attribute, item, value_modifier);
-
-                // v2 use separate icon for link placement
-                //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
-                //return item + '&nbsp;&nbsp;' + link;
-            });
-        },
-
-        enrich_link: function(label, attribute, value, value_modifier) {
-
-            // fallback: use label, if no value is given
-            if (!value) value = label;
-
-            // skip enriching links when in print mode
-            // due to phantomjs screwing them up when rendering to pdf
-            var printmode = opsChooserApp.config.get('mode') == 'print';
-            if (printmode) {
-                return value;
-            }
-
-            // TODO: make this configurable!
-            var kind = 'external';
-            var target = '_blank';
-            var query = null;
-
-            // apply supplied modifier function to value
-            if (value_modifier)
-                value = value_modifier(value);
-
-            // if value contains spaces, wrap into quotes
-            // FIXME: do this only, if string is not already quoted, see "services.py":
-            //      if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"'
-            if (_.string.include(value, ' '))
-                value = '"' + value + '"';
-
-            // prepare link rendering
-            var link_template;
-            if (kind == 'internal') {
-                link_template = _.template('<a href="" class="query-link" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
-            } else if (kind == 'external') {
-                query = encodeURIComponent(attribute + '=' + value);
-                link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>"><%= label %></a>');
-            }
-
-            // render link
-            if (link_template) {
-                var link = link_template({label: label, attribute: attribute, value: value, target: target, query: query});
-                return link;
-            }
-
-        },
-
         _find_document_number: function(container, id_type) {
             for (i in container) {
                 var item = container[i];
@@ -690,7 +641,7 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this.format_date(this.search_date(this['bibliographic-data']['application-reference']['document-id']));
         },
 
-},
+    },
 
     initialize: function(options) {
         // TODO: enhance this as soon as we're in AMD land
@@ -717,6 +668,17 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 
     initialize: function(collection) {
         var self = this;
+    },
+
+    get_document_numbers: function() {
+        var numbers = [];
+        _.each(this.models, function(model) {
+            numbers.push(model.get_document_number());
+            _.each(model.attributes.get_full_cycle(), function(model_pubcycle) {
+                numbers.push(model_pubcycle.get_document_number());
+            });
+        });
+        return numbers;
     },
 
 });

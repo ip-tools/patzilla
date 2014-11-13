@@ -4,3 +4,11 @@
 FulltextProSearch = DatasourceSearch.extend({
     url: '/api/ftpro/published-data/search',
 });
+
+FulltextProResultEntry = Backbone.Model.extend({
+
+    defaults: {
+    },
+
+});
+

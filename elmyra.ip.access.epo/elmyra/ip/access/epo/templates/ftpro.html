@@ -1,0 +1,182 @@
+## -*- coding: utf-8 -*-
+## (c) 2014 Andreas Motl, Elmyra UG
+
+## ------------------------------------------
+##   ftpro result item template
+## ------------------------------------------
+<script id="ftpro-entry-template" type="text/x-underscore-template">
+
+<%text>
+<%
+// log model item to assist in data exploration
+//console.log(data);
+%>
+</%text>
+
+<%text>
+<div class="container-fluid ops-collection-entry" data-document-number="<%= data.publication_number %>" style="page-break-after: always;">
+
+    <div class="ops-collection-entry-heading row-fluid">
+
+        <!-- publication number -->
+        <div class="span3 container-fluid">
+            <div class="header-compact">
+                <%= data.enrich_link(data.publication_number, 'pn') %>
+            </div>
+        </div>
+
+        <div class="span9 container-fluid">
+            <div class="header-biblio">
+                <% if (data.is_document_missing) { %>
+                <span class="label label-important label-document-missing pull-right">Document not available</span>
+                <% } else { %>
+                <span class="label label-success label-document-missing pull-right">Document available</span>
+                <% } %>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="ops-collection-entry-inner container-fluid">
+
+        <div class="row-fluid">
+
+            <div class="span12 tab-content document-details">
+
+                <% if (data.is_document_missing) { %>
+                <div class="alert alert-error">
+                    <strong>Bummer!</strong>
+                    <br/><br/>
+                    It looks like the document with the given publication number "<%= data.publication_number %>"
+                    is not shown in the main result list from the OPS data source.
+                    <br/>
+                    We suggest to try searching by application number, title or other criteria.
+                    <br/>
+                    However, due to differences in publication number formats, or if the upstream search yields
+                    documents from different publication cycles, this might also be a false alarm.
+                </div>
+                <% } else { %>
+                <div class="alert alert-success">
+                    <strong>Success!</strong>
+                    <br/><br/>
+                    The document with the given publication number "<%= data.publication_number %>" or a different
+                    publication cycle is already shown in-detail in the main result list from the OPS data source.
+                </div>
+                <% } %>
+
+                <table class="table table-bordered table-condensed">
+                    <thead>
+                    <tr>
+                        <th class="span1">Symbol</th>
+                        <th class="span2">Name</th>
+                        <th class="span9">Value</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td>Title</td>
+                        <td><%= data.enrich_link(data.title, 'title') %></td>
+                    </tr>
+                    <tr>
+                        <td>(71)</td>
+                        <td>Applicant</td>
+                        <td><%= data.enrich_link(data.applicant, 'applicant') %></td>
+                    </tr>
+                    <tr>
+                        <td>(72)</td>
+                        <td>Inventor</td>
+                        <td><%= data.enrich_link(data.inventor, 'inventor') %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Application number</td>
+                        <td>
+                            <%
+                            if (!data.is_application_number_invalid()) {
+                                print(data.enrich_link(data.get_linkable_application_number(), 'ap'));
+                                print('&nbsp;&nbsp;&nbsp;');
+                                print('(upstream value: ' + data.ApplicationNumber + ')');
+                            } else {
+                                print(data.ApplicationNumber);
+                            }
+                            %>
+                            <% if (data.is_application_number_invalid()) { %>
+                            <span class="pull-right">
+                                <span class="label label-warning">Warning</span>
+                                This might not be a valid application number if it is in format (n)nnnnnyy.
+                            </span>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Publication number</td>
+                        <td><%= data.enrich_link(data.publication_number, 'pn') %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Filing date</td>
+                        <td><%= data.filed %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Priority</td>
+                        <td><%= data.Priority %></td>
+                    </tr>
+                    <tr>
+                        <td>(45)</td>
+                        <td>Publication date</td>
+                        <td><%= data.published %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Grant date</td>
+                        <td>
+                            <%= data.granted %>
+                            <% if (_.string.startsWith(data.granted, '1899')) { %>
+                            <span class="pull-right">
+                                <span class="label label-warning">Warning</span>
+                                This date looks invalid.
+                            </span>
+                            <% } %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Legal status</td>
+                        <td><%= data.legalstatus %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Abstract</td>
+                        <td><%= data.abstract %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Image</td>
+                        <td><%= data.image %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Version</td>
+                        <td><%= data.version %></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Upstream provider</td>
+                        <td><%= data.upstream_provider %></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+</%text>
+
+</script>

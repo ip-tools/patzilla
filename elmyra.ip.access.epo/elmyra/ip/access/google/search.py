@@ -57,9 +57,11 @@ class GooglePatentsAccess(object):
         #print "google status:", response.status_code
         #print "google response:", response.content
 
-        payload = {}
+        payload = {
+            'query': expression,
+        }
         if response.status_code == 200:
-            payload = self.parse_response(response.content)
+            payload.update(self.parse_response(response.content))
 
         elif response.status_code == 503 and 'CaptchaRedirect' in response.content:
             payload['message'] = self.tweak_captcha_response(response.content)
@@ -70,7 +72,6 @@ class GooglePatentsAccess(object):
             logger.error(message + ' body:\n' + response.content)
             raise ValueError(message)
 
-        payload['query'] = expression
         return payload
 
     def tweak_captcha_response(self, body):
@@ -156,7 +157,7 @@ class GooglePatentsAccess(object):
             message += str(res_node)
 
         payload = {
-            'data': results,
+            'numbers': results,
             'hits': hits,
             'page': page,
             'message': message,
