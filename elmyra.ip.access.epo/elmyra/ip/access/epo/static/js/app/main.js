@@ -31,26 +31,21 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     perform_search: function(options) {
 
         options = options || {};
-
-        var query = $('#query').val();
-        var datasource = this.get_datasource();
-        this.metadata.set('datasource', datasource);
-
-        this.metadata.resetSomeDefaults(options);
-
-        console.log('App.perform_search: datasource=' + datasource, 'query=' + query, 'options=', options);
-
-        // propagate keywords from comfort form for fallback mechanism
-        options.keywords = $('#keywords').val();
-
         // propagate datasource
         options.datasource = datasource;
 
-        // handle basket review mode specially
+
+        // 1. initialize search
+        var query = this.get_query();
+        var datasource = this.get_datasource();
+        this.metadata.set('datasource', datasource);
+        this.metadata.resetSomeDefaults(options);
+
+
+        // 2. handle review mode
         if (options && options.reviewmode != null) {
             this.metadata.set('reviewmode', options.reviewmode);
         }
-
         // TODO: maybe move to pagination.js
         var reviewmode = this.metadata.get('reviewmode');
         if (reviewmode == true) {
@@ -58,132 +53,144 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        if (!_.isEmpty(query)) {
 
-            var self = this;
+        // 3. perform search
 
-            if (datasource == 'ops') {
-                var range = this.compute_range(options);
-                this.trigger('search:before', {datasource: datasource, query: query, range: range});
-                opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
+        if (_.isEmpty(query)) {
+            return;
+        }
 
-                    var hits = self.metadata.get('result_count');
-                    if (hits > self.metadata.get('maximum_results')['ops']) {
-                        self.user_alert('Total hits: ' + hits + '.    The first 2000 hits are accessible from OPS.  You can narrow your search by adding more search criteria.', 'warning');
-                    }
-                    self.metadata.set('keywords', opsChooserApp.search.keywords);
+        console.log('App.perform_search: datasource=' + datasource, 'query=' + query, 'options=', options);
 
-                    // signal the results are ready
-                    self.trigger('results:ready');
+        // propagate keywords from comfort form for fallback mechanism
+        options.keywords = $('#keywords').val();
 
+
+        var self = this;
+
+        if (datasource == 'ops') {
+            var range = this.compute_range(options);
+            this.trigger('search:before', {datasource: datasource, query: query, range: range});
+            opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
+
+                var hits = self.metadata.get('result_count');
+                if (hits > self.metadata.get('maximum_results')['ops']) {
+                    self.user_alert('Total hits: ' + hits + '.    ' +
+                        'The first 2000 hits are accessible from OPS.  ' +
+                        'You can narrow your search by adding more search criteria.', 'warning');
+                }
+                self.metadata.set('keywords', opsChooserApp.search.keywords);
+
+                // signal the results are ready
+                self.trigger('results:ready');
+
+            });
+
+        } else if (datasource == 'depatisnet') {
+
+            this.trigger('search:before', {datasource: datasource, query: query});
+
+            // make the pager display the original query
+            this.metadata.set('query_origin', query);
+
+            var depatisnet = new DepatisnetSearch();
+            depatisnet.perform(query, options).done(function(response) {
+
+                self.propagate_datasource_message(response);
+                self.metadata.set('keywords', depatisnet.keywords);
+                console.log('depatisnet response:', response);
+
+                var publication_numbers = response['numbers'];
+                var hits = response['hits'];
+
+                self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+                    // need to propagate again, because "perform_listsearch" clears it; TODO: enhance mechanics!
+                    self.propagate_datasource_message(response);
                 });
 
-            } else if (datasource == 'depatisnet') {
+            });
 
-                this.trigger('search:before', {datasource: datasource, query: query});
+        } else if (datasource == 'google') {
 
-                // make the pager display the original query
-                this.metadata.set('query_origin', query);
+            this.trigger('search:before', {datasource: datasource, query: query});
 
-                var depatisnet = new DepatisnetSearch();
-                depatisnet.perform(query, options).done(function(response) {
+            // make the pager display the original query
+            this.metadata.set('query_origin', query);
 
-                    self.propagate_datasource_message(response);
-                    self.metadata.set('keywords', depatisnet.keywords);
-                    console.log('depatisnet response:', response);
+            var google = new GooglePatentSearch();
+            google.perform(query, options).done(function(response) {
+                options = options || {};
 
-                    var publication_numbers = response['numbers'];
-                    var hits = response['hits'];
+                self.propagate_datasource_message(response);
+
+                // propagate keywords
+                self.metadata.set('keywords', google.keywords);
+
+                console.log('google response:', response);
+                console.log('google keywords:', google.keywords);
+
+                var publication_numbers = response['numbers'];
+                var hits = response['hits'];
+
+                if (publication_numbers) {
+
+                    // TODO: return pagesize from backend
+                    options.remote_limit = 100;
 
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-                        // need to propagate again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                        self.propagate_datasource_message(response);
-                    });
 
-                });
-
-            } else if (datasource == 'google') {
-
-                this.trigger('search:before', {datasource: datasource, query: query});
-
-                // make the pager display the original query
-                this.metadata.set('query_origin', query);
-
-                var google = new GooglePatentSearch();
-                google.perform(query, options).done(function(response) {
-                    options = options || {};
-
-                    self.propagate_datasource_message(response);
-
-                    // propagate keywords
-                    self.metadata.set('keywords', google.keywords);
-
-                    console.log('google response:', response);
-                    console.log('google keywords:', google.keywords);
-
-                    var publication_numbers = response['numbers'];
-                    var hits = response['hits'];
-
-                    if (publication_numbers) {
-
-                        // TODO: return pagesize from backend
-                        options.remote_limit = 100;
-
-                        self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-
-                            // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                            self.propagate_datasource_message(response);
-
-                            if (hits == null) {
-                                self.user_alert(
-                                    'Result count unknown. At Google Patents, sometimes result counts are not displayed. ' +
-                                    "Let's assume 1000 to make the paging work.", 'warning');
-                            }
-
-                            if (hits > self.metadata.get('maximum_results')['google']) {
-                                self.user_alert(
-                                    'Total results ' + hits + '. From Google Patents, the first 1000 results are accessible. ' +
-                                    'You might want to narrow your search by adding more search criteria.', 'warning');
-                            }
-                        });
-                    }
-
-                });
-
-            } else if (datasource == 'ftpro') {
-
-                this.trigger('search:before', {datasource: datasource, query: query});
-
-                // make the pager display the original query
-                this.metadata.set('query_origin', query);
-
-                var ftprosearch = new FulltextProSearch();
-                ftprosearch.perform(query, options).done(function(response) {
-                    options = options || {};
-
-                    console.log('ftpro response:', response);
-
-                    self.propagate_datasource_message(response);
-
-                    // propagate keywords
-                    self.metadata.set('keywords', ftprosearch.keywords);
-
-                    var publication_numbers = response['details'];
-                    var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
-                    options['remote_limit'] = response['meta']['Limit'];
-
-                    self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
                         // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
                         self.propagate_datasource_message(response);
-                    });
 
+                        if (hits == null) {
+                            self.user_alert(
+                                'Result count unknown. At Google Patents, sometimes result counts are not displayed. ' +
+                                "Let's assume 1000 to make the paging work.", 'warning');
+                        }
+
+                        if (hits > self.metadata.get('maximum_results')['google']) {
+                            self.user_alert(
+                                'Total results ' + hits + '. From Google Patents, the first 1000 results are accessible. ' +
+                                'You might want to narrow your search by adding more search criteria.', 'warning');
+                        }
+                    });
+                }
+
+            });
+
+        } else if (datasource == 'ftpro') {
+
+            this.trigger('search:before', {datasource: datasource, query: query});
+
+            // make the pager display the original query
+            this.metadata.set('query_origin', query);
+
+            var ftprosearch = new FulltextProSearch();
+            ftprosearch.perform(query, options).done(function(response) {
+                options = options || {};
+
+                console.log('ftpro response:', response);
+
+                self.propagate_datasource_message(response);
+
+                // propagate keywords
+                self.metadata.set('keywords', ftprosearch.keywords);
+
+                var publication_numbers = response['details'];
+                var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
+                options['remote_limit'] = response['meta']['Limit'];
+
+                self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+                    // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
+                    self.propagate_datasource_message(response);
                 });
 
-            } else {
-                this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon2: 'icon-copy'});
-            }
+            });
 
+        } else {
+            this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon2: 'icon-copy'});
         }
+
     },
 
     send_query: function(query, options) {
