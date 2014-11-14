@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.61.1
+======
 - ui: fix collectionView / listRegion display woes
 
 0.61.0
