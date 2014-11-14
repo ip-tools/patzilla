@@ -314,7 +314,7 @@ BasketEntryModel = Backbone.RelationalModel.extend({
     },
 
     initialize: function() {
-        console.log('BasketEntryModel.initialize');
+        //console.log('BasketEntryModel.initialize');
     },
 });
 
@@ -323,7 +323,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     template: "#basket-template",
 
     initialize: function() {
-        console.log('BasketView.initialize');
+        //console.log('BasketView.initialize');
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
         this.templateHelpers.config = opsChooserApp.config;
@@ -347,7 +347,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     },
 
     setup_ui: function() {
-        console.log('BasketView.setup_ui');
+        //console.log('BasketView.setup_ui');
 
         var _this = this;
 
@@ -560,10 +560,6 @@ BasketView = Backbone.Marionette.ItemView.extend({
                 "callback": null,
             }],
             {header: 'Future feature'});
-    },
-
-    onDomRefresh: function() {
-        console.log('BasketView.onDomRefresh');
     },
 
     textarea_scroll_bottom: function() {
