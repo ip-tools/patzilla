@@ -302,11 +302,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // in order to make it possible to indicate which documents are missing
             self.results.set_reference_document_numbers(self.documents.get_document_numbers());
 
-            // explicitly switch list view to OPS collection
-            if (self.listRegion.currentView !== self.collectionView) {
-                self.listRegion.show(self.collectionView);
-            }
-
             // signal the results are ready
             self.trigger('results:ready');
 
@@ -744,7 +739,6 @@ opsChooserApp.addInitializer(function(options) {
 
     // bind view objects to region objects
     this.metadataRegion.show(this.metadataView);
-    this.listRegion.show(this.collectionView);
     this.paginationRegionTop.show(this.paginationViewTop);
     this.paginationRegionBottom.show(this.paginationViewBottom);
 });
@@ -767,11 +761,10 @@ opsChooserApp.addInitializer(function(options) {
         // commit metadata, this will trigger e.g. PaginationView rendering
         this.metadata.trigger('commit');
 
-    });
+        // show documents (ops results) in collection view
+        // explicitly switch list region to OPS collection view
+        this.listRegion.show(this.collectionView);
 
-    // trigger results:ready to setup ui when switching back to main document list
-    this.listenTo(this.listRegion, "show", function() {
-        this.trigger('results:ready');
     });
 
     // activate project as soon it's loaded from the datastore
