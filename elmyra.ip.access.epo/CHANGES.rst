@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.61.2
+======
+- ui: fix database import on Windows
+
 0.61.1
 ======
 - ui: fix collectionView / listRegion display woes

@@ -455,6 +455,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     },
 
+    project_deactivate: function() {
+        $(window).off('focus', this.project_reload);
+    },
+
     project_reload: function() {
         // reload project
         var projectname = opsChooserApp.project.get('name');

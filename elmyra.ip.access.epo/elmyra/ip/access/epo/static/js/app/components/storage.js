@@ -206,12 +206,24 @@ StoragePlugin = Marionette.Controller.extend({
             e.stopPropagation();
             e.preventDefault();
 
+            // deactivate project / windows.onfocus
+            // otherwise, the default project (e.g. "ad-hoc") would be recreated almost instantly
+            opsChooserApp.project_deactivate();
+
             var file = this.files[0];
+            if (!file) { return; }
             $(this).val(undefined);
 
+            // Windows workaround
+            var file_type = file.type;
+            var running_in_hell = _.string.contains(navigator.userAgent, 'Windows');
+            if (running_in_hell && file.type == '' && _.string.endsWith(file.name, '.json')) {
+                file_type = 'application/json';
+            }
+
             // sanity checks
-            if (file.type != 'application/json') {
-                var message = 'ERROR: File type is ' + file.type + ', but should be application/json';
+            if (file_type != 'application/json') {
+                var message = 'ERROR: File type is ' + (file_type ? file_type : 'unknown') + ', but should be application/json';
                 //log('import message:', message);
                 _ui.notify(message, {type: 'error'});
                 return;
@@ -235,6 +247,7 @@ StoragePlugin = Marionette.Controller.extend({
 
         $('#data-import-button').unbind('click');
         $('#data-import-button').on('click', function(e) {
+            opsChooserApp.project_deactivate();
             $('#data-import-file').click();
         });
 
