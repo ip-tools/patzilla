@@ -216,55 +216,56 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
 });
 
-OpsExchangeDocument = Backbone.Model.extend({
+OpsBaseModel = Backbone.Model.extend({
 
     defaults: {
-        selected: false,
 
-        // TODO: move these methods to "viewHelpers"
-        // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
-        // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
-
-        get_patent_number: function() {
-            return this['@country'] + this['@doc-number'] + this['@kind'];
-        },
-
-        get_document_number: function() {
-            return this.get_patent_number();
-        },
-
-        get_publication_number: function(source) {
-            var publication_id = this.get_publication_reference(source);
-            return (publication_id.country || '') + (publication_id.number || '') + (publication_id.kind || '');
-        },
-
-        get_application_number: function(source) {
-            var application_id = this.get_application_reference(source);
-            return (application_id.country || '') + (application_id.number || '') + (application_id.kind || '');
-        },
-
-        get_linkmaker: function() {
-            return new Ipsuite.LinkMaker(this);
-        },
-
-        get_full_cycle: function() {
-            var results = [];
-            var entries = this['bibliographic-data']['full-cycle'];
-            _(entries).each(function(entry) {
-                //entry['document-id'] = entry['country'] + entry['doc-number'] + entry['kind'];
-                results.push(entry);
+        get_document_id: function(node, reference_type, format) {
+            /*
+            reference_type = publication|application
+            format = docdb|epodoc
+            */
+            node = node || this;
+            var document_ids;
+            if (reference_type) {
+                var reference = reference_type + '-reference';
+                document_ids = to_list(node[reference]['document-id']);
+            } else {
+                document_ids = to_list(node['document-id']);
+            }
+            var document_id = _(document_ids).find(function(item) {
+                return item['@document-id-type'] == format;
             });
-            return results;
+
+            var data = this.flatten_document_id(document_id);
+            if (format == 'epodoc') {
+                data.fullnumber = data.docnumber;
+
+            } else {
+                data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '')
+            }
+            data.isodate = this.format_date(data.date);
+
+            return data;
+
         },
 
-        _flatten_textstrings: function(dict) {
+        get_publication_reference: function(node, format) {
+            return this.get_document_id(node, 'publication', format);
+        },
+
+        get_application_reference: function(node, format) {
+            return this.get_document_id(node, 'application', format);
+        },
+
+        flatten_document_id: function(dict) {
             // TODO: not recursive yet
             var newdict = {};
             _(dict).each(function(value, key) {
                 if (key == '@document-id-type') {
-                    key = 'type';
+                    key = 'format';
                 } else if (key == 'doc-number') {
-                    key = 'number';
+                    key = 'docnumber';
                 }
                 if (typeof(value) == 'object') {
                     var realvalue = value['$'];
@@ -277,22 +278,58 @@ OpsExchangeDocument = Backbone.Model.extend({
             return newdict;
         },
 
-        get_publication_reference: function(source) {
-            // source = docdb|epodoc
-            var entries = this['bibliographic-data']['publication-reference']['document-id'];
-            var document_id = _(entries).find(function(item) {
-                return item['@document-id-type'] == source;
-            });
-            return this._flatten_textstrings(document_id);
+        format_date: function(value) {
+            if (value) {
+                return moment(value, 'YYYYMMDD').format('YYYY-MM-DD');
+            }
         },
 
-        get_application_reference: function(source) {
-            // source = docdb|epodoc
-            var entries = this['bibliographic-data']['application-reference']['document-id'];
-            var document_id = _(entries).find(function(item) {
-                return item['@document-id-type'] == source;
+    },
+});
+
+OpsExchangeDocument = Backbone.Model.extend({
+
+    defaults: $.extend(false, OpsBaseModel.prototype.defaults, {
+
+        selected: false,
+
+        // TODO: maybe move these methods to "viewHelpers"
+        // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
+        // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
+
+        get_patent_number: function() {
+            return this['@country'] + this['@doc-number'] + this['@kind'];
+        },
+
+        get_document_number: function() {
+            return this.get_patent_number();
+        },
+
+        get_publication_number: function(format) {
+            var document_id = this.get_publication_reference(format);
+            return document_id.fullnumber;
+        },
+
+        get_application_number: function(format) {
+            var document_id = this.get_application_reference(format);
+            return document_id.fullnumber;
+        },
+
+        get_full_cycle: function() {
+            var results = [];
+            var entries = this['bibliographic-data']['full-cycle'];
+            _(entries).each(function(entry) {
+                results.push(entry);
             });
-            return this._flatten_textstrings(document_id);
+            return results;
+        },
+
+        get_publication_reference: function(format) {
+            return OpsBaseModel.prototype.defaults.get_publication_reference(this['bibliographic-data'], format);
+        },
+
+        get_application_reference: function(format) {
+            return OpsBaseModel.prototype.defaults.get_application_reference(this['bibliographic-data'], format);
         },
 
         get_title_list: function() {
@@ -501,37 +538,14 @@ OpsExchangeDocument = Backbone.Model.extend({
             if (container) {
                 var nodelist = to_list(container['priority-claim']);
                 _(nodelist).each(function(node) {
-                    var priority = _this.get_priority_claim_document_id(node, 'epodoc');
+                    var priority = _this.get_document_id(node, null, 'epodoc');
                     if (!_.isEmpty(priority)) {
-                        var entry =
-                            _this.enrich_link(priority.number, 'spr', priority.number) + ', ' +
-                                moment(priority.date, 'YYYYMMDD').format('YYYY-MM-DD');
+                        var entry = _this.enrich_link(priority.docnumber, 'spr') + ', ' + priority.isodate;
                         entries.push(entry);
                     }
                 });
             }
             return entries;
-        },
-        get_priority_claim_document_id: function(node, source) {
-            // source = docdb|epodoc
-            var entries = to_list(node['document-id']);
-            var document_id = _(entries).find(function(item) {
-                return item['@document-id-type'] == source;
-            });
-            return this._flatten_textstrings(document_id);
-        },
-
-        _find_document_number: function(container, id_type) {
-            for (i in container) {
-                var item = container[i];
-                if (item['@document-id-type'] == id_type) {
-                    var docnumber =
-                        (item['country'] ? item['country']['$'] : '') +
-                        (item['doc-number'] ? item['doc-number']['$'] : '') +
-                        (item['kind'] ? item['kind']['$'] : '');
-                    return docnumber;
-                }
-            }
         },
 
         has_citations: function() {
@@ -547,7 +561,11 @@ OpsExchangeDocument = Backbone.Model.extend({
                 var container = to_list(container_top['citation']);
                 results = container
                     .filter(function(item) { return item['patcit']; })
-                    .map(function(item) { return self._find_document_number(item['patcit']['document-id'], id_type); })
+                    .map(function(item) {
+                        var document_id = self.get_document_id(item['patcit'], null, id_type);
+                        var fullnumber = self.flatten_document_id(document_id).fullnumber;
+                        return fullnumber;
+                    })
                 ;
             }
             if (links) {
@@ -616,12 +634,6 @@ OpsExchangeDocument = Backbone.Model.extend({
             return _(countries_allowed).contains(this['@country']);
         },
 
-        format_date: function(value) {
-            if (value) {
-                return value.slice(0, 4) + '-' + value.slice(4, 6) + '-' + value.slice(6, 8);
-            }
-        },
-
         // date values inside publication|application-reference
         search_date: function(node) {
             var value = null;
@@ -641,7 +653,7 @@ OpsExchangeDocument = Backbone.Model.extend({
             return this.format_date(this.search_date(this['bibliographic-data']['application-reference']['document-id']));
         },
 
-    },
+    }),
 
     initialize: function(options) {
         // TODO: enhance this as soon as we're in AMD land
@@ -754,5 +766,38 @@ OpsFulltext = Marionette.Controller.extend({
         return deferred.promise();
 
     },
+
+});
+
+
+
+OpsFamilyMember = OpsBaseModel.extend({
+
+    defaults: $.extend(false, OpsBaseModel.prototype.defaults, {
+
+    }),
+
+    parse: function(response) {
+        response['priority-claim'] = to_list(response['priority-claim']);
+        return response;
+    }
+});
+
+OpsFamilyCollection = Backbone.Collection.extend({
+
+    model: OpsFamilyMember,
+
+    initialize: function(models, options) {
+        this.document_number = options.document_number;
+    },
+
+    url: function(options) {
+        var url = _.template('/api/ops/publication/<%= document_number %>/family/inpadoc')({ document_number: this.document_number});
+        return url;
+    },
+
+    parse: function(response) {
+        return to_list(response['ops:world-patent-data']['ops:patent-family']['ops:family-member']);
+    }
 
 });

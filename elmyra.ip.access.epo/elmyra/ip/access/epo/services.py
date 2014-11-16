@@ -10,7 +10,7 @@ from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisc
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
 from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException
 from elmyra.ip.util.cql.pyparsing import CQL
@@ -30,10 +30,14 @@ ops_published_data_search_service = Service(
     path='/api/ops/published-data/search',
     description="OPS search interface")
 
-ops_family_publication_service = Service(
-    name='ops-family-publication',
-    path='/api/ops/{patent}/family/publication',
-    description="OPS family publication interface")
+ops_family_simple_service = Service(
+    name='ops-family-simple',
+    path='/api/ops/{patent}/family/simple',
+    description="OPS family simple interface")
+ops_family_inpadoc_service = Service(
+    name='ops-family-inpadoc',
+    path='/api/ops/{reference_type}/{patent}/family/inpadoc',
+    description="OPS family inpadoc interface")
 
 ops_image_info_service = Service(
     name='ops-image-info',
@@ -409,8 +413,19 @@ def ops_fullimage_handler(request):
     return pdf
 
 
-@ops_family_publication_service.get(renderer='xml')
-def ops_family_publication_handler(request):
+@ops_family_inpadoc_service.get(accept='application/json')
+def ops_family_inpadoc_json_handler(request):
+    reference_type = request.matchdict.get('reference_type')
+    patent = request.matchdict.get('patent')
+
+    # constituents: biblio, legal
+    constituents = request.params.get('constituents', '')
+
+    return ops_family_inpadoc(reference_type, patent, constituents)
+
+
+@ops_family_inpadoc_service.get(accept='text/xml', renderer='xml')
+def ops_family_publication_xml_handler(request):
     """
     Download requested family publication information from OPS
     e.g. http://ops.epo.org/3.1/rest-services/family/publication/docdb/EP.1491501.A1/biblio,legal

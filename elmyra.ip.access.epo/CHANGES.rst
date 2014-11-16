@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.62.0
+======
+- ui/middleware: display inpadoc patent family
+
 0.61.2
 ======
 - ui: fix database import on Windows

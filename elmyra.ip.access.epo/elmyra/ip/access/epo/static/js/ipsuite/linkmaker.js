@@ -23,16 +23,20 @@
 
     // constructor
     var LinkMaker = Ipsuite.LinkMaker = function(document) {
-        this.document = document;
-        this.country = document['@country'];
-        this.number = document['@doc-number'];
-        this.kind = document['@kind'];
+
+        if (document) {
+            this.document = document;
+            this.country = document['@country'];
+            this.docnumber = document['@doc-number'];
+            this.kind = document['@kind'];
+        }
 
         Object.defineProperty(this, 'document_number', {
             get: function() {
                 return this.document.get_document_number();
             }
         });
+
     };
 
     // implementation
@@ -57,7 +61,7 @@
         universal_pdf_url: function(document_id) {
             // /api/pdf/EP0666666B1
             if (!document_id) {
-                var url_tpl = _.template('/api/pdf/<%= country %><%= number %><%= kind %>');
+                var url_tpl = _.template('/api/pdf/<%= country %><%= docnumber %><%= kind %>');
                 var url = url_tpl(this);
             } else {
                 var url_tpl = _.template('/api/pdf/<%= document_id %>');
@@ -68,21 +72,21 @@
 
         ops_pdf_url: function() {
             // /api/ops/EP0666666B1/pdf/all
-            var url_tpl = _.template('/api/ops/<%= country %><%= number %><%= kind %>/pdf/all');
+            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %><%= kind %>/pdf/all');
             var url = url_tpl(this);
             return url;
         },
 
         espacenet_pdf_url: function() {
             // http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
-            var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
+            var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },
 
         depatisnet_pdf_url: function() {
             // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=AU002005309058B2
-            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=<%= country %><%= number %><%= kind %>');
+            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=<%= country %><%= docnumber %><%= kind %>');
             var url = url_tpl(this);
             return url;
         },
@@ -91,14 +95,14 @@
         epo_register_url: function() {
             // https://register.epo.org/application?number=EP95480005
             var document_id = this.document.get_application_reference('docdb');
-            var url_tpl = _.template('https://register.epo.org/application?number=<%= country %><%= number %>');
+            var url_tpl = _.template('https://register.epo.org/application?number=<%= country %><%= docnumber %>');
             var url = url_tpl(document_id);
             return url;
         },
 
         inpadoc_legal_url: function() {
             // http://worldwide.espacenet.com/publicationDetails/inpadoc?CC=US&NR=6269530B1&KC=B1&FT=D
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadoc?FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadoc?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },
@@ -130,7 +134,7 @@
             // 3. PCT/US2011/044199 does not work yet, why/how?
 
             var document_id = this.document.get_application_reference('docdb');
-            var url_tpl = _.template('/office/dpma/register/application/<%= country %><%= number %>?redirect=true');
+            var url_tpl = _.template('/office/dpma/register/application/<%= country %><%= docnumber %>?redirect=true');
             var url = url_tpl(document_id);
             return url;
         },
@@ -144,14 +148,14 @@
 
         inpadoc_family_url: function() {
             // http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?CC=US&NR=6269530B1&KC=B1&FT=D
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },
 
         ops_family_url: function() {
             // http://ops.epo.org/3.0/rest-services/family/publication/docdb/EP.2070806.B1/biblio,legal
-            var url_tpl = _.template('http://ops.epo.org/3.1/rest-services/family/publication/docdb/<%= country %>.<%= number %>.<%= kind %>/biblio,legal');
+            var url_tpl = _.template('http://ops.epo.org/3.1/rest-services/family/publication/docdb/<%= country %>.<%= docnumber %>.<%= kind %>/biblio,legal');
             var url = url_tpl(this);
             return url;
         },
@@ -161,7 +165,7 @@
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=DE20132003344U&type=application&format=epodoc
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=US201113881490&type=application&format=epodoc
             var document_id = this.document.get_application_reference('epodoc');
-            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0.4/html/viewCcd.html?num=<%= number %>&type=application&format=epodoc');
+            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0.4/html/viewCcd.html?num=<%= docnumber %>&type=application&format=epodoc');
             var url = url_tpl(document_id);
             return url;
         },
@@ -171,7 +175,7 @@
             // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=EP0666666A2
             // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=EP666666A2
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=<%= country %><%= number %><%= kind %>');
+            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=<%= country %><%= docnumber %><%= kind %>');
             var url = url_tpl(document_id);
             return url;
         },
@@ -179,7 +183,7 @@
         espacenet_worldwide_url: function() {
             // http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=US&NR=2014140267A1&KC=A1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=<%= country %>&NR=<%= number %><%= kind %>&KC=<%= kind %>');
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(document_id);
             return url;
         },
@@ -187,7 +191,7 @@
         google_url: function() {
             // https://www.google.com/patents/EP0666666B1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/<%= country %><%= number %><%= kind %>');
+            var url_tpl = _.template('https://www.google.com/patents/<%= country %><%= docnumber %><%= kind %>');
             var url = url_tpl(document_id);
             return url;
         },
@@ -195,7 +199,7 @@
         google_prior_art_url: function() {
             // https://www.google.com/patents/related/EP0666666B1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/related/<%= country %><%= number %><%= kind %>');
+            var url_tpl = _.template('https://www.google.com/patents/related/<%= country %><%= docnumber %><%= kind %>');
             var url = url_tpl(document_id);
             return url;
         },

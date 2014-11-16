@@ -18,6 +18,9 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     },
 
     templateHelpers: {
+        get_linkmaker: function() {
+            return new Ipsuite.LinkMaker(this);
+        },
         enrich_links: function() {
             return opsChooserApp.document_base.enrich_links.apply(this, arguments);
         },
@@ -108,5 +111,36 @@ MetadataView = Backbone.Marionette.ItemView.extend({
         });
 
     },
+
+});
+
+
+OpsFamilyMemberView = Backbone.Marionette.ItemView.extend({
+
+    template: _.template($('#ops-family-member-template').html(), this.model, {variable: 'data'}),
+    tagName: 'tr',
+    //className: 'row-fluid',
+    //style: 'margin-bottom: 10px',
+
+    templateHelpers: {
+        enrich_link: function() {
+            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
+        },
+    },
+
+});
+
+OpsFamilyCollectionView = Backbone.Marionette.CompositeView.extend({
+
+    template: "#ops-family-collection-template",
+    itemView: OpsFamilyMemberView,
+
+    id: "ops-family-collection",
+    //tagName: "div",
+    //className: "container-fluid",
+
+    appendHtml: function(collectionView, itemView) {
+        collectionView.$('tbody').append(itemView.el);
+    }
 
 });

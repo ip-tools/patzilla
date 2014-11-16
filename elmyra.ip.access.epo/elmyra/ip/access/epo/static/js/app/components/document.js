@@ -209,14 +209,19 @@ DocumentDetailsController = Marionette.Controller.extend({
             // e.target // activated tab
             // e.relatedTarget // previous tab
 
-            var content_container = $($(e.target).attr('href'));
+            var container = $($(e.target).attr('href'));
             var details_type = $(this).data('details-type');
 
             var document = $(this).closest('.ops-collection-entry').prop('ops-document');
 
             if (document) {
-                var details = _this.get_details(details_type, document);
-                _this.display_details(details, content_container);
+                if (_(['claims', 'description']).contains(details_type)) {
+                    var details = _this.get_fulltext_details(details_type, document);
+                    _this.display_details(details, container);
+
+                } else if (details_type == 'family') {
+                    _this.display_family(document, container);
+                }
             }
 
             // fix missing popover after switching inline detail view
@@ -238,7 +243,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         return new clazz(document_number);
     },
 
-    get_details: function(details_type, document) {
+    get_fulltext_details: function(details_type, document) {
         var ft = this.get_fulltext(document);
         if (details_type == 'description') {
             return ft.get_description();
@@ -250,8 +255,8 @@ DocumentDetailsController = Marionette.Controller.extend({
     display_details: function(details, container) {
         var _this = this;
 
-        var content_element = container.find('.document-details-content')[0];
-        var language_element = container.find('.document-details-language')[0];
+        var content_element = container.find('.document-details-content');
+        var language_element = container.find('.document-details-language');
 
         if (content_element) {
             this.indicate_activity(container, true);
@@ -264,6 +269,34 @@ DocumentDetailsController = Marionette.Controller.extend({
                 }
             });
         }
+
+    },
+
+    display_family: function(document, container) {
+
+        // create family collection
+        var document_number = document.get_publication_number('epodoc');
+        var family_collection = new OpsFamilyCollection(null, {document_number: document_number});
+
+        // create marionette region at dom element for displaying family information
+        var content_element = container.find('.document-details-content');
+        var family_region = new Backbone.Marionette.Region({
+            el: content_element
+        });
+
+        // link family collection to its view and show view in region
+        var view = new OpsFamilyCollectionView({
+            collection: family_collection,
+        })
+        family_region.show(view);
+
+        // finally, fetch data to fill the collection
+        var _this = this;
+        _this.indicate_activity(container, true);
+        family_collection.fetch().then(function() {
+            _this.indicate_activity(container, false);
+            //log('family_collection:', family_collection);
+        });
 
     },
 
