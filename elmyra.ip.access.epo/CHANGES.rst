@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.62.3
+======
+- ui: remove application date from document header area
+
 0.62.2
 ======
 - ui: don't use tables with full borders

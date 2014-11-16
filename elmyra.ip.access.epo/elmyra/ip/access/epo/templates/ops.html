@@ -44,18 +44,18 @@
         <div class="ops-collection-entry-heading row-fluid">
 
             <!-- patent number -->
-            <div class="span2 container-fluid">
+            <div class="span3 container-fluid">
                 <div class="header-compact">
                     <%= data.enrich_link(patent_number, 'pn') %>
                 </div>
             </div>
 
             <!-- dates -->
-            <div class="span3 container-fluid">
+            <div class="span2 container-fluid">
                 <div class="header-biblio">
-                    <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>&nbsp;<span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
-                    &nbsp;&nbsp;
-                    <span class="inid inid-tooltip" data-toggle="tooltip" title="application date">(22)</span>&nbsp;&nbsp;<span class="keyword"><%= application_date %></span>
+                    <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>
+                    &nbsp;
+                    <span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
                 </div>
             </div>
 
@@ -421,7 +421,12 @@
                         <dd class="keyword">
                             <%= data.get_priority_claims(true).join('<br/>') || '&nbsp;' %>
                         </dd>
-
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="application date">
+                            (22)
+                        </dt>
+                        <dd class="keyword">
+                            <%= application_date %>
+                        </dd>
                         <br/>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
@@ -432,7 +437,6 @@
                                 <%= abstract_list.join('<br/><br/>') || '&nbsp;' %>
                             </div>
                         </dd>
-
                         <br/>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="full cycle">
