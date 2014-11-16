@@ -44,7 +44,7 @@
         <div class="ops-collection-entry-heading row-fluid">
 
             <!-- patent number -->
-            <div class="span3 container-fluid">
+            <div class="span2 container-fluid">
                 <div class="header-compact">
                     <%= data.enrich_link(patent_number, 'pn') %>
                 </div>
@@ -60,12 +60,13 @@
             </div>
 
             <!-- actions -->
-            <div class="span6 container-fluid document-actions do-not-print">
+            <div class="span7 container-fluid document-actions do-not-print">
 
                 <!-- details / fulltext -->
                 <div class="span9">
 
-                    <% if (data.has_fulltext()) { %>
+                    <div class="span8">
+
                     <div class="btn-group btn-popover tabs document-details-chooser"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Toggle detail view"
@@ -74,6 +75,7 @@
                                 href="#document-details-biblio-container-<%= patent_number %>">
                             Biblio
                         </button>
+                        <% if (data.has_fulltext()) { %>
                         <button class="btn" data-toggle="tab"
                                 href="#document-details-claims-container-<%= patent_number %>"
                                 data-details-type="claims"
@@ -86,6 +88,7 @@
                                 >
                             Desc
                         </button>
+                        <% } %>
                         <button class="btn" data-toggle="tab"
                                 id="document-details-family-button-<%= patent_number %>"
                                 href="#document-details-family-container-<%= patent_number %>"
@@ -94,7 +97,11 @@
                             Family
                         </button>
                     </div>
-                    <% } %>
+
+                    </div>
+
+
+                    <div class="span4">
 
                     <span id="region-comment-button"/>
 
@@ -108,7 +115,7 @@
                     </a>
 
                     <!-- external links -->
-                    <div class="btn-group btn-popover pull-right"
+                    <div class="btn-group btn-popover"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
                          data-content="Show more information from various patent offices"
                          >
@@ -227,6 +234,8 @@
                             </li>
 
                         </ul>
+                    </div>
+
                     </div>
 
                     </%text>
@@ -520,7 +529,17 @@
 
                     <div id="document-details-family-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
                         <strong>Patent family</strong>
-                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin hide"></i>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="btn-group tabs family-chooser">
+                            <button class="btn btn-small active" data-toggle="tab" data-view-type="compact">
+                                Compact
+                            </button>
+                            <button class="btn btn-small" data-toggle="tab" data-view-type="verbose">
+                                Verbose
+                            </button>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <i class="document-details-spinner icon-refresh icon-spin hide"></i>
                         <br/><br/>
                         <span class="document-details-content keyword"></span>
                     </div>
@@ -677,7 +696,7 @@
 ##   ops family templates
 ## ------------------------------------------
 <%text>
-<script id="ops-family-collection-template" type="text/x-underscore-template">
+<script id="ops-family-verbose-collection-template" type="text/x-underscore-template">
 
     <table class="table table-bordered table-condensed">
         <thead>
@@ -693,13 +712,15 @@
     </table>
 
 </script>
-<script id="ops-family-member-template" type="text/x-underscore-template">
+<script id="ops-family-verbose-member-template" type="text/x-underscore-template">
 
     <%
-    //log('family:', data);
+    //log('family member:', data);
     var pubref = data.get_publication_reference(null, 'docdb');
     var appref = data.get_application_reference(null, 'docdb');
     var linkmaker = new Ipsuite.LinkMaker();
+
+    //log('appref:', appref);
     %>
 
     <td>
@@ -721,17 +742,74 @@
         <%= appref.fullnumber %>
         <br/>
         <%= appref.isodate %>
+        <%
+        if (data['application-reference']['@is-representative'] == 'YES') {
+            print('<br/>');
+            print('representative: yes');
+        }
+        %>
     </td>
     <td>
         <%
         _(data['priority-claim']).each(function(priority) {
+            //log('priority:', priority);
             var document_id = data.get_document_id(priority, null, 'docdb');
             print(document_id.fullnumber);
             print('<br/>');
             print(document_id.isodate);
             print('<br/>');
+            if (priority['priority-active-indicator'] && priority['priority-active-indicator']['$'] == 'YES') {
+                print('active: yes');
+                print('<br/>');
+            }
         });
         %>
+    </td>
+
+</script>
+
+
+<script id="ops-family-compact-collection-template" type="text/x-underscore-template">
+    <table class="table table-condensed span6">
+        <thead>
+        <tr>
+            <th class="span2">Pub. Number</th>
+            <th class="span2">Pub. Date</th>
+            <th class="span1">PDF</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</script>
+<script id="ops-family-compact-member-template" type="text/x-underscore-template">
+
+    <%
+    log('family member:', data);
+    var pubref = data.get_publication_reference(null, 'docdb');
+    var appref = data.get_application_reference(null, 'docdb');
+    var linkmaker = new Ipsuite.LinkMaker();
+
+    //log('appref:', appref);
+    %>
+
+    <td>
+        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+    </td>
+
+    <td>
+        <%= pubref.isodate %>
+    </td>
+
+    <td>
+        <!-- pdf document -->
+        <a href="<%= linkmaker.universal_pdf_url(pubref.fullnumber) %>" target="ipsuite-pdf"
+           class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
+           data-toggle="popover" data-trigger="hover" data-placement="top"
+           data-content="PDF document"
+                >
+            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+        </a>
     </td>
 
 </script>

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.62.1
+======
+- ui: improve display of inpadoc patent family (compact)
+
 0.62.0
 ======
 - ui/middleware: display inpadoc patent family

@@ -220,7 +220,14 @@ DocumentDetailsController = Marionette.Controller.extend({
                     _this.display_details(details, container);
 
                 } else if (details_type == 'family') {
-                    _this.display_family(document, container);
+
+                    var family_chooser = $(container).find('.family-chooser');
+                    family_chooser.find('button[data-toggle="tab"]').on('show', function (e) {
+                        var view_type = $(this).data('view-type');
+                        _this.display_family(document, container, view_type);
+                    });
+
+                    _this.display_family(document, container, 'compact');
                 }
             }
 
@@ -272,7 +279,12 @@ DocumentDetailsController = Marionette.Controller.extend({
 
     },
 
-    display_family: function(document, container) {
+    display_family: function(document, container, view_type) {
+
+        var view_class = OpsFamilyCompactCollectionView;
+        if (view_type == 'verbose') {
+            view_class = OpsFamilyVerboseCollectionView;
+        }
 
         // create family collection
         var document_number = document.get_publication_number('epodoc');
@@ -285,7 +297,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         });
 
         // link family collection to its view and show view in region
-        var view = new OpsFamilyCollectionView({
+        var view = new view_class({
             collection: family_collection,
         })
         family_region.show(view);
