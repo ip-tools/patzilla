@@ -115,9 +115,9 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 });
 
 
-OpsFamilyMemberView = Backbone.Marionette.ItemView.extend({
+OpsFamilyMemberVerboseView = Backbone.Marionette.ItemView.extend({
 
-    template: _.template($('#ops-family-member-template').html(), this.model, {variable: 'data'}),
+    template: _.template($('#ops-family-verbose-member-template').html(), this.model, {variable: 'data'}),
     tagName: 'tr',
     //className: 'row-fluid',
     //style: 'margin-bottom: 10px',
@@ -130,12 +130,44 @@ OpsFamilyMemberView = Backbone.Marionette.ItemView.extend({
 
 });
 
-OpsFamilyCollectionView = Backbone.Marionette.CompositeView.extend({
+OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
-    template: "#ops-family-collection-template",
-    itemView: OpsFamilyMemberView,
+    template: "#ops-family-verbose-collection-template",
+    itemView: OpsFamilyMemberVerboseView,
 
-    id: "ops-family-collection",
+    id: "ops-family-verbose-verbose-collection",
+    //tagName: "div",
+    //className: "container-fluid",
+
+    appendHtml: function(collectionView, itemView) {
+        collectionView.$('tbody').append(itemView.el);
+    }
+
+});
+
+
+OpsFamilyMemberCompactView = Backbone.Marionette.ItemView.extend({
+
+    template: _.template($('#ops-family-compact-member-template').html(), this.model, {variable: 'data'}),
+    tagName: 'tr',
+    //tagName: 'div',
+    //className: 'row-fluid',
+    //style: 'margin-bottom: 10px',
+
+    templateHelpers: {
+        enrich_link: function() {
+            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
+        },
+    },
+
+});
+
+OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
+
+    template: "#ops-family-compact-collection-template",
+    itemView: OpsFamilyMemberCompactView,
+
+    id: "ops-family-compact-collection",
     //tagName: "div",
     //className: "container-fluid",
 
