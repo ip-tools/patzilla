@@ -223,6 +223,7 @@ def ops_description(document_number):
         if response.headers['content-type'] == 'application/json':
             return response.json()
         else:
+            # TODO: handle error here?
             return
     else:
         response = handle_error(response, 'ops-description')
@@ -243,9 +244,36 @@ def ops_claims(document_number):
         if response.headers['content-type'] == 'application/json':
             return response.json()
         else:
+            # TODO: handle error here?
             return
     else:
         response = handle_error(response, 'ops-claims')
+        raise response
+
+
+@cache_region('static')
+def ops_family_inpadoc(reference_type, document_number, constituents):
+    """
+    Download requested family publication information from OPS
+    e.g. http://ops.epo.org/3.1/rest-services/family/publication/docdb/EP.1491501.A1/biblio,legal
+    """
+
+    url_tpl = 'https://ops.epo.org/3.1/rest-services/family/{reference_type}/epodoc/{document_number}/{constituents}.json'
+
+    url = url_tpl.format(reference_type=reference_type, document_number=document_number, constituents=constituents)
+    client = get_ops_client()
+    response = client.get(url, headers={'Accept': 'application/json'})
+    #response = client.get(url, headers={'Accept': 'text/xml'})
+    #print "response:", response.content
+
+    if response.status_code == 200:
+        if response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            # TODO: handle error here?
+            return
+    else:
+        response = handle_error(response, 'ops-family')
         raise response
 
 

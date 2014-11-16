@@ -63,7 +63,7 @@
             <div class="span6 container-fluid document-actions do-not-print">
 
                 <!-- details / fulltext -->
-                <div class="span8">
+                <div class="span9">
 
                     <% if (data.has_fulltext()) { %>
                     <div class="btn-group btn-popover tabs document-details-chooser"
@@ -85,6 +85,13 @@
                                 data-details-type="description"
                                 >
                             Desc
+                        </button>
+                        <button class="btn" data-toggle="tab"
+                                id="document-details-family-button-<%= patent_number %>"
+                                href="#document-details-family-container-<%= patent_number %>"
+                                data-details-type="family"
+                                >
+                            Family
                         </button>
                     </div>
                     <% } %>
@@ -228,7 +235,7 @@
                 </div>
 
                 <!-- add/remove -->
-                <div class="span4" style="line-height: 200%">
+                <div class="span3" style="line-height: 200%">
 
                     <%
                     # FIXME: use javascript-only variables, get rid of the pyramid request object
@@ -511,6 +518,13 @@
                         <span class="document-details-content keyword"></span>
                     </div>
 
+                    <div id="document-details-family-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
+                        <strong>Patent family</strong>
+                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin hide"></i>
+                        <br/><br/>
+                        <span class="document-details-content keyword"></span>
+                    </div>
+
                     <!-- embed 3rd-party component -->
                     <div class="embed-item" data-embed-url="<%= data.config.get('embed-item-url') %>" data-document-number="<%= patent_number %>">
                     </div>
@@ -654,6 +668,71 @@
 
         </div>
     </div>
+
+</script>
+</%text>
+
+
+## ------------------------------------------
+##   ops family templates
+## ------------------------------------------
+<%text>
+<script id="ops-family-collection-template" type="text/x-underscore-template">
+
+    <table class="table table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th class="span1">PDF</th>
+            <th class="span3">Publication</th>
+            <th class="span3">Application</th>
+            <th class="span2">Priority</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+</script>
+<script id="ops-family-member-template" type="text/x-underscore-template">
+
+    <%
+    //log('family:', data);
+    var pubref = data.get_publication_reference(null, 'docdb');
+    var appref = data.get_application_reference(null, 'docdb');
+    var linkmaker = new Ipsuite.LinkMaker();
+    %>
+
+    <td>
+        <!-- pdf document -->
+        <a href="<%= linkmaker.universal_pdf_url(pubref.fullnumber) %>" target="ipsuite-pdf"
+           class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
+           data-toggle="popover" data-trigger="hover" data-placement="top"
+           data-content="PDF document"
+                >
+            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+        </a>
+    </td>
+    <td>
+        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+        <br/>
+        <%= pubref.isodate %>
+    </td>
+    <td>
+        <%= appref.fullnumber %>
+        <br/>
+        <%= appref.isodate %>
+    </td>
+    <td>
+        <%
+        _(data['priority-claim']).each(function(priority) {
+            var document_id = data.get_document_id(priority, null, 'docdb');
+            print(document_id.fullnumber);
+            print('<br/>');
+            print(document_id.isodate);
+            print('<br/>');
+        });
+        %>
+    </td>
 
 </script>
 </%text>
