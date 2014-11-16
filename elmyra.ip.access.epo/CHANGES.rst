@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.62.2
+======
+- ui: don't use tables with full borders
+
 0.62.1
 ======
 - ui: improve display of inpadoc patent family (compact)
