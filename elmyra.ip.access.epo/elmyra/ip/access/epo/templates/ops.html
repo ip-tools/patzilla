@@ -415,17 +415,17 @@
                             </dl>
                         </dd>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority claims">
-                            (31)
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="application / domestic filing">
+                            (20)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.enrich_link(data.get_application_number('epodoc'), 'sap') %>, <%= application_date %>
+                        </dd>
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
+                            (30)
                         </dt>
                         <dd class="keyword">
                             <%= data.get_priority_claims(true).join('<br/>') || '&nbsp;' %>
-                        </dd>
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="application date">
-                            (22)
-                        </dt>
-                        <dd class="keyword">
-                            <%= application_date %>
                         </dd>
                         <br/>
 
