@@ -5,9 +5,13 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.64.0
+======
+- ui: display other classifications (UC, FI, FTERM)
+
 0.63.0
 ======
-- ui: add application data
+- ui: display application number
 
 0.62.3
 ======

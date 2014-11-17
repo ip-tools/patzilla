@@ -485,11 +485,15 @@ OpsExchangeDocument = Backbone.Model.extend({
             return entries;
         },
 
-        has_cpc: function() {
+        has_classifications: function() {
             return Boolean(this['bibliographic-data']['patent-classifications']);
         },
-        get_cpc_list: function(links) {
-            var entries = [];
+        get_classification_schemes: function() {
+            return ['CPC', 'UC', 'FI', 'FTERM'];
+        },
+        get_classifications: function(links) {
+
+            var classifications = {};
             var container = this['bibliographic-data']['patent-classifications'];
             var cpc_fieldnames = ['section', 'class', 'subclass', 'main-group', '/', 'subgroup'];
 
@@ -498,7 +502,14 @@ OpsExchangeDocument = Backbone.Model.extend({
             if (container) {
                 var nodelist = to_list(container['patent-classification']);
                 _(nodelist).each(function(node) {
+
                     var scheme = node['classification-scheme']['@scheme'];
+
+                    var defaults = {};
+                    defaults[scheme] = [];
+                    _.defaults(classifications, defaults);
+
+                    var entry;
                     if (scheme == 'CPC') {
                         var entry_parts = [];
                         _(cpc_fieldnames).each(function(cpc_fieldname) {
@@ -510,25 +521,39 @@ OpsExchangeDocument = Backbone.Model.extend({
                                 var part = node[cpc_fieldname]['$'];
                                 entry_parts.push(part);
                             } else {
-                                console.error('Unknown cpc classification field "' + cpc_fieldname + '" for document "' + _this.get_document_number() + '":', node);
+                                console.error(
+                                    'Unknown cpc classification field "' + cpc_fieldname + '" ' +
+                                    'for document "' + _this.get_document_number() + '":', node);
                             }
                         });
-                        var entry = entry_parts.join('');
-                        entries.push(entry);
+                        entry = entry_parts.join('');
 
-                    } else if (scheme == 'FI' || scheme == 'FTERM') {
-                        // TODO: JP documents carry these
+                    } else if (scheme == 'UC' || scheme == 'FI' || scheme == 'FTERM') {
+                        // UC was sighted with US documents, FI and FTERM with JP ones
+                        entry = node['classification-symbol']['$'];
 
                     } else {
                         console.error('Unknown classification scheme "' + scheme + '" for document "' + _this.get_document_number() + '":', node);
                     }
+
+                    if (!_.isEmpty(entry)) {
+                        classifications[scheme].push(entry);
+                    }
+
                 });
             }
 
             if (links) {
-                entries = this.enrich_links(entries, 'cpc', quotate);
+                _.each(classifications, function(value, key) {
+                    if (key == 'CPC') {
+                        classifications[key] = _this.enrich_links(value, 'cpc', quotate);
+                    }
+                });
             }
-            return entries;
+
+            //log('classifications:', classifications);
+
+            return classifications;
         },
 
         get_priority_claims: function(links) {

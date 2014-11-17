@@ -250,11 +250,11 @@ dl.dl-horizontal-inline {
 }
 
 .dl-horizontal-inline dt {
-    width: 40px;
+    width: 60px;
     text-align: left;
 }
 .dl-horizontal-inline dd {
-    margin-left: 50px;
+    margin-left: 60px;
 }
 
 .label-document-missing {

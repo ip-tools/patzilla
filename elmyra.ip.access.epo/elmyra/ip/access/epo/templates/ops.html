@@ -53,7 +53,7 @@
             <!-- dates -->
             <div class="span2 container-fluid">
                 <div class="header-biblio">
-                    <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>
+                    <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(40)</span>
                     &nbsp;
                     <span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
                 </div>
@@ -375,7 +375,20 @@
                         <dd class="keyword">
                             <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') || '&nbsp;' %>
                         </dd>
+                        <br/>
 
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="application / domestic filing">
+                            (20)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.enrich_link(data.get_application_number('epodoc'), 'sap') %>, <%= application_date %>
+                        </dd>
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
+                            (30)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.get_priority_claims(true).join('<br/>') || '&nbsp;' %>
+                        </dd>
                         <br/>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="classifications">
@@ -383,7 +396,7 @@
                         </dt>
                         <dd class="dl-horizontal-inline-container">
                             <span class="clearfix"></span>
-                            <dl class="dl-horizontal dl-horizontal-inline">
+                            <dl class="dl-horizontal2 dl-horizontal-inline">
 
                                 <% if (data.has_ipc()) { %>
                                 <dt>
@@ -403,38 +416,38 @@
                                 </dd>
                                 <% } %>
 
-                                <% if (data.has_cpc()) { %>
+
+                                <%
+                                var classifications_map = data.get_classifications(true);
+                                var classification_schemes = data.get_classification_schemes();
+                                %>
+
+                                <%
+                                _(classification_schemes).each(function(classification_scheme) {
+                                %>
+
+                                <%
+                                if (!_.isEmpty(classifications_map[classification_scheme])) {
+                                %>
                                 <dt>
-                                    CPC
+                                    <%= classification_scheme %>
                                 </dt>
                                 <dd class="keyword">
-                                    <%= data.get_cpc_list(true).join(', ') || '&nbsp;' %>
+                                    <%= classifications_map[classification_scheme].join(', ') || '&nbsp;' %>
                                 </dd>
                                 <% } %>
 
+                                <% }); %>
+
                             </dl>
                         </dd>
-
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="application / domestic filing">
-                            (20)
-                        </dt>
-                        <dd class="keyword">
-                            <%= data.enrich_link(data.get_application_number('epodoc'), 'sap') %>, <%= application_date %>
-                        </dd>
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
-                            (30)
-                        </dt>
-                        <dd class="keyword">
-                            <%= data.get_priority_claims(true).join('<br/>') || '&nbsp;' %>
-                        </dd>
-                        <br/>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
                             (57)
                         </dt>
                         <dd class="keyword">
                             <div class="abstract">
-                                <%= abstract_list.join('<br/><br/>') || '&nbsp;' %>
+                                <%= abstract_list.join('<br/><br/>') || 'Abstract not available' %>
                             </div>
                         </dd>
                         <br/>
