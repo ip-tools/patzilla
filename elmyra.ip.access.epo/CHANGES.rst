@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.63.0
+======
+- ui: add application data
+
 0.62.3
 ======
 - ui: remove application date from document header area
