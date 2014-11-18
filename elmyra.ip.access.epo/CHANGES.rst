@@ -9,6 +9,8 @@ development
 ======
 - ui: display other classifications (UC, FI, FTERM)
 - middleware: enhance timeout behavior when download PDF documents (1 second)
+- ui/middleware: fulltext-modifier-chooser for selecting in which fulltext fields
+  (title, abstract, claim, description) to search at"FulltextPRO "backend
 
 0.63.0
 ======

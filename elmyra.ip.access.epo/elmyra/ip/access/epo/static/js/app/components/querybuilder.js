@@ -524,6 +524,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             });
         });
 
+        // conditionally display fulltext-modifier-chooser
+        if (_(['ftpro']).contains(datasource)) {
+            $('#fulltext-modifier-chooser').show();
+            $('#fulltext-textarea-container').removeClass('span12').addClass('span11');
+            $('#fulltext-textarea-container').find('textarea').removeClass('span11').addClass('span10');
+        } else {
+            $('#fulltext-modifier-chooser').hide();
+            $('#fulltext-textarea-container').removeClass('span11').addClass('span12');
+            $('#fulltext-textarea-container').find('textarea').removeClass('span10').addClass('span11');
+        }
+
     },
 
     comfort_form_regular_to_zoomed: function(input_element) {
@@ -566,28 +577,55 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
 
     read_comfort_form: function(form) {
+
+        var criteria = {};
+        var modifiers = {};
+
+        // collect input fields
         var fields = $(form).find($('input'));
-        var payload = {};
         _.each(fields, function(item) {
             if (item.value) {
-                payload[item.name] = item.value;
+                criteria[item.name] = item.value;
             }
         });
-        //log('payload:', JSON.stringify(payload));
+
+        // collect fulltext modifiers
+        var buttons = $(form).find($('button[data-name="fulltext"]'));
+        var modifiers = {};
+        _.each(buttons, function(button) {
+            var name = $(button).data('name');
+            var modifier = $(button).data('modifier');
+            var state = $(button).hasClass('active');
+
+            var defaults = {};
+            defaults[name] = {};
+            _.defaults(modifiers, defaults);
+
+            modifiers[name][modifier] = state;
+        });
+
+        var payload = {
+            'criteria': criteria,
+            'modifiers': modifiers,
+        }
+
         return payload;
     },
 
     compute_comfort_query: function() {
 
-        var criteria = this.read_comfort_form($('#querybuilder-comfort-form'));
+        var form_data = this.read_comfort_form($('#querybuilder-comfort-form'));
         var datasource = opsChooserApp.get_datasource();
 
         var payload = {
             format: 'comfort',
-            criteria: criteria,
             datasource: datasource,
+            criteria: form_data.criteria,
+            modifiers: form_data.modifiers,
             //query: opsChooserApp.config.get('query'),
         };
+
+        log('comfort form query:', JSON.stringify(payload));
 
         //$("#query").val('');
         $("#keywords").val('[]');

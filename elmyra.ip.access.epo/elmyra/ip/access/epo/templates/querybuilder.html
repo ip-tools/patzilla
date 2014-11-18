@@ -208,10 +208,22 @@
                             </div>
 
                             <div id="fulltext-zoomed" class="field-zoomed hide">
-                                <div class="input-prepend" style="vertical-align: top">
-                                    <span class="add-on">Full text</span>
+                                <div class="span11" id="fulltext-textarea-container">
+                                    <div class="input-prepend" style="vertical-align: top">
+                                        <span class="add-on">Full text</span>
+                                    </div>
+                                    <textarea data-name="fulltext" class="span10" style="height: 143px;"></textarea>
                                 </div>
-                                <textarea data-name="fulltext" class="span11" style="height: 143px"></textarea>
+                                <div class="span1" id="fulltext-modifier-chooser">
+                                    <span class="pull-right">
+                                        Search&nbsp;in:
+                                    </span>
+                                    <br/>
+                                    <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
+                                    <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
+                                    <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="claim">Claim</button>
+                                    <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn hide">Submit</button>
