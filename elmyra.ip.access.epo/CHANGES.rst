@@ -11,6 +11,7 @@ development
 - middleware: enhance timeout behavior when download PDF documents (1 second)
 - ui/middleware: fulltext-modifier-chooser for selecting in which fulltext fields
   (title, abstract, claim, description) to search at"FulltextPRO "backend
+- ui: fullscreen mode feature
 
 0.63.0
 ======

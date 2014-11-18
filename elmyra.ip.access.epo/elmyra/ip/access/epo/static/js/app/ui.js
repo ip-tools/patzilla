@@ -56,6 +56,14 @@ UiController = Marionette.Controller.extend({
             $(this).attr('href', url);
         });
 
+
+        $('.link-fullscreen').click(function() {
+            if (screenfull.enabled) {
+                screenfull.request();
+            }
+        });
+
+
     },
 
     setup_text_tools: function() {
