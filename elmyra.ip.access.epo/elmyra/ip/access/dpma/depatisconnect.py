@@ -1,27 +1,48 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
-from cornice.util import to_list
+import logging
 import requests
-import xmlrpclib
 from StringIO import StringIO
 from lxml import etree as ET
 from lxml.builder import E
+from cornice.util import to_list
 from beaker.cache import cache_region
+from pyramid.httpexceptions import HTTPNotFound
 from elmyra.ip.util.numbers.normalize import normalize_patent
+from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
+
+log = logging.getLogger(__name__)
 
 def run_acquisition(document_number, doctypes=None):
     numbers = to_list(document_number)
     doctypes = doctypes or 'xml'
     doctypes = to_list(doctypes)
-    server = xmlrpclib.Server('***REMOVED***/RPC2')
+    server = XmlRpcTimeoutServer('***REMOVED***/RPC2', 1)
     return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
     # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
     url_tpl = '***REMOVED***/download/xml:docinfo/{number}.xml?nodtd=1'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False)
+    response = requests.get(url, verify=False, timeout=1)
     return response
+
+@cache_region('static')
+def fetch_pdf(number):
+
+    # ***REMOVED***/download/pdf/EP666666B1.pdf
+    url_tpl = '***REMOVED***/download/pdf/{number}.pdf'
+    url = url_tpl.format(number=number)
+    response = requests.get(url, verify=False, timeout=1)
+    if response.status_code == 200:
+        payload = response.content
+        if payload:
+            return payload
+        else:
+            raise HTTPNotFound('Empty PDF for document {0} found in archive'.format(number))
+
+    else:
+        raise HTTPNotFound('No PDF for document {0} found in archive'.format(number))
 
 @cache_region('static')
 def get_xml(number):
