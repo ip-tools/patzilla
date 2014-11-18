@@ -8,6 +8,7 @@ development
 0.64.0
 ======
 - ui: display other classifications (UC, FI, FTERM)
+- middleware: enhance timeout behavior when download PDF documents (1 second)
 
 0.63.0
 ======

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
-from StringIO import StringIO
 import logging
+from StringIO import StringIO
 from zipfile import ZipFile, ZIP_DEFLATED
-from elmyra.ip.access.dpma.depatisconnect import run_acquisition
+from elmyra.ip.util.numbers.normalize import normalize_patent
+from elmyra.ip.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
 from elmyra.ip.access.epo.ops import pdf_document_build
-from elmyra.ip.access.epd.archive import fetch_pdf as archive_fetch_pdf
 
 log = logging.getLogger(__name__)
 
@@ -13,17 +13,20 @@ def pdf_universal(patent):
     pdf = None
     datasource = None
 
+    number_normalized = normalize_patent(patent)
+
     # first, try archive
     try:
-        pdf = archive_fetch_pdf(patent)
+        log.info('PDF - trying archive (1): {0}'.format(number_normalized))
+        pdf = archive_fetch_pdf(number_normalized)
         datasource = 'archive'
     except:
 
         # second, try archive again after running acquisition
         try:
-            log.info('PDF - trying archive (2): {0}'.format(patent))
-            run_acquisition(patent, 'pdf')
-            pdf = archive_fetch_pdf(patent)
+            log.info('PDF - trying archive (2): {0}'.format(number_normalized))
+            run_acquisition(number_normalized, 'pdf')
+            pdf = archive_fetch_pdf(number_normalized)
             datasource = 'archive'
 
         # third, try building from OPS single images
@@ -31,7 +34,6 @@ def pdf_universal(patent):
             log.info('PDF - trying OPS: {0}'.format(patent))
             pdf = pdf_document_build(patent)
             datasource = 'ops'
-            pass
 
     return {'pdf': pdf, 'datasource': datasource}
 
