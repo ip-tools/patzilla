@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
-import re
 import json
 import logging
 from beaker.cache import cache_region
@@ -577,8 +576,14 @@ def query_expression_util_handler(request):
     # TODO: split functionality between ops/depatisnet, google and ftpro/ftpro
 
     data = request.json
+
     datasource = data['datasource']
+    criteria = data['criteria']
+    modifiers = data['modifiers']
     query = data.get('query')
+
+    if datasource == 'ftpro':
+        modifiers = FulltextProExpression.compute_modifiers(modifiers)
 
     expression = ''
     expression_parts = []
@@ -587,13 +592,13 @@ def query_expression_util_handler(request):
     if data['format'] == 'comfort':
 
         if datasource == 'google':
-            gpe = GooglePatentsExpression(data['criteria'], query)
+            gpe = GooglePatentsExpression(criteria, query)
             expression = gpe.serialize()
             keywords = gpe.get_keywords()
 
         else:
 
-            for key, value in data['criteria'].iteritems():
+            for key, value in criteria.iteritems():
 
                 if not value:
                     continue
@@ -604,7 +609,7 @@ def query_expression_util_handler(request):
                     expression_part = pair_to_cql(datasource, key, value)
 
                 elif datasource == 'ftpro':
-                    expression_part = FulltextProExpression.pair_to_ftpro_xml(key, value)
+                    expression_part = FulltextProExpression.pair_to_ftpro_xml(key, value, modifiers)
                     keywords += keywords_from_boolean_expression(key, value)
 
                 if expression_part:
