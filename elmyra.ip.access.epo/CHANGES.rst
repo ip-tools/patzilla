@@ -5,10 +5,14 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.65.0
+======
+- remove beta badge
+
 0.64.0
 ======
 - ui: display other classifications (UC, FI, FTERM)
-- middleware: enhance timeout behavior when download PDF documents (1 second)
+- middleware: enhance timeout behavior when downloading PDF documents (1 second)
 - ui/middleware: fulltext-modifier-chooser for selecting in which fulltext fields
   (title, abstract, claim, description) to search at"FulltextPRO "backend
 - ui: fullscreen mode feature
