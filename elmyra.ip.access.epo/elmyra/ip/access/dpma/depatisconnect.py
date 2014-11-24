@@ -17,8 +17,8 @@ def run_acquisition(document_number, doctypes=None):
     numbers = to_list(document_number)
     doctypes = doctypes or 'xml'
     doctypes = to_list(doctypes)
-    server = XmlRpcTimeoutServer('***REMOVED***/RPC2', 1)
-    return server.runAcquisition(numbers, doctypes)
+    with XmlRpcTimeoutServer('***REMOVED***/RPC2', 3) as server:
+        return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
     # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
@@ -184,4 +184,8 @@ if __name__ == '__main__':
     #print depatisconnect_abstracts('DE0001301607B', 'DE')
     #print depatisconnect_description('DE1301607B')
     #print depatisconnect_description('DE7909160U1')
-    print depatisconnect_abstracts('DE7909160U1', 'DE')
+    #print depatisconnect_abstracts('DE7909160U1', 'DE')
+
+    #print depatisconnect_claims('US2014250599A1')
+    print depatisconnect_claims('US2014339530A1')
+

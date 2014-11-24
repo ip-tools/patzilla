@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.65.1
+======
+- fix depatisconnect adapter
+
 0.65.0
 ======
 - remove beta badge
