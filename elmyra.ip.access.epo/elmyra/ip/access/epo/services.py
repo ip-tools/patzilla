@@ -637,8 +637,7 @@ def query_expression_util_handler(request):
     elif datasource == 'ftpro':
         #expression_parts = ['    ' + part for part in expression_parts]
         expression = '\n'.join(expression_parts)
-        if len(expression_parts) >= 2:
-            expression = '<and>\n' + expression + '\n</and>'
+        expression = '<and>\n' + expression + '\n</and>'
         expression = expression.strip()
 
     return expression
