@@ -92,6 +92,9 @@ nginx_path=/Users/amo/dev/celeraone/sources/c1-ocb-integrator/rem_rp/parts/openr
 nginx-start:
 	@$(nginx_path)/nginx/sbin/nginx -p $(nginx_path)/nginx -c `pwd`/nginx-auth/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
 
+mongodb-start:
+	mongod --dbpath=./var/lib/mongodb/
+
 mongodb-ftpro-export:
 	mkdir -p var/tmp/mongodb
 	mongoexport --db ipsuite_development --collection ftpro_country > var/tmp/mongodb/ftpro_country.mongodb

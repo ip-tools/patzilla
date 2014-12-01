@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.66.0
+======
+- middleware: allow simple boolean expressions (e.g. ti=bildschirm and ab=fahrzeug) in comfort form for FulltextPRO search
+
 0.65.1
 ======
 - fix depatisconnect adapter
