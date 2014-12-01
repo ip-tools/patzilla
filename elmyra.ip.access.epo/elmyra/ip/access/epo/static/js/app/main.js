@@ -774,7 +774,9 @@ opsChooserApp.addInitializer(function(options) {
 
         // show documents (ops results) in collection view
         // explicitly switch list region to OPS collection view
-        this.listRegion.show(this.collectionView);
+        if (this.listRegion.currentView !== this.collectionView) {
+            this.listRegion.show(this.collectionView);
+        }
 
     });
 

@@ -57,6 +57,9 @@ function boot_application() {
         opsChooserApp.set_datasource(datasource);
     }
 
+    // activate regular list region right now to avoid double rendering on initial page load
+    opsChooserApp.listRegion.show(opsChooserApp.collectionView);
+
     // hide pagination- and metadata-area to start from scratch
     opsChooserApp.ui.reset_content();
 
