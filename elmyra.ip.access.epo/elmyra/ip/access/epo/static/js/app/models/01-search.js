@@ -42,10 +42,9 @@ DatasourceSearch = Backbone.Model.extend({
             },
             error: function(e, xhr) {
 
-                //console.log("error: " + xhr.responseText);
+                console.log("DatasourceSearch error: " + xhr.responseText);
                 opsChooserApp.ui.indicate_activity(false);
-                opsChooserApp.ui.reset_content();
-                opsChooserApp.documents.reset();
+                opsChooserApp.ui.reset_content({documents: true});
 
                 opsChooserApp.ui.propagate_alerts(xhr.responseText);
             }

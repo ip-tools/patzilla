@@ -101,7 +101,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
             },
             error: function(model, response) {
 
-                //console.log("api error: " + response.responseText);
+                console.log("OpsPublishedDataSearch error: " + response.responseText);
 
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content({documents: true});
