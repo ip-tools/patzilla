@@ -11,7 +11,7 @@ from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
-from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException
+from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import pair_to_cql, should_be_quoted
 from elmyra.ip.util.date import datetime_iso_filename, now
@@ -282,10 +282,13 @@ def ftpro_published_data_search_handler(request):
         return data
 
     except LoginException as ex:
-        request.errors.add('ftpro-search', 'login', ex.info)
+        request.errors.add('FulltextPRO', 'login', ex.ftpro_info)
+
+    except SearchException as ex:
+        request.errors.add('FulltextPRO', 'search', ex.ftpro_info)
 
     except SyntaxError as ex:
-        request.errors.add('ftpro-search', 'query', str(ex.msg))
+        request.errors.add('FulltextPRO', 'query', str(ex.msg))
 
 
 def propagate_keywords(request, query_object):
