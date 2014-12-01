@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: propagate error message from"FulltextPRO "search to user interface
+- ui: reset document model on error while avoiding double rendering on initial page load
+- middleware/ui: propagate ftpro search exception to user interface
 
 0.66.0
 ======
