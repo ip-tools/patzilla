@@ -55,7 +55,8 @@ def pair_to_cql(datasource, key, value):
     if not cql_part:
         cql_part = format.format(fieldname, value)
 
-    return cql_part
+    return {'query': cql_part}
+
 
 def should_be_quoted(value):
     value = value.strip()
