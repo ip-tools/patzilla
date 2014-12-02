@@ -131,7 +131,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // ------------------------------------------
 
         $( "#querybuilder-comfort-form" ).submit(function( event ) {
-            event.preventDefault();
 
             // transfer values from zoomed fields
             _this.comfort_form_zoomed_to_regular_data();

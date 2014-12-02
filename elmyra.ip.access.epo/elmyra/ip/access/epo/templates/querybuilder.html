@@ -115,7 +115,7 @@
                 <!-- trimmed-down user interface -->
                 <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
 
-                    <form id="querybuilder-comfort-form">
+                    <form id="querybuilder-comfort-form" target="querybuilder-comfort-form-iframe">
                         <fieldset>
 
                             <div class="span6 field-regular">
@@ -229,6 +229,10 @@
                             <button type="submit" class="btn hide">Submit</button>
                         </fieldset>
                     </form>
+
+                    <!-- https://stackoverflow.com/questions/15462991/trigger-autocomplete-without-submitting-a-form/15634249#15634249 -->
+                    <!-- https://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-dynamically-generated-forms-handled-with-ajax/8449290#8449290 -->
+                    <iframe id="querybuilder-comfort-form-iframe" name="querybuilder-comfort-form-iframe" src="javascript:false" class="hide"></iframe>
 
                 </div>
 

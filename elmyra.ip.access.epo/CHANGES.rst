@@ -9,6 +9,7 @@ development
 - middleware/ui: propagate ftpro search exception to user interface
 - middleware: fix for boolean fulltext expressions for FulltextPRO search
 - ui: enhance/fix error behavior, error display and hotkeys
+- ui: enable/fix autocomplete in comfort form (workaround)
 
 0.66.0
 ======
