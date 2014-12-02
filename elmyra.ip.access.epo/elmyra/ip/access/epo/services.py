@@ -619,17 +619,26 @@ def query_expression_util_handler(request):
 
                 elif datasource == 'ftpro':
                     expression_part = FulltextProExpression.pair_to_ftpro_xml(key, value, modifiers)
-                    if expression_part is not None and expression_part.has_key('keywords'):
-                        keywords += expression_part['keywords']
-                    else:
-                        keywords += keywords_from_boolean_expression(key, value)
+                    if expression_part:
+                        if expression_part.has_key('keywords'):
+                            keywords += expression_part['keywords']
+                        else:
+                            keywords += keywords_from_boolean_expression(key, value)
 
-                if expression_part:
-                    expression_part.get('query') and expression_parts.append(expression_part.get('query'))
-                else:
-                    message = 'Criteria "{0}=\'{1}\'" has invalid format, datasource={2}.'.format(key, value, datasource)
+                error_tpl = 'Criteria "{0}=\'{1}\'" has invalid format, datasource={2}.'
+                if not expression_part:
+                    message = error_tpl.format(key, value, datasource)
                     log.warn(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
+
+                elif expression_part.has_key('error'):
+                    message = error_tpl.format(key, value, datasource)
+                    message += ' ' + expression_part['message']
+                    log.warn(message)
+                    request.errors.add('query-expression-utility-service', 'comfort-form', message)
+
+                else:
+                    expression_part.get('query') and expression_parts.append(expression_part.get('query'))
 
 
     log.info("keywords: %s", keywords)
