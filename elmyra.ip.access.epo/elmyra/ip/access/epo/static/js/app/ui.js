@@ -72,10 +72,14 @@ UiController = Marionette.Controller.extend({
     },
 
     reset_content: function(options) {
-        $('#alert-area').empty();
+        options = options || {};
+
         $('#info-area').empty();
         $('#pagination-info').hide();
-        options = options || {};
+
+        if (!options.keep_notifications) {
+            $('#alert-area').empty();
+        }
         if (!options.keep_pager) {
             $('.pager-area').hide();
         }

@@ -81,9 +81,11 @@ _.clear = function(array) {
 
 // https://stackoverflow.com/questions/964734/hitting-enter-does-not-post-form-in-ie8/4629047#4629047
 // Recreating normal browser behavior in Javascript. Thank you, Microsoft.
+// Same behaviour in Safari. :-)
 jQuery.fn.handle_enter_keypress = function() {
     var msie = _.string.contains(navigator.userAgent, '.NET');
-    if (msie) {
+    var safari = _.string.contains(navigator.userAgent, 'Safari');
+    if (msie || safari) {
         $(this).find('input').keypress(function(e) {
             // If the key pressed was enter
             if (e.which == '13') {
