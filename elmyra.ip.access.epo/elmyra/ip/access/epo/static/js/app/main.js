@@ -270,7 +270,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 number = entry;
             }
             if (number) {
-                return field + '=' + number;
+                return field + '=' + '"' + _.string.trim(number, '"') + '"';
             }
         }));
         var query_ops_cql = query_ops_constraints.join(' ' + operator + ' ');
@@ -332,9 +332,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     perform_numberlistsearch: function(options) {
         var publication_numbers = this.parse_numberlist($('#numberlist').val());
-        var hits = publication_numbers.length;
-        //opsChooserApp.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR')
-        this.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
+        if (publication_numbers) {
+            var hits = publication_numbers.length;
+            this.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
+        } else {
+            this.ui.notify("An empty numberlist can't be requested, please add some publication numbers.", {type: 'warning', icon: 'icon-align-justify'});
+        }
     },
 
     compute_range: function(options) {
