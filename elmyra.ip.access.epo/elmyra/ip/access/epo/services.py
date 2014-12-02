@@ -118,7 +118,7 @@ google_published_data_search_service = Service(
 ftpro_published_data_search_service = Service(
     name='ftpro-published-data-search',
     path='/api/ftpro/published-data/search',
-    description=" FulltextPROsearch interface")
+    description="FulltextPRO search interface")
 
 
 # ------------------------------------------

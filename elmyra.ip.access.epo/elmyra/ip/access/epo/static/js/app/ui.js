@@ -99,11 +99,11 @@ UiController = Marionette.Controller.extend({
         }
     },
 
-    propagate_alerts: function(response_body) {
+    propagate_alerts: function(xhr, options) {
 
         $('#alert-area').empty();
         try {
-            var response = jQuery.parseJSON(response_body);
+            var response = jQuery.parseJSON(xhr.responseText);
             if (response['status'] == 'error') {
                 _.each(response['errors'], function(error) {
                     var tpl = _.template($('#cornice-error-template').html());
@@ -114,12 +114,25 @@ UiController = Marionette.Controller.extend({
 
             }
 
-            // SyntaxError when decoding from JSON fails
+        // SyntaxError when decoding from JSON fails
+        // Display detailed data from XHR response
         } catch (err) {
-            // TODO: display more details of xhr response (headers, body, etc.)
-            // TODO: use class="alert alert-error alert-block"
-            var response = response_body;
-            $('#alert-area').append(response);
+
+            var error = {
+                'location': 'unknown',
+                'name': xhr.statusText,
+                'description': {
+                    'content': xhr.responseText,
+                    'headers': {'date': xhr.getResponseHeader('Date')},
+                    'status_code': xhr.status,
+                    'url': xhr.requestUrl || options.url,
+                }
+            }
+
+            var tpl = _.template($('#backend-error-template').html());
+            var alert_html = tpl(error);
+            $('#alert-area').append(alert_html);
+
         }
 
     },

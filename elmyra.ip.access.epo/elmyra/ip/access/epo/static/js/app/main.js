@@ -266,10 +266,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             var number;
             if (_.isObject(entry)) {
                 number = entry['publication_number'];
-            } else {
+            } else if (!_.isEmpty(entry)) {
                 number = entry;
             }
-            return field + '=' + number;
+            if (number) {
+                return field + '=' + number;
+            }
         }));
         var query_ops_cql = query_ops_constraints.join(' ' + operator + ' ');
         console.log('OPS CQL query:', query_ops_cql);

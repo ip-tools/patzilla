@@ -648,6 +648,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $.ajax({
             method: 'post',
             url: '/api/util/query-expression',
+            beforeSend: function(xhr, settings) {
+                xhr.requestUrl = settings.url;
+            },
             async: false,
             sync: true,
             data: JSON.stringify(payload),
@@ -659,8 +662,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             } else {
                 deferred.resolve('', '[]');
             }
-        }).error(function(xhr) {
-            opsChooserApp.ui.propagate_alerts(xhr.responseText);
+        }).error(function(xhr, settings) {
+            opsChooserApp.ui.propagate_alerts(xhr);
             deferred.reject();
         });
         return deferred.promise();
