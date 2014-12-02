@@ -613,7 +613,7 @@ def query_expression_util_handler(request):
 
                 elif datasource == 'ftpro':
                     expression_part = FulltextProExpression.pair_to_ftpro_xml(key, value, modifiers)
-                    if expression_part.has_key('keywords'):
+                    if expression_part is not None and expression_part.has_key('keywords'):
                         keywords += expression_part['keywords']
                     else:
                         keywords += keywords_from_boolean_expression(key, value)

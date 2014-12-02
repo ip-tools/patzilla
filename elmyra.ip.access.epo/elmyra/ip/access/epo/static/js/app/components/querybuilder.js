@@ -137,11 +137,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.comfort_form_zoomed_to_regular_data();
 
             // convert query from form fields to cql expression
-            _this.compute_comfort_query();
+            _this.compute_comfort_query().then(function() {
 
-            //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
-            opsChooserApp.disable_reviewmode();
-            opsChooserApp.perform_search({reviewmode: false, clear: true});
+                //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
+                opsChooserApp.disable_reviewmode();
+                opsChooserApp.perform_search({reviewmode: false, clear: true});
+
+            });
+
         });
 
         // perform search default action
@@ -629,9 +632,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         //$("#query").val('');
         $("#keywords").val('[]');
-        this.compute_query_expression(payload).then(function(expression, keywords) {
+        return this.compute_query_expression(payload).then(function(expression, keywords) {
             expression && $("#query").val(expression);
             keywords && $("#keywords").val(keywords);
+
+        }).fail(function() {
+            $("#query").val('');
+            $("#keywords").val('');
+            opsChooserApp.ui.reset_content({documents: true, keep_notifications: true});
         });
     },
 

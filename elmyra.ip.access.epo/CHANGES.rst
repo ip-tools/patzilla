@@ -8,6 +8,7 @@ development
 - ui: reset document model on error while avoiding double rendering on initial page load
 - middleware/ui: propagate ftpro search exception to user interface
 - middleware: fix for boolean fulltext expressions for FulltextPRO search
+- ui: enhance/fix error behavior, error display and hotkeys
 
 0.66.0
 ======
