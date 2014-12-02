@@ -12,6 +12,7 @@ development
 - ui: enable/fix autocomplete in comfort form (workaround)
 - middleware: strip spaces from values of comfort form @ FulltextPRO to fix"FulltextPRO "syntax error
 - ui: fix comfort form submit-on-return for non-ie/-safari browsers
+- middleware/ui: enhance error message propagation
 
 0.66.0
 ======

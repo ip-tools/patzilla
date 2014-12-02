@@ -7,7 +7,7 @@ DatasourceSearch = Backbone.Model.extend({
 
         var query_parameters = { query: query };
         _.extend(query_parameters, options);
-        log('search: query_parameters:', query_parameters);
+        log('DatasourceSearch.query_parameters:', query_parameters);
 
         opsChooserApp.ui.indicate_activity(true);
 
@@ -43,10 +43,11 @@ DatasourceSearch = Backbone.Model.extend({
             error: function(e, xhr) {
 
                 console.log("DatasourceSearch error: " + xhr.responseText);
+
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content({documents: true});
 
-                opsChooserApp.ui.propagate_alerts(xhr.responseText);
+                opsChooserApp.ui.propagate_alerts(xhr, {url: self.url});
             }
         });
 
