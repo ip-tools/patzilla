@@ -14,6 +14,7 @@ development
 - ui: fix comfort form submit-on-return for non-ie/-safari browsers
 - middleware/ui: enhance error message propagation
 - middleware/ui: fix/enhance query expression building experience
+- middleware: propagate error message about unknown IPC class from FulltextPRO comfort form
 
 0.66.0
 ======
