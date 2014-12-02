@@ -83,9 +83,16 @@ _.clear = function(array) {
 // Recreating normal browser behavior in Javascript. Thank you, Microsoft.
 // Same behaviour in Safari. :-)
 jQuery.fn.handle_enter_keypress = function() {
-    var msie = _.string.contains(navigator.userAgent, '.NET');
-    var safari = _.string.contains(navigator.userAgent, 'Safari');
-    if (msie || safari) {
+
+    // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser/9851769#9851769
+
+    // At least IE6
+    var isInternetExplorer = /*@cc_on!@*/false || !!document.documentMode;
+
+    // At least Safari 3+: "[object HTMLElementConstructor]"
+    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+
+    if (isInternetExplorer || isSafari) {
         $(this).find('input').keypress(function(e) {
             // If the key pressed was enter
             if (e.which == '13') {
