@@ -5,6 +5,7 @@ import logging
 from beaker.cache import cache_region
 from cornice import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from pyramid.response import Response
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description, depatisconnect_abstracts
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
@@ -128,6 +129,11 @@ query_expression_util_service = Service(
     name='query-expression-utility-service',
     path='/api/util/query-expression',
     description="Query expression utility service")
+
+void_service = Service(
+    name='void-service',
+    path='/api/void',
+    description="Void service")
 
 
 # ------------------------------------------
@@ -636,8 +642,14 @@ def query_expression_util_handler(request):
 
     elif datasource == 'ftpro':
         #expression_parts = ['    ' + part for part in expression_parts]
-        expression = '\n'.join(expression_parts)
-        expression = '<and>\n' + expression + '\n</and>'
-        expression = expression.strip()
+        if expression_parts:
+            expression = '\n'.join(expression_parts)
+            expression = '<and>\n' + expression + '\n</and>'
+            expression = expression.strip()
 
     return expression
+
+
+@void_service.get()
+def void(request):
+    return Response('')

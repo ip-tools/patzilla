@@ -13,6 +13,7 @@ development
 - middleware: strip spaces from values of comfort form @ FulltextPRO to fix"FulltextPRO "syntax error
 - ui: fix comfort form submit-on-return for non-ie/-safari browsers
 - middleware/ui: enhance error message propagation
+- middleware/ui: fix/enhance query expression building experience
 
 0.66.0
 ======

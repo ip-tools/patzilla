@@ -147,7 +147,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         });
 
-        // perform search default action
+        // define default search action when using "Start search" button
         $('.btn-query-perform').unbind('click');
         $('.btn-query-perform').click(function() {
             $( "#querybuilder-comfort-form" ).submit();
@@ -618,6 +618,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     compute_comfort_query: function() {
 
         var form_data = this.read_comfort_form($('#querybuilder-comfort-form'));
+        if (_.isEmpty(form_data.criteria)) {
+            var deferred = $.Deferred();
+            deferred.reject();
+            return deferred;
+        }
+
         var datasource = opsChooserApp.get_datasource();
 
         var payload = {
@@ -633,8 +639,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //$("#query").val('');
         $("#keywords").val('[]');
         return this.compute_query_expression(payload).then(function(expression, keywords) {
-            expression && $("#query").val(expression);
-            keywords && $("#keywords").val(keywords);
+            $("#query").val(expression);
+            $("#keywords").val(keywords);
 
         }).fail(function() {
             $("#query").val('');
