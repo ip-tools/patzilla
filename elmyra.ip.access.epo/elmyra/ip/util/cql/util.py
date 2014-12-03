@@ -46,7 +46,7 @@ def pair_to_cql(datasource, key, value):
 
         if key == 'inventor':
             if not query_has_booleans and should_be_quoted(value):
-                value = '"{0}"'.format(value)
+                value = u'"{0}"'.format(value)
 
         if 'within' in value:
             format = '{0} {1}'

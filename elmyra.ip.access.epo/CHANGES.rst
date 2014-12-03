@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: honor "bi=" fieldname in comfort form fulltext search expression
+- middleware: minor fix for problems with umlauts in “inventor” field in comfort form
 
 0.67.0
 ======
