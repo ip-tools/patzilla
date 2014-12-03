@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: honor "bi=" fieldname in comfort form fulltext search expression
 
 0.67.0
 ======
