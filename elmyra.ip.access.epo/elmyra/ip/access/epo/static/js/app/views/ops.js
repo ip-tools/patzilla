@@ -69,6 +69,12 @@ OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
         }
     },
 
+    // override the "close" method, otherwise the events bound by "_initialEvents" would vanish
+    // which leads to the view children not being re-rendered when resetting its collection.
+    // See also region.show(view, {preventClose: true}) in more recent versions of Marionette.
+    close: function() {
+    },
+
     onRender: function() {
         console.log('OpsExchangeDocumentCollectionView.onRender');
     },

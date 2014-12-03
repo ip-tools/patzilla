@@ -6,6 +6,7 @@ development
 ===========
 - middleware: honor "bi=" fieldname in comfort form fulltext search expression
 - middleware: minor fix for problems with umlauts in “inventor” field in comfort form
+- ui: don’t close document view when switching regions to fix lost event listeners
 
 0.67.0
 ======
