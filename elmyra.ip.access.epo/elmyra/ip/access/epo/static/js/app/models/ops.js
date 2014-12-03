@@ -627,6 +627,16 @@ OpsExchangeDocument = Backbone.Model.extend({
             return text;
         },
 
+        _add_crossref: function(text) {
+            var printmode = opsChooserApp.config.get('mode') == 'print';
+            if (printmode) {
+                return text;
+            } else {
+                text += '&nbsp;&nbsp;<a href="http://search.crossref.org/?q=' + encodeURIComponent(text.replace(/^- /, '')) + '" target="_blank" class="incognito"><i class="icon-external-link"></i></a>';
+                return text;
+            }
+        },
+
         get_npl_citation_list: function() {
             var self = this;
             var results = [];
@@ -636,7 +646,8 @@ OpsExchangeDocument = Backbone.Model.extend({
                 results = container
                     .filter(function(item) { return item['nplcit']; })
                     .map(function(item) { return item['nplcit']['text']['$']; })
-                    .map(self._expand_links)
+                    //.map(self._expand_links)
+                    .map(self._add_crossref)
                 ;
             }
             return results;

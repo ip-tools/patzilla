@@ -4,9 +4,13 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.68.0
+======
 - middleware: honor "bi=" fieldname in comfort form fulltext search expression
 - middleware: minor fix for problems with umlauts in “inventor” field in comfort form
 - ui: don’t close document view when switching regions to fix lost event listeners
+- ui: link non-patent-literature citations to search.crossref.org
 
 0.67.0
 ======
