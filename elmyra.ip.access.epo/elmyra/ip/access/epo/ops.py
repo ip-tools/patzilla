@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
+import operator
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPInternalServerError
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
+from jsonpointer import JsonPointer
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.client import oauth_client_create
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
@@ -256,6 +258,8 @@ def ops_family_inpadoc(reference_type, document_number, constituents):
     """
     Download requested family publication information from OPS
     e.g. http://ops.epo.org/3.1/rest-services/family/publication/docdb/EP.1491501.A1/biblio,legal
+
+    reference_type = publication|application|priority
     """
 
     url_tpl = 'https://ops.epo.org/3.1/rest-services/family/{reference_type}/epodoc/{document_number}/{constituents}.json'
@@ -377,6 +381,56 @@ def ops_document_kindcodes(patent):
         kindcodes.append(kindcode)
 
     return kindcodes
+
+
+
+def _get_document_number_date(document_id_list, id_type):
+    for document_id in document_id_list:
+        if document_id['@document-id-type'] == id_type:
+            if id_type == 'epodoc':
+                doc_number = document_id['doc-number']['$']
+            else:
+                doc_number = document_id['country']['$'] + document_id['doc-number']['$'] + document_id['kind']['$']
+            date = document_id['date']['$']
+            return doc_number, date
+    return None, None
+
+def ops_analytics_applicant_family(applicant):
+    applicant = '"' + applicant.strip('"') + '"'
+
+    payload = {}
+
+    # aggregate list of publication numbers
+    response = ops_published_data_search('biblio', 'applicant=' + applicant, '1-100')
+    pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
+    pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
+    results = to_list(pointer_results.resolve(response))
+    document_numbers = []
+    for result in results:
+        document_id_entries = pointer_publication_reference.resolve(result)
+        doc_number, date = _get_document_number_date(document_id_entries, 'epodoc')
+        if doc_number:
+            document_numbers.append(doc_number)
+
+    # get family information
+    pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
+    pointer_publication_reference = JsonPointer('/publication-reference/document-id')
+    for document_number in document_numbers:
+        response = ops_family_inpadoc('publication', document_number, '')
+        results = to_list(pointer_results.resolve(response))
+        family_member_document_ids = []
+        for family_member in results:
+            document_id_entries = pointer_publication_reference.resolve(family_member)
+            doc_number, date = _get_document_number_date(document_id_entries, 'docdb')
+            family_member_document_ids.append({'docnumber': doc_number, 'date': date})
+
+        payload.setdefault(document_number, {})
+        payload[document_number]['family-members'] = family_member_document_ids
+
+        prio = sorted(family_member_document_ids, key=operator.itemgetter('date'))[0]
+        payload[document_number]['priority'] = prio
+
+    return payload
 
 
 def _summarize_metrics(payload, kind):

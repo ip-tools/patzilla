@@ -24,6 +24,7 @@ def main(global_config, **settings):
     config.include("elmyra.web.identity")
     config.include(".opaquelinks")
     config.include("elmyra.ip.access.ftpro.concordance")
+    config.include("elmyra.web.pyramid")
 
     config.add_renderer('.html', 'pyramid.mako_templating.renderer_factory')
     config.add_renderer('xml', XmlRenderer)

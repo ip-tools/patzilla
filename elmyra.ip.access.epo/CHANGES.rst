@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.69.0
+======
+- middleware: OPS applicant family analytics prototype
+
 0.68.0
 ======
 - middleware: honor "bi=" fieldname in comfort form fulltext search expression

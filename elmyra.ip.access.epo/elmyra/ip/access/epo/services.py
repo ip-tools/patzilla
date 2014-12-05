@@ -2,15 +2,18 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import json
 import logging
+from urllib import unquote_plus
 from beaker.cache import cache_region
 from cornice import Service
+from oauthlib.common import urldecode
+from pyramid.compat import url_unquote_text, url_unquote_native
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.response import Response
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description, depatisconnect_abstracts
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
 from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException
 from elmyra.ip.util.cql.pyparsing import CQL
@@ -78,6 +81,12 @@ ops_kindcode_service = Service(
     name='ops-kindcodes',
     path='/api/ops/{patent}/kindcodes',
     description="OPS kindcodes interface")
+
+ops_analytics_applicant_family_service = Service(
+    name='ops-analytics-applicant-family',
+    path='/api/ops/analytics/applicant-family/{applicant}',
+    renderer='prettyjson',
+    description="OPS applicant-family analytics interface")
 
 
 # ------------------------------------------
@@ -540,6 +549,14 @@ def ops_kindcode_handler(request):
     patent = request.matchdict['patent']
     kindcodes = ops_document_kindcodes(patent)
     return kindcodes
+
+@ops_analytics_applicant_family_service.get()
+def ops_analytics_applicant_family_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+    applicant = unquote_plus(request.matchdict['applicant'])
+    response = ops_analytics_applicant_family(applicant)
+    return response
+
 
 @depatisconnect_claims_service.get()
 def depatisconnect_claims_handler(request):
