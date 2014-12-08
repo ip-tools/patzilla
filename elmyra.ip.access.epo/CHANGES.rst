@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.70.0
+======
+- middleware: integrate"FulltextPRO "CPC classes
+
 0.69.0
 ======
 - middleware: OPS applicant family analytics prototype
