@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.70.1
+======
+- middleware: fix"FulltextPRO "CPC classes import
+
 0.70.0
 ======
 - middleware: integrate"FulltextPRO "CPC classes
