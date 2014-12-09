@@ -13,8 +13,6 @@ def pair_to_cql(datasource, key, value):
     cql_part = None
     format = u'{0}=({1})'
 
-    query_has_booleans = ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
-
     # special processing rules for depatisnet
     if datasource == 'depatisnet':
 
@@ -36,16 +34,16 @@ def pair_to_cql(datasource, key, value):
             else:
                 value = iso_to_german(value)
 
-        elif key == 'inventor':
+        elif key == 'inventor' or key == 'applicant':
             value = value.strip(' "')
-            if ' ' in value and not query_has_booleans:
+            if not has_booleans(value) and should_be_quoted(value):
                 value = value.replace(' ', '(L)')
 
 
     elif datasource == 'ops':
 
-        if key == 'inventor':
-            if not query_has_booleans and should_be_quoted(value):
+        if key == 'inventor' or key == 'applicant':
+            if not has_booleans(value) and should_be_quoted(value):
                 value = u'"{0}"'.format(value)
 
         if 'within' in value:
@@ -57,6 +55,8 @@ def pair_to_cql(datasource, key, value):
 
     return {'query': cql_part}
 
+def has_booleans(value):
+    return ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
 
 def should_be_quoted(value):
     value = value.strip()
