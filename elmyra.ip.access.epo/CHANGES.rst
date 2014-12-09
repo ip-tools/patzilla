@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: OPS applicant family analytics enhancements
+- middleware: enhance query expression utility service for “applicant” field, e.g. “MAMMUT SPORTS GROUP AG”
 
 0.70.1
 ======
