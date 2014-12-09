@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: OPS applicant family analytics enhancements
 
 0.70.1
 ======

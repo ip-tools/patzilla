@@ -384,8 +384,9 @@ def ops_document_kindcodes(patent):
 
 
 
-def _get_document_number_date(document_id_list, id_type):
-    for document_id in document_id_list:
+def _get_document_number_date(docref, id_type):
+    docref_list = to_list(docref)
+    for document_id in docref_list:
         if document_id['@document-id-type'] == id_type:
             if id_type == 'epodoc':
                 doc_number = document_id['doc-number']['$']
@@ -399,38 +400,140 @@ def ops_analytics_applicant_family(applicant):
     applicant = '"' + applicant.strip('"') + '"'
 
     payload = {}
+    family_has_statistics = {}
 
-    # aggregate list of publication numbers
-    response = ops_published_data_search('biblio', 'applicant=' + applicant, '1-100')
+    # A. aggregate list of publication numbers
+    # http://ops.epo.org/3.1/rest-services/published-data/search/full-cycle/?q=pa=%22MAMMUT%20SPORTS%20GROUP%20AG%22
+    # TODO: step through all pages
+    response = ops_published_data_search('biblio', 'applicant=' + applicant, '1-10')
     pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
+    pointer_family_id = JsonPointer('/exchange-document/@family-id')
     pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
-    results = to_list(pointer_results.resolve(response))
-    document_numbers = []
-    for result in results:
-        document_id_entries = pointer_publication_reference.resolve(result)
-        doc_number, date = _get_document_number_date(document_id_entries, 'epodoc')
-        if doc_number:
-            document_numbers.append(doc_number)
 
-    # get family information
+    # A.1 compute distinct list with unique families
+    family_representatives = {}
+    results = to_list(pointer_results.resolve(response))
+    for result in results:
+        family_id = pointer_family_id.resolve(result)
+        # TODO: currently, use first document as family representative; this could change
+        if family_id not in family_representatives:
+            document_id_entries = pointer_publication_reference.resolve(result)
+            doc_number, date = _get_document_number_date(document_id_entries, 'epodoc')
+            if doc_number:
+                family_representatives[family_id] = doc_number
+
+
+    # B. aggregate all family members
+    # https://ops.epo.org/3.1/rest-services/family/application/docdb/US19288494.xml
     pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
     pointer_publication_reference = JsonPointer('/publication-reference/document-id')
-    for document_number in document_numbers:
+    pointer_application_reference = JsonPointer('/application-reference/document-id')
+    #pointer_priority_claim_reference = JsonPointer('/priority-claim/document-id')
+    for family_id, document_number in family_representatives.iteritems():
+        payload.setdefault(family_id, {})
         response = ops_family_inpadoc('publication', document_number, '')
         results = to_list(pointer_results.resolve(response))
-        family_member_document_ids = []
-        for family_member in results:
-            document_id_entries = pointer_publication_reference.resolve(family_member)
-            doc_number, date = _get_document_number_date(document_id_entries, 'docdb')
-            family_member_document_ids.append({'docnumber': doc_number, 'date': date})
+        family_members = []
+        for result in results:
 
-        payload.setdefault(document_number, {})
-        payload[document_number]['family-members'] = family_member_document_ids
+            # B.1 get publication and application references
+            pubref = pointer_publication_reference.resolve(result)
+            pubref_number, pubref_date = _get_document_number_date(pubref, 'docdb')
+            pubref_number_epodoc, pubref_date_epodoc = _get_document_number_date(pubref, 'epodoc')
+            appref = pointer_application_reference.resolve(result)
+            appref_number, appref_date = _get_document_number_date(appref, 'docdb')
+            family_members.append({
+                'publication': {'number-docdb': pubref_number, 'date': pubref_date, 'number-epodoc': pubref_number_epodoc, },
+                'application': {'number-docdb': appref_number, 'date': appref_date},
+            })
 
-        prio = sorted(family_member_document_ids, key=operator.itemgetter('date'))[0]
-        payload[document_number]['priority'] = prio
+            # B.2 use first active priority
+            if 'priority-claim' not in payload[family_id]:
+                for priority_claim in to_list(result['priority-claim']):
+                    try:
+                        if priority_claim['priority-active-indicator']['$'] == 'YES':
+                            prio_number, prio_date = _get_document_number_date(priority_claim['document-id'], 'docdb')
+                            payload[family_id]['priority-claim'] = {'number-docdb': prio_number, 'date': prio_date}
+                    except KeyError:
+                        pass
+
+        payload[family_id]['family-members'] = family_members
+
+
+        # B.3 compute word- and image-counts for EP publication
+        for statistics_country in ['EP', 'WO', 'AT', 'CA', 'CH', 'GB', 'ES']:
+
+            if family_id in family_has_statistics:
+                break
+
+            for family_member in family_members:
+                pubref_number = family_member['publication']['number-epodoc']
+                if pubref_number.startswith(statistics_country):
+                    statistics = {}
+
+                    # B.3.1 get data about claims
+                    try:
+                        claims_response = ops_claims(pubref_number)
+                        pointer_claims = JsonPointer('/ops:world-patent-data/ftxt:fulltext-documents/ftxt:fulltext-document/claims')
+                        claims = pointer_claims.resolve(claims_response)
+                        claim_paragraphs = []
+                        for part in to_list(claims['claim']['claim-text']):
+                            claim_paragraphs.append(part['$'])
+                        claim_text = '\n'.join(claim_paragraphs)
+                        statistics['claims-language'] = claims['@lang']
+                        statistics['claims-words-first'] = len(claim_paragraphs[0].split())
+                        statistics['claims-words-total'] = len(claim_text.split())
+                        statistics['claims-count'] = len(claim_paragraphs)
+
+                    except Exception as ex:
+                        request = get_current_request()
+                        del request.errors[:]
+
+                    # B.3.2 get data about description
+                    try:
+                        description_response = ops_description(pubref_number)
+                        pointer_description = JsonPointer('/ops:world-patent-data/ftxt:fulltext-documents/ftxt:fulltext-document/description')
+                        descriptions = pointer_description.resolve(description_response)
+                        description_paragraphs = []
+                        for part in to_list(descriptions['p']):
+                            description_paragraphs.append(part['$'])
+                        description_text = '\n'.join(description_paragraphs)
+                        statistics['description-words-total'] = len(description_text.split())
+
+                    except Exception as ex:
+                        request = get_current_request()
+                        del request.errors[:]
+
+
+                    if statistics:
+
+                        # B.3.3 get data about image count
+                        try:
+                            pubref_number_docdb = family_member['publication']['number-docdb']
+                            imginfo = inquire_images(pubref_number_docdb)
+                            statistics['drawings-count'] = imginfo['META']['drawing-total-count']
+
+                        except Exception as ex:
+                            request = get_current_request()
+                            del request.errors[:]
+
+                        family_member['statistics'] = statistics
+                        family_has_statistics[family_id] = True
+                        break
 
     return payload
+
+
+def _find_publication_number_by_prio_number():
+    if 'priority-claim' in payload[family_id]:
+
+        # find publication number by application (prio) number
+        prio_number = payload[family_id]['priority-claim']['number']
+        pubref_number = None
+        for family_member in family_members:
+            if family_member['application']['number'] == prio_number:
+                pubref_number = family_member['publication']['number']
+                break
 
 
 def _summarize_metrics(payload, kind):
@@ -458,7 +561,8 @@ def ops_service_usage():
     # all
     #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=26/11/2013~04/03/2014')
     #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=04/03/2014~27/07/2014')
-    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=27/07/2014~06/11/2014')
+    #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=27/07/2014~06/11/2014')
+    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=06/11/2014~09/12/2014')
 
     #print response
     #print response.headers
