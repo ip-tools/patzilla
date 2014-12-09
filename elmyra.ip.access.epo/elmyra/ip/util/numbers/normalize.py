@@ -20,9 +20,12 @@ def patch_patent(patent):
         # strip leading zeros of *publication* to 6 digits, if seqnumber is longer than 6 digits
         # examples: publication: AT401234; application: AT 967/1994 => AT96794
         if patched['country'] == 'AT':
+            """
             if len(patched['number']) > 6 and not '/' in patched['number']:
                 patched['number'] = trim_leading_zeros(patched['number'])
                 patched['number'] = pad_left(patched['number'], '0', 6)
+            """
+            patched['number'] = trim_leading_zeros(patched['number'])
 
         elif patched['country'] == 'AU':
             patched = normalize_patent_au(patched)
