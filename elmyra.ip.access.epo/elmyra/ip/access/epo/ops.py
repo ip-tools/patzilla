@@ -520,6 +520,7 @@ def ops_analytics_applicant_family(applicant):
                     except Exception as ex:
                         request = get_current_request()
                         del request.errors[:]
+                        log.warn('Could not fetch OPS claims for {0}'.format(pubref_number))
 
                     # B.3.2 get data about description
                     try:
@@ -535,6 +536,7 @@ def ops_analytics_applicant_family(applicant):
                     except Exception as ex:
                         request = get_current_request()
                         del request.errors[:]
+                        log.warn('Could not fetch OPS description for {0}'.format(pubref_number))
 
 
                     if statistics:
@@ -563,7 +565,14 @@ def ops_analytics_applicant_family(applicant):
             for family_member in family_members:
                 pubref_number = family_member['publication']['number-epodoc']
                 if pubref_number.startswith(country):
-                    reginfo_payload = ops_register('publication', pubref_number, 'biblio')
+                    try:
+                        reginfo_payload = ops_register('publication', pubref_number, 'biblio')
+                    except:
+                        request = get_current_request()
+                        del request.errors[:]
+                        log.warn('Could not fetch OPS register information for {0}'.format(pubref_number))
+                        continue
+
                     designated_states_list = pointer_designated_states.resolve(reginfo_payload)
                     designated_states_info = to_list(designated_states_list)[0]
                     try:
