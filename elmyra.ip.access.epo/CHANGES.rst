@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.71.3
+======
+- middleware: fix OPS applicant family analytics
+
 0.71.2
 ======
 - middleware: deactivate enhanced flexible class querying at FulltextPRO due to upstream regressions

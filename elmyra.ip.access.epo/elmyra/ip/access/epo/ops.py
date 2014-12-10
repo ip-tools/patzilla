@@ -462,8 +462,17 @@ def ops_analytics_applicant_family(applicant):
     pointer_application_reference = JsonPointer('/application-reference/document-id')
     #pointer_priority_claim_reference = JsonPointer('/priority-claim/document-id')
     for family_id, document_number in family_representatives.iteritems():
+
+        try:
+            response = ops_family_inpadoc('publication', document_number, '')
+
+        except Exception as ex:
+            request = get_current_request()
+            del request.errors[:]
+            log.warn('Could not fetch OPS family for {0}'.format(document_number))
+            continue
+
         payload.setdefault(family_id, {})
-        response = ops_family_inpadoc('publication', document_number, '')
         results = to_list(pointer_results.resolve(response))
         family_members = []
         for result in results:
