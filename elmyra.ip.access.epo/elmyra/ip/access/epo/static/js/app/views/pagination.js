@@ -85,6 +85,10 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                     } else {
                         opsChooserApp.perform_search(options);
                     }
+
+                    // scroll to first result entry
+                    var scroll_target = $('.ops-collection-entry').first();
+                    opsChooserApp.ui.scroll_smooth(scroll_target);
                 },
 
                 //link_string: '/?page={page_number}',
