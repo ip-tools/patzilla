@@ -366,14 +366,22 @@
                             (71)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_applicants(true).map(function(item) { return '<strong>' + item + '</strong>'; }).join('<br/>') || '&nbsp;' %>
+                            <%=
+                            data.get_applicants(true).map(function(item) {
+                                return _.template($('#ops-biblio-party-template').html(), item);
+                            }).join('<br/>') || '&nbsp;'
+                            %>
                         </dd>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
                             (72)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_inventors(true).map(function(item) { return '' + item + ''; }).join('<br/>') || '&nbsp;' %>
+                            <%=
+                            data.get_inventors(true).map(function(item) {
+                                return _.template($('#ops-biblio-party-template').html(), item);
+                            }).join('<br/>') || '&nbsp;'
+                            %>
                         </dd>
                         <br/>
 
@@ -574,6 +582,21 @@
     </%text>
 
 </script>
+
+<%text>
+<script type="text/x-underscore-template" id="ops-biblio-party-template">
+    <%
+    original = _.escape(_.escape(original));
+    epodoc = _.escape(_.escape(epodoc));
+    %>
+    <%= display %>
+    &nbsp;
+    <a href="#" class="incognito do-not-print" onclick="javascript: $(this).popover({
+        html: true,
+        content: 'original: <%= original %><br/>epodoc: <%= epodoc %>',
+        trigger: 'manual'}); $(this).popover('toggle'); return false;">...</a>
+</script>
+</%text>
 
 
 ## ------------------------------------------
