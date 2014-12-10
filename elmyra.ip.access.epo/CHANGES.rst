@@ -4,13 +4,14 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
-- middleware: OPS applicant family analytics enhancements
+- middleware: OPS applicant family analytics enhancements: word- and image-counts
 - middleware: enhance query expression utility service for “applicant” field, e.g. “MAMMUT SPORTS GROUP AG”
 - middleware: fix number normalization of AT numbers
 - ui: scroll to first result entry after paging
 - middleware: enhance/fix drawing inquiry
 - ui: display original values of parties (applicant, inventor)
 - middleware: make umlauts work at FulltextPRO, e.g. applicant=Kärcher
+- middleware: OPS applicant family analytics enhancements: designated states
 
 0.70.1
 ======

@@ -284,6 +284,34 @@ def ops_family_inpadoc(reference_type, document_number, constituents):
         raise response
 
 
+@cache_region('search')
+def ops_register(reference_type, document_number, constituents):
+    """
+    Download requested register information from OPS
+    e.g. http://ops.epo.org/3.1/rest-services/register/publication/epodoc/EP2485810/biblio
+
+    reference_type = publication|application|priority
+    """
+
+    url_tpl = 'https://ops.epo.org/3.1/rest-services/register/{reference_type}/epodoc/{document_number}/{constituents}.json'
+
+    url = url_tpl.format(reference_type=reference_type, document_number=document_number, constituents=constituents)
+    client = get_ops_client()
+    response = client.get(url, headers={'Accept': 'application/json'})
+    #response = client.get(url, headers={'Accept': 'text/xml'})
+    #print "response:", response.content
+
+    if response.status_code == 200:
+        if response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            # TODO: handle error here?
+            return
+    else:
+        response = handle_error(response, 'ops-register')
+        raise response
+
+
 def handle_error(response, name):
     request = get_current_request()
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
@@ -404,11 +432,12 @@ def ops_analytics_applicant_family(applicant):
 
     payload = {}
     family_has_statistics = {}
+    family_has_designated_states = {}
 
     # A. aggregate list of publication numbers
     # http://ops.epo.org/3.1/rest-services/published-data/search/full-cycle/?q=pa=%22MAMMUT%20SPORTS%20GROUP%20AG%22
     # TODO: step through all pages
-    response = ops_published_data_search('biblio', 'applicant=' + applicant, '1-10')
+    response = ops_published_data_search('biblio', 'applicant=' + applicant, '1-50')
     pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
     pointer_family_id = JsonPointer('/exchange-document/@family-id')
     pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
@@ -524,8 +553,39 @@ def ops_analytics_applicant_family(applicant):
                         family_has_statistics[family_id] = True
                         break
 
+        # B.4 compute designated states
+        pointer_designated_states = JsonPointer('/ops:world-patent-data/ops:register-search/reg:register-documents/reg:register-document/reg:bibliographic-data/reg:designation-of-states')
+        for country in ['EP', 'WO']:
+
+            if family_id in family_has_designated_states:
+                break
+
+            for family_member in family_members:
+                pubref_number = family_member['publication']['number-epodoc']
+                if pubref_number.startswith(country):
+                    reginfo_payload = ops_register('publication', pubref_number, 'biblio')
+                    designated_states_list = pointer_designated_states.resolve(reginfo_payload)
+                    designated_states_info = to_list(designated_states_list)[0]
+                    try:
+                        regional_info = designated_states_info['reg:designation-pct']['reg:regional']
+                        family_member.setdefault('register', {})
+                        family_member['register']['designated-states'] = {
+                            'gazette-num': designated_states_info['@change-gazette-num'],
+                            'region': regional_info['reg:region']['reg:country']['$'],
+                            'countries': list(_flatten_ops_json_list(regional_info['reg:country'])),
+                        }
+                        family_has_designated_states[family_id] = True
+                        break
+
+                    except Exception as ex:
+                        log.error('Retrieving designated states for {0} failed.'.format(pubref_number))
+
+
     return payload
 
+def _flatten_ops_json_list(ops_list):
+    for ops_entry in ops_list:
+        yield ops_entry['$']
 
 def _find_publication_number_by_prio_number():
     if 'priority-claim' in payload[family_id]:
