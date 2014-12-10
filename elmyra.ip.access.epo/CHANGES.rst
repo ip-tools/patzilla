@@ -10,6 +10,7 @@ development
 - ui: scroll to first result entry after paging
 - middleware: enhance/fix drawing inquiry
 - ui: display original values of parties (applicant, inventor)
+- middleware: make umlauts work at FulltextPRO, e.g. applicant=Kärcher
 
 0.70.1
 ======
