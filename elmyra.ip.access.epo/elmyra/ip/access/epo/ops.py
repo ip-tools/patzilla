@@ -136,7 +136,10 @@ def enrich_image_inquiry_info(info):
 
     # clone number of drawings
     if meta.has_key('drawing-start-page'):
-        meta['drawing-total-count'] = info['Drawing']['@number-of-pages']
+        if info.has_key('Drawing'):
+            meta['drawing-total-count'] = int(info['Drawing']['@number-of-pages'])
+        else:
+            meta['drawing-total-count'] = int(info['FullDocument']['@number-of-pages']) - meta['drawing-start-page']
 
     info['META'] = meta
 

@@ -8,6 +8,7 @@ development
 - middleware: enhance query expression utility service for “applicant” field, e.g. “MAMMUT SPORTS GROUP AG”
 - middleware: fix number normalization of AT numbers
 - ui: scroll to first result entry after paging
+- middleware: enhance/fix drawing inquiry
 
 0.70.1
 ======
