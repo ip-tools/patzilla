@@ -9,6 +9,7 @@ development
 - middleware: fix number normalization of AT numbers
 - ui: scroll to first result entry after paging
 - middleware: enhance/fix drawing inquiry
+- ui: display original values of parties (applicant, inventor)
 
 0.70.1
 ======

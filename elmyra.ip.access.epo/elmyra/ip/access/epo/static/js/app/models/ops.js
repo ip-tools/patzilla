@@ -432,11 +432,19 @@ OpsExchangeDocument = Backbone.Model.extend({
                 //entries.push(epodoc_value + ' / ' + original_value);
                 //entries.push(original_value);
 
-                var use_value = original_value;
+                var display_value = original_value;
                 if (epodoc_value) {
-                    use_value = epodoc_value.replace(/\[.+?\]/, '').trim();
+                    // strip country suffix from e.g. "L'ORÉAL [FR]"
+                    display_value = epodoc_value.replace(/\[.+?\]/, '').trim();
                 }
-                entries.push(use_value);
+
+                var entry = {
+                    display: display_value,
+                    epodoc: epodoc_value,
+                    original: original_value,
+                }
+
+                entries.push(entry);
             });
 
             return entries;

@@ -134,12 +134,21 @@ DocumentBaseController = Marionette.Controller.extend({
         var self = this;
         return _.map(container, function(item) {
 
-            // v1 replace text with links
-            return self.enrich_link(item, attribute, item, value_modifier);
+            if (_.isString(item)) {
 
-            // v2 use separate icon for link placement
-            //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
-            //return item + '&nbsp;&nbsp;' + link;
+                // v1 replace text with links
+                return self.enrich_link(item, attribute, item, value_modifier);
+
+                // v2 use separate icon for link placement
+                //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
+                //return item + '&nbsp;&nbsp;' + link;
+
+            } else if (_.isObject(item)) {
+                item.display = self.enrich_link(item.display, attribute, item.display, value_modifier);
+                return item;
+
+            }
+
         });
     },
 
