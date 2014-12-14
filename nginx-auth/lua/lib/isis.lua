@@ -164,12 +164,19 @@ function verify_cookie()
 
         if ttl >= 0 and encode_token(user, timestamp) == token then
 
-            -- propagate userid/username to upstream service via http headers
+            -- propagate userid/username to upstream service via http request headers
+            ngx.var.user_id = user.userid
+
+            -- propagate userid/username to downstream client via http response headers
+            ngx.log(ngx.INFO, 'userid: ' .. user.userid)
             ngx.header['X-User-Id'] = user.userid
             ngx.header['X-User-Username'] = user.username
             ngx.header['X-User-Fullname'] = user.fullname
             if user.tags then
                 ngx.header['X-User-Tags'] = cjson.encode(user.tags)
+            end
+            if user.modules then
+                ngx.header['X-User-Modules'] = cjson.encode(user.modules)
             end
 
             -- automatic token renewal

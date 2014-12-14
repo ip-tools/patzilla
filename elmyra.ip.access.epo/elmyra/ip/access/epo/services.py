@@ -2,18 +2,17 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import json
 import logging
+import arrow
 from urllib import unquote_plus
 from beaker.cache import cache_region
 from cornice import Service
-from oauthlib.common import urldecode
-from pyramid.compat import url_unquote_text, url_unquote_native
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.response import Response
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description, depatisconnect_abstracts
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family, ops_service_usage
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
 from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException
 from elmyra.ip.util.cql.pyparsing import CQL
@@ -87,6 +86,12 @@ ops_analytics_applicant_family_service = Service(
     path='/api/ops/analytics/applicant-family/{applicant}',
     renderer='prettyjson',
     description="OPS applicant-family analytics interface")
+
+ops_usage_service = Service(
+    name='ops-usage',
+    path='/api/ops/usage/{kind}',
+    renderer='prettyjson',
+    description="OPS usage interface")
 
 
 # ------------------------------------------
@@ -555,6 +560,36 @@ def ops_analytics_applicant_family_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     applicant = unquote_plus(request.matchdict['applicant'])
     response = ops_analytics_applicant_family(applicant)
+    return response
+
+@ops_usage_service.get()
+def ops_usage_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+    kind = request.matchdict['kind']
+    now = arrow.utcnow()
+    if kind == 'day':
+        date_begin = now.replace(days=-1)
+        date_end = now
+
+    elif kind == 'week':
+        date_begin = now.replace(weeks=-1)
+        date_end = now
+
+    elif kind == 'month':
+        date_begin = now.replace(months=-1)
+        date_end = now
+
+    elif kind == 'year':
+        date_begin = now.replace(years=-1)
+        date_end = now
+
+    else:
+        raise HTTPNotFound('Use /day, {0} not implemented'.format(kind))
+
+    date_begin = date_begin.format('DD/MM/YYYY')
+    date_end = date_end.format('DD/MM/YYYY')
+
+    response = ops_service_usage(date_begin, date_end)
     return response
 
 

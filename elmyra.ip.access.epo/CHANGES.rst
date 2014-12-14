@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: propagate userid upstream to middleware and resolve user detail information from MongoDB
+- middleware: use OPS credentials from user details, otherwise fall back to Elmyra OPS credentials
+- middleware: publish and enhance OPS usage api
 
 0.71.4
 ======

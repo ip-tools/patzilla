@@ -8,7 +8,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
 from mongoengine import connect as mongoengine_connect, signals
 from mongoengine.document import Document
-from mongoengine.fields import StringField, ListField, DateTimeField
+from mongoengine.fields import StringField, ListField, DateTimeField, DictField
 from mongoengine.errors import NotUniqueError
 
 log = logging.getLogger(__name__)
@@ -21,6 +21,7 @@ def includeme(config):
     #config.add_subscriber(setup_pymongo, "pyramid.events.NewRequest")
     config.add_subscriber(setup_mongoengine, "pyramid.events.ApplicationCreated")
     config.add_subscriber(provision_users, "pyramid.events.ApplicationCreated")
+    config.add_subscriber(attach_user, "pyramid.events.ContextFound")
 
 
 # ------------------------------------------
@@ -42,6 +43,20 @@ def setup_pymongo(event):
 
 
 # ------------------------------------------
+#   user injection
+# ------------------------------------------
+def attach_user(event):
+    request = event.request
+    registry = request.registry
+    #context = request.context
+    userid = request.headers.get('X-User-Id')
+    if userid:
+        request.user = User.objects(userid=userid).first()
+    else:
+        request.user = None
+
+
+# ------------------------------------------
 #   data model
 # ------------------------------------------
 class User(Document):
@@ -52,6 +67,8 @@ class User(Document):
     created = DateTimeField()
     modified = DateTimeField(default=datetime.datetime.now)
     tags = ListField(StringField(max_length=30))
+    modules = ListField(StringField(max_length=30))
+    upstream_credentials = DictField()
 
     @classmethod
     def assign_userid(cls, sender, document, **kwargs):
@@ -100,9 +117,20 @@ class UserHistory(Document):
 #   utilities
 # ------------------------------------------
 def provision_users(event):
+    ops_epd_credentials = {
+        'consumer_key': r'***REMOVED***',
+        'consumer_secret': r'***REMOVED***',
+    }
     users = [
         User(username = '***REMOVED***', password = '***REMOVED***', fullname = '***REMOVED***', tags = ['elmyra-staff']),
-        User(username = '***REMOVED***', password = '***REMOVED***', fullname = 'Andreas Motl', tags = ['elmyra-staff']),
+        User(username = '***REMOVED***',  password = '***REMOVED***', fullname = 'Andreas Motl', tags = ['elmyra-staff']),
+        User(
+            username = 'ep-test2',
+            password = 'test123',
+            fullname = '***REMOVED***',
+            tags = ['patoffice'],
+            upstream_credentials = {'ops': ops_epd_credentials}
+        ),
     ]
     for user in users:
         try:

@@ -9,7 +9,7 @@ from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
 from jsonpointer import JsonPointer
 from elmyra.ip.access.epo.util import object_attributes_to_dict
-from elmyra.ip.access.epo.client import oauth_client_create
+from elmyra.ip.access.epo.client import OpsOAuthClientFactory
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
 from elmyra.ip.util.numbers.common import split_patent_number
 
@@ -19,13 +19,11 @@ log = logging.getLogger(__name__)
 ops_service_url = 'https://ops.epo.org/3.1/rest-services/'
 
 
-ops_client = None
 def get_ops_client():
-    global ops_client
-    if not ops_client:
-        ops_client = oauth_client_create()
-    return ops_client
-
+    request = get_current_request()
+    oauth_client = request.ops_oauth_client
+    log.info('Making OPS request with client-id {0}'.format(oauth_client.client_id))
+    return oauth_client
 
 @cache_region('search')
 def ops_published_data_search(constituents, query, range):
@@ -629,7 +627,7 @@ def _summarize_metrics(payload, kind):
     total = sum(total_response_sizes)
     return total
 
-def ops_service_usage():
+def ops_service_usage(date_begin, date_end):
     client = get_ops_client()
 
     # one day
@@ -643,7 +641,12 @@ def ops_service_usage():
     #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=26/11/2013~04/03/2014')
     #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=04/03/2014~27/07/2014')
     #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=27/07/2014~06/11/2014')
-    response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=06/11/2014~09/12/2014')
+    #response = client.get('https://ops.epo.org/3.1/developers/me/stats/usage?timeRange=06/11/2014~09/12/2014')
+
+    # specific
+    url = 'https://ops.epo.org/3.1/developers/me/stats/usage?timeRange={date_begin}~{date_end}'.format(**locals())
+    print "getting metrics for:", date_begin, date_end, url
+    response = client.get(url)
 
     #print response
     #print response.headers
@@ -652,10 +655,22 @@ def ops_service_usage():
     payload = response.json()
 
     total_response_size = _summarize_metrics(payload, 'total_response_size')
-    print 'Total response size: {0}G'.format(total_response_size / float(10**9))
-
     message_count = _summarize_metrics(payload, 'message_count')
-    print 'Total message count: {0}'.format(message_count)
+
+    data = {
+        'time-range':    '{date_begin} to {date_end}'.format(**locals()),
+        'response-size': total_response_size,
+        'message-count': message_count,
+    }
+
+    log.info('OPS service usage for client_id={client_id} from {date_begin} to {date_end} is {data}'.format(
+        client_id = client.client_id, **locals()))
+
+    return data
+
 
 if __name__ == '__main__':
-    ops_service_usage()
+    data = ops_service_usage('06/11/2014', '09/12/2014')
+    print 'Time range:    {0}'.format(data['time-range'])
+    print 'Response size: {0}G'.format(data['response-size'] / float(10**9))
+    print 'Message count: {0}'.format(data['message-count'])
