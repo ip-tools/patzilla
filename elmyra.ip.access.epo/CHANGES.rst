@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.71.4
+======
+- middleware: fix FulltextPRO error messages
+
 0.71.3
 ======
 - middleware: fix OPS applicant family analytics
