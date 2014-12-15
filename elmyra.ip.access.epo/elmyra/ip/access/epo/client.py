@@ -3,10 +3,12 @@
 import json
 import logging
 from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
+from pyramid.threadlocal import get_current_registry
 from requests_oauthlib.oauth2_session import OAuth2Session
 from oauthlib.common import add_params_to_uri
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from elmyra.web.identity.store import IUserMetricsManager
 
 logger = logging.getLogger(__name__)
 
@@ -52,12 +54,17 @@ class OpsOAuthClientPool(object):
 class OpsOAuth2Session(OAuth2Session):
 
     def __init__(self, *args, **kwargs):
+        registry = get_current_registry()
+        self.metrics_manager = registry.getUtility(IUserMetricsManager)
         super(OpsOAuth2Session, self).__init__(*args, **kwargs)
 
     def request(self, *args, **kwargs):
 
         try:
             response = super(OpsOAuth2Session, self).request(*args, **kwargs)
+            content_length = response.headers.get('Content-Length')
+            if content_length and content_length.isdigit():
+                self.metrics_manager.measure_upstream('ops', int(content_length))
             return response
 
         except OAuth2Error as ex:
