@@ -3,13 +3,17 @@
 import logging
 import uuid
 import datetime
+import arrow
 from pbkdf2 import crypt
 from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
-from mongoengine import connect as mongoengine_connect, signals
+from mongoengine import connect as mongoengine_connect, signals, IntField
 from mongoengine.document import Document
 from mongoengine.fields import StringField, ListField, DateTimeField, DictField
 from mongoengine.errors import NotUniqueError
+from pyramid.threadlocal import get_current_request
+from zope.interface.declarations import implements
+from zope.interface.interface import Interface
 
 log = logging.getLogger(__name__)
 
@@ -113,8 +117,39 @@ class UserHistory(Document):
     action = StringField()
 
 
+class UserMetrics(Document):
+    userid = StringField()
+    date = DateTimeField()
+    transfer = DictField()
+
+
 # ------------------------------------------
 #   utilities
+# ------------------------------------------
+class IUserMetricsManager(Interface):
+    pass
+
+class UserMetricsManager(object):
+
+    implements(IUserMetricsManager)
+
+    def measure_upstream(self, upstream, volume):
+
+        # measure per-user
+        request = get_current_request()
+        userid = request.user and request.user.userid or None
+
+        log.info('Measure transfer: userid={0}, upstream={1}, volume={2}'.format(userid, upstream, volume))
+        date = arrow.utcnow().format('YYYY-MM-DD')
+        metrics, created = UserMetrics.objects.get_or_create(userid=userid, date=date)
+        metrics.transfer.setdefault(upstream, {'total_response_size': 0, 'message_count': 0})
+        metrics.transfer[upstream]['total_response_size'] += volume
+        metrics.transfer[upstream]['message_count'] += 1
+        metrics.save()
+
+
+# ------------------------------------------
+#   provisioning
 # ------------------------------------------
 def provision_users(event):
     ops_epd_credentials = {
