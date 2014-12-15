@@ -8,6 +8,7 @@ development
 - middleware: use OPS credentials from user details, otherwise fall back to Elmyra OPS credentials
 - middleware: publish and enhance OPS usage api
 - middleware: per-user, per-day metrics for upstream transfer volume
+- middleware: use "modules" info from user details for computing allowed access to FulltextPRO
 
 0.71.4
 ======

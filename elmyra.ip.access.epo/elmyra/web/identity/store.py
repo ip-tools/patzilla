@@ -143,8 +143,12 @@ def provision_users(event):
         'consumer_secret': r'***REMOVED***',
     }
     users = [
-        User(username = '***REMOVED***', password = '***REMOVED***', fullname = '***REMOVED***', tags = ['elmyra-staff']),
-        User(username = '***REMOVED***',  password = '***REMOVED***', fullname = 'Andreas Motl', tags = ['elmyra-staff']),
+        User(username = '***REMOVED***', password = '***REMOVED***', fullname = '***REMOVED***',
+            tags = ['elmyra-staff'],
+            modules = ['ftpro']),
+        User(username = '***REMOVED***',  password = '***REMOVED***', fullname = 'Andreas Motl',
+            tags = ['elmyra-staff'],
+            modules = ['ftpro']),
         User(
             username = 'ep-test2',
             password = 'test123',
