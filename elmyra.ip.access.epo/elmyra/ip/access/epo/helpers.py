@@ -60,6 +60,12 @@ class BackboneModelParameterFiddler(object):
         environment = dict_prefix_key(self.environment(), 'request.')
         setting_params = dict_prefix_key(self.settings(), 'setting.')
         request_params = dict(request.params)
+        user_params = {}
+        if request.user:
+            user_params = dict_prefix_key({
+                'modules': request.user.modules,
+                'tags': request.user.tags,
+            }, 'user.')
         request_opaque = dict(request.opaque)
         request_opaque_meta = dict_prefix_key(dict(request.opaque_meta), 'opaque.meta.')
 
@@ -89,11 +95,13 @@ class BackboneModelParameterFiddler(object):
         # 2. merge "settings" (prefixed "setting.")
         # 3. merge "opaque meta" parameters (prefixed "opaque.meta.")
         # 4. merge "request parameters"
-        # 5. merge "opaque parameters" taking the highest precedence
+        # 5. merge "user parameters"
+        # 6. merge "opaque parameters" taking the highest precedence
         params = environment
         params.update(setting_params)
         params.update(request_opaque_meta)
         params.update(request_params)
+        params.update(user_params)
         params.update(request_opaque)
 
 
@@ -128,11 +136,10 @@ class BackboneModelParameterFiddler(object):
         ftpro_allowed_hosts = [
             'patentsearch.vdpm.elmyra.de',
             'patentsearch-staging.elmyra.de',
-            'patentsearch-develop.elmyra.de',
-            'localhost',
-            'offgrid',
         ]
-        params['ftpro_enabled'] = params.get('request.host_name') in ftpro_allowed_hosts
+        params['ftpro_enabled'] = \
+            params.get('request.host_name') in ftpro_allowed_hosts or \
+            'ftpro' in params.get('user.modules', [])
 
         # 2.b compute whether Google datasource is allowed
         google_allowed_hosts = [
