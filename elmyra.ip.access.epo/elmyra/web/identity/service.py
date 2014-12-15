@@ -6,6 +6,23 @@ from elmyra.web.identity.store import User, UserHistory
 
 log = logging.getLogger(__name__)
 
+def includeme(config):
+    config.add_subscriber(attach_user, "pyramid.events.ContextFound")
+
+# ------------------------------------------
+#   user injection
+# ------------------------------------------
+def attach_user(event):
+    request = event.request
+    registry = request.registry
+    #context = request.context
+    userid = request.headers.get('X-User-Id')
+    if userid:
+        request.user = User.objects(userid=userid).first()
+    else:
+        request.user = None
+
+
 
 # ------------------------------------------
 #   services

@@ -25,7 +25,7 @@ def includeme(config):
     #config.add_subscriber(setup_pymongo, "pyramid.events.NewRequest")
     config.add_subscriber(setup_mongoengine, "pyramid.events.ApplicationCreated")
     config.add_subscriber(provision_users, "pyramid.events.ApplicationCreated")
-    config.add_subscriber(attach_user, "pyramid.events.ContextFound")
+    config.registry.registerUtility(UserMetricsManager())
 
 
 # ------------------------------------------
@@ -44,20 +44,6 @@ def setup_pymongo(event):
     mongodb_database = parse_uri(mongodb_uri)['database']
     mongodb_connection = MongoClient(mongodb_uri)
     event.request.db = mongodb_connection[mongodb_database]
-
-
-# ------------------------------------------
-#   user injection
-# ------------------------------------------
-def attach_user(event):
-    request = event.request
-    registry = request.registry
-    #context = request.context
-    userid = request.headers.get('X-User-Id')
-    if userid:
-        request.user = User.objects(userid=userid).first()
-    else:
-        request.user = None
 
 
 # ------------------------------------------
