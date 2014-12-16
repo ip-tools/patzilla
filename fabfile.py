@@ -77,10 +77,11 @@ def upload_config(config_path, target_path):
 
 def restart_service(target):
     uwsgi_names = {
-        'prod': 'patentsearch-prod',
-        'staging': 'patentsearch-staging',
-        'patoffice': 'patentsearch.patoffice',
-        'vdpm': 'patentsearch.vdpm',
+        'develop':      'patentsearch-develop',
+        'staging':      'patentsearch-staging',
+        'prod':         'patentsearch-prod',
+        'patoffice':    'patentsearch.patoffice',
+        'vdpm':         'patentsearch.vdpm',
     }
     uwsgi_name = uwsgi_names.get(target)
     if uwsgi_name:
