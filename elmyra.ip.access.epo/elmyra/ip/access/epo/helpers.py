@@ -134,6 +134,7 @@ class BackboneModelParameterFiddler(object):
 
         # 2.a compute whether"FulltextPRO "datasource is enabled
         ftpro_allowed_hosts = [
+            'localhost',
             'patentsearch.vdpm.elmyra.de',
             'patentsearch-staging.elmyra.de',
         ]
