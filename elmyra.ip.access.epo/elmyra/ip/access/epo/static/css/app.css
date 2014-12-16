@@ -175,6 +175,11 @@ a.editable-click {
     min-height: 7em;
 }
 
+#keyword-editor {
+    width: 800px;
+    margin-left: -400px;
+}
+
 
 
 /* result entry */
