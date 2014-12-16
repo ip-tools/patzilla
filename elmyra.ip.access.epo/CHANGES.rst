@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.73.0
+======
+- ui: individual keyword highlighting - prototype
+
 0.72.0
 ======
 - middleware: propagate userid upstream to middleware and resolve user detail information from MongoDB

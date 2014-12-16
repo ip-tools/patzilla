@@ -672,7 +672,7 @@
             <div class="span4 do-not-print non-liveview">
 
                 <% if (data.searchmode == 'subsearch' && !data.reviewmode) { %>
-                <div class="span4">
+                <div class="span6">
 
                     <div class="btn-group btn-popover tabs content-chooser"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
@@ -689,12 +689,37 @@
                 </div>
                 <% } %>
 
-                <div class="span4 pull-right">
+                <div class="span6 pull-right">
                     <a id="basket-add-all-documents" role="button" class="btn btn-popover"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add all documents of current result page to collection"
                        >
                         <i class="icon-white icon-plus"></i> Add visible
                     </a>
+
+                    <div class="btn-group">
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-wrench"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+
+                            <li>
+
+                                <div class="dropdown-section-header">Highlighting</div>
+
+                                <!-- mapping -->
+                                <a id="highlighting-map-edit-action">
+                                    <i class="icon-edit"></i> &nbsp; Edit mapping
+                                </a>
+
+                                <!--
+                                <hr class="divider"/>
+                                -->
+
+                            </li>
+                        </ul>
+
+                    </div>
+
                 </div>
 
                 <!-- result list actions -->

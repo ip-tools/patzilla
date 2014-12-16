@@ -545,7 +545,31 @@ HighlightingController = Marionette.Controller.extend({
         console.log('HighlightingController.initialize');
     },
 
-    apply: function(element) {
+    setup_ui: function() {
+
+        var _this = this;
+
+        $('#highlighting-map-edit-action').unbind('click');
+        $('#highlighting-map-edit-action').click(function() {
+
+            localforage.getItem('keywords-magenta', function(value) {
+                $('#keyword-editor').modal('show');
+                $('#keywords-magenta').val(value);
+            });
+
+            $('#keyword-editor-save-button').unbind('click');
+            $('#keyword-editor-save-button').click(function() {
+                var value = $('#keywords-magenta').val();
+                localforage.setItem('keywords-magenta', value, function() {
+                    $('#keyword-editor').modal('hide');
+                });
+            });
+
+        });
+
+    },
+
+    apply_query_keywords: function(element) {
 
         var highlight_selector = element;
         if (!highlight_selector) { highlight_selector = '.keyword'; }
@@ -586,6 +610,22 @@ HighlightingController = Marionette.Controller.extend({
         });
     },
 
+    apply_individual_keywords: function(element) {
+
+        var highlight_selector = element;
+        if (!highlight_selector) { highlight_selector = '.keyword'; }
+
+        localforage.getItem('keywords-magenta', function(value) {
+            var keywords = value.split(',');
+            _.each(keywords, function(keyword) {
+                var class_name = 'highlight-' + 'magenta';
+                var style = {backgroundColor: 'hsla(315, 100%, 82%, 1)'};
+                $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
+                $('.' + class_name).css(style);
+            });
+        });
+    },
+
 });
 
 
@@ -599,6 +639,8 @@ opsChooserApp.addInitializer(function(options) {
         this.document_base.setup_ui();
         this.document_details.setup_ui();
         this.document_carousel.setup_ui();
-        this.document_highlighting.apply();
+        this.document_highlighting.setup_ui();
+        this.document_highlighting.apply_query_keywords();
+        this.document_highlighting.apply_individual_keywords();
     });
 });
