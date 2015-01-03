@@ -569,6 +569,11 @@ HighlightingController = Marionette.Controller.extend({
 
     },
 
+    apply: function(element) {
+        this.apply_query_keywords(element);
+        this.apply_individual_keywords(element);
+    },
+
     apply_query_keywords: function(element) {
 
         var highlight_selector = element;
@@ -640,7 +645,6 @@ opsChooserApp.addInitializer(function(options) {
         this.document_details.setup_ui();
         this.document_carousel.setup_ui();
         this.document_highlighting.setup_ui();
-        this.document_highlighting.apply_query_keywords();
-        this.document_highlighting.apply_individual_keywords();
+        this.document_highlighting.apply();
     });
 });
