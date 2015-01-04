@@ -145,10 +145,10 @@ def provision_users(event):
     users = [
         User(username = '***REMOVED***', password = '***REMOVED***', fullname = '***REMOVED***',
             tags = ['elmyra-staff'],
-            modules = ['ftpro']),
+            modules = ['ftpro', 'keywords-user']),
         User(username = '***REMOVED***',  password = '***REMOVED***', fullname = 'Andreas Motl',
             tags = ['elmyra-staff'],
-            modules = ['ftpro']),
+            modules = ['ftpro', 'keywords-user']),
         User(
             username = 'ep-test2',
             password = 'test123',

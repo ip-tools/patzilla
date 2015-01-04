@@ -696,6 +696,8 @@
                         <i class="icon-white icon-plus"></i> Add visible
                     </a>
 
+
+                    <% if (opsChooserApp.user_has_module('keywords-user')) { %>
                     <div class="btn-group">
                         <button class="btn dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-wrench"></i>
@@ -706,7 +708,6 @@
 
                                 <div class="dropdown-section-header">Highlighting</div>
 
-                                <!-- mapping -->
                                 <a id="highlighting-map-edit-action">
                                     <i class="icon-edit"></i> &nbsp; Edit mapping
                                 </a>
@@ -719,6 +720,7 @@
                         </ul>
 
                     </div>
+                    <% } %>
 
                 </div>
 

@@ -1,36 +1,40 @@
 ## -*- coding: utf-8 -*-
 ## (c) 2013,2014 Andreas Motl, Elmyra UG
 
-<!-- modal dialog for choosing clipboard content modifier -->
-<div id="keyword-editor" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="keyword-editor-label" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="keyword-editor-label">Keyword editor</h3>
-    </div>
-    <div class="modal-body">
-        Edit keywords for individual highlighting
-        <br/><br/>
-        <table class="table table-condensed">
-            <thead>
-                <tr>
-                    <th class="span10">Keywords</th>
-                    <th class="span2">Color</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <textarea id="keywords-magenta" rows="2" class="span6"></textarea>
-                    </td>
-                    <td>
-                        <span style="color: hsla(315, 100%, 82%, 1)"><strong>Magenta</strong></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="modal-footer">
-        <button class="btn" id="keyword-editor-save-button" type="button">Save</button>
-        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-    </div>
-</div>
+<%text>
+<script type="text/x-underscore-template" id="keyword-editor-template">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="keyword-editor-label">Keyword editor</h3>
+        </div>
+        <div class="modal-body">
+            Edit keywords for individual highlighting
+            <br/><br/>
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th class="span10">Keywords</th>
+                        <th class="span2">Style</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" id="keyword-editor-save-button" type="button">Save</button>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+
+</script>
+
+<script type="text/x-underscore-template" id="keyword-editor-entry-template">
+    <td>
+        <textarea id="keywords-<%= name %>" data-name="<%= name %>" rows="2" class="span6"><%= keywords.join(',') %></textarea>
+    </td>
+    <td>
+        <span class="highlight-base highlight-strong-<%= name %>"><strong><%= name %></strong></span>
+    </td>
+</script>
+</%text>

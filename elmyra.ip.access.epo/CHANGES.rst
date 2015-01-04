@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.74.0
+======
 - ui: fix - highlighting stopped working when displaying document details (claims, description)
+- ui: enhance custom highlighting
 
 0.73.0
 ======
