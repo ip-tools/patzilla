@@ -162,8 +162,11 @@ class BackboneModelParameterFiddler(object):
             if 'staging' in host_name:
                 badge_text = 'staging'
                 label_kind = 'info'
-            elif 'develop' in host_name or 'localhost' in host_name:
+            elif 'develop' in host_name:
                 badge_text = 'development'
+                label_kind = 'info'
+            elif 'localhost' in host_name:
+                badge_text = 'localhost'
                 label_kind = 'info'
             params['setting.ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
 

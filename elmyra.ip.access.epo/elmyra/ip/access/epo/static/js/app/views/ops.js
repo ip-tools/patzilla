@@ -21,12 +21,6 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         get_linkmaker: function() {
             return new Ipsuite.LinkMaker(this);
         },
-        enrich_links: function() {
-            return opsChooserApp.document_base.enrich_links.apply(this, arguments);
-        },
-        enrich_link: function() {
-            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
-        },
     },
 
     onDomRefresh: function() {
@@ -128,12 +122,6 @@ OpsFamilyMemberVerboseView = Backbone.Marionette.ItemView.extend({
     //className: 'row-fluid',
     //style: 'margin-bottom: 10px',
 
-    templateHelpers: {
-        enrich_link: function() {
-            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
-        },
-    },
-
 });
 
 OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
@@ -160,12 +148,6 @@ OpsFamilyMemberCompactView = Backbone.Marionette.ItemView.extend({
     //className: 'row-fluid',
     //style: 'margin-bottom: 10px',
 
-    templateHelpers: {
-        enrich_link: function() {
-            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
-        },
-    },
-
 });
 
 OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
@@ -177,6 +159,41 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
     //tagName: "div",
     //className: "container-fluid",
 
+    appendHtml: function(collectionView, itemView) {
+        collectionView.$('tbody').append(itemView.el);
+    }
+
+});
+
+
+OpsFamilyMemberCitationsView = Backbone.Marionette.ItemView.extend({
+
+    template: _.template($('#ops-family-citations-member-template').html(), this.model, {variable: 'data'}),
+    tagName: 'tr',
+
+    templateHelpers: {
+        get_patent_citation_list: function(enrich) {
+            if (this['exchange-document']) {
+                var exchange_document = new OpsExchangeDocument(this['exchange-document']);
+                var citations = exchange_document.attributes.get_patent_citation_list(enrich);
+                return citations;
+            } else {
+                return [];
+            }
+        },
+        get_citations_environment_button: function() {
+            var exchange_document = new OpsExchangeDocument(this['exchange-document']);
+            var citations_environment_button = exchange_document.attributes.get_citations_environment_button();
+            return citations_environment_button;
+        },
+    },
+
+});
+
+OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
+    id: "ops-family-citations-collection",
+    template: "#ops-family-citations-collection-template",
+    itemView: OpsFamilyMemberCitationsView,
     appendHtml: function(collectionView, itemView) {
         collectionView.$('tbody').append(itemView.el);
     }

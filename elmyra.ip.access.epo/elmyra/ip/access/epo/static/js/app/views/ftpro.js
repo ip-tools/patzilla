@@ -9,11 +9,7 @@ FulltextProResultView = ResultItemView.extend({
     },
 
     // TODO: maybe refactor to models/ftpro.js
-    templateHelpers: {
-
-        enrich_link: function() {
-            return opsChooserApp.document_base.enrich_link.apply(this, arguments);
-        },
+    templateHelpers: _({}).extend(OpsHelpers.prototype, {
 
         is_application_number_invalid: function() {
             return this.cc == 'JP' && (this.ApplicationNumber.length == 7 || this.ApplicationNumber.length == 8);
@@ -34,6 +30,7 @@ FulltextProResultView = ResultItemView.extend({
             return number;
 
         },
-    },
+
+    }),
 
 });

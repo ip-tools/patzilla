@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - auth: fix authentication.lua re. “came_from”
+- ui: "family citations" prototype
 
 0.77.1
 ======

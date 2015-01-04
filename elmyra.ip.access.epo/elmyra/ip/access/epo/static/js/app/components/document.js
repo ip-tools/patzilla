@@ -129,73 +129,6 @@ DocumentBaseController = Marionette.Controller.extend({
 
     },
 
-
-    enrich_links: function(container, attribute, value_modifier) {
-        var self = this;
-        return _.map(container, function(item) {
-
-            if (_.isString(item)) {
-
-                // v1 replace text with links
-                return self.enrich_link(item, attribute, item, value_modifier);
-
-                // v2 use separate icon for link placement
-                //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
-                //return item + '&nbsp;&nbsp;' + link;
-
-            } else if (_.isObject(item)) {
-                item.display = self.enrich_link(item.display, attribute, item.display, value_modifier);
-                return item;
-
-            }
-
-        });
-    },
-
-    enrich_link: function(label, attribute, value, value_modifier) {
-
-        // fallback: use label, if no value is given
-        if (!value) value = label;
-
-        // skip enriching links when in print mode
-        // due to phantomjs screwing them up when rendering to pdf
-        var printmode = opsChooserApp.config.get('mode') == 'print';
-        if (printmode) {
-            return value;
-        }
-
-        // TODO: make this configurable!
-        var kind = 'external';
-        var target = '_blank';
-        var query = null;
-
-        // apply supplied modifier function to value
-        if (value_modifier)
-            value = value_modifier(value);
-
-        // if value contains spaces, wrap into quotes
-        // FIXME: do this only, if string is not already quoted, see "services.py":
-        //      if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"'
-        if (_.string.include(value, ' '))
-            value = '"' + value + '"';
-
-        // prepare link rendering
-        var link_template;
-        if (kind == 'internal') {
-            link_template = _.template('<a href="" class="query-link" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
-        } else if (kind == 'external') {
-            query = encodeURIComponent(attribute + '=' + value);
-            link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>"><%= label %></a>');
-        }
-
-        // render link
-        if (link_template) {
-            var link = link_template({label: label, attribute: attribute, value: value, target: target, query: query});
-            return link;
-        }
-
-    },
-
 });
 
 
@@ -231,12 +164,18 @@ DocumentDetailsController = Marionette.Controller.extend({
                 } else if (details_type == 'family') {
 
                     var family_chooser = $(container).find('.family-chooser');
+
+                    // event handler
                     family_chooser.find('button[data-toggle="tab"]').on('show', function (e) {
                         var view_type = $(this).data('view-type');
                         _this.display_family(document, container, view_type);
                     });
 
-                    _this.display_family(document, container, 'compact');
+                    // initial setup
+                    var active_tab = family_chooser.find('button[data-toggle="tab"][class*="active"]');
+                    var view_type = $(active_tab).data('view-type');
+                    _this.display_family(document, container, view_type);
+
                 }
             }
 
@@ -290,20 +229,34 @@ DocumentDetailsController = Marionette.Controller.extend({
 
     display_family: function(document, container, view_type) {
 
-        var view_class = OpsFamilyCompactCollectionView;
-        if (view_type == 'verbose') {
+        var document_number = document.get_publication_number('epodoc');
+
+        // compute data collection and view class
+        var view_class;
+        var family_collection;
+        if (view_type == 'compact') {
+            family_collection = new OpsFamilyCollection(null, {document_number: document_number});
+            view_class = OpsFamilyCompactCollectionView;
+        } else if (view_type == 'verbose') {
+            family_collection = new OpsFamilyCollection(null, {document_number: document_number});
             view_class = OpsFamilyVerboseCollectionView;
+        } else if (view_type == 'citations') {
+            family_collection = new OpsFamilyCollection(null, {document_number: document_number, constituents: 'biblio'});
+            view_class = OpsFamilyCitationsCollectionView;
         }
 
-        // create family collection
-        var document_number = document.get_publication_number('epodoc');
-        var family_collection = new OpsFamilyCollection(null, {document_number: document_number});
 
         // create marionette region at dom element for displaying family information
         var content_element = container.find('.document-details-content');
         var family_region = new Backbone.Marionette.Region({
             el: content_element
         });
+
+        if (!family_collection || !view_class) {
+            family_region.close();
+            content_element.empty();
+            return;
+        }
 
         // link family collection to its view and show view in region
         var view = new view_class({
