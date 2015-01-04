@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.76.0
+======
+- ui: enhance custom highlighting style
+
 0.75.0
 ======
 - ui: display badges for patentsearch-staging and -develop
