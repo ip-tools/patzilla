@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- auth: fix authentication.lua re. “came_from”
 
 0.77.1
 ======
