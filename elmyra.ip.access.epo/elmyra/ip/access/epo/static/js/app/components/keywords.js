@@ -175,8 +175,8 @@ KeywordsController = Marionette.Controller.extend({
         textDecorationStyle: 'dotted',
         textDecorationColor: '#222222',
         */
-        //borderBottom: '1px dashed black',
-        borderLeft: '1px dotted black',
+        borderBottom: '1px dashed #333333',
+        //borderLeft: '1px dotted #333333',
     },
 
     initialize: function(options) {

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.77.1
+======
+- ui: minor tweaks to custom highlighting style
+
 0.77.0
 ======
 - auth: fix "came_from" functionality
