@@ -281,7 +281,7 @@ DocumentDetailsController = Marionette.Controller.extend({
                 if (data) {
                     $(content_element).html(data['html']);
                     data['lang'] && $(language_element).html('[' + data['lang'] + ']');
-                    opsChooserApp.document_highlighting.apply($(content_element).find('*'));
+                    opsChooserApp.keywords.highlight($(content_element).find('*'));
                 }
             });
         }
@@ -539,99 +539,6 @@ PdfPanelController = Marionette.Controller.extend({
 
 });
 
-HighlightingController = Marionette.Controller.extend({
-
-    initialize: function(options) {
-        console.log('HighlightingController.initialize');
-    },
-
-    setup_ui: function() {
-
-        var _this = this;
-
-        $('#highlighting-map-edit-action').unbind('click');
-        $('#highlighting-map-edit-action').click(function() {
-
-            localforage.getItem('keywords-magenta', function(value) {
-                $('#keyword-editor').modal('show');
-                $('#keywords-magenta').val(value);
-            });
-
-            $('#keyword-editor-save-button').unbind('click');
-            $('#keyword-editor-save-button').click(function() {
-                var value = $('#keywords-magenta').val();
-                localforage.setItem('keywords-magenta', value, function() {
-                    $('#keyword-editor').modal('hide');
-                });
-            });
-
-        });
-
-    },
-
-    apply: function(element) {
-        this.apply_query_keywords(element);
-        this.apply_individual_keywords(element);
-    },
-
-    apply_query_keywords: function(element) {
-
-        var highlight_selector = element;
-        if (!highlight_selector) { highlight_selector = '.keyword'; }
-
-        // http://hslpicker.com/
-        var styles = {
-            yellow:     {backgroundColor: 'hsla( 60, 100%, 82%, 1)'},
-            green:      {backgroundColor: 'hsla(118, 100%, 82%, 1)'},
-            orange:     {backgroundColor: 'hsla( 16, 100%, 82%, 1)'},
-            turquoise:  {backgroundColor: 'hsla(174, 100%, 82%, 1)'},
-            blue:       {backgroundColor: 'hsla(195, 100%, 82%, 1)'},
-            violet:     {backgroundColor: 'hsla(247, 100%, 82%, 1)'},
-            magenta:    {backgroundColor: 'hsla(315, 100%, 82%, 1)'},
-        };
-        var style_queue = ['yellow', 'green', 'orange', 'turquoise', 'blue', 'violet', 'magenta'];
-        var style_queue_work;
-        _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
-            log('keyword:', keyword);
-            if (keyword) {
-
-                // refill style queue
-                if (_.isEmpty(style_queue_work)) {
-                    style_queue_work = style_queue.slice(0);
-                }
-
-                // get next style available
-                var style_name = style_queue_work.shift();
-                var style = styles[style_name];
-
-                var class_name = 'highlight-' + style_name;
-
-                // perform highlighting
-                $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
-
-                // apply style
-                $('.' + class_name).css(style);
-            }
-        });
-    },
-
-    apply_individual_keywords: function(element) {
-
-        var highlight_selector = element;
-        if (!highlight_selector) { highlight_selector = '.keyword'; }
-
-        localforage.getItem('keywords-magenta', function(value) {
-            var keywords = value.split(',');
-            _.each(keywords, function(keyword) {
-                var class_name = 'highlight-' + 'magenta';
-                var style = {backgroundColor: 'hsla(315, 100%, 82%, 1)'};
-                $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
-                $('.' + class_name).css(style);
-            });
-        });
-    },
-
-});
 
 
 // setup plugin
@@ -639,12 +546,9 @@ opsChooserApp.addInitializer(function(options) {
     this.document_base = new DocumentBaseController();
     this.document_details = new DocumentDetailsController();
     this.document_carousel = new DocumentCarouselController();
-    this.document_highlighting = new HighlightingController();
     this.listenTo(this, 'results:ready', function() {
         this.document_base.setup_ui();
         this.document_details.setup_ui();
         this.document_carousel.setup_ui();
-        this.document_highlighting.setup_ui();
-        this.document_highlighting.apply();
     });
 });

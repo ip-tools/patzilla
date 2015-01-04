@@ -654,6 +654,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     },
 
+    user_has_module: function(module) {
+        return _(this.config.get('user.modules')).contains(module);
+    },
+
 });
 
 
