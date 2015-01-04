@@ -18,7 +18,7 @@ class BackboneModelParameterFiddler(object):
 
     def __init__(self, name):
         self.name = name
-        self.beta_badge = '<div class="label label-success beta-badge do-not-print">BETA</div>'
+        self.beta_badge = '<div class="label label-success label-large do-not-print">BETA</div>'
 
     def environment(self):
         """create default environment"""
@@ -150,6 +150,22 @@ class BackboneModelParameterFiddler(object):
             'offgrid',
         ]
         params['google_allowed'] = params.get('request.host_name') in google_allowed_hosts
+
+        # 3. add badges for staging- and development-environments
+        staging_hosts = [
+            'patentsearch-staging.elmyra.de',
+            'patentsearch-develop.elmyra.de',
+            'localhost',
+        ]
+        host_name = params.get('request.host_name')
+        if host_name in staging_hosts:
+            if 'staging' in host_name:
+                badge_text = 'staging'
+                label_kind = 'info'
+            elif 'develop' in host_name or 'localhost' in host_name:
+                badge_text = 'development'
+                label_kind = 'info'
+            params['setting.ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
 
         # E. backward-compat amendments
         for key, value in params.iteritems():

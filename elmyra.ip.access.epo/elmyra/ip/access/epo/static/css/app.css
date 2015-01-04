@@ -50,10 +50,9 @@ a.editable-click {
 
 
 /* header */
-.beta-badge {
-    position: relative; top: -3px;
+.label-large {
     font-size: large;
-    padding: 7px;
+    padding: 9px;
 }
 
 .header-compact {
