@@ -8,6 +8,7 @@ development
 0.75.0
 ======
 - ui: display badges for patentsearch-staging and -develop
+- ui: extend copyright line to current year (2015)
 
 0.74.0
 ======
