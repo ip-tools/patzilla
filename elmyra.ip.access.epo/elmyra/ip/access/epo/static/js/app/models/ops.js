@@ -216,6 +216,76 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
 });
 
+OpsHelpers = Backbone.Model.extend({
+
+    enrich_links: function(container, attribute, value_modifier) {
+        var self = this;
+        return _.map(container, function(item) {
+
+            if (_.isString(item)) {
+
+                // v1 replace text with links
+                return self.enrich_link(item, attribute, item, value_modifier);
+
+                // v2 use separate icon for link placement
+                //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
+                //return item + '&nbsp;&nbsp;' + link;
+
+            } else if (_.isObject(item)) {
+                item.display = self.enrich_link(item.display, attribute, item.display, value_modifier);
+                return item;
+
+            }
+
+        });
+    },
+
+    enrich_link: function(label, attribute, value, value_modifier) {
+
+        // fallback: use label, if no value is given
+        if (!value) value = label;
+
+        // skip enriching links when in print mode
+        // due to phantomjs screwing them up when rendering to pdf
+        var printmode = opsChooserApp.config.get('mode') == 'print';
+        if (printmode) {
+            return value;
+        }
+
+        // TODO: make this configurable!
+        var kind = 'external';
+        var target = '_blank';
+        var query = null;
+
+        // apply supplied modifier function to value
+        if (value_modifier)
+            value = value_modifier(value);
+
+        // if value contains spaces, wrap into quotes
+        // FIXME: do this only, if string is not already quoted, see "services.py":
+        //      if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"'
+        if (_.string.include(value, ' '))
+            value = '"' + value + '"';
+
+        // prepare link rendering
+        var link_template;
+        if (kind == 'internal') {
+            link_template = _.template('<a href="" class="query-link" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
+        } else if (kind == 'external') {
+            query = encodeURIComponent(attribute + '=' + value);
+            link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>"><%= label %></a>');
+        }
+
+        // render link
+        if (link_template) {
+            var link = link_template({label: label, attribute: attribute, value: value, target: target, query: query});
+            return link;
+        }
+
+    },
+
+});
+
 OpsBaseModel = Backbone.Model.extend({
 
     defaults: {
@@ -284,12 +354,21 @@ OpsBaseModel = Backbone.Model.extend({
             }
         },
 
+        // ui helper
+        get_citations_environment_button: function() {
+            var tpl = _.template($('#ops-citations-environment-button-template').html());
+            return tpl({data: this});
+        },
+
     },
+
+
+
 });
 
-OpsExchangeDocument = Backbone.Model.extend({
+OpsExchangeDocument = OpsBaseModel.extend({
 
-    defaults: $.extend(false, OpsBaseModel.prototype.defaults, {
+    defaults: _({}).extend(OpsBaseModel.prototype.defaults, OpsHelpers.prototype, {
 
         selected: false,
 
@@ -582,7 +661,7 @@ OpsExchangeDocument = Backbone.Model.extend({
         },
 
         has_citations: function() {
-            return Boolean(this['bibliographic-data']['references-cited']);
+            return this['bibliographic-data'] && Boolean(this['bibliographic-data']['references-cited']);
         },
 
         get_patent_citation_list: function(links, id_type) {
@@ -597,6 +676,12 @@ OpsExchangeDocument = Backbone.Model.extend({
                     .map(function(item) {
                         var document_id = self.get_document_id(item['patcit'], null, id_type);
                         var fullnumber = self.flatten_document_id(document_id).fullnumber;
+
+                        // fall back to epodoc format, if ops format yields empty number
+                        if (_.isEmpty(fullnumber)) {
+                            document_id = self.get_document_id(item['patcit'], null, 'epodoc');
+                            fullnumber = self.flatten_document_id(document_id).fullnumber;
+                        }
                         return fullnumber;
                     })
                 ;
@@ -625,6 +710,11 @@ OpsExchangeDocument = Backbone.Model.extend({
             items = items.map(function(item) { return fieldname + '=' + item; });
             var query = items.join(' ' + operator + ' ');
             return query;
+        },
+
+        get_cited_numbers_comma: function() {
+            var items = this.get_patent_citation_list(false, 'epodoc');
+            return items.join(',');
         },
 
         _expand_links: function(text) {
@@ -817,8 +907,7 @@ OpsFulltext = Marionette.Controller.extend({
 
 OpsFamilyMember = OpsBaseModel.extend({
 
-    defaults: $.extend(false, OpsBaseModel.prototype.defaults, {
-
+    defaults: _({}).extend(OpsBaseModel.prototype.defaults, OpsHelpers.prototype, {
     }),
 
     parse: function(response) {
@@ -833,10 +922,14 @@ OpsFamilyCollection = Backbone.Collection.extend({
 
     initialize: function(models, options) {
         this.document_number = options.document_number;
+        this.constituents = options.constituents;
     },
 
     url: function(options) {
         var url = _.template('/api/ops/publication/<%= document_number %>/family/inpadoc')({ document_number: this.document_number});
+        if (this.constituents) {
+            url += '?constituents=' + this.constituents;
+        }
         return url;
     },
 

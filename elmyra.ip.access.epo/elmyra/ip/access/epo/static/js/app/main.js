@@ -321,20 +321,30 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     // initialize model from url query parameters ("numberlist")
     parse_numberlist: function(payload) {
         if (!_.isEmpty(payload)) {
+            var fieldname;
+            var parts = payload.split(/=/);
+            if (parts.length == 1) {
+                fieldname = 'pn';
+                payload   = parts[0];
+            } else if (parts.length == 2) {
+                fieldname = parts[0];
+                payload   = parts[1];
+            }
             var numberlist = _(payload.split(/[,\n]/)).map(function(entry) {
                 return entry.trim();
             }).filter(function(entry) {
                 return !(_.isEmpty(entry) || _.string.startsWith(entry, '//') || _.string.startsWith(entry, '#'));
             });
-            return numberlist;
+            return {data: numberlist, fieldname: fieldname};
         }
     },
 
     perform_numberlistsearch: function(options) {
-        var publication_numbers = this.parse_numberlist($('#numberlist').val());
+        var numberlist = this.parse_numberlist($('#numberlist').val());
+        var publication_numbers = numberlist.data;
         if (publication_numbers) {
             var hits = publication_numbers.length;
-            this.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
+            this.perform_listsearch(options, undefined, publication_numbers, hits, numberlist.fieldname, 'OR');
         } else {
             this.ui.notify("An empty numberlist can't be requested, please add some publication numbers.", {type: 'warning', icon: 'icon-align-justify'});
         }

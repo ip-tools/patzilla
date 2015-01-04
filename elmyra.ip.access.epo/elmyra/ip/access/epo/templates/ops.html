@@ -495,37 +495,7 @@
                             (56)
                         </dt>
                         <dd class="keyword">
-                            <!-- citation queries -->
-                            <div class="btn-group btn-popover do-not-print"
-                                 data-toggle="popover" data-trigger="hover" data-placement="top"
-                                 data-content="Explore citation environment"
-                                 >
-                                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
-                                    <i class="icon-search"></i>
-                                </button>
-                                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="?query=<%= encodeURIComponent(data.get_citing_query()) %>" class="query-link" target="_blank">
-                                            Documents which cite ct=<%= data.get_publication_number('epodoc') %>
-                                        </a>
-                                    </li>
-                                    <% if (data.has_citations()) { %>
-                                    <li>
-                                        <a href="?query=<%= encodeURIComponent(data.get_same_citations_query()) %>" class="query-link" target="_blank">
-                                            Documents with same citations: ct in (56)
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="?query=<%= encodeURIComponent(data.get_all_citations_query()) %>" class="query-link" target="_blank">
-                                            All cited documents: pn in (56)
-                                        </a>
-                                    </li>
-                                    <% } %>
-                                </ul>
-                            </div>
+                            <%= data.get_citations_environment_button() %>
                             &nbsp;
                             <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
 
@@ -562,6 +532,11 @@
                             <button class="btn btn-small" data-toggle="tab" data-view-type="verbose">
                                 Verbose
                             </button>
+                            <% if (opsChooserApp.user_has_module('family-citations')) { %>
+                            <button class="btn btn-small" data-toggle="tab" data-view-type="citations">
+                                Citations
+                            </button>
+                            <% } %>
                         </div>
                         &nbsp;&nbsp;&nbsp;
                         <i class="document-details-spinner icon-refresh icon-spin hide"></i>
@@ -582,6 +557,49 @@
     </%text>
 
 </script>
+
+<%text>
+<!-- citation queries -->
+<script type="text/x-underscore-template" id="ops-citations-environment-button-template">
+
+    <div class="btn-group btn-popover do-not-print"
+         data-toggle="popover" data-trigger="hover" data-placement="top"
+         data-content="Explore citation environment"
+            >
+        <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+            <i class="icon-search"></i>
+        </button>
+        <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <% if (data.has_citations()) { %>
+            <li>
+                <a href="?numberlist=<%= encodeURIComponent(data.get_cited_numbers_comma()) %>" class="query-link" target="_blank">
+                    Documents cited: pn in (56)
+                </a>
+            </li>
+            <li>
+                <a href="?numberlist=<%= encodeURIComponent('ct=' + data.get_cited_numbers_comma()) %>" class="query-link" target="_blank">
+                    Documents citing same citations: ct in (56)
+                </a>
+            </li>
+            <% } %>
+
+            <% try { %>
+            <li>
+                <a href="?query=<%= encodeURIComponent(data.get_citing_query()) %>" class="query-link" target="_blank">
+                    Documents citing <%= data.get_publication_number('epodoc') %>
+                </a>
+            </li>
+            <% } catch(err) {} %>
+
+        </ul>
+    </div>
+
+</script>
+</%text>
+
 
 <%text>
 <script type="text/x-underscore-template" id="ops-biblio-party-template">
@@ -786,8 +804,6 @@
     var pubref = data.get_publication_reference(null, 'docdb');
     var appref = data.get_application_reference(null, 'docdb');
     var linkmaker = new Ipsuite.LinkMaker();
-
-    //log('appref:', appref);
     %>
 
     <td>
@@ -840,9 +856,9 @@
     <table class="table table-condensed span6">
         <thead>
         <tr>
+            <th class="span1">PDF</th>
             <th class="span2">Pub. Number</th>
             <th class="span2">Pub. Date</th>
-            <th class="span1">PDF</th>
         </tr>
         </thead>
         <tbody>
@@ -852,21 +868,10 @@
 <script id="ops-family-compact-member-template" type="text/x-underscore-template">
 
     <%
-    log('family member:', data);
+    //log('family member:', data);
     var pubref = data.get_publication_reference(null, 'docdb');
-    var appref = data.get_application_reference(null, 'docdb');
     var linkmaker = new Ipsuite.LinkMaker();
-
-    //log('appref:', appref);
     %>
-
-    <td>
-        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
-    </td>
-
-    <td>
-        <%= pubref.isodate %>
-    </td>
 
     <td>
         <!-- pdf document -->
@@ -877,6 +882,51 @@
                 >
             <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
         </a>
+    </td>
+
+    <td>
+        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+    </td>
+
+    <td>
+        <%= pubref.isodate %>
+    </td>
+
+</script>
+
+
+<script id="ops-family-citations-collection-template" type="text/x-underscore-template">
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th class="span1">Explore</th>
+            <th class="span2">Publication</th>
+            <th class="span7">Citations</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</script>
+<script id="ops-family-citations-member-template" type="text/x-underscore-template">
+
+    <%
+    //log('family member:', data);
+    var pubref = data.get_publication_reference(null, 'docdb');
+    %>
+
+    <td>
+        <%= data.get_citations_environment_button() %>
+    </td>
+
+    <td>
+        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+        <br/>
+        <%= pubref.isodate %>
+    </td>
+
+    <td>
+        <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
     </td>
 
 </script>
