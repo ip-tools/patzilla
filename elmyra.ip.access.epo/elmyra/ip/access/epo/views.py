@@ -233,6 +233,7 @@ def admin_user_create_get(request):
 def login_page(request):
     tplvars = {
         'username': request.params.get('username', ''),
+        'came_from': request.params.get('came_from', ''),
         'error': asbool(request.params.get('error')),
     }
     return tplvars
