@@ -77,6 +77,8 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
             _.each(response.models, function(model) {
                 var class_name = 'highlight-strong-' + model.get('name');
                 var style = model.get('style');
+                style = _(style).extend(opsChooserApp.keywords.styles_strong);
+
                 // apply style
                 $('.' + class_name).css(style);
 
@@ -98,6 +100,7 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
         $('#keyword-editor-save-button').click(function() {
             $.when(_this.save_models()).then(function() {
                 opsChooserApp.keywords.keyword_modal.close();
+                opsChooserApp.keywords.highlight_from_user();
             });
         });
     },
@@ -145,7 +148,7 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
 KeywordsController = Marionette.Controller.extend({
 
     // http://hslpicker.com/
-    styles_light: {
+    colors_light: {
         yellow:     {backgroundColor: 'hsla( 60, 100%, 88%, 1)'},
         green:      {backgroundColor: 'hsla(118, 100%, 88%, 1)'},
         orange:     {backgroundColor: 'hsla( 16, 100%, 88%, 1)'},
@@ -155,14 +158,25 @@ KeywordsController = Marionette.Controller.extend({
         magenta:    {backgroundColor: 'hsla(315, 100%, 88%, 1)'},
     },
 
+    colors_strong: {
+        yellow:     {backgroundColor: 'hsla( 60, 100%, 80%, 1)'},
+        green:      {backgroundColor: 'hsla(118, 100%, 80%, 1)'},
+        orange:     {backgroundColor: 'hsla( 16, 100%, 80%, 1)'},
+        turquoise:  {backgroundColor: 'hsla(174, 100%, 80%, 1)'},
+        blue:       {backgroundColor: 'hsla(195, 100%, 80%, 1)'},
+        violet:     {backgroundColor: 'hsla(247, 100%, 80%, 1)'},
+        magenta:    {backgroundColor: 'hsla(315, 100%, 80%, 1)'},
+    },
+
     styles_strong: {
-        yellow:     {backgroundColor: 'hsla( 60, 100%, 80%, 1)', textDecoration: 'underline'},
-        green:      {backgroundColor: 'hsla(118, 100%, 80%, 1)', textDecoration: 'underline'},
-        orange:     {backgroundColor: 'hsla( 16, 100%, 80%, 1)', textDecoration: 'underline'},
-        turquoise:  {backgroundColor: 'hsla(174, 100%, 80%, 1)', textDecoration: 'underline'},
-        blue:       {backgroundColor: 'hsla(195, 100%, 80%, 1)', textDecoration: 'underline'},
-        violet:     {backgroundColor: 'hsla(247, 100%, 80%, 1)', textDecoration: 'underline'},
-        magenta:    {backgroundColor: 'hsla(315, 100%, 80%, 1)', textDecoration: 'underline'},
+        /*
+        textDecoration: 'underline',
+        textDecorationLine: 'underline',
+        textDecorationStyle: 'dotted',
+        textDecorationColor: '#222222',
+        */
+        //borderBottom: '1px dashed black',
+        borderLeft: '1px dotted black',
     },
 
     initialize: function(options) {
@@ -174,9 +188,9 @@ KeywordsController = Marionette.Controller.extend({
     setup_fixtures: function() {
         var _this = this;
         this.keywordmaps.fetch({success: function(response) {
-            if (response.length < _(_this.styles_strong).keys().length) {
-                _.each(_(_this.styles_strong).keys(), function(style_name) {
-                    var style = _this.styles_strong[style_name];
+            if (response.length < _(_this.colors_strong).keys().length) {
+                _.each(_(_this.colors_strong).keys(), function(style_name) {
+                    var style = _this.colors_strong[style_name];
                     var keywordmap = new KeywordMapModel({
                         name: style_name,
                         style: style,
@@ -227,9 +241,9 @@ KeywordsController = Marionette.Controller.extend({
 
                 // get next style available
                 var style_name = style_queue_work.shift();
-                var style = _this.styles_light[style_name];
+                var style = _this.colors_light[style_name];
 
-                var class_name = 'highlight-' + style_name;
+                var class_name = 'keyword-light-' + style_name;
 
                 // perform highlighting
                 $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
@@ -245,15 +259,17 @@ KeywordsController = Marionette.Controller.extend({
         var highlight_selector = element;
         if (!highlight_selector) { highlight_selector = '.keyword'; }
 
+        var _this = this;
         this.keywordmaps.fetch({success: function(response) {
             _.each(response.models, function(model) {
-                var class_name = 'highlight-' + model.get('name');
+                var class_name = 'keyword-strong-' + model.get('name');
                 var style = model.get('style');
                 var keywords = model.get('keywords');
                 _.each(keywords, function(keyword) {
                     if (!keyword) { return; }
                     $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
                 });
+                style = _(style).extend(_this.styles_strong);
                 $('.' + class_name).css(style);
             });
         }});
