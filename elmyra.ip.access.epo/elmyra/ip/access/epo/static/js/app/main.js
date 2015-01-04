@@ -655,7 +655,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     user_has_module: function(module) {
-        return _(this.config.get('user.modules')).contains(module);
+        var module_abo = _(this.config.get('user.modules')).contains(module);
+        var development_mode = this.config.get('request.host_name') == 'localhost';
+        return module_abo || development_mode;
     },
 
 });

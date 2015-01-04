@@ -9,6 +9,7 @@ development
 ======
 - ui: display badges for patentsearch-staging and -develop
 - ui: extend copyright line to current year (2015)
+- ui: enable all modules in development mode
 
 0.74.0
 ======
