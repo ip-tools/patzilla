@@ -178,6 +178,28 @@ UiController = Marionette.Controller.extend({
         return deferred.promise();
     },
 
+    user_alert: function(message, kind) {
+
+        if (!message) {
+            return;
+        }
+
+        var label = 'INFO';
+        var clazz = 'alert-info';
+        if (kind == 'warning') {
+            label = 'WARNING';
+            clazz = 'alert-warning';
+        }
+        var tpl = _.template($('#alert-template').html());
+        var error = {
+            'title': label,
+            'description': message,
+            'clazz': clazz,
+        };
+        var alert_html = tpl(error);
+        $('#info-area').append(alert_html);
+    },
+
     notify: function(message, options) {
 
         if (options.icon) {
@@ -204,6 +226,10 @@ UiController = Marionette.Controller.extend({
                 },
                 //ttl: 100000,
             });
+
+            if (options.right) {
+                this.notification.ntf.className = this.notification.ntf.className.replace('ns-attached', 'ns-attached-right');
+            }
 
             // show the notification
             this.notification.show();

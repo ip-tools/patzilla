@@ -72,6 +72,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // hide action tools
                 $('#querybuilder-cql-actions').hide();
+                $('#querybuilder-numberlist-actions').hide();
 
                 // hide history chooser
                 $('#cql-history-chooser').hide();
@@ -88,6 +89,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // show action tools
                 $('#querybuilder-cql-actions').show();
+                $('#querybuilder-numberlist-actions').hide();
 
                 // show history chooser
                 $('#cql-history-chooser').show();
@@ -109,6 +111,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // hide action tools
                 $('#querybuilder-cql-actions').hide();
+                $('#querybuilder-numberlist-actions').show();
 
                 // hide history chooser
                 $('#cql-history-chooser').hide();
@@ -189,10 +192,20 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     query_empty: function() {
         return _.isEmpty($('#query').val().trim());
     },
-
     check_query_empty: function(options) {
         if (this.query_empty()) {
             opsChooserApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
+            return true;
+        }
+        return false;
+    },
+
+    numberlist_empty: function() {
+        return _.isEmpty($('#numberlist').val().trim());
+    },
+    check_numberlist_empty: function(options) {
+        if (this.numberlist_empty()) {
+            opsChooserApp.ui.notify('Numberlist is empty', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -307,6 +320,59 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         });
 
+
+        // normalize numberlist
+        $('#btn-numberlist-normalize').unbind('click');
+        $('#btn-numberlist-normalize').click(function(e) {
+            e.preventDefault();
+            if (_this.check_numberlist_empty({'icon': 'icon-exchange'})) { return; }
+
+            _this.normalize_numberlist($('#numberlist').val()).then(function(response) {
+                var numbers_valid = response['numbers-normalized'] && response['numbers-normalized']['valid'];
+                var numbers_invalid = response['numbers-normalized'] && response['numbers-normalized']['invalid'];
+
+                // replace numberlist in ui by normalized one
+                $('#numberlist').val(numbers_valid.join('\n'));
+
+                // display invalid patent numbers
+                if (_.isEmpty(numbers_invalid)) {
+                    opsChooserApp.ui.notify(
+                        'Patent numbers normalized successfully',
+                        {type: 'success', icon: 'icon-exchange', right: true});
+                } else {
+                    var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
+                    opsChooserApp.ui.user_alert(message, 'warning');
+
+                }
+            });
+        });
+
+    },
+
+    normalize_numberlist: function(payload) {
+        var deferred = $.Deferred();
+        $.ajax({
+            method: 'post',
+            url: '/api/util/numberlist?normalize=true',
+            beforeSend: function(xhr, settings) {
+                xhr.requestUrl = settings.url;
+            },
+            async: false,
+            sync: true,
+            data: payload,
+            contentType: "text/plain; charset=utf-8",
+        }).success(function(response, status, options) {
+            if (response) {
+                deferred.resolve(response);
+            } else {
+                opsChooserApp.ui.notify('Number normalization failed (empty response)', {type: 'warning', icon: 'icon-exchange', right: true});
+                deferred.reject();
+            }
+        }).error(function(xhr, settings) {
+            opsChooserApp.ui.propagate_alerts(xhr);
+            deferred.reject();
+        });
+        return deferred.promise();
     },
 
     setup_quick_cql_builder: function() {

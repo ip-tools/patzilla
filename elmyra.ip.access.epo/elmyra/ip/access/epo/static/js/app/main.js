@@ -75,7 +75,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                 var hits = self.metadata.get('result_count');
                 if (hits > self.metadata.get('maximum_results')['ops']) {
-                    self.user_alert('Total hits: ' + hits + '.    ' +
+                    self.ui.user_alert('Total hits: ' + hits + '.    ' +
                         'The first 2000 hits are accessible from OPS.  ' +
                         'You can narrow your search by adding more search criteria.', 'warning');
                 }
@@ -143,13 +143,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                         self.propagate_datasource_message(response);
 
                         if (hits == null) {
-                            self.user_alert(
+                            self.ui.user_alert(
                                 'Result count unknown. At Google Patents, sometimes result counts are not displayed. ' +
                                 "Let's assume 1000 to make the paging work.", 'warning');
                         }
 
                         if (hits > self.metadata.get('maximum_results')['google']) {
-                            self.user_alert(
+                            self.ui.user_alert(
                                 'Total results ' + hits + '. From Google Patents, the first 1000 results are accessible. ' +
                                 'You might want to narrow your search by adding more search criteria.', 'warning');
                         }
@@ -239,7 +239,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             if (_.isEmpty(query_origin) && _.isEmpty(entries)) {
                 this.ui.reset_content({keep_pager: false, documents: true});
-                this.user_alert('No results.', 'info');
+                this.ui.user_alert('No results.', 'info');
                 return deferred.promise();
             }
 
@@ -341,8 +341,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     perform_numberlistsearch: function(options) {
         var numberlist = this.parse_numberlist($('#numberlist').val());
-        var publication_numbers = numberlist.data;
-        if (publication_numbers) {
+        if (numberlist) {
+            var publication_numbers = numberlist.data;
             var hits = publication_numbers.length;
             this.perform_listsearch(options, undefined, publication_numbers, hits, numberlist.fieldname, 'OR');
         } else {
@@ -359,29 +359,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     propagate_datasource_message: function(response) {
         log('propagate_datasource_message');
-        this.user_alert(response['message'], 'warning');
-    },
-
-    user_alert: function(message, kind) {
-
-        if (!message) {
-            return;
-        }
-
-        var label = 'INFO';
-        var clazz = 'alert-info';
-        if (kind == 'warning') {
-            label = 'WARNING';
-            clazz = 'alert-warning';
-        }
-        var tpl = _.template($('#alert-template').html());
-        var error = {
-            'title': label,
-            'description': message,
-            'clazz': clazz,
-        };
-        var alert_html = tpl(error);
-        $('#info-area').append(alert_html);
+        this.ui.user_alert(response['message'], 'warning');
     },
 
 
