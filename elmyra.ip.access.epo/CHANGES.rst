@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: slightly enhance layout of “references cited (56)” data
+
 
 0.79.0
 ======

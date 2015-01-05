@@ -454,14 +454,14 @@
                             (56)
                         </dt>
                         <dd class="keyword">
+                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
+                            <br/>
                             <%= data.get_citations_environment_button() %>
                             <% if (opsChooserApp.user_has_module('family-citations')) { %>
                             <a class="btn btn-small family-citations-shortcut-button" role="button">
                                 Family » Citations &nbsp; <i class="icon-arrow-right"></i>
                             </a>
                             <% } %>
-                            &nbsp;
-                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
                         </dd>
                         <br/>
 
