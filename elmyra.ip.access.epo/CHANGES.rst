@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: fix direct numberlist mode for internet explorer
+- middleware: fix FulltextPRO query generation (deactivated "modern mode" due to problems with"FulltextPRO "query parser)
 
 0.78.0
 ======
