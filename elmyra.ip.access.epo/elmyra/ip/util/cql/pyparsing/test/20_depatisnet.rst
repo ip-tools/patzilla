@@ -280,3 +280,22 @@ Extract keywords after polishing:
 
 >>> CQL(u'bi=( ( hot(P)rolling)  AND ( strip(P)center and measurement)  oder ( hot  and rolling)  AND ( strip and camber and measurement) ) oder bi=((reversing and mill)and (camber)) ODER bi=( ( hot  and steel)  AND (center and measurement) )  ODER BI =((hot(P)slab) und(position(P)measurement)) ODER BI =((hot(P)strip) und(position(P)measurement))').polish().keywords()
 [[u'hot', u'rolling'], [u'strip', u'center'], u'measurement', u'hot', u'rolling', u'strip', u'camber', u'measurement', u'reversing', u'mill', u'camber', u'hot', u'steel', u'center', u'measurement', [u'hot', u'slab'], [u'position', u'measurement'], [u'hot', u'strip'], [u'position', u'measurement']]
+
+
+Query 4
+-------
+
+Reproduce verbatim:
+
+>>> print(CQL(u'BI=((finne? or (flying(1a)buttress?) or fins or effillee?) and (viergelenk? or mehrgelenk? or quadrilateral? or quadruple? or (four(w)joint) or quadrilaterale or quatre))').dumps())
+BI=((finne? or (flying(1A)buttress?) or fins or effillee?) and (viergelenk? or mehrgelenk? or quadrilateral? or quadruple? or (four(W)joint) or quadrilaterale or quatre))
+
+Reproduce with polishing:
+
+>>> print(CQL(u'BI=((finne? or (flying(1a)buttress?) or fins or effillee?) and (viergelenk? or mehrgelenk? or quadrilateral? or quadruple? or (four(w)joint) or quadrilaterale or quatre))').polish().dumps())
+((BI=finne? or (BI=(flying(1A)buttress?)) or BI=fins or BI=effillee?) and (BI=viergelenk? or BI=mehrgelenk? or BI=quadrilateral? or BI=quadruple? or (BI=(four(W)joint)) or BI=quadrilaterale or BI=quatre))
+
+Extract keywords after polishing:
+
+>>> CQL(u'BI=((finne? or (flying(1a)buttress?) or fins or effillee?) and (viergelenk? or mehrgelenk? or quadrilateral? or quadruple? or (four(w)joint) or quadrilaterale or quatre))').polish().keywords()
+[u'finne', [u'flying', u'buttress'], u'fins', u'effillee', u'viergelenk', u'mehrgelenk', u'quadrilateral', u'quadruple', [u'four', u'joint'], u'quadrilaterale', u'quatre']

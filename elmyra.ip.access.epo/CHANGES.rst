@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.81.1
+======
+- ui: fix keyword decoding for complex queries
+
 0.81.0
 ======
 - middleware: bug: “just one IPC class works with FulltextPRO”; another fix for “modern mode => legacy mode”
