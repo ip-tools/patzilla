@@ -454,7 +454,11 @@
                             (56)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
+                            <% if (data.has_citations()) { %>
+                                <%= data.get_patent_citation_list(true).join(', ') || 'Citations empty' %>
+                            <% } else { %>
+                                Citations not available
+                            <% } %>
                             <br/>
                             <%= data.get_citations_environment_button() %>
                             <% if (opsChooserApp.user_has_module('family-citations')) { %>
