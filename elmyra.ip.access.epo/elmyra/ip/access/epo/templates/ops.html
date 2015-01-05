@@ -450,6 +450,21 @@
                             </dl>
                         </dd>
 
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
+                            (56)
+                        </dt>
+                        <dd class="keyword">
+                            <%= data.get_citations_environment_button() %>
+                            <% if (opsChooserApp.user_has_module('family-citations')) { %>
+                            <a class="btn btn-small family-citations-shortcut-button" role="button">
+                                Family » Citations &nbsp; <i class="icon-arrow-right"></i>
+                            </a>
+                            <% } %>
+                            &nbsp;
+                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
+                        </dd>
+                        <br/>
+
                         <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
                             (57)
                         </dt>
@@ -488,22 +503,20 @@
                             <% }); %>
 
                         </dd>
-
                         <br/>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
-                            (56)
+                        <% var npl_citations_rendered = data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>
+                        <% if (npl_citations_rendered) { %>
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="non-patent-literature references cited">
+                            (N)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_citations_environment_button() %>
-                            &nbsp;
-                            <%= data.get_patent_citation_list(true).join(', ') || '&nbsp;' %>
-
-                            <br/><br/>
                             <table class="table table-striped table-condensed">
-                                <%= data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>
+                                <%= npl_citations_rendered %>
                             </table>
                         </dd>
+                        <br/>
+                        <% } %>
 
                     </dl>
                     </div>
