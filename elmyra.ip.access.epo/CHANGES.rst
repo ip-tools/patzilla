@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.79.0
+======
 - ui: fix direct numberlist mode for internet explorer
 - middleware: fix FulltextPRO query generation (deactivated "modern mode" due to problems with"FulltextPRO "query parser)
 - ui: shortcut button for jumping from bibliographic data directly to the “Family » Citations” tab
