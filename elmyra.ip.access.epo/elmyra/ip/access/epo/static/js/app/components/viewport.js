@@ -52,7 +52,12 @@ ViewportPlugin = Marionette.Controller.extend({
                     target = $('.ops-collection-entry:below-the-fold').first();
                     var bottom_overdraw = !target.exists();
                     if (bottom_overdraw && options.paging) {
-                        opsChooserApp.paginationViewTop.set_page('next');
+                        try {
+                            opsChooserApp.paginationViewBottom.set_page('next');
+                        } catch(err) {
+                            // FIXME: properly log error
+
+                        }
                     }
                 }
             }
@@ -78,10 +83,15 @@ ViewportPlugin = Marionette.Controller.extend({
                     target = $('.ops-collection-entry:above-the-top').last();
                     var top_overdraw = !target.exists();
                     if (top_overdraw && options.paging) {
-                        opsChooserApp.paginationViewTop.set_page('previous');
+                        try {
+                            opsChooserApp.paginationViewBottom.set_page('previous');
+                        } catch(err) {
+                            // FIXME: properly log error
+
+                        }
                     }
                 }
-                if (!target.length) {
+                if (!target.exists()) {
                     target = $('body');
                 }
             }

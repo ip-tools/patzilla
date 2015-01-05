@@ -214,6 +214,7 @@ UiController = Marionette.Controller.extend({
 
     // perform animated scrolling
     scroll_smooth: function(target) {
+        if (!target) return;
         if ($(target).offset()) {
             $('html, body').animate({
                 scrollTop: $(target).offset().top
