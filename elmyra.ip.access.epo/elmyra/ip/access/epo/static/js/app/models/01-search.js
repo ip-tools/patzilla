@@ -19,24 +19,17 @@ DatasourceSearch = Backbone.Model.extend({
             success: function (payload, response, options) {
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content();
-                var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
 
-                if (keywords) {
-                    // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
-                    keywords = keywords.replace(/(.+), \[.+\]/, '$1');
-                    self.keywords = jQuery.parseJSON(keywords);
+                // decode regular keywords
+                var keywords_regular = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+                if (keywords_regular) {
+                    self.keywords = self.decode_header_json(keywords_regular) || [];
                 }
 
                 // fallback keyword gathering from comfort form
                 if (_.isEmpty(self.keywords)) {
-                    var keywords_json = _options.keywords;
-                    if (keywords_json) {
-                        // workaround for weird Chrome bug: keyword lists get duplicated
-                        keywords_json = keywords_json.replace(/(.+), \[.+\]/, '$1');
-                        log('keywords fallback json:', keywords_json);
-                        self.keywords = jQuery.parseJSON(keywords_json);
-                        log('keywords fallback:', self.keywords);
-                    }
+                    var keywords_form = _options.keywords;
+                    self.keywords = self.decode_header_json(keywords_form) || [];
                 }
 
             },
@@ -52,4 +45,20 @@ DatasourceSearch = Backbone.Model.extend({
         });
 
     },
+
+    decode_header_json: function(raw) {
+
+        // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+        // example: ["siemens", "bosch"], ["siemens", "bosch"]
+
+        if (raw) {
+            // wrap in yet another list
+            raw = '[' + raw + ']';
+            var data = jQuery.parseJSON(raw);
+            if (!_.isEmpty(data)) {
+                return data[0];
+            }
+        }
+    },
+
 });

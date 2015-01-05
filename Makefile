@@ -75,11 +75,12 @@ test:
 		--with-doctest          \
 		--doctest-tests         \
 		--doctest-extension=rst \
+		--doctest-options=doctestencoding=utf-8 \
 		--where=elmyra.ip.access.epo \
 		--exclude-dir=elmyra/ip/util/database \
 		--exclude-dir=elmyra/ip/access/epo/static \
 		--exclude-dir=elmyra/ip/access/epo/templates \
-		--doctest-options=doctestencoding=utf-8 \
+		--exclude-dir=elmyra/web/uwsgi \
 		$(options)
 
 test-cover:
