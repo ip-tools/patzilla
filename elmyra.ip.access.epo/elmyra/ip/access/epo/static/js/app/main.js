@@ -766,7 +766,8 @@ opsChooserApp.addInitializer(function(options) {
         model: this.metadata
     });
     this.paginationViewBottom = new PaginationView({
-        model: this.metadata
+        model: this.metadata,
+        bottom_pager: true,
     });
 
     // bind view objects to region objects

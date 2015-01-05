@@ -5,11 +5,12 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
     template: _.template($('#ops-pagination-template').html(), this.model),
 
-    initialize: function() {
+    initialize: function(options) {
         console.log('PaginationView.initialize');
         this.listenTo(this.model, "commit", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
         this.templateHelpers.config = opsChooserApp.config;
+        this.bottom_pager = options.bottom_pager;
     },
 
     templateHelpers: {},
@@ -78,19 +79,25 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                 // page-change occurred
                 paged: function(page) {
                     _this.model.set('pagination_current_page', page);
-                    var options = _this.get_range(page);
+
+                    // scroll to first result entry
+                    //var scroll_target = $('.ops-collection-entry').first();
+                    //opsChooserApp.ui.scroll_smooth(scroll_target);
+
+                    // scroll to window top
+                    if (_this.bottom_pager) {
+                        $.when($(window).scrollTop(0)).then(function() {
+                        });
+                    }
+
                     // TODO: untangle this by doing opsChooserApp.perform_listsearch right here!?
+                    var options = _this.get_range(page);
                     if (opsChooserApp.queryBuilderView.get_flavor() == 'numberlist' && opsChooserApp.metadata.get('reviewmode') != true) {
                         opsChooserApp.perform_numberlistsearch(options);
                     } else {
                         opsChooserApp.perform_search(options);
                     }
 
-                    // scroll to first result entry
-                    //var scroll_target = $('.ops-collection-entry').first();
-                    // scroll to window top
-                    var scroll_target = $(window);
-                    opsChooserApp.ui.scroll_smooth(scroll_target);
                 },
 
                 //link_string: '/?page={page_number}',
@@ -161,8 +168,8 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     set_page: function(page) {
-        var paginator = $(this.el).find('.jqpagination').first();
-        $(paginator).jqPagination('option', 'current_page', page);
+        var paginator = $(this.el).find('.jqpagination').last();
+        return $(paginator).jqPagination('option', 'current_page', page);
     },
 
     onDomRefresh: function() {
