@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.80.0
+======
 - ui: slightly enhance layout of “references cited (56)” data
 - ui: scroll to top of window after paging
 - ui: pagedown/pageup (space/shift+space) navigation now also utilizes paging when overdrawing
