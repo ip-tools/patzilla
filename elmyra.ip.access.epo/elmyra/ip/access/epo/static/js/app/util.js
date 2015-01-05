@@ -79,6 +79,11 @@ _.clear = function(array) {
     });
 })(jQuery);
 
+// https://stackoverflow.com/questions/920236/how-can-i-detect-if-a-selector-returns-null/920322#920322
+$.fn.exists = function () {
+    return this.length !== 0;
+}
+
 // https://stackoverflow.com/questions/964734/hitting-enter-does-not-post-form-in-ie8/4629047#4629047
 // Recreating normal browser behavior in Javascript. Thank you, Microsoft.
 // Same behaviour in Safari. :-)

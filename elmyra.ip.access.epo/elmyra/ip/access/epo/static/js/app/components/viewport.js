@@ -37,7 +37,8 @@ ViewportPlugin = Marionette.Controller.extend({
     },
 
     // compute the best next list item
-    next_item: function() {
+    next_item: function(options) {
+        options = options || {};
         var target;
         var origin = $('.ops-collection-entry:in-viewport');
         if (origin.length) {
@@ -49,6 +50,10 @@ ViewportPlugin = Marionette.Controller.extend({
                 var target = origin.closest('.ops-collection-entry').last();
                 if (target[0] === origin[0]) {
                     target = $('.ops-collection-entry:below-the-fold').first();
+                    var bottom_overdraw = !target.exists();
+                    if (bottom_overdraw && options.paging) {
+                        opsChooserApp.paginationViewTop.set_page('next');
+                    }
                 }
             }
 
@@ -60,7 +65,8 @@ ViewportPlugin = Marionette.Controller.extend({
     },
 
     // compute the best previous list item
-    previous_item: function() {
+    previous_item: function(options) {
+        options = options || {};
         var target;
         var origin = $('.ops-collection-entry:in-viewport');
         if (origin.length) {
@@ -70,6 +76,10 @@ ViewportPlugin = Marionette.Controller.extend({
                 target = origin.closest('.ops-collection-entry').first();
                 if (target[0] === origin[0]) {
                     target = $('.ops-collection-entry:above-the-top').last();
+                    var top_overdraw = !target.exists();
+                    if (top_overdraw && options.paging) {
+                        opsChooserApp.paginationViewTop.set_page('previous');
+                    }
                 }
                 if (!target.length) {
                     target = $('body');
