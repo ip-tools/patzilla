@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: bug: “just one IPC class works with FulltextPRO”; another fix for “modern mode => legacy mode”
+- middleware/ui: number normalization for numberlists
 
 0.80.0
 ======

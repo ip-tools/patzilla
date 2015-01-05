@@ -8,6 +8,7 @@ from beaker.cache import cache_region
 from cornice import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.response import Response
+from pyramid.settings import asbool
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_description, depatisconnect_abstracts
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
@@ -20,6 +21,7 @@ from elmyra.ip.util.cql.util import pair_to_cql, should_be_quoted
 from elmyra.ip.util.date import datetime_iso_filename, now
 from elmyra.ip.util.expression.keywords import clean_keyword, keywords_from_boolean_expression
 from elmyra.ip.util.numbers.common import split_patent_number
+from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
 from elmyra.ip.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
@@ -143,6 +145,11 @@ query_expression_util_service = Service(
     name='query-expression-utility-service',
     path='/api/util/query-expression',
     description="Query expression utility service")
+
+numberlist_util_service = Service(
+    name='numberlist-utility-service',
+    path='/api/util/numberlist',
+    description="Numberlist utility service")
 
 void_service = Service(
     name='void-service',
@@ -710,6 +717,21 @@ def query_expression_util_handler(request):
 
     return expression
 
+
+@numberlist_util_service.post()
+def numberlist_util_handler(request):
+    response = {}
+    numberlist = None
+
+    if request.content_type == 'text/plain':
+        numberlist = parse_numberlist(request.text)
+        response['numbers-sent'] = numberlist
+
+    if numberlist:
+        if asbool(request.params.get('normalize')):
+            response['numbers-normalized'] = normalize_numbers(numberlist)
+
+    return response
 
 @void_service.get()
 def void(request):
