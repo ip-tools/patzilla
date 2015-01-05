@@ -127,6 +127,15 @@ DocumentBaseController = Marionette.Controller.extend({
             }
         });
 
+
+        // Shortcut button for jumping to Family » Citations
+        $('.family-citations-shortcut-button').unbind('click');
+        $('.family-citations-shortcut-button').bind('click', function(event) {
+            var container = $(this).closest('.ops-collection-entry')
+            container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
+            container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
+        });
+
     },
 
 });
