@@ -5,7 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: slightly enhance layout of “references cited (56)” data
-
+- ui: scroll to top of window after paging
 
 0.79.0
 ======

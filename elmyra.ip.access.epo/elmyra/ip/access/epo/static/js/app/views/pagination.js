@@ -87,7 +87,9 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                     }
 
                     // scroll to first result entry
-                    var scroll_target = $('.ops-collection-entry').first();
+                    //var scroll_target = $('.ops-collection-entry').first();
+                    // scroll to window top
+                    var scroll_target = $(window);
                     opsChooserApp.ui.scroll_smooth(scroll_target);
                 },
 
