@@ -687,7 +687,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     set_numberlist: function(numberlist) {
         if (!_.isEmpty(numberlist)) {
             this.set_flavor('numberlist');
-            $('#numberlist').html(numberlist);
+
+            // .html() does not work in IE
+            //$('#numberlist').html(numberlist);
+            $('#numberlist').val(numberlist);
+
             opsChooserApp.perform_numberlistsearch();
         }
     },

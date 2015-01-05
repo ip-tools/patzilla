@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix direct numberlist mode for internet explorer
 
 0.78.0
 ======
