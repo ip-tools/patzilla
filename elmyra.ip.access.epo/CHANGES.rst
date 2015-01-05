@@ -6,6 +6,7 @@ development
 ===========
 - ui: slightly enhance layout of “references cited (56)” data
 - ui: scroll to top of window after paging
+- ui: pagedown/pageup (space/shift+space) navigation now also utilizes paging when overdrawing
 
 0.79.0
 ======

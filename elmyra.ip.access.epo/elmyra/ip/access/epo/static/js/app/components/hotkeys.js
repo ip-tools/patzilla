@@ -99,22 +99,22 @@ HotkeysPlugin = Marionette.Controller.extend({
 
                 // scroll to the best next target element
                 if (event.shiftKey == false) {
-                    scroll_smooth(_this.app.viewport.next_item());
+                    scroll_smooth(_this.app.viewport.next_item({paging: true}));
 
                     // scroll to the best previous target element
                 } else if (event.shiftKey == true) {
-                    scroll_smooth(_this.app.viewport.previous_item());
+                    scroll_smooth(_this.app.viewport.previous_item({paging: true}));
                 }
 
             }
         });
         $(document).on('keydown', null, 'pagedown', function(event) {
             event.preventDefault();
-            scroll_smooth(_this.app.viewport.next_item());
+            scroll_smooth(_this.app.viewport.next_item({paging: true}));
         });
         $(document).on('keydown', null, 'pageup', function(event) {
             event.preventDefault();
-            scroll_smooth(_this.app.viewport.previous_item());
+            scroll_smooth(_this.app.viewport.previous_item({paging: true}));
         });
 
 

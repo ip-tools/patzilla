@@ -160,6 +160,11 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
     },
 
+    set_page: function(page) {
+        var paginator = $(this.el).find('.jqpagination').first();
+        $(paginator).jqPagination('option', 'current_page', page);
+    },
+
     onDomRefresh: function() {
         console.log('PaginationView.onDomRefresh');
     },
