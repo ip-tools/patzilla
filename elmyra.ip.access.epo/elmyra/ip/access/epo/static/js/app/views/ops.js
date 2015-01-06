@@ -115,7 +115,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 });
 
 
-OpsFamilyMemberVerboseView = Backbone.Marionette.ItemView.extend({
+OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
 
     template: _.template($('#ops-family-verbose-member-template').html(), this.model, {variable: 'data'}),
     tagName: 'tr',
@@ -127,7 +127,7 @@ OpsFamilyMemberVerboseView = Backbone.Marionette.ItemView.extend({
 OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: "#ops-family-verbose-collection-template",
-    itemView: OpsFamilyMemberVerboseView,
+    itemView: OpsFamilyVerboseMemberView,
 
     id: "ops-family-verbose-verbose-collection",
     //tagName: "div",
@@ -140,7 +140,7 @@ OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 });
 
 
-OpsFamilyMemberCompactView = Backbone.Marionette.ItemView.extend({
+OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
 
     template: _.template($('#ops-family-compact-member-template').html(), this.model, {variable: 'data'}),
     tagName: 'tr',
@@ -153,7 +153,7 @@ OpsFamilyMemberCompactView = Backbone.Marionette.ItemView.extend({
 OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: "#ops-family-compact-collection-template",
-    itemView: OpsFamilyMemberCompactView,
+    itemView: OpsFamilyCompactMemberView,
 
     id: "ops-family-compact-collection",
     //tagName: "div",
@@ -161,12 +161,12 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
     appendHtml: function(collectionView, itemView) {
         collectionView.$('tbody').append(itemView.el);
-    }
+    },
 
 });
 
 
-OpsFamilyMemberCitationsView = Backbone.Marionette.ItemView.extend({
+OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
 
     template: _.template($('#ops-family-citations-member-template').html(), this.model, {variable: 'data'}),
     tagName: 'tr',
@@ -191,11 +191,59 @@ OpsFamilyMemberCitationsView = Backbone.Marionette.ItemView.extend({
 });
 
 OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
+
     id: "ops-family-citations-collection",
-    template: "#ops-family-citations-collection-template",
-    itemView: OpsFamilyMemberCitationsView,
+    //template: "#ops-family-citations-collection-template",
+    template: _.template($('#ops-family-citations-collection-template').html(), this.collection, {variable: 'data'}),
+    itemView: OpsFamilyCitationsMemberView,
+
     appendHtml: function(collectionView, itemView) {
         collectionView.$('tbody').append(itemView.el);
-    }
+    },
+
+    templateHelpers: function() {
+
+        // implement interface required for reusing #ops-citations-environment-button-template
+        return {
+
+            // If your template needs access to the collection, you'll need to pass it via templateHelpers
+            // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
+            items: this.collection.toJSON(),
+
+            get_citations_environment_button: function() {
+                var tpl = _.template($('#ops-citations-environment-button-template').html());
+                return tpl({data: this});
+            },
+
+            has_citations: function() {
+                return this.items.length > 0;
+            },
+            get_patent_citation_list: function(links, id_type) {
+                id_type = id_type || 'docdb';
+
+                // aggregate cited references across all family members
+                var citations_set = new Set();
+                _.each(this.items, function(item) {
+                    var exchange_document = new OpsExchangeDocument(item['exchange-document']);
+                    var citations_local = exchange_document.attributes.get_patent_citation_list(false, 'epodoc');
+                    _.each(citations_local, function(citation) {
+                        citations_set.add(citation);
+                    });
+                });
+
+                var citations = Array.from(citations_set);
+                return citations;
+
+            },
+            get_citing_query: function() {
+                throw Error('not implemented');
+            },
+            get_publication_number: function(kind) {
+                throw Error('not implemented');
+            },
+
+        };
+
+    },
 
 });

@@ -668,6 +668,11 @@ OpsExchangeDocument = OpsBaseModel.extend({
             id_type = id_type || 'docdb';
             var self = this;
             var results = [];
+
+            if (!this['bibliographic-data'] || !this['bibliographic-data']['references-cited']) {
+                return [];
+            }
+
             var container_top = this['bibliographic-data']['references-cited'];
             if (container_top) {
                 var container = to_list(container_top['citation']);
@@ -710,11 +715,6 @@ OpsExchangeDocument = OpsBaseModel.extend({
             items = items.map(function(item) { return fieldname + '=' + item; });
             var query = items.join(' ' + operator + ' ');
             return query;
-        },
-
-        get_cited_numbers_comma: function() {
-            var items = this.get_patent_citation_list(false, 'epodoc');
-            return items.join(',');
         },
 
         _expand_links: function(text) {

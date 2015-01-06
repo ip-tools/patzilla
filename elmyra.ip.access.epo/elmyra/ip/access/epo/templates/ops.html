@@ -591,13 +591,14 @@
         </button>
         <ul class="dropdown-menu">
             <% if (data.has_citations()) { %>
+            <% var citations_comma = data.get_patent_citation_list(false, 'epodoc').join(','); %>
             <li>
-                <a href="?numberlist=<%= encodeURIComponent(data.get_cited_numbers_comma()) %>" class="query-link" target="_blank">
+                <a href="?numberlist=<%= encodeURIComponent(citations_comma) %>" class="query-link" target="_blank">
                     Documents cited: pn in (56)
                 </a>
             </li>
             <li>
-                <a href="?numberlist=<%= encodeURIComponent('ct=' + data.get_cited_numbers_comma()) %>" class="query-link" target="_blank">
+                <a href="?numberlist=<%= encodeURIComponent('ct=' + citations_comma) %>" class="query-link" target="_blank">
                     Documents citing same citations: ct in (56)
                 </a>
             </li>
@@ -922,6 +923,9 @@
         </tr>
         </thead>
         <tbody>
+            <td><%= data.get_citations_environment_button() %></td>
+            <td></td>
+            <td>All citation references (#<%= data.get_patent_citation_list(false, 'epodoc').length %>)</td>
         </tbody>
     </table>
 </script>

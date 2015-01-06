@@ -271,13 +271,14 @@ DocumentDetailsController = Marionette.Controller.extend({
         var view = new view_class({
             collection: family_collection,
         })
-        family_region.show(view);
+        //family_region.show(view);
 
         // finally, fetch data to fill the collection
         var _this = this;
         _this.indicate_activity(container, true);
         family_collection.fetch().then(function() {
             _this.indicate_activity(container, false);
+            family_region.show(view);
             //log('family_collection:', family_collection);
         });
 
