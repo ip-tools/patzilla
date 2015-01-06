@@ -288,7 +288,7 @@ OpsHelpers = Backbone.Model.extend({
 
 OpsBaseModel = Backbone.Model.extend({
 
-    defaults: {
+    defaults: _({}).extend(OpsHelpers.prototype, {
 
         get_document_id: function(node, reference_type, format) {
             /*
@@ -354,13 +354,49 @@ OpsBaseModel = Backbone.Model.extend({
             }
         },
 
-        // ui helper
         get_citations_environment_button: function() {
             var tpl = _.template($('#ops-citations-environment-button-template').html());
             return tpl({data: this});
         },
 
-    },
+        get_patent_citation_list: function(node, links, id_type) {
+
+            node = node || this;
+
+            id_type = id_type || 'docdb';
+            var self = this;
+            log('self:', self);
+            var results = [];
+
+            if (!node || !node['references-cited']) {
+                return [];
+            }
+
+            var container_top = node['references-cited'];
+            if (container_top) {
+                var container = to_list(container_top['citation']);
+                results = container
+                    .filter(function(item) { return item['patcit']; })
+                    .map(function(item) {
+                        var document_id = self.get_document_id(item['patcit'], null, id_type);
+                        var fullnumber = self.flatten_document_id(document_id).fullnumber;
+
+                        // fall back to epodoc format, if ops format yields empty number
+                        if (_.isEmpty(fullnumber)) {
+                            document_id = self.get_document_id(item['patcit'], null, 'epodoc');
+                            fullnumber = self.flatten_document_id(document_id).fullnumber;
+                        }
+                        return fullnumber;
+                    })
+                ;
+            }
+            if (links) {
+                results = this.enrich_links(results, 'pn');
+            }
+            return results;
+        },
+
+    }),
 
 
 
@@ -409,6 +445,10 @@ OpsExchangeDocument = OpsBaseModel.extend({
 
         get_application_reference: function(format) {
             return OpsBaseModel.prototype.defaults.get_application_reference(this['bibliographic-data'], format);
+        },
+
+        get_patent_citation_list: function(links, id_type) {
+            return OpsBaseModel.prototype.defaults.get_patent_citation_list(this['bibliographic-data'], links, id_type);
         },
 
         get_title_list: function() {
@@ -662,39 +702,6 @@ OpsExchangeDocument = OpsBaseModel.extend({
 
         has_citations: function() {
             return this['bibliographic-data'] && Boolean(this['bibliographic-data']['references-cited']);
-        },
-
-        get_patent_citation_list: function(links, id_type) {
-            id_type = id_type || 'docdb';
-            var self = this;
-            var results = [];
-
-            if (!this['bibliographic-data'] || !this['bibliographic-data']['references-cited']) {
-                return [];
-            }
-
-            var container_top = this['bibliographic-data']['references-cited'];
-            if (container_top) {
-                var container = to_list(container_top['citation']);
-                results = container
-                    .filter(function(item) { return item['patcit']; })
-                    .map(function(item) {
-                        var document_id = self.get_document_id(item['patcit'], null, id_type);
-                        var fullnumber = self.flatten_document_id(document_id).fullnumber;
-
-                        // fall back to epodoc format, if ops format yields empty number
-                        if (_.isEmpty(fullnumber)) {
-                            document_id = self.get_document_id(item['patcit'], null, 'epodoc');
-                            fullnumber = self.flatten_document_id(document_id).fullnumber;
-                        }
-                        return fullnumber;
-                    })
-                ;
-            }
-            if (links) {
-                results = this.enrich_links(results, 'pn');
-            }
-            return results;
         },
 
         get_citing_query: function() {
