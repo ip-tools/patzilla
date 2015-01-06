@@ -227,7 +227,7 @@ KeywordsController = Marionette.Controller.extend({
         var highlight_selector = element;
         if (!highlight_selector) { highlight_selector = '.keyword'; }
 
-        var style_queue = ['yellow', 'green', 'orange', 'turquoise', 'blue', 'violet', 'magenta'];
+        var style_queue = _(this.colors_light).keys();
         var style_queue_work;
         var _this = this;
         _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {

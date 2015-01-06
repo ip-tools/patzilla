@@ -4,8 +4,12 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.82.0
+======
 - ui: add ECMAScript 6 compatibility shim
 - ui: explore citation environment of all cited references aggregated across all family members
+- ui: highlighting for family citations
 
 0.81.3
 ======

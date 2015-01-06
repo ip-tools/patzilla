@@ -246,4 +246,78 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
     },
 
+    colors_light: {
+        yellow:     {backgroundColor: 'hsla( 60, 100%, 88%, 1)'},
+        green:      {backgroundColor: 'hsla(118, 100%, 88%, 1)'},
+        orange:     {backgroundColor: 'hsla( 16, 100%, 88%, 1)'},
+        turquoise:  {backgroundColor: 'hsla(174, 100%, 88%, 1)'},
+        blue:       {backgroundColor: 'hsla(195, 100%, 88%, 1)'},
+        violet:     {backgroundColor: 'hsla(247, 100%, 88%, 1)'},
+        magenta:    {backgroundColor: 'hsla(315, 100%, 88%, 1)'},
+    },
+
+    highlight: function() {
+
+        // count all cited references
+        var citations = {};
+        _.each(this.collection.models, function(model) {
+            var exchange_document = model.attributes['exchange-document'];
+            if (exchange_document && exchange_document['bibliographic-data']) {
+                var citation_list = model.attributes.get_patent_citation_list(exchange_document['bibliographic-data'], false, 'epodoc');
+                _.each(citation_list, function(citation_item) {
+                    if (!citations[citation_item]) {
+                        citations[citation_item] = 0;
+                    }
+                    citations[citation_item]++;
+                });
+            }
+        });
+
+        // reject citation references occurring only once
+        /*
+         // FIXME: use "pick" of more recent underscore release (1.6.0)
+         citations = _.pick(citations, function(value, key, object) {
+         return value > 1;
+         });
+         */
+        _.each(citations, function(value, key) {
+            log(value, key);
+            if (value < 2) {
+                delete citations[key];
+            }
+        });
+
+
+        // highlight citations
+        var style_queue = _(this.colors_light).keys();
+        var style_queue_work;
+        var _this = this;
+        _.each(citations, function(index, citation) {
+            if (!citation) { return; }
+
+            // refill style queue
+            if (_.isEmpty(style_queue_work)) {
+                style_queue_work = style_queue.slice(0);
+            }
+
+            // get next style available
+            var style_name = style_queue_work.shift();
+            var style = _this.colors_light[style_name];
+
+            var class_name = 'citation-highlight-' + style_name;
+
+            // perform highlighting
+            _this.$el.highlight(citation, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
+
+            // apply style
+            $('.' + class_name).css(style);
+
+        });
+
+    },
+
+    onDomRefresh: function() {
+        this.highlight();
+    },
+
 });
