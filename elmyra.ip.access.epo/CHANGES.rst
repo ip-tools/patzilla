@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.82.2
+======
+- dummy release
+
 0.82.1
 ======
 - ui: properly catch condition when there's no family information available
