@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.81.3
+======
 - middleware: cleanup host-based constraints in parameter firewall
 - middleware: fix keyword extraction from FulltextPRO fulltext field containing boolean expressions
 
