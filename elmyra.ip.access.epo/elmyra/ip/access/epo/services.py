@@ -647,7 +647,7 @@ def query_expression_util_handler(request):
 
     datasource = data['datasource']
     criteria = data['criteria']
-    modifiers = data['modifiers']
+    modifiers = data.get('modifiers', {})
     query = data.get('query')
 
     if datasource == 'ftpro':

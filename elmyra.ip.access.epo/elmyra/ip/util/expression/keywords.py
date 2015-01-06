@@ -4,7 +4,7 @@ import re
 from elmyra.ip.util.cql.pyparsing.parser import wildcards
 
 def clean_keyword(keyword):
-    return keyword.strip(wildcards + ' "')
+    return keyword.strip(wildcards + ' "()')
 
 def keywords_from_boolean_expression(key, value):
     if key != 'country':
