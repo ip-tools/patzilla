@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.82.1
+======
+- ui: properly catch condition when there's no family information available
+
 0.82.0
 ======
 - ui: add ECMAScript 6 compatibility shim
