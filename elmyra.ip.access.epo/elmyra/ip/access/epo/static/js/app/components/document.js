@@ -280,6 +280,18 @@ DocumentDetailsController = Marionette.Controller.extend({
             _this.indicate_activity(container, false);
             family_region.show(view);
             //log('family_collection:', family_collection);
+
+        }).fail(function() {
+
+            _this.indicate_activity(container, false);
+
+            // indicate family acquistion failed
+            FamilyFailedView = Backbone.Marionette.ItemView.extend({
+                render : function (){
+                    this.$el.append('No family information available.');
+                }
+            });
+            family_region.show(new FamilyFailedView());
         });
 
     },
