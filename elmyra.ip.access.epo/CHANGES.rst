@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: add ECMAScript 6 compatibility shim
 
 0.81.3
 ======
