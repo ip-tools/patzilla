@@ -114,6 +114,13 @@ class BackboneModelParameterFiddler(object):
 
         # D. special customizations
 
+        staging_hosts = [
+            'localhost',
+            'offgrid',
+            'patentsearch-develop.elmyra.de',
+            'patentsearch-staging.elmyra.de',
+        ]
+
         # 1. on patentview.elmyra.de, only run liveview
         params['isviewer'] = isviewer
         if isviewer:
@@ -135,28 +142,16 @@ class BackboneModelParameterFiddler(object):
         # 2.a compute whether"FulltextPRO "datasource is enabled
         ftpro_allowed_hosts = [
             'localhost',
-            'patentsearch.vdpm.elmyra.de',
-            'patentsearch-staging.elmyra.de',
+            'offgrid',
         ]
         params['ftpro_enabled'] = \
             params.get('request.host_name') in ftpro_allowed_hosts or \
             'ftpro' in params.get('user.modules', [])
 
         # 2.b compute whether Google datasource is allowed
-        google_allowed_hosts = [
-            'patentsearch-staging.elmyra.de',
-            'patentsearch-develop.elmyra.de',
-            'localhost',
-            'offgrid',
-        ]
-        params['google_allowed'] = params.get('request.host_name') in google_allowed_hosts
+        params['google_allowed'] = params.get('request.host_name') in staging_hosts
 
         # 3. add badges for staging- and development-environments
-        staging_hosts = [
-            'patentsearch-staging.elmyra.de',
-            'patentsearch-develop.elmyra.de',
-            'localhost',
-        ]
         host_name = params.get('request.host_name')
         if host_name in staging_hosts:
             if 'staging' in host_name:

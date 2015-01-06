@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: cleanup host-based constraints in parameter firewall
 
 0.81.2
 ======
