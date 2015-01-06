@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.81.2
+======
+- middleware: enhance FulltextPRO IPC/CPC class woes
+
 0.81.1
 ======
 - ui: fix keyword decoding for complex queries
