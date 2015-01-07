@@ -2,6 +2,7 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import json
 import logging
+import re
 import arrow
 from urllib import unquote_plus
 from beaker.cache import cache_region
@@ -670,6 +671,12 @@ def query_expression_util_handler(request):
 
                 if not value:
                     continue
+
+                # allow notations like "DE or EP or US" and "DE,EP"
+                if key == 'country':
+                    entries = re.split('(?: or |,)', value, flags=re.IGNORECASE)
+                    entries = [entry.strip() for entry in entries]
+                    value = ' or '.join(entries)
 
                 expression_part = None
 
