@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: increase DEPATISconnect service run_acquisition request timeout from 3 to 8 seconds; hopefully this improves the 502/504 http errors occurring on production
 
 0.82.2
 ======
