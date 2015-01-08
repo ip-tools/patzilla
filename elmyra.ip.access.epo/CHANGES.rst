@@ -10,6 +10,7 @@ development
 - middleware/ui: allow "DE,EP" comfort form syntax for countries
 - ui: Family citations highlighting: auto generate hsla colors to increase color space
 - ui: Family citations highlighting: when saving keyword mappings, remove highlighted keywords before applying highlighting again
+- ui: Don't use dismissed basket entries in review mode
 
 0.82.2
 ======
