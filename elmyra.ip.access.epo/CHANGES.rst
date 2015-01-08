@@ -12,6 +12,7 @@ development
 - ui: Family citations highlighting: when saving keyword mappings, remove highlighted keywords before applying highlighting again
 - ui: Don't use dismissed basket entries in review mode
 - ui: cache "get_numbers" on basket model, this would be called on each "link_document"
+- ui: enhance behavior for hitting page bottom when scrolling to next item, simplify code
 
 0.82.2
 ======
