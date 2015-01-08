@@ -23,13 +23,13 @@
 }(this, function() {
     "use strict";
 
-    var memoize = function(func) {
+    var memoize = function(func, context) {
         var stringifyJson = JSON.stringify,
             cache = {};
 
         var cachedfun = function() {
             var hash = stringifyJson(arguments);
-            return (hash in cache) ? cache[hash] : cache[hash] = func.apply(this, arguments);
+            return (hash in cache) ? cache[hash] : cache[hash] = func.apply(context, arguments);
         };
 
         cachedfun.__cache = (function() {
@@ -38,7 +38,7 @@
                 return (delete cache[hash]);
             });
             return cache;
-        }).call(this);
+        }).call(context);
 
         return cachedfun;
     };
