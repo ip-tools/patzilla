@@ -142,8 +142,17 @@ BasketModel = Backbone.RelationalModel.extend({
         }});
     },
 
-    get_numbers: function() {
-        return this.get('entries').invoke('get', 'number');
+    get_numbers: function(options) {
+        options = options || {};
+        var numbers = _.reject(this.get('entries').models, function(entry) {
+            if (options.honor_dismiss) {
+                return entry.get('dismiss') == true;
+            }
+            return false;
+        }).map(function(entry) {
+            return entry.get('number');
+        });
+        return numbers;
     },
 
     empty: function() {
@@ -185,7 +194,7 @@ BasketModel = Backbone.RelationalModel.extend({
 
     review: function(options) {
 
-        var publication_numbers = this.get_numbers();
+        var publication_numbers = this.get_numbers({honor_dismiss: true});
         var hits = publication_numbers.length;
 
         // TODO: decouple from referencing the main application object e.g. by using events!?
@@ -610,7 +619,7 @@ BasketController = Marionette.Controller.extend({
             indicator_element.toggleClass('score2', false);
             indicator_element.toggleClass('score3', false);
 
-            // number is already in basket, show "remove" button and propagate rating values
+        // number is already in basket, show "remove" button and propagate rating values
         } else {
             checkbox_element && checkbox_element.prop('checked', true);
             add_button_element && add_button_element.hide();
