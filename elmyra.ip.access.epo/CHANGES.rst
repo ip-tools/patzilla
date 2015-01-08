@@ -8,6 +8,7 @@ development
   hopefully this improves the 502/504 http errors occurring on production
 - middleware: switch to modern version of FulltextPRO comfort form -> xml query translation again, allowing nested OR expressions
 - middleware/ui: allow "DE,EP" comfort form syntax for countries
+- ui: Family citations highlighting: auto generate hsla colors to increase color space
 
 0.82.2
 ======
