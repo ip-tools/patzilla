@@ -411,3 +411,13 @@ var ModalRegion = Marionette.Region.extend({
         this.$el.modal('hide');
     }
 });
+
+// https://stackoverflow.com/questions/3898130/how-to-check-if-a-user-has-scrolled-to-the-bottom/10795797#10795797
+var getDocumentHeight = function() {
+    var D = document;
+    return Math.max(
+        D.body.scrollHeight, D.documentElement.scrollHeight,
+        D.body.offsetHeight, D.documentElement.offsetHeight,
+        D.body.clientHeight, D.documentElement.clientHeight
+    );
+}

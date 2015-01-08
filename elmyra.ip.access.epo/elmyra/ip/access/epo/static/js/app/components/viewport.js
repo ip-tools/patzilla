@@ -6,6 +6,8 @@ ViewportPlugin = Marionette.Controller.extend({
     initialize: function(options) {
         console.log('ViewportPlugin.initialize');
         this.app = options.app;
+
+        this.bottom_area_height = 20;
     },
 
     // ux: hotkeys + and - for adding/removing the document in viewport to/from basket
@@ -39,33 +41,35 @@ ViewportPlugin = Marionette.Controller.extend({
     // compute the best next list item
     next_item: function(options) {
         options = options || {};
-        var target;
+
         var origin = $('.ops-collection-entry:in-viewport');
-        if (origin.length) {
-            var page_offset = $(window).scrollTop();
-            var item_offset = Math.floor(origin.offset().top);
-            if (page_offset < item_offset) {
-                target = origin;
-            } else {
-                var target = origin.closest('.ops-collection-entry').last();
-                if (target[0] === origin[0]) {
-                    target = $('.ops-collection-entry:below-the-fold').first();
-                    var bottom_overdraw = !target.exists();
-                    if (bottom_overdraw && options.paging) {
-                        try {
-                            opsChooserApp.paginationViewBottom.set_page('next');
-                        } catch(err) {
-                            // FIXME: properly log error
+        var next = origin.parent().next().find('.ops-collection-entry').first();
 
-                        }
-                    }
-                }
-            }
+        var bottom_visible = $(window).scrollTop() + $(window).height() > getDocumentHeight() - this.bottom_area_height;
 
+        var target;
+        var bottom_overdraw = false;
+
+        var page_offset = $(window).scrollTop();
+        var item_offset = Math.floor(origin.offset().top);
+        if (page_offset < item_offset - 3) {
+            target = origin;
+            bottom_overdraw = bottom_visible;
         } else {
-            target = $('.ops-collection-entry:below-the-fold').first();
-
+            target = next;
+            bottom_overdraw = bottom_visible || !next.exists();
         }
+
+        if (bottom_overdraw && options.paging) {
+            try {
+                opsChooserApp.paginationViewBottom.set_page('next');
+                return;
+            } catch(err) {
+                // FIXME: properly log error
+
+            }
+        }
+
         return target;
     },
 
