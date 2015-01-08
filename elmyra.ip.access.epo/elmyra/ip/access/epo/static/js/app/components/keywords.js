@@ -100,7 +100,8 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
         $('#keyword-editor-save-button').click(function() {
             $.when(_this.save_models()).then(function() {
                 opsChooserApp.keywords.keyword_modal.close();
-                opsChooserApp.keywords.highlight_from_user();
+                opsChooserApp.keywords.unhighlight();
+                opsChooserApp.keywords.highlight();
             });
         });
     },
@@ -220,6 +221,12 @@ KeywordsController = Marionette.Controller.extend({
     highlight: function(element) {
         this.highlight_from_query(element);
         this.highlight_from_user(element);
+    },
+
+    unhighlight: function(element) {
+        var highlight_selector = element;
+        if (!highlight_selector) { highlight_selector = '.keyword'; }
+        $(highlight_selector).unhighlight({className: 'highlight-base'});
     },
 
     highlight_from_query: function(element) {

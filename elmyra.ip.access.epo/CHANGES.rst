@@ -9,6 +9,7 @@ development
 - middleware: switch to modern version of FulltextPRO comfort form -> xml query translation again, allowing nested OR expressions
 - middleware/ui: allow "DE,EP" comfort form syntax for countries
 - ui: Family citations highlighting: auto generate hsla colors to increase color space
+- ui: Family citations highlighting: when saving keyword mappings, remove highlighted keywords before applying highlighting again
 
 0.82.2
 ======
