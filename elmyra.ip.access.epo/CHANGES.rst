@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.83.0
+======
 - middleware: increase DEPATISconnect service run_acquisition request timeout from 3 to 8 seconds;
   hopefully this improves the 502/504 http errors occurring on production
 - middleware: switch to modern version of FulltextPRO comfort form -> xml query translation again, allowing nested OR expressions
