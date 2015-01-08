@@ -11,6 +11,7 @@ development
 - ui: Family citations highlighting: auto generate hsla colors to increase color space
 - ui: Family citations highlighting: when saving keyword mappings, remove highlighted keywords before applying highlighting again
 - ui: Don't use dismissed basket entries in review mode
+- ui: cache "get_numbers" on basket model, this would be called on each "link_document"
 
 0.82.2
 ======

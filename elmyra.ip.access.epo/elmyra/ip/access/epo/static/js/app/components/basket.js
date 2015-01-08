@@ -29,8 +29,23 @@ BasketModel = Backbone.RelationalModel.extend({
 
     initialize: function() {
         console.log('BasketModel.initialize');
+
         // backbone-relational backward-compat
         if (!this.fetchRelated) this.fetchRelated = this.getAsync;
+
+        // memoize results of "get_numbers"
+        this.wrap_cache('get_numbers');
+
+    },
+
+    // memoize results of method, invalidating cache on model change
+    wrap_cache: function(funcname, context) {
+        context = context || this;
+        this[funcname] = memoize(this[funcname], this);
+        this.invalidate_cache = function() {
+            this[funcname].__cache.remove();
+        };
+        this.bind('change', this.invalidate_cache);
     },
 
     // initialize model from url query parameters ("numberlist")
