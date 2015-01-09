@@ -105,7 +105,7 @@ class DpmaDepatisnetAccess:
 
             results = self.csv_parse_publication_numbers(csv_response)
 
-            results = [normalize_patent(result) for result in results]
+            results = [normalize_patent(result) or result for result in results]
 
 
         payload = {
