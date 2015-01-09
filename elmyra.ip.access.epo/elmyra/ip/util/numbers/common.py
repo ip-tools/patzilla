@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # (c) 2007-2011 ***REMOVED***
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-from elmyra.ip.util.numbers.helper import strip_spaces
+# (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
+import logging
+from elmyra.ip.util.numbers.helper import strip_spaces
 
 """
 Common lowlevel functions
 """
+
+logger = logging.getLogger(__name__)
 
 def join_patent(patent):
     if patent:
@@ -32,8 +35,8 @@ def split_patent_number(patent_number):
     # e.g. DE10001499.2
     #pattern = '^(\D\D)(0?\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
 
-    # e.g. DE10001499.2
-    pattern = '^(\D\D)(0?\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
+    # e.g. BR000PI0507004A, MX00PA05006297A
+    pattern = '^(\D\D)(0*\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
 
 
 
@@ -105,6 +108,9 @@ def split_patent_number(patent_number):
             parts[name] = value
 
         return parts
+
+    else:
+        logger.warning('Could not parse patent number "{0}"'.format(patent_number))
 
 
 def modify_invalid_patent_number(patent_number):

@@ -30,6 +30,9 @@ def patch_patent(patent):
         elif patched['country'] == 'AU':
             patched = normalize_patent_au(patched)
 
+        elif patched['country'] == 'BR':
+            patched['number'] = patched['number'].lstrip('0')
+
         # strip leading zeros with exception of kindcode == T1, then pad to 7 digits like EP
         # "Veröffentlichung der europäischen Patentanmeldung"
         elif patched['country'] == 'DE':
