@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - tests: add tests for patent number normalization routines
+- tests: adapt tests for patent number normalization routines to enhancements of normalization algorithms for AT- and JP-offices
 
 0.83.2
 ======
