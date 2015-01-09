@@ -81,6 +81,9 @@ test:
 		--exclude-dir=elmyra/ip/access/epo/static \
 		--exclude-dir=elmyra/ip/access/epo/templates \
 		--exclude-dir=elmyra/web/uwsgi \
+		--nocapture \
+		--nologcapture \
+		--verbose \
 		$(options)
 
 test-cover:
