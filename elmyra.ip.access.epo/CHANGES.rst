@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.83.1
+======
+- middleware: finally remove last hack against FulltextPRO deficiencies reg. ipc- vs. cpc-classes
+
 0.83.0
 ======
 - middleware: increase DEPATISconnect service run_acquisition request timeout from 3 to 8 seconds;
