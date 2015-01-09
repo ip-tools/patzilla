@@ -78,7 +78,19 @@ def patch_patent(patent):
     return patent
 
 
-def normalize_patent(number, as_dict = False, as_string = False):
+def fix_patent(patent):
+    """
+    e.g. AT362828E should be returned as AT362828T for querying at OPS
+    """
+
+    if not patent:
+        return
+
+    if patent['country'] == 'AT' and patent['kind'] == 'E':
+        patent['kind'] = 'T'
+
+
+def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=False):
 
     # 1. handle patent dicts or convert (split) from string
     if type(number) == types.DictType:
@@ -86,8 +98,12 @@ def normalize_patent(number, as_dict = False, as_string = False):
     else:
         patent = split_patent_number(number)
 
-    # 2. normalize patent dict
+    # 2.a. normalize patent dict
     patent_normalized = patch_patent(patent)
+
+    # 2.b. apply fixes
+    if fix_kindcode:
+        fix_patent(patent_normalized)
 
     # 3. result handling
 

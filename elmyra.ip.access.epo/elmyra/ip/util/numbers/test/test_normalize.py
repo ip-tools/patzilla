@@ -286,6 +286,9 @@ t['BR000PI0507004A']     = 'BRPI0507004A'
 t['BR000PI0502229A']     = 'BRPI0502229A'
 t['MX00PA05006297A']     = 'MXPA05006297A'
 
+# via "B25B27/? and B62D65/?": AT362828E
+t['AT000362828E']        = 'AT362828T'
+
 
 test_numbers_normalized_ok = t
 
@@ -296,7 +299,7 @@ class TestNumberNormalization:
 
     def examples_ok(self):
         for number, number_normalized_expect in test_numbers_normalized_ok.iteritems():
-            number_normalized_computed = normalize_patent(number)
+            number_normalized_computed = normalize_patent(number, fix_kindcode=True)
             yield number, number_normalized_expect, number_normalized_computed
 
     def testDecodeOK(self):
