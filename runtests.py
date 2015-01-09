@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # https://github.com/nltk/nltk/blob/develop/nltk/test/runtests.py
 import sys
+import logging
 import nose
 from nose.plugins.manager import PluginManager
 from nose.plugins.doctests import Doctest
@@ -10,6 +11,8 @@ from nose_exclude import NoseExclude
 from elmyra.ip.util.test.doctest_nose_plugin import DoctestFix
 
 if __name__ == '__main__':
+
+    logging.basicConfig(level=logging.DEBUG)
 
     class CustomPluginManager(PluginManager):
         """

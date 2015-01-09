@@ -279,6 +279,14 @@ t['WO09222000A3']        = 'WO2009222000A3'
 t['DE10001499.2']        = 'DE10001499.2'
 
 
+# Elmyra
+
+# via "B25B27/? and B62D65/?" (pages 13 and 16): BR000PI0507004A, BR000PI0502229A
+t['BR000PI0507004A']     = 'BRPI0507004A'
+t['BR000PI0502229A']     = 'BRPI0502229A'
+t['MX00PA05006297A']     = 'MXPA05006297A'
+
+
 test_numbers_normalized_ok = t
 
 
