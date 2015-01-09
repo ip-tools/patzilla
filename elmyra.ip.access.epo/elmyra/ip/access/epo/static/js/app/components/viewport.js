@@ -10,12 +10,17 @@ ViewportPlugin = Marionette.Controller.extend({
         this.bottom_area_height = 20;
     },
 
-    // ux: hotkeys + and - for adding/removing the document in viewport to/from basket
+    get_document: function() {
+        var document_in_focus = $('.document-actions:in-viewport').closest('.ops-collection-entry').first();
+        return document_in_focus;
+    },
+
     get_document_number_in_focus: function() {
-        var document_in_focus = _.first($('.document-actions:in-viewport').closest('.ops-collection-entry'));
+        var document_in_focus = this.get_document();
         var document_number = $(document_in_focus).data('document-number');
         return document_number;
     },
+
     get_rating_widget: function(document_number) {
         return $('#rate-patent-number-' + document_number);
     },
