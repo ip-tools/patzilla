@@ -274,7 +274,7 @@ KeywordsController = Marionette.Controller.extend({
                 var keywords = model.get('keywords');
                 _.each(keywords, function(keyword) {
                     if (!keyword) { return; }
-                    $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
+                    $(highlight_selector).highlight(keyword, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 0});
                 });
                 style = _(style).extend(_this.styles_strong);
                 $('.' + class_name).css(style);

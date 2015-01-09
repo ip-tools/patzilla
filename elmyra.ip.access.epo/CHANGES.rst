@@ -8,6 +8,7 @@ development
 - tests: adapt tests for patent number normalization routines to enhancements of normalization algorithms for AT- and JP-offices
 - middleware: pass through not-normalizable numbers from 3rd-party datasources to OPS
 - middleware: number normalization for e.g. BR000PI0507004A
+- ui: permit definition of short user-defined keywords (0 chars minimum)
 
 0.83.2
 ======
