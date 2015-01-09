@@ -57,11 +57,11 @@ t['EP1083612']       = 'EP1083612'
 t['EP083612']        = 'EP0083612'
 t['EP0 240 590B1']   = 'EP0240590B1'
 t['GB2 000 685A']    = 'GB2000685A'
-t['JP01206674A']     = 'JP01206674A'        # bei günther nachfragen
+t['JP01206674A']     = 'JP1206674A'         # bei günther nachfragen
 t['JP2000182770A']   = 'JP2000182770A'
-t['JP8-179521']      = 'JP08179521'         # bei günther nachfragen
-t['JP05-142789']     = 'JP05142789'         # bei günther nachfragen
-t['JP2000-347427']   = 'JP2000347427'      # bei günther nachfragen
+t['JP8-179521']      = 'JPH08179521'        # bei günther nachfragen
+t['JP05-142789']     = 'JPH05142789'        # bei günther nachfragen
+t['JP2000-347427']   = 'JP2000347427'       # bei günther nachfragen
 t['KR2001-0024348']  = 'KR20010024348'
 t['WOWO 99/39395']   = 'WO1999039395'
 t['WOWO00/05701']    = 'WO2000005701'
@@ -151,8 +151,8 @@ t['WO09802618A2']        = 'WO2009802618A2'
 
 # from archive
 t['AT00256702B']         = 'AT256702B'
-t['AT00009794U1']        = 'AT009794U1'
-t['AT00008739U1']        = 'AT008739U1'
+t['AT00009794U1']        = 'AT9794U1'
+t['AT00008739U1']        = 'AT8739U1'
 
 t['AU2003212220A1']      = 'AU2003212220A1'     # application
 t['AU200042655B2']       = 'AU2000042655B2'     # application
@@ -209,8 +209,8 @@ t['GB00440724A']         = 'GB440724A'
 
 t['HU00224856B1']        = 'HU224856B1'
 t['IT01247849B']         = 'IT01247849B'
-t['JP04219000B2']        = 'JP04219000B2'
-t['JP08007001AA']        = 'JP08007001AA'
+t['JP04219000B2']        = 'JP4219000B2'
+t['JP08007001AA']        = 'JP8007001AA'
 t['NL01015058C']         = 'NL1015058C'
 t['PL00193102B1']        = 'PL193102B1'
 t['RO00121297B1']        = 'RO121297B1'
@@ -254,8 +254,8 @@ t['WO002000066014A1']    = 'WO2000066014A1'
 # via espacenet:
 t['AT 967/1994']         = 'AT967/1994'         # maybe 'AT96794'
 t['AT 401 234 B']        = 'AT401234B'
-t['AT 001 234 B']        = 'AT001234B'          # fantasy
-t['AT0001 234 B']        = 'AT001234B'          # fantasy
+t['AT 001 234 B']        = 'AT1234B'            # fantasy
+t['AT0001 234 B']        = 'AT1234B'            # fantasy
 
 # more
 t['WO1A2']               = 'WO1A2'              # fantasy
