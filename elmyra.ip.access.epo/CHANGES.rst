@@ -7,6 +7,10 @@ development
 
 0.83.2
 ======
+- middleware: reject bad search syntax in FulltextPRO fulltext field
+
+0.83.2
+======
 - ui: enhance document viewport detection reg. hotkey behaviour; should properly work on last item in list now
 
 0.83.1
