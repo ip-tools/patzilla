@@ -65,6 +65,10 @@ class OpsOAuth2Session(OAuth2Session):
             content_length = response.headers.get('Content-Length')
             if content_length and content_length.isdigit():
                 self.metrics_manager.measure_upstream('ops', int(content_length))
+
+            # FIXME: Temporary logging
+            logger.info('OPS X-Throttling-Control: {0}'.format(response.headers.get('x-throttling-control')))
+
             return response
 
         except OAuth2Error as ex:

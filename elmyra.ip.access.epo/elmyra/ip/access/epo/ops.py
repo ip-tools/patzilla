@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# (c) 2013,2014 Andreas Motl, Elmyra UG
+# (c) 2013-2015 Andreas Motl, Elmyra UG
+import time
 import logging
-import operator
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPInternalServerError
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
-from jsonpointer import JsonPointer
+from jsonpointer import JsonPointer, resolve_pointer, set_pointer
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.client import OpsOAuthClientFactory
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
@@ -58,6 +58,119 @@ def ops_published_data_search(constituents, query, range):
     else:
         response = handle_error(response, 'ops-published-data-search')
         raise response
+
+
+@cache_region('search')
+def ops_published_data_crawl(constituents, query, chunksize):
+
+    if constituents != 'pub-number':
+        raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
+
+    real_constituents = constituents
+    if constituents == 'pub-number':
+        constituents = ''
+
+    # fetch first chunk (1-chunksize) from upstream
+    first_chunk = ops_published_data_search(constituents, query, '1-{0}'.format(chunksize))
+    #print first_chunk
+
+    pointer_total_count = JsonPointer('/ops:world-patent-data/ops:biblio-search/@total-result-count')
+    total_count = int(pointer_total_count.resolve(first_chunk))
+    log.info('ops_published_data_crawl total_count: %s', total_count)
+
+    # The first 2000 hits are accessible from OPS.
+    total_count = min(total_count, 2000)
+
+    # collect upstream results
+    begin_second_chunk = chunksize + 1
+    chunks = [first_chunk]
+    for range_begin in range(begin_second_chunk, total_count + 1, chunksize):
+
+        # countermeasure to robot flagging
+        # <code>CLIENT.RobotDetected</code>
+        # <message>Recent behaviour implies you are a robot. The server is at the moment busy to serve robots. Please try again later</message>
+        time.sleep(5)
+
+        range_end = range_begin + chunksize - 1
+        range_string = '{0}-{1}'.format(range_begin, range_end)
+        log.info('ops_published_data_crawl range: ' + range_string)
+        chunk = ops_published_data_search(constituents, query, range_string)
+        #print 'chunk:', chunk
+        chunks.append(chunk)
+
+    #return chunks
+
+    # merge chunks into single result
+    """
+    <empty>:    "ops:search-result" { » "ops:publication-reference": [
+    biblio:     "ops:search-result" { » "exchange-documents": [ » "exchange-document": {
+    abstract:   "ops:search-result" { » "exchange-documents": [ » "exchange-document": {
+    full-cycle: "ops:search-result" { » "exchange-documents": [ » "exchange-document": [
+    pub-number: "ops:search-result" { » "ops:publication-reference": [
+                        {
+                            "@family-id": "6321653",
+                            "@system": "ops.epo.org",
+                            "document-id": {
+                                "@document-id-type": "docdb",
+                                "country": {
+                                    "$": "DE"
+                                },
+                                "doc-number": {
+                                    "$": "3705908"
+                                },
+                                "kind": {
+                                    "$": "A1"
+                                }
+                            }
+                        },
+    """
+    pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/ops:publication-reference')
+    pointer_time_elapsed = JsonPointer('/ops:world-patent-data/ops:meta/@value')
+    all_results = []
+    time_elapsed = int(pointer_time_elapsed.resolve(first_chunk))
+    for chunk in chunks:
+
+        # FIXME: use this for "real_constituents == 'pub-number'" only
+        chunk_results = to_list(pointer_results.resolve(chunk))
+
+        # FIXME: implement other constituents
+
+        #print 'chunk_results:', chunk_results
+        all_results += chunk_results
+
+        time_elapsed += int(pointer_time_elapsed.resolve(chunk))
+
+    response = None
+    if real_constituents == 'pub-number':
+
+        response = first_chunk
+
+        # delete upstream data
+        del resolve_pointer(response, '/ops:world-patent-data/ops:biblio-search/ops:search-result')['ops:publication-reference']
+
+        # compute own representation
+        publication_numbers = []
+        pointer_document_id = JsonPointer('/document-id')
+        for entry in all_results:
+            pubref = pointer_document_id.resolve(entry)
+            #print entry, pubref
+            pubref_number, pubref_date = _get_document_number_date(pubref, 'docdb')
+            publication_numbers.append(pubref_number)
+
+        # add own representation
+        set_pointer(response, '/ops:world-patent-data/ops:biblio-search/ops:search-result/publication-numbers', publication_numbers, inplace=True)
+
+        # amend metadata
+        new_total_count = str(len(publication_numbers))
+        pointer_total_count.set(response, new_total_count)
+        set_pointer(response, '/ops:world-patent-data/ops:biblio-search/ops:range', {'@begin': '1', '@end': new_total_count})
+        pointer_time_elapsed.set(response, str(time_elapsed))
+
+    if not response:
+        raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
+
+    return response
+
 
 
 @cache_region('search')
@@ -323,6 +436,9 @@ def handle_error(response, name):
     response_json = json_error(request.errors)
     response_json.status = response.status_code
 
+    # countermeasure against "_JSONError: <unprintable _JSONError object>" or the like
+    response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.content
+
     #print "response:", response
     log.warn(request.errors)
     return response_json
@@ -421,7 +537,7 @@ def _get_document_number_date(docref, id_type):
                 doc_number = document_id['doc-number']['$']
             else:
                 doc_number = document_id['country']['$'] + document_id['doc-number']['$'] + document_id['kind']['$']
-            date = document_id['date']['$']
+            date = document_id.get('date', {}).get('$')
             return doc_number, date
     return None, None
 

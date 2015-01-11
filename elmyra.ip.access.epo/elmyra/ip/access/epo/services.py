@@ -2,6 +2,7 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import json
 import logging
+from cornice.util import _JSONError
 import re
 import arrow
 from urllib import unquote_plus
@@ -14,7 +15,7 @@ from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisc
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
-from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family, ops_service_usage
+from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family, ops_service_usage, ops_published_data_crawl
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
 from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException
 from elmyra.ip.util.cql.pyparsing import CQL
@@ -34,6 +35,10 @@ ops_published_data_search_service = Service(
     name='ops-published-data-search',
     path='/api/ops/published-data/search',
     description="OPS search interface")
+ops_published_data_crawl_service = Service(
+    name='ops-published-data-crawl',
+    path='/api/ops/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    description="OPS crawler interface")
 
 ops_family_simple_service = Service(
     name='ops-family-simple',
@@ -172,8 +177,83 @@ def ops_published_data_search_handler(request):
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
 
+    query_object, query = cql_prepare_query(query)
+
+    log.info('query cql: ' + query)
+
+    # range: x-y, maximum delta is 100, default is 25
+    range = request.params.get('range')
+    range = range or '1-25'
+
+    result = ops_published_data_search(constituents, query, range)
+    propagate_keywords(request, query_object)
+
+    log.info('query finished')
+
+    return result
+
+
+@ops_published_data_crawl_service.get(accept="application/json")
+def ops_published_data_crawl_handler(request):
+    """Crawl published-data at OPS"""
+
+    # constituents: abstract, biblio and/or full-cycle
+    constituents = request.matchdict.get('constituents', 'full-cycle')
+    print 'constituents:', constituents
+
+    # CQL query string
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    query_object, query = cql_prepare_query(query)
+    propagate_keywords(request, query_object)
+
+    log.info('query cql: ' + query)
+
+
+    chunksize = int(request.params.get('chunksize', '100'))
+
+    try:
+        result = ops_published_data_crawl(constituents, query, chunksize)
+        return result
+
+    except Exception as ex:
+        log.error(u'OPS crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+        request.errors.add('ops-published-data-crawl', 'query', str(ex))
+
+
+
+@depatisnet_published_data_search_service.get(accept="application/json")
+def depatisnet_published_data_search_handler(request):
+    """Search for published-data at DEPATISnet"""
+
+    # CQL query string
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    query_object, query = cql_prepare_query(query)
+
+    log.info('query cql: ' + query)
+
+    propagate_keywords(request, query_object)
+
+    # lazy-fetch more entries up to maximum of depatisnet
+    # TODO: get from elmyra.ip.access.dpma.depatisnet
+    request_size = 250
+    if int(request.params.get('range_begin', 0)) > request_size:
+        request_size = 1000
+
+    try:
+        return dpma_published_data_search(query, request_size)
+
+    except SyntaxError as ex:
+        request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
+
+
+def cql_prepare_query(query):
+
     # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if ('=' not in query and 'within' not in query) and ' ' in query and query[0] != '"' and query[-1] != '"':
+    if should_be_quoted(query) and 'within' not in query:
         query = '"%s"' % query
 
     # Parse and recompile CQL query string to apply number normalization
@@ -195,67 +275,7 @@ def ops_published_data_search_handler(request):
         # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
         log.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
 
-    log.info('query cql: ' + query)
-
-    # range: x-y, maximum delta is 100, default is 25
-    range = request.params.get('range')
-    range = range or '1-25'
-
-    result = ops_published_data_search(constituents, query, range)
-    propagate_keywords(request, query_object)
-
-    log.info('query finished')
-
-    return result
-
-
-
-@depatisnet_published_data_search_service.get(accept="application/json")
-def depatisnet_published_data_search_handler(request):
-    """Search for published-data at DEPATISnet"""
-
-    # CQL query string
-    query = request.params.get('query', '')
-    log.info('query raw: ' + query)
-
-    # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if should_be_quoted(query):
-        query = '"%s"' % query
-
-    # Parse and recompile CQL query string to apply number normalization
-    query_object = None
-    try:
-
-        # v1: Cheshire3 CQL parser
-        #query_object = cql_parse(query)
-        #query_recompiled = query_object.toCQL().strip()
-
-        # v2 pyparsing CQL parser
-        query_object = CQL(query).polish()
-        query_recompiled = query_object.dumps()
-
-        if query_recompiled:
-            query = query_recompiled
-
-    except Exception as ex:
-        # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
-        log.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
-
-    log.info('query cql: ' + query)
-
-    propagate_keywords(request, query_object)
-
-    # lazy-fetch more entries up to maximum of depatisnet
-    # TODO: get from elmyra.ip.access.dpma.depatisnet
-    request_size = 250
-    if int(request.params.get('range_begin', 0)) > request_size:
-        request_size = 1000
-
-    try:
-        return dpma_published_data_search(query, request_size)
-
-    except SyntaxError as ex:
-        request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
+    return query_object, query
 
 
 @google_published_data_search_service.get(accept="application/json")
