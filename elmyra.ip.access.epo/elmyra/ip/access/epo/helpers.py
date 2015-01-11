@@ -154,6 +154,8 @@ class BackboneModelParameterFiddler(object):
         # 3. add badges for staging- and development-environments
         host_name = params.get('request.host_name')
         if host_name in staging_hosts:
+            badge_text = None
+            label_kind = None
             if 'staging' in host_name:
                 badge_text = 'staging'
                 label_kind = 'info'
@@ -163,7 +165,11 @@ class BackboneModelParameterFiddler(object):
             elif 'localhost' in host_name:
                 badge_text = 'localhost'
                 label_kind = 'info'
-            params['setting.ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
+            elif 'localhost' in host_name:
+                badge_text = 'localhost'
+                label_kind = 'info'
+            if badge_text and label_kind:
+                params['setting.ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
 
         # E. backward-compat amendments
         for key, value in params.iteritems():

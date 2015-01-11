@@ -212,7 +212,7 @@ KeywordsController = Marionette.Controller.extend({
 
         $('#highlighting-map-edit-action').unbind('click');
         $('#highlighting-map-edit-action').click(function() {
-            _this.keyword_modal = new ModalRegion({el: '#keyword-editor-modal'});
+            _this.keyword_modal = new ModalRegion({el: '#modal-area'});
             _this.keyword_modal.show(_this.keyword_editor);
         });
 

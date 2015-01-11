@@ -178,7 +178,7 @@ UiController = Marionette.Controller.extend({
         return deferred.promise();
     },
 
-    user_alert: function(message, kind) {
+    user_alert: function(message, kind, selector) {
 
         if (!message) {
             return;
@@ -186,10 +186,20 @@ UiController = Marionette.Controller.extend({
 
         var label = 'INFO';
         var clazz = 'alert-info';
-        if (kind == 'warning') {
+        if (kind == 'success') {
+            label = 'SUCCESS';
+            clazz = 'alert-success';
+
+        } else if (kind == 'warning') {
             label = 'WARNING';
             clazz = 'alert-warning';
+
+        } else if (kind == 'error') {
+            label = 'ERROR';
+            clazz = 'alert-danger';
+
         }
+
         var tpl = _.template($('#alert-template').html());
         var error = {
             'title': label,
@@ -197,10 +207,15 @@ UiController = Marionette.Controller.extend({
             'clazz': clazz,
         };
         var alert_html = tpl(error);
-        $('#info-area').append(alert_html);
+
+        selector = selector || '#info-area';
+        $(selector).append(alert_html);
     },
 
     notify: function(message, options) {
+
+        options = options || {};
+        options.wrapper = options.wrapper || document.body;
 
         if (options.icon) {
             message = '<span class="icon ' + options.icon + ' icon-large"></span>' + '<p>' + message + '</p>';
@@ -221,6 +236,7 @@ UiController = Marionette.Controller.extend({
                 layout : 'attached',
                 effect : 'bouncyflip',
                 type :   options.type, // notice, warning, error, success
+                wrapper: options.wrapper,
                 onClose : function() {
                     //bttn.disabled = false;
                 },
@@ -251,7 +267,17 @@ UiController = Marionette.Controller.extend({
     copy_to_clipboard: function(mimetype, payload, options) {
         options = options || {};
         var deferred = $.Deferred();
-        //log('payload:', payload);
+
+        if (ZeroClipboard.isFlashUnusable()) {
+            $(options.element).unbind('click');
+            $(options.element).bind('click', function() {
+                var message =
+                    'Copying data to clipboard not possible, Adobe Flash Player plugin is required.<br/>' +
+                    '<a href="https://get.adobe.com/flashplayer/" target="_blank">Install Adobe Flash Player</a>.';
+                _ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+            });
+            return;
+        }
 
         var zeroclipboard = new ZeroClipboard(options.element);
         zeroclipboard.on('ready', function(readyEvent) {
@@ -277,13 +303,26 @@ UiController = Marionette.Controller.extend({
                     var size_label = 'kB';
                 }
                 var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
-                _ui.notify(message, {type: 'success', icon: 'icon-copy'});
+                _ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
             });
 
             deferred.resolve(zeroclipboard);
 
         });
         return deferred.promise();
+    },
+
+    copy_to_clipboard_bind_button: function(mimetype, payload, options) {
+
+        // prevent default action on copy button
+        $(options.element).unbind('click');
+        $(options.element).click(function(e) {
+            e.preventDefault();
+        });
+
+        // copy permalink to clipboard
+        this.copy_to_clipboard(mimetype, payload, options);
+
     },
 
 });

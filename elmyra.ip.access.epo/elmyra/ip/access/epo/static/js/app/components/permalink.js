@@ -151,15 +151,9 @@ PermalinkPlugin = Marionette.Controller.extend({
                     window.open(uri);
                 });
 
-                // prevent default action on copy button
-                $(tip).find('#permalink-copy').unbind('click');
-                $(tip).find('#permalink-copy').click(function(e) {
-                    e.preventDefault();
-                });
-
                 // copy permalink to clipboard
-                var clipboard_button = $(tip).find('#permalink-copy')[0];
-                _ui.copy_to_clipboard('text/plain', uri, {element: clipboard_button});
+                var copy_button = $(tip).find('#permalink-copy');
+                _ui.copy_to_clipboard_bind_button('text/plain', uri, {element: copy_button[0], wrapper: this.el});
 
                 // apply more generic augmentations
                 _ui.setup_text_tools();

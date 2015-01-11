@@ -726,6 +726,7 @@
                 <% } %>
 
                 <div class="span6 pull-right">
+
                     <a id="basket-add-all-documents" role="button" class="btn btn-popover"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add all documents of current result page to collection"
                        >
@@ -972,3 +973,30 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>
 </div>
+
+
+## ------------------------------------------
+##   modal dialog for viewing result numbers
+## ------------------------------------------
+<%text>
+<script type="text/x-underscore-template" id="result-numbers-template">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="result-numbers-label">Result numbers</h3>
+    </div>
+    <div class="modal-body">
+        <div id="result-numbers-info">
+        </div>
+        <textarea id="result-numbers-content" rows="13" cols="40" class="pull-left"></textarea>
+        <a id="result-numbers-copy-button" role="button" class="btn btn-popover pull-right">
+            <i class="icon-copy"></i> &nbsp; Copy to clipboard
+        </a>
+
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+
+</script>
+</%text>
