@@ -162,8 +162,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // ------------------------------------------
 
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        $('.btn-full-cycle').on('click', function (e) {
-            event.stopPropagation();
+        $('.btn-full-cycle').on('click', function(e) {
+            e.stopPropagation();
             if( $(this).attr('data-toggle') != 'button' ) { // don't toggle if data-toggle="button"
                 $(this).toggleClass('active');
             }
