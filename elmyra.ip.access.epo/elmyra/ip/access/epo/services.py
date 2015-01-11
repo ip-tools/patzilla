@@ -109,6 +109,10 @@ depatisnet_published_data_search_service = Service(
     name='depatisnet-published-data-search',
     path='/api/depatisnet/published-data/search',
     description="DEPATISnet search interface")
+depatisnet_published_data_crawl_service = Service(
+    name='depatisnet-published-data-crawl',
+    path='/api/depatisnet/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    description="DEPATISnet crawler interface")
 
 depatisconnect_description_service = Service(
     name='depatisconnect-description',
@@ -248,6 +252,29 @@ def depatisnet_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
+
+
+@depatisnet_published_data_crawl_service.get(accept="application/json")
+def depatisnet_published_data_crawl_handler(request):
+    """Crawl published-data at DEPATISnet"""
+
+    # CQL query string
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    query_object, query = cql_prepare_query(query)
+    propagate_keywords(request, query_object)
+
+    chunksize = 1000
+
+    log.info('query cql: ' + query)
+    try:
+        result = dpma_published_data_search(query, chunksize)
+        return result
+
+    except Exception as ex:
+        log.error(u'DEPATISnet crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+        request.errors.add('depatisnet-published-data-crawl', 'query', str(ex))
 
 
 def cql_prepare_query(query):

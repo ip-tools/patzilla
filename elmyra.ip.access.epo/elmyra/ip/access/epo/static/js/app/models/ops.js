@@ -216,6 +216,40 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
 });
 
+OpsPublishedDataCrawler = Marionette.Controller.extend({
+
+    initialize: function(options) {
+        log('OpsPublishedDataCrawler.initialize');
+        options = options || {};
+        this.query = options.query;
+        this.constituents = options.constituents;
+    },
+
+    crawl: function() {
+        var deferred = $.Deferred();
+        var url_tpl = _.template('/api/ops/published-data/crawl/<%= constituents %>?query=<%= query %>');
+        var url = url_tpl({constituents: this.constituents, query: this.query});
+        var _this = this;
+        $.ajax({url: url, async: true})
+            .success(function(payload) {
+                if (payload) {
+                    if (_this.constituents == 'pub-number') {
+                        var numberlist = payload['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['publication-numbers'];
+                        deferred.resolve(numberlist);
+                    } else {
+                        deferred.reject('Unknown constituents "' + _this.constituents + '"');
+                    }
+                } else {
+                    deferred.reject('Empty response');
+                }
+            }).error(function(error) {
+                deferred.reject('API failed', error);
+            });
+        return deferred;
+    },
+
+});
+
 OpsHelpers = Backbone.Model.extend({
 
     enrich_links: function(container, attribute, value_modifier) {
