@@ -30,7 +30,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 opsChooserApp.ui.reset_content();
 
                 console.log("response data:");
-                console.log(response);
+                //console.log(response);
 
                 if (_.isEmpty(response)) {
                     documents.reset();
@@ -399,7 +399,6 @@ OpsBaseModel = Backbone.Model.extend({
 
             id_type = id_type || 'docdb';
             var self = this;
-            log('self:', self);
             var results = [];
 
             if (!node || !node['references-cited']) {

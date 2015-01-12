@@ -275,13 +275,12 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
         // reject citation references occurring only once
         /*
-         // FIXME: use "pick" of more recent underscore release (1.6.0)
+         // FIXME: use "pick" of more recent underscore release (1.6.0), this can do objects
          citations = _.pick(citations, function(value, key, object) {
          return value > 1;
          });
          */
         _.each(citations, function(value, key) {
-            log(value, key);
             if (value < 2) {
                 delete citations[key];
             }
