@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - authentication: restrict access to admin api
+- admin api: add endpoint for inquiring email addresses of all users
 
 0.86.0
 ======
