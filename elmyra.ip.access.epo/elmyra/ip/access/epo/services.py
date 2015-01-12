@@ -24,6 +24,7 @@ from elmyra.ip.util.expression.keywords import clean_keyword, keywords_from_bool
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
 from elmyra.ip.util.python import _exception_traceback
+from elmyra.web.identity.store import User
 
 log = logging.getLogger(__name__)
 
@@ -168,6 +169,15 @@ void_service = Service(
     name='void-service',
     path='/api/void',
     description="Void service")
+
+
+# ------------------------------------------
+#   services: admin
+# ------------------------------------------
+admin_users_emails_service = Service(
+    name='admin-users-email-service',
+    path='/api/admin/users/emails',
+    description="Responds with email addresses of all customers")
 
 
 # ------------------------------------------
@@ -802,6 +812,15 @@ def numberlist_util_handler(request):
 
     return response
 
-@void_service.get()
-def void(request):
-    return Response('')
+@admin_users_emails_service.get()
+def admin_users_emails_handler(request):
+    users = User.objects()
+    user_emails = ['support@elmyra.de']
+    for user in users:
+        if '@' not in user.username:
+            continue
+        user_emails.append(user.username.lower())
+
+    payload = u'\n'.join(user_emails)
+
+    return Response(payload, content_type='text/plain', charset='utf-8')
