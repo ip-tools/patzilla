@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.85.0
+======
 - middleware: number normalization: AT362828E should be returned as AT362828T for querying at OPS
 - middleware/ui: ops upstream datasource crawler for fetching complete list of publication numbers, user interface
 - ui: fix “full-cycle” for firefox
