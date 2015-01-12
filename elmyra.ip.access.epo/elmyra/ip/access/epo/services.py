@@ -2,7 +2,6 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import json
 import logging
-from cornice.util import _JSONError
 import re
 import arrow
 from urllib import unquote_plus
@@ -17,7 +16,7 @@ from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family, ops_service_usage, ops_published_data_crawl
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
-from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException
+from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException, ftpro_published_data_search, ftpro_published_data_crawl
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import pair_to_cql, should_be_quoted
 from elmyra.ip.util.date import datetime_iso_filename, now
@@ -146,6 +145,10 @@ ftpro_published_data_search_service = Service(
     name='ftpro-published-data-search',
     path='/api/ftpro/published-data/search',
     description="FulltextPRO search interface")
+ftpro_published_data_crawl_service = Service(
+    name='ftpro-published-data-crawl',
+    path='/api/ftpro/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    description="FulltextPRO crawler interface")
 
 
 # ------------------------------------------
@@ -336,12 +339,12 @@ def google_published_data_search_handler(request):
 def ftpro_published_data_search_handler(request):
     """Search for published-data at FulltextPRO"""
 
-    # CQL query string
+    # XML query expression
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
 
     # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if '=' not in query and ' ' in query and query[0] != '"' and query[-1] != '"':
+    if should_be_quoted(query):
         query = '"%s"' % query
 
     #propagate_keywords(request, query_object)
@@ -364,6 +367,31 @@ def ftpro_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('FulltextPRO', 'query', str(ex.msg))
+
+@ftpro_published_data_crawl_service.get(accept="application/json")
+def ftpro_published_data_crawl_handler(request):
+    """Crawl published-data at FulltextPRO"""
+
+    # XML query expression
+    query = request.params.get('query', '')
+    log.info('query raw: ' + query)
+
+    if should_be_quoted(query):
+        query = '"%s"' % query
+
+    # constituents: abstract, biblio and/or full-cycle
+    constituents = request.matchdict.get('constituents', 'full-cycle')
+    print 'constituents:', constituents
+
+    chunksize = int(request.params.get('chunksize', '2500'))
+
+    try:
+        result = ftpro_published_data_crawl(constituents, query, chunksize)
+        return result
+
+    except Exception as ex:
+        log.error(u'FulltextPRO crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+        request.errors.add('ftpro-published-data-crawl', 'query', str(ex))
 
 
 def propagate_keywords(request, query_object):
@@ -444,19 +472,6 @@ def google_published_data_search(query, offset, limit):
         log.warn('Invalid query for Google Patents: %s' % ex.msg)
         raise
 
-@cache_region('search')
-def ftpro_published_data_search(query, offset, limit):
-
-    # <applicant type="inpadoc">grohe</applicant>
-    # <applicant type="inpadoc">siemens</applicant>
-
-    ftpro = FulltextProClient(uri='http://62.245.145.108:2000', username='gartzen@elmyra.de', password='fAaVq4GwXi')
-    #ftpro = FulltextProClient(uri='http://62.245.145.108:2000', sessionid='MFbZjdAKJ0mfg4VvwFZZbWqeygU=')
-    try:
-        return ftpro.search(query, offset, limit)
-    except SyntaxError as ex:
-        log.warn('Invalid query for FulltextPRO: %s' % ex.msg)
-        raise
 
 @ops_image_info_service.get()
 def ops_image_info_handler(request):

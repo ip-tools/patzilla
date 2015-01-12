@@ -2,14 +2,13 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import time
 import logging
-from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPInternalServerError
+from pyramid.httpexceptions import HTTPNotFound, HTTPError
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer
 from elmyra.ip.access.epo.util import object_attributes_to_dict
-from elmyra.ip.access.epo.client import OpsOAuthClientFactory
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
 from elmyra.ip.util.numbers.common import split_patent_number
 

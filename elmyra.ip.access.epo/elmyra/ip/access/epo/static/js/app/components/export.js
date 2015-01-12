@@ -47,6 +47,9 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
         } else if (datasource == 'depatisnet') {
             crawler_class = DepatisnetCrawler;
 
+        } else if (datasource == 'ftpro') {
+            crawler_class = FulltextProCrawler;
+
         } else {
             this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
             return;
