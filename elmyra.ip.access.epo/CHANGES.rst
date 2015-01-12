@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.86.0
+======
 - middleware: FulltextPRO user impersonation / multi-tenancy
 
 0.85.0
