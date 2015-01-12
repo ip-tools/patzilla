@@ -21,7 +21,7 @@ ops_service_url = 'https://ops.epo.org/3.1/rest-services/'
 def get_ops_client():
     request = get_current_request()
     oauth_client = request.ops_oauth_client
-    log.info('Making OPS request with client-id {0}'.format(oauth_client.client_id))
+    log.info('OPS request with client-id {0}'.format(oauth_client.client_id))
     return oauth_client
 
 @cache_region('search')
