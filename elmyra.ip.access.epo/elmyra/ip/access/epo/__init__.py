@@ -22,6 +22,7 @@ def main(global_config, **settings):
 
     # Register subsystem components
     config.include("elmyra.web.identity")
+    config.include("***REMOVED***")
     config.include("elmyra.ip.access.ftpro.concordance")
     config.include("elmyra.web.pyramid")
     config.include(".client")

@@ -33,6 +33,9 @@ def attach_oauth_client(event):
         request.ops_oauth_client = pool.get('default')
 
 
+# ------------------------------------------
+#   pool as utility
+# ------------------------------------------
 class IOpsOAuthClientPool(Interface):
     pass
 
@@ -51,6 +54,10 @@ class OpsOAuthClientPool(object):
             self.clients[identifier] = factory.oauth_client_create()
         return self.clients.get(identifier)
 
+
+# ------------------------------------------
+#   implementation
+# ------------------------------------------
 class OpsOAuth2Session(OAuth2Session):
 
     def __init__(self, *args, **kwargs):
