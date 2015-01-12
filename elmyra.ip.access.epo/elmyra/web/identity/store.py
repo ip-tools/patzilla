@@ -153,6 +153,8 @@ def provision_users(event):
         User(username = '***REMOVED***',  password = '***REMOVED***', fullname = 'Andreas Motl',
             tags = ['elmyra-staff'],
             modules = ['ftpro', 'keywords-user']),
+
+        """
         User(
             username = 'ep-test2',
             password = 'test123',
@@ -167,9 +169,11 @@ def provision_users(event):
             tags = [],
             upstream_credentials = {'ftpro': ftpro_credentials_f2015_0001}
         ),
+        """
     ]
     for user in users:
         try:
-            user.save()
+            if type(user) is User:
+                user.save()
         except NotUniqueError as ex:
             pass
