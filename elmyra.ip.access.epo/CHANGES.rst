@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- authentication: restrict access to admin api
 
 0.86.0
 ======
