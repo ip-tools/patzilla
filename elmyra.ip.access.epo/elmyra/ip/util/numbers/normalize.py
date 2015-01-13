@@ -128,6 +128,42 @@ def fix_patent(patent):
         patent['kind'] = 'Y'
 
 
+def depatisconnect_alternatives(number):
+    """reverse "fix_patent" for DE documents"""
+
+    patent = split_patent_number(number)
+
+    numbers = []
+
+    if patent['country'] == 'DE':
+        if not patent['number'].isdigit():
+            return [join_patent(patent)]
+
+        patent_number = int(patent['number'])
+        # e.g. DE000000121107A, DE000000801283B
+        if patent_number < 1000000:
+            if patent['kind'] == 'C':
+                patent['kind'] = 'B'
+                numbers.append(join_patent(patent))
+                patent['kind'] = 'A'
+                numbers.append(join_patent(patent))
+
+        # e.g. DE000001020931A
+        elif 1000000 <= patent_number < 1400000:
+            numbers.append(join_patent(patent))
+
+        # e.g. DE000002363448A
+        elif 1400000 <= patent_number:
+            if patent['kind'] == 'A1':
+                patent['kind'] = 'A'
+                numbers.append(join_patent(patent))
+
+    else:
+        numbers.append(number)
+
+    return numbers
+
+
 def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=False):
 
     # 1. handle patent dicts or convert (split) from string
