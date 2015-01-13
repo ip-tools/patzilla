@@ -154,6 +154,13 @@ def provision_users(event):
             tags = ['elmyra-staff'],
             modules = ['ftpro', 'keywords-user']),
 
+        User(
+            username = 'test@example.com',
+            password = 'test',
+            fullname = 'Markus Tester',
+            tags = ['']
+        ),
+
         """
         User(
             username = 'ep-test2',
