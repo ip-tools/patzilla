@@ -35,7 +35,7 @@ def split_patent_number(patent_number):
     # e.g. DE10001499.2
     #pattern = '^(\D\D)(0?\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
 
-    # e.g. BR000PI0507004A, MX00PA05006297A
+    # e.g. BR000PI0507004A, MX00PA05006297A, ITVR0020130124A
     pattern = '^(\D\D)(0*\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
 
 
@@ -107,10 +107,22 @@ def split_patent_number(patent_number):
                 value = m.group(i+1)
             parts[name] = value
 
+        split_patent_number_more(parts)
+
         return parts
 
     else:
         logger.warning('Could not parse patent number "{0}"'.format(patent_number))
+
+
+def split_patent_number_more(patent):
+    # filter: special document handling (with alphanumeric prefixes)
+    pattern = '^(\D+)(\d+)'
+    r = re.compile(pattern)
+    matches = r.match(patent['number'])
+    if matches:
+        patent['number-type'] = matches.group(1)
+        patent['number-real'] = matches.group(2)
 
 
 def modify_invalid_patent_number(patent_number):

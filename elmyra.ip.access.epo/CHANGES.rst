@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: enhanced patentnumber- and kindcode-normalization for offices AR, GE, IT and ES
 
 0.86.1
 ======

@@ -7,8 +7,10 @@ from elmyra.ip.util.numbers.common import split_patent_number
 
 
 good = OrderedDict()
-good['USRE039998E1']     = {'country': 'US', 'kind': 'E1', 'ext': '', 'number': 'RE039998'}
+good['USRE039998E1']     = {'kind': 'E1', 'country': 'US', 'number': 'RE039998', 'number-type': 'RE', 'ext': '', 'number-real': '039998'}
 good['BR000PI0502229A']  = {'country': 'BR', 'kind': 'A',  'ext': '', 'number': '000PI0502229'}
+good['ITVR0020130124A']  = {'kind': 'A', 'country': 'IT', 'number': 'VR0020130124', 'number-type': 'VR', 'ext': '', 'number-real': '0020130124'}
+
 
 bad = OrderedDict()
 bad['WO2003EP8824']      = None
