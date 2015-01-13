@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: reverse kindcode fixing for DE documents at DEPATISconnect
 
 0.86.2
 ======

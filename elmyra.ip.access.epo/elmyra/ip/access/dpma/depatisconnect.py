@@ -8,7 +8,7 @@ from lxml.builder import E
 from cornice.util import to_list
 from beaker.cache import cache_region
 from pyramid.httpexceptions import HTTPNotFound
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from elmyra.ip.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
 from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ def fetch_xml(number):
     # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
     url_tpl = '***REMOVED***/download/xml:docinfo/{number}.xml?nodtd=1'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False, timeout=1)
+    response = requests.get(url, verify=False, timeout=3)
     return response
 
 @cache_region('static')
@@ -33,7 +33,7 @@ def fetch_pdf(number):
     # ***REMOVED***/download/pdf/EP666666B1.pdf
     url_tpl = '***REMOVED***/download/pdf/{number}.pdf'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False, timeout=1)
+    response = requests.get(url, verify=False, timeout=3)
     if response.status_code == 200:
         payload = response.content
         if payload:
@@ -50,7 +50,22 @@ def get_xml(number):
     Fetch XML from EPD archive service
     """
     number_normalized = normalize_patent(number)
-    response = fetch_xml(number_normalized)
+
+    # 2015-01-13: apply patentnumber fixes for getting more out of DEPATISconnect
+    numbers = depatisconnect_alternatives(number_normalized)
+
+    for number_real in numbers:
+        try:
+            return get_xml_real(number_real)
+        except KeyError:
+            continue
+
+    raise KeyError('No XML document for "{0}" at DPMA'.format(number))
+
+
+def get_xml_real(number):
+
+    response = fetch_xml(number)
 
     if response.status_code == 200:
         return response.content
@@ -58,8 +73,8 @@ def get_xml(number):
     elif response.status_code == 404:
 
         # fetch number from remote source and try again once
-        if run_acquisition(number_normalized):
-            response = fetch_xml(number_normalized)
+        if run_acquisition(number):
+            response = fetch_xml(number)
             if response.status_code == 200:
                 return response.content
 
