@@ -29,8 +29,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content();
 
-                console.log("response data:");
-                //console.log(response);
+                console.log("response data:", response);
 
                 if (_.isEmpty(response)) {
                     documents.reset();
