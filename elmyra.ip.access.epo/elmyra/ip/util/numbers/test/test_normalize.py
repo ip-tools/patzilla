@@ -178,19 +178,18 @@ t['DE01071000B']         = 'DE1071000B'
 t['DE10002000A1']        = 'DE10002000A1'
 t['DE10002000A1']        = 'DE10002000A1'
 t['DE102004002000A1']    = 'DE102004002000A1'
-t['DE00700001A']         = 'DE700001A'
+t['DE00700001A']         = 'DE700001C'          # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
 t['DE000060018002T2']    = 'DE60018002T2'
-t['DE00000003A']         = 'DE3A'
 t['DE00694003T1']        = 'DE0694003T1'
 t['DE00935004T1']        = 'DE0935004T1'
-t['DE00650009A']         = 'DE650009A'
+t['DE00650009A']         = 'DE650009C'          # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
 t['DE000019958011A1']    = 'DE19958011A1'
 t['DE09422010U1']        = 'DE9422010U1'
 t['DE000060126015T2']    = 'DE60126015T2'
-t['DE00087015A']         = 'DE87015A'
+t['DE00087015A']         = 'DE87015C'           # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
 t['DE000004240017A1']    = 'DE4240017A1'
 t['DE000004431018A1']    = 'DE4431018A1'
-t['DE02309038A']         = 'DE2309038A'
+t['DE02309038A']         = 'DE2309038A1'        # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to A1
 
 t['EP00169000A2']        = 'EP0169000A2'
 t['EP01296000A3']        = 'EP1296000A3'
@@ -261,8 +260,8 @@ t['AT0001 234 B']        = 'AT1234B'            # fantasy
 t['WO1A2']               = 'WO1A2'              # fantasy
 t['US1A']                = 'US1A'               # fantasy
 t['US000001A']           = 'US1A'               # fantasy
-t['DE3A']                = 'DE3A'               # fantasy
-t['DE00000003A']         = 'DE3A'               # fantasy
+t['DE3A']                = 'DE3C'               # fantasy   # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
+t['DE00000003A']         = 'DE3C'               # fantasy   # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
 t['AT_00213320_B']       = 'AT213320B'
 t['WO_09104034_A3']      = 'WO2009104034A3'
 t['WO09104034A3']        = 'WO2009104034A3'
@@ -304,6 +303,188 @@ t['AR000000004605A1']       = 'AR004605A1'
 
 t['GE00U200501210Y']        = 'GEU20051210Y'
 t['GE00P200503700B']        = 'GEP20053700B'
+
+german_kindcode_fixes = """
+
+# Fazit:
+# Bei U (Gebrauchsmustern) ist alles gut.
+
+# DE+Nummer<1000000
+# A: IPS: Hier muss eine Umsetzung A->C rein
+# B: IPS: Hier muss eine Umsetzung B->C rein
+
+# DE+Nummer>1000000 und <1400000
+# A: IPS: Hier muss eine Umsetzung A->B rein
+# B: OK
+
+# DE+Nummer <1400000
+# A: A->A1
+# B: OK
+# IPS: Funktioniert automatisch
+
+# Details zum Test:
+# DE Check alte DE Publikationen
+# kommen beim EPO unter KindCode C
+
+# 1900: (Nur A gefunden)
+DE000000121107A = DE121107C
+DE000000112245A= DE112245C
+
+# 1920 (Nur A gefunden)
+DE000000330860A=DE330860C
+
+# 1930 (Nur A gefunden)
+DE466541A=DE466541C
+
+# 1940: (Nur A gefunden)
+DE000000647068A=DE647068C
+
+# IPS: Hier muss eine Umsetzung A->C rein
+
+
+# 1946-1949 keine DE Schutzrechte beim DPMA
+
+
+# 1950:
+# (Kindcodes U, A, B)
+
+DE000001617764U =DE1617764U
+# IPS funktioniert
+
+DE000000801283B = DE801283C
+# IPS: Hier muss eine Umsetzung B->C rein
+
+DE000000761063A = DE761063C
+# IPS: Hier muss eine Umsetzung A->C rein
+
+
+DE000P0001770BAZ = None
+DE000Q0000001MAZ = None
+DE000P0018311DAZ = None
+# Hier kann ich nichts passendes bei Espacenet finden
+
+
+# 1955
+# (Kindcodes U, A, B)
+
+DE000001710055U = DE1710055U
+# IPS funktioniert
+
+DE000000870319B = DE870319C
+DE000000918770B = DE918770C
+# IPS: Hier muss eine Umsetzung B->C rein
+
+DE000000753891A = DE753891C
+# IPS: Hier muss eine Umsetzung A->C rein
+
+
+# 1956:
+# (Kindcodes U, A, B)
+
+# Exoten:
+DE000SC010639MAZ = None
+DE000SC010234MAZ = None
+# Hier kann ich nichts passendes bei Espacenet finden
+
+DE000001736208U = DE1736208U
+# IPS funktioniert
+
+DE000000956397B = DE956397C
+DE000000949370B = DE949370C
+# IPS: Hier muss eine Umsetzung B->C rein
+
+DE000000750093A = DE750093C
+# IPS: Hier muss eine Umsetzung A->C rein
+
+
+# -----
+# 1957:
+DE000001020931B=DE1020931B
+# IPS funktioniert
+
+DE000001020931A=DE1020931B
+DE000000752628A=DE752628C
+DE000001017472A=DE1017472B
+DE000001000991A=DE1000991B
+DE000001001855A = DE1001855B
+DE000001001650B = DE1001650B
+
+
+# 1960:
+DE000001086436B= DE1086436B
+DE000001086014A=DE1086014B
+DE000001073687A=DE1073687B
+
+
+# Fazit:
+
+# DE+Nummer<1000000
+# B: IPS: Hier muss eine Umsetzung B->C rein
+# A: IPS: Hier muss eine Umsetzung A->C rein
+
+# DE+Nummer>1000000
+# A: IPS: Hier muss eine Umsetzung A->B rein
+
+# 1961:
+DE000001101695A = DE1101695B
+
+# 1963:
+DE000001151898A = DE1151898B
+
+# 1965:
+DE000001207548A = DE1207548B
+DE000001403081A = DE1403081A1
+DE000001467818A = DE1467818A1
+DE000001416855A = DE1416855A1
+# IPS funktioniert automatisch
+
+# 1974:
+DE000007309197U = DE7309197U
+# IPS funktioniert
+
+#DE000002363448A = DE2363448A1
+# IPS funktioniert automatisch
+
+#DE000001467818B = DE1467818B2
+# IPS funktioniert automatisch
+
+# 1974
+#DE000002343572B
+
+# 1975:
+#DE000001250596C2
+#DE000001250596B
+#DE000001250596A
+
+
+# Übergang?
+# Ab 1975 Übergang zu A1 und B
+# PC=DE  und PY=1975 und IC=A61G? und Pub=13.03.1975
+
+# Ab DEXXXXXXXX ca. >2000000 keine einstelligen Kindcodes mehr
+
+# 1978:
+# April: Wechsel zwischen U und U1
+# DE000007210072U1
+# DE000007739494U
+"""
+
+
+def convert_text(text, tests):
+    #print dir(text)
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith('#'): continue
+        if '=' in line:
+            lval, rval = line.split('=')
+            number = lval.strip()
+            expected = rval.strip()
+            if expected == 'None':
+                expected = None
+            tests[number] = expected
+
+convert_text(german_kindcode_fixes, t)
+
 
 
 test_numbers_normalized_ok = t
