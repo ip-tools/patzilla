@@ -57,17 +57,6 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         }
 
 
-        // wire fetch-results button
-        // FIXME: refactor elsewhere
-        $('.fetch-result-numbers-action').unbind('click');
-        $('.fetch-result-numbers-action').click(function() {
-            var modal = new ModalRegion({el: '#modal-area'});
-            var result_numbers_view = new ResultNumbersView({model: _this.model});
-            modal.show(result_numbers_view);
-        });
-
-
-
         if (page_count < 1) {
             $('.page-size-chooser').parent().remove();
             return;
