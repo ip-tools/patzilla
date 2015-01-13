@@ -13,7 +13,7 @@ def normalize_numbers(entries):
     entries = map(lambda s: s.replace(u' ', u''), entries)
     response = {'valid': [], 'invalid': []}
     for entry in entries:
-        entry_normalized = normalize_patent(entry)
+        entry_normalized = normalize_patent(entry, fix_kindcode=True)
         if entry_normalized:
             response['valid'].append(entry_normalized)
         else:

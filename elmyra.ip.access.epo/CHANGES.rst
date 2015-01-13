@@ -6,6 +6,7 @@ development
 ===========
 - middleware: reverse kindcode fixing for DE documents at DEPATISconnect
 - middleware: enhance patent number normalization for old US publications, e.g. US000000024087E => USRE24087E
+- middleware: perform kindcode fixing also on patent normalization api
 
 0.86.2
 ======
