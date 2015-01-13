@@ -94,3 +94,20 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
     },
 
 });
+
+
+opsChooserApp.addInitializer(function(options) {
+
+    this.listenTo(this, 'results:ready', function() {
+        var _this = this;
+        // wire fetch-results button
+        $('#fetch-result-numbers-action').unbind('click');
+        $('#fetch-result-numbers-action').click(function() {
+            var modal = new ModalRegion({el: '#modal-area'});
+            var result_numbers_view = new ResultNumbersView({model: _this.metadata});
+            modal.show(result_numbers_view);
+        });
+
+    });
+
+});
