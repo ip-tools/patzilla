@@ -8,6 +8,7 @@ development
 - middleware: enhance patent number normalization for old US publications, e.g. US000000024087E => USRE24087E
 - middleware: perform kindcode fixing also on patent normalization api
 - ui: move “Fetch result numbers” button to results tool menu
+- ui: deactivated feature "Documents citing same citations"
 
 0.86.2
 ======
