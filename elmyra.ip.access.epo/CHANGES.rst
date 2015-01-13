@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: reverse kindcode fixing for DE documents at DEPATISconnect
+- middleware: enhance patent number normalization for old US publications, e.g. US000000024087E => USRE24087E
 
 0.86.2
 ======

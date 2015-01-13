@@ -486,6 +486,11 @@ def convert_text(text, tests):
 convert_text(german_kindcode_fixes, t)
 
 
+t['US000000024087E']        = 'USRE24087E'
+t['US000000044856E']        = 'USRE44856E'
+
+
+
 
 test_numbers_normalized_ok = t
 
