@@ -106,14 +106,20 @@ def fix_patent(patent):
     if patent['country'] == 'DE':
         if not patent['number'].isdigit(): return
         patent_number = int(patent['number'])
+
+        # e.g. DE000000121107A, DE000000801283B
         if patent_number < 1000000:
             if patent['kind'] == 'A':
                 patent['kind'] = 'C'
             elif patent['kind'] == 'B':
                 patent['kind'] = 'C'
+
+        # e.g. DE000001020931A
         elif 1000000 <= patent_number < 1400000:
             if patent['kind'] == 'A':
                 patent['kind'] = 'B'
+
+        # e.g. DE000002363448A
         elif 1400000 <= patent_number:
             if patent['kind'] == 'A':
                 patent['kind'] = 'A1'
