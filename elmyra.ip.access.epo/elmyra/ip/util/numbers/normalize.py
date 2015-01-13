@@ -27,6 +27,10 @@ def patch_patent(patent):
             """
             patched['number'] = trim_leading_zeros(patched['number'])
 
+        # pad to 6 characters with leading zeros
+        elif patched['country'] == 'AR':
+            patched['number'] = patched['number'].lstrip('0').rjust(6, '0')
+
         elif patched['country'] == 'AU':
             patched = normalize_patent_au(patched)
 
@@ -45,10 +49,20 @@ def patch_patent(patent):
             patched['number'] = trim_leading_zeros(patched['number'])
             patched['number'] = pad_left(patched['number'], '0', 7)
 
-        # pad to 8 characters with leading zeros
+        elif patched['country'] == 'GE':
+            patched['number'] = patched['number'].lstrip('0')
+
+            # e.g.
+            # GE00U200501210Y = GEU20051210Y
+            # GE00P200503700B = GEP20053700B
+            print '77777777777:', patched['number'][5]
+            if patched['number'][5] == '0':
+                patched['number'] = patched['number'][:5] + patched['number'][6:]
+
+
         elif patched['country'] == 'IT':
-            patched['number'] = trim_leading_zeros(patched['number'])
-            patched['number'] = pad_left(patched['number'], '0', 8)
+            patched['number'] = patched['number'].lstrip('0')
+            patched = normalize_patent_it(patched)
 
         # 2009-11-09: JP numbers
         elif patched['country'] == 'JP':
@@ -88,6 +102,9 @@ def fix_patent(patent):
 
     if patent['country'] == 'AT' and patent['kind'] == 'E':
         patent['kind'] = 'T'
+
+    elif patent['country'] == 'ES' and patent['kind'] == 'Y2':
+        patent['kind'] = 'Y'
 
 
 def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=False):
@@ -295,14 +312,14 @@ def normalize_patent_us(patent):
     # PATFT - Issued Patents:
     # http://patft.uspto.gov/netahtml/PTO/srchnum.htm
     #
-    #   Utility                           --  5,146,634 6923014 0000001
-    #   Design                            -- 	D339,456 D321987 D000152
-    #   Plant                             -- 	PP08,901 PP07514 PP00003
-    #   Reissue                           -- 	RE35,312 RE12345 RE00007
-    #   Defensive Publication             -- 	T109,201 T855019 T100001
-    #   Statutory Invention Registration  -- 	H001,523 H001234 H000001
-    #   Re-examination                    -- 	RX12
-    #   Additional Improvement            -- 	AI00,002 AI000318 AI00007
+    #   Utility                           --   5,146,634 6923014 0000001
+    #   Design                            --    D339,456 D321987 D000152
+    #   Plant                             --    PP08,901 PP07514 PP00003
+    #   Reissue                           --    RE35,312 RE12345 RE00007
+    #   Defensive Publication             --    T109,201 T855019 T100001
+    #   Statutory Invention Registration  --    H001,523 H001234 H000001
+    #   Re-examination                    --    RX12
+    #   Additional Improvement            --    AI00,002 AI000318 AI00007
 
     # AppFT - Patent Applications
     # http://appft.uspto.gov/netahtml/PTO/srchnum.html
@@ -315,12 +332,9 @@ def normalize_patent_us(patent):
 
     # filter: special document handling (with alphanumeric prefixes)
     # trim and pad sequential number with zeros to get total length of 7 characters for patent number
-    pattern = '^(\D+)(\d+)'
-    r = re.compile(pattern)
-    matches = r.match(patched['number'])
-    if matches:
-        subtype = matches.group(1)
-        seqnumber = matches.group(2)
+    if patched.has_key('number-type') and patched.has_key('number-real'):
+        subtype = patched['number-type']
+        seqnumber = patched['number-real']
         if subtype in ('D', 'PP', 'RD', 'RE', 'T', 'H', 'AI'):
             patched['number'] = subtype + pad_left(trim_leading_zeros(seqnumber), '0', 7 - len(subtype))
         return patched
@@ -432,6 +446,32 @@ def normalize_patent_au(patent):
 
     if len(patched['number']) < 6:
         patched['number'] = pad_left(patched['number'], '0', 6)
+
+    return patched
+
+
+def normalize_patent_it(patent):
+
+    #
+    # Italian number formats
+    #
+    # IT000009015161U => IT9015161U
+    # IT000001259603B => IT1259603B
+    # ITVR0020130124A => ITVR20130124A
+    # ITVE0020080094A => ITVE20080094A
+    #
+
+    assert patent['country'] == 'IT'
+
+    patched = patent.copy()
+
+    # filter: special document handling (with alphanumeric prefixes)
+    # trim and pad sequential number with zeros to get total length of 7 characters for patent number
+    if patched.has_key('number-type') and patched.has_key('number-real'):
+        subtype = patched['number-type']
+        seqnumber = patched['number-real']
+        patched['number'] = subtype + seqnumber.lstrip('0')
+        return patched
 
     return patched
 

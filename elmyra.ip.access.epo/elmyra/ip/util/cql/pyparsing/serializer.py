@@ -74,7 +74,7 @@ def normalize_patentnumbers(tokens):
     def action(token, index, binop, term):
         # apply document number normalization to values of certain indexes only
         if index.lower() in indexes_publication_number:
-            term = normalize_patent(term)
+            term = normalize_patent(term, fix_kindcode=True)
             if term:
                 token[2] = term
 
