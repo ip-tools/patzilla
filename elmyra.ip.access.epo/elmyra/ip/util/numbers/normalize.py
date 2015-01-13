@@ -103,7 +103,7 @@ def fix_patent(patent):
     if patent['country'] == 'AT' and patent['kind'] == 'E':
         patent['kind'] = 'T'
 
-    if patent['country'] == 'DE':
+    elif patent['country'] == 'DE':
         if not patent['number'].isdigit(): return
         patent_number = int(patent['number'])
 
@@ -126,6 +126,10 @@ def fix_patent(patent):
 
     elif patent['country'] == 'ES' and patent['kind'] == 'Y2':
         patent['kind'] = 'Y'
+
+    elif patent['country'] == 'US' and patent['kind'] == 'E':
+        if 'RE' not in patent['number']:
+            patent['number'] = 'RE' + patent['number']
 
 
 def depatisconnect_alternatives(number):
