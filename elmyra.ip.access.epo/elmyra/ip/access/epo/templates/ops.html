@@ -591,7 +591,10 @@
         </button>
         <ul class="dropdown-menu">
             <% if (data.has_citations()) { %>
-            <% var citations_comma = data.get_patent_citation_list(false, 'epodoc').join(','); %>
+            <%
+            var citations_list  = data.get_patent_citation_list(false, 'epodoc');
+            var citations_comma = citations_list.join(',');
+            %>
             <li>
                 <a href="?numberlist=<%= encodeURIComponent(citations_comma) %>" class="query-link" target="_blank">
                     Documents cited: pn in (56)
@@ -604,6 +607,12 @@
                 </a>
             </li>
             -->
+            <li>
+                <a href="?query=<%= encodeURIComponent(data.get_same_citations_query()) %>"
+                   class="query-link same-citations-link" data-length="<%= citations_list.length %>" target="_blank">
+                    Documents citing same citations: ct in (56)
+                </a>
+            </li>
             <% } %>
 
             <% try { %>
