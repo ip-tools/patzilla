@@ -136,6 +136,10 @@ DocumentBaseController = Marionette.Controller.extend({
             container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
         });
 
+        // override clicking of "citation explore » documents with same citations" button
+        // for introducing warning message when having len(citations) > 10
+        OpsBaseViewMixin.bind_same_citations_links($(document));
+
     },
 
 });
