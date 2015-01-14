@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.87.1
+======
+- ui: reactivate feature "Documents citing same citations"
+
 0.87.0
 ======
 - middleware: reverse kindcode fixing for DE documents at DEPATISconnect

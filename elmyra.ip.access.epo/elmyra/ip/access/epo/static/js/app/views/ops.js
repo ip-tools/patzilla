@@ -201,6 +201,16 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
         collectionView.$('tbody').append(itemView.el);
     },
 
+    // Override and disable add:render event, see also:
+    // https://github.com/marionettejs/backbone.marionette/issues/640
+    _initialEvents: function() {
+        if (this.collection) {
+            //this.listenTo(this.collection, "add", this.addChildView, this);
+            this.listenTo(this.collection, "remove", this.removeItemView, this);
+            this.listenTo(this.collection, "reset", this.render, this);
+        }
+    },
+
     templateHelpers: function() {
 
         // implement interface required for reusing #ops-citations-environment-button-template
@@ -235,6 +245,19 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
                 return citations;
 
             },
+
+            get_items_query: function(items, fieldname, operator) {
+                // FIXME: limit query to 10 items due to ops restriction
+                items = items.slice(0, 10);
+                items = items.map(function(item) { return fieldname + '=' + item; });
+                var query = items.join(' ' + operator + ' ');
+                return query;
+            },
+            get_same_citations_query: function() {
+                var items = this.get_patent_citation_list(false, 'epodoc');
+                return this.get_items_query(items, 'ct', 'OR');
+            },
+
             get_citing_query: function() {
                 throw Error('not implemented');
             },
@@ -313,7 +336,27 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
     },
 
+    setup_ui: function() {
+        // bind user notification to all same citations links of "explore citation environment" fame
+        this.$el.find('.same-citations-link').unbind('click');
+        this.$el.find('.same-citations-link').on('click', function(event) {
+            var citations_length = $(this).data('length');
+            if (citations_length > 10) {
+                event.preventDefault();
+                event.stopPropagation();
+                opsChooserApp.ui.notify(
+                    'Querying the same citations is capped to the first 10 cited references. Sorry for this limitation.',
+                    {type: 'warning', icon: 'icon-cut'});
+                var _this = this;
+                setTimeout(function() {
+                    open($(_this).attr("href"));
+                }, 3000);
+            }
+        });
+    },
+
     onDomRefresh: function() {
+        this.setup_ui();
         this.highlight();
     },
 
