@@ -40,15 +40,19 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
 
         // compute crawler by datasource
         var crawler_class;
+        var crawler_limit;
         var datasource = this.model.get('datasource');
         if (datasource == 'ops') {
             crawler_class = OpsPublishedDataCrawler;
+            crawler_limit = 2000;
 
         } else if (datasource == 'depatisnet') {
             crawler_class = DepatisnetCrawler;
+            crawler_limit = 1000;
 
         } else if (datasource == 'ftpro') {
             crawler_class = FulltextProCrawler;
+            crawler_limit = 5000;
 
         } else {
             this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
@@ -73,7 +77,12 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
 
                 // notify user
                 _this.indicate_activity(false);
-                _this.user_message('Result publication numbers fetched successfully. Hits: ' + numberlist.length, 'success');
+                var message = numberlist.length + ' result publication numbers fetched successfully.';
+                if (numberlist.length >= crawler_limit) {
+                    message += '<br/>' +
+                        'Remark: The maximum number of results for datasource "' + datasource + '" is "' + crawler_limit + '".';
+                }
+                _this.user_message(message, 'success');
 
             }).fail(function(message, error) {
 
