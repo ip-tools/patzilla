@@ -13,6 +13,7 @@ development
 - ui: move “Fetch result numbers” button to results tool menu
 - ui: deactivated feature "Documents citing same citations"
 - middleware: enhance/fix FulltextPRO fulltext search field
+- ui: display limits of datasource in “fetch result numbers” dialog
 
 0.86.2
 ======
