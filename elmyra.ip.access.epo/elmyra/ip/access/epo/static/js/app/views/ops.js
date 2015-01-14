@@ -1,6 +1,29 @@
 // -*- coding: utf-8 -*-
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
+OpsBaseViewMixin = {
+
+    bind_same_citations_links: function(container) {
+        // bind user notification to all same citations links of "explore citation environment" fame
+        container.find('.same-citations-link').unbind('click');
+        container.find('.same-citations-link').bind('click', function(event) {
+            var citations_length = $(this).data('length');
+            if (citations_length > 10) {
+                event.preventDefault();
+                event.stopPropagation();
+                opsChooserApp.ui.notify(
+                    'List is capped to the first 10 cited references. Sorry for this limitation.',
+                    {type: 'warning', icon: 'icon-cut'});
+                var _this = this;
+                setTimeout(function() {
+                    open($(_this).attr("href"));
+                }, 3000);
+            }
+        });
+    },
+
+};
+
 OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     //template: "#ops-entry-template",
     template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
@@ -337,22 +360,7 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
     },
 
     setup_ui: function() {
-        // bind user notification to all same citations links of "explore citation environment" fame
-        this.$el.find('.same-citations-link').unbind('click');
-        this.$el.find('.same-citations-link').on('click', function(event) {
-            var citations_length = $(this).data('length');
-            if (citations_length > 10) {
-                event.preventDefault();
-                event.stopPropagation();
-                opsChooserApp.ui.notify(
-                    'Querying the same citations is capped to the first 10 cited references. Sorry for this limitation.',
-                    {type: 'warning', icon: 'icon-cut'});
-                var _this = this;
-                setTimeout(function() {
-                    open($(_this).attr("href"));
-                }, 3000);
-            }
-        });
+        OpsBaseViewMixin.bind_same_citations_links(this.$el);
     },
 
     onDomRefresh: function() {

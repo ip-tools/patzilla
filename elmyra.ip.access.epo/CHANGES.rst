@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.87.2
+======
 - ui: don’t display FulltextPRO query in expert mode, unless using “debug=true”
+- ui: warning message re. capping the first 10 elements also should appear when exploring the citation environment in main bibliographic view
 
 0.87.1
 ======
