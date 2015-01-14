@@ -39,6 +39,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // TODO: do it properly on the configuration data model
         $('#datasource').on('click', '.btn', function(event) {
             opsChooserApp.set_datasource($(this).data('value'));
+
+            // hide query textarea for ftpro, if not in debug mode
+            _this.setup_ui_query_textarea();
         });
 
 
@@ -103,6 +106,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     opsChooserApp.disable_reviewmode();
                     opsChooserApp.perform_search({reviewmode: false, clear: true});
                 });
+
+                // hide query textarea for ftpro, if not in debug mode
+                _this.setup_ui_query_textarea();
+
 
             } else if (flavor == 'numberlist') {
 
@@ -186,6 +193,27 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         });
         */
+
+    },
+
+    // hide query textarea for ftpro, if not in debug mode
+    setup_ui_query_textarea: function() {
+
+        if (opsChooserApp.config.get('debug')) {
+            return;
+        }
+
+        if (opsChooserApp.get_datasource() == 'ftpro') {
+            $('#query').hide();
+            $('#query').parent().find('#query-alert').remove();
+            $('#query').parent().append('<div id="query-alert" class="alert alert-default"><br/><br/>Expert mode not available with data source "FulltextPRO".</div>');
+            var alert_element = $('#query').parent().find('#query-alert');
+            alert_element.height($('#query').height() - 18);
+            alert_element.marginBottom($('#query').marginBottom());
+        } else {
+            $('#query').parent().find('#query-alert').remove();
+            $('#query').show();
+        }
 
     },
 
