@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: don’t display FulltextPRO query in expert mode, unless using “debug=true”
 
 0.87.1
 ======
