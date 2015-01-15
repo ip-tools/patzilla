@@ -135,10 +135,10 @@ def fix_patent(patent):
 def depatisconnect_alternatives(number):
     """reverse "fix_patent" for DE documents"""
 
+    # always add original number first
+    numbers = [number]
+
     patent = split_patent_number(number)
-
-    numbers = []
-
     if patent['country'] == 'DE':
         if not patent['number'].isdigit():
             return [join_patent(patent)]
@@ -154,16 +154,14 @@ def depatisconnect_alternatives(number):
 
         # e.g. DE000001020931A
         elif 1000000 <= patent_number < 1400000:
-            numbers.append(join_patent(patent))
+            #numbers.append(join_patent(patent))
+            pass
 
         # e.g. DE000002363448A
         elif 1400000 <= patent_number:
             if patent['kind'] == 'A1':
                 patent['kind'] = 'A'
                 numbers.append(join_patent(patent))
-
-    else:
-        numbers.append(number)
 
     return numbers
 

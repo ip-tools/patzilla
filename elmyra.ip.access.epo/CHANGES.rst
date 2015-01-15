@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.87.3
+======
+- middleware: fix "DEPATISconnect alternatives" routine
+
 0.87.2
 ======
 - ui: don’t display FulltextPRO query in expert mode, unless using “debug=true”
