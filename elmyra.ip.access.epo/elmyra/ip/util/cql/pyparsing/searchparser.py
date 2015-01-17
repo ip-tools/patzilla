@@ -61,6 +61,10 @@ TODO:
 """
 from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppress, Optional, OneOrMore, oneOf
 from sets import Set
+from elmyra.ip.util.cql.pyparsing.parser import separators, wildcards
+
+wordchars = alphanums + separators + wildcards
+
 
 class SearchQueryParser:
 
@@ -93,8 +97,9 @@ class SearchQueryParser:
         """
         operatorOr = Forward()
 
-        operatorWord = Group(Combine(Word(alphanums) + Suppress('*'))).setResultsName('wordwildcard') |\
-                       Group(Word(alphanums)).setResultsName('word')
+        #operatorWord = Group(Combine(Word(wordchars) + Suppress('*'))).setResultsName('wordwildcard') |\
+        #               Group(Word(wordchars)).setResultsName('word')
+        operatorWord = Group(Word(wordchars)).setResultsName('word')
 
         operatorQuotesContent = Forward()
         operatorQuotesContent << (

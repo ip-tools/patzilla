@@ -24,6 +24,7 @@ from elmyra.ip.util.expression.keywords import clean_keyword, keywords_from_bool
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
 from elmyra.ip.util.python import _exception_traceback
+from elmyra.ip.util.xml.format import pretty_print
 from elmyra.web.identity.store import User
 
 log = logging.getLogger(__name__)
@@ -805,11 +806,13 @@ def query_expression_util_handler(request):
         expression = ' and '.join(expression_parts)
 
     elif datasource == 'ftpro':
-        #expression_parts = ['    ' + part for part in expression_parts]
         if expression_parts:
-            expression = '\n'.join(expression_parts)
-            expression = '<and>\n' + expression + '\n</and>'
-            expression = expression.strip()
+            if len(expression_parts) == 1:
+                expression = expression_parts[0]
+            else:
+                expression = '\n'.join(expression_parts)
+                expression = '<and>\n' + expression + '\n</and>'
+            expression = pretty_print(expression)
 
     return expression
 
