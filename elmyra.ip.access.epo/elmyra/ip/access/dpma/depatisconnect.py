@@ -24,7 +24,7 @@ def fetch_xml(number):
     # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
     url_tpl = '***REMOVED***/download/xml:docinfo/{number}.xml?nodtd=1'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False, timeout=3)
+    response = requests.get(url, verify=False, timeout=(2, 17))
     return response
 
 @cache_region('static')
@@ -33,7 +33,7 @@ def fetch_pdf(number):
     # ***REMOVED***/download/pdf/EP666666B1.pdf
     url_tpl = '***REMOVED***/download/pdf/{number}.pdf'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False, timeout=3)
+    response = requests.get(url, verify=False, timeout=(2, 90))
     if response.status_code == 200:
         payload = response.content
         if payload:
