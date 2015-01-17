@@ -48,7 +48,7 @@ requires = [
     'mongoengine==0.8.7',
     'blinker==1.3',
     'python-dateutil==2.2',
-    'lxml==3.3.5',
+    'lxml==3.4.1',
     'openpyxl==2.1.0',
     'jsonpointer==1.6',
     'arrow==0.4.4',
