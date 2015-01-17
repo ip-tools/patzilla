@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.87.4
+======
+- middleware: enhance timeout behavior at DEPATISconnect upstream
+
 0.87.3
 ======
 - middleware: fix "DEPATISconnect alternatives" routine

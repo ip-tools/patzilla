@@ -679,11 +679,17 @@ def depatisconnect_claims_handler(request):
     patent = request.matchdict['patent']
     try:
         description = depatisconnect_claims(patent)
+
     except KeyError as ex:
+        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPNotFound(ex)
+
     except ValueError as ex:
+        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
+
     return description
+
 
 @depatisconnect_description_service.get()
 def depatisconnect_description_handler(request):
@@ -691,11 +697,17 @@ def depatisconnect_description_handler(request):
     patent = request.matchdict['patent']
     try:
         description = depatisconnect_description(patent)
+
     except KeyError as ex:
+        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPNotFound(ex)
+
     except ValueError as ex:
+        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
+
     return description
+
 
 @depatisconnect_abstract_service.get()
 def depatisconnect_abstract_handler(request):
@@ -704,10 +716,15 @@ def depatisconnect_abstract_handler(request):
     language = request.params.get('language')
     try:
         abstract = depatisconnect_abstracts(patent, language)
+
     except KeyError as ex:
+        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPNotFound(ex)
+
     except ValueError as ex:
+        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
+
     return abstract
 
 
