@@ -9,3 +9,13 @@ Getting Started
 - $venv/bin/python setup.py develop
 
 - $venv/bin/pserve development.ini
+
+
+
+Tests
+-----
+::
+
+    make test
+
+    make test options='--where elmyra.ip.access.ftpro'

@@ -6,6 +6,7 @@ development
 ===========
 - middleware: enhance FulltextPRO comfort form capabilities for "Class" expressions
 - middleware: enhance FulltextPRO comfort form capabilities for “Full text” expressions
+- tests: tests for enhanced FulltextPRO cql expressions and parser refinements
 
 0.87.4
 ======

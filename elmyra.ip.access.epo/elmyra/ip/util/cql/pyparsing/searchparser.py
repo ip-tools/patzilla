@@ -59,11 +59,11 @@ TODO:
 - ask someone to check my English texts
 - add more kinds of wildcards ('*' at the beginning and '*' inside a word)?
 """
-from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppress, Optional, OneOrMore, oneOf
+from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppress, Optional, OneOrMore, oneOf, nums, Literal
 from sets import Set
 from elmyra.ip.util.cql.pyparsing.parser import separators, wildcards
 
-wordchars = alphanums + separators + wildcards + '='
+wordchars = alphanums + separators + wildcards
 
 
 class SearchQueryParser:
@@ -97,8 +97,6 @@ class SearchQueryParser:
         """
         operatorOr = Forward()
 
-        #operatorWord = Group(Combine(Word(wordchars) + Suppress('*'))).setResultsName('wordwildcard') |\
-        #               Group(Word(wordchars)).setResultsName('word')
         operatorWord = Word(wordchars).setResultsName('value')
 
         operatorQuotesContent = Forward()
@@ -128,9 +126,16 @@ class SearchQueryParser:
             operatorNot + OneOrMore(~oneOf("and or") + operatorAnd)
         ).setResultsName("and") | operatorNot)
 
+        operatorProximity = Forward()
+        operatorProximity << (Group(
+            operatorWord + Suppress(Literal("near,")) + Word(nums).setResultsName('distance') + operatorWord
+        ).setResultsName("near") | Group(
+            operatorWord + Suppress(Literal("span,")) + Word(nums).setResultsName('distance') + operatorWord
+        ).setResultsName("span") | operatorAnd)
+
         operatorOr << (Group(
-            operatorAnd + Suppress(Keyword("or", caseless=True)) + operatorOr
-        ).setResultsName("or") | operatorAnd)
+            operatorProximity + Suppress(Keyword("or", caseless=True)) + operatorOr
+        ).setResultsName("or") | operatorProximity)
 
         return operatorOr.parseString
 

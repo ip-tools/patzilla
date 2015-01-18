@@ -75,7 +75,7 @@ test:
 		--with-doctest          \
 		--doctest-tests         \
 		--doctest-extension=rst \
-		--doctest-options=doctestencoding=utf-8 \
+		--doctest-options=doctestencoding=utf-8,+ELLIPSIS,+NORMALIZE_WHITESPACE,+REPORT_UDIFF \
 		--where=elmyra.ip.access.epo \
 		--exclude-dir=elmyra/ip/util/database \
 		--exclude-dir=elmyra/ip/access/epo/static \
