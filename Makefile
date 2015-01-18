@@ -86,6 +86,9 @@ test:
 		--verbose \
 		$(options)
 
+# +REPORT_ONLY_FIRST_FAILURE
+
+
 test-cover:
 	$(MAKE) test options="--with-coverage"
 

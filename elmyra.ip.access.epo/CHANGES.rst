@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: major enhancements to FulltextPRO expression translator re. unqualified search expressions, tests
 
 0.88.1
 ======
