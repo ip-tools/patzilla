@@ -5,7 +5,7 @@
 CQL pyparsing parser tests: Foundation spec
 ===========================================
 
-The tests all examples from https://en.wikipedia.org/wiki/Contextual_Query_Language
+This tests all examples from https://en.wikipedia.org/wiki/Contextual_Query_Language
 
 >>> from elmyra.ip.util.cql.pyparsing import CQL
 

@@ -39,3 +39,10 @@ def pretty_print(xml):
     xml = xml.strip()
 
     return xml
+
+def compact_print(xml):
+    parser = etree.XMLParser(remove_blank_text=True)
+    root = etree.fromstring(xml, parser)
+    xml = etree.tostring(root)
+    xml = xml.strip()
+    return xml
