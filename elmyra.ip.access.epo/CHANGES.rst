@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.88.1
+======
+- middleware: fixes to FultextPRO expression enhancements
+
 0.88.0
 ======
 - middleware: enhance FulltextPRO comfort form capabilities for "Class" expressions
