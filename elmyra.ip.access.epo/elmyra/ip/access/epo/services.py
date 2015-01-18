@@ -2,6 +2,7 @@
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import json
 import logging
+from pymongo.errors import OperationFailure
 import re
 import arrow
 from urllib import unquote_plus
@@ -378,6 +379,12 @@ def ftpro_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('FulltextPRO', 'query', str(ex.msg))
+
+    except OperationFailure as ex:
+        log.error(ex)
+        message = str(ex)
+        message = re.sub('namespace: .*', '', message)
+        request.errors.add('FulltextPRO', 'query', message)
 
 @ftpro_published_data_crawl_service.get(accept="application/json")
 def ftpro_published_data_crawl_handler(request):
@@ -781,7 +788,7 @@ def query_expression_util_handler(request):
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
 
-                error_tpl = 'Criteria "{0}=\'{1}\'" has invalid format, datasource={2}.'
+                error_tpl = 'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
                     log.warn(message)
@@ -789,7 +796,7 @@ def query_expression_util_handler(request):
 
                 elif expression_part.has_key('error'):
                     message = error_tpl.format(key, value, datasource)
-                    message += ' ' + expression_part['message']
+                    message += '<br/>' + expression_part['message']
                     log.warn(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 

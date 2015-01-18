@@ -63,7 +63,7 @@ from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppres
 from sets import Set
 from elmyra.ip.util.cql.pyparsing.parser import separators, wildcards
 
-wordchars = alphanums + separators + wildcards
+wordchars = alphanums + separators + wildcards + '='
 
 
 class SearchQueryParser:
@@ -99,7 +99,7 @@ class SearchQueryParser:
 
         #operatorWord = Group(Combine(Word(wordchars) + Suppress('*'))).setResultsName('wordwildcard') |\
         #               Group(Word(wordchars)).setResultsName('word')
-        operatorWord = Group(Word(wordchars)).setResultsName('word')
+        operatorWord = Word(wordchars).setResultsName('value')
 
         operatorQuotesContent = Forward()
         operatorQuotesContent << (
@@ -110,9 +110,11 @@ class SearchQueryParser:
             Suppress('"') + operatorQuotesContent + Suppress('"')
         ).setResultsName("quotes") | operatorWord
 
+        prefix = (Word(alphanums).setResultsName('index') + Word('=').setResultsName('binop'))
         operatorParenthesis = Group(
+            Optional(prefix) +
             (Suppress("(") + operatorOr + Suppress(")"))
-        ).setResultsName("parenthesis") | operatorQuotes
+        ).setResultsName("parenthesis") | Group(prefix + operatorQuotes).setResultsName('term') | operatorQuotes
 
         operatorNot = Forward()
         operatorNot << (Group(
