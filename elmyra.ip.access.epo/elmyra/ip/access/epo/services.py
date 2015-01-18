@@ -17,7 +17,8 @@ from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family, ops_service_usage, ops_published_data_crawl
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
-from elmyra.ip.access.ftpro.search import FulltextProClient, FulltextProExpression, LoginException, SearchException, ftpro_published_data_search, ftpro_published_data_crawl
+from elmyra.ip.access.ftpro.expression import FulltextProExpression
+from elmyra.ip.access.ftpro.search import LoginException, SearchException, ftpro_published_data_search, ftpro_published_data_crawl
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import pair_to_cql, should_be_quoted
 from elmyra.ip.util.date import datetime_iso_filename, now
