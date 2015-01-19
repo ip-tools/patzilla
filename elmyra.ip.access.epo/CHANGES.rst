@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.90.0
+======
+- ui: copy comfort form contents to clipboard, clear comfort form values
+
 0.89.1
 ======
 - middleware: fix keyword trimming at FulltextPRO expression converter

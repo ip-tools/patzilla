@@ -74,6 +74,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#patentnumber').focus();
 
                 // hide action tools
+                $('#querybuilder-comfort-actions').show();
                 $('#querybuilder-cql-actions').hide();
                 $('#querybuilder-numberlist-actions').hide();
 
@@ -91,6 +92,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#query').focus();
 
                 // show action tools
+                $('#querybuilder-comfort-actions').hide();
                 $('#querybuilder-cql-actions').show();
                 $('#querybuilder-numberlist-actions').hide();
 
@@ -117,6 +119,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#numberlist').focus();
 
                 // hide action tools
+                $('#querybuilder-comfort-actions').hide();
                 $('#querybuilder-cql-actions').hide();
                 $('#querybuilder-numberlist-actions').show();
 
@@ -247,7 +250,47 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //   cql query area action tools
         // ------------------------------------------
 
-        // trash icon clears the whole content
+        // display all comfort form values
+        $('#btn-comfort-display-values').unbind('click');
+        $('#btn-comfort-display-values').click(function() {
+
+            var lines = [];
+            _.each($('#querybuilder-comfort-form').find('input'), function(field) {
+                var f = $(field);
+                var name = f.attr('name');
+                var value = f.val();
+                var label = name + ':';
+                label = _.string.rpad(label, 16, ' ');
+                lines.push(label + value);
+            });
+
+            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn"><i class="icon-copy"></i> &nbsp; Copy to clipboard</a>';
+
+            var data = lines.join('\n');
+            var modal_html = '<pre>' + data + '</pre>' + copy_button;
+
+            var box = bootbox.dialog(
+                modal_html, [{
+                    "label": 'OK',
+                    "icon" : 'OK',
+                    "callback": null,
+                }],
+                {header: 'Contents of comfort form'});
+            //log('box:', box);
+
+            // bind clipboard copy button
+            var copy_button = box.find('#comfort-form-copy-button');
+            _ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: box[0]});
+
+        });
+
+        // clear all comfort form values
+        $('#btn-comfort-clear').unbind('click');
+        $('#btn-comfort-clear').click(function() {
+            $('#querybuilder-comfort-form').find('input').val('');
+        });
+
+        // clear the whole expression (export form)
         $('#btn-query-clear').unbind('click');
         $('#btn-query-clear').click(function() {
             $('#query').val('').focus();

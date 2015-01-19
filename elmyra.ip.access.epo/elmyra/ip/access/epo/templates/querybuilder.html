@@ -7,10 +7,8 @@
             <!-- choose ui flavor -->
             <div class="span5">
 
-                <div id="querybuilder-flavor-chooser" class="btn-group btn-popover tabs"
-                     data-toggle="popover" data-trigger="hover" data-placement="right"
-                     data-content="Choose query interface"
-                        >
+                <div id="querybuilder-flavor-chooser" class="btn-group tabs">
+
                     <button class="btn active" data-toggle="tab"
                             href="#querybuilder-comfort-tab"
                             data-value="comfort">
@@ -54,8 +52,34 @@
                     </div>
 
                     <div class="btn-group">
+                        <button class="btn dropdown-toggle" id="querybuilder-comfort-actions" data-toggle="dropdown">
+                            <i class="icon-wrench btn-popover"
+                               data-toggle="popover" data-trigger="hover" data-placement="top"
+                               data-content="Tools"></i>
+                        </button>
+                        <ul class="dropdown-menu">
+
+                            <li>
+
+                                <!-- display values -->
+                                <a id="btn-comfort-display-values">
+                                    <i class="icon-list"></i> &nbsp; Display form values
+                                </a>
+
+                                <!-- clear -->
+                                <a id="btn-comfort-clear">
+                                    <i class="icon-trash"></i> &nbsp; Clear form values
+                                </a>
+
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group">
                         <button class="btn dropdown-toggle hide" id="querybuilder-cql-actions" data-toggle="dropdown">
-                            <i class="icon-wrench"></i>
+                            <i class="icon-wrench btn-popover"
+                               data-toggle="popover" data-trigger="hover" data-placement="top"
+                               data-content="Tools"></i>
                         </button>
                         <ul class="dropdown-menu">
 
@@ -82,7 +106,9 @@
 
                     <div class="btn-group">
                         <button class="btn dropdown-toggle hide" id="querybuilder-numberlist-actions" data-toggle="dropdown">
-                            <i class="icon-wrench"></i>
+                            <i class="icon-wrench btn-popover"
+                               data-toggle="popover" data-trigger="hover" data-placement="top"
+                               data-content="Tools"></i>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
