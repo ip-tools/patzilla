@@ -515,7 +515,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
             if (country == 'DE' && !_(languages_seen).contains('DE')) {
                 abstract_list.push(
                     '[DE] <a href="#" class="abstract-acquire" data-lang="de">OPS lacks german abstract, try to ' +
-                    'acquire from different data source.</a>');
+                    'acquire from different data source</a>');
             }
 
             return abstract_list;

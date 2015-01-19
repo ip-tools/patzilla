@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: distinguish between erroneous or empty responses to on-demand requests for abstracts at DEPATISconnect
 
 0.90.1
 ======
