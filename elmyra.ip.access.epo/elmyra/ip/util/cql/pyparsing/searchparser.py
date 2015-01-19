@@ -63,7 +63,13 @@ from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppres
 from sets import Set
 from elmyra.ip.util.cql.pyparsing.parser import separators, wildcards
 
-wordchars = alphanums + separators + wildcards
+# define characters comprising a word
+#wordchars = alphanums + separators + wildcards
+
+# all unicode characters
+# http://stackoverflow.com/questions/2339386/python-pyparsing-unicode-characters/2340659#2340659
+unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isalnum() and not unichr(c).isspace())
+wordchars = unicode_printables + separators + wildcards
 
 
 class SearchQueryParser:

@@ -789,7 +789,7 @@ def query_expression_util_handler(request):
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
 
-                error_tpl = 'Criteria "{0}: {1}" has invalid format, datasource={2}.'
+                error_tpl = u'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
                     log.warn(message)
@@ -797,7 +797,7 @@ def query_expression_util_handler(request):
 
                 elif expression_part.has_key('error'):
                     message = error_tpl.format(key, value, datasource)
-                    message += '<br/>' + expression_part['message']
+                    message += u'<br/>' + expression_part['message']
                     log.warn(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 

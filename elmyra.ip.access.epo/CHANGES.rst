@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.90.1
+======
 - middleware: make fieldnames case insensitive at FulltextPRO expression translator
+- middleware: unicode support for FulltextPRO expression translator
 
 0.90.0
 ======
