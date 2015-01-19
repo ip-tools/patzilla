@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.90.2
+======
 - ui: distinguish between erroneous or empty responses to on-demand requests for abstracts at DEPATISconnect
 - middleware: attempt to detect when searching at FulltextPRO fails due to invalid session and relogin again
 - middleware: make FulltextPRO expression parser handle more expressions from the wild
