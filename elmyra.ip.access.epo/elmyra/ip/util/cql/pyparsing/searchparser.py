@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Search query parser
 
 version 2006-03-09
@@ -69,7 +70,8 @@ from elmyra.ip.util.cql.pyparsing.parser import separators, wildcards
 # all unicode characters
 # http://stackoverflow.com/questions/2339386/python-pyparsing-unicode-characters/2340659#2340659
 unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isalnum() and not unichr(c).isspace())
-wordchars = unicode_printables + separators + wildcards
+more_chars = u'°'
+wordchars = unicode_printables + more_chars + separators + wildcards
 
 
 class SearchQueryParser:
