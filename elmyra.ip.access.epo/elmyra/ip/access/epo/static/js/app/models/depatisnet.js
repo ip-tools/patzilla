@@ -105,16 +105,20 @@ DepatisConnectFulltext = Marionette.Controller.extend({
         var url = _.template(url_tpl)({ document_number: this.document_number, language: language});
         $.ajax({url: url, async: true})
             .success(function(payload) {
-                if (payload) {
+                if (payload && payload['xml']) {
                     var response = {
                         html: payload['xml'],
                         lang: payload['lang'],
                     };
                     deferred.resolve(response);
+
+                } else {
+                    console.warn('DEPATISconnect: Empty abstract for', _this.document_number);
+                    deferred.reject({html: 'Abstract for this document is empty, see original data source'});
                 }
             }).error(function(error) {
-                console.warn('Error while fetching description from DEPATISconnect for', _this.document_number, error);
-                deferred.resolve({html: 'No data available'});
+                console.warn('DEPATISconnect: Error while fetching abstract for', _this.document_number, error);
+                deferred.reject({html: 'No data available', error: error});
             });
 
         return deferred.promise();

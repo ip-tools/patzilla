@@ -102,8 +102,12 @@ DocumentBaseController = Marionette.Controller.extend({
             var ft = opsChooserApp.document_details.get_fulltext(document);
             var _this = this;
             ft.get_abstract(lang).then(function(data) {
-                $(_this).replaceWith(data['html']);
-                $('.abstract-acquire-spinner').detach();
+                    $(_this).replaceWith(data['html']);
+                    $('.abstract-acquire-spinner').detach();
+
+                }).fail(function(data) {
+                    $(_this).replaceWith(data['html']);
+                    $('.abstract-acquire-spinner').detach();
             });
         });
 
