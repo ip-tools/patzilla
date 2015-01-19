@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.89.1
+======
+- middleware: fix keyword trimming at FulltextPRO expression converter
+
 0.89.0
 ======
 - middleware: major enhancements to FulltextPRO expression translator re. unqualified search expressions, tests
