@@ -213,7 +213,8 @@ OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
 
 OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
-    template: "#ops-family-compact-collection-template",
+    //template: "#ops-family-compact-collection-template",
+    template: _.template($('#ops-family-compact-collection-template').html(), this.collection, {variable: 'data'}),
     itemView: OpsFamilyCompactMemberView,
 
     id: "ops-family-compact-collection",
@@ -222,6 +223,43 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
     appendHtml: function(collectionView, itemView) {
         collectionView.$('tbody').append(itemView.el);
+    },
+
+    onDomRefresh: function() {
+        this.setup_ui();
+    },
+
+    setup_ui: function() {
+        OpsBaseViewMixin.bind_query_links(this.$el);
+        OpsBaseViewMixin.bind_same_citations_links(this.$el);
+    },
+
+    templateHelpers: function() {
+
+        // implement interface required for reusing #ops-citations-environment-button-template
+        return {
+
+            // If your template needs access to the collection, you'll need to pass it via templateHelpers
+            // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
+            items: this.collection.toJSON(),
+
+            get_patent_family_member_list: function(id_type) {
+
+                id_type = id_type || 'docdb';
+
+                // aggregate list of publication numbers of all family members
+                var members = [];
+                _.each(this.items, function(item) {
+                    var publication_number = OpsBaseModel.prototype.defaults.get_publication_number(item, id_type);
+                    members.push(publication_number);
+                });
+
+                return members;
+
+            },
+
+        };
+
     },
 
 });
@@ -300,6 +338,8 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
                 return this.items.length > 0;
             },
             get_patent_citation_list: function(links, id_type) {
+
+                // FIXME: does not get used yet!
                 id_type = id_type || 'docdb';
 
                 // aggregate cited references across all family members

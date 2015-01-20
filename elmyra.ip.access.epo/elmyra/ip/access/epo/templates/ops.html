@@ -895,11 +895,24 @@
         <thead>
         <tr>
             <th class="span1">PDF</th>
-            <th class="span2">Pub. Number</th>
-            <th class="span2">Pub. Date</th>
+            <th class="span2">Publication</th>
+            <th class="span2">Date</th>
         </tr>
         </thead>
         <tbody>
+        <tr>
+            <%
+            var family_members = data.get_patent_family_member_list('epodoc');
+            var family_members_comma = family_members.join(',');
+            %>
+            <td>
+            </td>
+            <td colspan="2">
+                <a href="?numberlist=<%= encodeURIComponent(family_members_comma) %>" class="query-link" target="_blank">
+                    All family members (#<%= family_members.length %>)
+                </a>
+            </td>
+        </tr>
         </tbody>
     </table>
 </script>
@@ -943,9 +956,11 @@
         </tr>
         </thead>
         <tbody>
+        <tr>
             <td><%= data.get_citations_environment_button() %></td>
             <td></td>
             <td>All citation references (#<%= data.get_patent_citation_list(false, 'epodoc').length %>)</td>
+        </tr>
         </tbody>
     </table>
 </script>
