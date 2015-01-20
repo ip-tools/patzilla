@@ -17,7 +17,7 @@ def run_acquisition(document_number, doctypes=None):
     numbers = to_list(document_number)
     doctypes = doctypes or 'xml'
     doctypes = to_list(doctypes)
-    with XmlRpcTimeoutServer('***REMOVED***/RPC2', 8) as server:
+    with XmlRpcTimeoutServer('***REMOVED***/RPC2', 15) as server:
         return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
