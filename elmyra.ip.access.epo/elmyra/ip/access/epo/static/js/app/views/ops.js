@@ -1,11 +1,49 @@
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2015 Andreas Motl, Elmyra UG
 
 OpsBaseViewMixin = {
 
+    bind_query_links: function(container) {
+
+        // run search actions when clicking query-links
+        container.find(".query-link").unbind('click');
+        container.find(".query-link").on('click', function(event) {
+
+            // add important parameters which reflect current gui state (e.g. selected project)
+            var href = $(this).attr('href');
+            var params = opsChooserApp.permalink.query_parameters_viewstate(href);
+
+            // regardless where the query originates from (e.g. datasource=review),
+            // requests for query-links need switching to ops
+            params['datasource'] = 'ops';
+
+            // debugging
+            //opsChooserApp.config.set('isviewer', true);
+
+            // when in liveview, scrumble database query and viewstate parameters into opaque parameter token
+            if (opsChooserApp.config.get('isviewer')) {
+
+                // nail to liveview mode in any case
+                params['mode'] = 'liveview';
+
+                // compute opaque parameter token and reset href
+                var _this = this;
+                opaque_param(params).then(function(opaque_query) {
+                    $(_this).attr('href', '?' + opaque_query);
+                })
+
+                // serialize state into regular query parameters otherwise
+            } else {
+                $(this).attr('href', '?' + jQuery.param(params));
+            }
+
+        });
+
+    },
+
     bind_same_citations_links: function(container) {
         // bind user notification to all same citations links of "explore citation environment" fame
-        container.find('.same-citations-link').unbind('click');
+        //container.find('.same-citations-link').unbind('click');
         container.find('.same-citations-link').bind('click', function(event) {
             var citations_length = $(this).data('length');
             if (citations_length > 10) {
@@ -234,6 +272,16 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
         }
     },
 
+    onDomRefresh: function() {
+        this.setup_ui();
+        this.highlight();
+    },
+
+    setup_ui: function() {
+        OpsBaseViewMixin.bind_query_links(this.$el);
+        OpsBaseViewMixin.bind_same_citations_links(this.$el);
+    },
+
     templateHelpers: function() {
 
         // implement interface required for reusing #ops-citations-environment-button-template
@@ -357,15 +405,6 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
         });
 
-    },
-
-    setup_ui: function() {
-        OpsBaseViewMixin.bind_same_citations_links(this.$el);
-    },
-
-    onDomRefresh: function() {
-        this.setup_ui();
-        this.highlight();
     },
 
 });
