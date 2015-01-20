@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: enhance ops usage api (differentiate between "ago" and "current" - per period)
 
 0.90.3
 ======
