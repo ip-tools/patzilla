@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2015 Andreas Motl, Elmyra UG
 
 DocumentBaseController = Marionette.Controller.extend({
 
@@ -58,40 +58,6 @@ DocumentBaseController = Marionette.Controller.extend({
         $('.inid-tooltip').tooltip();
 
 
-        // run search actions when clicking query-links
-        $(".query-link").unbind('click');
-        $(".query-link").on('click', function(event) {
-
-            var href = $(this).attr('href');
-            var params = opsChooserApp.permalink.query_parameters_viewstate(href);
-
-            // regardless where the query originates from (e.g. datasource=review),
-            // requests for query-links need switching to ops
-            params['datasource'] = 'ops';
-
-            // debugging
-            //opsChooserApp.config.set('isviewer', true);
-
-            // when in liveview, scrumble database query and viewstate parameters into opaque parameter token
-            if (opsChooserApp.config.get('isviewer')) {
-
-                // nail to liveview mode in any case
-                params['mode'] = 'liveview';
-
-                // compute opaque parameter token and reset href
-                var _this = this;
-                opaque_param(params).then(function(opaque_query) {
-                    $(_this).attr('href', '?' + opaque_query);
-                })
-
-                // serialize state into regular query parameters otherwise
-            } else {
-                $(this).attr('href', '?' + jQuery.param(params));
-            }
-
-        });
-
-
         // lazy german abstract acquisition
         $('.abstract-acquire').on('click', function(event) {
             event.preventDefault();
@@ -139,6 +105,11 @@ DocumentBaseController = Marionette.Controller.extend({
             container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
             container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
         });
+
+
+        // override clicking on any inline links to propagate important
+        // view state parameters by amending the url on the fly
+        OpsBaseViewMixin.bind_query_links($(document));
 
         // override clicking of "citation explore » documents with same citations" button
         // for introducing warning message when having len(citations) > 10
