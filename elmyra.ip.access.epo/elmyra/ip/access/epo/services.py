@@ -21,7 +21,7 @@ from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.access.ftpro.search import LoginException, SearchException, ftpro_published_data_search, ftpro_published_data_crawl
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import pair_to_cql, should_be_quoted
-from elmyra.ip.util.date import datetime_iso_filename, now
+from elmyra.ip.util.date import datetime_iso_filename, now, week_range, month_range, year_range
 from elmyra.ip.util.expression.keywords import clean_keyword, keywords_from_boolean_expression
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
@@ -100,7 +100,7 @@ ops_analytics_applicant_family_service = Service(
 
 ops_usage_service = Service(
     name='ops-usage',
-    path='/api/ops/usage/{kind}',
+    path='/api/ops/usage/{kind}/{duration}',
     renderer='prettyjson',
     description="OPS usage interface")
 
@@ -655,25 +655,46 @@ def ops_analytics_applicant_family_handler(request):
 def ops_usage_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     kind = request.matchdict['kind']
+    duration = request.matchdict['duration']
+
     now = arrow.utcnow()
-    if kind == 'day':
-        date_begin = now.replace(days=-1)
-        date_end = now
 
-    elif kind == 'week':
-        date_begin = now.replace(weeks=-1)
-        date_end = now
+    date_begin = None
+    date_end = None
 
-    elif kind == 'month':
-        date_begin = now.replace(months=-1)
-        date_end = now
+    if kind == 'ago':
+        if duration == 'day':
+            date_begin = now.replace(days=-1)
+            date_end = now
 
-    elif kind == 'year':
-        date_begin = now.replace(years=-1)
-        date_end = now
+        elif duration == 'week':
+            date_begin = now.replace(weeks=-1)
+            date_end = now
 
-    else:
-        raise HTTPNotFound('Use /day, {0} not implemented'.format(kind))
+        elif duration == 'month':
+            date_begin = now.replace(months=-1)
+            date_end = now
+
+        elif duration == 'year':
+            date_begin = now.replace(years=-1)
+            date_end = now
+
+    elif kind == 'current':
+        if duration == 'day':
+            date_begin = now.replace(days=-1)
+            date_end = now
+
+        elif duration == 'week':
+            date_begin, date_end = week_range(now)
+
+        elif duration == 'month':
+            date_begin, date_end = month_range(now)
+
+        elif duration == 'year':
+            date_begin, date_end = year_range(now)
+
+    if not date_begin or not date_end:
+        raise HTTPNotFound('Use /day, /week, /month or /year, /{0}/{1} not implemented'.format(kind, duration))
 
     date_begin = date_begin.format('DD/MM/YYYY')
     date_end = date_end.format('DD/MM/YYYY')

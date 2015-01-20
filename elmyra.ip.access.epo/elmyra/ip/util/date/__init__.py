@@ -2,6 +2,8 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import ago
 import datetime
+from arrow.arrow import Arrow
+from dateutil.relativedelta import relativedelta
 
 def now():
     return datetime.datetime.now()
@@ -73,3 +75,52 @@ def parse_date_within(value):
         'enddate': parts[1],
     }
     return result
+
+
+def week_range(date):
+    """
+    Find the first & last day of the week for the given day.
+    Assuming weeks start on Monday and end on Sunday.
+
+    Returns a tuple of ``(start_date, end_date)``.
+
+    Original version (used US week definition from Sunday to Saturday)
+    https://bradmontgomery.net/blog/2013/03/07/calculate-week-range-date/
+    https://gist.github.com/bradmontgomery/5110985
+
+    See also:
+    http://code.activestate.com/recipes/521915-start-date-and-end-date-of-given-week/
+    https://stackoverflow.com/questions/2003841/how-can-i-get-the-current-week-using-python
+    """
+    # isocalendar calculates the year, week of the year, and day of the week.
+    # dow is Mon = 1, Sat = 6, Sun = 7
+    year, week, dow = date.isocalendar()
+
+    # Find the first day of the week.
+    start_date = date - datetime.timedelta(dow - 1)
+
+    # Now, add 6 for the last day of the week (i.e., count up to Sunday)
+    end_date = start_date + datetime.timedelta(6)
+
+    return (start_date, end_date)
+
+def month_range(date):
+
+    # https://stackoverflow.com/questions/42950/get-last-day-of-the-month-in-python/27667421#27667421
+    start_date = datetime.datetime(date.year, date.month, 1)
+    end_date = start_date + relativedelta(months=1, days=-1)
+
+    start_date = Arrow.fromdatetime(start_date)
+    end_date = Arrow.fromdatetime(end_date)
+
+    return (start_date, end_date)
+
+def year_range(date):
+
+    start_date = datetime.datetime(date.year, 1, 1)
+    end_date   = datetime.datetime(date.year, 12, 31)
+
+    start_date = Arrow.fromdatetime(start_date)
+    end_date = Arrow.fromdatetime(end_date)
+
+    return (start_date, end_date)
