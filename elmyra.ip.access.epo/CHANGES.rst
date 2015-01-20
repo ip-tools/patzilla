@@ -9,6 +9,7 @@ development
 - ui: bug: when clicking through family citations, current view state (e.g. project) is not propagated properly
 - ui: explore all family members
 - middleware: more enhancements to FulltextPRO query translator
+- middleware: don't use "inpadoc" field qualifier when searching for applicant or investor at FulltextPRO
 
 0.90.3
 ======
