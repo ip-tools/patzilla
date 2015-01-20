@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.90.3
+======
+- middleware: increase timeout for XmlRpcTimeoutServer (DEPATISconnect) from 8 to 15 seconds
+
 0.90.2
 ======
 - ui: distinguish between erroneous or empty responses to on-demand requests for abstracts at DEPATISconnect
