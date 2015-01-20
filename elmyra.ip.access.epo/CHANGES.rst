@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: enhance ops usage api (differentiate between "ago" and "current" - per period)
+- middleware: uppercase patentnumber when searching at FulltextPRO
 
 0.90.3
 ======
