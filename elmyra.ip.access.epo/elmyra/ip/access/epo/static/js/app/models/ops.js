@@ -361,6 +361,16 @@ OpsBaseModel = Backbone.Model.extend({
             return this.get_document_id(node, 'application', format);
         },
 
+        get_publication_number: function(node, format) {
+            var document_id = this.get_publication_reference(node, format);
+            return document_id.fullnumber;
+        },
+
+        get_application_number: function(node, format) {
+            var document_id = this.get_application_reference(node, format);
+            return document_id.fullnumber;
+        },
+
         flatten_document_id: function(dict) {
             // TODO: not recursive yet
             var newdict = {};
