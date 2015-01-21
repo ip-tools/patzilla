@@ -11,6 +11,7 @@ development
 - middleware: more enhancements to FulltextPRO query translator
 - middleware: don't use "inpadoc" field qualifier when searching for applicant or investor at FulltextPRO
 - middleware: understand year ranges in comfort form, e.g. 1990-2014, 1990 - 2014, 1990-, -2014
+- middleware: fix gif to tiff conversion (required for acquiring drawings from CIPO)
 
 0.90.3
 ======
