@@ -10,6 +10,7 @@ development
 - ui: explore all family members
 - middleware: more enhancements to FulltextPRO query translator
 - middleware: don't use "inpadoc" field qualifier when searching for applicant or investor at FulltextPRO
+- middleware: understand year ranges in comfort form, e.g. 1990-2014, 1990 - 2014, 1990-, -2014
 
 0.90.3
 ======
