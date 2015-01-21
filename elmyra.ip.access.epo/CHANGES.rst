@@ -13,6 +13,7 @@ development
 - middleware: understand year ranges in comfort form, e.g. 1990-2014, 1990 - 2014, 1990-, -2014
 - middleware: fix gif to tiff conversion (required for acquiring drawings from CIPO)
 - middleware: username (email) should always be lowercase
+- middleware: admin api: filter email addresses by tag: /api/admin/users/emails?tag=vdpm
 
 0.90.3
 ======

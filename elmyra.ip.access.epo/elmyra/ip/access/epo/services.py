@@ -863,10 +863,13 @@ def numberlist_util_handler(request):
 
 @admin_users_emails_service.get()
 def admin_users_emails_handler(request):
+    tag = request.params.get('tag')
     users = User.objects()
     user_emails = ['support@elmyra.de']
     for user in users:
         if '@' not in user.username:
+            continue
+        if tag and tag not in user.tags:
             continue
         user_emails.append(user.username.lower())
 
