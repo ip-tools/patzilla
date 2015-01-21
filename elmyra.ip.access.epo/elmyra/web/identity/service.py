@@ -53,7 +53,7 @@ def identity_auth_handler(request):
     """Authenticate a user"""
 
     payload = request.json
-    username = payload.get('username')
+    username = payload.get('username').lower()
     password = payload.get('password')
 
     # mitigate timing attacks
@@ -65,7 +65,7 @@ def identity_auth_handler(request):
     User.crypt500(password)
 
     # find user
-    user = User.objects(username=username).first()
+    user = User.objects(username__iexact=username).first()
     if user:
 
         # check password

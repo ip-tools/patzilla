@@ -175,7 +175,7 @@ def jump_dpmaregister(request):
 
 
 @view_config(route_name='admin-user-create', renderer='elmyra.ip.access.epo:templates/admin/user-create.html')
-def admin_user_create_get(request):
+def admin_user_create(request):
 
     success = False
     success_message = ''
@@ -184,7 +184,7 @@ def admin_user_create_get(request):
 
     if request.method == 'POST':
         fullname = request.params.get('fullname').strip()
-        username = request.params.get('username').strip()
+        username = request.params.get('username').strip().lower()
         password = request.params.get('password')
 
         if not fullname:
@@ -200,7 +200,7 @@ def admin_user_create_get(request):
             error_messages.append('Password must not be empty.')
 
         if not error:
-            user = User(username = username, password = password, fullname = fullname, tags = ['customer-beta'])
+            user = User(username = username, password = password, fullname = fullname, tags = ['trial'])
             try:
                 user.save()
                 success = True
