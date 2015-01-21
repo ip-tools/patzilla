@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.91.0
+======
 - middleware: enhance ops usage api (differentiate between "ago" and "current" - per period)
 - middleware: uppercase patentnumber when searching at FulltextPRO
 - ui: bug: when clicking through family citations, current view state (e.g. project) is not propagated properly
