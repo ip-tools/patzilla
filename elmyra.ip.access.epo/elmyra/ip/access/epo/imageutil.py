@@ -13,15 +13,17 @@ log = logging.getLogger(__name__)
 
 def gif_to_tiff(payload):
 
-    infile = NamedTemporaryFile()
+    # debugging
+    delete = True
+
+    infile = NamedTemporaryFile(prefix='tmp-gif_to_tiff-', delete=delete)
     infile.write(payload)
     infile.flush()
 
-    outfile = NamedTemporaryFile()
+    outfile_name = infile.name + '-out'
 
-    command = ['gif2tiff', infile.name, outfile.name]
-
-    command_debug = ' '.join(command)
+    command = ['gif2tiff', infile.name, outfile_name]
+    command_string = ' '.join(command)
 
     proc = subprocess.Popen(
         command,
@@ -37,10 +39,13 @@ def gif_to_tiff(payload):
         stdout, stderr = proc.communicate()
         if proc.returncode is not None and proc.returncode != 0:
             raise Exception('GIF to TIFF conversion failed')
-        return stdout
+
+        payload = file(outfile_name, 'rb').read()
+        os.unlink(outfile_name)
+        return payload
 
     except:
-        log.error('GIF to TIFF conversion failed. returncode={2}, command="{0}", stderr={1}'.format(command_debug, stderr, proc.returncode))
+        log.error('GIF to TIFF conversion failed. returncode={returncode}, command="{command_string}", stdout={stdout}, stderr={stderr}'.format(returncode=proc.returncode, **locals()))
         raise Exception('GIF to TIFF conversion failed')
 
 
@@ -71,7 +76,7 @@ def to_png(tiff_payload, format='tif'):
                 '-resize', '457x',
                 '-colorspace', 'rgb', '-flatten', '-depth', '8',
                 '-antialias', '-quality', '100', '-density', '300',
-                '-level', '30%,100%',
+                #'-level', '30%,100%',
                 'png:-']
 
     command_debug = ' '.join(command)
