@@ -76,6 +76,17 @@ def parse_date_within(value):
     }
     return result
 
+def year_range_to_within(value):
+    """
+    Parse year ranges like "1990-2014" or "1990 - 2014"
+    and convert into "within 1990,2014" expression
+    """
+    if value.count(u'-') == 1:
+        parts = value.split(u'-')
+        parts = [part.strip() for part in parts]
+        year_from, year_to = parts
+        value = u'within {year_from},{year_to}'.format(**locals())
+    return value
 
 def week_range(date):
     """

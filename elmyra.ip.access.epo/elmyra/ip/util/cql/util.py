@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
 from elmyra.ip.util.cql.knowledge import datasource_indexnames
-from elmyra.ip.util.date import parse_date_within, iso_to_german
+from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within
 
 def pair_to_cql(datasource, key, value):
 
@@ -21,15 +21,24 @@ def pair_to_cql(datasource, key, value):
             if len(value) == 4 and value.isdigit():
                 fieldname = 'py'
 
-            elif 'within' in value:
+            # e.g. 1990-2014, 1990 - 2014
+            value = year_range_to_within(value)
+
+            if 'within' in value:
                 within_dates = parse_date_within(value)
                 elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
                 if elements_are_years:
                     fieldname = 'py'
-                cql_part = '{fieldname} >= {startdate} and {fieldname} <= {enddate}'.format(
-                    fieldname=fieldname,
-                    startdate=iso_to_german(within_dates['startdate']),
-                    enddate=iso_to_german(within_dates['enddate']))
+
+                cql_parts = []
+                if within_dates['startdate']:
+                    part = '{fieldname} >= {startdate}'.format(fieldname=fieldname, startdate=iso_to_german(within_dates['startdate']))
+                    cql_parts.append(part)
+                if within_dates['enddate']:
+                    part = '{fieldname} <= {enddate}'.format(fieldname=fieldname, enddate=iso_to_german(within_dates['enddate']))
+                    cql_parts.append(part)
+
+                cql_part = ' and '.join(cql_parts)
 
             else:
                 value = iso_to_german(value)
@@ -46,8 +55,17 @@ def pair_to_cql(datasource, key, value):
             if not has_booleans(value) and should_be_quoted(value):
                 value = u'"{0}"'.format(value)
 
-        if 'within' in value:
-            format = '{0} {1}'
+        if key == 'pubdate':
+
+            # e.g. 1990-2014, 1990 - 2014
+            value = year_range_to_within(value)
+
+            if 'within' in value:
+                within_dates = parse_date_within(value)
+                if not within_dates['startdate'] or not within_dates['enddate']:
+                    return {'error': True, 'message': 'OPS only accepts full date ranges in "within" expressions'}
+
+                format = '{0} {1}'
 
 
     if not cql_part:
