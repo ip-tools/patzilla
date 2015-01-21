@@ -12,6 +12,7 @@ development
 - middleware: don't use "inpadoc" field qualifier when searching for applicant or investor at FulltextPRO
 - middleware: understand year ranges in comfort form, e.g. 1990-2014, 1990 - 2014, 1990-, -2014
 - middleware: fix gif to tiff conversion (required for acquiring drawings from CIPO)
+- middleware: username (email) should always be lowercase
 
 0.90.3
 ======
