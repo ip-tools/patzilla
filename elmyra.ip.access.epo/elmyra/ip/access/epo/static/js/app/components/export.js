@@ -31,9 +31,28 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
     templateHelpers: {
     },
 
-    setup_copy_button: function(payload) {
-        var copy_button = this.$el.find('#result-numbers-copy-button');
-        _ui.copy_to_clipboard_bind_button('text/plain', payload, {element: copy_button[0], wrapper: this.el});
+    setup_result_actions: function(numberlist) {
+
+        var numberlist_string = numberlist.join('\n');
+
+        // transfer to textarea
+        $('#result-numbers-content').val(numberlist_string);
+
+        // setup copy-to-clipboard button
+        var clipboard_button = this.$el.find('#result-numbers-to-clipboard-button');
+        _ui.copy_to_clipboard_bind_button('text/plain', numberlist_string, {element: clipboard_button[0], wrapper: this.el});
+
+        // setup insert-to-basket button
+        var basket_button = this.$el.find('#result-numbers-to-basket-button');
+        basket_button.unbind('click');
+        var _this = this;
+        basket_button.on('click', function(event) {
+            _.each(numberlist, function(number) {
+                opsChooserApp.basketModel.add(number);
+            });
+            var message = 'Added #' + numberlist.length + ' patent numbers to document collection.';
+            _ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
+        });
     },
 
     onShow: function() {
@@ -70,10 +89,7 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
         crawler.crawl().then(function(numberlist) {
 
                 // transfer data
-                var numberlist_string = numberlist.join('\n');
-                $('#result-numbers-content').val(numberlist_string);
-
-                _this.setup_copy_button(numberlist_string);
+                _this.setup_result_actions(numberlist);
 
                 // notify user
                 _this.indicate_activity(false);

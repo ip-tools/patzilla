@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.92.0
+======
+- ui: offer adding all numbers to basket after fetching result numberlist
+
 0.91.0
 ======
 - middleware: enhance ops usage api (differentiate between "ago" and "current" - per period)
