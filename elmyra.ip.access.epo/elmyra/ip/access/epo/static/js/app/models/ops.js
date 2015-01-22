@@ -668,7 +668,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
 
             var _this = this;
 
-            if (container) {
+            if (container && container['patent-classification']) {
                 var nodelist = to_list(container['patent-classification']);
                 _(nodelist).each(function(node) {
 

@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix display problem for documents without “patent-classification” attribute, this occurred with documents from e.g. B60N3/02, B60N3/10
 
 0.92.0
 ======
