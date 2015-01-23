@@ -39,7 +39,7 @@
 
 
     <%text>
-    <div class="container-fluid ops-collection-entry" data-document-number="<%= patent_number %>" style="page-break-after: always;">
+    <div class="container-fluid ops-collection-entry page-break-after" data-document-number="<%= patent_number %>">
 
         <div class="ops-collection-entry-heading row-fluid">
 
@@ -462,7 +462,7 @@
                             <br/>
                             <%= data.get_citations_environment_button() %>
                             <% if (opsChooserApp.user_has_module('family-citations')) { %>
-                            <a class="btn btn-small family-citations-shortcut-button" role="button">
+                            <a class="btn btn-small family-citations-shortcut-button do-not-print" role="button">
                                 Family » Citations &nbsp; <i class="icon-arrow-right"></i>
                             </a>
                             <% } %>

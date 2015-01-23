@@ -1,5 +1,19 @@
 /* general */
 
+/*
+https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
+https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-break-after
+*/
+/*
+* {
+    overflow: visible !important;
+}
+*/
+.page-break-after {
+    page-break-inside: avoid;
+    page-break-after: always;
+}
+
 body {
     background-color: #e7e7e7;
 }
