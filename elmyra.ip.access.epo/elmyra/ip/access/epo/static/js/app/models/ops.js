@@ -732,14 +732,31 @@ OpsExchangeDocument = OpsBaseModel.extend({
             if (container) {
                 var nodelist = to_list(container['priority-claim']);
                 _(nodelist).each(function(node) {
-                    var priority = _this.get_document_id(node, null, 'epodoc');
-                    if (!_.isEmpty(priority)) {
-                        var entry = _this.enrich_link(priority.docnumber, 'spr') + ', ' + priority.isodate;
+                    var priority_epodoc = _this.get_document_id(node, null, 'epodoc');
+                    var priority_original = _this.get_document_id(node, null, 'original');
+                    if (!_.isEmpty(priority_epodoc)) {
+                        var entry =
+                            '<td class="span2">' + (priority_epodoc.isodate || '--') + '</td>' +
+                            '<td class="span3">' + (priority_epodoc.docnumber && _this.enrich_link(priority_epodoc.docnumber, 'spr') || '--') + '</td>';
+                        if (!_.isEmpty(priority_original)) {
+                            entry += '<td>original: ' + priority_original.docnumber + '</td>';
+                        }
                         entries.push(entry);
                     }
                 });
             }
             return entries;
+        },
+        get_application_references: function(links) {
+            var appnumber_epodoc = this.get_application_number('epodoc');
+            var appnumber_original = this.get_application_number('original');
+            var entry =
+                '<td class="span2">' + (this.get_application_date() || '--') + '</td>' +
+                '<td class="span3">' + (this.enrich_link(appnumber_epodoc, 'sap') || '--') + '</td>';
+            if (!_.isEmpty(appnumber_original)) {
+                entry += '<td>original: ' + appnumber_original + '</td>';
+            }
+            return entry;
         },
 
         has_citations: function() {

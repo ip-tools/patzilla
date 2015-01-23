@@ -389,13 +389,20 @@
                             (20)
                         </dt>
                         <dd class="keyword">
-                            <%= data.enrich_link(data.get_application_number('epodoc'), 'sap') %>, <%= application_date %>
+                            <table class="table table-striped2 table-condensed">
+                                <tr>
+                                <%= data.get_application_references() %>
+                                </tr>
+                            </table>
                         </dd>
                         <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
                             (30)
                         </dt>
                         <dd class="keyword">
-                            <%= data.get_priority_claims(true).join('<br/>') || '&nbsp;' %>
+                            <% var priority_claims_rendered = data.get_priority_claims(true).map(function(item) { return '<tr>' + item + '</tr>'; }).join(''); %>
+                            <table class="table table-striped2 table-condensed">
+                                <%= priority_claims_rendered %>
+                            </table>
                         </dd>
                         <br/>
 
