@@ -576,6 +576,45 @@
 </script>
 
 <%text>
+<script id="ops-entry-error-template" type="text/x-underscore-template">
+
+    <%
+    var patent_number = get_patent_number();
+    var subject = 'Display error for ' + patent_number;
+    var body = 'We experienced a display error for ' + patent_number + '. Please get back to us.';
+    %>
+
+    <div class="container-fluid ops-collection-entry page-break-after" data-document-number="<%= patent_number %>">
+
+        <div class="ops-collection-entry-heading row-fluid">
+
+            <!-- patent number -->
+            <div class="span3 container-fluid">
+                <div class="header-compact">
+                    <%= enrich_link(patent_number, 'pn') %>
+                </div>
+            </div>
+
+            <!-- actions -->
+            <div class="span7 container-fluid document-actions">
+                <div class="alert alert-error alert-block">
+                    En error occurred when displaying this document:
+                    <br/>
+                    <%= error_message %>
+                    <br/><br/>
+                    <a href="mailto:support@elmyra.de?subject=<%= encodeURIComponent('Elmyra IP Suite Navigator: ' + subject)%>&body=<%= encodeURIComponent(body) %>" role="button" class="btn">Please report the error.</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</script>
+<%/text>
+
+
+<%text>
 <!-- citation queries -->
 <script type="text/x-underscore-template" id="ops-citations-environment-button-template">
 
