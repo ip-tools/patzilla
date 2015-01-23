@@ -9,6 +9,7 @@ development
 - ui: proper page-break handling
 - ui: boot application even if experiencing problems with localStorage (for print mode)
 - middleware: try “wkhtmltopdf” for pdf rendering
+- ui: fix display problem for documents without “classification-ipcr” attribute
 
 0.92.0
 ======
