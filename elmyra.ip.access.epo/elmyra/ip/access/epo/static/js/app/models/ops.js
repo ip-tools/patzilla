@@ -637,7 +637,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
         get_ipcr_list: function(links) {
             var entries = [];
             var container = this['bibliographic-data']['classifications-ipcr'];
-            if (container) {
+            if (container && container['classification-ipcr']) {
                 var nodelist = to_list(container['classification-ipcr']);
                 entries = _.map(nodelist, function(node) {
                     return node['text']['$'];
