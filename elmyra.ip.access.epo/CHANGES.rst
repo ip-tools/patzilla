@@ -6,6 +6,7 @@ development
 ===========
 - ui: fix display problem for documents without “patent-classification” attribute, this occurred with documents from e.g. B60N3/02, B60N3/10
 - ui: display placeholder on exception in central document item template
+- ui: proper page-break handling
 
 0.92.0
 ======
