@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix/enhance rendering of application reference and priority claims
 
 0.93.0
 ======

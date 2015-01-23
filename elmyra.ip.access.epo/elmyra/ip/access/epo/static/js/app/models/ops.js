@@ -737,10 +737,12 @@ OpsExchangeDocument = OpsBaseModel.extend({
                     if (!_.isEmpty(priority_epodoc)) {
                         var entry =
                             '<td class="span2">' + (priority_epodoc.isodate || '--') + '</td>' +
-                            '<td class="span3">' + (priority_epodoc.docnumber && _this.enrich_link(priority_epodoc.docnumber, 'spr') || '--') + '</td>';
-                        if (!_.isEmpty(priority_original)) {
-                            entry += '<td>original: ' + priority_original.docnumber + '</td>';
+                            '<td class="span3">' + (priority_epodoc.docnumber && _this.enrich_link(priority_epodoc.docnumber, 'spr') || '--') + '</td>' +
+                            '<td>';
+                        if (!_.isEmpty(priority_original.docnumber)) {
+                            entry += 'original: ' + priority_original.docnumber;
                         }
+                        entry += '</td>';
                         entries.push(entry);
                     }
                 });
@@ -752,10 +754,12 @@ OpsExchangeDocument = OpsBaseModel.extend({
             var appnumber_original = this.get_application_number('original');
             var entry =
                 '<td class="span2">' + (this.get_application_date() || '--') + '</td>' +
-                '<td class="span3">' + (this.enrich_link(appnumber_epodoc, 'sap') || '--') + '</td>';
+                '<td class="span3">' + (this.enrich_link(appnumber_epodoc, 'sap') || '--') + '</td>' +
+                '<td>';
             if (!_.isEmpty(appnumber_original)) {
-                entry += '<td>original: ' + appnumber_original + '</td>';
+                entry += 'original: ' + appnumber_original;
             }
+            entry += '</td>';
             return entry;
         },
 
