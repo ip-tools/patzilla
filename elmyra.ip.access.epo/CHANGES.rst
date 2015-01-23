@@ -8,6 +8,7 @@ development
 - ui: display placeholder on exception in central document item template
 - ui: proper page-break handling
 - ui: boot application even if experiencing problems with localStorage (for print mode)
+- middleware: try “wkhtmltopdf” for pdf rendering
 
 0.92.0
 ======
