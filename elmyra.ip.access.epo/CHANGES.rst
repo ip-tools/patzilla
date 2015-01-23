@@ -4,12 +4,16 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.93.0
+======
 - ui: fix display problem for documents without “patent-classification” attribute, this occurred with documents from e.g. B60N3/02, B60N3/10
 - ui: display placeholder on exception in central document item template
 - ui: proper page-break handling
 - ui: boot application even if experiencing problems with localStorage (for print mode)
 - middleware: try “wkhtmltopdf” for pdf rendering
 - ui: fix display problem for documents without “classification-ipcr” attribute
+- ui: enhance rendering of application reference and priority claims
 
 0.92.0
 ======
