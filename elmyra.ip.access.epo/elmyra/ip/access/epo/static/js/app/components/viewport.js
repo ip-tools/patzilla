@@ -47,12 +47,18 @@ ViewportPlugin = Marionette.Controller.extend({
     next_item: function(options) {
         options = options || {};
 
+        var target;
+
         var origin = $('.ops-collection-entry:in-viewport');
+        if (!origin.exists()) {
+            target = $('.ops-collection-entry:below-the-fold');
+            return target;
+        }
+
         var next = origin.parent().next().find('.ops-collection-entry').first();
 
         var bottom_visible = $(window).scrollTop() + $(window).height() > getDocumentHeight() - this.bottom_area_height;
 
-        var target;
         var bottom_overdraw = false;
 
         var page_offset = $(window).scrollTop();

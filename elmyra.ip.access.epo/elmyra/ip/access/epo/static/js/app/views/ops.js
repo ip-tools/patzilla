@@ -101,6 +101,24 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         'click a.disqualify': 'disqualify',
     },
 
+    render: function() {
+
+        try {
+            var args = Array.prototype.slice.apply(arguments);
+            var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
+            return result;
+
+        } catch(error) {
+            console.error('Error while rendering OpsExchangeDocumentView:', error.message, error.stack);
+            var args = Array.prototype.slice.apply(arguments);
+            this.model.set('error_message', error.message);
+            this.template = '#ops-entry-error-template';
+            var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
+            return result;
+        }
+
+    },
+
 });
 
 OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
