@@ -183,6 +183,10 @@ ProjectCollection = Backbone.Collection.extend({
                             // refetch project again and finally end this damn chain
                             project.fetch({success: function() {
                                 $.when(project.fetchRelated('basket')).then(succeed);
+
+                            }, error: function(project) {
+                                console.error('Could not fetch project: ' + JSON.stringify(project));
+                                deferred.reject(project);
                             }});
 
                         }});
@@ -407,12 +411,17 @@ opsChooserApp.addInitializer(function(options) {
 
         var _this = this;
         $.when(this.projects.get_or_create(projectname)).done(function(project) {
+
             _this.trigger('project:ready', project);
 
             // if project names differ, emit changed event
             if (projectname != projectname_before) {
                 _this.trigger('project:changed', project);
             }
+
+        }).fail(function(project) {
+            _this.trigger('project:ready');
+
         });
 
     });
