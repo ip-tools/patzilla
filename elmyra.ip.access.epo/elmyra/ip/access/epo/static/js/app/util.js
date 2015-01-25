@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2015 Andreas Motl, Elmyra UG
 
 function to_list(value) {
     return _.isArray(value) && value || [value];
@@ -420,4 +420,26 @@ var getDocumentHeight = function() {
         D.body.offsetHeight, D.documentElement.offsetHeight,
         D.body.clientHeight, D.documentElement.clientHeight
     );
+}
+
+
+// TODO: unify with sorting routine from ProjectModel
+function sortCollectionByField(collection, fieldName, direction) {
+    collection = collection.clone();
+    var _this = collection;
+    var _comparator_ascending = function(a, b) {
+        a = a.get(_this.sort_key);
+        b = b.get(_this.sort_key);
+        return a > b ?  1
+            : a < b ? -1
+            :          0;
+    };
+    var _comparator_descending = function(a, b) { return _comparator_ascending(b, a); }
+    collection.comparator = _comparator_ascending;
+    if (_.str.startsWith(direction, 'd')) {
+        collection.comparator = _comparator_descending;
+    }
+    collection.sort_key = fieldName;
+    collection.sort();
+    return collection;
 }

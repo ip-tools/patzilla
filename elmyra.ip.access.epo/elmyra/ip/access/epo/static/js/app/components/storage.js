@@ -172,6 +172,8 @@ StoragePlugin = Marionette.Controller.extend({
 
     dbreset: function(options) {
 
+        log('dbreset');
+
         options = options || {};
 
         // make all data control widgets empty
@@ -184,7 +186,15 @@ StoragePlugin = Marionette.Controller.extend({
         //Backbone.Relational.store = new Backbone.Store();
 
         // wipe the data store
-        localforage.clear();
+        log('About to wipe database');
+        cb = function() {
+            log('localforage.clear DONE');
+        }
+        localforage.clear(cb).then(function() {
+            log('localforage.clear SUCCESS');
+        }, function() {
+            log('localforage.clear FAIL');
+        })
     },
 
     setup_ui: function() {

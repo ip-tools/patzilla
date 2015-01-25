@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2015 Andreas Motl, Elmyra UG
 
 /**
  * ------------------------------------------
@@ -66,11 +66,20 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         options.keywords = $('#keywords').val();
 
 
+        var search_info = {datasource: datasource, query: query};
+        if (options.flavor) {
+            search_info.flavor = options.flavor;
+        }
+        if (options.query_data) {
+            search_info.query_data = options.query_data;
+        }
+
         var self = this;
 
         if (datasource == 'ops') {
             var range = this.compute_range(options);
-            this.trigger('search:before', {datasource: datasource, query: query, range: range});
+            this.trigger('search:before', _(search_info).extend({range: range}));
+
             opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
 
                 var hits = self.metadata.get('result_count');
@@ -88,7 +97,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         } else if (datasource == 'depatisnet') {
 
-            this.trigger('search:before', {datasource: datasource, query: query});
+            this.trigger('search:before', search_info);
 
             // make the pager display the original query
             this.metadata.set('query_origin', query);
@@ -112,7 +121,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         } else if (datasource == 'google') {
 
-            this.trigger('search:before', {datasource: datasource, query: query});
+            this.trigger('search:before', search_info);
 
             // make the pager display the original query
             this.metadata.set('query_origin', query);
@@ -160,7 +169,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         } else if (datasource == 'ftpro') {
 
-            this.trigger('search:before', {datasource: datasource, query: query});
+            this.trigger('search:before', search_info);
 
             // make the pager display the original query
             this.metadata.set('query_origin', query);
@@ -629,9 +638,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     shutdown_gui: function() {
 
         // basket and associated document indicators
-        this.basketModel.destroy();
+        this.basketModel && this.basketModel.destroy();
         this.basket_bind_actions();
-        this.basketView.render();
+        this.basketView && this.basketView.render();
 
         // comments
         this.comments.store.set();

@@ -1,9 +1,33 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2015 Andreas Motl, Elmyra UG
 
-QueryModel = Backbone.Model.extend({
+QueryModel = Backbone.RelationalModel.extend({
+
+    sync: Backbone.localforage.sync('Query'),
+
+    defaults: {
+        flavor: undefined,              // comfort, expert
+        datasource: undefined,          // ops, depatisnet, ftpro
+        query_expression: undefined,    // query expression from expert mode
+        query_data: undefined,          // e.g. comfort mode form dictionary
+        created: undefined,
+        result_count: undefined,
+    },
+
+    initialize: function() {
+        console.log('QueryModel.initialize');
+    },
+
+    equals: function(obj) {
+        var proplist = ['flavor', 'datasource', 'query_expression', 'query_data'];
+        var picked_this = _.pick(this.attributes, proplist);
+        var picked_obj = _.pick(obj.attributes, proplist);
+        var result = _.isEqual(picked_this, picked_obj);
+        return result;
+    },
 
 });
+
 
 ProjectModel = Backbone.RelationalModel.extend({
 
@@ -25,14 +49,29 @@ ProjectModel = Backbone.RelationalModel.extend({
                 includeInJSON: Backbone.Model.prototype.idAttribute,
             },
 
-        }
+        },
+
+        {
+            type: Backbone.HasMany,
+            key: 'queries',
+            relatedModel: 'QueryModel',
+            includeInJSON: Backbone.Model.prototype.idAttribute,
+
+             reverseRelation: {
+                 type: Backbone.One,
+                 key: 'project',
+                 // 'relatedModel' is automatically set to 'ProjectModel'
+                 includeInJSON: Backbone.Model.prototype.idAttribute,
+             },
+
+        },
+
     ],
 
     defaults: {
         name: null,
         created: null,
         modified: null,
-        queries: [],
     },
 
     // initialize model
@@ -42,26 +81,64 @@ ProjectModel = Backbone.RelationalModel.extend({
         if (!this.fetchRelated) this.fetchRelated = this.getAsync;
     },
 
-    record_query: function(query_data) {
+    record_query: function(search_info) {
 
-        var query = query_data.query + ' [' + query_data.datasource + ']';
+        log('ProjectModel.record_query search_info:', search_info);
+        this.query_recorded = null;
 
-        console.log('ProjectModel.record_query:', query);
+        var flavor = search_info.flavor;
+        var datasource = search_info.datasource;
+
+        if (!flavor || !datasource) {
+            return;
+        }
 
         var dirty = false;
+        var _this = this;
+        $.when(this.fetch_queries()).then(function() {
+            var query_collection = _this.get('queries');
+            query_collection = sortCollectionByField(query_collection, 'created', 'desc');
+            var recent = query_collection.first();
 
-        var queries = this.get('queries');
+            var query = new QueryModel({
+                flavor: flavor,
+                datasource: datasource,
+                query_expression: search_info.query,
+                query_data: search_info.query_data,
+                created: now_iso(),
+                project: _this,
+            });
 
-        // don't record the same queries multiple times
-        if (_(queries).last() != query) {
-            queries.push(query);
-            dirty = true;
-        }
+            // don't record the same queries multiple times
+            var equals = query.equals(recent);
+            if (!equals) {
+                _this.history_add_query(query);
+                _this.query_recorded = query;
+            } else {
+                query.destroy();
+            }
 
-        if (dirty) {
-            this.set('queries', queries);
-            this.save();
-        }
+        });
+
+    },
+
+    history_add_query: function(query) {
+
+        log('ProjectModel.record_query model:', query);
+
+        var _this = this;
+        query.save(null, {success: function() {
+            var queries = _this.get('queries');
+            queries.add(query);
+            _this.save({'queries': queries}, {
+                success: function() {
+                    log('ProjectModel.record_query SUCCESS!');
+                },
+                error: function(error) {
+                    log('ProjectModel.record_query ERROR!', error);
+                },
+            });
+        }});
 
     },
 
@@ -87,6 +164,43 @@ ProjectModel = Backbone.RelationalModel.extend({
             basket.destroy();
         }
         return Backbone.Model.prototype.destroy.call(this, options);
+    },
+
+    fetch_queries: function() {
+        var main_deferred = $.Deferred();
+
+        // fetch associated basket objects
+        var _this = this;
+        $.when(this.fetchRelated('queries')).then(function() {
+            var query_collection = _this.get('queries');
+            var deferreds = [];
+            query_collection.each(function(query) {
+
+                // prepare a deferred which will get resolved after successfully fetching an item from datastore
+                var deferred = $.Deferred();
+                deferreds.push(deferred.promise());
+
+                query.fetch({
+                    success: function() {
+                        deferred.resolve(query);
+                    },
+                    error: function(error) {
+                        deferred.resolve(query);
+                    },
+                });
+
+            });
+
+            $.when.apply($, deferreds).then(function() {
+                main_deferred.resolve();
+            });
+
+
+        }).fail(function() {
+            main_deferred.reject();
+        });
+
+        return main_deferred.promise();
     },
 
 });
@@ -448,6 +562,15 @@ opsChooserApp.addInitializer(function(options) {
             // load designated project
             _this.trigger('project:load', projectname);
         }});
+    });
+
+    // record results to query history
+    this.listenTo(this, 'results:ready', function() {
+        var result_count = this.metadata.get('result_count');
+        if (this.project.query_recorded) {
+            this.project.query_recorded.set('result_count', result_count);
+            this.project.query_recorded.save();
+        }
     });
 
     // Fetch all projects on application start and initialize designated or default project.
