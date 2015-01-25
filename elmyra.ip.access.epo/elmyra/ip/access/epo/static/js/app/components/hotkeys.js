@@ -18,10 +18,10 @@ HotkeysPlugin = Marionette.Controller.extend({
 
         // submit on meta+enter
         $('#query').on('keydown', null, 'meta+return', function() {
-            _this.app.perform_search({reviewmode: false});
+            _this.app.perform_search({reviewmode: false, flavor: 'cql'});
         });
         $('#query').on('keydown', null, 'ctrl+return', function(event) {
-            _this.app.perform_search({reviewmode: false});
+            _this.app.perform_search({reviewmode: false, flavor: 'cql'});
         });
 
         // submit on meta+enter

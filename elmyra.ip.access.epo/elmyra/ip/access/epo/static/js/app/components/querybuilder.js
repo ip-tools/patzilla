@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2015 Andreas Motl, Elmyra UG
 
 QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
@@ -79,7 +79,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#querybuilder-numberlist-actions').hide();
 
                 // hide history chooser
-                $('#cql-history-chooser').hide();
+                $('#cql-history-chooser').show();
 
                 // perform field-based search
                 $('.btn-query-perform').click(function() {
@@ -98,7 +98,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // show history chooser
                 $('#cql-history-chooser').show();
-                $('#cql-history-chooser').css('display', 'inline');
 
                 // convert query from form fields to cql expression
                 _this.compute_comfort_query();
@@ -106,7 +105,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // perform cql expression search
                 $('.btn-query-perform').click(function() {
                     opsChooserApp.disable_reviewmode();
-                    opsChooserApp.perform_search({reviewmode: false, clear: true});
+                    opsChooserApp.perform_search({reviewmode: false, clear: true, flavor: flavor});
                 });
 
                 // hide query textarea for ftpro, if not in debug mode
@@ -149,12 +148,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // transfer values from zoomed fields
             _this.comfort_form_zoomed_to_regular_data();
 
+            var query_data = _this.get_comfort_form_data();
+
             // convert query from form fields to cql expression
             _this.compute_comfort_query().then(function() {
 
                 //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
                 opsChooserApp.disable_reviewmode();
-                opsChooserApp.perform_search({reviewmode: false, clear: true});
+                opsChooserApp.perform_search({reviewmode: false, clear: true, flavor: _this.get_flavor(), query_data: query_data});
 
             });
 
@@ -212,7 +213,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $('#query').parent().append('<div id="query-alert" class="alert alert-default"><br/><br/>Expert mode not available with data source "FulltextPRO".</div>');
             var alert_element = $('#query').parent().find('#query-alert');
             alert_element.height($('#query').height() - 18);
-            alert_element.marginBottom($('#query').marginBottom());
+            //alert_element.marginBottom($('#query').marginBottom());
         } else {
             $('#query').parent().find('#query-alert').remove();
             $('#query').show();
@@ -242,6 +243,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         return false;
     },
 
+    get_comfort_form_entries: function(options) {
+        options = options || {};
+        var entries = [];
+        _.each($('#querybuilder-comfort-form').find('input'), function(field) {
+            var f = $(field);
+            var name = f.attr('name');
+            var value = f.val();
+            if (!value && options.skip_empty) {
+                return;
+            }
+            var label = name + ':';
+            label = _.string.rpad(label, 16, ' ');
+            entries.push(label + value);
+        });
+        return entries;
+    },
+
     setup_ui_actions: function() {
 
         var _this = this;
@@ -254,19 +272,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-comfort-display-values').unbind('click');
         $('#btn-comfort-display-values').click(function() {
 
-            var lines = [];
-            _.each($('#querybuilder-comfort-form').find('input'), function(field) {
-                var f = $(field);
-                var name = f.attr('name');
-                var value = f.val();
-                var label = name + ':';
-                label = _.string.rpad(label, 16, ' ');
-                lines.push(label + value);
-            });
-
             var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn"><i class="icon-copy"></i> &nbsp; Copy to clipboard</a>';
 
-            var data = lines.join('\n');
+            var entries = _this.get_comfort_form_entries();
+            var data = entries.join('\n');
             var modal_html = '<pre>' + data + '</pre>' + copy_button;
 
             var box = bootbox.dialog(
@@ -287,7 +296,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // clear all comfort form values
         $('#btn-comfort-clear').unbind('click');
         $('#btn-comfort-clear').click(function() {
-            $('#querybuilder-comfort-form').find('input').val('');
+            _this.clear_comfort_form();
         });
 
         // clear the whole expression (export form)
@@ -418,6 +427,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             });
         });
 
+    },
+
+    clear_comfort_form: function() {
+        $('#querybuilder-comfort-form').find('input').val('');
     },
 
     normalize_numberlist: function(payload) {
@@ -556,55 +569,152 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
-
     cql_history_chooser_get_data: function() {
+
+        log('cql_history_chooser_get_data');
+
+        var deferred = $.Deferred();
+
+        // fetch query objects and sort descending by creation date
+        var _this = this;
+        $.when(opsChooserApp.project.fetch_queries()).then(function() {
+            var query_collection = opsChooserApp.project.get('queries');
+            query_collection = sortCollectionByField(query_collection, 'created', 'desc');
+            var deferreds = [];
+            var chooser_data = query_collection.map(function(query) {
+                return _this.query_model_repr(query);
+            });
+            deferred.resolve(chooser_data);
+
+        }).fail(function() {
+            deferred.reject();
+        });
+
+        return deferred.promise();
+
+
         var queries = opsChooserApp.project.get('queries');
         var chooser_data = _(queries).unique().map(function(query) {
             return { id: query, text: query };
         });
         return chooser_data;
     },
+
+    query_model_repr: function(query) {
+
+        var flavor = query.get('flavor');
+        var datasource = query.get('datasource');
+        var query_data = query.get('query_data');
+        var created = query.get('created');
+        var result_count = query.get('result_count');
+
+        // compute title
+        var title = query.get('query_expression');
+        if ((flavor == 'comfort' || datasource == 'ftpro') && query_data && _.isObject(query_data['criteria'])) {
+            // serialize query_data criteria
+            var entries = _.map(query_data['criteria'], function(value, key) {
+                // add serialized representation of fulltext modifiers if not all(modifiers) == true
+                if (key == 'fulltext' && query_data['modifiers'] && query_data['modifiers']['fulltext']) {
+                    if (_.every(_.values(query_data['modifiers']['fulltext']))) {
+                        value += ' [all]';
+
+                    } else {
+                        var modifiers = _.objFilter(query_data['modifiers']['fulltext'], function(value, key) {
+                            return Boolean(value);
+                        });
+                        value += ' [' + _.keys(modifiers).join(',') + ']';
+
+                    }
+                }
+                return key + ': ' + value;
+            });
+            title = entries.join(', ');
+        }
+        created = moment(created).fromNow();
+
+        var datasource_title = datasource;
+        if (datasource == 'ops') {
+            datasource_title = 'EPO';
+        } else if (datasource == 'depatisnet') {
+            datasource_title = 'DPMA';
+        } else if (datasource == 'ftpro') {
+            datasource_title = 'FtPRO';
+        }
+
+        title += '<div class="pull-right"><small>' + [
+            flavor,
+            datasource_title,
+            created,
+            (result_count ? result_count : 'no') + ' hits'
+        ].join(', ') + '</small></div><div class="clearfix"></div>';
+
+        var entry = {
+            id: query,
+            text: title,
+        };
+        return entry;
+
+    },
+
     cql_history_chooser_setup: function() {
         var projectname = opsChooserApp.project.get('name');
-        var data = this.cql_history_chooser_get_data();
 
         var chooser_widget = $('#cql-history-chooser-select2');
 
-        // initialize cql history chooser
+        // initialize empty cql history chooser widget
         chooser_widget.select2({
-            placeholder: 'CQL history' + ' (' + projectname + ')',
-            data: { results: data },
+            placeholder: 'Query history' + ' (' + projectname + ')',
+            data: { results: [] },
             dropdownCssClass: "bigdrop",
             escapeMarkup: function(text) { return text; },
         });
 
         // when query was selected, put it into cql query input field
+        var _this = this;
         chooser_widget.unbind('change');
         chooser_widget.on('change', function(event) {
 
             $(this).unbind('change');
 
-            var value = $(this).val();
-            if (value) {
+            // this gets the "id" attribute of an entry in select2 `data`
+            var query_object = $(this).val();
 
-                // HACK: cut away suffix, currently it's appended to query string => dirty :-(
-                // TODO: move to QueryModel
-                var datasources = ['ops', 'depatisnet', 'google', 'ftpro'];
-                _(datasources).each(function(datasource) {
-                    if (_.string.endsWith(value, '[' + datasource + ']') || _.string.endsWith(value, '(' + datasource + ')')) {
-                        opsChooserApp.set_datasource(datasource);
-                    }
-                    value = value
-                        .replace(' [' + datasource + ']', '').replace(' (' + datasource + ')', '')
-                });
+            // transfer history data to current querybuilder state
+            if (query_object) {
 
-                $('#query').val(value);
+                var flavor = query_object.get('flavor');
+                if (flavor == 'cql') {
+                    _this.disable_compute_comfort_query = true;
+                }
+                _this.set_flavor(flavor);
+
+                opsChooserApp.set_datasource(query_object.get('datasource'));
+
+                if (flavor == 'comfort') {
+                    var data = query_object.get('query_data');
+                    _this.clear_comfort_form();
+                    _this.set_comfort_form_data(data);
+
+                } else if (flavor == 'cql') {
+                    var expression = query_object.get('query_expression');
+                    _this.clear_comfort_form();
+                    $('#query').val(expression);
+                }
+
             }
 
             // destroy widget and close dropdown container
             $(this).data('select2').destroy();
             $(this).dropdown().toggle();
 
+        });
+
+        // load query history data and propagate to history chooser
+        this.cql_history_chooser_get_data().then(function(data) {
+            chooser_widget.select2({
+                data: data,
+                escapeMarkup: function(text) { return text; },
+            });
         });
 
     },
@@ -716,7 +826,35 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         input_element && input_element.focus();
     },
 
-    read_comfort_form: function(form) {
+    set_comfort_form_data: function(data, options) {
+        options = options || {};
+
+        // populate input fields
+        var form = $('#querybuilder-comfort-form');
+        _.each(data['criteria'], function(value, key) {
+            var element = form.find('input[name="' + key + '"]');
+            element.val(value);
+        });
+
+        // populate fulltext modifiers
+        if (data['modifiers'] && _.isObject(data['modifiers']['fulltext'])) {
+            _.each(data['modifiers']['fulltext'], function(value, key) {
+                var element = $(form).find($('button[data-name="fulltext"][data-modifier="' + key + '"]'));
+                if (value) {
+                    element.addClass('active');
+                } else {
+                    element.removeClass('active');
+                }
+            });
+        }
+
+    },
+
+    get_comfort_form_data: function() {
+
+        var form = $('#querybuilder-comfort-form');
+
+        var datasource = opsChooserApp.get_datasource();
 
         var criteria = {};
         var modifiers = {};
@@ -728,6 +866,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 criteria[item.name] = item.value;
             }
         });
+
+        // skip if collected criteria is empty
+        if (_.isEmpty(criteria)) {
+            return;
+        }
 
         // collect fulltext modifiers
         var buttons = $(form).find($('button[data-name="fulltext"]'));
@@ -745,31 +888,31 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         var payload = {
-            'criteria': criteria,
-            'modifiers': modifiers,
-        }
-
+            format: 'comfort',
+            datasource: datasource,
+            criteria: criteria,
+            modifiers: modifiers,
+            //query: opsChooserApp.config.get('query'),
+        };
         return payload;
+
     },
 
     compute_comfort_query: function() {
 
-        var form_data = this.read_comfort_form($('#querybuilder-comfort-form'));
-        if (_.isEmpty(form_data.criteria)) {
+        if (this.disable_compute_comfort_query) {
+            this.disable_compute_comfort_query = false;
             var deferred = $.Deferred();
             deferred.reject();
             return deferred;
         }
 
-        var datasource = opsChooserApp.get_datasource();
-
-        var payload = {
-            format: 'comfort',
-            datasource: datasource,
-            criteria: form_data.criteria,
-            modifiers: form_data.modifiers,
-            //query: opsChooserApp.config.get('query'),
-        };
+        var payload = this.get_comfort_form_data();
+        if (_.isEmpty(payload)) {
+            var deferred = $.Deferred();
+            deferred.reject();
+            return deferred;
+        }
 
         log('comfort form query:', JSON.stringify(payload));
 
