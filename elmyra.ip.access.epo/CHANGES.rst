@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.94.0
+======
 - ui: major improvements to query history subsystem
 
 0.93.2
