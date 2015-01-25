@@ -110,7 +110,7 @@ ProjectModel = Backbone.RelationalModel.extend({
             });
 
             // don't record the same queries multiple times
-            var equals = query.equals(recent);
+            var equals = recent && query.equals(recent);
             if (!equals) {
                 _this.history_add_query(query);
                 _this.query_recorded = query;
