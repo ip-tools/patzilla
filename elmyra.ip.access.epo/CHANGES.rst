@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.93.3
+======
+- middleware: minor but important enhancements to FulltextPRO query expression parser
+
 0.93.2
 ======
 - ui: fix typo in main template introduced when doing the document error template in a hurry
