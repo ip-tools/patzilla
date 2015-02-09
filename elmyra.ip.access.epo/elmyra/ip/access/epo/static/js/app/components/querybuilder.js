@@ -210,7 +210,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (opsChooserApp.get_datasource() == 'ftpro') {
             $('#query').hide();
             $('#query').parent().find('#query-alert').remove();
-            $('#query').parent().append('<div id="query-alert" class="alert alert-default"><br/><br/>Expert mode not available with data source "FulltextPRO".</div>');
+            $('#query').parent().append('<div id="query-alert" class="alert alert-default">Expert mode not available for datasource "FulltextPRO".</div>');
             var alert_element = $('#query').parent().find('#query-alert');
             alert_element.height($('#query').height() - 18);
             //alert_element.marginBottom($('#query').marginBottom());
@@ -317,24 +317,25 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-query-history').click(function(e) {
 
             // setup select2 widget
-            _this.cql_history_chooser_setup();
+            _this.cql_history_chooser_setup().then(function() {
 
-            var opened = $('#cql-history-chooser').hasClass('open');
-            var chooser_widget = $('#cql-history-chooser-select2');
+                var opened = $('#cql-history-chooser').hasClass('open');
 
-            // if already opened, skip event propagation and just reopen the widget again
-            if (opened) {
-                e.preventDefault();
-                e.stopPropagation();
-                chooser_widget.select2('open');
+                // if already opened, skip event propagation to prevent wrong parent nesting
+                if (opened) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
 
                 // open select2 widget *after* dropdown has been opened
-            } else {
                 // TODO: use "shown.bs.dropdown" event when migrating to bootstrap3
+                var chooser_widget = $('#cql-history-chooser-select2');
                 setTimeout(function() {
                     chooser_widget.select2('open');
                 });
-            }
+
+            });
+
         });
 
         // share via url, with ttl
@@ -638,14 +639,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         } else if (datasource == 'depatisnet') {
             datasource_title = 'DPMA';
         } else if (datasource == 'ftpro') {
-            datasource_title = 'FtPRO';
+            datasource_title = 'FulltextPRO';
         }
 
         title += '<div class="pull-right"><small>' + [
             flavor,
             datasource_title,
             created,
-            (result_count ? result_count : 'no') + ' hits'
+            (result_count ? result_count : 'no') + (result_count == 1 ? ' hit' : ' hits')
         ].join(', ') + '</small></div><div class="clearfix"></div>';
 
         var entry = {
@@ -657,6 +658,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
 
     cql_history_chooser_setup: function() {
+
+        var deferred = $.Deferred();
+
         var projectname = opsChooserApp.project.get('name');
 
         var chooser_widget = $('#cql-history-chooser-select2');
@@ -715,7 +719,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 data: data,
                 escapeMarkup: function(text) { return text; },
             });
+            deferred.resolve();
         });
+
+        return deferred.promise();
 
     },
 
