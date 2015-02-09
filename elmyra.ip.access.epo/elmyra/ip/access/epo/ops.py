@@ -732,7 +732,11 @@ def _find_publication_number_by_prio_number():
 
 def _summarize_metrics(payload, kind):
 
-    metrics = payload['environments'][0]['dimensions'][0]['metrics']
+    try:
+        metrics = payload['environments'][0]['dimensions'][0]['metrics']
+    except KeyError:
+        return 'error while computing value'
+
     total_response_size_entries = filter(lambda item: item['name'] == kind, metrics)[0]['values']
     #print total_response_size_entries
 
