@@ -77,5 +77,7 @@ def has_booleans(value):
     return ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower()
 
 def should_be_quoted(value):
-    value = value.strip()
-    return '=' not in value and ' ' in value and value[0] != '"' and value[-1] != '"'
+    value = value.strip().lower()
+    return \
+        '=' not in value and 'and' not in value and 'or' not in value and 'not' not in value and \
+        ' ' in value and value[0] != '"' and value[-1] != '"'
