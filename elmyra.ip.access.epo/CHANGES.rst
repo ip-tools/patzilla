@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.94.1
+======
+- ui: fix ui lockup issues with new query history chooser
+
 0.94.0
 ======
 - ui: major improvements to query history subsystem
