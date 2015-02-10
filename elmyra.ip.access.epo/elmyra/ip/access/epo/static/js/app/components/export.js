@@ -33,6 +33,8 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
 
     setup_result_actions: function(numberlist) {
 
+        var _this = this;
+
         var numberlist_string = numberlist.join('\n');
 
         // transfer to textarea
@@ -45,13 +47,15 @@ ResultNumbersView = Backbone.Marionette.ItemView.extend({
         // setup insert-to-basket button
         var basket_button = this.$el.find('#result-numbers-to-basket-button');
         basket_button.unbind('click');
-        var _this = this;
         basket_button.on('click', function(event) {
-            _.each(numberlist, function(number) {
-                opsChooserApp.basketModel.add(number);
-            });
-            var message = 'Added #' + numberlist.length + ' patent numbers to document collection.';
-            _ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
+            $('#result-numbers-add-collection-indicator').removeClass('icon-plus').addClass('icon-spinner icon-spin');
+            setTimeout(function() {
+                $.when(opsChooserApp.basketModel.add_multi(numberlist)).then(function() {
+                    $('#result-numbers-add-collection-indicator').removeClass('icon-spinner icon-spin').addClass('icon-plus');
+                    var message = 'Added ' + numberlist.length + ' patent numbers to document collection.';
+                    _ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
+                });
+            }, 50);
         });
     },
 
