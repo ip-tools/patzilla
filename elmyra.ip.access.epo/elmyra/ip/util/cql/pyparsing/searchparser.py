@@ -131,7 +131,7 @@ class SearchQueryParser:
         operatorAnd << (Group(
             operatorNot + Suppress(Keyword("and", caseless=True)) + operatorAnd
         ).setResultsName("and") | Group(
-            operatorNot + OneOrMore(~oneOf("and or") + operatorAnd)
+            operatorNot + OneOrMore(~oneOf("and or", caseless=True) + operatorAnd)
         ).setResultsName("and") | operatorNot)
 
         operatorProximity = Forward()

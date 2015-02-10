@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.94.2
+======
+- middleware: fix case sensitivity problem in fulltext expression parser for FulltextPRO
+
 0.94.1
 ======
 - ui: fix ui lockup issues with new query history chooser
