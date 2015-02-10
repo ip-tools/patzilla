@@ -3,6 +3,7 @@
 import logging
 from StringIO import StringIO
 from zipfile import ZipFile, ZIP_DEFLATED
+from pyramid.httpexceptions import HTTPNotFound, HTTPError
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
 from elmyra.ip.access.epo.ops import pdf_document_build
@@ -40,10 +41,24 @@ def pdf_universal(patent):
 def pdf_universal_multi(patents):
     buffer = StringIO()
     with ZipFile(buffer, 'w', ZIP_DEFLATED) as archive:
+
+        delivered = []
+        missing = []
         for patent in patents:
-            data = pdf_universal(patent)
-            if data.get('pdf'):
-                archive.writestr('{0}.pdf'.format(patent), data['pdf'])
+            try:
+                data = pdf_universal(patent)
+                if data.get('pdf'):
+                    archive.writestr('{0}.pdf'.format(patent), data['pdf'])
+                    delivered.append(patent)
+            except HTTPError as ex:
+                missing.append(patent)
+
+        # TODO: format more professionally incl. generator description
+        report = \
+            'Delivered PDF files ({0}):\n'.format(len(delivered)) + '\n'.join(delivered) + \
+            '\n\n' + \
+            'Missing PDF files ({0}):\n'.format(len(missing)) + '\n'.join(missing)
+        archive.writestr('report.txt', report)
 
     buffer.seek(0)
     payload = buffer.read()

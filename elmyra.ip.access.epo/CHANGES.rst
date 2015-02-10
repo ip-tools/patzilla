@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.95.1
+======
+- middleware: improve pdf bulk delivery: include report.txt into zip archive, be graceful for invalid patent numbers
+
 0.95.0
 ======
 - ui: fix “wipe database”
