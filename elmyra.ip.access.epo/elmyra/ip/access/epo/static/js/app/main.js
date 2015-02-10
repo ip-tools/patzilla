@@ -218,8 +218,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         //this.set_datasource('ops');
 
         this.ui.indicate_activity(false);
-        //this.ui.reset_content();
-        this.ui.reset_content({keep_pager: true, documents: true});
+        this.ui.reset_content();
+        //this.ui.reset_content({keep_pager: true, documents: true});
 
 
         // compute slice values

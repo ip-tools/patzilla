@@ -18,7 +18,7 @@ DatasourceSearch = Backbone.Model.extend({
             data: $.param(query_parameters),
             success: function (payload, response, options) {
                 opsChooserApp.ui.indicate_activity(false);
-                opsChooserApp.ui.reset_content();
+                //opsChooserApp.ui.reset_content();
 
                 // decode regular keywords
                 var keywords_regular = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');

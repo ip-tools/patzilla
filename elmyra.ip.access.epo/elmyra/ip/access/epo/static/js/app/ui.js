@@ -75,13 +75,13 @@ UiController = Marionette.Controller.extend({
         options = options || {};
 
         $('#info-area').empty();
-        $('#pagination-info').hide();
+        //$('#pagination-info').hide();
 
         if (!options.keep_notifications) {
             $('#alert-area').empty();
         }
         if (!options.keep_pager) {
-            $('.pager-area').hide();
+            //$('.pager-area').hide();
         }
         if (options.documents) {
             opsChooserApp.documents.reset();

@@ -17,7 +17,12 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
     // Change Which Template Is Rendered For A View
     // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.view.md#change-which-template-is-rendered-for-a-view
-    getTemplate: function(){
+    getTemplate: function() {
+
+        // v2: always use compact pager
+        return '#ops-pagination-template';
+
+        // v1: use specific pager component
         if (opsChooserApp.config.get('mode') == 'liveview') {
             return '#ops-pagination-template-liveview';
         } else if (this.model.get('searchmode') == 'subsearch') {
@@ -58,8 +63,10 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
 
         if (page_count < 1) {
-            $('.page-size-chooser').parent().remove();
+            this.$el.hide();
             return;
+        } else {
+            this.$el.show();
         }
 
         // 1. initialize pagination widget

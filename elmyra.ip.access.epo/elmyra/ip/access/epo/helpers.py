@@ -128,7 +128,9 @@ class BackboneModelParameterFiddler(object):
 
         # TODO: move the html stuff elsewhere!
         if params.get('mode') == 'liveview':
-            params['setting.ui.page.title'] = 'Patent view' + ' &nbsp; ' + self.beta_badge
+            params['setting.ui.page.title'] = 'Patent view'
+            #params['setting.ui.page.title'] += ' &nbsp; ' + self.beta_badge
+            params['setting.ui.page.title'] += ' &nbsp; <i class="spinner icon-refresh icon-spin" style="display: none"></i>'
             if params.get('datasource') == 'review':
                 params['setting.ui.page.statusline'] = \
                     '<span id="ui-project-name"></span>' + \

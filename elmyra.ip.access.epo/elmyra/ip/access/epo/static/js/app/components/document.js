@@ -38,7 +38,7 @@ DocumentBaseController = Marionette.Controller.extend({
         // ------------------------------------------
         //   second pagination at bottom
         // ------------------------------------------
-        $(opsChooserApp.paginationViewBottom.el).show();
+        //$(opsChooserApp.paginationViewBottom.el).show();
 
 
         // ------------------------------------------
