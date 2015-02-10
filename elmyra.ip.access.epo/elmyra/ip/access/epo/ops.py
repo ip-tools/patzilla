@@ -2,7 +2,7 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import time
 import logging
-from pyramid.httpexceptions import HTTPNotFound, HTTPError
+from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
@@ -176,6 +176,8 @@ def ops_published_data_crawl(constituents, query, chunksize):
 def inquire_images(patent):
 
     p = split_patent_number(patent)
+    if not p:
+        raise HTTPBadRequest('{0} is not a valid patent number'.format(patent))
 
     # v1: docdb
     patent = p['country'] + '.' + p['number'] + '.' + p['kind']
