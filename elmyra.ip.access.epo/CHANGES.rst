@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: fix “wipe database”
+- ui: improve performance when adding many result numbers to document collection
 
 0.94.3
 ======

@@ -78,7 +78,10 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     // add item to basket
-    add: function(number) {
+    add: function(number, options) {
+
+        options = options || {};
+
         var _this = this;
 
         number = number.trim();
@@ -95,7 +98,7 @@ BasketModel = Backbone.RelationalModel.extend({
                 deferred.resolve(entry);
 
                 // refresh gui, update timestamp
-                _this.trigger('change', _this);
+                !options.bulk && _this.trigger('change', _this);
             }});
 
             return deferred.promise();
@@ -124,17 +127,45 @@ BasketModel = Backbone.RelationalModel.extend({
             entries.add(entry);
             _this.save({'entries': entries}, {
                 success: function() {
-                    $.when(_this.fetch_entries()).then(function() {
-                        //deferred.resolve(entry);
-                        deferred.resolve(_this.get_entry_by_number(entry.get('number')));
-                        _this.trigger('change', _this);
-                        _this.trigger('change:add', entry, number);
-                    });
+                    if (options.bulk) {
+                        deferred.resolve(entry);
+                    } else {
+                        $.when(_this.fetch_entries()).then(function() {
+                            //deferred.resolve(entry);
+                            deferred.resolve(_this.get_entry_by_number(entry.get('number')));
+                            _this.trigger('change', _this);
+                            _this.trigger('change:add', entry, number);
+                        });
+                    }
                 },
             });
         }});
 
         return deferred.promise();
+    },
+
+    add_multi: function(numberlist) {
+
+        var deferred = $.Deferred();
+
+        var _this = this;
+        var deferreds = [];
+        _.each(numberlist, function(number) {
+            deferreds.push(_this.add(number, {bulk: true}));
+        });
+        $.when.apply($, deferreds).then(function() {
+            _this.refresh();
+            deferred.resolve();
+        });
+
+        return deferred.promise();
+    },
+
+    refresh: function() {
+        var _this = this;
+        $.when(this.fetch_entries()).then(function() {
+            _this.trigger('change');
+        });
     },
 
     // remove item from basket
