@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.94.3
+======
+- ui: enhance show-/hide-mechanics of paging components et al.
+
 0.94.2
 ======
 - middleware: fix case sensitivity problem in fulltext expression parser for FulltextPRO

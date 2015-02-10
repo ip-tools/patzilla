@@ -96,14 +96,16 @@ ${ h.fiddler.render() | n }
     ## pager top
     <div class="pager-area do-not-print" id="ops-pagination-region-top"></div>
 
+    <div id="modal-area"></div>
+
+    ## metadata
+    <div id="ops-metadata-region"></div>
+
     ## notifications and alerts
     <div id="alert-area"></div>
     <div id="info-area"></div>
 
-    <div id="modal-area"></div>
-
     ## results
-    <div id="ops-metadata-region"></div>
     <div id="ops-collection-region"></div>
 
     ## pager bottom
@@ -189,7 +191,7 @@ ${ h.fiddler.render() | n }
 
 <script id="backend-error-template" type="text/x-underscore-template">
 
-    <div class="alert alert-error alert-block">
+    <div class="alert alert-error alert-block alert-inline">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>ERROR</h4>
         <%text>
@@ -250,7 +252,7 @@ ${ h.fiddler.render() | n }
 
 <script id="cornice-error-template" type="text/x-underscore-template">
 
-    <div class="alert alert-error alert-block">
+    <div class="alert alert-error alert-block alert-inline">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>ERROR</h4>
         <%text>
@@ -290,7 +292,7 @@ ${ h.fiddler.render() | n }
 
 <script id="alert-template" type="text/x-underscore-template">
     <%text>
-    <div class="alert alert-block <%= clazz %>">
+    <div class="alert alert-block alert-inline <%= clazz %>">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4><%= title %></h4>
         <br/>

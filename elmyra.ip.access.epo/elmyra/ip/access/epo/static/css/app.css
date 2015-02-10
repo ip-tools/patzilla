@@ -168,6 +168,11 @@ a.editable-click {
     color: black;
 }
 
+/* alert boxes */
+.alert-inline {
+    margin-bottom: inherit;
+}
+
 
 /* modal boxes */
 

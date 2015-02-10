@@ -12,7 +12,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         //$('.pager-area').hide();
 
         // TODO: enhance this as soon as we're in AMD land
-        $(opsChooserApp.paginationViewBottom.el).hide();
+        //$(opsChooserApp.paginationViewBottom.el).hide();
 
         var self = this;
         return this.fetch({
@@ -36,7 +36,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                     return;
                 }
 
-                $('.pager-area').show();
+                //$('.pager-area').show();
 
                 // get "node" containing record list from nested json response
                 var search_result = response['ops:world-patent-data']['ops:biblio-search']['ops:search-result'];
