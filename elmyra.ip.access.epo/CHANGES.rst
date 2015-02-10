@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: fix “wipe database”
 
 0.94.3
 ======

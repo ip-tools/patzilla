@@ -3,6 +3,8 @@
     Version 0.8.1
     http://mozilla.github.io/localForage
     (c) 2013-2014 Mozilla, Apache License 2.0
+
+    2015-02-10 [amo]: fix localStorage.clear
 */
 (function() {
 var define, requireModule, require, requirejs;
@@ -1104,15 +1106,21 @@ requireModule('promise/polyfill').polyfill();
         var _this = this;
         return new Promise(function(resolve) {
             _this.ready().then(function() {
-                var length = localStorage.length;
-                var keys = [];
 
-                for (var i = 0; i < length; i++) {
+                // collect keys
+                var keys = [];
+                for (var i = 0; i < localStorage.length; i++) {
                     var key = localStorage.key(i);
                     if (key.indexOf(keyPrefix) == 0) {
-                        localStorage.removeItem(key);
+                        keys.push(key);
                     }
                 }
+
+                // delete from store
+                for (var i = 0; i < keys.length; i++) {
+                    var key = keys[i];
+                    localStorage.removeItem(key);
+                };
 
                 if (callback) {
                     callback();
