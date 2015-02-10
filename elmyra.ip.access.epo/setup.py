@@ -23,9 +23,10 @@ requires = [
     'PasteScript==1.7.5',
 
     # caching
-    'Beaker==1.6.4',
+    'Beaker==1.6.5.post1',
     'pyramid_beaker==0.8',
-    'pymongo==2.7.1',
+    'pymongo==2.8',
+    'mongodb_gridfs_beaker==0.5.4',
 
     # web services
     'cornice==0.15',

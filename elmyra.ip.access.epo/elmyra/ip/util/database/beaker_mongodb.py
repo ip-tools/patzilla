@@ -208,6 +208,7 @@ except ImportError:
     raise InvalidCacheBackendError("Unable to load the pymongo driver.")
 
 log = logging.getLogger(__name__)
+#log.setLevel(logging.DEBUG)
 
 class MongoDBNamespaceManager(NamespaceManager):
     clients = SyncDict()
@@ -364,7 +365,7 @@ class MongoDBNamespaceManager(NamespaceManager):
                 'pickled': False
             }
             try:
-                bson.encode(value)
+                bson.BSON.encode(value)
             except:
                 log.warning("Value is not bson serializable, pickling inner value.")
                 value['value'] = pickle.dumps(value['value'])

@@ -4,8 +4,12 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.95.0
+======
 - ui: fix “wipe database”
 - ui: improve performance when adding many result numbers to document collection
+- middleware: use MongoDB GridFS for storing large binary static resources from upstream to prevent DocumentTooLarge errors
 
 0.94.3
 ======
