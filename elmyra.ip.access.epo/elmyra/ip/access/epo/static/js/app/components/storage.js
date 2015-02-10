@@ -186,15 +186,12 @@ StoragePlugin = Marionette.Controller.extend({
         //Backbone.Relational.store = new Backbone.Store();
 
         // wipe the data store
-        log('About to wipe database');
-        cb = function() {
-            log('localforage.clear DONE');
-        }
-        localforage.clear(cb).then(function() {
+        localforage.clear().then(function() {
             log('localforage.clear SUCCESS');
         }, function() {
             log('localforage.clear FAIL');
-        })
+        });
+
     },
 
     setup_ui: function() {
@@ -266,7 +263,7 @@ StoragePlugin = Marionette.Controller.extend({
         $('#database-wipe-button').unbind();
         $('#database-wipe-button').click(function(e) {
 
-            _ui.confirm('This will wipe the whole local database. Are you sure?').then(function() {
+            _ui.confirm('This will wipe the whole local database including custom keywords. Are you sure?').then(function() {
 
                 // wipe the database
                 _this.dbreset({shutdown_gui: true});
