@@ -405,6 +405,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $(window).on('focus', this.project_reload);
 
         // setup views
+        // TODO: refactor using a Marionette Region
+        if (this.projectChooserView) {
+            this.projectChooserView.stopListening();
+        }
         this.projectChooserView = new ProjectChooserView({
             el: $('#project-chooser-area'),
             model: project,
