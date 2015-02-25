@@ -203,4 +203,4 @@ if __name__ == '__main__':
 
     #print depatisconnect_claims('US2014250599A1')
     print depatisconnect_claims('US2014339530A1')
-
+    #print depatisconnect_claims('DE102006019883A1')
