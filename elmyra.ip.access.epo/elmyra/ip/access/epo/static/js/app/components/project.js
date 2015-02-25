@@ -16,6 +16,8 @@ QueryModel = Backbone.RelationalModel.extend({
 
     initialize: function() {
         console.log('QueryModel.initialize');
+        // backbone-relational backward-compat
+        if (!this.fetchRelated) this.fetchRelated = this.getAsync;
     },
 
     equals: function(obj) {
@@ -57,12 +59,16 @@ ProjectModel = Backbone.RelationalModel.extend({
             relatedModel: 'QueryModel',
             includeInJSON: Backbone.Model.prototype.idAttribute,
 
-             reverseRelation: {
-                 type: Backbone.One,
-                 key: 'project',
-                 // 'relatedModel' is automatically set to 'ProjectModel'
-                 includeInJSON: Backbone.Model.prototype.idAttribute,
-             },
+            // reverseRelation *must not* be defined for HasMany relationships, otherwise this will yield
+            // empty collections unconditionally, especially after creating new parent objects
+            /*
+            reverseRelation: {
+                type: Backbone.HasOne,
+                key: 'project',
+                // 'relatedModel' is automatically set to 'ProjectModel'
+                includeInJSON: Backbone.Model.prototype.idAttribute,
+            },
+            */
 
         },
 
