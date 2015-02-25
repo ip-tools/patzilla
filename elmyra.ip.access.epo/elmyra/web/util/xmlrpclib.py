@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2015 Andreas Motl, Elmyra UG
 from __future__ import absolute_import
+import sys
 import socket
 import xmlrpclib
+import ssl
 
 # https://stackoverflow.com/questions/372365/set-timeout-for-xmlrpclib-serverproxy/14397619#14397619
 class XmlRpcTimeoutServer:
@@ -11,6 +13,11 @@ class XmlRpcTimeoutServer:
         self.__url = url
         self.__timeout = timeout
         self.__prevDefaultTimeout = None
+
+        # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
+        # https://bugs.python.org/issue22417
+        if sys.hexversion >= 0x02070900:
+            ssl._create_default_https_context = ssl._create_unverified_context
 
     def __enter__(self):
         try:

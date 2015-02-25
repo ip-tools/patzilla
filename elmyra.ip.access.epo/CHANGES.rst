@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: fix HTTPS self-signed certificate validation problem for Python >= 2.7.9, see PEP 476
 
 0.95.1
 ======
