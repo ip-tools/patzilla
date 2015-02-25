@@ -7,6 +7,7 @@ development
 - middleware: fix HTTPS self-signed certificate validation problem for Python >= 2.7.9, see PEP 476
 - auth: turn off open access to “kindcodes” api
 - ui: fix query history display after creating new project
+- ui: fix event listening when creating ProjectChooserView instances
 
 0.95.1
 ======
