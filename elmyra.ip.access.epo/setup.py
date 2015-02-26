@@ -23,7 +23,7 @@ requires = [
     'PasteScript==1.7.5',
 
     # caching
-    'Beaker==1.6.5.post1',
+    'Beaker==1.7.0dev',
     'pyramid_beaker==0.8',
     'pymongo==2.8',
     'mongodb_gridfs_beaker==0.5.4',
