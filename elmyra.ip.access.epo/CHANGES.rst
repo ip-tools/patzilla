@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.95.3
+======
+- middleware: fix cache key charset encoding problem by upgrading to Beaker 1.7.0dev
+
 0.95.2
 ======
 - middleware: fix HTTPS self-signed certificate validation problem for Python >= 2.7.9, see PEP 476
