@@ -195,11 +195,11 @@ def ops_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('query', '')
-    log.info('query raw:', query)
+    log.info('query raw: %s', query)
 
     query_object, query = cql_prepare_query(query)
 
-    log.info('query cql:', query)
+    log.info('query cql: %s', query)
 
     # range: x-y, maximum delta is 100, default is 25
     range = request.params.get('range')
