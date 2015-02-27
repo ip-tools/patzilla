@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: implement asciifolding for FulltextPRO
 
 0.95.3
 ======
