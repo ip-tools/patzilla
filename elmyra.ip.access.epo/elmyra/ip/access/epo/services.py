@@ -15,6 +15,7 @@ from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisc
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
+from elmyra.ip.access.epo.espacenet import espacenet_description, espacenet_claims
 from elmyra.ip.access.epo.ops import get_ops_client, ops_published_data_search, get_ops_image, pdf_document_build, inquire_images, ops_description, ops_claims, ops_document_kindcodes, ops_family_inpadoc, ops_analytics_applicant_family, ops_service_usage, ops_published_data_crawl
 from elmyra.ip.access.google.search import GooglePatentsAccess, GooglePatentsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
@@ -708,6 +709,12 @@ def depatisconnect_claims_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
     try:
+        return depatisconnect_claims_handler_real(patent)
+    except:
+        return espacenet_claims(patent)
+
+def depatisconnect_claims_handler_real(patent):
+    try:
         description = depatisconnect_claims(patent)
 
     except KeyError as ex:
@@ -725,6 +732,12 @@ def depatisconnect_claims_handler(request):
 def depatisconnect_description_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
+    try:
+        return depatisconnect_description_handler_real(patent)
+    except:
+        return espacenet_description(patent)
+
+def depatisconnect_description_handler_real(patent):
     try:
         description = depatisconnect_description(patent)
 
