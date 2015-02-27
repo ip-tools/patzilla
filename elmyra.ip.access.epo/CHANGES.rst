@@ -4,6 +4,13 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.95.5
+======
+- middleware: fall back to Espacenet for DE- and US-fulltexts
+
+0.95.4
+======
 - middleware: implement asciifolding for FulltextPRO
 
 0.95.3

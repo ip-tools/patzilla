@@ -168,6 +168,7 @@ def depatisconnect_description(document_number):
     Return DEPATISconnect description fulltext
     """
     response, content = get_claims_or_description(document_number, '/DocInfoRes/Result/application-body/description')
+    response['source'] = 'depatisconnect'
     return response
 
 
