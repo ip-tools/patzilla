@@ -7,7 +7,7 @@ from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region
-from jsonpointer import JsonPointer, resolve_pointer, set_pointer
+from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -542,8 +542,7 @@ def _get_document_number_date(docref, id_type):
             return doc_number, date
     return None, None
 
-def ops_analytics_applicant_family(applicant):
-    applicant = '"' + applicant.strip('"') + '"'
+def analytics_family(query):
 
     payload = {}
     family_has_statistics = {}
@@ -552,7 +551,7 @@ def ops_analytics_applicant_family(applicant):
     # A. aggregate list of publication numbers
     # http://ops.epo.org/3.1/rest-services/published-data/search/full-cycle/?q=pa=%22MAMMUT%20SPORTS%20GROUP%20AG%22
     # TODO: step through all pages
-    response = ops_published_data_search('biblio', 'applicant=' + applicant, '1-50')
+    response = ops_published_data_search('biblio', query, '1-50')
     pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
     pointer_family_id = JsonPointer('/exchange-document/@family-id')
     pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
@@ -730,6 +729,93 @@ def _find_publication_number_by_prio_number():
             if family_member['application']['number'] == prio_number:
                 pubref_number = family_member['publication']['number']
                 break
+
+
+
+def _format_title(title):
+    return u'[{0}] {1}'.format(title.get(u'@lang', u'').upper() or u'', title[u'$'] or u'')
+
+def _format_abstract(abstract):
+    if not abstract: return
+    lines = to_list(abstract['p'])
+    lines = map(lambda line: line['$'], lines)
+    return u'[{0}] {1}'.format(abstract.get(u'@lang', u'').upper() or u'', '\n'.join(lines))
+
+def _mogrify_parties(partylist, name):
+    results = []
+    parties = {}
+    for party in partylist:
+        key = party['@sequence']
+        parties.setdefault(key, {})
+        parties[key][party['@data-format']] = party[name]['name']['$']
+
+    for key in sorted(parties.keys()):
+        name_epodoc = parties[key]['epodoc'].replace(u'\u2002', u' ')
+        name_original = parties[key]['original']
+        entry = u'{0}; {1}'.format(name_epodoc, name_original)
+        results.append(entry)
+
+    return results
+
+def _result_list_compact(response):
+    items = []
+
+    pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
+    pointer_application_reference = JsonPointer('/exchange-document/bibliographic-data/application-reference/document-id')
+    pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
+    pointer_invention_title = JsonPointer('/exchange-document/bibliographic-data/invention-title')
+    pointer_abstract = JsonPointer('/exchange-document/abstract')
+    pointer_applicant = JsonPointer('/exchange-document/bibliographic-data/parties/applicants/applicant')
+    pointer_inventor = JsonPointer('/exchange-document/bibliographic-data/parties/inventors/inventor')
+
+    results = to_list(pointer_results.resolve(response))
+    for result in results:
+
+        pubref = pointer_publication_reference.resolve(result)
+        pubref_number, pubref_date = _get_document_number_date(pubref, 'epodoc')
+        pubref_date = pubref_date and '-'.join([pubref_date[:4], pubref_date[4:6], pubref_date[6:8]])
+
+        appref = pointer_application_reference.resolve(result)
+        appref_number, appref_date = _get_document_number_date(appref, 'epodoc')
+        appref_date = appref_date and '-'.join([appref_date[:4], appref_date[4:6], appref_date[6:8]])
+
+        try:
+            titles = to_list(pointer_invention_title.resolve(result))
+            titles = map(_format_title, titles)
+        except JsonPointerException:
+            titles = None
+
+        try:
+            abstracts = to_list(pointer_abstract.resolve(result))
+            abstracts = map(_format_abstract, abstracts)
+        except JsonPointerException:
+            abstracts = None
+
+        try:
+            applicants = to_list(pointer_applicant.resolve(result))
+            applicants = _mogrify_parties(applicants, 'applicant-name')
+        except JsonPointerException:
+            applicants = None
+
+        try:
+            inventors = to_list(pointer_inventor.resolve(result))
+            inventors = _mogrify_parties(inventors, 'inventor-name')
+        except JsonPointerException:
+            inventors = None
+
+        item = {
+            'abstract': abstracts,
+            'appdate': appref_date,
+            'appnumber': appref_number,
+            'pubdate': pubref_date,
+            'pubnumber': pubref_number,
+            'title': titles,
+            'applicant': applicants,
+            'inventor': inventors,
+        }
+        items.append(item)
+
+    return items
 
 
 def _summarize_metrics(payload, kind):

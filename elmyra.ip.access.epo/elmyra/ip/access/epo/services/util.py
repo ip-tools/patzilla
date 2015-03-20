@@ -5,6 +5,7 @@ import json
 import logging
 from cornice.service import Service
 from pyramid.settings import asbool
+from pyramid.threadlocal import get_current_request
 from elmyra.ip.access.google.search import GooglePatentsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.util.cql.util import pair_to_cql
@@ -36,6 +37,13 @@ def query_expression_util_handler(request):
     # TODO: split functionality between ops/depatisnet, google and ftpro/ftpro
 
     data = request.json
+
+    return make_expression(data)
+
+
+def make_expression(data):
+
+    request = get_current_request()
 
     datasource = data['datasource']
     criteria = data['criteria']
