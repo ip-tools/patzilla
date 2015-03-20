@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
 import csv
 import sys
 import logging
 import mechanize
 import cookielib
+import codecs
 from BeautifulSoup import BeautifulSoup
+from elmyra.ip.util.date import from_german, date_iso
 from elmyra.ip.util.numbers.normalize import normalize_patent
 
 
@@ -50,6 +52,16 @@ class DpmaDepatisnetAccess:
 
         self.browser['query'] = query.encode('iso-8859-1')
         self.browser['hitsPerPage'] = [str(hits_per_page)]
+
+        # turn on all fields
+        self.browser['DocId'] = ['on']      # Publication number
+        self.browser['Ti'] = ['on']         # Title
+        self.browser['In'] = ['on']         # Inventor
+        self.browser['Pa'] = ['on']         # Applicant/Owner
+        self.browser['Pub'] = ['on']        # Publication date
+        self.browser['Ad'] = ['on']         # Application date
+        #self.browser['Icp'] = ['on']        # IPC search file
+        #self.browser['Icm'] = ['on']        # IPC main class
 
         # sort by publication date, descending
         self.browser['sf'] = ['pd']
@@ -95,6 +107,7 @@ class DpmaDepatisnetAccess:
 
         if 'did not match any documents' in body:
             results = []
+            numbers = []
             #error_message = 'did not match any documents'
 
         else:
@@ -104,34 +117,93 @@ class DpmaDepatisnetAccess:
             #print "csv:", csv
 
             results = self.csv_parse_publication_numbers(csv_response)
+            #print 'results:', results
 
-            results = [normalize_patent(result, fix_kindcode=True) or result for result in results]
+            numbers = [normalize_patent(result['pubnumber'], fix_kindcode=True) or result for result in results]
 
 
         payload = {
-            'query': query,
-            'numbers': results,
             'hits': hits,
+            'results': results,
+            'numbers': numbers,
+            'query': query,
             'message': error_message,
         }
         return payload
 
 
     def csv_parse_publication_numbers(self, csv_response):
-        csvreader = csv.reader(csv_response, delimiter=';')
+        #print 'csv_response:', csv_response.read()
+        #csv_response.seek(0)
+        csvreader = FieldStrippingDictReader(csv_response, delimiter=';', encoding='latin-1')
         results = []
         for row in csvreader:
-            #print row
+            #print 'row:', row
             if row:
-                publication_number = row[0]
-                #print 'publication_number:', publication_number
-                results.append(publication_number)
-
-        if results:
-            results = results[1:]
+                item = {
+                    'pubnumber': normalize_patent(row['Publication number']),
+                    'pubdate': row['Publication date'] and date_iso(from_german(row['Publication date'])) or None,
+                    'appdate': row['Application date'] and date_iso(from_german(row['Application date'])) or None,
+                    'title': row['Title'],
+                    'applicant': row['Applicant/Owner'],
+                    'inventor': row['Inventor'],
+                }
+                results.append(item)
 
         return results
 
+class UTF8Recoder:
+    """
+    Iterator that reads an encoded stream and reencodes the input to UTF-8
+    https://docs.python.org/2/library/csv.html#examples
+    """
+    def __init__(self, f, encoding):
+        self.reader = codecs.getreader(encoding)(f)
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        return self.reader.next().encode("utf-8")
+
+class UnicodeDictReader(csv.DictReader):
+    """
+    A CSV reader which will iterate over lines in the CSV file "f",
+    which is encoded in the given encoding.
+    https://docs.python.org/2/library/csv.html#examples
+    """
+
+    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
+        f = UTF8Recoder(f, encoding)
+        csv.DictReader.__init__(self, f, dialect=dialect, **kwds)
+
+    def next(self):
+        row = csv.DictReader.next(self)
+        for key, value in row.iteritems():
+            row[key] = unicode(value, "utf-8")
+        return row
+
+    def __iter__(self):
+        return self
+
+class FieldStrippingDictReader(UnicodeDictReader):
+
+    @property
+    def fieldnames(self):
+        if self._fieldnames is None:
+            try:
+                self._fieldnames = self.reader.next()
+                self._fieldnames = map(str.strip, self._fieldnames)
+            except StopIteration:
+                pass
+        self.line_num = self.reader.line_num
+        return self._fieldnames
+
+    def next(self):
+        data = UnicodeDictReader.next(self)
+        for key, value in data.iteritems():
+            data[key] = value.strip()
+        return data
 
 if __name__ == '__main__':
 

@@ -9,10 +9,13 @@ def now():
     return datetime.datetime.now()
 
 def date_iso(date):
-    return date.strftime('%Y-%m-%d')
+    return Arrow.fromdatetime(date).format('YYYY-MM-DD')
 
 def date_german(date):
-    return date.strftime('%d.%m.%Y')
+    return Arrow.fromdatetime(date).format('DD.MM.YYYY')
+
+def from_german(date):
+    return Arrow.strptime(date, '%d.%m.%Y')
 
 def datetime_iso(date):
     return date.strftime('%Y-%m-%d %H:%M:%S')

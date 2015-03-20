@@ -53,6 +53,7 @@ requires = [
     'openpyxl==2.1.0',
     'jsonpointer==1.6',
     'arrow==0.4.4',
+    'transitions==0.2.4',
 
     # ----------------------------------------------
     #   user interface
