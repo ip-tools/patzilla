@@ -21,12 +21,13 @@ debugmode = h.asbool(request.params.get('debug'))
 %>
 
 <script type="application/javascript">
-${ h.fiddler.render() | n }
+    ${ h.fiddler.render() | n }
 </script>
 
 
 ## title / headline
 <div class="container-fluid header-container">
+    <!--
     <div class="span8">
         <h3 id="ui-title" style="display: inline-block"></h3>
         <span id="ui-subtitle"></span>
@@ -39,14 +40,14 @@ ${ h.fiddler.render() | n }
                    role="button" class="btn btn-popover"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Sign out"
-                   >
+                        >
                     <i class="icon-signout"></i>
                 </a>
                 <a target="_blank"
                    role="button" class="btn btn-popover link-help"
                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                    data-content="Online help"
-                   >
+                        >
                     <i class="icon-question-sign"></i>
                 </a>
                 <a target="_blank"
@@ -61,6 +62,7 @@ ${ h.fiddler.render() | n }
             <h3 id="ui-productname" style="display: inline-block"></h3>
         </div>
     </div>
+    -->
 </div>
 
 <br/>
@@ -111,6 +113,7 @@ ${ h.fiddler.render() | n }
     ## pager bottom
     <div class="pager-area do-not-print" id="ops-pagination-region-bottom"></div>
 
+    <!--
     <hr class="clear-margin" style="margin-top: 50px"/>
     <div class="page-footer pull-left">
         &copy; 2013-2015, Elmyra UG — All rights reserved.
@@ -126,6 +129,7 @@ ${ h.fiddler.render() | n }
             </div>
         </small>
     </div>
+    -->
 
 </div>
 
@@ -243,7 +247,7 @@ ${ h.fiddler.render() | n }
             </dd>
 
         </dl>
-        </%text>
+    </%text>
 
     </div>
 
@@ -283,7 +287,7 @@ ${ h.fiddler.render() | n }
             </dd>
 
         </dl>
-        </%text>
+    </%text>
 
     </div>
 
@@ -298,12 +302,12 @@ ${ h.fiddler.render() | n }
         <br/>
         <%= description %>
     </div>
-    </%text>
+</%text>
 </script>
 
 
 <script id="cql-field-chooser-entry" type="text/x-underscore-template">
-<%text>
+    <%text>
 
     <div class="row-fluid">
         <div class="span5 strong">
@@ -391,38 +395,38 @@ ${ h.fiddler.render() | n }
 
 <!-- application -->
 % if request.registry.settings.get('ipsuite.production') == 'true':
-    <script type="text/javascript" src="/static/js/app.min.js"></script>
+<script type="text/javascript" src="/static/js/module-drawings.min.js"></script>
 % else:
-    <script type="text/javascript" src="/static/js/ipsuite/linkmaker.js"></script>
-    <script type="text/javascript" src="/static/js/app/util.js"></script>
-    <script type="text/javascript" src="/static/js/app/core.js"></script>
-    <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/01-search.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/01-results.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/ops.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/google.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/ftpro.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/01-results.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/ops.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/ftpro.js"></script>
-    <script type="text/javascript" src="/static/js/app/application.js"></script>
-    <script type="text/javascript" src="/static/js/app/ui.js"></script>
-    <script type="text/javascript" src="/static/js/components/document.js"></script>
-    <script type="text/javascript" src="/static/js/components/keywords.js"></script>
-    <script type="text/javascript" src="/static/js/components/opaquelinks.js"></script>
-    <script type="text/javascript" src="/static/js/components/querybuilder.js"></script>
-    <script type="text/javascript" src="/static/js/components/basket.js"></script>
-    <script type="text/javascript" src="/static/js/components/project.js"></script>
-    <script type="text/javascript" src="/static/js/components/comment.js"></script>
-    <script type="text/javascript" src="/static/js/components/storage.js"></script>
-    <script type="text/javascript" src="/static/js/components/permalink.js"></script>
-    <script type="text/javascript" src="/static/js/components/hotkeys.js"></script>
-    <script type="text/javascript" src="/static/js/components/viewport.js"></script>
-    <script type="text/javascript" src="/static/js/components/export.js"></script>
-    <script type="text/javascript" src="/static/js/components/analytics.js"></script>
-    <script type="text/javascript" src="/static/js/boot/main.js"></script>
+<script type="text/javascript" src="/static/js/ipsuite/linkmaker.js"></script>
+<script type="text/javascript" src="/static/js/app/util.js"></script>
+<script type="text/javascript" src="/static/js/app/core.js"></script>
+<script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
+<script type="text/javascript" src="/static/js/app/models/01-search.js"></script>
+<script type="text/javascript" src="/static/js/app/models/01-results.js"></script>
+<script type="text/javascript" src="/static/js/app/models/ops.js"></script>
+<script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
+<script type="text/javascript" src="/static/js/app/models/google.js"></script>
+<script type="text/javascript" src="/static/js/app/models/ftpro.js"></script>
+<script type="text/javascript" src="/static/js/app/views/01-results.js"></script>
+<script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
+<script type="text/javascript" src="/static/js/app/views/ops.js"></script>
+<script type="text/javascript" src="/static/js/app/views/ftpro.js"></script>
+<script type="text/javascript" src="/static/js/app/application.js"></script>
+<script type="text/javascript" src="/static/js/app/ui.js"></script>
+<script type="text/javascript" src="/static/js/components/document.js"></script>
+<script type="text/javascript" src="/static/js/components/keywords.js"></script>
+<script type="text/javascript" src="/static/js/components/opaquelinks.js"></script>
+<script type="text/javascript" src="/static/js/components/querybuilder.js"></script>
+<script type="text/javascript" src="/static/js/components/basket.js"></script>
+<script type="text/javascript" src="/static/js/components/project.js"></script>
+<script type="text/javascript" src="/static/js/components/comment.js"></script>
+<script type="text/javascript" src="/static/js/components/storage.js"></script>
+<script type="text/javascript" src="/static/js/components/permalink.js"></script>
+<script type="text/javascript" src="/static/js/components/hotkeys.js"></script>
+<script type="text/javascript" src="/static/js/components/viewport.js"></script>
+<script type="text/javascript" src="/static/js/components/export.js"></script>
+<script type="text/javascript" src="/static/js/components/analytics.js"></script>
+<script type="text/javascript" src="/static/js/boot/drawings.js"></script>
 % endif
 
 </%block>

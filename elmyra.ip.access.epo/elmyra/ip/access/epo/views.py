@@ -37,6 +37,9 @@ def includeme(config):
     # serve application
     config.add_route('patentsearch', '/ops/browser')
 
+    # serve web components
+    config.add_route('drawings', '/ops/browser/drawings')
+
     # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
@@ -59,6 +62,13 @@ def opsbrowser(request):
     payload = {
         'project': 'elmyra.ip.access.epo',
     }
+    return payload
+
+@view_config(route_name='drawings', renderer='elmyra.ip.access.epo:templates/drawings.html')
+def drawings(request):
+    payload = {
+        'project': 'elmyra.ip.access.epo',
+        }
     return payload
 
 
