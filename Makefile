@@ -10,16 +10,30 @@ js:
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
-		--preamble "// (c) 2013,2014 Elmyra UG - All rights reserved" \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/main.js \
+		--preamble "// (c) 2013-2015 Elmyra UG - All rights reserved" \
 		--mangle --compress \
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
 		--source-map-url /static/js/app.min.map \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.js
 
+	# module "drawings"
+	node_modules/.bin/uglifyjs \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/drawings.js \
+		--preamble "// (c) 2013-2015 Elmyra UG - All rights reserved" \
+		--mangle --compress \
+		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/module-drawings.min.map \
+		--source-map-url /static/js/module-drawings.min.map \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/module-drawings.min.js
+
 	# configuration
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.js \
-		--preamble "// (c) 2013,2014 Elmyra UG - All rights reserved" \
+		--preamble "// (c) 2013-2015 Elmyra UG - All rights reserved" \
 		--mangle --compress \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js
 

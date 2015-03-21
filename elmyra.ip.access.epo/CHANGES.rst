@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.0
+======
+- ui/middleware: standalone carousel widget
+
 0.96.1
 ======
 - ui: move application components
