@@ -3,9 +3,9 @@
 <head>
     <title><%block name="title">
         % if page_title is not None:
-            ${page_title} » ${site_title}
+            ${site_title} » ${page_title}
         % else:
-            ${site_title} » ${site_claim}
+            ${site_title}
         % endif
     </%block></title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>

@@ -148,6 +148,14 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
 
 KeywordsController = Marionette.Controller.extend({
 
+    initialize: function(options) {
+        console.log('KeywordsController.initialize');
+        this.keywordmaps = new KeywordMapCollection();
+        this.setup_fixtures();
+        this.module_name = 'keywords-user';
+        this.module_available = opsChooserApp.user_has_module(this.module_name);
+    },
+
     // http://hslpicker.com/
     colors_light: {
         yellow:     {backgroundColor: 'hsla( 60, 100%, 88%, 1)'},
@@ -180,12 +188,6 @@ KeywordsController = Marionette.Controller.extend({
         //borderLeft: '1px dotted #333333',
     },
 
-    initialize: function(options) {
-        console.log('KeywordsController.initialize');
-        this.keywordmaps = new KeywordMapCollection();
-        this.setup_fixtures();
-    },
-
     setup_fixtures: function() {
         var _this = this;
         this.keywordmaps.fetch({success: function(response) {
@@ -212,8 +214,12 @@ KeywordsController = Marionette.Controller.extend({
 
         $('#highlighting-map-edit-action').unbind('click');
         $('#highlighting-map-edit-action').click(function() {
-            _this.keyword_modal = new ModalRegion({el: '#modal-area'});
-            _this.keyword_modal.show(_this.keyword_editor);
+            if (_this.module_available) {
+                _this.keyword_modal = new ModalRegion({el: '#modal-area'});
+                _this.keyword_modal.show(_this.keyword_editor);
+            } else {
+                opsChooserApp.ui.notify_module_locked(_this.module_name);
+            }
         });
 
     },
@@ -289,6 +295,9 @@ KeywordsController = Marionette.Controller.extend({
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
     this.keywords = new KeywordsController();
+    this.listenTo(this, 'application:ready', function() {
+        this.keywords.setup_ui();
+    });
     this.listenTo(this, 'results:ready', function() {
         this.keywords.setup_ui();
         this.keywords.highlight();

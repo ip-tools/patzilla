@@ -14,7 +14,7 @@ DepatisnetCrawler = Marionette.Controller.extend({
         this.constituents = options.constituents;
     },
 
-    crawl: function() {
+    start: function() {
         var deferred = $.Deferred();
         var url_tpl = _.template('/api/depatisnet/published-data/crawl/<%= constituents %>?query=<%= query %>');
         var url = url_tpl({constituents: this.constituents, query: this.query});
@@ -32,7 +32,7 @@ DepatisnetCrawler = Marionette.Controller.extend({
                     deferred.reject('Empty response');
                 }
             }).error(function(error) {
-                deferred.reject('API failed', error);
+                deferred.reject('API failed: ' + JSON.stringify(error));
             });
         return deferred;
     },

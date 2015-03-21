@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.96.0
+======
 - middleware: analytics api for "newest" and "oldest" searches
+- ui: preliminary access to analytics api
 
 0.95.5
 ======

@@ -325,6 +325,11 @@ UiController = Marionette.Controller.extend({
 
     },
 
+    notify_module_locked: function(modulename) {
+        var message = 'The module "' + modulename + '" is not available to your account. Please subscribe to this feature.';
+        this.notify(message, {type: 'warning', icon: 'icon-lock'});
+    },
+
 });
 
 // setup controller
