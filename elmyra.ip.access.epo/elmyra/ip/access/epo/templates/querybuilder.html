@@ -345,6 +345,45 @@
             <!-- cql field symbol chooser -->
             <div class="span7">
                 <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
+
+                <!-- analytics actions -->
+                <div id="analytics-actions" class="btn-group btn-popover pull-right"
+                     data-toggle="popover" data-trigger="hover" data-placement="top"
+                     data-content="Run analytic queries"
+                        >
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-cog"></i>
+                        &nbsp;
+                        Analytics
+                    </button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        <li>
+                            <a id="analytics-family-overview-button">
+                                <i class="icon-group"></i>
+                                &nbsp;
+                                Family overview
+                            </a>
+                            <a class="analytics-daterange-button" data-kind="oldest">
+                                <i class="icon-time"></i>
+                                &nbsp;
+                                Daterange: oldest
+                            </a>
+                            <a class="analytics-daterange-button" data-kind="newest">
+                                <i class="icon-time"></i>
+                                &nbsp;
+                                Daterange: newest
+                            </a>
+
+                        </li>
+
+                    </ul>
+                </div>
+
+
             </div>
 
         </div>

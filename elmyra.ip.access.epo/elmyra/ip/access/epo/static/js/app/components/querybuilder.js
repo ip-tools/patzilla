@@ -530,15 +530,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
     cql_field_chooser_setup: function(hide) {
 
-        // TODO: reduce conditional weirdness
-
         var datasource = opsChooserApp.get_datasource();
         var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
+
+        var analytics_actions = $('#analytics-actions')[0]; //.previousSibling;
+        if (queryflavor == 'comfort') {
+            $(analytics_actions).show();
+        } else {
+            $(analytics_actions).hide();
+        }
+
+        // TODO: reduce conditional weirdness
         if (hide || !datasource || _(['review', 'google', 'ftpro']).contains(datasource) || queryflavor != 'cql') {
             var container = $('#cql-field-chooser')[0].previousSibling;
             $(container).hide();
             return;
         }
+
         var data = this.cql_field_chooser_get_data(datasource);
         $('#cql-field-chooser').select2({
             placeholder: 'CQL field symbols' + ' (' + datasource + ')',

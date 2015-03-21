@@ -468,11 +468,9 @@
                             <% } %>
                             <br/>
                             <%= data.get_citations_environment_button() %>
-                            <% if (opsChooserApp.user_has_module('family-citations')) { %>
                             <a class="btn btn-small family-citations-shortcut-button do-not-print" role="button">
                                 Family » Citations &nbsp; <i class="icon-arrow-right"></i>
                             </a>
-                            <% } %>
                         </dd>
                         <br/>
 
@@ -791,7 +789,6 @@
                     </a>
 
 
-                    <% if (opsChooserApp.user_has_module('keywords-user')) { %>
                     <div class="btn-group">
                         <button class="btn dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-wrench"></i>
@@ -822,7 +819,6 @@
                         </ul>
 
                     </div>
-                    <% } %>
 
                 </div>
 
@@ -1055,33 +1051,30 @@
 </div>
 
 
-## ------------------------------------------
-##   modal dialog for viewing result numbers
-## ------------------------------------------
+## ---------------------------------------------
+##   modal dialog for viewing arbitrary results
+## ---------------------------------------------
 <%text>
-<script type="text/x-underscore-template" id="result-numbers-template">
+<script type="text/x-underscore-template" id="result-template">
 
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="result-numbers-label">Result numbers</h3>
+        <h3 id="result-label">Results</h3>
     </div>
     <div class="modal-body">
-        <div id="result-numbers-info">
+        <div id="result-info">
         </div>
         <br/>
-        <textarea id="result-numbers-content" rows="13" cols="40" class="pull-left"></textarea>
-        <div class="pull-right">
-            <a id="result-numbers-to-basket-button" role="button" class="btn pull-right">
-                <i class="icon-plus" id="result-numbers-add-collection-indicator"></i> &nbsp; Add to document collection
-            </a>
-            <br/><br/>
-            <a id="result-numbers-to-clipboard-button" role="button" class="btn pull-right">
-                <i class="icon-copy"></i> &nbsp; Copy to clipboard
-            </a>
-        </div>
+        <textarea id="result-content" rows="13" cols="84" style="width: inherit"></textarea>
 
     </div>
     <div class="modal-footer">
+        <a id="result-to-basket-button" role="button" class="btn pull-left">
+            <i class="icon-plus" id="result-to-basket-indicator"></i> &nbsp; Add to document collection
+        </a>
+        <a id="result-to-clipboard-button" role="button" class="btn pull-left">
+            <i class="icon-copy"></i> &nbsp; Copy to clipboard
+        </a>
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>
 

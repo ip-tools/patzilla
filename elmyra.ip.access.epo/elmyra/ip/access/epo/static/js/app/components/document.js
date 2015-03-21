@@ -97,13 +97,19 @@ DocumentBaseController = Marionette.Controller.extend({
             }
         });
 
+        var module_name = 'family-citations';
+        var module_available = opsChooserApp.user_has_module(module_name);
 
         // Shortcut button for jumping to Family » Citations
         $('.family-citations-shortcut-button').unbind('click');
         $('.family-citations-shortcut-button').bind('click', function(event) {
-            var container = $(this).closest('.ops-collection-entry')
-            container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
-            container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
+            if (module_available) {
+                var container = $(this).closest('.ops-collection-entry')
+                container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
+                container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
+            } else {
+                opsChooserApp.ui.notify_module_locked(module_name);
+            }
         });
 
 
@@ -153,10 +159,22 @@ DocumentDetailsController = Marionette.Controller.extend({
 
                     var family_chooser = $(container).find('.family-chooser');
 
+
                     // event handler
                     family_chooser.find('button[data-toggle="tab"]').on('show', function (e) {
                         var view_type = $(this).data('view-type');
-                        _this.display_family(document, container, view_type);
+                        if (view_type == 'citations') {
+                            var module_name = 'family-citations';
+                            var module_available = opsChooserApp.user_has_module(module_name);
+                            if (module_available) {
+                                _this.display_family(document, container, view_type);
+                            } else {
+                                opsChooserApp.ui.notify_module_locked(module_name);
+                            }
+
+                        } else {
+                            _this.display_family(document, container, view_type);
+                        }
                     });
 
                     // initial setup
