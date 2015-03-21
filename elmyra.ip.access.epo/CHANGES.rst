@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.96.1
+======
+- ui: move application components
+
 0.96.0
 ======
 - middleware: analytics api for "newest" and "oldest" searches

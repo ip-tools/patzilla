@@ -8,6 +8,7 @@ js:
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
 		--preamble "// (c) 2013,2014 Elmyra UG - All rights reserved" \
 		--mangle --compress \
@@ -114,7 +115,7 @@ mongodb-ftpro-import:
 
 sloccount:
 	sloccount elmyra.ip.access.epo
-	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app
+	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/{app,components,ipsuite}
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
