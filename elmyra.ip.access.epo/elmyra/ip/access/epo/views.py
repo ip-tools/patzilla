@@ -38,7 +38,8 @@ def includeme(config):
     config.add_route('patentsearch', '/ops/browser')
 
     # serve web components
-    config.add_route('drawings', '/ops/browser/drawings')
+    config.add_route('embedded-item', '/ops/browser/embed/item')
+    config.add_route('embedded-list', '/ops/browser/embed/list')
 
     # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
@@ -57,15 +58,16 @@ def includeme(config):
     # negative lookahead to the rescue:
     # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
 
-@view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/app.html')
-def opsbrowser(request):
+@view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/standalone.html')
+def navigator_standalone(request):
     payload = {
         'project': 'elmyra.ip.access.epo',
     }
     return payload
 
-@view_config(route_name='drawings', renderer='elmyra.ip.access.epo:templates/drawings.html')
-def drawings(request):
+@view_config(route_name='embedded-item', renderer='elmyra.ip.access.epo:templates/embedded.html')
+@view_config(route_name='embedded-list', renderer='elmyra.ip.access.epo:templates/embedded.html')
+def navigator_embedded(request):
     payload = {
         'project': 'elmyra.ip.access.epo',
         }

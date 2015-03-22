@@ -4,31 +4,31 @@
 js:
 	@#echo bundling javascript for release=$(VERSION)
 
-	# application
+	# standalone application
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/main.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/standalone.js \
 		--preamble "// (c) 2013-2015 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.map \
-		--source-map-url /static/js/app.min.map \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app.min.js
+		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-standalone.min.map \
+		--source-map-url /static/js/o-standalone.min.map \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-standalone.min.js
 
-	# module "drawings"
+	# embedded application
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/drawings.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/embedded.js \
 		--preamble "// (c) 2013-2015 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/module-drawings.min.map \
-		--source-map-url /static/js/module-drawings.min.map \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/module-drawings.min.js
+		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-embedded.min.map \
+		--source-map-url /static/js/o-embedded.min.map \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-embedded.min.js
 
 	# configuration
 	node_modules/.bin/uglifyjs \

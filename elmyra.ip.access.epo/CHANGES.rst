@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.1
+======
+- ui/middleware: make embedding subsystem more generic
+
 0.97.0
 ======
 - ui/middleware: standalone carousel widget

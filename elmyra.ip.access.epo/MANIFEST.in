@@ -4,5 +4,6 @@ exclude elmyra/ip/access/epo/static/js/app/*.js
 exclude elmyra/ip/access/epo/static/js/app/**/*.js
 exclude elmyra/ip/access/epo/static/js/config.js
 exclude elmyra/ip/access/epo/templates/urlcleaner.js
+prune elmyra/ip/access/epo/static/js/components
 prune elmyra/ip/access/epo/static/js/ipsuite
 recursive-include elmyra/ip/util/render *.js
