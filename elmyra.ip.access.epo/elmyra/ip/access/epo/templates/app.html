@@ -390,9 +390,7 @@ ${ h.fiddler.render() | n }
 <link rel="stylesheet" type="text/css" href="/static/css/app.css" />
 
 <!-- application -->
-% if request.registry.settings.get('ipsuite.production') == 'true':
-    <script type="text/javascript" src="/static/js/app.min.js"></script>
-% else:
+% if request.registry.settings.get('ipsuite.production') != 'true':
     <script type="text/javascript" src="/static/js/ipsuite/linkmaker.js"></script>
     <script type="text/javascript" src="/static/js/app/util.js"></script>
     <script type="text/javascript" src="/static/js/app/core.js"></script>
@@ -422,7 +420,6 @@ ${ h.fiddler.render() | n }
     <script type="text/javascript" src="/static/js/components/viewport.js"></script>
     <script type="text/javascript" src="/static/js/components/export.js"></script>
     <script type="text/javascript" src="/static/js/components/analytics.js"></script>
-    <script type="text/javascript" src="/static/js/boot/main.js"></script>
 % endif
 
 </%block>

@@ -1,0 +1,10 @@
+## -*- coding: utf-8 -*-
+## (c) 2013-2015 Andreas Motl, Elmyra UG
+
+<%include file="app.html"/>
+
+% if request.registry.settings.get('ipsuite.production') == 'true':
+<script type="text/javascript" src="/static/js/embedded.min.js"></script>
+% else:
+<script type="text/javascript" src="/static/js/boot/embedded.js"></script>
+% endif
