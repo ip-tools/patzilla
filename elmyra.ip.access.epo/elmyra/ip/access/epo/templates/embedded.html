@@ -4,7 +4,7 @@
 <%include file="app.html"/>
 
 % if request.registry.settings.get('ipsuite.production') == 'true':
-<script type="text/javascript" src="/static/js/embedded.min.js"></script>
+<script type="text/javascript" src="/static/js/o-embedded.min.js"></script>
 % else:
 <script type="text/javascript" src="/static/js/boot/embedded.js"></script>
 % endif
