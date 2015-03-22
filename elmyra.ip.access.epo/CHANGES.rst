@@ -7,6 +7,10 @@ development
 
 0.97.1
 ======
+- ui/middleware: minor fixes to embedding subsystem
+
+0.97.1
+======
 - ui/middleware: make embedding subsystem more generic
 
 0.97.0
