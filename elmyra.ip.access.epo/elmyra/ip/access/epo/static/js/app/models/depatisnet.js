@@ -17,7 +17,7 @@ DepatisnetCrawler = Marionette.Controller.extend({
     start: function() {
         var deferred = $.Deferred();
         var url_tpl = _.template('/api/depatisnet/published-data/crawl/<%= constituents %>?query=<%= query %>');
-        var url = url_tpl({constituents: this.constituents, query: this.query});
+        var url = url_tpl({constituents: this.constituents, query: encodeURIComponent(this.query)});
         var _this = this;
         $.ajax({url: url, async: true})
             .success(function(payload) {
