@@ -5,7 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
-0.97.1
+0.97.3
+======
+- ui: fix "fetch result numbers" for queries including umlauts
+
+0.97.2
 ======
 - ui/middleware: minor fixes to embedding subsystem
 
