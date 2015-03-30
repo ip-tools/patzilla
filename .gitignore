@@ -8,3 +8,5 @@ dist/
 /var
 /node_modules
 .coverage
+o-*.min.js
+o-*.min.map
