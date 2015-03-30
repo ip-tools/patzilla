@@ -7,6 +7,7 @@ import logging
 import mechanize
 import cookielib
 import codecs
+from StringIO import StringIO
 from BeautifulSoup import BeautifulSoup
 from elmyra.ip.util.date import from_german, date_iso
 from elmyra.ip.util.numbers.normalize import normalize_patent
@@ -115,6 +116,11 @@ class DpmaDepatisnetAccess:
             csv_response = self.browser.open(self.csvurl)
             #csv = csv_response.read().decode('latin-1')
             #print "csv:", csv
+
+            # replace html entities
+            payload = csv_response.read()
+            payload = payload.replace('&amp;', '&')
+            csv_response = StringIO(payload)
 
             results = self.csv_parse_publication_numbers(csv_response)
             #print 'results:', results
