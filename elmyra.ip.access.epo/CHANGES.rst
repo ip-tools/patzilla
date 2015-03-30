@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.4
+======
+- middleware: replace html entities in csv response from depatisnet
+
 0.97.3
 ======
 - ui: fix "fetch result numbers" for queries including umlauts
