@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.5
+======
+- middleware: minor post-refactoring fixes
+
 0.97.4
 ======
 - middleware: replace html entities in csv response from depatisnet
