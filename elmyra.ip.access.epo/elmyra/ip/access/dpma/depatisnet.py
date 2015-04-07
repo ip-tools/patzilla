@@ -7,6 +7,7 @@ import logging
 import mechanize
 import cookielib
 import codecs
+import HTMLParser
 from StringIO import StringIO
 from BeautifulSoup import BeautifulSoup
 from elmyra.ip.util.date import from_german, date_iso
@@ -115,16 +116,39 @@ class DpmaDepatisnetAccess:
 
             csv_response = self.browser.open(self.csvurl)
             #csv = csv_response.read().decode('latin-1')
+            #csv_response.seek(0)
             #print "csv:", csv
 
-            # replace html entities
+            # read and decode payload
             payload = csv_response.read()
-            payload = payload.replace('&amp;', '&')
+            payload = payload.decode('iso-8859-1')
+
+            # replace html entities I
+            # pc=(de) and ic=(A45D34/00) and py >= 1990 and py <= 1994
+            # Kušnir, Elena Vladimir, Kievskaya oblast', Borispolsky, SU Kušnir, Vladimir Markovič
+            # Ukrainskij naučno-issledovatel'skij institut po plemennomu delu v životnovodstve "Ukrniiplem", Kievskaja oblast', SU
+            # Ku&scaron;nir => Kušnir
+            # Markovi&ccaron; => Markovič
+            # &zcaron;ivotnovodstve => životnovodstve
+            payload = payload.replace(u'&ccaron;', u'č')
+            payload = payload.replace(u'&zcaron;', u'ž')
+
+            # replace html entities II
+            # http://fredericiana.com/2010/10/08/decoding-html-entities-to-text-in-python/
+            #payload = payload.replace('&amp;', '&')
+            #payload = payload.replace('&nbsp;', ' ')
+            #payload = re.sub('&([^;]+);', lambda m: unichr(htmlentitydefs.name2codepoint[m.group(1)]), payload, re.MULTILINE)
+            htmlparser = HTMLParser.HTMLParser()
+            payload = htmlparser.unescape(payload).encode('utf-8')
+
+            # convert manipulated payload back to stream
             csv_response = StringIO(payload)
 
+            # parse csv data
             results = self.csv_parse_publication_numbers(csv_response)
             #print 'results:', results
 
+            # normalize patent numbers
             numbers = [normalize_patent(result['pubnumber'], fix_kindcode=True) or result for result in results]
 
 
@@ -141,7 +165,7 @@ class DpmaDepatisnetAccess:
     def csv_parse_publication_numbers(self, csv_response):
         #print 'csv_response:', csv_response.read()
         #csv_response.seek(0)
-        csvreader = FieldStrippingDictReader(csv_response, delimiter=';', encoding='latin-1')
+        csvreader = FieldStrippingDictReader(csv_response, delimiter=';', encoding='utf-8')
         results = []
         for row in csvreader:
             #print 'row:', row
@@ -186,6 +210,7 @@ class UnicodeDictReader(csv.DictReader):
     def next(self):
         row = csv.DictReader.next(self)
         for key, value in row.iteritems():
+            #print 'value:', value
             row[key] = unicode(value, "utf-8")
         return row
 
