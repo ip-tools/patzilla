@@ -63,6 +63,10 @@ def depatisnet_published_data_search_handler(request):
     except SyntaxError as ex:
         request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
 
+    except Exception as ex:
+        log.error(u'DEPATISnet crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+        request.errors.add('depatisnet-published-data-search', 'query', u'An exception occurred while processing your query')
+
 
 @depatisnet_published_data_crawl_service.get(accept="application/json")
 def depatisnet_published_data_crawl_handler(request):
