@@ -63,6 +63,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         console.log('ResultView.initialize');
+        this.message_more = '';
     },
 
     indicate_activity: function(active) {
