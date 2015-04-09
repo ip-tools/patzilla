@@ -5,9 +5,13 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.7
+======
+- middleware: fix more edge cases when parsing non-standard html entities from depatisnet csv inventor or applicant fields
+
 0.97.6
 ======
-- middlware: fix edge cases when parsing non-standard html entities from depatisnet csv inventor or applicant fields
+- middleware: fix edge cases when parsing non-standard html entities from depatisnet csv inventor or applicant fields
 
 0.97.5
 ======

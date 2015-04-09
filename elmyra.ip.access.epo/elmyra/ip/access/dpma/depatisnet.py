@@ -130,8 +130,8 @@ class DpmaDepatisnetAccess:
             # Ku&scaron;nir => Kušnir
             # Markovi&ccaron; => Markovič
             # &zcaron;ivotnovodstve => životnovodstve
-            payload = payload.replace(u'&ccaron;', u'č')
-            payload = payload.replace(u'&zcaron;', u'ž')
+            payload = payload.replace(u'&ccaron;', u'č').replace(u'&Ccaron;', u'č'.upper())
+            payload = payload.replace(u'&zcaron;', u'ž').replace(u'&Zcaron;', u'ž'.upper())
 
             # replace html entities II
             # http://fredericiana.com/2010/10/08/decoding-html-entities-to-text-in-python/
