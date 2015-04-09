@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.8
+======
+- middleware: switch depatisnet to data acquisition via xls (excel) file instead of csv
+
 0.97.7
 ======
 - middleware: fix more edge cases when parsing non-standard html entities from depatisnet csv inventor or applicant fields

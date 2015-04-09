@@ -64,7 +64,7 @@ def depatisnet_published_data_search_handler(request):
         request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
 
     except Exception as ex:
-        log.error(u'DEPATISnet crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+        log.error(u'DEPATISnet search error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
         request.errors.add('depatisnet-published-data-search', 'query', u'An exception occurred while processing your query')
 
 
