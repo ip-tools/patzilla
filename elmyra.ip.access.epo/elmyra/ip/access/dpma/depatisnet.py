@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
-import csv
 import sys
 import logging
 import mechanize
 import cookielib
-import codecs
-import HTMLParser
-from StringIO import StringIO
 from BeautifulSoup import BeautifulSoup
+from xlrd import open_workbook
 from elmyra.ip.util.date import from_german, date_iso
 from elmyra.ip.util.numbers.normalize import normalize_patent
 
@@ -35,6 +32,7 @@ class DpmaDepatisnetAccess:
         self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
         self.searchurl = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
         self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
+        self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
         self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
 
 
@@ -113,39 +111,8 @@ class DpmaDepatisnetAccess:
             #error_message = 'did not match any documents'
 
         else:
-
-            csv_response = self.browser.open(self.csvurl)
-            #csv = csv_response.read().decode('latin-1')
-            #csv_response.seek(0)
-            #print "csv:", csv
-
-            # read and decode payload
-            payload = csv_response.read()
-            payload = payload.decode('iso-8859-1')
-
-            # replace html entities I
-            # pc=(de) and ic=(A45D34/00) and py >= 1990 and py <= 1994
-            # Kušnir, Elena Vladimir, Kievskaya oblast', Borispolsky, SU Kušnir, Vladimir Markovič
-            # Ukrainskij naučno-issledovatel'skij institut po plemennomu delu v životnovodstve "Ukrniiplem", Kievskaja oblast', SU
-            # Ku&scaron;nir => Kušnir
-            # Markovi&ccaron; => Markovič
-            # &zcaron;ivotnovodstve => životnovodstve
-            payload = payload.replace(u'&ccaron;', u'č').replace(u'&Ccaron;', u'č'.upper())
-            payload = payload.replace(u'&zcaron;', u'ž').replace(u'&Zcaron;', u'ž'.upper())
-
-            # replace html entities II
-            # http://fredericiana.com/2010/10/08/decoding-html-entities-to-text-in-python/
-            #payload = payload.replace('&amp;', '&')
-            #payload = payload.replace('&nbsp;', ' ')
-            #payload = re.sub('&([^;]+);', lambda m: unichr(htmlentitydefs.name2codepoint[m.group(1)]), payload, re.MULTILINE)
-            htmlparser = HTMLParser.HTMLParser()
-            payload = htmlparser.unescape(payload).encode('utf-8')
-
-            # convert manipulated payload back to stream
-            csv_response = StringIO(payload)
-
-            # parse csv data
-            results = self.csv_parse_publication_numbers(csv_response)
+            xls_response = self.browser.open(self.xlsurl)
+            results = self.read_xls_response(xls_response)
             #print 'results:', results
 
             # normalize patent numbers
@@ -162,12 +129,10 @@ class DpmaDepatisnetAccess:
         return payload
 
 
-    def csv_parse_publication_numbers(self, csv_response):
-        #print 'csv_response:', csv_response.read()
-        #csv_response.seek(0)
-        csvreader = FieldStrippingDictReader(csv_response, delimiter=';', encoding='utf-8')
+    def read_xls_response(self, xls_response):
+        data = excel_to_dict(xls_response.read())
         results = []
-        for row in csvreader:
+        for row in data:
             #print 'row:', row
             if row:
                 item = {
@@ -182,59 +147,25 @@ class DpmaDepatisnetAccess:
 
         return results
 
-class UTF8Recoder:
-    """
-    Iterator that reads an encoded stream and reencodes the input to UTF-8
-    https://docs.python.org/2/library/csv.html#examples
-    """
-    def __init__(self, f, encoding):
-        self.reader = codecs.getreader(encoding)(f)
 
-    def __iter__(self):
-        return self
+def excel_to_dict(payload):
 
-    def next(self):
-        return self.reader.next().encode("utf-8")
+    # http://stackoverflow.com/questions/23568409/xlrd-python-reading-excel-file-into-dict-with-for-loops/23568655#23568655
 
-class UnicodeDictReader(csv.DictReader):
-    """
-    A CSV reader which will iterate over lines in the CSV file "f",
-    which is encoded in the given encoding.
-    https://docs.python.org/2/library/csv.html#examples
-    """
+    book = open_workbook(file_contents=payload)
+    sheet = book.sheet_by_index(0)
 
-    def __init__(self, f, dialect=csv.excel, encoding="utf-8", **kwds):
-        f = UTF8Recoder(f, encoding)
-        csv.DictReader.__init__(self, f, dialect=dialect, **kwds)
+    # read header values into the list
+    keys = [sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)]
 
-    def next(self):
-        row = csv.DictReader.next(self)
-        for key, value in row.iteritems():
-            #print 'value:', value
-            row[key] = unicode(value, "utf-8")
-        return row
+    dict_list = []
+    for row_index in xrange(1, sheet.nrows):
+        d = {keys[col_index]: sheet.cell(row_index, col_index).value
+             for col_index in xrange(sheet.ncols)}
+        dict_list.append(d)
 
-    def __iter__(self):
-        return self
+    return dict_list
 
-class FieldStrippingDictReader(UnicodeDictReader):
-
-    @property
-    def fieldnames(self):
-        if self._fieldnames is None:
-            try:
-                self._fieldnames = self.reader.next()
-                self._fieldnames = map(str.strip, self._fieldnames)
-            except StopIteration:
-                pass
-        self.line_num = self.reader.line_num
-        return self._fieldnames
-
-    def next(self):
-        data = UnicodeDictReader.next(self)
-        for key, value in data.iteritems():
-            data[key] = value.strip()
-        return data
 
 if __name__ == '__main__':
 
