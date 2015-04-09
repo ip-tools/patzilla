@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.97.9
+======
+- middleware: fix dependency on "xlrd" for reading excel files
+
 0.97.8
 ======
 - middleware: switch depatisnet to data acquisition via xls (excel) file instead of csv
