@@ -54,6 +54,7 @@ requires = [
     'jsonpointer==1.6',
     'arrow==0.4.4',
     'transitions==0.2.4',
+    'xlrd==0.9.3',
 
     # ----------------------------------------------
     #   user interface
