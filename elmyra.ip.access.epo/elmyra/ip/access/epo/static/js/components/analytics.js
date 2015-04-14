@@ -3,6 +3,10 @@
 
 AbstractResultFetcher = Marionette.Controller.extend({
 
+    initialize: function(options) {
+        options = options || {};
+    },
+
     start: function() {
         var deferred = $.Deferred();
 
@@ -31,6 +35,29 @@ AbstractResultFetcher = Marionette.Controller.extend({
 
 });
 
+AbstractResultView = GenericResultView.extend({
+
+    initialize: function() {
+        this.fetcher_class = null;
+    },
+
+    onShow: function() {
+        this.hide_buttons();
+        this.start();
+    },
+
+    setup_data: function(data) {
+        // transfer json payload to textarea
+        $('#result-content').val(JSON.stringify(data, null, 2));
+    },
+
+    fetcher_factory: function() {
+        return eval('new ' + this.fetcher_class + '()');
+    },
+
+});
+
+
 ResultAnalyticsFamilyFetcher = AbstractResultFetcher.extend({
 
     initialize: function(options) {
@@ -46,30 +73,11 @@ ResultAnalyticsFamilyFetcher = AbstractResultFetcher.extend({
 
 });
 
-ResultAnalyticsFamilyView = GenericResultView.extend({
+ResultAnalyticsFamilyView = AbstractResultView.extend({
 
     initialize: function() {
         console.log('ResultAnalyticsFamilyView.initialize');
-    },
-
-    onShow: function() {
-        this.hide_buttons();
-        this.start();
-    },
-
-    setup_data: function(data) {
-
-        // transfer json payload to textarea
-        $('#result-content').val(JSON.stringify(data, null, 2));
-
-        // don't setup buttons
-        //this.setup_numberlist_buttons(numberlist);
-
-    },
-
-    fetcher_factory: function() {
-        var fetcher = new ResultAnalyticsFamilyFetcher();
-        return fetcher;
+        this.fetcher_class = 'ResultAnalyticsFamilyFetcher';
     },
 
 });
@@ -91,7 +99,7 @@ ResultAnalyticsDaterangeFetcher = AbstractResultFetcher.extend({
 
 });
 
-ResultAnalyticsDaterangeView = GenericResultView.extend({
+ResultAnalyticsDaterangeView = AbstractResultView.extend({
 
     initialize: function(options) {
         console.log('ResultAnalyticsDaterangeView.initialize');
@@ -105,8 +113,7 @@ ResultAnalyticsDaterangeView = GenericResultView.extend({
 
     setup_data: function(data) {
 
-        // transfer json payload to textarea
-        $('#result-content').val(JSON.stringify(data, null, 2));
+        AbstractResultView.prototype.setup_data.call(this, data);
 
         // transfer numberlist to button actions
         var numberlist = [];
@@ -119,12 +126,30 @@ ResultAnalyticsDaterangeView = GenericResultView.extend({
     },
 
     fetcher_factory: function() {
-        var fetcher = new ResultAnalyticsDaterangeFetcher({kind: this.kind});
-        return fetcher;
+        return new ResultAnalyticsDaterangeFetcher({kind: this.kind});
     },
 
 });
 
+
+ResultAnalyticsDistinctApplicantFetcher = AbstractResultFetcher.extend({
+
+    get_url: function(data) {
+        var url_tpl = _.template('/api/analytics/applicants-distinct?<%= criteria_query %>&datasource=<%= datasource %>');
+        var url = url_tpl({criteria_query: $.param(data.criteria), datasource: data.datasource});
+        return url;
+    },
+
+});
+
+ResultAnalyticsDistinctApplicantView = AbstractResultView.extend({
+
+    initialize: function() {
+        console.log('ResultAnalyticsDistinctApplicantView.initialize');
+        this.fetcher_class = 'ResultAnalyticsDistinctApplicantFetcher';
+    },
+
+});
 
 
 opsChooserApp.addInitializer(function(options) {
@@ -153,6 +178,16 @@ opsChooserApp.addInitializer(function(options) {
                 _this.ui.notify_module_locked(module_name);
             }
         });
+
+        $('.analytics-applicants-distinct-button').unbind('click');
+        $('.analytics-applicants-distinct-button').click(function() {
+            if (module_available) {
+                make_modal_view(ResultAnalyticsDistinctApplicantView, _this.metadata);
+            } else {
+                _this.ui.notify_module_locked(module_name);
+            }
+        });
+
     });
 
 });

@@ -3,6 +3,7 @@
 import logging
 import datetime
 import operator
+import HTMLParser
 from arrow.arrow import Arrow
 from cornice.service import Service
 from dateutil.relativedelta import relativedelta
@@ -11,7 +12,7 @@ from transitions.core import Machine
 from elmyra.ip.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
 from elmyra.ip.access.epo.services.dpma import dpma_published_data_search
 from elmyra.ip.access.epo.services.util import make_expression
-from elmyra.ip.access.ftpro.search import ftpro_published_data_search
+from elmyra.ip.access.ftpro.search import ftpro_published_data_search, ftpro_published_data_crawl
 
 log = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ def analytics_family_handler(request):
 
 
 analytics_daterange_service = Service(
-    name='analytics-applicant-date',
+    name='analytics-daterange',
     path='/api/analytics/daterange/{kind}',
     renderer='prettyjson',
     description="Daterange analytics interface")
@@ -266,3 +267,40 @@ def query_ftpro(query, limit=50):
     total_count = int(response['meta']['MemCount'])
     log.info('query: %s, total_count: %s', query, total_count)
     return response, total_count
+
+
+
+
+analytics_applicants_distinct_service = Service(
+    name='analytics-applicants-distinct',
+    path='/api/analytics/applicants-distinct',
+    renderer='prettyjson',
+    description='Applicants distinct analytics interface')
+
+@analytics_applicants_distinct_service.get()
+def analytics_applicants_distinct_handler(request):
+    # TODO: respond with proper 4xx codes if something fails
+
+    # decode query parameters into datasource and criteria
+    expression_data = _decode_expression_from_query(request)
+
+    query = make_expression({
+        'datasource': 'ftpro',
+        'format': 'comfort',
+        'criteria': expression_data['criteria'],
+    })
+
+    results = ftpro_published_data_crawl('biblio', query, 2500)
+    #print 'results:', results
+
+    applicants = {}
+    htmlparser = HTMLParser.HTMLParser()
+    for item in results['details']:
+        applicant = item.get('applicant')
+        if applicant:
+            applicant = htmlparser.unescape(applicant)
+        applicants.setdefault(applicant, 0)
+        applicants[applicant] += 1
+
+    response = applicants
+    return response
