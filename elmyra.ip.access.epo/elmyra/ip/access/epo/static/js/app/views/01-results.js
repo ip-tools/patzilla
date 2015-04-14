@@ -61,11 +61,6 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
     className: "modal",
     template: "#result-template",
 
-    initialize: function() {
-        console.log('ResultView.initialize');
-        this.message_more = '';
-    },
-
     indicate_activity: function(active) {
         if (active) {
             this.$el.find('#result-busy').show();
@@ -144,7 +139,9 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
                 length = Object.keys(response).length;
             }
             var message = length + ' result item(s) fetched successfully.';
-            message += _this.message_more;
+            if (_this.message_more) {
+                message += _this.message_more;
+            }
             _this.user_message(message, 'success');
 
         }).fail(function(message, error) {

@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware/ui: add "applicant-distinct" analytics module
 
 0.97.9
 ======
