@@ -136,9 +136,9 @@ class SearchQueryParser:
 
         operatorProximity = Forward()
         operatorProximity << (Group(
-            operatorWord + Suppress(Literal("near,")) + Word(nums).setResultsName('distance') + operatorWord
+            operatorParenthesis + Suppress(Literal("near,")) + Word(nums).setResultsName('distance') + operatorParenthesis
         ).setResultsName("near") | Group(
-            operatorWord + Suppress(Literal("span,")) + Word(nums).setResultsName('distance') + operatorWord
+            operatorParenthesis + Suppress(Literal("span,")) + Word(nums).setResultsName('distance') + operatorParenthesis
         ).setResultsName("span") | operatorAnd)
 
         operatorOr << (Group(

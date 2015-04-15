@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware/ui: add "applicant-distinct" analytics module
+- middleware: fix edge case re. proximity operators in"FulltextPRO "expressions
 
 0.97.9
 ======
