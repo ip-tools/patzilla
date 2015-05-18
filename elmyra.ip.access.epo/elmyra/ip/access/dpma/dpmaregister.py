@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2011,2012,2013 ***REMOVED***
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2014,2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import sys
 import re
 import logging
@@ -137,8 +137,8 @@ class DpmaRegisterAccess:
 
         # 2. submit form
         # http://wwwsearch.sourceforge.net/ClientForm/
-        #br.select_form(nr=0)
-        self.browser.select_form(name='form')
+        self.browser.select_form(nr=0)
+        #self.browser.select_form(name='form')
         self.browser['akzPn'] = patent_number
         response = self.browser.submit()
 

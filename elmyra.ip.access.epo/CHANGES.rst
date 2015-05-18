@@ -4,8 +4,12 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.97.10
+=======
 - middleware/ui: add "applicant-distinct" analytics module
 - middleware: fix edge case re. proximity operators in"FulltextPRO "expressions
+- middleware: DPMA register: fix form selection (don't select by name, but by number)
 
 0.97.9
 ======
