@@ -22,6 +22,13 @@ logger = logging.getLogger(__name__)
 class DpmaDepatisnetAccess:
 
     def __init__(self):
+
+        # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
+        # https://bugs.python.org/issue22417
+        if sys.hexversion >= 0x02070900:
+            import ssl
+            ssl._create_default_https_context = ssl._create_unverified_context
+
         # http://wwwsearch.sourceforge.net/mechanize/
         self.browser = mechanize.Browser()
         self.browser.set_cookiejar(cookielib.LWPCookieJar())
