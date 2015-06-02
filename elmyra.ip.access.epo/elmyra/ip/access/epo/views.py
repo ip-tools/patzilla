@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2013,2014 Andreas Motl, Elmyra UG
-from mongoengine.errors import NotUniqueError
+# (c) 2013-2015 Andreas Motl, Elmyra UG
+import re
 import os
 import logging
 from pkg_resources import resource_filename
+from mongoengine.errors import NotUniqueError
 from elmyra.ip.access.dpma.dpmaregister import DpmaRegisterAccess
 from elmyra.ip.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
 from elmyra.ip.util.render.phantomjs import render_pdf
@@ -123,22 +124,80 @@ def opsbrowser_quick(request):
     value = request.matchdict.get('value')
     value2 = request.matchdict.get('value2')
 
-    query = compute_query(field, value, value2)
+    query = compute_query(field, value, value2, parameters=request.params)
     print 'quick:', query
     return get_redirect_query(request, query)
 
-def compute_query(field, value, value2=None):
+def compute_query(field, value, value2=None, **kwargs):
 
     if field == 'country':
         field = 'pn'
 
     if field in ['cl', 'ipc', 'ic', 'cpc', 'cpci', 'cpca']:
-        value = value.replace('-', '/')
+        value = value.replace(u'-', u'/')
 
-    if ' ' in value:
-        value = '"{0}"'.format(value)
+    quotable = True
+    if field in ['pa', 'applicant']:
+        if kwargs.get('parameters', {}).get('smart'):
+            quotable = False
 
-    query = '{field}={value}'.format(**locals())
+            # apply blacklist
+            blacklist = [
+                u'GmbH & Co. KG',
+                u'GmbH',
+                u' KG',
+                u' AG',
+                u'& Co.',
+            ]
+            replacements = {
+                u' and ': u' ',
+                u' or ':  u' ',
+                u' not ': u' ',
+            }
+            for black in blacklist:
+                pattern = re.compile(re.escape(black), re.IGNORECASE)
+                value = pattern.sub(u'', value).strip()
+            for replacement_key, replacement_value in replacements.iteritems():
+                #value = value.replace(replacement_key, replacement_value)
+                pattern = re.compile(replacement_key, re.IGNORECASE)
+                value = pattern.sub(replacement_value, value).strip()
+
+            # make query expression
+            parts_raw = re.split(u'[ -]*', value)
+            umlaut_map = {
+                u'ä': u'ae',
+                u'ö': u'oe',
+                u'ü': u'ue',
+                u'Ä': u'Ae',
+                u'Ö': u'Oe',
+                u'Ü': u'Ue',
+                u'ß': u'ss',
+            }
+            def replace_parts(thing):
+                for umlaut, replacement in umlaut_map.iteritems():
+                    thing = thing.replace(umlaut, replacement)
+                return thing
+
+            parts = []
+            for part in parts_raw:
+
+                # "Alfred H. Schütte" => Alfred Schütte
+                if re.match(u'^(\w\.)+$', part):
+                    continue
+
+                part_normalized = replace_parts(part)
+                if part != part_normalized:
+                    part = u'({} or {})'.format(part, part_normalized)
+                parts.append(part)
+
+            value = u' and '.join(parts)
+            #value = u'({})'.format(value)
+
+
+    if quotable and u' ' in value:
+        value = u'"{0}"'.format(value)
+
+    query = u'{field}={value}'.format(**locals())
 
     if field in ['pd', 'publicationdate']:
         if 'W' in value:

@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.98.0
+======
+- middleware: smart normalization for applicant names on direct url entry
+
 0.97.10
 =======
 - middleware/ui: add "applicant-distinct" analytics module
