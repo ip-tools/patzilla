@@ -11,6 +11,9 @@ def now():
 def date_iso(date):
     return Arrow.fromdatetime(date).format('YYYY-MM-DD')
 
+def date_iso_compact(date):
+    return Arrow.fromdatetime(date).format('YYYYMMDD')
+
 def date_german(date):
     return Arrow.fromdatetime(date).format('DD.MM.YYYY')
 
@@ -64,6 +67,11 @@ def unixtime_to_human(unixtime):
 def iso_to_german(date):
     if '-' in date:
         date = date_german(parse_date_iso(date))
+    return date
+
+def iso_to_iso_compact(date):
+    if '-' in date:
+        date = date_iso_compact(parse_date_iso(date))
     return date
 
 def parse_date_within(value):

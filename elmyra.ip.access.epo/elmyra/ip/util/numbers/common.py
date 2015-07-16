@@ -78,6 +78,13 @@ def split_patent_number(patent_number):
         # JPS5647318A, JP00000S602468B2
         pattern = '^(\D\D)([SH\d|-]+?)(\D.?)?(_.+)?$'
 
+    elif patent_number.startswith('IN'):
+        """
+        examples:
+        IN2011MU02282A, IN2009KN02715A
+        """
+        pattern = '^(\D\D)(\d+\D*?\d+)(\D.?)?(_.+)?$'
+
     else:
         patent_number = modify_invalid_patent_number(patent_number)
 
@@ -112,7 +119,7 @@ def split_patent_number(patent_number):
         return parts
 
     else:
-        logger.warning('Could not parse patent number "{0}"'.format(patent_number))
+        logger.error('Could not parse patent number "{0}"'.format(patent_number))
 
 
 def split_patent_number_more(patent):

@@ -108,6 +108,9 @@ class IpcDecoder:
     def formatIPCR(self):
         return self.formatFlexible(group_subgroup_delimiter='', group_padding='0', subgroup_padding='0')
 
+    def formatIFI(self):
+        return self.formatFlexible(group_subgroup_delimiter='', group_padding='0', subgroup_padding='')
+
     def formatOPS(self):
         return self.formatFlexible(class_padding='0', group_subgroup_delimiter='/', group_padding='', subgroup_padding='')
 

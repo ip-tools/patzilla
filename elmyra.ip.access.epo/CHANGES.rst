@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.99.0
+======
+
+
 0.98.0
 ======
 - middleware: smart normalization for applicant names on direct url entry

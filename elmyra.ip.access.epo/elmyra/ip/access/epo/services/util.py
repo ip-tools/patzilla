@@ -7,6 +7,7 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
 from elmyra.ip.access.google.search import GooglePatentsExpression
+from elmyra.ip.access.serviva.expression import ServivaExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.util.cql.util import pair_to_cql
 from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
@@ -35,6 +36,7 @@ void_service = Service(
 def query_expression_util_handler(request):
 
     # TODO: split functionality between ops/depatisnet, google and ftpro/ftpro
+    # TODO: improve error handling
 
     data = request.json
 
@@ -90,6 +92,14 @@ def make_expression(data):
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
 
+                elif datasource == 'sdp':
+                    expression_part = ServivaExpression.pair_to_solr(key, value, modifiers)
+                    if expression_part:
+                        if expression_part.has_key('keywords'):
+                            keywords += expression_part['keywords']
+                        else:
+                            keywords += keywords_from_boolean_expression(key, value)
+
                 error_tpl = u'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
@@ -109,10 +119,12 @@ def make_expression(data):
     log.info("keywords: %s", keywords)
     request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
-
     # assemble complete expression from parts, connect them with AND operators
     if datasource in ['ops', 'depatisnet']:
         expression = ' and '.join(expression_parts)
+
+    elif datasource == 'sdp':
+        expression = ' AND '.join(expression_parts)
 
     elif datasource == 'ftpro':
         if expression_parts:

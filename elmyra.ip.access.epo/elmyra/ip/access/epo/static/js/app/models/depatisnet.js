@@ -5,36 +5,13 @@ DepatisnetSearch = DatasourceSearch.extend({
     url: '/api/depatisnet/published-data/search',
 });
 
-DepatisnetCrawler = Marionette.Controller.extend({
+DepatisnetCrawler = DatasourceCrawler.extend({
 
     initialize: function(options) {
         log('DepatisnetCrawler.initialize');
         options = options || {};
-        this.query = options.query;
-        this.constituents = options.constituents;
-    },
-
-    start: function() {
-        var deferred = $.Deferred();
-        var url_tpl = _.template('/api/depatisnet/published-data/crawl/<%= constituents %>?query=<%= query %>');
-        var url = url_tpl({constituents: this.constituents, query: encodeURIComponent(this.query)});
-        var _this = this;
-        $.ajax({url: url, async: true})
-            .success(function(payload) {
-                if (payload) {
-                    if (_this.constituents == 'pub-number') {
-                        var numberlist = payload['numbers'];
-                        deferred.resolve(numberlist);
-                    } else {
-                        deferred.reject('Unknown constituents "' + _this.constituents + '"');
-                    }
-                } else {
-                    deferred.reject('Empty response');
-                }
-            }).error(function(error) {
-                deferred.reject('API failed: ' + JSON.stringify(error));
-            });
-        return deferred;
+        options.datasource = 'depatisnet';
+        this.__proto__.constructor.__super__.initialize.apply(this, arguments);
     },
 
 });

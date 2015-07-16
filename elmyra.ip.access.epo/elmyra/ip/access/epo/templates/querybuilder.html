@@ -143,6 +143,10 @@
                         <img src="/static/img/icons/pro.svg" class="square"/>
                       "FulltextPRO "
                     </button>
+                    <button class="btn hide" data-value="sdp">
+                        <div class="icon icon-globe icon-large" style="color: #3781b7;"/>
+                        SDP
+                    </button>
                 </div>
             </div>
 
@@ -210,7 +214,7 @@
                                     <div class="controls">
                                         <div class="input-prepend">
                                             <span class="add-on add-on-label">Class</span>
-                                            <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" type="text">
+                                            <input name="class" class="input-xlarge" data-placeholder-multi="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -261,7 +265,7 @@
                                     <br/>
                                     <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
                                     <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
-                                    <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="claim">Claim</button>
+                                    <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
                                     <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
                                 </div>
                             </div>
@@ -354,7 +358,7 @@
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-cog"></i>
                         &nbsp;
-                        Analytics
+                        Analytics (testing)
                     </button>
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
@@ -395,4 +399,24 @@
 
     </div>
 
+</script>
+
+<script id="cql-field-chooser-entry" type="text/x-underscore-template">
+<%text>
+
+    <div class="row-fluid">
+        <div class="span5 strong">
+            <%= label %>
+        </div>
+        <div class="span4">
+            <%= _(fields).first() %>
+            <br/>
+            <small><%= _(fields).rest(1).join('<br/>') %></small>
+        </div>
+        <div class="span3">
+            <%= more %>
+        </div>
+    </div>
+
+</%text>
 </script>

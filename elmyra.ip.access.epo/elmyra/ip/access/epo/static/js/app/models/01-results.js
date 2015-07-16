@@ -14,6 +14,9 @@ ResultCollection = Backbone.Collection.extend({
     model: function(attrs, options) {
         if (attrs.upstream_provider == 'ftpro') {
             return new FulltextProResultEntry(attrs, options);
+        } else if (attrs.upstream_provider == 'sdp') {
+            log('make SdpResultEntry');
+            return new SdpResultEntry(attrs, options);
         } else {
             console.error('Could not create result model instance for upstream provider "' + attrs.upstream_provider + '"');
         }
