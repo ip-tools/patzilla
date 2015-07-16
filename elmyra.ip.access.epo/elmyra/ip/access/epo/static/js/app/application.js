@@ -196,8 +196,37 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             });
 
+        } else if (datasource == 'sdp') {
+
+            this.trigger('search:before', search_info);
+
+            // make the pager display the original query
+            this.metadata.set('query_origin', query);
+
+            var sdpsearch = new SdpSearch();
+            sdpsearch.perform(query, options).done(function(response) {
+                options = options || {};
+
+                console.log('sdp response:', response);
+
+                self.propagate_datasource_message(response);
+
+                // propagate keywords
+                self.metadata.set('keywords', sdpsearch.keywords);
+
+                var publication_numbers = response['details'];
+                var hits = response['meta']['pager']['totalEntries'];
+                options['remote_limit'] = response['meta']['Limit'];
+
+                self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
+                    // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
+                    self.propagate_datasource_message(response);
+                });
+
+            });
+
         } else {
-            this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon2: 'icon-copy'});
+            this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'icon-search'});
         }
 
     },

@@ -46,7 +46,7 @@ class BackboneModelParameterFiddler(object):
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, FulltextPRO',
+            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, FulltextPRO, SDP',
             'ui.productname': 'elmyra <i class="circle-icon">IP</i> suite',
         }
 
@@ -141,7 +141,7 @@ class BackboneModelParameterFiddler(object):
                 params.setdefault('setting.ui.page.statusline', '')
                 params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
 
-        # 2.a compute whether"FulltextPRO "datasource is enabled
+        # 2.a compute whether datasource "FulltextPRO" is enabled
         ftpro_allowed_hosts = [
             'localhost',
             'offgrid',
@@ -150,8 +150,18 @@ class BackboneModelParameterFiddler(object):
             params.get('request.host_name') in ftpro_allowed_hosts or \
             'ftpro' in params.get('user.modules', [])
 
-        # 2.b compute whether Google datasource is allowed
+        # 2.b compute whether datasource "Serviva Data Proxy" is enabled
+        sdp_allowed_hosts = [
+            'localhost',
+            'offgrid',
+            ]
+        params['sdp_enabled'] = \
+            params.get('request.host_name') in sdp_allowed_hosts or \
+            'sdp' in params.get('user.modules', [])
+
+        # 2.c compute whether Google datasource is allowed
         params['google_allowed'] = params.get('request.host_name') in staging_hosts
+
 
         # 3. add badges for staging- and development-environments
         host_name = params.get('request.host_name')

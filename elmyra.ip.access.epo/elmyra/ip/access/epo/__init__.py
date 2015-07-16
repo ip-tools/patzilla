@@ -25,6 +25,7 @@ def main(global_config, **settings):
     config.include("elmyra.ip.util.database.beaker_mongodb_gridfs")
     config.include("***REMOVED***")
     config.include("elmyra.ip.access.ftpro.concordance")
+    config.include("***REMOVED***")
     config.include("elmyra.web.pyramid")
     config.include(".client")
     config.include(".opaquelinks")

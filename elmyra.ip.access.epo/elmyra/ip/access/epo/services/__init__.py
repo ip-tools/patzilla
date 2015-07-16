@@ -4,6 +4,7 @@ import json
 import logging
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import should_be_quoted
+from elmyra.ip.util.expression.keywords import clean_keyword
 from elmyra.ip.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)

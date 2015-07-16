@@ -48,6 +48,10 @@ ResultNumbersView = GenericResultView.extend({
             crawler_class = FulltextProCrawler;
             this.crawler_limit = 5000;
 
+        } else if (datasource == 'sdp') {
+            crawler_class = SdpCrawler;
+            this.crawler_limit = 50000;
+
         } else {
             this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
             return;

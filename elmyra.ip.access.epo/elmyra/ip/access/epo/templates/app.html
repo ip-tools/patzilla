@@ -301,28 +301,6 @@ ${ h.fiddler.render() | n }
     </%text>
 </script>
 
-
-<script id="cql-field-chooser-entry" type="text/x-underscore-template">
-<%text>
-
-    <div class="row-fluid">
-        <div class="span5 strong">
-            <%= label %>
-        </div>
-        <div class="span4">
-            <%= _(fields).first() %>
-            <br/>
-            <small><%= _(fields).rest(1).join('<br/>') %></small>
-        </div>
-        <div class="span3">
-            <%= more %>
-        </div>
-    </div>
-
-</%text>
-</script>
-
-
 <!-- user interface: templates -->
 <%include file="querybuilder.html"/>
 <%include file="basket.html"/>
@@ -401,6 +379,7 @@ ${ h.fiddler.render() | n }
     <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
     <script type="text/javascript" src="/static/js/app/models/google.js"></script>
     <script type="text/javascript" src="/static/js/app/models/ftpro.js"></script>
+    <script type="text/javascript" src="/static/js/app/models/sdp.js"></script>
     <script type="text/javascript" src="/static/js/app/views/01-results.js"></script>
     <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
     <script type="text/javascript" src="/static/js/app/views/ops.js"></script>

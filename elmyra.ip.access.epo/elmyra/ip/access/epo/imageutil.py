@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # (c) 2011 ***REMOVED***
-# (c) 2013-2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import os
 import logging
 import StringIO
 import subprocess
 import datetime
 from tempfile import NamedTemporaryFile
+from cornice.util import to_list
 
 
 log = logging.getLogger(__name__)
@@ -249,7 +250,7 @@ def pdf_set_metadata(pdf_payload, metadata):
 
 def pdf_make_metadata(title, producer, pagecount, page_sections=None):
 
-    page_sections = page_sections or []
+    page_sections = page_sections and to_list(page_sections) or []
 
     date = pdf_now()
 

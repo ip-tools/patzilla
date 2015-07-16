@@ -1,78 +1,90 @@
 // -*- coding: utf-8 -*-
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
-function cql_field_chooser_text(label, fields, more) {
+function _field_text(label, fields, more, options) {
 
     // short-circuit enrichment
     //return label;
 
+    fields = to_list(fields);
+    options = options || {};
+
+    _.defaults(options, {'sep': '='});
+    var separator = options.sep;
+
     var tpl = _.template($('#cql-field-chooser-entry').html());
-    fields = fields.map(function(item) { return item + '=' });
+    fields = fields.map(function(item) { return item + separator });
     var html = tpl({label: label, fields: fields, more: more});
     return html;
+}
+
+function _field_text_sdp(label, fields, more, options) {
+    options = options || {};
+    options.sep = ':';
+    return _field_text(label, fields, more, options);
 }
 
 var OPS_CQL_FIELDS = [
     {
         text: '<h4>Popular</h4>',
         children: [
-            { id: 'num', text: cql_field_chooser_text('Publication-, application- or<br/>priority number', ['num'], '(10, 11, 21, 31)') },
-            { id: 'txt', text: cql_field_chooser_text('Title, abstract, inventor-, or applicant name', ['txt'], '(54, 57, 72, 71, 73)') },
-            { id: 'cl', text: cql_field_chooser_text('CPC or IPC8 class', ['cl'], '') },
+            { id: 'num', text: _field_text('Publication-, application- or<br/>priority number', ['num'], '(10, 11, 21, 31)') },
+            { id: 'txt', text: _field_text('Title, abstract, inventor-, or applicant name', ['txt'], '(54, 57, 72, 71, 73)') },
+            { id: 'cl', text: _field_text('CPC or IPC8 class', ['cl'], '') },
         ],
     },
     {
         text: '<h4>Publication</h4>',
         children: [
-            { id: 'pn', text: cql_field_chooser_text('Publication number', ['pn', 'publicationnumber'], '(10, 11)') },
-            { id: 'pd', text: cql_field_chooser_text('Publication date', ['pd', 'publicationdate'], '') },
-            { id: 'pa', text: cql_field_chooser_text('Applicant', ['pa', 'applicant'], '(71, 73)') },
-            { id: 'in', text: cql_field_chooser_text('Inventor', ['in', 'inventor'], '(72)') },
-            { id: 'ia', text: cql_field_chooser_text('Inventor or applicant', ['ia', 'inventorandapplicant'], '(72, 71, 73)') },
-            { id: 'spn', text: cql_field_chooser_text('Publication number<br/><small>in epodoc format</small>', ['spn'], '') },
+            { id: 'pn', text: _field_text('Publication number', ['pn', 'publicationnumber'], '(10, 11)') },
+            { id: 'pd', text: _field_text('Publication date', ['pd', 'publicationdate'], '(40)') },
+            { id: 'pa', text: _field_text('Applicant', ['pa', 'applicant'], '(71, 73)') },
+            { id: 'in', text: _field_text('Inventor', ['in', 'inventor'], '(72)') },
+            { id: 'ia', text: _field_text('Inventor or applicant', ['ia', 'inventorandapplicant'], '(72, 71, 73)') },
+            { id: 'spn', text: _field_text('Publication number<br/><small>in epodoc format</small>', ['spn'], '') },
         ],
     },
     {
         text: '<h4>Text</h4>',
         children: [
-            { id: 'ti', text: cql_field_chooser_text('Title', ['ti', 'title'], '(54)') },
-            { id: 'ab', text: cql_field_chooser_text('Abstract', ['ab', 'abstract'], '(57)') },
-            { id: 'ta', text: cql_field_chooser_text('Title or abstract', ['ta', 'titleandabstract'], '(54, 57)') },
-            { id: 'txt', text: cql_field_chooser_text('Title, abstract, inventor-, or applicant name', ['txt'], '(54, 57, 72, 71, 73)') },
+            { id: 'ti', text: _field_text('Title', ['ti', 'title'], '(54)') },
+            { id: 'ab', text: _field_text('Abstract', ['ab', 'abstract'], '(57)') },
+            { id: 'ta', text: _field_text('Title or abstract', ['ta', 'titleandabstract'], '(54, 57)') },
+            { id: 'txt', text: _field_text('Title, abstract, inventor-, or applicant name', ['txt'], '(54, 57, 72, 71, 73)') },
         ],
     },
     {
         text: '<h4>Application, priority and family</h4>',
         children: [
-            { id: 'ap', text: cql_field_chooser_text('Application number', ['ap', 'applicantnumber'], '(21)') },
-            { id: 'sap', text: cql_field_chooser_text('Application number<br/><small>in epodoc format</small>', ['sap'], '') },
-            { id: 'pr', text: cql_field_chooser_text('Priority number', ['pr', 'prioritynumber'], '(31)') },
-            { id: 'spr', text: cql_field_chooser_text('Priority number<br/><small>in epodoc format</small>', ['spr'], '') },
-            { id: 'famn', text: cql_field_chooser_text('Family identifier (simple)', ['famn'], '') },
+            { id: 'ap', text: _field_text('Application number', ['ap', 'applicantnumber'], '(21)') },
+            { id: 'sap', text: _field_text('Application number<br/><small>in epodoc format</small>', ['sap'], '') },
+            { id: 'pr', text: _field_text('Priority number', ['pr', 'prioritynumber'], '(31)') },
+            { id: 'spr', text: _field_text('Priority number<br/><small>in epodoc format</small>', ['spr'], '') },
+            { id: 'famn', text: _field_text('Family identifier (simple)', ['famn'], '') },
         ],
     },
     {
         text: '<h4>Classification</h4>',
         children: [
-            { id: 'cpc', text: cql_field_chooser_text('CPC classification<br/><small>(invention and additional)</small>', ['cpc', 'cpci', 'cpca'], '') },
-            { id: 'ipc', text: cql_field_chooser_text('IPC8 class', ['ipc', 'ic'], '') },
-            { id: 'ci', text: cql_field_chooser_text('IPC8 core invention class', ['ci'], '') },
-            { id: 'cn', text: cql_field_chooser_text('IPC8 core additional class<br/><small>(non-invention)</small>', ['cn'], '') },
-            { id: 'ai', text: cql_field_chooser_text('IPC8 advanced invention class', ['ai'], '') },
-            { id: 'an', text: cql_field_chooser_text('IPC8 advanced additional class<br/><small>(non-invention)</small>', ['an'], '') },
-            { id: 'a', text: cql_field_chooser_text('IPC8 advanced class', ['a'], '') },
-            { id: 'c', text: cql_field_chooser_text('IPC8 core class', ['c'], '') },
-            { id: 'cl', text: cql_field_chooser_text('CPC or IPC8 class', ['cl'], '') },
+            { id: 'cpc', text: _field_text('CPC classification<br/><small>(invention and additional)</small>', ['cpc', 'cpci', 'cpca'], '') },
+            { id: 'ipc', text: _field_text('IPC8 class', ['ipc', 'ic'], '') },
+            { id: 'ci', text: _field_text('IPC8 core invention class', ['ci'], '') },
+            { id: 'cn', text: _field_text('IPC8 core additional class<br/><small>(non-invention)</small>', ['cn'], '') },
+            { id: 'ai', text: _field_text('IPC8 advanced invention class', ['ai'], '') },
+            { id: 'an', text: _field_text('IPC8 advanced additional class<br/><small>(non-invention)</small>', ['an'], '') },
+            { id: 'a', text: _field_text('IPC8 advanced class', ['a'], '') },
+            { id: 'c', text: _field_text('IPC8 core class', ['c'], '') },
+            { id: 'cl', text: _field_text('CPC or IPC8 class', ['cl'], '') },
         ],
     },
     {
         text: '<h4>Citations</h4>',
         children: [
-            { id: 'ct', text: cql_field_chooser_text('Cited document number', ['ct', 'citation'], '(56)') },
-            { id: 'ex', text: cql_field_chooser_text('Cited document number<br/><small>during examination</small>', ['ex'], '') },
-            { id: 'op', text: cql_field_chooser_text('Cited document number<br/><small>during opposition</small>', ['op'], '') },
-            { id: 'rf', text: cql_field_chooser_text('Cited document number<br/><small>provided by applicant</small>', ['rf'], '') },
-            { id: 'oc', text: cql_field_chooser_text('Another cited document number', ['oc'], '') },
+            { id: 'ct', text: _field_text('Cited document number', ['ct', 'citation'], '(56)') },
+            { id: 'ex', text: _field_text('Cited document number<br/><small>during examination</small>', ['ex'], '') },
+            { id: 'op', text: _field_text('Cited document number<br/><small>during opposition</small>', ['op'], '') },
+            { id: 'rf', text: _field_text('Cited document number<br/><small>provided by applicant</small>', ['rf'], '') },
+            { id: 'oc', text: _field_text('Another cited document number', ['oc'], '') },
         ],
     },
 ];
@@ -81,88 +93,229 @@ var DEPATISNET_CQL_FIELDS = [
     {
         text: '<h4>Publication</h4>',
         children: [
-            { id: 'pn', text: cql_field_chooser_text('Publication number', ['pn'], '(10, 11)') },
-            { id: 'pc', text: cql_field_chooser_text('Country of publication', ['pc'], '(19)') },
-            { id: 'pub', text: cql_field_chooser_text('Publication date', ['pub'], '') },
-            { id: 'py', text: cql_field_chooser_text('Publication year', ['py'], '') },
-            { id: 'pa', text: cql_field_chooser_text('Applicant/Owner', ['pa'], '(71, 73)') },
-            { id: 'in', text: cql_field_chooser_text('Inventor', ['in'], '(72)') },
-            { id: 'pcod', text: cql_field_chooser_text('Kind code', ['pcod'], '(12)') },
+            { id: 'pn', text: _field_text('Publication number', ['pn'], '(10, 11)') },
+            { id: 'pc', text: _field_text('Country of publication', ['pc'], '(19)') },
+            { id: 'pub', text: _field_text('Publication date', ['pub'], '(40)') },
+            { id: 'py', text: _field_text('Publication year', ['py'], '(40)') },
+            { id: 'pa', text: _field_text('Applicant/Owner', ['pa'], '(71, 73)') },
+            { id: 'in', text: _field_text('Inventor', ['in'], '(72)') },
+            { id: 'pcod', text: _field_text('Kind code', ['pcod'], '(12)') },
         ],
     },
     {
         text: '<h4>Text</h4>',
         children: [
-            { id: 'ti', text: cql_field_chooser_text('Title', ['ti'], '(54)') },
-            { id: 'ab', text: cql_field_chooser_text('Abstract', ['ab'], '(57)') },
-            { id: 'de', text: cql_field_chooser_text('Description', ['de'], '') },
-            { id: 'cl', text: cql_field_chooser_text('Claims', ['cl'], '(57)') },
-            { id: 'bi', text: cql_field_chooser_text('Full text data', ['bi']) },
+            { id: 'ti', text: _field_text('Title', ['ti'], '(54)') },
+            { id: 'ab', text: _field_text('Abstract', ['ab'], '(57)') },
+            { id: 'de', text: _field_text('Description', ['de'], '') },
+            { id: 'cl', text: _field_text('Claims', ['cl'], '(57)') },
+            { id: 'bi', text: _field_text('Full text data', ['bi']) },
         ],
     },
     {
         text: '<h4>Application</h4>',
         children: [
-            { id: 'an', text: cql_field_chooser_text('Application number', ['ap'], '(21)') },
-            { id: 'ac', text: cql_field_chooser_text('Country of application', ['ac'], '') },
-            { id: 'ad', text: cql_field_chooser_text('Application date', ['ad'], '(22, 96)') },
-            { id: 'ay', text: cql_field_chooser_text('Application year', ['ay'], '') },
+            { id: 'an', text: _field_text('Application number', ['ap'], '(21)') },
+            { id: 'ac', text: _field_text('Country of application', ['ac'], '') },
+            { id: 'ad', text: _field_text('Application date', ['ad'], '(22, 96)') },
+            { id: 'ay', text: _field_text('Application year', ['ay'], '') },
         ],
     },
     {
         text: '<h4>Priority</h4>',
         children: [
-            { id: 'prn', text: cql_field_chooser_text('Priority number', ['prn'], '(31)') },
-            { id: 'prc', text: cql_field_chooser_text('Country of priority', ['prc'], '(33)') },
-            { id: 'prd', text: cql_field_chooser_text('Priority date', ['prd'], '(32)') },
-            { id: 'pry', text: cql_field_chooser_text('Priority year', ['pry'], '') },
+            { id: 'prn', text: _field_text('Priority number', ['prn'], '(31)') },
+            { id: 'prc', text: _field_text('Country of priority', ['prc'], '(33)') },
+            { id: 'prd', text: _field_text('Priority date', ['prd'], '(32)') },
+            { id: 'pry', text: _field_text('Priority year', ['pry'], '') },
         ],
     },
     {
         text: '<h4>Citations</h4>',
         children: [
-            { id: 'ct', text: cql_field_chooser_text('Cited documents', ['ct'], '(56)') },
-            { id: 'ctnp', text: cql_field_chooser_text('Cited non-patent literature', ['ctnp'], '(56)') },
+            { id: 'ct', text: _field_text('Cited documents', ['ct'], '(56)') },
+            { id: 'ctnp', text: _field_text('Cited non-patent literature', ['ctnp'], '(56)') },
         ],
     },
     {
         text: '<h4>All IPC</h4>',
         children: [
-            { id: 'ic', text: cql_field_chooser_text('All IPC fields', ['ic'], '') },
+            { id: 'ic', text: _field_text('All IPC fields', ['ic'], '') },
         ],
     },
     {
         text: '<h4>Bibliographic IPC</h4>',
         children: [
-            { id: 'icb', text: cql_field_chooser_text('Bibliographic IPC', ['icb'], '') },
-            { id: 'icm', text: cql_field_chooser_text('IPC main class', ['icm'], '(51)') },
-            { id: 'ics', text: cql_field_chooser_text('IPC secondary class', ['ics'], '(51)') },
-            { id: 'ica', text: cql_field_chooser_text('IPC additional class', ['ica'], '') },
-            { id: 'ici', text: cql_field_chooser_text('IPC index classes', ['ici'], '') },
-            { id: 'icmv', text: cql_field_chooser_text('IPC main class version', ['icmv'], '') },
-            { id: 'icsv', text: cql_field_chooser_text('IPC secondary class version', ['icsv'], '') },
-            { id: 'icav', text: cql_field_chooser_text('IPC additional class version', ['icav'], '') },
-            { id: 'icml', text: cql_field_chooser_text('IPC main class level', ['icml'], '') },
-            { id: 'icsl', text: cql_field_chooser_text('IPC secondary class level', ['icsl'], '') },
-            { id: 'ical', text: cql_field_chooser_text('IPC additional class level', ['ical'], '') },
+            { id: 'icb', text: _field_text('Bibliographic IPC', ['icb'], '') },
+            { id: 'icm', text: _field_text('IPC main class', ['icm'], '(51)') },
+            { id: 'ics', text: _field_text('IPC secondary class', ['ics'], '(51)') },
+            { id: 'ica', text: _field_text('IPC additional class', ['ica'], '') },
+            { id: 'ici', text: _field_text('IPC index classes', ['ici'], '') },
+            { id: 'icmv', text: _field_text('IPC main class version', ['icmv'], '') },
+            { id: 'icsv', text: _field_text('IPC secondary class version', ['icsv'], '') },
+            { id: 'icav', text: _field_text('IPC additional class version', ['icav'], '') },
+            { id: 'icml', text: _field_text('IPC main class level', ['icml'], '') },
+            { id: 'icsl', text: _field_text('IPC secondary class level', ['icsl'], '') },
+            { id: 'ical', text: _field_text('IPC additional class level', ['ical'], '') },
         ],
     },
     {
         text: '<h4>Reclassified IPC</h4>',
         children: [
-            { id: 'mcd', text: cql_field_chooser_text('Reclassified IPC', ['mcd'], '') },
-            { id: 'mcm', text: cql_field_chooser_text('MCD main class', ['mcm'], '') },
-            { id: 'mcs', text: cql_field_chooser_text('MCD secondary class', ['mcs'], '') },
-            { id: 'mca', text: cql_field_chooser_text('MCD additional class', ['mca'], '') },
-            { id: 'mcml', text: cql_field_chooser_text('MCD main class level', ['mcml'], '') },
-            { id: 'mcsl', text: cql_field_chooser_text('MCD secondary class level', ['mcsl'], '') },
-            { id: 'mcal', text: cql_field_chooser_text('MCD additional class level', ['mcal'], '') },
+            { id: 'mcd', text: _field_text('Reclassified IPC', ['mcd'], '') },
+            { id: 'mcm', text: _field_text('MCD main class', ['mcm'], '') },
+            { id: 'mcs', text: _field_text('MCD secondary class', ['mcs'], '') },
+            { id: 'mca', text: _field_text('MCD additional class', ['mca'], '') },
+            { id: 'mcml', text: _field_text('MCD main class level', ['mcml'], '') },
+            { id: 'mcsl', text: _field_text('MCD secondary class level', ['mcsl'], '') },
+            { id: 'mcal', text: _field_text('MCD additional class level', ['mcal'], '') },
         ],
     },
     {
         text: '<h4>Search file IPC</h4>',
         children: [
-            { id: 'icp', text: cql_field_chooser_text('Search file IPC', ['icp'], '') },
+            { id: 'icp', text: _field_text('Search file IPC', ['icp'], '') },
         ],
     },
 ];
+
+var SDP_CQL_FIELDS = [
+    {
+        text: '<h4>Popular</h4>',
+        children: [
+            { id: 'pn', text: _field_text_sdp('Publication identifier', 'pn', '(10, 11)') },
+            { id: 'text', text: _field_text_sdp('Title, Abstract, Description, Claims', 'text', '(54, 57)') },
+            { id: 'ic', text: _field_text_sdp('International classification', 'ic', '(51)') },
+            { id: 'cpc', text: _field_text_sdp('CP Classification', 'cpc', '') },
+        ],
+    },
+    {
+        // Publication Information
+        text: '<h4>Publication</h4>',
+        children: [
+            { id: 'pn', text: _field_text_sdp('Publication identifier', 'pn', '(10, 11)') },
+            { id: 'pnlang', text: _field_text_sdp('Publication language', 'pnlang', '(26)') },
+            { id: 'pd', text: _field_text_sdp('Publication date', 'pd', '(40)') },
+        ],
+    },
+    {
+        // Parties
+        text: '<h4>Parties</h4>',
+        children: [
+            { id: 'pa', text: _field_text_sdp('Applicants, Assignees', 'pa', '(71, 73)') },
+            { id: 'inv', text: _field_text_sdp('Inventors', 'inv', '(72)') },
+            { id: 'apl', text: _field_text_sdp('Applicants', 'apl', '(71)') },
+            { id: 'asg', text: _field_text_sdp('Assignees', 'asg', '(73)') },
+            { id: 'reasg', text: _field_text_sdp('Reassignees', 'reasg', '(73)') },
+            { id: 'agt', text: _field_text_sdp('Agents', 'agt', '(74)') },
+            { id: 'cor', text: _field_text_sdp('Correspondent name', 'cor', '') },
+        ],
+    },
+    {
+        // Text fields
+        text: '<h4>Text</h4>',
+        children: [
+            { id: 'text', text: _field_text_sdp('Title, Abstract, Description, Claims', 'text', '(54, 57)') },
+            { id: 'tac', text: _field_text_sdp('Title, Abstract, Claims', 'tac', '(54, 57)') },
+            { id: 'ttl', text: _field_text_sdp('Title', 'ttl', '(54)') },
+            { id: 'ab', text: _field_text_sdp('Abstract', 'ab', '(57)') },
+            { id: 'desc', text: _field_text_sdp('Description', 'desc', '(57)') },
+            { id: 'clm', text: _field_text_sdp('Claims', 'clm', '(57)') },
+            { id: 'aclm', text: _field_text_sdp('Amended claims', 'clm', '(57)') },
+        ],
+    },
+    {
+        // Classifications
+        text: '<h4>Classifications</h4>',
+        children: [
+            { id: 'ic', text: _field_text_sdp('International classification', 'ic', '(51)') },
+            { id: 'cpc', text: _field_text_sdp('CP classification', 'cpc', '') },
+            { id: 'ecla', text: _field_text_sdp('ECLA classification', 'ecla', '') },
+            { id: 'uc', text: _field_text_sdp('US classification', 'uc', '') },
+            { id: 'fi', text: _field_text_sdp('FI classification', 'fi', '') },
+            { id: 'fterm', text: _field_text_sdp('F-Terms', 'fterm', '') },
+        ],
+    },
+    {
+        text: '<h4>Filing/Application and priority</h4>',
+        children: [
+            // Filing Information
+            { id: 'an', text: _field_text_sdp('Filing identifier', 'an', '(21)') },
+            { id: 'anlang', text: _field_text_sdp('Filing language', 'anlang', '(25)') },
+            { id: 'ad', text: _field_text_sdp('Filing date', 'ad', '(22)') },
+
+            // Priority Filing Information
+            { id: 'pri', text: _field_text_sdp('Priority identifiers', 'pri', '(31)') },
+            { id: 'pridate', text: _field_text_sdp('Priority dates', 'pridate', '(32)') },
+            { id: 'regd', text: _field_text_sdp('DE registration date', 'regd', '') },
+        ],
+    },
+    {
+        // International Filing and Publishing data
+        text: '<h4>International Filing and Publishing data</h4>',
+        children: [
+            { id: 'pctan', text: _field_text_sdp('PCT application identifier', 'pctan', '(86)') },
+            { id: 'pctad', text: _field_text_sdp('PCT application date', 'pctad', '(86)') },
+            { id: 'pctpn', text: _field_text_sdp('PCT publication identifier', 'pctpn', '(87)') },
+            { id: 'pctpd', text: _field_text_sdp('PCT publication date', 'pctpd', '(87)') },
+            { id: 'ds', text: _field_text_sdp('Designated states', 'ds', '(81)') },
+        ],
+    },
+    {
+        // Citations
+        text: '<h4>Citations</h4>',
+        children: [
+            { id: 'pcit', text: _field_text_sdp('Patent citations (full information)', 'pcit', '') },
+            { id: 'pcitpn', text: _field_text_sdp('Patent citation identifier', 'pcitpn', '') },
+            { id: 'ncit', text: _field_text_sdp('Non-patent citations (full information)', 'ncit', '') },
+        ],
+    },
+    {
+        // Related Documents
+        text: '<h4>Related Documents</h4>',
+        children: [
+            { id: 'relan', text: _field_text_sdp('Related applications', 'relan', '') },
+            { id: 'relad', text: _field_text_sdp('Related applications date', 'relad', '') },
+            { id: 'relpn', text: _field_text_sdp('Related publications identifier', 'relpn', '') },
+            { id: 'relpd', text: _field_text_sdp('Related publications publication date', 'relpd', '') },
+        ],
+    },
+    {
+        // Legal Status Events
+        text: '<h4>Legal Status Events</h4>',
+        children: [
+            { id: 'ls', text: _field_text_sdp('Legal status: All legal status fields w/o lsconv, lsrf)', 'ls', '') },
+            { id: 'lsconv', text: _field_text_sdp('Legal status conveyance', 'lsconv', '') },
+            { id: 'lsrf', text: _field_text_sdp('Legal status reel-frame', 'lsrf', '') },
+            { id: 'lstext', text: _field_text_sdp('Legal status text', 'lstext', '') },
+        ],
+    },
+    {
+        text: '<h4>Miscellaneous</h4>',
+        children: [
+            { id: 'fam', text: _field_text('Family identifier', 'fam', '') },
+        ],
+    },
+];
+
+
+var FIELDS_KNOWLEDGE = {
+    'ops': {
+        'meta': {
+            'separator': '=',
+        },
+        'fields': OPS_CQL_FIELDS,
+    },
+    'depatisnet': {
+        'meta': {
+            'separator': '=',
+        },
+        'fields': DEPATISNET_CQL_FIELDS,
+    },
+    'sdp': {
+        'meta': {
+            'separator': ':',
+        },
+        'fields': SDP_CQL_FIELDS,
+    },
+};

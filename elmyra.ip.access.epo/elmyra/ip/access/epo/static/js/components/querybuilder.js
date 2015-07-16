@@ -34,6 +34,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (opsChooserApp.config.get('ftpro_enabled')) {
             $("#datasource > button[data-value='ftpro']").show();
         }
+        if (opsChooserApp.config.get('sdp_enabled')) {
+            $("#datasource > button[data-value='sdp']").show();
+        }
 
         // switch cql field chooser when selecting datasource
         // TODO: do it properly on the configuration data model
@@ -516,18 +519,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
-    cql_field_chooser_get_data: function(datasource) {
-        if (datasource == 'ops') {
-            return OPS_CQL_FIELDS;
-
-        } else if (datasource == 'depatisnet') {
-            return DEPATISNET_CQL_FIELDS;
-
-        } else {
-            return [];
-
-        }
-    },
     cql_field_chooser_setup: function(hide) {
 
         var datasource = opsChooserApp.get_datasource();
@@ -547,13 +538,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             return;
         }
 
-        var data = this.cql_field_chooser_get_data(datasource);
+        var fields_knowledge = FIELDS_KNOWLEDGE[datasource] || {};
+
         $('#cql-field-chooser').select2({
-            placeholder: 'CQL field symbols' + ' (' + datasource + ')',
-            data: { results: data },
+            placeholder: 'Field symbols' + ' (' + datasource + ')',
+            data: { results: fields_knowledge.fields },
             dropdownCssClass: "bigdrop",
             escapeMarkup: function(text) { return text; },
         });
+        $('#cql-field-chooser').unbind('change');
         $('#cql-field-chooser').on('change', function(event) {
 
             var value = $(this).val();
@@ -566,12 +559,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var leftchar = query.substring(position - 1, position);
 
             // skip insert if we're right behind a "="
-            if (leftchar == '=') return;
+            if (leftchar == fields_knowledge.meta.separator) {
+                $('#query').focus();
+                return;
+            }
 
             // insert space before new field if there is none and we're not at the beginning
             if (leftchar != ' ' && position != 0) value = ' ' + value;
 
-            $('#query').caret(value + '=');
+            $('#query').caret(value + fields_knowledge.meta.separator);
             $(this).data('select2').clear();
 
         });
@@ -753,18 +749,28 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // hide citations for certain search backends
         var citation = form.find("input[name='citation']").closest("div[class='control-group']");
-        if (_(['ops', 'depatisnet']).contains(datasource)) {
+        if (_(['ops', 'depatisnet', 'sdp']).contains(datasource)) {
             citation.show();
         } else if (_(['google', 'ftpro']).contains(datasource)) {
             citation.hide();
         }
 
         // amend placeholder values for certain search backends
+        function activate_placeholder(element, kind) {
+            element.attr('placeholder', element.data('placeholder-' + kind));
+        }
+
         var patentnumber = form.find("input[name='patentnumber']");
-        if (_(['google', 'ftpro']).contains(datasource)) {
-            patentnumber.attr('placeholder', patentnumber.data('placeholder-single'));
+        if (_(['google', 'ftpro', 'sdp']).contains(datasource)) {
+            activate_placeholder(patentnumber, 'single');
         } else {
-            patentnumber.attr('placeholder', patentnumber.data('placeholder-multi'));
+            activate_placeholder(patentnumber, 'multi');
+        }
+        var input_class = form.find("input[name='class']");
+        if (_(['sdp']).contains(datasource)) {
+            activate_placeholder(input_class, 'single');
+        } else {
+            activate_placeholder(input_class, 'multi');
         }
 
         // enrich form fields with actions
