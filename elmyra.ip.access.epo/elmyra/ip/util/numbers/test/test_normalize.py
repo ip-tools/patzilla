@@ -57,7 +57,6 @@ t['EP1083612']       = 'EP1083612'
 t['EP083612']        = 'EP0083612'
 t['EP0 240 590B1']   = 'EP0240590B1'
 t['GB2 000 685A']    = 'GB2000685A'
-t['JP01206674A']     = 'JP1206674A'         # bei günther nachfragen
 t['JP2000182770A']   = 'JP2000182770A'
 t['JP8-179521']      = 'JPH08179521'        # bei günther nachfragen
 t['JP05-142789']     = 'JPH05142789'        # bei günther nachfragen
@@ -209,7 +208,6 @@ t['GB00440724A']         = 'GB440724A'
 t['HU00224856B1']        = 'HU224856B1'
 t['IT01247849B']         = 'IT1247849B'
 t['JP04219000B2']        = 'JP4219000B2'
-t['JP08007001AA']        = 'JP8007001AA'
 t['NL01015058C']         = 'NL1015058C'
 t['PL00193102B1']        = 'PL193102B1'
 t['RO00121297B1']        = 'RO121297B1'
@@ -490,11 +488,22 @@ t['US000000024087E']        = 'USRE24087E'
 t['US000000044856E']        = 'USRE44856E'
 
 
+# 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A or JP00000S602468B2)
+t['JP00000S602468B2']       = 'JPS602468B2'
+
+# 2015-09-01: properly convert japanese numbers into "HEISEI (HEI, H) - reign of Emperor Akihito" format
+t['JP01153210A']            = 'JPH01153210A'
+t['JP01206674A']            = 'JPH01206674A'
+
+# 2015-09-01: mogrify kindcodes for japanese edge cases, here: JP08007001AA => JPH087001A
+t['JP08007001AA']           = 'JPH087001A'
+
+# 2015-09-01: mogrify kindcodes for patents from sweden, here: SE9503964A => SE9503964L
+t['SE9503964A']             = 'SE9503964L'
+
 
 
 test_numbers_normalized_ok = t
-
-
 
 
 class TestNumberNormalization:

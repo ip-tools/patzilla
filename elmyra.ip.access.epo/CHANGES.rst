@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: add flexibility to work against a local archive service instance for accessing DEPATISconnect
+- middleware: improve number normalization for JP and SE documents
 
 0.99.0
 ======
