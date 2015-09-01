@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: add flexibility to work against a local archive service instance for accessing DEPATISconnect
 
 0.99.0
 ======

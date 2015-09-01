@@ -13,16 +13,19 @@ from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
 
 log = logging.getLogger(__name__)
 
+archive_service_baseurl = '***REMOVED***'
+#archive_service_baseurl = 'http://localhost:20300'
+
 def run_acquisition(document_number, doctypes=None):
     numbers = to_list(document_number)
     doctypes = doctypes or 'xml'
     doctypes = to_list(doctypes)
-    with XmlRpcTimeoutServer('***REMOVED***/RPC2', 15) as server:
+    with XmlRpcTimeoutServer(archive_service_baseurl + '/RPC2', 15) as server:
         return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
     # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
-    url_tpl = '***REMOVED***/download/xml:docinfo/{number}.xml?nodtd=1'
+    url_tpl = archive_service_baseurl + '/download/xml:docinfo/{number}.xml?nodtd=1'
     url = url_tpl.format(number=number)
     response = requests.get(url, verify=False, timeout=(2, 17))
     return response
