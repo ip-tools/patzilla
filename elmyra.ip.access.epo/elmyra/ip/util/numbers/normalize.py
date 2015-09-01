@@ -81,6 +81,11 @@ def patch_patent(patent):
                 patched = normalize_patent_wo(patched)
                 #patched = denormalize_patent_wo(patched)
 
+        # 2015-09-01: SE numbers
+        elif patched['country'] == 'SE':
+            patched = normalize_patent_se(patched)
+            patched['number'] = trim_leading_zeros(patched['number'])
+
         # strip leading zeros
         else:
             patched['number'] = trim_leading_zeros(patched['number'])
@@ -435,6 +440,7 @@ def normalize_patent_jp(patent):
     - Something yields JP8-179521, which OPS will only accept as JPH08179521
     -"FulltextPRO "yields JP58002167U, which OPS will only accept as JPS582167U
     - JP3657641B2 should stay the same
+    - JP08007001AA should become JP08007001A
     """
 
     assert patent['country'] == 'JP'
@@ -447,9 +453,6 @@ def normalize_patent_jp(patent):
     if len(patched['number']) == 10:
         return patched
 
-    # 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A or JP00000S602468B2)
-    patched['number'] = patched['number'].lstrip('0')
-
     # 2014-11-12: handle numbers without emperor year symbols
     if patched['number'][0] not in ['S', 'H']:
 
@@ -459,14 +462,22 @@ def normalize_patent_jp(patent):
             if len(parts) == 2:
                 patched['number'] = parts[0].rjust(2, '0') + parts[1].rjust(6, '0')
 
-        if len(patched['number']) == 8:
+        if len(patched['number']) == 8 and not patched['kind'].startswith('B'):
             emperor_year = patched['number'][:2]
             real_number = patched['number'][2:]
             if int(emperor_year) <= 12:
                 emperor_symbol = 'H'
             else:
                 emperor_symbol = 'S'
+
             patched['number'] = emperor_symbol + emperor_year.rjust(2, '0') + real_number.lstrip('0')
+
+            # 2015-09-01: mogrify kindcodes for edge cases, here: JP08007001AA => JPH087001A
+            if patched['kind'] == 'AA':
+                patched['kind'] = 'A'
+
+    # 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A or JP00000S602468B2)
+    patched['number'] = patched['number'].lstrip('0')
 
     return patched
 
@@ -531,6 +542,24 @@ def normalize_patent_it(patent):
         seqnumber = patched['number-real']
         patched['number'] = subtype + seqnumber.lstrip('0')
         return patched
+
+    return patched
+
+
+def normalize_patent_se(patent):
+    """
+    Normalize SE patent number format
+    """
+
+    assert patent['country'] == 'SE'
+
+    patched = patent.copy()
+
+    #print patched['number']
+
+    # 2015-09-01: mogrify kindcodes for patents from sweden, here: SE9503964A => SE9503964L
+    if patched['kind'] == 'A':
+        patched['kind'] = 'L'
 
     return patched
 
