@@ -19,3 +19,4 @@ Tests
     make test
 
     make test options='--where elmyra.ip.access.ftpro'
+    make test options='--where elmyra.ip.util.numbers.test.test_normalize'
