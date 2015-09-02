@@ -6,6 +6,7 @@ development
 ===========
 - middleware: add flexibility to work against a local archive service instance for accessing DEPATISconnect
 - middleware: improve number normalization for JP and SE documents
+- middleware: improve fulltext access robustness at DEPATISconnect vs. Espacenet
 
 0.99.0
 ======

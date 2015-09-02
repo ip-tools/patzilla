@@ -107,22 +107,35 @@ def depatisconnect_claims_handler(request):
     try:
         return depatisconnect_claims_handler_real(patent)
     except:
-        return espacenet_claims(patent)
+        return espacenet_claims_handler_real(patent)
 
 def depatisconnect_claims_handler_real(patent):
     try:
-        description = depatisconnect_claims(patent)
+        claims = depatisconnect_claims(patent)
 
     except KeyError as ex:
-        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
+        log.error('No details at DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPNotFound(ex)
 
     except ValueError as ex:
-        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
+        log.error('Fetching details from DEPATISconnect failed: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
 
-    return description
+    return claims
 
+def espacenet_claims_handler_real(patent):
+    try:
+        claims = espacenet_claims(patent)
+
+    except KeyError as ex:
+        log.error('No details at Espacenet: %s %s', type(ex), ex)
+        raise HTTPNotFound(ex)
+
+    except ValueError as ex:
+        log.error('Fetching details from Espacenet failed: %s %s', type(ex), ex)
+        raise HTTPBadRequest(ex)
+
+    return claims
 
 @depatisconnect_description_service.get()
 def depatisconnect_description_handler(request):
@@ -136,13 +149,15 @@ def depatisconnect_description_handler(request):
 def depatisconnect_description_handler_real(patent):
     try:
         description = depatisconnect_description(patent)
+        if not description['xml']:
+            raise KeyError('Description is empty')
 
     except KeyError as ex:
-        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
+        log.error('No details at DEPATISconnect: %s %s', type(ex), ex)
         raise HTTPNotFound(ex)
 
     except ValueError as ex:
-        log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
+        log.error('Fetching details from DEPATISconnect failed: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
 
     return description
