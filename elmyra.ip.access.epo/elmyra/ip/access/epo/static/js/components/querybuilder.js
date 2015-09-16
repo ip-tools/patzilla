@@ -393,7 +393,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (_.str.contains(text, '=')) {
                 return;
             }
-            var entries = text.split('\n');
+            var entries = text.split('\n').filter(function(item) { return item != '\n' && item != ''; });
             var query = _(entries).map(function(item) {
                 return modifier + '=' + '"' + item + '"';
             }).join(' ' + operator + ' ');

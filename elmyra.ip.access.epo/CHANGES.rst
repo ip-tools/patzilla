@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - middleware: improve ops image inquiry robustness
+- ui: improve numberlist robustness, filter empty entries
 
 0.100.0
 =======
