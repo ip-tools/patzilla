@@ -6,6 +6,7 @@ development
 ===========
 - middleware: improve ops image inquiry robustness
 - ui: improve numberlist robustness, filter empty entries
+- middleware: improve sdp backend, fetch single resources (xml, json, pdf, tif, png)
 
 0.100.0
 =======
