@@ -2,6 +2,7 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import time
 import logging
+from pprint import pprint
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
@@ -455,7 +456,12 @@ def pdf_document_build(patent):
         # TODO: respond with proper json error
         raise HTTPNotFound(msg)
 
-    page_count = int(image_info['FullDocument']['@number-of-pages'])
+    resource_info = image_info.get('FullDocument')
+    if not resource_info:
+        msg = 'No image information for document={0}, type=FullDocument'.format(patent)
+        raise HTTPNotFound(msg)
+
+    page_count = int(resource_info['@number-of-pages'])
     log.info('pdf_document_build collecting {0} pages for document {1}'.format(page_count, patent))
     pdf_pages = []
     for page_number in range(1, page_count + 1):
@@ -467,8 +473,8 @@ def pdf_document_build(patent):
 
     # 3. add pdf metadata
     page_sections = None
-    if image_info['FullDocument'].has_key('ops:document-section'):
-        page_sections = image_info['FullDocument']['ops:document-section']
+    if resource_info.has_key('ops:document-section'):
+        page_sections = resource_info['ops:document-section']
         #pprint(page_sections)
 
     metadata = pdf_make_metadata(patent, 'digi42, elmyra ip suite', page_count, page_sections)
