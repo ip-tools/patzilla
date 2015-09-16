@@ -7,6 +7,8 @@ development
 - middleware: improve ops image inquiry robustness
 - ui: improve numberlist robustness, filter empty entries
 - middleware: improve sdp backend, fetch single resources (xml, json, pdf, tif, png)
+- auth: improve lua layer robustness
+- auth: turn on open access to “kindcodes” api again
 
 0.100.0
 =======
