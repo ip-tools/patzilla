@@ -13,6 +13,11 @@ function get_uri(path, args, args_more)
 end
 
 function decode_uri(uri)
+
+    if uri == nil then
+        return '', {}
+    end
+
     local path, args = uri:match('(.+)?(.+)')
     if not path then
         path = uri
