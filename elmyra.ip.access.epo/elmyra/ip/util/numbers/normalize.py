@@ -422,7 +422,7 @@ def normalize_patent_jp(patent):
     """
     Normalizes to JP patent number format (JPO)
     - http://www.epo.org/searching/asian/japan/numbering.html
-    - http://www.cas.org/training/stneasytips/patentnumber2.html#anchor3
+    - http://www.cas.org/training/stneasytips/patentnumber2.html#anchor3 "Japanese emperor year numbering restart format"
 
     SHOWA (SHO, S) - reign of Emperor Hirohito
     1926 to 1989
@@ -558,8 +558,9 @@ def normalize_patent_se(patent):
     #print patched['number']
 
     # 2015-09-01: mogrify kindcodes for patents from sweden, here: SE9503964A => SE9503964L
-    if patched['kind'] == 'A':
-        patched['kind'] = 'L'
+    # TODO: don't modify, add it to a variants list, as soon as we have a similar subsystem to "EP Archive Service" here
+    #if patched['kind'] == 'A':
+    #    patched['kind'] = 'L'
 
     return patched
 
