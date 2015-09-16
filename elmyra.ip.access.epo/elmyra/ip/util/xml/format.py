@@ -35,7 +35,7 @@ def pretty_print(xml):
     # pretty print xml
     etree_indent(root)
 
-    xml = etree.tostring(root, pretty_print=True)
+    xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
     xml = xml.strip()
 
     return xml
