@@ -9,6 +9,7 @@ development
 - middleware: improve sdp backend, fetch single resources (xml, json, pdf, tif, png)
 - auth: improve lua layer robustness
 - auth: turn on open access to “kindcodes” api again
+- middleware: improve sdp backend, fetch multiple resources (xml:pretty,json:pretty,png,pdf)
 
 0.100.0
 =======

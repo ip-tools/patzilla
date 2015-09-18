@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 # (c) 2015 Andreas Motl, Elmyra UG
+import os
+import re
 import json
+import time
 import logging
+import tempfile
+import zipfile
 from cornice.service import Service
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.settings import asbool
-from elmyra.ip.access.serviva.api import serviva_download
+from elmyra.ip.access.serviva.api import serviva_download, serviva_download_multi
 from elmyra.ip.access.serviva.dataproxy import serviva_published_data_search, LoginException, SearchException, serviva_published_data_crawl, ServivaException, ServivaFormatException
 from elmyra.ip.access.serviva.expression import should_be_quoted
 from elmyra.ip.util.python import _exception_traceback
@@ -14,10 +19,6 @@ from elmyra.ip.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
 
-sdp_download_service = Service(
-    name='sdp-download',
-    path='/api/sdp/download/{resource}.{format}',
-    description="SDP download interface")
 sdp_published_data_search_service = Service(
     name='sdp-published-data-search',
     path='/api/sdp/published-data/search',
@@ -26,6 +27,15 @@ sdp_published_data_crawl_service = Service(
     name='sdp-published-data-crawl',
     path='/api/sdp/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="SDP crawler interface")
+
+sdp_download_service = Service(
+    name='sdp-download',
+    path='/api/sdp/download/{resource}.{format}',
+    description="SDP download interface")
+sdp_deliver_service = Service(
+    name='sdp-deliver',
+    path='/api/sdp/deliver/{kind}',
+    description="SDP deliver interface")
 
 
 @sdp_download_service.get(renderer='null')
@@ -64,6 +74,90 @@ def sdp_download_handler(request):
     else:
 
         raise HTTPNotFound("Resource '%s' with format='%s' not found" % (resource, format))
+
+
+@sdp_deliver_service.get(renderer='null')
+def sdp_deliver_handler(request):
+    """Deliver resources from Serviva Data Proxy in bulk"""
+
+    kind = request.matchdict['kind']
+    formats = map(unicode.strip, request.params.get('formats', u'').lower().split(u','))
+    numberlist = filter(lambda item: bool(item), map(unicode.strip, re.split('[\n,]', request.params.get('numberlist', u''))))
+
+    if kind == 'zip':
+        multi = serviva_download_multi(numberlist, formats)
+
+        #for entry in multi['results']:
+        #    print 'entry:', entry
+        print 'report:'
+        print json.dumps(multi['report'], indent=4)
+
+        payload = zip_multi(multi)
+
+        disposition = 'attachment'
+        zipname = time.strftime('sdp-delivery_%Y%m%d-%H%M%S.zip')
+
+        content_disposition = '{disposition}; filename={filename}'.format(disposition=disposition, filename=zipname)
+        request.response.content_type = 'application/zip'
+        request.response.headers['Content-Disposition'] = content_disposition
+        request.response.headers['Data-Source'] = 'sdp'
+
+        return payload
+    else:
+        raise HTTPBadRequest("Unknown delivery kind '{kind}'".format(**locals()))
+
+
+def zip_multi(multi):
+
+    # use temporary file as zipfile
+    tmpfh, tmppath = tempfile.mkstemp()
+    os.close(tmpfh)
+
+    # create zip
+    zip = zipfile.ZipFile(tmppath, "w")
+    now = time.localtime(time.time())[:6]
+
+    # http://stackoverflow.com/questions/434641/how-do-i-set-permissions-attributes-on-a-file-in-a-zip-file-using-pythons-zip/434689#434689
+    unix_permissions = 0644 << 16L
+
+    # add index file for drawings
+    """
+    index_payload = json.dumps({'type': 'drawings', 'filenames': filenames_full})
+    info = zipfile.ZipInfo(number + '.drawings.json')
+    info.date_time = now
+    info.compress_type = zipfile.ZIP_STORED
+    info.external_attr = unix_permissions
+    zip.writestr(info, index_payload)
+    """
+
+    # add report file
+    info = zipfile.ZipInfo('@report.json')
+    info.date_time = now
+    info.compress_type = zipfile.ZIP_STORED
+    info.external_attr = unix_permissions
+    zip.writestr(info, json.dumps(multi['report'], indent=4))
+
+    # add files
+    for entry in multi['results']:
+        payload = entry['payload']
+        filename = entry['filename']
+        info = zipfile.ZipInfo(filename)
+        info.date_time = now
+        info.compress_type = zipfile.ZIP_STORED
+        info.external_attr = unix_permissions
+        zip.writestr(info, payload)
+
+    zip.close()
+
+    # read zip
+    fh = open(tmppath, 'rb')
+    payload_zipped = fh.read()
+    fh.close()
+
+    # destroy zip
+    os.unlink(tmppath)
+
+    return payload_zipped
 
 
 @sdp_published_data_search_service.get(accept="application/json")
