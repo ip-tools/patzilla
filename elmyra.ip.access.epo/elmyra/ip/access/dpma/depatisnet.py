@@ -170,6 +170,10 @@ def excel_to_dict(payload):
 
     start_row = 0
 
+    # upstream added new status line to first row, e.g. "Search query: pn=(EP666666) Status: 25.09.2015"
+    if u'Search query' in sheet.cell(0, 0).value:
+        start_row = 1
+
     # read header values
     keys = [sheet.cell(start_row, col_index).value for col_index in xrange(sheet.ncols)]
 
