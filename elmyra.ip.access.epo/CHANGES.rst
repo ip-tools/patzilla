@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.101.1
+=======
+-"FulltextPRO "adapter: fix xml query building re. xml declaration
+
 0.101.0
 =======
 - middleware: improve ops image inquiry robustness
