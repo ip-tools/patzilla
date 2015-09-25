@@ -28,14 +28,14 @@ def etree_indent(elem, level=0, more_sibs=False):
             if more_sibs:
                 elem.tail += spacing
 
-def pretty_print(xml):
+def pretty_print(xml, xml_declaration=True):
     parser = etree.XMLParser(remove_blank_text=True)
     root = etree.fromstring(xml, parser)
 
     # pretty print xml
     etree_indent(root)
 
-    xml = etree.tostring(root, encoding='utf-8', xml_declaration=True, pretty_print=True)
+    xml = etree.tostring(root, encoding='utf-8', xml_declaration=xml_declaration, pretty_print=True)
     xml = xml.strip()
 
     return xml
