@@ -9,6 +9,7 @@ from BeautifulSoup import BeautifulSoup
 from xlrd import open_workbook
 from elmyra.ip.util.date import from_german, date_iso
 from elmyra.ip.util.numbers.normalize import normalize_patent
+from elmyra.ip.util.python import _exception_traceback
 
 
 """
@@ -142,14 +143,19 @@ class DpmaDepatisnetAccess:
         for row in data:
             #print 'row:', row
             if row:
-                item = {
-                    'pubnumber': normalize_patent(row['Publication number']),
-                    'pubdate': row['Publication date'] and date_iso(from_german(row['Publication date'])) or None,
-                    'appdate': row['Application date'] and date_iso(from_german(row['Application date'])) or None,
-                    'title': row['Title'],
-                    'applicant': row['Applicant/Owner'],
-                    'inventor': row['Inventor'],
-                }
+                try:
+                    item = {
+                        'pubnumber': normalize_patent(row['Publication number']),
+                        'pubdate': row['Publication date'] and date_iso(from_german(row['Publication date'])) or None,
+                        'appdate': row['Application date'] and date_iso(from_german(row['Application date'])) or None,
+                        'title': row['Title'],
+                        'applicant': row['Applicant/Owner'],
+                        'inventor': row['Inventor'],
+                    }
+                except KeyError as ex:
+                    logger.error('Could not decode row from DEPATISnet. row={row}, exception={exception}\n{trace}'.format(
+                        row=row, exception=ex, trace=_exception_traceback()))
+                    raise
                 results.append(item)
 
         return results
@@ -162,11 +168,14 @@ def excel_to_dict(payload):
     book = open_workbook(file_contents=payload)
     sheet = book.sheet_by_index(0)
 
-    # read header values into the list
-    keys = [sheet.cell(0, col_index).value for col_index in xrange(sheet.ncols)]
+    start_row = 0
 
+    # read header values
+    keys = [sheet.cell(start_row, col_index).value for col_index in xrange(sheet.ncols)]
+
+    # read sheet content
     dict_list = []
-    for row_index in xrange(1, sheet.nrows):
+    for row_index in xrange(start_row + 1, sheet.nrows):
         d = {keys[col_index]: sheet.cell(row_index, col_index).value
              for col_index in xrange(sheet.ncols)}
         dict_list.append(d)

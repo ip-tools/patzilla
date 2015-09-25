@@ -10,6 +10,7 @@ development
 - auth: improve lua layer robustness
 - auth: turn on open access to “kindcodes” api again
 - middleware: improve sdp backend, fetch multiple resources (xml:pretty,json:pretty,png,pdf)
+- depatisnet adapter: improve error detection on upstream result decoding errors
 
 0.100.0
 =======
