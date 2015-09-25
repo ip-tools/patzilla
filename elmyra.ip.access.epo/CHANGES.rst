@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.101.0
+=======
 - middleware: improve ops image inquiry robustness
 - ui: improve numberlist robustness, filter empty entries
 - middleware: improve sdp backend, fetch single resources (xml, json, pdf, tif, png)
@@ -12,8 +15,6 @@ development
 - middleware: improve sdp backend, fetch multiple resources (xml:pretty,json:pretty,png,pdf)
 - DEPATISnet adapter: improve error detection on upstream result decoding errors
 - DEPATISnet adapter: fix XLS decoding error, upstream added new status line to first row, e.g. "Search query: pn=(EP666666) Status: 25.09.2015"
-
-
 
 0.100.0
 =======
