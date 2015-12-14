@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- DEPATISnet adapter: Feature "Remove family members"
+- ui: improve querybuilder layout and mechanics
 
 0.101.1
 =======

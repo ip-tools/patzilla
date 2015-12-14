@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
+from pprint import pprint
 from beaker.cache import cache_region
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from pyramid.settings import asbool
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.epo.espacenet import espacenet_claims, espacenet_description
@@ -41,15 +43,11 @@ depatisconnect_abstract_service = Service(
 def depatisnet_published_data_search_handler(request):
     """Search for published-data at DEPATISnet"""
 
+    #pprint(request.params)
+
     # CQL query string
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
-
-    query_object, query = cql_prepare_query(query)
-
-    log.info('query cql: ' + query)
-
-    propagate_keywords(request, query_object)
 
     # lazy-fetch more entries up to maximum of depatisnet
     # TODO: get from elmyra.ip.access.dpma.depatisnet
@@ -57,15 +55,37 @@ def depatisnet_published_data_search_handler(request):
     if int(request.params.get('range_begin', 0)) > request_size:
         request_size = 1000
 
+    # Compute query options, like
+    # - limit
+    # - sorting
+    # - whether to remove family members
+    options = {}
+    options.update({'limit': request_size})
+    if asbool(request.params.get('query_data[modifiers][family-remove]')):
+        options.update({'feature_family_remove': True})
+
+    query_object, query = cql_prepare_query(query)
+
+    log.info('query cql: ' + query)
+
+    propagate_keywords(request, query_object)
+
+
     try:
-        return dpma_published_data_search(query, request_size)
+        return dpma_published_data_search(query, options)
 
     except SyntaxError as ex:
-        request.errors.add('depatisnet-published-data-search', 'query', str(ex.msg))
+        request.errors.add('depatisnet-published-data', 'query-syntax', str(ex.msg))
 
     except Exception as ex:
-        log.error(u'DEPATISnet search error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
-        request.errors.add('depatisnet-published-data-search', 'query', u'An exception occurred while processing your query')
+        http_response = None
+        if hasattr(ex, 'http_response'):
+            http_response = ex.http_response
+        log.error(u'DEPATISnet search error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
+            query, ex, http_response, _exception_traceback()))
+
+        message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
+        request.errors.add('depatisnet-published-data', 'search', message)
 
 
 @depatisnet_published_data_crawl_service.get(accept="application/json")
@@ -83,22 +103,29 @@ def depatisnet_published_data_crawl_handler(request):
 
     log.info('query cql: ' + query)
     try:
-        result = dpma_published_data_search(query, chunksize)
+        result = dpma_published_data_search(query, {'limit': chunksize})
         return result
 
+    except SyntaxError as ex:
+        request.errors.add('depatisnet-published-data', 'query-syntax', str(ex.msg))
+
     except Exception as ex:
-        log.error(u'DEPATISnet crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
-        request.errors.add('depatisnet-published-data-crawl', 'query', str(ex))
+        http_response = None
+        if hasattr(ex, 'http_response'):
+            http_response = ex.http_response
+        log.error(u'DEPATISnet crawler error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
+            query, ex, http_response, _exception_traceback()))
+
+        message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
+        request.errors.add('depatisnet-published-data', 'crawl', message)
 
 
 @cache_region('search')
-def dpma_published_data_search(query, hits_per_page):
+def dpma_published_data_search(query, options):
+    options = options or {}
     depatisnet = DpmaDepatisnetAccess()
-    try:
-        return depatisnet.search_patents(query, hits_per_page)
-    except SyntaxError as ex:
-        log.warn('Invalid query for DEPATISnet: %s' % ex.msg)
-        raise
+    return depatisnet.search_patents(query, options)
+
 
 @depatisconnect_claims_service.get()
 def depatisconnect_claims_handler(request):

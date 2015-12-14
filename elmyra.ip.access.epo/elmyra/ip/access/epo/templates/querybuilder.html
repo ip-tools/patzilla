@@ -319,35 +319,8 @@
 
         <div class="row-fluid">
 
-            <!-- send query to database -->
-            <div class="span5">
-
-                <div
-                        class="btn-group btn-popover"
-                        data-toggle="popover" data-trigger="hover" data-placement="right"
-                        data-content="Send query to database"
-                        >
-
-                    <!-- activity indicator -->
-                    <button type="submit" role="button" class="btn btn-query-perform">
-                        <i class="idler icon-search"></i>
-                        <i class="spinner icon-refresh icon-spin" style="display: none"></i>
-                    </button>
-
-                    <button type="submit" role="button" class="btn btn-query-perform">
-                        Start search
-                    </button>
-                </div>
-
-                <button role="button" class="btn btn-full-cycle" data-toggle="buttons-checkbox">
-                    <i class="icon-repeat"></i>
-                    full-cycle
-                </button>
-
-            </div>
-
             <!-- cql field symbol chooser -->
-            <div class="span7">
+            <div class="span12">
                 <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
 
                 <!-- analytics actions -->
@@ -358,7 +331,7 @@
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-cog"></i>
                         &nbsp;
-                        Analytics (testing)
+                        Analytics (beta)
                     </button>
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                         <span class="caret"></span>
@@ -392,6 +365,54 @@
                     </ul>
                 </div>
 
+
+            </div>
+
+        </div>
+
+        <div class="row-fluid">
+
+            <div class="span12 light-panel">
+
+                <!-- send query to database -->
+                <div
+                        class="btn-group btn-popover"
+                        data-toggle="popover" data-trigger="hover" data-placement="right"
+                        data-content="Send query to database"
+                        >
+
+                    <!-- activity indicator -->
+                    <button type="submit" role="button" class="btn btn-query-perform">
+                        <i class="idler icon-search"></i>
+                        <i class="spinner icon-refresh icon-spin" style="display: none"></i>
+                    </button>
+
+                    <button type="submit" role="button" class="btn btn-query-perform">
+                        Start search
+                    </button>
+                </div>
+
+                <!-- toggle mode: full-cycle -->
+                <button role="button"
+                        class="btn btn-popover btn-full-cycle"
+                        data-name="full-cycle"
+                        data-toggle="buttons-checkbox"
+                        data-trigger="hover" data-placement="right" data-content="Display all document kind variants"
+                        >
+                    <i class="icon-repeat"></i>
+                    Full cycle
+                </button>
+
+                <!-- toggle mode: remove family members -->
+                <button role="button" id="btn-family-remove"
+                        class="btn btn-popover btn-family-remove"
+                        data-name="family-remove"
+                        data-toggle="buttons-checkbox"
+                        data-trigger="hover" data-placement="right" data-content="Display just one document per patent family"
+                        >
+                    <i class="icon-remove"></i>
+                    Remove family members
+                </button>
 
             </div>
 

@@ -2,6 +2,7 @@
 # (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
 import sys
+import json
 import logging
 import mechanize
 import cookielib
@@ -44,11 +45,13 @@ class DpmaDepatisnetAccess:
         self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
 
 
-    def search_patents(self, query, hits_per_page=None):
+    def search_patents(self, query, options=None):
 
-        hits_per_page = hits_per_page or self.hits_per_page
+        options = options or {}
 
-        logger.info("DEPATISnet: searching documents, query='%s', hits_per_page='%s'" % (query, hits_per_page))
+        limit = options.get('limit', self.hits_per_page)
+
+        logger.info('Searching documents. query="%s", options=%s' % (query, options))
 
         # 1. open search url
         response_searchform = self.browser.open(self.searchurl)
@@ -59,7 +62,7 @@ class DpmaDepatisnetAccess:
         #self.browser.select_form(name='form')
 
         self.browser['query'] = query.encode('iso-8859-1')
-        self.browser['hitsPerPage'] = [str(hits_per_page)]
+        self.browser['hitsPerPage'] = [str(limit)]
 
         # turn on all fields
         self.browser['DocId'] = ['on']      # Publication number
@@ -72,9 +75,11 @@ class DpmaDepatisnetAccess:
         #self.browser['Icm'] = ['on']        # IPC main class
 
         # sort by publication date, descending
+        # TODO: improve by letting the user choose the sorting
         self.browser['sf'] = ['pd']
         self.browser['so'] = ['desc']
 
+        # submit form
         response = self.browser.submit()
 
         # propagate error- and info-messages
@@ -83,6 +88,7 @@ class DpmaDepatisnetAccess:
         if body == '':
             raise SyntaxError('Empty response from server')
 
+        # check for error messages
         soup = BeautifulSoup(body)
         error_message = soup.find('div', {'class': 'error'})
         if error_message:
@@ -95,6 +101,16 @@ class DpmaDepatisnetAccess:
         if 'An error has occurred' in body:
             raise SyntaxError(error_message)
 
+        # remove family members
+        if 'feature_family_remove' in options:
+            response = self.browser.follow_link(url_regex=re.compile("content=removefam"))
+            body = response.read().decode('iso-8859-1')
+
+        # replace family members
+        # TODO: actually implement in user interface
+        elif 'feature_family_replace' in options:
+            response = self.browser.follow_link(url_regex=re.compile("content=replacefam"))
+            body = response.read().decode('iso-8859-1')
 
         # parse hit count
         hits = 0
@@ -119,8 +135,16 @@ class DpmaDepatisnetAccess:
             #error_message = 'did not match any documents'
 
         else:
-            xls_response = self.browser.open(self.xlsurl)
-            results = self.read_xls_response(xls_response)
+            logger.debug('DEPATISnet xlsurl: %s' % self.xlsurl)
+            try:
+                xls_response = self.browser.open(self.xlsurl)
+                results = self.read_xls_response(xls_response)
+            except Exception as ex:
+                logger.error('Problem downloading results in XLS format: {}'.format(ex))
+                ex.http_response = ex.read()
+                raise
+
+            # debugging
             #print 'results:', results
 
             # normalize patent numbers
@@ -194,8 +218,9 @@ if __name__ == '__main__':
     depatisnet = DpmaDepatisnetAccess()
     if len(sys.argv) > 1:
         data = depatisnet.search_patents(sys.argv[1])
+        #data = depatisnet.search_patents(sys.argv[1], options={'feature_family_remove': True})
 
     else:
         data = depatisnet.search_patents('BI=bagger and PC=DE')
 
-    print data
+    print json.dumps(data)

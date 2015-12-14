@@ -16,6 +16,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     set_datasource: function(datasource) {
         $("#datasource .btn[data-value='" + datasource + "']").button('toggle');
         this.queryBuilderView.cql_field_chooser_setup();
+        this.queryBuilderView.setup_common_form();
         this.queryBuilderView.setup_comfort_form();
     },
 
@@ -68,9 +69,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         var search_info = {datasource: datasource, query: query};
         if (options.flavor) {
+            this.metadata.set('flavor', options.flavor);
             search_info.flavor = options.flavor;
         }
         if (options.query_data) {
+            this.metadata.set('query_data', options.query_data);
             search_info.query_data = options.query_data;
         }
 

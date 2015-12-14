@@ -62,8 +62,15 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                             exchange_document['bibliographic-data']['full-cycle'] = representations;
                         });
 
+                        // document display strategy: regular vs. full-cycle
+                        var query_data = metadata.get('query_data');
+                        var mode_full_cycle = false;
+                        if (query_data) {
+                            mode_full_cycle = query_data['modifiers']['full-cycle'];
+                        }
+
                         // a) display all documents (full-cycle)
-                        if (opsChooserApp.config.get('mode.full-cycle')) {
+                        if (mode_full_cycle) {
                             results = $.merge(results, exchange_documents);
 
                         // b) use first result document as representative document

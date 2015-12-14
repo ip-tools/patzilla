@@ -59,7 +59,8 @@ def make_expression(data):
     expression_parts = []
     keywords = []
 
-    if data['format'] == 'comfort':
+    #if data['format'] == 'comfort':
+    if True:
 
         if datasource == 'google':
             gpe = GooglePatentsExpression(criteria, query)
