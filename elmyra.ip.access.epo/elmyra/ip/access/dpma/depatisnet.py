@@ -47,6 +47,7 @@ class DpmaDepatisnetAccess:
 
     def search_patents(self, query, options=None):
 
+        # search options
         options = options or {}
 
         limit = options.get('limit', self.hits_per_page)
@@ -101,6 +102,14 @@ class DpmaDepatisnetAccess:
         if 'An error has occurred' in body:
             raise SyntaxError(error_message)
 
+        # hit count
+        hits = 0
+
+        # Total hits: 230175    A random selection of 1000 hits is being displayed.  You can narrow your search by adding more search criteria.
+        matches = re.search('Total hits:&nbsp;(\d+)', error_message)
+        if matches:
+            hits = int(matches.group(1))
+
         # remove family members
         if 'feature_family_remove' in options:
             response = self.browser.follow_link(url_regex=re.compile("content=removefam"))
@@ -112,17 +121,9 @@ class DpmaDepatisnetAccess:
             response = self.browser.follow_link(url_regex=re.compile("content=replacefam"))
             body = response.read().decode('iso-8859-1')
 
-        # parse hit count
-        hits = 0
 
-        # Result list: 52 hits
-        #
+        # Result list: 42 hits
         matches = re.search('Result list:&nbsp;(\d+)&nbsp;hits', body)
-        if matches:
-            hits = int(matches.group(1))
-
-        # Total hits: 230175    A random selection of 1000 hits is being displayed.  You can narrow your search by adding more search criteria.
-        matches = re.search('Total hits:&nbsp;(\d+)', error_message)
         if matches:
             hits = int(matches.group(1))
 

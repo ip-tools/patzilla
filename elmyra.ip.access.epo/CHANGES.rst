@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- “Remove family members” at DEPATISnet: fix edge case where hit count
+  would display wrong numbers when requesting in family-only mode and
+  having more than 1000 results
 
 0.102.0
 =======
