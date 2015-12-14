@@ -664,7 +664,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 modifier_labels.push('fc');
             }
             if (query_data['modifiers']['family-remove']) {
-                modifier_labels.push('fam');
+                modifier_labels.push('-fam');
             }
         }
         var modifiers = '';
