@@ -99,11 +99,16 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                     }
 
                     // TODO: untangle this by doing opsChooserApp.perform_listsearch right here!?
-                    var options = _this.get_range(page);
-                    if (opsChooserApp.queryBuilderView.get_flavor() == 'numberlist' && opsChooserApp.metadata.get('reviewmode') != true) {
-                        opsChooserApp.perform_numberlistsearch(options);
+                    var search_options = _this.get_search_options();
+                    $.extend(search_options, _this.get_range(page));
+                    //log('search_options:', search_options);
+
+                    var flavor = opsChooserApp.queryBuilderView.get_flavor();
+                    var reviewmode = opsChooserApp.metadata.get('reviewmode');
+                    if (flavor == 'numberlist' && reviewmode != true) {
+                        opsChooserApp.perform_numberlistsearch(search_options);
                     } else {
-                        opsChooserApp.perform_search(options);
+                        opsChooserApp.perform_search(search_options);
                     }
 
                 },
@@ -145,6 +150,9 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         }
 
 
+        /*
+        // 3. legacy pagination
+
         // 3.a create pagination entries
         $(this.el).find('.pagination ul').each(function(i, pagination) {
             $(this).empty();
@@ -172,6 +180,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                 li.addClass('active');
             }
         });
+        */
 
     },
 
@@ -201,6 +210,15 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
         var range = range_begin + '-' + range_end;
         return {range: range, range_begin: range_begin, range_end: range_end, page: page};
+    },
+
+    get_search_options: function() {
+        var query_data = opsChooserApp.queryBuilderView.get_common_form_data();
+        //log('query_data:', query_data);
+        var options = {
+            'query_data': query_data,
+        };
+        return options;
     },
 
 });
