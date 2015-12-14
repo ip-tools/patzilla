@@ -263,7 +263,7 @@ def query_depatisnet(query, limit=50):
     return response, response['hits']
 
 def query_ftpro(query, limit=50):
-    response = ftpro_published_data_search(query, 1, limit)
+    response = ftpro_published_data_search(query, {'offset': 1, 'limit': limit})
     total_count = int(response['meta']['MemCount'])
     log.info('query: %s, total_count: %s', query, total_count)
     return response, total_count

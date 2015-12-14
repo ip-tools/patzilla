@@ -157,10 +157,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        $('.btn-family-remove,.btn-full-cycle').on('click', function(e) {
+        $('.btn-full-cycle, .btn-family-remove, .btn-family-full').on('click', function(e) {
             e.stopPropagation();
-            if( $(this).attr('data-toggle') != 'button' ) { // don't toggle if data-toggle="button"
+            // don't toggle if data-toggle="button"
+            if ($(this).attr('data-toggle') != 'button') {
                 $(this).toggleClass('active');
+            }
+
+            // when clicking a mode button which augments search behavior, recompute upstream query expression
+            // for search backends where query_data modifiers already influence the expression building
+            if (opsChooserApp.get_datasource() == 'ftpro') {
+                _this.compute_comfort_query();
             }
         });
 
@@ -666,6 +673,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (query_data['modifiers']['family-remove']) {
                 modifier_labels.push('-fam');
             }
+            if (query_data['modifiers']['family-full']) {
+                modifier_labels.push('+fam');
+            }
         }
         var modifiers = '';
         if (!_.isEmpty(modifier_labels)) {
@@ -777,6 +787,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             button_family_remove.show();
         } else {
             button_family_remove.hide();
+        }
+
+        // display "Full family" only for certain search backends
+        var button_family_full = container.find("button[id='btn-family-full']");
+        if (_(['ftpro']).contains(datasource)) {
+            button_family_full.show();
+        } else {
+            button_family_full.hide();
         }
 
     },
@@ -898,13 +916,28 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         input_element && input_element.focus();
     },
 
+    get_form_modifier_elements: function() {
+
+        var datasource = opsChooserApp.get_datasource();
+        var modifier_buttons_selector = 'button[data-name="full-cycle"]';
+
+        if (_(['depatisnet']).contains(datasource)) {
+            modifier_buttons_selector += ',[data-name="family-remove"]';
+        }
+        if (_(['ftpro']).contains(datasource)) {
+            modifier_buttons_selector += ',[data-name="family-full"]';
+        }
+
+        var elements = $('#querybuilder-area').find(modifier_buttons_selector);
+        return elements;
+    },
 
     get_common_form_data: function() {
         var flavor = this.get_flavor();
         var datasource = opsChooserApp.get_datasource();
 
-        var buttons = $('#querybuilder-area').find($('button[data-name="family-remove"],[data-name="full-cycle"]'));
-        var modifiers = this.collect_modifiers_from_ui(buttons);
+        var modifier_elements = this.get_form_modifier_elements();
+        var modifiers = this.collect_modifiers_from_ui(modifier_elements);
 
         var form_data = {
             format: flavor,
@@ -920,10 +953,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         options = options || {};
 
         // populate query modifiers to user interface
-        var container = $('#querybuilder-area');
-        var elements = $(container).find($('button[data-name="family-remove"],[data-name="full-cycle"]'));
+        var modifier_elements = this.get_form_modifier_elements();
 
-        _.each(elements, function(element) {
+        _.each(modifier_elements, function(element) {
             var name = $(element).data('name');
 
             if (data['modifiers'] && data['modifiers'][name]) {
