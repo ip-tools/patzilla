@@ -66,6 +66,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // show/hide cql field chooser
             _this.cql_field_chooser_setup(flavor != 'cql');
 
+            // show all search backends
+            $('#datasource button[data-value != "google"]').show();
+
             // application action: perform search
             // properly wire "send query" button
             $('.btn-query-perform').unbind('click');
@@ -107,8 +110,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // perform cql expression search
                 $('.btn-query-perform').click(function() {
+                    var query_data = _this.get_common_form_data();
                     opsChooserApp.disable_reviewmode();
-                    opsChooserApp.perform_search({reviewmode: false, clear: true, flavor: flavor});
+                    opsChooserApp.perform_search({reviewmode: false, clear: true, flavor: flavor, query_data: query_data});
                 });
 
                 // hide query textarea for ftpro, if not in debug mode
@@ -131,6 +135,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // switch datasource to epo
                 opsChooserApp.set_datasource('ops');
 
+                // hide other search backends
+                $('#datasource button[data-value != "ops"]').hide();
+
                 // perform numberlist search
                 $('.btn-query-perform').click(function() {
                     opsChooserApp.disable_reviewmode();
@@ -142,7 +149,24 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
 
         // ------------------------------------------
-        //   submit search
+        //   common form behavior
+        // ------------------------------------------
+
+        //   mode: full-cycle, display all document kinds
+        //   mode: remove patent family members
+
+        // workaround for making "hasClass('active')" work stable
+        // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
+        $('.btn-family-remove,.btn-full-cycle').on('click', function(e) {
+            e.stopPropagation();
+            if( $(this).attr('data-toggle') != 'button' ) { // don't toggle if data-toggle="button"
+                $(this).toggleClass('active');
+            }
+        });
+
+
+        // ------------------------------------------
+        //   comfort form search
         // ------------------------------------------
 
         $( "#querybuilder-comfort-form" ).unbind();
@@ -170,20 +194,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $( "#querybuilder-comfort-form" ).submit();
         });
 
-
-        // ------------------------------------------
-        //   full-cycle mode chooser
-        // ------------------------------------------
-
-        // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        $('.btn-full-cycle').on('click', function(e) {
-            e.stopPropagation();
-            if( $(this).attr('data-toggle') != 'button' ) { // don't toggle if data-toggle="button"
-                $(this).toggleClass('active');
-            }
-            opsChooserApp.config.set('mode.full-cycle', $(this).hasClass( 'active' ));
-
-        });
 
         // --------------------------------------------
         //   intercept and reformat clipboard content
@@ -576,7 +586,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     cql_history_chooser_get_data: function() {
 
-        log('cql_history_chooser_get_data');
+        log('cql_history_chooser_get_data: begin');
 
         var deferred = $.Deferred();
 
@@ -637,6 +647,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
         created = moment(created).fromNow();
 
+        // human representation for data source type
         var datasource_title = datasource;
         if (datasource == 'ops') {
             datasource_title = 'EPO';
@@ -646,8 +657,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             datasource_title = 'FulltextPRO';
         }
 
+        // human representation for search modifiers
+        var modifier_labels = [];
+        if (_.isObject(query_data) && _.isObject(query_data['modifiers'])) {
+            if (query_data['modifiers']['full-cycle']) {
+                modifier_labels.push('fc');
+            }
+            if (query_data['modifiers']['family-remove']) {
+                modifier_labels.push('fam');
+            }
+        }
+        var modifiers = '';
+        if (!_.isEmpty(modifier_labels)) {
+            modifiers = ' [' + modifier_labels.join(',') + ']';
+        }
+
         title += '<div class="pull-right"><small>' + [
-            flavor,
+            flavor + modifiers,
             datasource_title,
             created,
             (result_count ? result_count : 'no') + (result_count == 1 ? ' hit' : ' hits')
@@ -665,17 +691,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var deferred = $.Deferred();
 
-        var projectname = opsChooserApp.project.get('name');
-
         var chooser_widget = $('#cql-history-chooser-select2');
 
         // initialize empty cql history chooser widget
-        chooser_widget.select2({
-            placeholder: 'Query history' + ' (' + projectname + ')',
-            data: { results: [] },
-            dropdownCssClass: "bigdrop",
-            escapeMarkup: function(text) { return text; },
-        });
+        this.cql_history_chooser_load_data();
 
         // when query was selected, put it into cql query input field
         var _this = this;
@@ -699,14 +718,22 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 opsChooserApp.set_datasource(query_object.get('datasource'));
 
                 if (flavor == 'comfort') {
-                    var data = query_object.get('query_data');
                     _this.clear_comfort_form();
+
+                    var data = query_object.get('query_data');
                     _this.set_comfort_form_data(data);
+                    _this.set_common_form_data(data);
 
                 } else if (flavor == 'cql') {
-                    var expression = query_object.get('query_expression');
+                    log('history cql - query_object:', query_object);
+
                     _this.clear_comfort_form();
+
+                    var expression = query_object.get('query_expression');
                     $('#query').val(expression);
+
+                    var data = query_object.get('query_data');
+                    _this.set_common_form_data(data);
                 }
 
             }
@@ -719,14 +746,38 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // load query history data and propagate to history chooser
         this.cql_history_chooser_get_data().then(function(data) {
-            chooser_widget.select2({
-                data: data,
-                escapeMarkup: function(text) { return text; },
-            });
+            _this.cql_history_chooser_load_data(data);
             deferred.resolve();
         });
 
         return deferred.promise();
+
+    },
+
+    cql_history_chooser_load_data: function(data) {
+        var chooser_widget = $('#cql-history-chooser-select2');
+        var projectname = opsChooserApp.project.get('name');
+        chooser_widget.select2({
+            placeholder: 'Query history' + ' (' + projectname + ')',
+            dropdownCssClass: "bigdrop",
+            escapeMarkup: function(text) { return text; },
+            data: (data || { results: [] }),
+        });
+    },
+
+    setup_common_form: function() {
+        var container = $('#querybuilder-area');
+        var datasource = opsChooserApp.get_datasource();
+
+        var _this = this;
+
+        // display "Remove family members" only for certain search backends
+        var button_family_remove = container.find("button[id='btn-family-remove']");
+        if (_(['depatisnet']).contains(datasource)) {
+            button_family_remove.show();
+        } else {
+            button_family_remove.hide();
+        }
 
     },
 
@@ -847,6 +898,79 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         input_element && input_element.focus();
     },
 
+
+    get_common_form_data: function() {
+        var flavor = this.get_flavor();
+        var datasource = opsChooserApp.get_datasource();
+
+        var buttons = $('#querybuilder-area').find($('button[data-name="family-remove"],[data-name="full-cycle"]'));
+        var modifiers = this.collect_modifiers_from_ui(buttons);
+
+        var form_data = {
+            format: flavor,
+            datasource: datasource,
+            modifiers: modifiers,
+            //query: opsChooserApp.config.get('query'),
+        };
+
+        return form_data;
+    },
+
+    set_common_form_data: function(data, options) {
+        options = options || {};
+
+        // populate query modifiers to user interface
+        var container = $('#querybuilder-area');
+        var elements = $(container).find($('button[data-name="family-remove"],[data-name="full-cycle"]'));
+
+        _.each(elements, function(element) {
+            var name = $(element).data('name');
+
+            if (data['modifiers'] && data['modifiers'][name]) {
+                $(element).addClass('active');
+            } else {
+                $(element).removeClass('active');
+            }
+
+        });
+    },
+
+    get_comfort_form_data: function() {
+
+        // 1. collect search criteria from comfort form input fields
+        var criteria = {};
+        var form = $('#querybuilder-comfort-form');
+        var fields = $(form).find($('input'));
+        _.each(fields, function(item) {
+            if (item.value) {
+                criteria[item.name] = item.value;
+            }
+        });
+
+        // skip if collected criteria is empty
+        if (_.isEmpty(criteria)) {
+            return;
+        }
+
+        // 2. collect modifiers from user interface
+        var buttons = $('#querybuilder-area').find($('button[data-name="fulltext"]'));
+        var modifiers = this.collect_modifiers_from_ui(buttons);
+
+        var payload = this.get_common_form_data();
+
+        var payload_local = {
+            criteria: criteria,
+            modifiers: modifiers,
+        };
+
+        // merge common- and comfort-form-data
+        $.extend(true, payload, payload_local);
+        //log('========= payload:', payload);
+
+        return payload;
+
+    },
+
     set_comfort_form_data: function(data, options) {
         options = options || {};
 
@@ -871,52 +995,25 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
-    get_comfort_form_data: function() {
 
-        var form = $('#querybuilder-comfort-form');
-
-        var datasource = opsChooserApp.get_datasource();
-
-        var criteria = {};
+    collect_modifiers_from_ui: function(elements) {
         var modifiers = {};
+        _.each(elements, function(element) {
+            var name = $(element).data('name');
+            var state = $(element).hasClass('active');
 
-        // collect input fields
-        var fields = $(form).find($('input'));
-        _.each(fields, function(item) {
-            if (item.value) {
-                criteria[item.name] = item.value;
+            // handle modifier-based storage
+            var modifier = $(element).data('modifier');
+            if (modifier) {
+                var defaults = {};
+                defaults[name] = {};
+                _.defaults(modifiers, defaults);
+                modifiers[name][modifier] = state;
+            } else {
+                modifiers[name] = state;
             }
         });
-
-        // skip if collected criteria is empty
-        if (_.isEmpty(criteria)) {
-            return;
-        }
-
-        // collect fulltext modifiers
-        var buttons = $(form).find($('button[data-name="fulltext"]'));
-        var modifiers = {};
-        _.each(buttons, function(button) {
-            var name = $(button).data('name');
-            var modifier = $(button).data('modifier');
-            var state = $(button).hasClass('active');
-
-            var defaults = {};
-            defaults[name] = {};
-            _.defaults(modifiers, defaults);
-
-            modifiers[name][modifier] = state;
-        });
-
-        var payload = {
-            format: 'comfort',
-            datasource: datasource,
-            criteria: criteria,
-            modifiers: modifiers,
-            //query: opsChooserApp.config.get('query'),
-        };
-        return payload;
-
+        return modifiers;
     },
 
     compute_comfort_query: function() {

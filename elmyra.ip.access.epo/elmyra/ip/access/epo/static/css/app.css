@@ -204,7 +204,7 @@ a.editable-click {
 
 img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
-.ops-collection-entry, .ops-collection-meta {
+.ops-collection-entry, .ops-collection-meta, .light-panel {
     position: relative;
     margin: 15px 0;
     padding: 0px;
@@ -215,7 +215,7 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     border-radius: 4px;
 }
 
-.ops-collection-meta:first-child {
+.ops-collection-meta:first-child, .light-panel {
     padding: 9px 15px;
     border-bottom: 0px;
 }
@@ -350,7 +350,7 @@ dl.dl-horizontal-inline {
 }
 
 #cql-history-chooser-container {
-    width: 488px;
+    width: 770px;
 }
 
 #basket {
