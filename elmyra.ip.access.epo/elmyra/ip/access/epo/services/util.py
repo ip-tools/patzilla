@@ -134,6 +134,11 @@ def make_expression(data):
             else:
                 expression = '\n'.join(expression_parts)
                 expression = '<and>\n' + expression + '\n</and>'
+
+            # apply full family mode to whole xml search expression
+            if asbool(modifiers.get('family-full')):
+                expression = FulltextProExpression.enrich_fullfamily(expression)
+
             expression = pretty_print(expression, xml_declaration=False)
 
     return expression
