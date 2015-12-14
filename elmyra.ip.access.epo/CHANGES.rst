@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.103.0
+=======
 -"FulltextPRO "adapter: Feature "Full family"
 
 0.102.1
