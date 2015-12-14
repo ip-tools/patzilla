@@ -7,6 +7,8 @@ DatasourceSearch = Backbone.Model.extend({
 
         var query_parameters = { query: query };
         _.extend(query_parameters, options);
+
+        // debugging
         log('DatasourceSearch.query_parameters:', query_parameters);
 
         opsChooserApp.ui.indicate_activity(true);
