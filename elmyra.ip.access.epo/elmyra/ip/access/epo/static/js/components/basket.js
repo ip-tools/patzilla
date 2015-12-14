@@ -243,6 +243,7 @@ BasketModel = Backbone.RelationalModel.extend({
     review: function(options) {
 
         var publication_numbers = this.get_numbers({honor_dismiss: true});
+        //log('publication_numbers:', publication_numbers);
         var hits = publication_numbers.length;
 
         // TODO: decouple from referencing the main application object e.g. by using events!?

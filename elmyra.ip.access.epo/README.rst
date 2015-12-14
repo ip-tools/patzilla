@@ -9,7 +9,7 @@ Getting Started
 - $venv/bin/python setup.py develop
 
 - $venv/bin/pserve development.ini
-
+- pserve development.ini --reload
 
 
 Tests
