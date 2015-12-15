@@ -3,6 +3,7 @@
 import re
 import sys
 import json
+import types
 import logging
 import mechanize
 import cookielib
@@ -76,9 +77,13 @@ class DpmaDepatisnetAccess:
         #self.browser['Icm'] = ['on']        # IPC main class
 
         # sort by publication date, descending
-        # TODO: improve by letting the user choose the sorting
-        self.browser['sf'] = ['pd']
-        self.browser['so'] = ['desc']
+        #self.browser['sf'] = ['pd']
+        #self.browser['so'] = ['desc']
+
+        # sort by user selection
+        if 'sorting' in options and type(options['sorting']) is types.DictionaryType:
+            self.browser['sf'] = [options['sorting']['field']]
+            self.browser['so'] = [options['sorting']['order']]
 
         # submit form
         response = self.browser.submit()

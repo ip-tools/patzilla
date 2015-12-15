@@ -62,6 +62,10 @@ a.editable-click {
     cursor: pointer;
 }
 
+hr.no-margin {
+    margin: inherit;
+}
+
 
 /* header */
 .label-large {

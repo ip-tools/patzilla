@@ -179,6 +179,19 @@ var DEPATISNET_CQL_FIELDS = [
     },
 ];
 
+var DEPATISNET_SORT_FIELDS = [
+    { id: 'pd', text: 'Publication date' },
+    { id: 'vn', text: 'Publication number' },
+    { id: 'in', text: 'Inventor' },
+    { id: 'pa', text: 'Applicant' },
+    { id: 'ti', text: 'Title' },
+    { id: 'ad', text: 'Application date' },
+    { id: 'icm', text: 'IPC main class' },
+    { id: 'icsf', text: 'IPC secondary classes' },
+    { id: 'mcsf', text: 'Reclassified IPC (MCD)' },
+    { id: 'icp', text: 'Search file IPC' },
+];
+
 var SDP_CQL_FIELDS = [
     {
         text: '<h4>Popular</h4>',
@@ -311,6 +324,7 @@ var FIELDS_KNOWLEDGE = {
             'separator': '=',
         },
         'fields': DEPATISNET_CQL_FIELDS,
+        'sorting': DEPATISNET_SORT_FIELDS,
     },
     'sdp': {
         'meta': {

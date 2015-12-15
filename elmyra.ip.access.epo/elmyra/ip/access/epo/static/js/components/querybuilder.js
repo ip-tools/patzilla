@@ -41,11 +41,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // switch cql field chooser when selecting datasource
         // TODO: do it properly on the configuration data model
         $('#datasource').on('click', '.btn', function(event) {
-            opsChooserApp.set_datasource($(this).data('value'));
+            var datasource = $(this).data('value');
+            opsChooserApp.set_datasource(datasource);
 
             // hide query textarea for ftpro, if not in debug mode
             _this.setup_ui_query_textarea();
         });
+
 
 
         // ------------------------------------------
@@ -64,7 +66,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.comfort_form_zoomed_to_regular_data();
 
             // show/hide cql field chooser
-            _this.cql_field_chooser_setup(flavor != 'cql');
+            _this.setup_cql_field_chooser(flavor != 'cql');
 
             // show all search backends
             $('#datasource button[data-value != "google"]').show();
@@ -536,7 +538,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
-    cql_field_chooser_setup: function(hide) {
+    setup_cql_field_chooser: function(hide) {
 
         var datasource = opsChooserApp.get_datasource();
         var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
@@ -586,6 +588,94 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             $('#query').caret(value + fields_knowledge.meta.separator);
             $(this).data('select2').clear();
+
+        });
+
+    },
+
+    setup_sorting_chooser: function() {
+
+        log('setup_sorting_chooser');
+
+        var datasource = opsChooserApp.get_datasource();
+
+        var fields_knowledge = FIELDS_KNOWLEDGE[datasource] || {};
+
+
+        var element_field_chooser = $('#sort-field-chooser');
+        var element_order_chooser = $('#sort-order-chooser');
+
+
+        // --------------------
+        //   sort field
+        // --------------------
+
+        element_field_chooser.select2({
+            placeholder: '<i class="icon-sort"></i> Sorting',
+            data: { results: fields_knowledge.sorting },
+            dropdownCssClass: "bigdrop",
+            escapeMarkup: function(text) { return text; },
+        });
+
+        element_field_chooser.unbind('change');
+        element_field_chooser.on('change', function(event) {
+
+            var value = $(this).val();
+            if (!value) return;
+
+            var sort_order = element_order_chooser.data('value');
+            if (!sort_order) {
+                element_order_chooser.click();
+            }
+
+        });
+
+
+        // --------------------
+        //   sort order
+        // --------------------
+
+        function sort_order_refresh() {
+
+            //log('sort_order_refresh');
+
+            // read from "data-value" attribute
+            var value = element_order_chooser.data('value');
+
+            // compute and set proper icon class
+            var icon_class = 'icon-sort';
+            if (value == 'asc') {
+                icon_class = 'icon-sort-down';
+            } else if (value == 'desc') {
+                icon_class = 'icon-sort-up';
+            }
+            element_order_chooser.find('i').attr('class', icon_class);
+        }
+        sort_order_refresh();
+
+        element_order_chooser.unbind('click');
+        element_order_chooser.on('click', function(event) {
+
+            // read from "data-value" attribute
+            var value = $(this).data('value');
+
+            //log('value-before:', value);
+
+            // sort order state machine
+            if (!value) {
+                value = 'asc';
+            } else if (value == 'asc') {
+                value = 'desc';
+            } else if (value == 'desc') {
+                value = null;
+            }
+
+            //log('value-after: ', value);
+
+            // store in "data-value" attribute
+            $(this).data('value', value);
+
+            sort_order_refresh();
 
         });
 
@@ -665,25 +755,29 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
 
         // human representation for search modifiers
-        var modifier_labels = [];
+        var tags = [];
         if (_.isObject(query_data) && _.isObject(query_data['modifiers'])) {
             if (query_data['modifiers']['full-cycle']) {
-                modifier_labels.push('fc');
+                tags.push('fc');
             }
             if (query_data['modifiers']['family-remove']) {
-                modifier_labels.push('-fam');
+                tags.push('-fam');
             }
             if (query_data['modifiers']['family-full']) {
-                modifier_labels.push('+fam');
+                tags.push('+fam');
             }
         }
-        var modifiers = '';
-        if (!_.isEmpty(modifier_labels)) {
-            modifiers = ' [' + modifier_labels.join(',') + ']';
+        if (_.isObject(query_data) && _.isObject(query_data['sorting'])) {
+            tags.push(query_data.sorting.field + ':' + query_data.sorting.order);
+        }
+
+        var tags_repr = '';
+        if (!_.isEmpty(tags)) {
+            tags_repr = ' [' + tags.join(',') + ']';
         }
 
         title += '<div class="pull-right"><small>' + [
-            flavor + modifiers,
+            flavor + tags_repr,
             datasource_title,
             created,
             (result_count ? result_count : 'no') + (result_count == 1 ? ' hit' : ' hits')
@@ -795,6 +889,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             button_family_full.show();
         } else {
             button_family_full.hide();
+        }
+
+        // display sorting only for certain search backends
+        if (_(['depatisnet']).contains(datasource)) {
+            $('#sorting-chooser').show();
+            this.setup_sorting_chooser();
+        } else {
+            $('#sorting-chooser').hide();
         }
 
     },
@@ -938,6 +1040,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var modifier_elements = this.get_form_modifier_elements();
         var modifiers = this.collect_modifiers_from_ui(modifier_elements);
+        var sorting = this.collect_sorting_state_from_ui();
 
         var form_data = {
             format: flavor,
@@ -945,6 +1048,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             modifiers: modifiers,
             //query: opsChooserApp.config.get('query'),
         };
+
+        if (sorting) {
+            form_data.sorting = sorting;
+        }
 
         return form_data;
     },
@@ -954,7 +1061,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // populate query modifiers to user interface
         var modifier_elements = this.get_form_modifier_elements();
-
         _.each(modifier_elements, function(element) {
             var name = $(element).data('name');
 
@@ -963,8 +1069,20 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             } else {
                 $(element).removeClass('active');
             }
-
         });
+
+        // populate sorting state to user interface
+        if (data.sorting) {
+            //log('data.sorting:', data.sorting);
+            $('#sort-field-chooser').select2("val", data.sorting.field);
+            $('#sort-order-chooser').data('value', data.sorting.order);
+            this.setup_sorting_chooser();
+        } else {
+            $('#sort-field-chooser').select2("val", null);
+            $('#sort-order-chooser').data('value', null);
+            this.setup_sorting_chooser();
+        }
+
     },
 
     get_comfort_form_data: function() {
@@ -1047,6 +1165,32 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
         return modifiers;
     },
+
+    collect_sorting_state_from_ui: function() {
+        var sort_state;
+
+        var datasource = opsChooserApp.get_datasource();
+        var modifier_buttons_selector = 'button[data-name="full-cycle"]';
+
+        if (_(['depatisnet']).contains(datasource)) {
+            var field_chooser = $('#querybuilder-area').find('#sort-field-chooser');
+            var order_chooser = $('#querybuilder-area').find('#sort-order-chooser');
+            sort_field = field_chooser.val();
+            sort_order = order_chooser.data('value');
+            if (sort_field && sort_order) {
+                sort_state = {
+                    field: sort_field,
+                    order: sort_order,
+                };
+            }
+        }
+
+        //log('sorting state:', sort_state);
+
+        return sort_state;
+
+    },
+
 
     compute_comfort_query: function() {
 

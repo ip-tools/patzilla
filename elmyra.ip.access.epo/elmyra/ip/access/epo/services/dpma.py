@@ -39,6 +39,7 @@ depatisconnect_abstract_service = Service(
     description="DEPATISconnect abstract interface")
 
 
+# TODO: implement as JSON POST
 @depatisnet_published_data_search_service.get(accept="application/json")
 def depatisnet_published_data_search_handler(request):
     """Search for published-data at DEPATISnet"""
@@ -61,15 +62,23 @@ def depatisnet_published_data_search_handler(request):
     # - whether to remove family members
     options = {}
     options.update({'limit': request_size})
+    # TODO: transfer all modifiers 1:1
     if asbool(request.params.get('query_data[modifiers][family-remove]')):
         options.update({'feature_family_remove': True})
 
-    query_object, query = cql_prepare_query(query)
+    # this is awful, switch to JSON POST
+    for key, value in request.params.iteritems():
+        if key.startswith(u'query_data[sorting]'):
+            key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
+            options.setdefault('sorting', {})
+            options['sorting'][key] = value
 
+    # transcode CQL query
+    query_object, query = cql_prepare_query(query)
     log.info('query cql: ' + query)
 
+    # propagate keywords to highlighting component
     propagate_keywords(request, query_object)
-
 
     try:
         return dpma_published_data_search(query, options)
