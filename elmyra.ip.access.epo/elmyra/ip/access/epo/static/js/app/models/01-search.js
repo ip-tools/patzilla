@@ -10,6 +10,7 @@ DatasourceSearch = Backbone.Model.extend({
 
         // debugging
         log('DatasourceSearch.query_parameters:', query_parameters);
+        //log('params:', $.param(query_parameters));
 
         opsChooserApp.ui.indicate_activity(true);
 
@@ -17,6 +18,8 @@ DatasourceSearch = Backbone.Model.extend({
         var _options = options;
         return this.fetch({
             //async: false,
+            // TODO: switch to JSON POST
+            //method: 'post',
             data: $.param(query_parameters),
             success: function (payload, response, options) {
                 opsChooserApp.ui.indicate_activity(false);

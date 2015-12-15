@@ -748,9 +748,32 @@
                         print(htmlentities(_query, 'ENT_NOQUOTES'));
                         %>
                     </span>
+                    <br/>
+
+                    <%
+                    if (data && data.query_data && data.query_data.sorting) {
+                        %>
+                        Sorting:
+                        <br/>
+                        <span style="font-size: small" class="cql-query">
+                        <%
+                        var sorting = data.query_data.sorting;
+                        var sort_order_human = 'unknown';
+                        if (sorting.order == 'asc') {
+                            sort_order_human = 'ascending';
+                        } else if (sorting.order == 'desc') {
+                            sort_order_human = 'descending';
+                        }
+                        var message = 'field=' + sorting.field + ', order=' + sort_order_human;
+                        print(message);
+                        %>
+                        </span>
+                        <%
+                    }
+                    %>
 
                     <% if (asbool(data.config.get('debug')) && (data.searchmode == 'subsearch') && data.query_real) { %>
-                    <br/>
+                    <hr class="no-margin"/>
                     Query OPS:
                     <br/>
                     <span style="font-size: small" class="cql-query"><%= data.query_real %></span>

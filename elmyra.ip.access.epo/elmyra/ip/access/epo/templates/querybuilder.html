@@ -374,56 +374,78 @@
 
             <div class="span12 light-panel">
 
-                <!-- send query to database -->
-                <div
-                        class="btn-group btn-popover"
-                        data-toggle="popover" data-trigger="hover" data-placement="right"
-                        data-content="Send query to database"
-                        >
+                <div class="span8">
 
-                    <!-- activity indicator -->
-                    <button type="submit" role="button" class="btn btn-query-perform">
-                        <i class="idler icon-search"></i>
-                        <i class="spinner icon-refresh icon-spin" style="display: none"></i>
+                    <!-- send query to database -->
+                    <div
+                            class="btn-group btn-popover"
+                            data-toggle="popover" data-trigger="hover" data-placement="right"
+                            data-content="Send query to database"
+                            >
+
+                        <!-- activity indicator -->
+                        <button type="submit" role="button" class="btn btn-query-perform">
+                            <i class="idler icon-search"></i>
+                            <i class="spinner icon-refresh icon-spin" style="display: none"></i>
+                        </button>
+
+                        <button type="submit" role="button" class="btn btn-query-perform">
+                            Start search
+                        </button>
+                    </div>
+
+                    <!-- toggle mode: full-cycle -->
+                    <button role="button"
+                            class="btn btn-popover btn-full-cycle"
+                            data-name="full-cycle"
+                            data-toggle="buttons-checkbox"
+                            data-trigger="hover" data-placement="right" data-content="Display all document kind variants"
+                            >
+                        <i class="icon-repeat"></i>
+                        Full cycle
                     </button>
 
-                    <button type="submit" role="button" class="btn btn-query-perform">
-                        Start search
+                    <!-- toggle mode: remove family members -->
+                    <button role="button" id="btn-family-remove"
+                            class="btn btn-popover btn-family-remove"
+                            data-name="family-remove"
+                            data-toggle="buttons-checkbox"
+                            data-trigger="hover" data-placement="right" data-content="Display just one document per patent family"
+                            >
+                        <i class="icon-remove"></i>
+                        Remove family members
                     </button>
+
+                    <!-- toggle mode: all family members -->
+                    <button role="button" id="btn-family-full"
+                            class="btn btn-popover btn-family-full"
+                            data-name="family-full"
+                            data-toggle="buttons-checkbox"
+                            data-trigger="hover" data-placement="right" data-content="Display all patent family members"
+                            >
+                        <i class="icon-group"></i>
+                        Full family
+                    </button>
+
                 </div>
 
-                <!-- toggle mode: full-cycle -->
-                <button role="button"
-                        class="btn btn-popover btn-full-cycle"
-                        data-name="full-cycle"
-                        data-toggle="buttons-checkbox"
-                        data-trigger="hover" data-placement="right" data-content="Display all document kind variants"
-                        >
-                    <i class="icon-repeat"></i>
-                    Full cycle
-                </button>
+                <div class="span4">
 
-                <!-- toggle mode: remove family members -->
-                <button role="button" id="btn-family-remove"
-                        class="btn btn-popover btn-family-remove"
-                        data-name="family-remove"
-                        data-toggle="buttons-checkbox"
-                        data-trigger="hover" data-placement="right" data-content="Display just one document per patent family"
-                        >
-                    <i class="icon-remove"></i>
-                    Remove family members
-                </button>
+                    <div id="sorting-chooser" class="pull-right">
 
-                <!-- toggle mode: all family members -->
-                <button role="button" id="btn-family-full"
-                        class="btn btn-popover btn-family-full"
-                        data-name="family-full"
-                        data-toggle="buttons-checkbox"
-                        data-trigger="hover" data-placement="right" data-content="Display all patent family members"
-                        >
-                    <i class="icon-group"></i>
-                    Full family
-                </button>
+                        <!-- sorting field -->
+                        <div id="sort-field-chooser" name="sort-field" style="width: 175px" size="1"></div>
+
+                        <!-- sorting direction -->
+                        <button role="button" id="sort-order-chooser"
+                                class="btn btn-popover"
+                                data-trigger="hover" data-placement="bottom" data-content="Define sorting"
+                                >
+                            <i class="icon-sort"></i>
+                        </button>
+                    </div>
+
+                </div>
 
             </div>
 
