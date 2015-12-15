@@ -66,7 +66,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // propagate keywords from comfort form for fallback mechanism
         options.keywords = $('#keywords').val();
 
-
+        // propagate bunches of options around
+        // a) to metadata object
+        // b) to search_info summary object
+        // TODO: consolidate somehow
         var search_info = {datasource: datasource, query: query};
         if (options.flavor) {
             this.metadata.set('flavor', options.flavor);
