@@ -167,6 +167,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $(this).toggleClass('active');
             }
 
+            $(this).toggleClass('btn-info');
+
             // when clicking a mode button which augments search behavior, recompute upstream query expression
             // for search backends where query_data modifiers already influence the expression building
             if (opsChooserApp.get_datasource() == 'ftpro') {
@@ -1067,8 +1069,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             if (data['modifiers'] && data['modifiers'][name]) {
                 $(element).addClass('active');
+                $(element).addClass('btn-info');
             } else {
                 $(element).removeClass('active');
+                $(element).removeClass('btn-info');
             }
         });
 
