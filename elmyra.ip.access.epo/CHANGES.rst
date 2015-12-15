@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.105.0
+=======
+- ui: display results in the same order as coming from upstream; this applies to DEPATISnet,"FulltextPRO "and Numberlist queries
+
 0.104.2
 =======
 - ui: improve visibility of active search option modifier buttons (full cycle, remove family members, full family)

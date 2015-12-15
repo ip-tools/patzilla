@@ -305,16 +305,21 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             this.results.reset();
         }
 
-        // compute query expression to display documents from OPS
-        var query_ops_constraints = _(_.map(entries_sliced, function(entry) {
+        // compute list of requested publication numbers for this slice
+        var publication_numbers = _.map(entries_sliced, function(entry) {
             var number;
             if (_.isObject(entry)) {
                 number = entry['publication_number'];
             } else if (!_.isEmpty(entry)) {
                 number = entry;
             }
-            if (number) {
-                return field + '=' + '"' + _.string.trim(number, '"') + '"';
+            return number;
+        });
+
+        // compute query expression to display documents from OPS
+        var query_ops_constraints = _(_.map(publication_numbers, function(publication_number) {
+            if (publication_number) {
+                return field + '=' + '"' + _.string.trim(publication_number, '"') + '"';
             }
         }));
         var query_ops_cql = query_ops_constraints.join(' ' + operator + ' ');
@@ -332,9 +337,31 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // set parameter to control subsearch
         this.metadata.set('searchmode', 'subsearch');
 
+
+        // for having a reference to ourselves in nested scopes
         var self = this;
+
+        // establish comparator to bring collection items into same order of upstream result list
+        this.documents.comparator = function(document) {
+            var document_id = document.get('@country') + document.get('@doc-number') + document.get('@kind');
+            var index = publication_numbers.indexOf(document_id);
+
+            // handle edge cases
+            // easy: if not found in list, put it to bottom of list
+            // TODO: make more sophisticated
+            if (index == -1) {
+                index = self.documents.length;
+            }
+
+            return index;
+        }
+
         //var range = this.compute_range(options);
         return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10').done(function() {
+
+            // undefine comparator after performing action in order not to poise other queries
+            // TODO: decouple/isolate this behavior from "global" scope, i.e. this is not reentrant
+            self.documents.comparator = undefined;
 
             // show the original query
             self.metadata.set('query_origin', query_origin);
