@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.104.0
+=======
 - DEPATISnet adapter: Feature "Sorting of results"
 
 0.103.0
