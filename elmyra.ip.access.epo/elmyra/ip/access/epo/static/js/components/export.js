@@ -31,6 +31,7 @@ ResultNumbersView = GenericResultView.extend({
     fetcher_factory: function() {
 
         var query = this.model.get('query_origin');
+        var query_data = this.model.get('query_data');
         var datasource = this.model.get('datasource');
 
         // compute crawler by datasource
@@ -58,7 +59,7 @@ ResultNumbersView = GenericResultView.extend({
 
         }
 
-        var crawler = new crawler_class({constituents: 'pub-number', query: query})
+        var crawler = new crawler_class({constituents: 'pub-number', query: query, query_data: query_data})
         return crawler;
 
     },

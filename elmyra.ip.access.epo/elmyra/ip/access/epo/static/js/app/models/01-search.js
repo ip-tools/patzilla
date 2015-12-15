@@ -77,12 +77,23 @@ DatasourceCrawler = Marionette.Controller.extend({
         this.datasource = options.datasource;
         this.query = options.query;
         this.constituents = options.constituents;
+        this.query_data = options.query_data || {};
     },
 
     start: function() {
         var deferred = $.Deferred();
-        var url_tpl = _.template('/api/<%= datasource %>/published-data/crawl/<%= constituents %>?query=<%= query %>');
-        var url = url_tpl({datasource: this.datasource, constituents: this.constituents, query: encodeURIComponent(this.query)});
+        var more_params = $.param({
+            'query_data': this.query_data,
+        });
+        var url_tpl = _.template('/api/<%= datasource %>/published-data/crawl/<%= constituents %>?query=<%= query %>&<%= more_params %>');
+        var url = url_tpl({
+            datasource: this.datasource,
+            constituents: this.constituents,
+            query: encodeURIComponent(this.query),
+            more_params: more_params,
+        });
+        //log('url:', url);
+
         var _this = this;
         $.ajax({url: url, async: true})
             .success(function(payload) {

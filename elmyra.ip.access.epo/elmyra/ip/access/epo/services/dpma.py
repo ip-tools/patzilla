@@ -62,16 +62,9 @@ def depatisnet_published_data_search_handler(request):
     # - whether to remove family members
     options = {}
     options.update({'limit': request_size})
-    # TODO: transfer all modifiers 1:1
-    if asbool(request.params.get('query_data[modifiers][family-remove]')):
-        options.update({'feature_family_remove': True})
 
-    # this is awful, switch to JSON POST
-    for key, value in request.params.iteritems():
-        if key.startswith(u'query_data[sorting]'):
-            key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
-            options.setdefault('sorting', {})
-            options['sorting'][key] = value
+    # propagate request parameters to search options parameters
+    request_to_options(request, options)
 
     # transcode CQL query
     query_object, query = cql_prepare_query(query)
@@ -110,9 +103,19 @@ def depatisnet_published_data_crawl_handler(request):
 
     chunksize = 1000
 
+    # Compute query options, like
+    # - limit
+    # - sorting
+    # - whether to remove family members
+    options = {}
+    options.update({'limit': chunksize})
+
+    # propagate request parameters to search options parameters
+    request_to_options(request, options)
+
     log.info('query cql: ' + query)
     try:
-        result = dpma_published_data_search(query, {'limit': chunksize})
+        result = dpma_published_data_search(query, options)
         return result
 
     except SyntaxError as ex:
@@ -127,6 +130,19 @@ def depatisnet_published_data_crawl_handler(request):
 
         message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
         request.errors.add('depatisnet-published-data', 'crawl', message)
+
+
+def request_to_options(request, options):
+    # TODO: transfer all modifiers 1:1
+    if asbool(request.params.get('query_data[modifiers][family-remove]')):
+        options.update({'feature_family_remove': True})
+
+    # this is awful, switch to JSON POST
+    for key, value in request.params.iteritems():
+        if key.startswith(u'query_data[sorting]'):
+            key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
+            options.setdefault('sorting', {})
+            options['sorting'][key] = value
 
 
 @cache_region('search')
