@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.104.1
+=======
+- DEPATISnet adapter: Properly propagate search options (Modifiers, Sorting) to crawler subsystem
+
 0.104.0
 =======
 - DEPATISnet adapter: Feature "Sorting of results"
