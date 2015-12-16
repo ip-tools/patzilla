@@ -6,7 +6,7 @@ from StringIO import StringIO
 from lxml import etree as ET
 from lxml.builder import E
 from cornice.util import to_list
-from beaker.cache import cache_region
+from beaker.cache import cache_region, region_invalidate
 from pyramid.httpexceptions import HTTPNotFound
 from elmyra.ip.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
 from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
@@ -47,7 +47,7 @@ def fetch_pdf(number):
     else:
         raise HTTPNotFound('No PDF for document {0} found in archive'.format(number))
 
-@cache_region('static')
+@cache_region('static', 'get_xml')
 def get_xml(number):
     """
     Fetch XML from EPD archive service
@@ -65,6 +65,9 @@ def get_xml(number):
 
     raise KeyError('No XML document for "{0}" at DPMA'.format(number))
 
+def invalidate_xml(number):
+    number_normalized = normalize_patent(number)
+    region_invalidate(get_xml, None, 'get_xml', number_normalized)
 
 def get_xml_real(number):
 
@@ -141,11 +144,16 @@ def get_abstracts(document_number, xpath):
     return response, elements
 
 
-def depatisconnect_claims(document_number):
+def depatisconnect_claims(document_number, invalidate=False):
     """
     Return DEPATISconnect claims fulltext
     Manipulate XML to visually enumerate claims sections in HTML
     """
+
+    # invalidate cache
+    if invalidate:
+        invalidate_xml(document_number)
+
     response, content = get_claims_or_description(document_number, '/DocInfoRes/Result/application-body/claims')
 
     # visually enumerate list of claims
@@ -175,10 +183,15 @@ def depatisconnect_description(document_number):
     return response
 
 
-def depatisconnect_abstracts(document_number, language=None):
+def depatisconnect_abstracts(document_number, language=None, invalidate=False):
     """
     Return DEPATISconnect abstract, optionally filtered by language
     """
+
+    # invalidate cache
+    if invalidate:
+        invalidate_xml(document_number)
+
     xpath = '/DocInfoRes/Result/Bibl/Ab'
     if language:
         xpath += '[@lancode="{0}"]'.format(language.lower())

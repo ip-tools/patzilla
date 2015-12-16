@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
-from pprint import pprint
-from beaker.cache import cache_region
+from beaker.cache import cache_region, region_invalidate
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.settings import asbool
@@ -72,6 +71,11 @@ def depatisnet_published_data_search_handler(request):
 
     # propagate keywords to highlighting component
     propagate_keywords(request, query_object)
+
+    # invalidate cache
+    invalidate = asbool(request.params.get('invalidate', 'false'))
+    if invalidate:
+        dpma_published_data_search_invalidate(query, options)
 
     try:
         return dpma_published_data_search(query, options)
@@ -145,25 +149,28 @@ def request_to_options(request, options):
             options['sorting'][key] = value
 
 
-@cache_region('search')
+@cache_region('search', 'dpma_search')
 def dpma_published_data_search(query, options):
     options = options or {}
     depatisnet = DpmaDepatisnetAccess()
     return depatisnet.search_patents(query, options)
 
+def dpma_published_data_search_invalidate(*args):
+    region_invalidate(dpma_published_data_search, None, 'dpma_search', *args)
 
 @depatisconnect_claims_service.get()
 def depatisconnect_claims_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
+    invalidate = asbool(request.params.get('invalidate', 'false'))
     try:
-        return depatisconnect_claims_handler_real(patent)
+        return depatisconnect_claims_handler_real(patent, invalidate)
     except:
         return espacenet_claims_handler_real(patent)
 
-def depatisconnect_claims_handler_real(patent):
+def depatisconnect_claims_handler_real(patent, invalidate=False):
     try:
-        claims = depatisconnect_claims(patent)
+        claims = depatisconnect_claims(patent, invalidate)
 
     except KeyError as ex:
         log.error('No details at DEPATISconnect: %s %s', type(ex), ex)
@@ -189,6 +196,20 @@ def espacenet_claims_handler_real(patent):
 
     return claims
 
+def espacenet_description_handler_real(patent):
+    try:
+        description = espacenet_description(patent)
+
+    except KeyError as ex:
+        log.error('No details at Espacenet: %s %s', type(ex), ex)
+        raise HTTPNotFound(ex)
+
+    except ValueError as ex:
+        log.error('Fetching details from Espacenet failed: %s %s', type(ex), ex)
+        raise HTTPBadRequest(ex)
+
+    return description
+
 @depatisconnect_description_service.get()
 def depatisconnect_description_handler(request):
     # TODO: use jsonified error responses
@@ -196,7 +217,7 @@ def depatisconnect_description_handler(request):
     try:
         return depatisconnect_description_handler_real(patent)
     except:
-        return espacenet_description(patent)
+        return espacenet_description_handler_real(patent)
 
 def depatisconnect_description_handler_real(patent):
     try:
@@ -220,8 +241,9 @@ def depatisconnect_abstract_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
     language = request.params.get('language')
+    invalidate = asbool(request.params.get('invalidate', 'false'))
     try:
-        abstract = depatisconnect_abstracts(patent, language)
+        abstract = depatisconnect_abstracts(patent, language, invalidate)
 
     except KeyError as ex:
         log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
