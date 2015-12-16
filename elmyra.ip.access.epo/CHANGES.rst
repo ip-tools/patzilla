@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.106.0
+=======
+- middleware: allow cache invalidation for upstream resources by url parameter “invalidate=true”
+
 0.105.0
 =======
 - ui: display results in the same order as coming from upstream; this applies to DEPATISnet,"FulltextPRO "and Numberlist queries

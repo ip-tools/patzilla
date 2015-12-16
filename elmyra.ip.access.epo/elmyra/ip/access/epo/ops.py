@@ -7,7 +7,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
 from simplejson.scanner import JSONDecodeError
-from beaker.cache import cache_region
+from beaker.cache import cache_region, region_invalidate
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
@@ -25,7 +25,7 @@ def get_ops_client():
     log.info('OPS request with client-id {0}'.format(oauth_client.client_id))
     return oauth_client
 
-@cache_region('search')
+@cache_region('search', 'ops_search')
 def ops_published_data_search(constituents, query, range):
 
     # query EPO OPS REST service
@@ -58,6 +58,9 @@ def ops_published_data_search(constituents, query, range):
     else:
         response = handle_error(response, 'ops-published-data-search')
         raise response
+
+def ops_published_data_search_invalidate(constituents, query, range):
+    region_invalidate(ops_published_data_search, None, 'ops_search', constituents, query, range)
 
 
 @cache_region('search')

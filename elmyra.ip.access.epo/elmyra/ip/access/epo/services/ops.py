@@ -2,7 +2,8 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
-from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search
+from pyramid.settings import asbool
+from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate
 from elmyra.ip.access.epo.services import propagate_keywords, cql_prepare_query
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.python import _exception_traceback
@@ -77,6 +78,11 @@ def ops_published_data_search_handler(request):
     # range: x-y, maximum delta is 100, default is 25
     range = request.params.get('range')
     range = range or '1-25'
+
+    # invalidate cache
+    invalidate = asbool(request.params.get('invalidate', 'false'))
+    if invalidate:
+        ops_published_data_search_invalidate(constituents, query, range)
 
     result = ops_published_data_search(constituents, query, range)
     propagate_keywords(request, query_object)
