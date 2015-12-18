@@ -159,18 +159,40 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        $('.btn-full-cycle, .btn-family-remove, .btn-family-full').on('click', function(e) {
-            e.stopPropagation();
+        var common_buttons = $('.btn-full-cycle, .btn-family-remove, .btn-family-replace, .btn-family-full');
+        common_buttons.on('click', function(e) {
+
+            var already_active = $(this).hasClass('active');
+            var parent_data_toggle = $(this).parent().attr('data-toggle');
+
+            if (parent_data_toggle != 'buttons-radio') {
+                e.stopPropagation();
+            }
 
             // don't toggle if data-toggle="button"
             if ($(this).attr('data-toggle') != 'button') {
                 $(this).toggleClass('active');
+                $(this).toggleClass('btn-info');
             }
 
-            $(this).toggleClass('btn-info');
+            // simulate "buttons-radio" behavior, but add a third state
+            if (parent_data_toggle == 'buttons-radio') {
+
+                // simulate third state (deactivate already pressed)
+                if (already_active) {
+                    $(this).removeClass('active');
+                    $(this).removeClass('btn-info');
+                    e.stopPropagation();
+
+                // simulate exclusive selection (radio behavior)
+                } else {
+                    $(this).parent().find('button').addClass('btn-info').not(this).removeClass('btn-info');
+                }
+            }
 
             // when clicking a mode button which augments search behavior, recompute upstream query expression
             // for search backends where query_data modifiers already influence the expression building
+            // with "ftpro", we inject the attribute 'fullfamily="true"' into the xml nodes
             if (opsChooserApp.get_datasource() == 'ftpro') {
                 _this.compute_comfort_query();
             }
@@ -764,7 +786,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 tags.push('fc');
             }
             if (query_data['modifiers']['family-remove']) {
-                tags.push('-fam');
+                tags.push('-fam:rm');
+            }
+            if (query_data['modifiers']['family-replace']) {
+                tags.push('-fam:rp');
             }
             if (query_data['modifiers']['family-full']) {
                 tags.push('+fam');
@@ -878,8 +903,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
-        // display "Remove family members" only for certain search backends
-        var button_family_remove = container.find("button[id='btn-family-remove']");
+        // display "(Remove|Replace) family members" only for certain search backends
+        var button_family_remove = container.find("button[id='btn-family-remove'],button[id='btn-family-replace']");
         if (_(['depatisnet']).contains(datasource)) {
             button_family_remove.show();
         } else {
@@ -1028,6 +1053,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         if (_(['depatisnet']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-remove"]';
+            modifier_buttons_selector += ',[data-name="family-replace"]';
         }
         if (_(['ftpro']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-full"]';

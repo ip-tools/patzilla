@@ -110,7 +110,6 @@ class DpmaDepatisnetAccess:
             error_message = self.find_errors(body)
 
         # replace family members
-        # TODO: actually implement in user interface
         elif 'feature_family_replace' in options:
 
             # push the button
