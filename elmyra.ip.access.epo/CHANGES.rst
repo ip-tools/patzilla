@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- DEPATISnet adapter: fix scraper response handling re. parsing of upstream errors and result count
 
 0.106.0
 =======
