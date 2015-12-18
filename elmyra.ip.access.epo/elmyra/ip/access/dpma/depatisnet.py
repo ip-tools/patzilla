@@ -88,44 +88,47 @@ class DpmaDepatisnetAccess:
         # submit form
         response = self.browser.submit()
 
-        # propagate error- and info-messages
+        # decode response
         body = response.read().decode('iso-8859-1')
-        #print response.info(); print 'body:', body
-        if body == '':
-            raise SyntaxError('Empty response from server')
 
         # check for error messages
-        soup = BeautifulSoup(body)
-        error_message = soup.find('div', {'class': 'error'})
-        if error_message:
-            [s.extract() for s in error_message('a')]
-            [s.extract() for s in error_message('p', {'class': 'headline'})]
-            error_message = str(error_message)
-        else:
-            error_message = ''
-
-        if 'An error has occurred' in body:
-            raise SyntaxError(error_message)
+        error_message = self.find_errors(body)
 
         # hit count
         hits = 0
+
+        # remove family members
+        if 'feature_family_remove' in options:
+
+            # push the button
+            response = self.browser.follow_link(url_regex=re.compile("content=removefam"))
+
+            # decode response
+            body = response.read().decode('iso-8859-1')
+
+            # check for error messages
+            error_message = self.find_errors(body)
+
+        # replace family members
+        # TODO: actually implement in user interface
+        elif 'feature_family_replace' in options:
+
+            # push the button
+            response = self.browser.follow_link(url_regex=re.compile("content=replacefam"))
+
+            # decode response
+            body = response.read().decode('iso-8859-1')
+
+            # check for error messages
+            error_message = self.find_errors(body)
+
+
+        # collect result count
 
         # Total hits: 230175    A random selection of 1000 hits is being displayed.  You can narrow your search by adding more search criteria.
         matches = re.search('Total hits:&nbsp;(\d+)', error_message)
         if matches:
             hits = int(matches.group(1))
-
-        # remove family members
-        if 'feature_family_remove' in options:
-            response = self.browser.follow_link(url_regex=re.compile("content=removefam"))
-            body = response.read().decode('iso-8859-1')
-
-        # replace family members
-        # TODO: actually implement in user interface
-        elif 'feature_family_replace' in options:
-            response = self.browser.follow_link(url_regex=re.compile("content=replacefam"))
-            body = response.read().decode('iso-8859-1')
-
 
         # Result list: 42 hits
         matches = re.search('Result list:&nbsp;(\d+)&nbsp;hits', body)
@@ -166,6 +169,24 @@ class DpmaDepatisnetAccess:
         }
         return payload
 
+    def find_errors(self, body):
+        if body == '':
+            raise SyntaxError('Empty response from server')
+
+            # check for error messages
+        soup = BeautifulSoup(body)
+        error_message = soup.find('div', {'class': 'error'})
+        if error_message:
+            [s.extract() for s in error_message('a')]
+            [s.extract() for s in error_message('p', {'class': 'headline'})]
+            error_message = str(error_message)
+        else:
+            error_message = ''
+
+        if 'An error has occurred' in body:
+            raise SyntaxError(error_message)
+
+        return error_message
 
     def read_xls_response(self, xls_response):
         data = excel_to_dict(xls_response.read())
