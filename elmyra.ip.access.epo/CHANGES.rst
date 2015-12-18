@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.107.0
+=======
 - DEPATISnet adapter: fix scraper response handling re. parsing of upstream errors and result count
 - DEPATISnet adapter: feature “family-replace”
 - ui: fix result comparator sorting for numberlists without patent kindcodes
