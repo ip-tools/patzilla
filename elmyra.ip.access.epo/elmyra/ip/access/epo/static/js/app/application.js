@@ -343,7 +343,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // establish comparator to bring collection items into same order of upstream result list
         this.documents.comparator = function(document) {
-            var document_id = document.get('@country') + document.get('@doc-number') + document.get('@kind');
+            var document_id = document.get('@country') + document.get('@doc-number'); // + document.get('@kind');
             var index = publication_numbers.indexOf(document_id);
 
             // handle edge cases
