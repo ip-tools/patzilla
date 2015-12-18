@@ -189,6 +189,8 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 
         });
 
+        opsChooserApp.trigger('metadataview:setup_ui');
+
     },
 
 });

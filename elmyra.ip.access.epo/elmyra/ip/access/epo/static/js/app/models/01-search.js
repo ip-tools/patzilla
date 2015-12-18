@@ -78,6 +78,7 @@ DatasourceCrawler = Marionette.Controller.extend({
         this.query = options.query;
         this.constituents = options.constituents;
         this.query_data = options.query_data || {};
+        this.filter = options.filter || {};
     },
 
     start: function() {
@@ -100,6 +101,10 @@ DatasourceCrawler = Marionette.Controller.extend({
                 if (payload) {
                     if (_this.constituents == 'pub-number') {
                         var numberlist = payload['numbers'];
+
+                        // apply arbitrary named filter to numberlist
+                        numberlist = _this.apply_filter(numberlist);
+
                         deferred.resolve(numberlist);
                     } else {
                         deferred.reject('Unknown constituents "' + _this.constituents + '"');
@@ -111,6 +116,29 @@ DatasourceCrawler = Marionette.Controller.extend({
                 deferred.reject('API failed: ' + JSON.stringify(error));
             });
         return deferred;
+    },
+
+    apply_filter: function(numberlist) {
+
+        // strip patent kindcode from all numberlist items,
+        // then build list of unique entries
+        if (this.filter.strip_kindcodes) {
+            numberlist = _(numberlist).map(function(item) {
+
+                // strip patent kindcode for the poorest
+                var re = /.+\d+(\D)/g;
+                var match = re.exec(item);
+                if (match[1]) {
+                    var position = re.lastIndex;
+                    if (position) {
+                        item = item.substring(0, position - 1);
+                    }
+                }
+                return item;
+            });
+            numberlist = _(numberlist).uniq();
+        }
+        return numberlist;
     },
 
 });

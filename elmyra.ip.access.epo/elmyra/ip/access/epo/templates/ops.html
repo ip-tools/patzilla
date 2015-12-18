@@ -825,15 +825,24 @@
                                 -->
 
                                 <a id="highlighting-map-edit-action" class="btn-popover"
-                                    data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Edit keyword mapping for individual highlighting"
+                                    data-toggle="popover" data-trigger="hover" data-placement="left"
+                                    data-content="Edit keyword mapping for individual highlighting"
                                     >
                                     <i class="icon-edit"></i> &nbsp; Keyword editor
                                 </a>
 
                                 <a id="fetch-result-numbers-action" class="btn-popover"
-                                   data-toggle="popover" data-trigger="hover" data-placement="right" data-content="Fetch publication numbers of all results"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Fetch publication numbers of all results. This is the raw response of the datasource."
                                    >
-                                    <i class="icon-download"></i> &nbsp; Fetch result numbers
+                                    <i class="icon-download"></i> &nbsp; Fetch raw result numbers
+                                </a>
+
+                                <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
+                                        >
+                                    <i class="icon-download"></i> &nbsp; Fetch unique result numbers w/o kindcodes
                                 </a>
 
                                 <!--
