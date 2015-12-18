@@ -33,6 +33,7 @@ ResultNumbersView = GenericResultView.extend({
         var query = this.model.get('query_origin');
         var query_data = this.model.get('query_data');
         var datasource = this.model.get('datasource');
+        var filter = this.model.get('filter');
 
         // compute crawler by datasource
         var crawler_class;
@@ -59,7 +60,7 @@ ResultNumbersView = GenericResultView.extend({
 
         }
 
-        var crawler = new crawler_class({constituents: 'pub-number', query: query, query_data: query_data})
+        var crawler = new crawler_class({constituents: 'pub-number', query: query, query_data: query_data, filter: filter})
         return crawler;
 
     },
@@ -69,12 +70,23 @@ ResultNumbersView = GenericResultView.extend({
 
 opsChooserApp.addInitializer(function(options) {
 
-    this.listenTo(this, 'results:ready', function() {
+    this.listenTo(this, 'metadataview:setup_ui', function() {
         var _this = this;
-        // wire fetch-results button
+
+        // wire fetch-results buttons
         $('#fetch-result-numbers-action').unbind('click');
-        $('#fetch-result-numbers-action').click(function() {
+        $('#fetch-result-numbers-action').click(function(e) {
             var modal = new ModalRegion({el: '#modal-area'});
+            // reset all filters
+            _this.metadata.set('filter', {});
+            var result_numbers_view = new ResultNumbersView({model: _this.metadata});
+            modal.show(result_numbers_view);
+        });
+        $('#fetch-result-numbers-no-kindcodes-action').unbind('click');
+        $('#fetch-result-numbers-no-kindcodes-action').click(function(e) {
+            var modal = new ModalRegion({el: '#modal-area'});
+            // apply filter "strip_kindcodes" on response
+            _this.metadata.set('filter', {'strip_kindcodes': true});
             var result_numbers_view = new ResultNumbersView({model: _this.metadata});
             modal.show(result_numbers_view);
         });

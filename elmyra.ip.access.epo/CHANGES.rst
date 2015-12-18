@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: Feature "Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
 
 0.107.0
 =======
