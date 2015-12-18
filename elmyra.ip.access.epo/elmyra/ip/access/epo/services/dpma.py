@@ -137,9 +137,13 @@ def depatisnet_published_data_crawl_handler(request):
 
 
 def request_to_options(request, options):
+
     # TODO: transfer all modifiers 1:1
+
     if asbool(request.params.get('query_data[modifiers][family-remove]')):
         options.update({'feature_family_remove': True})
+    elif asbool(request.params.get('query_data[modifiers][family-replace]')):
+        options.update({'feature_family_replace': True})
 
     # this is awful, switch to JSON POST
     for key, value in request.params.iteritems():

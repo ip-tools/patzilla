@@ -372,9 +372,9 @@
 
         <div class="row-fluid">
 
-            <div class="span12 light-panel">
+            <div class="span12 light-panel" style="width: 152%">
 
-                <div class="span8">
+                <div class="span9">
 
                     <!-- send query to database -->
                     <div
@@ -405,16 +405,33 @@
                         Full cycle
                     </button>
 
-                    <!-- toggle mode: remove family members -->
-                    <button role="button" id="btn-family-remove"
-                            class="btn btn-popover btn-family-remove"
-                            data-name="family-remove"
-                            data-toggle="buttons-checkbox"
-                            data-trigger="hover" data-placement="right" data-content="Display just one document per patent family"
-                            >
-                        <i class="icon-remove"></i>
-                        Remove family members
-                    </button>
+                    <div class="btn-group" data-toggle="buttons-radio" id="family-remove-buttons">
+
+                        <!-- toggle mode: remove family members -->
+                        <button type="button" role="button"
+                                id="btn-family-remove"
+                                class="btn btn-popover btn-family-remove"
+                                data-name="family-remove"
+                                data-toggle="buttons-checkbox"
+                                data-trigger="hover" data-placement="top" data-content="Display just one document per patent family by removing family members"
+                                >
+                            <i class="icon-remove"></i>
+                            Remove family members
+                        </button>
+
+                        <!-- toggle mode: replace family members -->
+                        <button type="button" role="button"
+                                id="btn-family-replace"
+                                class="btn btn-popover btn-family-replace"
+                                data-name="family-replace"
+                                data-toggle="buttons-checkbox"
+                                data-trigger="hover" data-placement="top" data-content="Display just one document per patent family by replacing family members"
+                                >
+                            <i class="icon-exchange"></i>
+                            Replace family members
+                        </button>
+
+                    </div>
 
                     <!-- toggle mode: all family members -->
                     <button role="button" id="btn-family-full"
@@ -429,7 +446,7 @@
 
                 </div>
 
-                <div class="span4">
+                <div class="span3">
 
                     <div id="sorting-chooser" class="pull-right">
 
