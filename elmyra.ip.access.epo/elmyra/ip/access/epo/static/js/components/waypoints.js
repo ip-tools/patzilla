@@ -48,10 +48,16 @@ WaypointController = Marionette.Controller.extend({
 
                     } else if (direction == 'down') {
 
-                        // mark current document as "seen"
+                        // Feature "seen"
+                        // - decrease opacity of documents marked as "seen"
+                        // - mark current document as "seen" if there's no rating yet
                         var document = opsChooserApp.document_base.get_document_by_element(this.element);
                         var document_number = document.get_document_number();
-                        opsChooserApp.document_seen(document_number);
+                        if (opsChooserApp.document_seen_twice(document_number)) {
+                            opsChooserApp.document_base.dim(this.element);
+                        } else {
+                            opsChooserApp.document_mark_seen(document_number);
+                        }
 
                         // TODO: for letting the drawing follow the text
                         /*

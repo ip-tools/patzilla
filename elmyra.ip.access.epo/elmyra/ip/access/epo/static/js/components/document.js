@@ -136,6 +136,14 @@ DocumentBaseController = Marionette.Controller.extend({
         return this.get_collection_entry_by_element(element).prop('ops-document');
     },
 
+    dim: function(element) {
+        var entry = this.get_collection_entry_by_element(element);
+        entry.fadeTo('slow', 0.33);
+    },
+
+    bright: function(element) {
+        var entry = this.get_collection_entry_by_element(element);
+        entry.fadeTo('slow', 1);
     },
 
 });

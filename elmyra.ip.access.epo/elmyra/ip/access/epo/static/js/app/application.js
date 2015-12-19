@@ -581,6 +581,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // FIXME: this stopListening is brutal!
         this.stopListening(null, "change:add");
         this.stopListening(null, "change:remove");
+        this.stopListening(null, "change:rate");
         this.listenTo(basket, "change:add", this.basketController.link_document);
         this.listenTo(basket, "change:remove", this.basketController.link_document);
         this.listenTo(basket, "change:rate", this.basketController.link_document);
@@ -699,7 +700,23 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
     },
 
-    document_seen: function(document_number) {
+    document_seen_twice: function(document_number) {
+
+        // skip saving as "seen" if already in basket
+        if (this.basketModel.exists(document_number)) {
+
+            // if we occur the document a second time, mark as seen visually by increasing opacity
+            var basket = this.basketModel.get_entry_by_number(document_number);
+            if (basket.get('seen')) {
+                return true;
+            }
+
+        }
+
+        return false;
+    },
+
+    document_mark_seen: function(document_number) {
         var _this = this;
 
         if (!document_number) {

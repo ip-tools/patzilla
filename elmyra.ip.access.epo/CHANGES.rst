@@ -7,6 +7,7 @@ development
 - ui: Feature "Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
 - ui: add jquery.waypoints library
 - ui: introduce “seen” attribute to BasketEntryModel
+- ui: apply basket item “seen” state to user interface by decreasing opacity of document panels
 
 0.107.0
 =======

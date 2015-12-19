@@ -89,10 +89,9 @@ BasketModel = Backbone.RelationalModel.extend({
         }
     },
 
-    // add item to basket
     exists: function(number) {
-        var entry = this.get_entry_by_number(number);
-        return !_.isEmpty(entry);
+        var item = this.get_entry_by_number(number);
+        return item ? true : false;
     },
 
     // add item to basket
@@ -740,9 +739,12 @@ BasketController = Marionette.Controller.extend({
     // backpropagate current basket entries into action state (rating, signal coloring, etc.)
     link_document: function(entry, number) {
 
+        //log('link_document', entry, number);
+
         // why do we have to access the global object here?
         // maybe because of the event machinery which dispatches to us?
         var numbers = opsChooserApp.basketModel ? opsChooserApp.basketModel.get_numbers() : [];
+        //log('link_document numbers:', numbers);
 
         var checkbox_element = $('#chk-patent-number-' + number);
         var add_button_element = $('#add-patent-number-' + number);
@@ -788,6 +790,14 @@ BasketController = Marionette.Controller.extend({
 
             }
 
+        }
+
+        // properly handle "seen" state
+        // display document with full opacity if not marked as "seen"
+        if (entry) {
+            if (!entry.get('seen')) {
+                opsChooserApp.document_base.bright(rating_widget);
+            }
         }
 
     },
