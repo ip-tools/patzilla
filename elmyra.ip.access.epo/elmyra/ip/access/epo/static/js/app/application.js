@@ -643,7 +643,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // collect all document numbers
             _this.documents.each(function(document) {
                 var number = document.attributes.get_patent_number();
-                _this.basketModel.add(number);
+                _this.basketModel.add(number, {'reset_seen': true});
             });
 
         });
@@ -685,7 +685,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var _this = this;
         if (document_number) {
             this.basketModel.add(document_number).then(function(item) {
-                item.save({score: score, dismiss: dismiss}, {
+                item.save({score: score, dismiss: dismiss, seen: undefined}, {
                     success: function() {
                         _this.basketModel.trigger('change:rate', item, document_number);
                         _this.basketView.textarea_scroll_text(document_number);
@@ -697,6 +697,37 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             });
         }
+    },
+
+    document_seen: function(document_number) {
+        var _this = this;
+
+        if (!document_number) {
+            return;
+        }
+
+        // skip saving as "seen" if already in basket
+        if (this.basketModel.exists(document_number)) {
+            return;
+        }
+
+        //log('document seen:', document_number);
+
+        this.basketModel.add(document_number).then(function(item) {
+
+            item.save({seen: true}, {
+                success: function() {
+
+                    // don't backpropagate in realtime, this would probably immediately color the document gray
+                    //_this.basketModel.trigger('change:rate', item, document_number);
+
+                }, error: function() {
+                    console.error('rating save error', document_number, item);
+                }
+            });
+
+        });
+
     },
 
 

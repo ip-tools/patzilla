@@ -25,15 +25,28 @@
                     -->
 
                     <div class="btn-group do-not-print">
-                        <button
-                                class="btn btn-popover basket-review-button" data-value="review"
+                        <button id="basket-review-button"
+                                class="btn btn-popover" data-value="review"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                 data-content="Review collection"
                                 >
                             <i class="icon-indent-left"></i> Review
                         </button>
-                        <button class="btn" disabled="disabled">
+                        <button id="basket-entry-count-button"
+                                class="btn btn-popover disabled"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                data-content="Number of rated documents"
+                                >
+                            <i class="fa-icon icon-pushpin"></i>
                             <span class="basket-entry-count"></span>
+                        </button>
+                        <button id="basket-seen-count-button"
+                                class="btn btn-popover disabled"
+                                data-toggle="popover" data-trigger="hover" data-placement="right"
+                                data-content="Number of seen but unrated documents"
+                                >
+                        <i class="fa-icon icon-eye-open"></i>
+                            <span class="basket-seen-count"></span>
                         </button>
                     </div>
 
@@ -86,6 +99,17 @@
                                     &nbsp;
                                     Numberlist
                                 </div>
+
+                                <a id="share-display-rated">
+                                    <i class="fa-icon icon-pushpin"></i>
+                                    &nbsp;&nbsp;
+                                    Display rated documents
+                                </a>
+                                <a id="share-display-seen">
+                                    <i class="fa-icon icon-eye-open"></i>
+                                    &nbsp;
+                                    Display seen documents
+                                </a>
 
                                 <a id="share-numberlist-email">
                                     <i class="icon-envelope-alt"></i>

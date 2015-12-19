@@ -62,7 +62,9 @@ DocumentBaseController = Marionette.Controller.extend({
         $('.abstract-acquire').on('click', function(event) {
             event.preventDefault();
             var lang = $(this).data('lang');
-            var document = $(this).closest('.ops-collection-entry').prop('ops-document');
+
+            var document = opsChooserApp.document_base.get_document(this);
+
             $(this).after('<span class="abstract-acquire-spinner">&nbsp;&nbsp;<i class="icon-refresh icon-spin"></i></span>');
 
             var ft = opsChooserApp.document_details.get_fulltext(document);
@@ -97,6 +99,10 @@ DocumentBaseController = Marionette.Controller.extend({
             }
         });
 
+
+        // ------------------------------------------
+        //   "family citations" module
+        // ------------------------------------------
         var module_name = 'family-citations';
         var module_available = opsChooserApp.user_has_module(module_name);
 
@@ -104,14 +110,13 @@ DocumentBaseController = Marionette.Controller.extend({
         $('.family-citations-shortcut-button').unbind('click');
         $('.family-citations-shortcut-button').bind('click', function(event) {
             if (module_available) {
-                var container = $(this).closest('.ops-collection-entry')
+                var container = $(this).closest('.ops-collection-entry');
                 container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
                 container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
             } else {
                 opsChooserApp.ui.notify_module_locked(module_name);
             }
         });
-
 
         // override clicking on any inline links to propagate important
         // view state parameters by amending the url on the fly
@@ -121,6 +126,11 @@ DocumentBaseController = Marionette.Controller.extend({
         // for introducing warning message when having len(citations) > 10
         OpsBaseViewMixin.bind_same_citations_links($(document));
 
+    },
+
+    get_document: function(element) {
+        var document = $(element).closest('.ops-collection-entry').prop('ops-document');
+        return document;
     },
 
 });
@@ -148,7 +158,7 @@ DocumentDetailsController = Marionette.Controller.extend({
             var container = $($(e.target).attr('href'));
             var details_type = $(this).data('details-type');
 
-            var document = $(this).closest('.ops-collection-entry').prop('ops-document');
+            var document = opsChooserApp.document_base.get_document(this);
 
             if (document) {
                 if (_(['claims', 'description']).contains(details_type)) {

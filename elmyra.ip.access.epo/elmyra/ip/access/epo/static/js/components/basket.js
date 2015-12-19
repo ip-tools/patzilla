@@ -45,7 +45,8 @@ BasketModel = Backbone.RelationalModel.extend({
         context = context || this;
         this[funcname] = memoize(this[funcname], this);
         this.invalidate_cache = function() {
-            this[funcname].__cache.remove();
+            //this[funcname].__cache.remove();
+            this[funcname].__cache.purge();
         };
         this.bind('change', this.invalidate_cache);
     },
@@ -80,6 +81,12 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     // add item to basket
+    exists: function(number) {
+        var entry = this.get_entry_by_number(number);
+        return !_.isEmpty(entry);
+    },
+
+    // add item to basket
     add: function(number, options) {
 
         options = options || {};
@@ -94,14 +101,24 @@ BasketModel = Backbone.RelationalModel.extend({
         var entry = this.get_entry_by_number(number);
         if (entry) {
 
-            // refetch entry to work around localforage.backbone vs. backbone-relational woes
-            // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
-            entry.fetch({success: function() {
-                deferred.resolve(entry);
+            function _refetch() {
+                // refetch entry to work around localforage.backbone vs. backbone-relational woes
+                // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
+                entry.fetch({success: function() {
+                    deferred.resolve(entry);
 
-                // refresh gui, update timestamp
-                !options.bulk && _this.trigger('change', _this);
-            }});
+                    // refresh gui, update timestamp
+                    !options.bulk && _this.trigger('change', _this);
+                }});
+            }
+
+            if (options.reset_seen) {
+                entry.save({'seen': undefined}, {success: function() {
+                    _refetch();
+                }});
+            } else {
+                _refetch();
+            }
 
             return deferred.promise();
         }
@@ -190,25 +207,65 @@ BasketModel = Backbone.RelationalModel.extend({
         }});
     },
 
-    get_numbers: function(options) {
+    get_entries: function(options) {
         options = options || {};
-        var numbers = _.reject(this.get('entries').models, function(entry) {
-            if (options.honor_dismiss) {
-                return entry.get('dismiss') == true;
+
+        var entries = this.get('entries').models;
+        //log('entries:', entries);
+
+        entries = _(entries).reject(function(entry) {
+
+            // let all entries pass
+            //return false;
+
+            if (options.dismiss != undefined) {
+                var dismiss = entry.get('dismiss');
+                if (dismiss != undefined) {
+                    return dismiss == !options.dismiss;
+                }
+            }
+            if (options.seen != undefined) {
+                var seen = entry.get('seen');
+                if (seen == undefined) {
+                    return options.seen;
+                } else {
+                    return seen == !options.seen;
+                }
             }
             return false;
-        }).map(function(entry) {
+        });
+
+        return entries;
+
+    },
+
+    get_numbers: function(options) {
+        options = options || {};
+
+        if (options.honor_dismiss) {
+            options.dismiss = false;
+        }
+        _(options).defaults({seen: false});
+        //log('options:', options);
+
+        var entries = this.get_entries(options);
+
+        var numbers = entries.map(function(entry) {
             return entry.get('number');
         });
+        //log('numbers:', numbers);
+
         return numbers;
     },
 
     empty: function() {
-        return this.get('entries').length == 0;
+        var entries = this.get_entries({'seen': false});
+        return entries.length == 0;
     },
 
     csv_list: function() {
-        return this.get('entries').map(function(entry) {
+        var entries = this.get_entries({'seen': false});
+        return entries.map(function(entry) {
             var parts = [
                 entry.get('number'),
                 entry.get('score'),
@@ -220,18 +277,21 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     unicode_stars_list: function() {
-        return this.get('entries').map(function(entry) {
+        var entries = this.get_entries({'seen': false});
+        return entries.map(function(entry) {
             var line =
                     _.string.ljust(entry.get('number'), 20, ' ') +
-                    _.string.ljust(entry.get('dismiss') ? '∅' : '', 5, ' ') +
-                    _.string.repeat('★', entry.get('score'));
+                        _.string.ljust(entry.get('dismiss') ? '∅' : '', 5, ' ') +
+                        (entry.get('seen') ? 'seen' : '') +
+                        _.string.repeat('★', entry.get('score'));
             return line;
         });
     },
 
     unicode_stars_list_email: function() {
         var nbsp = String.fromCharCode(160);
-        return this.get('entries').map(function(entry) {
+        var entries = this.get_entries({'seen': false});
+        return entries.map(function(entry) {
             var dismiss_and_score = (entry.get('dismiss') ? '∅' : '') + _.string.repeat('★', entry.get('score'));
             var padlen = 10 - dismiss_and_score.length * 1.7;
             var padding = _.string.repeat(nbsp, padlen);
@@ -243,6 +303,7 @@ BasketModel = Backbone.RelationalModel.extend({
     review: function(options) {
 
         var publication_numbers = this.get_numbers({honor_dismiss: true});
+
         //log('publication_numbers:', publication_numbers);
         var hits = publication_numbers.length;
 
@@ -367,6 +428,7 @@ BasketEntryModel = Backbone.RelationalModel.extend({
         title: undefined,
         score: undefined,
         dismiss: undefined,
+        seen: undefined,
         // TODO: link to QueryModel
         //query: undefined,
     },
@@ -410,8 +472,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
         var _this = this;
 
         // display number of entries in basket
-        var entry_count = this.model.get('entries').length;
+
+        var entry_count = this.model.get_entries({'seen': false}).length;
         $('.basket-entry-count').text(entry_count);
+
+        var seen_count = this.model.get_entries({'seen': true}).length;
+        $('.basket-seen-count').text(seen_count);
+
 
         // only enable submit button, if ship url is given
         var ship_url = opsChooserApp.config.get('ship-url');
@@ -440,11 +507,17 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // review feature: trigger search from basket content
-        $('.basket-review-button').unbind('click');
-        $('.basket-review-button').click(function(event) {
+        $('#basket-review-button').unbind('click');
+        $('#basket-review-button').click(function(event) {
             event.preventDefault();
             if (_this.check_empty({kind: 'review', icon: 'icon-indent-left'})) { return; }
             _this.model.review();
+        });
+        // disable counter buttons, required to retain popover
+        $('#basket-entry-count-button,#basket-seen-count-button').unbind('click');
+        $('#basket-entry-count-button,#basket-seen-count-button').click(function(event) {
+            event.preventDefault();
+            event.stopPropagation();
         });
 
         // submit selected documents to origin or 3rd-party system
@@ -453,6 +526,21 @@ BasketView = Backbone.Marionette.ItemView.extend({
             if (_this.check_empty()) { return; }
             var numbers = _this.model.get_numbers();
             $('textarea#basket').val(numbers.join('\n'));
+        });
+
+
+        // wire display-results buttons
+        $('#share-display-rated').unbind('click');
+        $('#share-display-rated').click(function(e) {
+            var modal = new ModalRegion({el: '#modal-area'});
+            var basket_list_view = new BasketListView({});
+            modal.show(basket_list_view);
+        });
+        $('#share-display-seen').unbind('click');
+        $('#share-display-seen').click(function(e) {
+            var modal = new ModalRegion({el: '#modal-area'});
+            var basket_list_view = new BasketListView({'seen': true});
+            modal.show(basket_list_view);
         });
 
         // share via mail
@@ -696,6 +784,59 @@ BasketController = Marionette.Controller.extend({
     },
 
 });
+
+
+BasketListView = GenericResultView.extend({
+
+    initialize: function(options) {
+        console.log('BasketListView.initialize');
+        this.options = options;
+        this.message_more = '';
+    },
+
+    setup_data: function(data) {
+
+        var numberlist = data;
+
+        var numberlist_string = numberlist.join('\n');
+
+        // transfer to textarea
+        $('#result-content').val(numberlist_string);
+
+        this.setup_numberlist_buttons(numberlist);
+        this.hide_button_to_basket();
+
+    },
+
+    start: function() {
+
+        this.indicate_activity(true);
+        this.user_message('Computing results, please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
+
+        var response = opsChooserApp.basketModel.get_numbers(this.options);
+
+        // transfer data
+        this.setup_data(response);
+
+        // notify user
+        this.indicate_activity(false);
+        var length = NaN;
+        if (_.isArray(response)) {
+            length = response.length;
+        }
+        if (_.isObject(response)) {
+            length = Object.keys(response).length;
+        }
+        var message = length + ' collection item(s).';
+        if (this.message_more) {
+            message += this.message_more;
+        }
+        this.user_message(message, 'success');
+
+    },
+
+});
+
 
 // setup component
 opsChooserApp.addInitializer(function(options) {
