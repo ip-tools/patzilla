@@ -51,10 +51,13 @@ WaypointController = Marionette.Controller.extend({
                         // Feature "seen"
                         // - decrease opacity of documents marked as "seen"
                         // - mark current document as "seen" if there's no rating yet
+                        var mode_seen_fade = $('#mode-seen-fade').prop('checked');
                         var document = opsChooserApp.document_base.get_document_by_element(this.element);
                         var document_number = document.get_document_number();
                         if (opsChooserApp.document_seen_twice(document_number)) {
-                            opsChooserApp.document_base.dim(this.element);
+                            if (mode_seen_fade) {
+                                opsChooserApp.document_base.dim(this.element);
+                            }
                         } else {
                             opsChooserApp.document_mark_seen(document_number);
                         }
