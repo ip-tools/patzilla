@@ -8,6 +8,7 @@ development
 - ui: add jquery.waypoints library
 - ui: introduce “seen” attribute to BasketEntryModel
 - ui: apply basket item “seen” state to user interface by decreasing opacity of document panels
+- ui: fix document list comparator re. document numbers w/o kindcode
 
 0.107.0
 =======

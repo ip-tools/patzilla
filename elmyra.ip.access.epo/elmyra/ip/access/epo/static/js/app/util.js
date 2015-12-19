@@ -60,9 +60,20 @@ if (Function.prototype.bind) {
     var log = function() {};
 }
 
+// Addons to Underscore.js 1.4.4
 // http://stackoverflow.com/questions/572604/javascript-how-to-extend-array-prototype-push/572631#572631
 _.clear = function(array) {
     array.length = 0;
+};
+
+// _.findIndex was added in Underscore.js 1.8
+// https://stackoverflow.com/questions/21631127/find-the-array-index-of-an-object-with-a-specific-key-value-in-underscore/24588304#24588304
+var findIndex = function(arr, cond) {
+    var i, x;
+    for (i in arr) {
+        x = arr[i];
+        if (cond(x)) return parseInt(i);
+    }
 };
 
 (function($) {
