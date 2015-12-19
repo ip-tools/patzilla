@@ -78,6 +78,7 @@ ProjectModel = Backbone.RelationalModel.extend({
         name: null,
         created: null,
         modified: null,
+        mode_fade_seen: undefined,
     },
 
     // initialize model
@@ -412,8 +413,44 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         });
 
 
-        // 4. activate project action buttons
-        var delete_button = $(this.el).find('#project-delete-button')
+        // 4. setup mode buttons
+        var mode_seen_button = $(this.el).find('#mode-seen-fade-button');
+        var mode_seen_checkbox = mode_seen_button.find('#mode-seen-fade');
+
+        // propagate checkbox state from data model to user interface
+        var mode_seen_user = _this.model.get('mode_fade_seen');
+        if (mode_seen_user) {
+            mode_seen_checkbox.prop('checked', true);
+        }
+
+        // bind click event
+        mode_seen_button.unbind('click');
+        mode_seen_button.click(function(e) {
+
+            //log('CLICK SEEN');
+
+            // boilerplate
+            e.stopPropagation();
+            e.preventDefault();
+            //$(this).popover('hide');
+
+            // manually toggle ui state, was suppressed by e.stopPropagation() and e.preventDefault()
+            mode_seen_checkbox.toggleCheck();
+
+            // propagate checkbox state from user interface to data model
+            var mode_seen_ui = mode_seen_checkbox.prop('checked');
+            //log('mode_seen_ui:', mode_seen_ui);
+            _this.model.set('mode_fade_seen', mode_seen_ui);
+            _this.model.save();
+
+            var mode_seen_user = _this.model.get('mode_fade_seen');
+            //log('mode_seen_user:', mode_seen_user);
+
+        });
+
+
+        // 5. bind project action buttons
+        var delete_button = $(this.el).find('#project-delete-button');
         delete_button.unbind('click');
         delete_button.click(function(e) {
 

@@ -6,9 +6,10 @@ development
 ===========
 - ui: Feature "Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
 - ui: add jquery.waypoints library
-- ui: introduce “seen” attribute to BasketEntryModel
-- ui: apply basket item “seen” state to user interface by decreasing opacity of document panels
+- ui: Feature "track seen documents": introduce “seen” attribute to BasketEntryModel
+- ui: Feature "track seen documents": apply basket item “seen” state to user interface by decreasing opacity of document panels
 - ui: fix document list comparator re. document numbers w/o kindcode
+- ui: Feature "track seen documents": introduce “mode_fade_seen” attribute to ProjectModel and bind mode behavior to it
 
 0.107.0
 =======
