@@ -63,7 +63,7 @@ DocumentBaseController = Marionette.Controller.extend({
             event.preventDefault();
             var lang = $(this).data('lang');
 
-            var document = opsChooserApp.document_base.get_document(this);
+            var document = opsChooserApp.document_base.get_document_by_element(this);
 
             $(this).after('<span class="abstract-acquire-spinner">&nbsp;&nbsp;<i class="icon-refresh icon-spin"></i></span>');
 
@@ -128,9 +128,14 @@ DocumentBaseController = Marionette.Controller.extend({
 
     },
 
-    get_document: function(element) {
-        var document = $(element).closest('.ops-collection-entry').prop('ops-document');
-        return document;
+    get_collection_entry_by_element: function(element) {
+        return $(element).closest('.ops-collection-entry');
+    },
+
+    get_document_by_element: function(element) {
+        return this.get_collection_entry_by_element(element).prop('ops-document');
+    },
+
     },
 
 });
@@ -158,7 +163,7 @@ DocumentDetailsController = Marionette.Controller.extend({
             var container = $($(e.target).attr('href'));
             var details_type = $(this).data('details-type');
 
-            var document = opsChooserApp.document_base.get_document(this);
+            var document = opsChooserApp.document_base.get_document_by_element(this);
 
             if (document) {
                 if (_(['claims', 'description']).contains(details_type)) {

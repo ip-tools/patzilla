@@ -711,7 +711,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        //log('document seen:', document_number);
+        log('document seen:', document_number);
 
         this.basketModel.add(document_number).then(function(item) {
 
@@ -722,7 +722,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     //_this.basketModel.trigger('change:rate', item, document_number);
 
                 }, error: function() {
-                    console.error('rating save error', document_number, item);
+                    console.error('"seen" save error', document_number, item);
                 }
             });
 
