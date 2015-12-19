@@ -315,6 +315,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             }
             return number;
         });
+        //log('publication_numbers:', publication_numbers);
 
         // compute query expression to display documents from OPS
         var query_ops_constraints = _(_.map(publication_numbers, function(publication_number) {
@@ -343,8 +344,15 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // establish comparator to bring collection items into same order of upstream result list
         this.documents.comparator = function(document) {
+
+            // compare documents with kindcode + seqnumber and w/o kindcode
+            // to match reference item w/o kindcode
             var document_id = document.get('@country') + document.get('@doc-number'); // + document.get('@kind');
-            var index = publication_numbers.indexOf(document_id);
+
+            //var index = publication_numbers.indexOf(document_id);
+            var index = findIndex(publication_numbers, function(item) {
+                return _.string.startsWith(item, document_id)
+            });
 
             // handle edge cases
             // easy: if not found in list, put it to bottom of list
