@@ -43,12 +43,21 @@ BasketModel = Backbone.RelationalModel.extend({
     // memoize results of method, invalidating cache on model change
     wrap_cache: function(funcname, context) {
         context = context || this;
+
+        // cache return value of function
         this[funcname] = memoize(this[funcname], this);
+
+        // method for invalidating the cache
         this.invalidate_cache = function() {
             //this[funcname].__cache.remove();
             this[funcname].__cache.purge();
         };
-        this.bind('change', this.invalidate_cache);
+
+        // invalidate cache on all model change events
+        //this.bind('change', this.invalidate_cache);
+        this.bind('change:add', this.invalidate_cache);
+        this.bind('change:remove', this.invalidate_cache);
+        this.bind('change:rate', this.invalidate_cache);
     },
 
     // initialize model from url query parameters ("numberlist")

@@ -16,7 +16,7 @@ WaypointController = Marionette.Controller.extend({
 
         var current_header = null;
 
-        // TODO: for letting the drawing follow the flow
+        // TODO: for letting the drawing follow the text
         /*
          $('.ops-collection-entry-heading-second').each(function() {
          var sticky = new Waypoint.Sticky({
@@ -39,7 +39,7 @@ WaypointController = Marionette.Controller.extend({
                     //log('waypoint: Enter triggered with direction ' + direction + ':', this);
                     if (direction == 'up') {
 
-                        // TODO: for letting the drawing follow the flow
+                        // TODO: for letting the drawing follow the text
                         /*
                          var container = $(this.element).closest('.ops-collection-entry')
                          var elem = container.find('.ops-collection-entry-heading-second');
@@ -49,11 +49,11 @@ WaypointController = Marionette.Controller.extend({
                     } else if (direction == 'down') {
 
                         // mark current document as "seen"
-                        var document = opsChooserApp.document_base.get_document(this.element);
+                        var document = opsChooserApp.document_base.get_document_by_element(this.element);
                         var document_number = document.get_document_number();
                         opsChooserApp.document_seen(document_number);
 
-                        // TODO: for letting the drawing follow the flow
+                        // TODO: for letting the drawing follow the text
                         /*
                          if (current_header) {
 
@@ -83,7 +83,7 @@ WaypointController = Marionette.Controller.extend({
                 exited: function(direction) {
                     //log('waypoint: Exited triggered with direction ' + direction);
 
-                    // TODO: for letting the drawing follow the flow
+                    // TODO: for letting the drawing follow the text
                     /*
                      if (direction == 'down') {
                      var container = $(this.element).closest('.ops-collection-entry')
