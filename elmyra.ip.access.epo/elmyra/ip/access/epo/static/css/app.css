@@ -430,3 +430,14 @@ dl.dl-horizontal-inline {
     right: 30px;
     max-width: 300px;
 }
+
+
+/* waypoint sticky */
+/* TODO: for letting the drawing follow the flow */
+/*
+.stuck {
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+}
+*/

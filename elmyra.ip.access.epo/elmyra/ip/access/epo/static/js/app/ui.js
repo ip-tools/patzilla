@@ -296,6 +296,11 @@ UiController = Marionette.Controller.extend({
                 // `this` === `client`
                 // `event.target` === the element that was clicked
                 //event.target.style.display = "none";
+                if (_.isEmpty(event.data)) {
+                    var message = "Empty content, nothing copied to clipboard.";
+                    _ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                    return;
+                }
                 var size_value = event.data[mimetype].length;
                 var size_label = 'Bytes';
                 if (size_value >= 1000) {

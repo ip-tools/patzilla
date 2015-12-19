@@ -37,6 +37,10 @@
                 var hash = stringifyJson(arguments);
                 return (delete cache[hash]);
             });
+            cache.purge || (cache.purge = function() {
+                var hash = stringifyJson(arguments);
+                cache = {};
+            });
             return cache;
         }).call(context);
 

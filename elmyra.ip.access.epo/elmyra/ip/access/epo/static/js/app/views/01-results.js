@@ -113,6 +113,10 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
         this.$el.find('#result-to-basket-button').hide();
     },
 
+    hide_button_to_basket: function() {
+        this.$el.find('#result-to-basket-button').hide();
+    },
+
     onShow: function() {
         this.start();
     },
