@@ -403,15 +403,19 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
             container.append(entry);
         });
 
-        // make project entry links switch the current project
-        container.find('a').click(function() {
+        // make project entry links switch to the selected project
+        var project_links = container.find('a');
+        project_links.unbind('click');
+        project_links.click(function() {
             var projectname = $(this).data('value');
             opsChooserApp.trigger('project:load', projectname);
         });
 
 
         // 4. activate project action buttons
-        $(this.el).find('#project-delete-button').click(function(e) {
+        var delete_button = $(this.el).find('#project-delete-button')
+        delete_button.unbind('click');
+        delete_button.click(function(e) {
 
             var projectname = opsChooserApp.config.get('project');
             _ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
