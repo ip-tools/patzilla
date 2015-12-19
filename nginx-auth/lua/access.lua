@@ -49,6 +49,11 @@ if request_uri:find("^/api/ops/.+/kindcodes$") then
     return
 end
 
+-- temporarily allow free embedding
+--if request_uri:find("^/embed/.*$") then
+--    return
+--end
+
 -- "patentview" domains
 if ngx.var.host:find("^patentview.*$") then
     return
