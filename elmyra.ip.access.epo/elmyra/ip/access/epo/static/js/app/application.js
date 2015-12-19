@@ -736,7 +736,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        log('document seen:', document_number);
+        log('document_mark_seen:', document_number);
 
         this.basketModel.add(document_number).then(function(item) {
 

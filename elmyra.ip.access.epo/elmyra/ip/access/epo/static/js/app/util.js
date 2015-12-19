@@ -60,7 +60,9 @@ if (Function.prototype.bind) {
     var log = function() {};
 }
 
-// Addons to Underscore.js 1.4.4
+// ------------------------------------------
+//   Addons to Underscore.js 1.4.4
+// ------------------------------------------
 // http://stackoverflow.com/questions/572604/javascript-how-to-extend-array-prototype-push/572631#572631
 _.clear = function(array) {
     array.length = 0;
@@ -76,6 +78,12 @@ var findIndex = function(arr, cond) {
     }
 };
 
+
+// ------------------------------------------
+//   Addons to jQuery
+// ------------------------------------------
+
+// qnotify
 (function($) {
     $.fn.extend({
         qnotify: function(message, options) {
@@ -90,6 +98,7 @@ var findIndex = function(arr, cond) {
     });
 })(jQuery);
 
+// .exists()
 // https://stackoverflow.com/questions/920236/how-can-i-detect-if-a-selector-returns-null/920322#920322
 $.fn.exists = function () {
     return this.length !== 0;
@@ -117,6 +126,19 @@ jQuery.fn.handle_enter_keypress = function() {
                     .filter(':first').click();
             }
         });
+    }
+}
+
+// .toggleCheck()
+// https://stackoverflow.com/questions/4177159/toggle-checkboxes-on-off/18268117#18268117
+$.fn.toggleCheck = function() {
+    if (!$(this).exists()) {
+        return;
+    }
+
+    var element = this[0];
+    if (element.tagName === 'INPUT') {
+        $(element).prop('checked', !($(element).prop('checked')));
     }
 }
 
