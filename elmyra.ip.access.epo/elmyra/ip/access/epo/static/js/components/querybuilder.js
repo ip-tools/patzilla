@@ -143,6 +143,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // perform numberlist search
                 $('.btn-query-perform').click(function() {
                     opsChooserApp.disable_reviewmode();
+                    opsChooserApp.populate_metadata();
                     opsChooserApp.perform_numberlistsearch({reviewmode: false, clear: true});
                 });
 

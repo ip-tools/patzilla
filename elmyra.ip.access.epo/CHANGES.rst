@@ -10,6 +10,7 @@ development
 - ui: Feature "track seen documents": apply basket item “seen” state to user interface by decreasing opacity of document panels
 - ui: fix document list comparator re. document numbers w/o kindcode
 - ui: Feature "track seen documents": introduce “mode_fade_seen” attribute to ProjectModel and bind mode behavior to it
+- ui: make datasource “numberlist” and review mode honor “full-cycle” search modifier
 
 0.107.0
 =======
