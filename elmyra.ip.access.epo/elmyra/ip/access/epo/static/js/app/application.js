@@ -28,6 +28,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.metadata.set('reviewmode', false);
     },
 
+    populate_metadata: function() {
+        var query_data = this.queryBuilderView.get_common_form_data();
+        this.metadata.set('query_data', query_data);
+    },
+
     // perform ops search and process response
     perform_search: function(options) {
 
