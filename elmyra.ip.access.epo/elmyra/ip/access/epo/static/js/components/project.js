@@ -443,8 +443,9 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
             _this.model.set('mode_fade_seen', mode_seen_ui);
             _this.model.save();
 
-            var mode_seen_user = _this.model.get('mode_fade_seen');
-            //log('mode_seen_user:', mode_seen_user);
+            if (!mode_seen_ui) {
+                opsChooserApp.document_base.bright('.ops-collection-entry');
+            }
 
         });
 
