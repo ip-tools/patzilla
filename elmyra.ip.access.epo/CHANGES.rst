@@ -14,6 +14,7 @@ development
 - ui: sophisticated placeholder subsystem
 - middleware: improve number normalization for US numbers, e.g. US20150322651A1
 - ui: proper sorting (recent first, past first) for kindcode variants with EP..A3 downvoting
+- middleware: disable long-term caching for ops family queries
 
 0.107.0
 =======

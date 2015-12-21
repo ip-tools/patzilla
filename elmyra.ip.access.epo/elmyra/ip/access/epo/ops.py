@@ -372,7 +372,7 @@ def ops_claims(document_number):
         raise response
 
 
-@cache_region('static')
+@cache_region('search')
 def ops_family_inpadoc(reference_type, document_number, constituents):
     """
     Download requested family publication information from OPS
