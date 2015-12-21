@@ -316,7 +316,7 @@
 
         <span id="region-comment-text"/>
 
-        <div class="ops-collection-entry-inner container-fluid">
+        <div class="ops-collection-entry-inner container-fluid ops-bibliographic-details">
 
             <div class="row-fluid">
                 <div class="span12 keyword">
@@ -586,13 +586,14 @@
 
 </script>
 
+
 <%text>
 <script id="ops-entry-error-template" type="text/x-underscore-template">
 
     <%
     var patent_number = get_patent_number();
-    var subject = 'Display error for ' + patent_number;
-    var body = 'We experienced a display error for ' + patent_number + '. Please get back to us.';
+    var subject = 'Problem when displaying document ' + patent_number;
+    var body = 'We experienced an error when displaying the document ' + patent_number + ', which is important to us. Please have a look at this problem.';
     %>
 
     <div class="container-fluid ops-collection-entry page-break-after" data-document-number="<%= patent_number %>">
@@ -613,7 +614,7 @@
                     <br/>
                     <%= error_message %>
                     <br/><br/>
-                    <a href="mailto:support@elmyra.de?subject=<%= encodeURIComponent('Elmyra IP Suite Navigator: ' + subject)%>&body=<%= encodeURIComponent(body) %>" role="button" class="btn">Please report the error.</a>
+                    <a href="mailto:support@elmyra.de?subject=<%= encodeURIComponent('Elmyra IP Suite Navigator: ' + subject)%>&body=<%= encodeURIComponent(body) %>" role="button" class="btn">Help to improve the system</a>
                 </div>
             </div>
 

@@ -4,9 +4,11 @@
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
     keywords: [],
-    perform: function(documents, metadata, query, range) {
+    perform: function(documents, metadata, query, range, more_options) {
 
         log('OpsPublishedDataSearch.perform');
+
+        more_options = more_options || {};
 
         opsChooserApp.ui.indicate_activity(true);
         //$('.pager-area').hide();
@@ -46,6 +48,13 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var entries_full = [];
                 if (!_.isEmpty(search_result)) {
 
+                    // document display strategy: regular vs. full-cycle
+                    var query_data = metadata.get('query_data');
+                    var mode_full_cycle = false;
+                    if (query_data) {
+                        mode_full_cycle = query_data['modifiers']['full-cycle'];
+                    }
+
                     // search_result is nested, collect representative result documents
                     // while retaining additional result documents inside ['bibliographic-data']['full-cycle']
                     var results = [];
@@ -56,24 +65,22 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                         // collect full-cycle information from other result documents
                         var representations = [];
                         _(exchange_documents).each(function(exchange_document) {
+                            // TODO: implement more sophisticated decisions how to order the documents
                             representations.push(new OpsExchangeDocument(exchange_document));
                         });
                         _(exchange_documents).each(function(exchange_document) {
                             exchange_document['bibliographic-data']['full-cycle'] = representations;
                         });
 
+
                         // document display strategy: regular vs. full-cycle
-                        var query_data = metadata.get('query_data');
-                        var mode_full_cycle = false;
-                        if (query_data) {
-                            mode_full_cycle = query_data['modifiers']['full-cycle'];
-                        }
 
                         // a) display all documents (full-cycle)
                         if (mode_full_cycle) {
                             results = $.merge(results, exchange_documents);
 
                         // b) use first result document as representative document
+                        // TODO: implement more sophisticated decisions which document to choose as the representative
                         } else {
                             var representative_entry = exchange_documents[0];
                             results.push(representative_entry);
@@ -86,7 +93,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 }
 
                 // propagate data to model collection instance
-                documents.reset(entries);
+                documents.reset(entries, {silent: more_options.silent});
 
                 // propagate metadata to model
                 var biblio_search = response['ops:world-patent-data']['ops:biblio-search'];
@@ -352,7 +359,7 @@ OpsBaseModel = Backbone.Model.extend({
                 data.fullnumber = data.docnumber;
 
             } else {
-                data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '')
+                data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
             }
             data.isodate = this.format_date(data.date);
 
@@ -486,6 +493,13 @@ OpsExchangeDocument = OpsBaseModel.extend({
                 results.push(entry);
             });
             return results;
+        },
+
+        get_full_cycle_numbers: function() {
+            var numbers = _.map(this.get_full_cycle(), function(model_pubcycle) {
+                return model_pubcycle.get_document_number();
+            });
+            return numbers;
         },
 
         get_publication_reference: function(format) {
@@ -896,11 +910,18 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
     get_document_numbers: function() {
         var numbers = [];
         _.each(this.models, function(model) {
+
+            // push the document numbers
             numbers.push(model.get_document_number());
-            _.each(model.attributes.get_full_cycle(), function(model_pubcycle) {
-                numbers.push(model_pubcycle.get_document_number());
-            });
+
+            // push more numbers from full-cycle
+            var full_cycle_numbers = model.attributes.get_full_cycle_numbers();
+            Array.prototype.push.apply(numbers, full_cycle_numbers);
         });
+
+        // make list of unique items
+        numbers = _.unique(numbers);
+
         return numbers;
     },
 

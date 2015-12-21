@@ -1,0 +1,134 @@
+## -*- coding: utf-8 -*-
+## (c) 2013-2015 Andreas Motl, Elmyra UG
+
+<script id="ops-entry-placeholder-template" type="text/x-underscore-template">
+    <%text>
+    <%
+    var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
+    var report_issue_id = _.uniqueId('ops-placeholder-report-issue-');
+    var accordion_id = _.uniqueId('ops-placeholder-accordion-');
+    var document_number = data.get_patent_number();
+    var metadata = opsChooserApp.metadata;
+    %>
+    <div class="ops-collection-entry-inner container-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="hero-unit">
+                    <h4>Placeholder for "<%= document_number %>"</h4>
+                    <p>Document not in result list</p>
+                    <% if (!_.isEmpty(data['alternatives_local'])) { %>
+                    <p>
+                        However, we identified one of these viable alternatives in the current page of the result list:
+                    <ul>
+                        <%
+                        _.each(data['alternatives_local'], function(alternative) {
+                        %>
+                        <li>
+                            <a href="javascript: opsChooserApp.ui.scroll_to_document('<%= alternative %>');">
+                                <%= alternative %>
+                            </a>
+                        </li>
+                        <%
+                        });
+                        %>
+                    </ul>
+                    </p>
+                    <% } %>
+
+                    <div id="<%= accordion_id %>">
+
+                    <p>
+                        <button class="btn btn-default" data-toggle="collapse" data-target="#<%= learn_more_id %>" data-parent="#<%= accordion_id %>">
+                            Learn more
+                        </button>
+                        <button class="btn btn-default" data-toggle="collapse" data-target="#<%= report_issue_id %>" data-parent="#<%= accordion_id %>">
+                            Report problem
+                        </button>
+                    </p>
+
+                    <div class="accordion-group noborder">
+                    <div id="<%= learn_more_id %>" class="collapse">
+                        A document was delivered from an upstream datasource but is missing in the result list.
+                        Please help to improve the system by reporting this issue to us.
+                        <br/><br/>
+
+                        Some background information about possible reasons why this might happen:
+                        <ul class="breathe">
+                            <li>
+                                <h4 class="inline-head">Search mode</h4>
+                                <br/>
+                                The specific kindcode <strong>"<%= data['@kind'] %>"</strong> for the requested
+                                document <strong>"<%= data['@country'] %><%= data['@doc-number'] %>"</strong> is not listed,
+                                because another representative document was selected for display,
+                                maybe by using a specific search mode like "full-cycle" or "most-recent" modifiers.
+                                <br/>
+                                Try using a different search mode or even use
+                                <button class="btn btn-small">
+                                    <i class="icon-repeat"></i>
+                                    Full cycle
+                                </button>
+                                mode to display
+                                <strong>all</strong> kindcode variants available from OPS.
+                            </li>
+                            <li>
+                                <h4 class="inline-head">Comparison mismatch</h4>
+                                <br/>
+                                Depending on the format of the publication number, the comparison whether results are
+                                actually listed or not might fail and lead to mismatches.
+                                In this case, this placeholder can be considered a "false alarm".
+                                <br/>
+                                Often, another representation of the same document having a different kindcode can be
+                                found in the result list next to this placeholder.
+                                If we can identify viable alternatives in the same result page, they are displayed above.
+                                <p class="hero-smaller">
+                                    We apply publication number normalization and sophisticated decision rules to achieve
+                                    the best placeholder behavior.
+                                    Your report can have a real impact on improving these rules.
+                                </p>
+                            </li>
+                            <li>
+                                <h4 class="inline-head">Document not available from OPS</h4>
+                                <br/>
+                                The requested document <strong>"<%= document_number %>"</strong> is not available
+                                from EPO's Open Patent Services (OPS).
+                                <br/>
+                                The publication number might actually be an application or domestic filing number
+                                or may contain an uncommon patent kind code, so trying different variants or even
+                                searching without kindcode might help.
+                                <p class="hero-smaller">
+                                    If the document is not available in any other form which satisfies your needs,
+                                    don't hesitate to report this problem to us!
+                                </p>
+                            </li>
+                        </ul>
+                    </div>
+                    </div>
+
+                    <div class="accordion-group noborder">
+                    <div id="<%= report_issue_id %>" class="collapse">
+                        <textarea rows="13" cols="80" class="span8">
+Dear Elmyra Support Team,
+we encountered a problem when displaying document "<%= document_number %>", please have a look into this issue.
+Thanks in advance and with kind regards.
+
+Additional information:
+The original query expression to datasource "<%= metadata.get('datasource') %>" was "<%= metadata.get('query_origin') %>", amended to "<%= metadata.get('query_real') %>" and the document in question occurred at result range "<%= metadata.get('result_range') %>".
+
+More remarks:
+</textarea>
+                        <br/>
+                        <button class="btn btn-info btn-large" role="button"
+                                onclick="javascript: opsChooserApp.ui.open_support_email('Problem when displaying document <%= document_number %>', $('#<%= report_issue_id %> textarea').val());">
+                            Send report as email
+                        </button>
+                    </div>
+                    </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</%text>
+</script>

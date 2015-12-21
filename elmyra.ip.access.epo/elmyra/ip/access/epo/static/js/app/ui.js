@@ -264,6 +264,11 @@ UiController = Marionette.Controller.extend({
         }
     },
 
+    scroll_to_document: function(document_number) {
+        var selector = 'div[data-document-number="' + document_number + '"]';
+        this.scroll_smooth(selector);
+    },
+
     copy_to_clipboard: function(mimetype, payload, options) {
         options = options || {};
         var deferred = $.Deferred();
@@ -333,6 +338,17 @@ UiController = Marionette.Controller.extend({
     notify_module_locked: function(modulename) {
         var message = 'The module "' + modulename + '" is not available to your account. Please subscribe to this feature.';
         this.notify(message, {type: 'warning', icon: 'icon-lock'});
+    },
+
+    open_email: function(recipient, subject, body) {
+        var address_email = 'mailto:' + recipient
+        var address_more = 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+        var address = address_email + '?' + address_more;
+        $('<iframe src="' + address + '">').appendTo('body').css('display', 'none');
+    },
+
+    open_support_email: function(subject, body) {
+        this.open_email('support@elmyra.de', 'Elmyra Navigator: ' + subject, body);
     },
 
 });
