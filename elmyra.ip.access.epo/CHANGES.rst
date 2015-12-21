@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.108.1
+=======
+- ui: refactor components due to import order woes
+
 0.108.0
 =======
 - ui: Feature "Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
