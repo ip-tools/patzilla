@@ -405,6 +405,44 @@
                         Full cycle
                     </button>
 
+                    <div class="btn-group" data-toggle="buttons-radio" id="mode-order-buttons">
+
+                        <!-- toggle mode: order-past-first -->
+                        <button role="button"
+                                class="btn btn-popover btn-mode-order"
+                                data-name="order-past-first"
+                                data-toggle="buttons-checkbox"
+                                data-active-target="#mode-order-label"
+                                data-active-text="Past first"
+                                data-trigger="hover" data-placement="bottom" data-content="Display kindcode variants in chronological order of publication"
+                                >
+                            <i class="icon-sort-by-order"></i>
+                        </button>
+
+                        <!-- toggle mode: order-recent-first -->
+                        <button role="button"
+                                class="btn btn-popover btn-mode-order"
+                                data-name="order-recent-first"
+                                data-toggle="buttons-checkbox"
+                                data-active-target="#mode-order-label"
+                                data-active-text="Recent first"
+                                data-trigger="hover" data-placement="bottom" data-content="Display kindcode variants in reverse chronological order of publication"
+                                >
+                            <i class="icon-sort-by-order-alt"></i>
+                        </button>
+
+                        <!-- label -->
+                        <button id="btn-mode-order-label"
+                                class="btn btn-popover disabled"
+                                >
+                            <span id="mode-order-label"
+                                data-original-text="Native order">
+                                Native order
+                            </span>
+                        </button>
+
+                    </div>
+
                     <div class="btn-group" data-toggle="buttons-radio" id="family-remove-buttons">
 
                         <!-- toggle mode: remove family members -->

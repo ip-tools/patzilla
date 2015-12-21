@@ -48,11 +48,21 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var entries_full = [];
                 if (!_.isEmpty(search_result)) {
 
-                    // document display strategy: regular vs. full-cycle
+                    // get query_data from metadata
                     var query_data = metadata.get('query_data');
+
+                    // document display strategy: regular vs. full-cycle
                     var mode_full_cycle = false;
                     if (query_data) {
                         mode_full_cycle = query_data['modifiers']['full-cycle'];
+                    }
+
+                    // document sort order: recent vs. descending
+                    var order_recent_first = false;
+                    var order_past_first = false;
+                    if (query_data) {
+                        order_recent_first = query_data['modifiers']['order-recent-first'];
+                        order_past_first   = query_data['modifiers']['order-past-first'];
                     }
 
                     // search_result is nested, collect representative result documents
@@ -72,6 +82,30 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                             exchange_document['bibliographic-data']['full-cycle'] = representations;
                         });
 
+
+                        // sort exchange documents by publication date
+                        if (order_recent_first || order_past_first) {
+                            exchange_documents = _.sortBy(exchange_documents, function(exchange_document) {
+                                var document_id = (new OpsBaseModel()).attributes.get_document_id(
+                                    exchange_document['bibliographic-data'], 'publication', 'docdb');
+                                var isodate = document_id.isodate;
+                                exchange_document.document_id = document_id;
+                                return isodate;
+                            });
+
+                            if (order_recent_first) {
+
+                                // sort reverse chronologically
+                                exchange_documents = exchange_documents.reverse();
+
+                                // downvote EP..A3 documents
+                                //log('exchange_documents:', exchange_documents);
+                                var document_id = exchange_documents[0].document_id;
+                                if (document_id['country'] == 'EP' && document_id['kind'] == 'A3') {
+                                    _.move(exchange_documents, 0, 1);
+                                }
+                            }
+                        }
 
                         // document display strategy: regular vs. full-cycle
 

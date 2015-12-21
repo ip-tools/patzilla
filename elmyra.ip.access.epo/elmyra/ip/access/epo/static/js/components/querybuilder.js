@@ -160,7 +160,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        var common_buttons = $('.btn-full-cycle, .btn-family-remove, .btn-family-replace, .btn-family-full');
+        var common_buttons = $('.btn-full-cycle, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
         common_buttons.on('click', function(e) {
 
             var already_active = $(this).hasClass('active');
@@ -189,7 +189,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 } else {
                     $(this).parent().find('button').addClass('btn-info').not(this).removeClass('btn-info');
                 }
+
             }
+
+            // set label text
+            _this.buttonstate_to_label(this, already_active);
 
             // when clicking a mode button which augments search behavior, recompute upstream query expression
             // for search backends where query_data modifiers already influence the expression building
@@ -246,6 +250,26 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
         */
 
+    },
+
+    // set label text
+    buttonstate_to_label: function(element, default_state) {
+
+        // switch to default state
+        if (default_state) {
+            var active_target = $(element).data('active-target');
+            var active_text   = $(active_target).data('original-text');
+
+        // switch to state coming from selected button
+        } else {
+            var active_target = $(element).data('active-target');
+            var active_text   = $(element).data('active-text');
+        }
+
+        // set text to appropriate element
+        if (active_target && active_text) {
+            $(active_target).html(active_text);
+        }
     },
 
     // hide query textarea for ftpro, if not in debug mode
@@ -760,6 +784,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (query_data['modifiers']['full-cycle']) {
                 tags.push('fc');
             }
+
+            if (query_data['modifiers']['order-past-first']) {
+                tags.push('pf');
+            }
+            if (query_data['modifiers']['order-recent-first']) {
+                tags.push('rf');
+            }
+
             if (query_data['modifiers']['family-remove']) {
                 tags.push('-fam:rm');
             }
@@ -1025,6 +1057,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var datasource = opsChooserApp.get_datasource();
         var modifier_buttons_selector = 'button[data-name="full-cycle"]';
+        modifier_buttons_selector += ',[data-name="order-past-first"]';
+        modifier_buttons_selector += ',[data-name="order-recent-first"]';
 
         if (_(['depatisnet']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-remove"]';
@@ -1064,7 +1098,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         options = options || {};
 
         // populate query modifiers to user interface
+        var _this = this;
         var modifier_elements = this.get_form_modifier_elements();
+
         _.each(modifier_elements, function(element) {
             var name = $(element).data('name');
 
@@ -1075,7 +1111,20 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $(element).removeClass('active');
                 $(element).removeClass('btn-info');
             }
+
+            // set label text to default
+            _this.buttonstate_to_label(element, true);
+
         });
+
+        _.each(modifier_elements, function(element) {
+            var is_active = $(element).hasClass('active');
+            if (is_active) {
+                // set label text to selected one
+                _this.buttonstate_to_label(element, false);
+            }
+        });
+
 
         // populate sorting state to user interface
         if (data.sorting) {
@@ -1176,7 +1225,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var sort_state;
 
         var datasource = opsChooserApp.get_datasource();
-        var modifier_buttons_selector = 'button[data-name="full-cycle"]';
 
         if (_(['depatisnet']).contains(datasource)) {
             var field_chooser = $('#querybuilder-area').find('#sort-field-chooser');
