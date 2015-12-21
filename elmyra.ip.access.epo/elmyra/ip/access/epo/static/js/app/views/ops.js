@@ -90,8 +90,23 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         // Attach current model reference to result entry dom container so it can be used by different subsystems
         // A reference to the model is required for switching between document details (biblio/fulltext)
         // and for acquiring abstracts from third party data sources.
+        // In other words, this is a central gateway between the jQuery DOM world and the Backbone Marionette world.
+        // However, there should be better mechanisms. Investigate! (TODO)
         var container = $(this.el).find('.ops-collection-entry');
         $(container).prop('ops-document', this.model.attributes);
+
+        // Swap bibliographic details with placeholder information if we encounter appropriate signal
+        if (this.model.get('__type__') == 'ops-placeholder') {
+            //log('this.model:', this.model);
+
+            // Replace details with placeholder
+            var html = _.template($('#ops-entry-placeholder-template').html(), this.model.attributes, {variable: 'data'});
+            $(container).find('.ops-bibliographic-details').replaceWith(html);
+
+            // Hide other elements displaying bibliographic data
+            $(container).find('.header-biblio,.document-details-chooser').hide();
+
+        }
 
     },
 
@@ -108,7 +123,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
             var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
             return result;
 
-        } catch(error) {
+        } catch (error) {
             console.error('Error while rendering OpsExchangeDocumentView:', error.message, error.stack);
             var args = Array.prototype.slice.apply(arguments);
             this.model.set('error_message', error.message);

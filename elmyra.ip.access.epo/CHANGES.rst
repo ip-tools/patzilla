@@ -11,6 +11,8 @@ development
 - ui: fix document list comparator re. document numbers w/o kindcode
 - ui: Feature "track seen documents": introduce “mode_fade_seen” attribute to ProjectModel and bind mode behavior to it
 - ui: make datasource “numberlist” and review mode honor “full-cycle” search modifier
+- ui: sophisticated placeholder subsystem
+- middleware: improve number normalization for US numbers, e.g. US20150322651A1
 
 0.107.0
 =======

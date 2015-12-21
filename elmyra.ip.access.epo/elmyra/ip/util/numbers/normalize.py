@@ -405,10 +405,16 @@ def normalize_patent_us(patent):
 
     length = len(patched['number'])
 
-    # US applications: convert from 4+5 or 4+6 to 4+7=11
-    if length == 9 or length == 10:
-        padding = '0' * (11 - length)
+    # US applications: convert from 4+5=9 to 4+6=10
+    if length == 9:
+        padding = '0' * (10 - length)
         patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
+
+    # US applications: convert from 4+7=11 to 4+6=10
+    # 2015-12-20: normalize"FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
+    elif length == 11:
+        if patched['number'][4] == '0':
+            patched['number'] = patched['number'][0:4] + patched['number'][5:]
 
     # US patents: trim to seven digits
     else:

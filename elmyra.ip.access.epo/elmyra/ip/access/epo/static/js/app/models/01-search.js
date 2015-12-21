@@ -124,17 +124,8 @@ DatasourceCrawler = Marionette.Controller.extend({
         // then build list of unique entries
         if (this.filter.strip_kindcodes) {
             numberlist = _(numberlist).map(function(item) {
-
                 // strip patent kindcode for the poorest
-                var re = /.+\d+(\D)/g;
-                var match = re.exec(item);
-                if (match[1]) {
-                    var position = re.lastIndex;
-                    if (position) {
-                        item = item.substring(0, position - 1);
-                    }
-                }
-                return item;
+                return patent_number_strip_kindcode(item);
             });
             numberlist = _(numberlist).uniq();
         }

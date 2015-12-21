@@ -66,6 +66,18 @@ hr.no-margin {
     margin: inherit;
 }
 
+p.hero-smaller {
+    font-size: 75%;
+    line-height: 1.5em;
+}
+
+
+/* bootstrap modifiers */
+.accordion-group.noborder {
+    border: none;
+}
+
+
 
 /* header */
 .label-large {
@@ -94,6 +106,14 @@ hr.no-margin {
 }
 .header-container #ui-productname {
     margin-right: 25px;
+}
+
+.inline-head {
+    display: inline;
+}
+
+ul.breathe li {
+    margin-bottom: 1em;
 }
 
 

@@ -33,6 +33,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.metadata.set('query_data', query_data);
     },
 
+
+    // TODO: move to search.js
+
     // perform ops search and process response
     perform_search: function(options) {
 
@@ -45,6 +48,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var query = this.get_query();
         var datasource = this.get_datasource();
         this.metadata.set('datasource', datasource);
+
+        // it's probably important to reset e.g. "result_range",
+        // because we have to fetch 1-10 for each single result page from OPS
         this.metadata.resetSomeDefaults(options);
 
 
@@ -346,35 +352,18 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // for having a reference to ourselves in nested scopes
         var self = this;
+        var _this = this;
 
         // establish comparator to bring collection items into same order of upstream result list
-        this.documents.comparator = function(document) {
-
-            // compare documents with kindcode + seqnumber and w/o kindcode
-            // to match reference item w/o kindcode
-            var document_id = document.get('@country') + document.get('@doc-number'); // + document.get('@kind');
-
-            //var index = publication_numbers.indexOf(document_id);
-            var index = findIndex(publication_numbers, function(item) {
-                return _.string.startsWith(item, document_id)
-            });
-
-            // handle edge cases
-            // easy: if not found in list, put it to bottom of list
-            // TODO: make more sophisticated
-            if (index == -1) {
-                index = self.documents.length;
-            }
-
-            return index;
-        }
+        // TODO: decouple/isolate this behavior from "global" scope, i.e. this is not reentrant
+        this.documents_apply_comparator(publication_numbers);
 
         //var range = this.compute_range(options);
-        return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10').done(function() {
+        return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10', {silent: true}).done(function() {
 
-            // undefine comparator after performing action in order not to poise other queries
-            // TODO: decouple/isolate this behavior from "global" scope, i.e. this is not reentrant
-            self.documents.comparator = undefined;
+            // ------------------------------------------
+            //   metadata propagation
+            // ------------------------------------------
 
             // show the original query
             self.metadata.set('query_origin', query_origin);
@@ -384,12 +373,39 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             // amend the current result range and paging parameter
             self.metadata.set('result_range', range);
+
+            // FIXME: WTF - 17?
             self.metadata.set('pagination_entry_count', 17);
+
+
+            // ------------------------------------------
+            //   placeholders
+            // ------------------------------------------
+            // add placeholders for missing documents to model
+            _this.documents_add_placeholders(publication_numbers);
+
+
+            // ------------------------------------------
+            //   housekeeping
+            // ------------------------------------------
+            // undefine comparator after performing action in order not to poise other queries
+            // TODO: decouple/isolate this behavior from "global" scope, i.e. this is not reentrant
+            self.documents.comparator = undefined;
+
+
+            // ------------------------------------------
+            //   ui tuning
+            // ------------------------------------------
             $('.pagination').removeClass('span10');
             $('.pagination').addClass('span12');
 
             // TODO: selecting page size with DEPATISnet is currently not possible
             //$('.page-size-chooser').parent().remove();
+
+
+            // ------------------------------------------
+            //   downstream signalling
+            // ------------------------------------------
 
             // propagate list of found document numbers to results collection
             // in order to make it possible to indicate which documents are missing
@@ -399,6 +415,203 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             self.trigger('results:ready');
 
         });
+
+    },
+
+    // comparator to bring collection items into same order of upstream result list
+    documents_apply_comparator: function(documents_requested) {
+
+        // TODO: decouple/isolate this behavior from "global" scope, i.e. this is not reentrant
+        this.documents.comparator = function(document) {
+
+            var debug = false;
+
+            // get document number
+            // TODO: maybe use .get_document_id() ?
+            var document_id_full = document.get('@country') + document.get('@doc-number') + document.get('@kind');
+            debug && log('document_id_full:', document_id_full);
+
+            // compare against document numbers _with_ kindcode
+            var index = findIndex(documents_requested, function(item) {
+                return _.string.startsWith(item, document_id_full);
+            });
+            debug && log('index-1', index);
+
+            // fall back to compare against document numbers w/o kindcode
+            if (index == undefined) {
+
+                var document_id_short = document.get('@country') + document.get('@doc-number');
+                index = findIndex(documents_requested, function(item) {
+                    return _.string.startsWith(item, document_id_short);
+                });
+                // advance by one, since we usually want to insert _after_ that one
+                if (index != undefined) {
+                    index++;
+                }
+                debug && log('index-2', index);
+            }
+
+            // again, fall back to compare against full-cycle neighbors
+            if (index == undefined) {
+
+                var full_cycle_numbers_full = document.attributes.get_full_cycle_numbers();
+                var full_cycle_numbers = _.difference(full_cycle_numbers_full, [document_id_full]);
+
+                // check each full-cycle member ...
+                _.each(full_cycle_numbers, function(full_cycle_number) {
+                    var full_cycle_number_nokindcode = patent_number_strip_kindcode(full_cycle_number);
+                    // ... if it exists in list of requested documents
+                    var index_tmp = findIndex(documents_requested, function(document_requested) {
+
+                        var outcome =
+                            _.string.startsWith(document_requested, full_cycle_number) ||
+                            _.string.startsWith(document_requested, full_cycle_number_nokindcode);
+                        return outcome;
+                    });
+                    if (index_tmp != undefined) {
+                        index = index_tmp;
+                    }
+                });
+
+                // advance by one, since we usually want to insert _after_ that one
+                if (index != undefined) {
+                    index++;
+                }
+                debug && log('index-3', index);
+            }
+
+            // if not found yet, put it to the end of the list
+            if (index == undefined) {
+                if (self.documents) {
+                    index = self.documents.length;
+                }
+                debug && log('index-4', index);
+            }
+
+            return index;
+        }
+
+    },
+
+    // add placeholders for missing documents to model
+    documents_add_placeholders: function(documents_requested) {
+
+        var debug = false;
+
+        // list of requested documents w/o kindcode
+        var documents_requested_kindcode = documents_requested;
+        var documents_requested_nokindcode = _.map(documents_requested, patent_number_strip_kindcode);
+
+        // list of documents in response with and w/o kindcode
+        var documents_response_kindcode = [];
+        var documents_response_nokindcode = [];
+
+        // full-cycle publication numbers per document
+        var documents_full_cycle_map = {};
+
+        // collect information from response documents
+        this.documents.each(function(document) {
+            var document_id_kindcode = document.get('@country') + document.get('@doc-number') + document.get('@kind');
+            var document_id_nokindcode = document.get('@country') + document.get('@doc-number');
+            documents_response_kindcode.push(document_id_kindcode);
+            documents_response_nokindcode.push(document_id_nokindcode);
+
+            // build map for each number knowing its full-cycle neighbours
+            var full_cycle_numbers_full = document.attributes.get_full_cycle_numbers();
+            _.each(full_cycle_numbers_full, function(number) {
+                if (!documents_full_cycle_map[number]) {
+                    var full_cycle_numbers = _.difference(full_cycle_numbers_full, [number]);
+                    documents_full_cycle_map[number] = full_cycle_numbers;
+                }
+            });
+        });
+        debug && log('documents_response_kindcode:', documents_response_kindcode);
+        debug && log('documents_response_nokindcode:', documents_response_nokindcode);
+        debug && log('documents_full_cycle_map:', documents_full_cycle_map);
+
+
+        // compute list of missing documents with local alternatives
+
+        // v1: naive
+        //var documents_missing = _.difference(documents_requested, documents_response);
+
+        // v2: sophisticated
+        var documents_missing = [];
+        _.each(documents_requested_kindcode, function(document_requested_kindcode) {
+
+            var document_requested_nokindcode = patent_number_strip_kindcode(document_requested_kindcode);
+
+            // compare with kindcodes
+            var result_found =
+                _.contains(documents_response_kindcode, document_requested_kindcode);
+
+            // optionally, also compare without kindcodes
+            if (document_requested_kindcode == document_requested_nokindcode) {
+                result_found =
+                    result_found ||
+                    _.contains(documents_response_nokindcode, document_requested_nokindcode);
+            }
+
+            if (!result_found) {
+
+                // populate list of possible local alternatives for given number w/o kindcode
+                var alternatives_local = _.filter(documents_response_kindcode, function(item) {
+                    return _.string.startsWith(item, document_requested_nokindcode);
+                });
+
+                // also add documents from full-cycle neighbours to list of possible local alternatives
+                var full_cycle_numbers = documents_full_cycle_map[document_requested_kindcode];
+
+                // fall back searching the full-cycle map w/o kindcodes
+                if (_.isEmpty(full_cycle_numbers)) {
+                    _.each(documents_full_cycle_map, function(value, key) {
+                        if (_.string.startsWith(key, document_requested_nokindcode)) {
+                            full_cycle_numbers = value;
+                        }
+                    });
+                }
+
+                // propagate the results
+                if (!_.isEmpty(full_cycle_numbers)) {
+                    Array.prototype.push.apply(alternatives_local, full_cycle_numbers);
+                }
+
+                // per-document response
+                var document_missing = {
+                    'number': document_requested_kindcode,
+                    'alternatives_local':_.unique(alternatives_local),
+                };
+
+                documents_missing.push(document_missing);
+            }
+
+        });
+        debug && log('documents_missing:', documents_missing);
+
+
+        // inject placeholder objects for all missing documents
+        var _this = this;
+        _.each(documents_missing, function(document_missing) {
+
+            // split patent number into components
+            var patent = split_patent_number(document_missing.number);
+
+            // inject placeholder model
+            _this.documents.add(new GenericExchangeDocument({
+                '__type__': 'ops-placeholder',
+                '@country': patent.country,
+                '@doc-number': patent.number,
+                '@kind': patent.kind,
+                'alternatives_local': document_missing.alternatives_local,
+            }), {sort: false});
+        });
+        //log('documents:', this.documents);
+
+        // sort documents in bulk
+        this.documents.sort();
+
+        // trigger re-rendering through model-change
+        this.documents.trigger('reset', this.documents);
 
     },
 
@@ -424,11 +637,21 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     perform_numberlistsearch: function(options) {
+        //log('perform_numberlistsearch');
         var numberlist = this.parse_numberlist($('#numberlist').val());
         if (numberlist) {
-            var publication_numbers = numberlist.data;
-            var hits = publication_numbers.length;
-            this.perform_listsearch(options, undefined, publication_numbers, hits, numberlist.fieldname, 'OR');
+            var _this = this;
+            normalize_numberlist(numberlist.data.join(',')).then(function(normalized) {
+                var numbers_normalized = normalized['numbers-normalized']['all'];
+                //log('numbers_normalized:', numbers_normalized);
+
+                //var publication_numbers = numberlist.data;
+                var publication_numbers = numbers_normalized || numberlist.data;
+                var hits = publication_numbers.length;
+
+                // actually perform the listsearch
+                _this.perform_listsearch(options, undefined, publication_numbers, hits, numberlist.fieldname, 'OR');
+            });
         } else {
             this.ui.notify("An empty numberlist can't be requested, please add some publication numbers.", {type: 'warning', icon: 'icon-align-justify'});
         }

@@ -456,7 +456,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             e.preventDefault();
             if (_this.check_numberlist_empty({'icon': 'icon-exchange'})) { return; }
 
-            _this.normalize_numberlist($('#numberlist').val()).then(function(response) {
+            normalize_numberlist($('#numberlist').val()).then(function(response) {
                 var numbers_valid = response['numbers-normalized'] && response['numbers-normalized']['valid'];
                 var numbers_invalid = response['numbers-normalized'] && response['numbers-normalized']['invalid'];
 
@@ -480,32 +480,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     clear_comfort_form: function() {
         $('#querybuilder-comfort-form').find('input').val('');
-    },
-
-    normalize_numberlist: function(payload) {
-        var deferred = $.Deferred();
-        $.ajax({
-            method: 'post',
-            url: '/api/util/numberlist?normalize=true',
-            beforeSend: function(xhr, settings) {
-                xhr.requestUrl = settings.url;
-            },
-            async: false,
-            sync: true,
-            data: payload,
-            contentType: "text/plain; charset=utf-8",
-        }).success(function(response, status, options) {
-            if (response) {
-                deferred.resolve(response);
-            } else {
-                opsChooserApp.ui.notify('Number normalization failed (empty response)', {type: 'warning', icon: 'icon-exchange', right: true});
-                deferred.reject();
-            }
-        }).error(function(xhr, settings) {
-            opsChooserApp.ui.propagate_alerts(xhr);
-            deferred.reject();
-        });
-        return deferred.promise();
     },
 
     setup_quick_cql_builder: function() {

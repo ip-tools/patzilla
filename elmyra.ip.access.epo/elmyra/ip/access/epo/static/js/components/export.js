@@ -85,8 +85,10 @@ opsChooserApp.addInitializer(function(options) {
         $('#fetch-result-numbers-no-kindcodes-action').unbind('click');
         $('#fetch-result-numbers-no-kindcodes-action').click(function(e) {
             var modal = new ModalRegion({el: '#modal-area'});
-            // apply filter "strip_kindcodes" on response
+
+            // set signal to apply filter "strip_kindcodes" on response
             _this.metadata.set('filter', {'strip_kindcodes': true});
+
             var result_numbers_view = new ResultNumbersView({model: _this.metadata});
             modal.show(result_numbers_view);
         });
