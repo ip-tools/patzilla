@@ -5,6 +5,7 @@ import sys
 import json
 import types
 import logging
+import urllib2
 import mechanize
 import cookielib
 from BeautifulSoup import BeautifulSoup
@@ -25,8 +26,15 @@ logger = logging.getLogger(__name__)
 class DpmaDepatisnetAccess:
 
     def __init__(self):
-
         print 'DpmaDepatisnetAccess.__init__'
+        self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
+        self.searchurl = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
+        self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
+        self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
+        self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
+        self.setup_browser()
+
+    def setup_browser(self):
 
         # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
         # https://bugs.python.org/issue22417
@@ -41,13 +49,6 @@ class DpmaDepatisnetAccess:
         # ignore robots.txt
         self.browser.set_handle_robots(False)
 
-        self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
-        self.searchurl = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
-        self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
-        self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
-        self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
-
-
     def search_patents(self, query, options=None):
 
         # search options
@@ -57,8 +58,17 @@ class DpmaDepatisnetAccess:
 
         logger.info('Searching documents. query="%s", options=%s' % (query, options))
 
+        # 0. create browser instance
+        if not self.browser:
+            self.setup_browser()
+
         # 1. open search url
-        response_searchform = self.browser.open(self.searchurl)
+        try:
+            self.browser.open(self.searchurl)
+        except urllib2.HTTPError as ex:
+            logger.critical('Hard error with DEPATISnet: {}'.format(ex))
+            self.browser = None
+            raise
 
         # 2. submit form
         # http://wwwsearch.sourceforge.net/ClientForm/
