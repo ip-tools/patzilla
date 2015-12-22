@@ -130,7 +130,29 @@ WaypointController = Marionette.Controller.extend({
 
         var document = opsChooserApp.document_base.get_document_by_element(source.element);
         var document_number = document.get_document_number();
-        var element_index = $(source.element).parent('.ops-collection-entry').parent('.row-fluid').index();
+        //log('document:', document);
+
+        // compute current element index
+
+        // v1: Naive, doesn't account for placeholder items, which shouldn't advance the reading progress
+        //var element_index = $(source.element).parent('.ops-collection-entry').parent('.row-fluid').index();
+
+        // v2: Count ourselves by omitting the placeholder items.
+        //     In fact, it should be the even more sophisticated and should count
+        //     the occurrences of _actual result items_ on the current page by having
+        //     a different flavor of waypoints in place.
+        //     The current ones are more user interface centric.
+        //     ... but don't tell anybody (FIXME)
+        var element_index = 0;
+        opsChooserApp.documents.every(function(item) {
+            //log('item:', item);
+            if (item.attributes['__type__'] != 'ops-placeholder') {
+                element_index++;
+            }
+            return item.attributes != document;
+        });
+
+        //log('element_index:', element_index);
 
         // go event-based
         var event = {
