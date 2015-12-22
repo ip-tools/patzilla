@@ -1,6 +1,11 @@
 // -*- coding: utf-8 -*-
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
+function BasketError(message) {
+    this.name    = 'BasketError';
+    this.message = message;
+}
+
 BasketModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Basket'),

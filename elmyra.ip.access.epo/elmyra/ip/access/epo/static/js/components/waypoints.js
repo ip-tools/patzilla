@@ -61,13 +61,18 @@ WaypointController = Marionette.Controller.extend({
                         // Feature "seen"
                         // - decrease opacity of documents marked as "seen"
                         // - mark current document as "seen" if there's no rating yet
-                        var mode_seen_fade = opsChooserApp.project.get('mode_fade_seen');
-                        if (opsChooserApp.document_seen_twice(event.document_number)) {
-                            if (mode_seen_fade) {
-                                opsChooserApp.document_base.dim(this.element);
+                        try {
+                            var mode_seen_fade = opsChooserApp.project.get('mode_fade_seen');
+                            if (opsChooserApp.document_seen_twice(event.document_number)) {
+                                if (mode_seen_fade) {
+                                    opsChooserApp.document_base.dim(this.element);
+                                }
+                            } else {
+                                opsChooserApp.document_mark_seen(event.document_number);
                             }
-                        } else {
-                            opsChooserApp.document_mark_seen(event.document_number);
+
+                        } catch (e) {
+                            log('ERROR tracking documents through waypoints:', e);
                         }
 
                         // TODO: for letting the drawing follow the text
@@ -129,6 +134,8 @@ WaypointController = Marionette.Controller.extend({
     build_event: function(source) {
 
         var document = opsChooserApp.document_base.get_document_by_element(source.element);
+        if (!document) return;
+
         var document_number = document.get_document_number();
         //log('document:', document);
 
@@ -167,7 +174,9 @@ WaypointController = Marionette.Controller.extend({
     },
 
     emit_event: function(name, event) {
-        opsChooserApp.trigger(name, event);
+        if (event) {
+            opsChooserApp.trigger(name, event);
+        }
     },
 
 });
