@@ -29,6 +29,7 @@ WaypointController = Marionette.Controller.extend({
 
         Waypoint.destroyAll();
 
+        var _this = this;
         $('.ops-collection-entry-heading').each(function() {
 
 
@@ -36,8 +37,14 @@ WaypointController = Marionette.Controller.extend({
             var inview = new Waypoint.Inview({
                 element: this,
                 enter: function(direction) {
+
+                    var event = _this.build_event(this);
+                    _this.emit_event('document:enter', event);
+
                     //log('waypoint: Enter triggered with direction ' + direction + ':', this);
                     if (direction == 'up') {
+
+                        _this.emit_event('document:enter:up', event);
 
                         // TODO: for letting the drawing follow the text
                         /*
@@ -48,18 +55,19 @@ WaypointController = Marionette.Controller.extend({
 
                     } else if (direction == 'down') {
 
+                        _this.emit_event('document:enter:down', event);
+
+                        // TODO: refactor to event-based
                         // Feature "seen"
                         // - decrease opacity of documents marked as "seen"
                         // - mark current document as "seen" if there's no rating yet
                         var mode_seen_fade = opsChooserApp.project.get('mode_fade_seen');
-                        var document = opsChooserApp.document_base.get_document_by_element(this.element);
-                        var document_number = document.get_document_number();
-                        if (opsChooserApp.document_seen_twice(document_number)) {
+                        if (opsChooserApp.document_seen_twice(event.document_number)) {
                             if (mode_seen_fade) {
                                 opsChooserApp.document_base.dim(this.element);
                             }
                         } else {
-                            opsChooserApp.document_mark_seen(document_number);
+                            opsChooserApp.document_mark_seen(event.document_number);
                         }
 
                         // TODO: for letting the drawing follow the text
@@ -85,6 +93,9 @@ WaypointController = Marionette.Controller.extend({
                 },
                 entered: function(direction) {
                     //log('waypoint: Entered triggered with direction ' + direction)
+
+                    var event = _this.build_event(this);
+                    _this.emit_event('document:entered', event);
                 },
                 exit: function(direction) {
                     //log('waypoint: Exit triggered with direction ' + direction)
@@ -115,12 +126,34 @@ WaypointController = Marionette.Controller.extend({
 
     },
 
+    build_event: function(source) {
+
+        var document = opsChooserApp.document_base.get_document_by_element(source.element);
+        var document_number = document.get_document_number();
+        var element_index = $(source.element).parent('.ops-collection-entry').parent('.row-fluid').index();
+
+        // go event-based
+        var event = {
+            'source': source,
+            'element_index': element_index,
+            'document': document,
+            'document_number': document_number,
+        };
+
+        return event;
+
+    },
+
+    emit_event: function(name, event) {
+        opsChooserApp.trigger(name, event);
+    },
+
 });
 
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
     this.waypoints = new WaypointController();
     this.listenTo(this, 'results:ready', function() {
-        this.waypoints .setup_ui();
+        this.waypoints.setup_ui();
     });
 });

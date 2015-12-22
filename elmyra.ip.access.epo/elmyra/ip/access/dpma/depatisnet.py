@@ -26,6 +26,8 @@ class DpmaDepatisnetAccess:
 
     def __init__(self):
 
+        print 'DpmaDepatisnetAccess.__init__'
+
         # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
         # https://bugs.python.org/issue22417
         if sys.hexversion >= 0x02070900:
