@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - ui: add “ToProgress” top bar library
+- ui: add reading progress indicator
 
 0.108.1
 =======
