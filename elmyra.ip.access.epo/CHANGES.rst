@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.109.2
+=======
 - ui: make IE11 behave
+- ui: change color of reading progress indicator to more decent turquoise
 
 0.109.1
 =======
