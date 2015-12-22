@@ -940,6 +940,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     document_seen_twice: function(document_number) {
 
+        if (!this.basketModel) {
+            throw new BasketError('Basket not active');
+        }
+
         // skip saving as "seen" if already in basket
         if (this.basketModel.exists(document_number)) {
 
@@ -961,12 +965,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
+        if (!this.basketModel) {
+            throw new BasketError('Basket not active');
+        }
+
         // skip saving as "seen" if already in basket
         if (this.basketModel.exists(document_number)) {
             return;
         }
 
-        log('document_mark_seen:', document_number);
+        //log('document_mark_seen:', document_number);
 
         this.basketModel.add(document_number).then(function(item) {
 
