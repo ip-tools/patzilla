@@ -8,7 +8,7 @@ ReadingController = Marionette.Controller.extend({
 
         var progressbar_options = {
             id: 'top-progress-bar',
-            color: '#F44336',
+            color: '#2f96b4',
             height: '2px',
             duration: 0.2
         }
