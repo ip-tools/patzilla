@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.109.1
+=======
 - middleware: improve depatisnet client by vaporizing after any http error
+- ui: improve reading progress indicator
 
 0.109.0
 =======
