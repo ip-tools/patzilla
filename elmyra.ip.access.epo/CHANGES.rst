@@ -4,6 +4,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- ui: stop storing "title" attributes into BasketEntryModel objects, also remove when touching objects
+- middleware: add tool "browser_database_tool" for manipulating browser database dumps (json)
 
 0.109.2
 =======

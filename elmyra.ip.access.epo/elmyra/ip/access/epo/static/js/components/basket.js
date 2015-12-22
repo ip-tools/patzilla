@@ -118,6 +118,10 @@ BasketModel = Backbone.RelationalModel.extend({
                 // refetch entry to work around localforage.backbone vs. backbone-relational woes
                 // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
                 entry.fetch({success: function() {
+
+                    // 2015-12-22: remove "title" attributes from BasketEntry objects
+                    delete entry['title'];
+
                     deferred.resolve(entry);
 
                     // refresh gui, update timestamp
@@ -137,18 +141,26 @@ BasketModel = Backbone.RelationalModel.extend({
         }
 
         // get title of selected document
+        // 2015-12-22: stop storing "title" attributes
+        //             deactivated due to default database size constraints (5 MB)
+        //             our first user seems to have hit this limit!
+        /*
         // TODO: maybe prebuild/maintain an index in collection
         var document = _.find(opsChooserApp.documents.models, function(doc) {
             var document_number = doc.get_document_number();
             return number == document_number;
         });
         var title = document ? document.attributes.get_title_list() : undefined;
+        */
 
         // build basket entry
         entry = new BasketEntryModel({
             number: number,
             timestamp: now_iso(),
-            title: title,
+
+            // 2015-12-22: stop storing "title" attributes
+            //title: title,
+
             /*basket: this,*/
             /*query: null,*/
         });
@@ -439,7 +451,8 @@ BasketEntryModel = Backbone.RelationalModel.extend({
     defaults: {
         number: undefined,
         timestamp: undefined,
-        title: undefined,
+        // 2015-12-22: stop storing "title" attributes
+        //title: undefined,
         score: undefined,
         dismiss: undefined,
         seen: undefined,
