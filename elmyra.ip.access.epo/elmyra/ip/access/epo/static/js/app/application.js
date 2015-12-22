@@ -608,7 +608,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         //log('documents:', this.documents);
 
         // sort documents in bulk
-        this.documents.sort();
+        if (this.documents.comparator) {
+            this.documents.sort();
+        }
 
         // trigger re-rendering through model-change
         this.documents.trigger('reset', this.documents);
