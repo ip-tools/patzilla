@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- middleware: improve depatisnet client by vaporizing after any http error
 
 0.109.0
 =======
