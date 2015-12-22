@@ -24,6 +24,8 @@ def admin_users_emails_handler(request):
     for user in users:
         if '@' not in user.username:
             continue
+        if 'newsletter:opt-out' in user.tags:
+            continue
         if tag and tag not in user.tags:
             continue
         user_emails.append(user.username.lower())
