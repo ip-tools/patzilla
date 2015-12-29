@@ -7,6 +7,7 @@ development
 - ui: stop storing "title" attributes into BasketEntryModel objects, also remove when touching objects
 - middleware: add tool "browser_database_tool" for manipulating browser database dumps (json)
 - middleware: don’t list email addresses for newsletter if user is tagged with “newsletter:opt-out”
+- ui: improve display when no classifications are available
 
 0.109.2
 =======
