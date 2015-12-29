@@ -419,6 +419,8 @@
                             <span class="clearfix"></span>
                             <dl class="dl-horizontal2 dl-horizontal-inline">
 
+                            <% if (data.has_ipc() || data.has_ipcr() || data.has_classifications()) { %>
+
                                 <% if (data.has_ipc()) { %>
                                 <dt>
                                     IPC
@@ -447,18 +449,22 @@
                                 _(classification_schemes).each(function(classification_scheme) {
                                 %>
 
-                                <%
-                                if (!_.isEmpty(classifications_map[classification_scheme])) {
-                                %>
-                                <dt>
-                                    <%= classification_scheme %>
-                                </dt>
-                                <dd class="keyword">
-                                    <%= classifications_map[classification_scheme].join(', ') || '&nbsp;' %>
-                                </dd>
-                                <% } %>
+                                    <%
+                                    if (!_.isEmpty(classifications_map[classification_scheme])) {
+                                    %>
+                                    <dt>
+                                        <%= classification_scheme %>
+                                    </dt>
+                                    <dd class="keyword">
+                                        <%= classifications_map[classification_scheme].join(', ') || '&nbsp;' %>
+                                    </dd>
+                                    <% } %>
 
                                 <% }); %>
+
+                            <% } else { %>
+                            Classifications not available
+                            <% } %>
 
                             </dl>
                         </dd>

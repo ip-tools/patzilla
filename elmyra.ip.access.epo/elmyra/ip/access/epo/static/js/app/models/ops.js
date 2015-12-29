@@ -474,7 +474,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
         },
 
         has_ipc: function() {
-            return Boolean(this['bibliographic-data']['classification-ipc']);
+            return !_.isEmpty(this['bibliographic-data']['classification-ipc']);
         },
         get_ipc_list: function(links) {
             var entries = [];
@@ -493,7 +493,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
         },
 
         has_ipcr: function() {
-            return Boolean(this['bibliographic-data']['classifications-ipcr']);
+            return !_.isEmpty(this['bibliographic-data']['classifications-ipcr']);
         },
         get_ipcr_list: function(links) {
             var entries = [];
@@ -516,7 +516,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
         },
 
         has_classifications: function() {
-            return Boolean(this['bibliographic-data']['patent-classifications']);
+            return !_.isEmpty(this['bibliographic-data']['patent-classifications']);
         },
         get_classification_schemes: function() {
             return ['CPC', 'UC', 'FI', 'FTERM'];
