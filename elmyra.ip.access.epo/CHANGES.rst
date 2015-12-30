@@ -9,6 +9,7 @@ development
 - middleware: don’t list email addresses for newsletter if user is tagged with “newsletter:opt-out”
 - ui: improve display when no classifications are available
 - ui: citation references from non-US family members
+- middleware: add cache region “medium” with ttl of one day, set ttl of region “static” to one month (before: one year)
 
 0.109.2
 =======
