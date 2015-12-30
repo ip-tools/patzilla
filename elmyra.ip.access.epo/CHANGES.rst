@@ -8,6 +8,7 @@ development
 - middleware: add tool "browser_database_tool" for manipulating browser database dumps (json)
 - middleware: don’t list email addresses for newsletter if user is tagged with “newsletter:opt-out”
 - ui: improve display when no classifications are available
+- ui: citation references from non-US family members
 
 0.109.2
 =======

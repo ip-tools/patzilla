@@ -364,23 +364,35 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
             // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
             items: this.collection.toJSON(),
 
-            get_citations_environment_button: function() {
+            get_citations_environment_button: function(options) {
+                options = options || {};
                 var tpl = _.template($('#ops-citations-environment-button-template').html());
-                return tpl({data: this});
+                return tpl({data: this, options: options});
             },
 
             has_citations: function() {
                 return this.items.length > 0;
             },
-            get_patent_citation_list: function(links, id_type) {
+            get_patent_citation_list: function(links, id_type, options) {
 
                 // FIXME: does not get used yet!
                 id_type = id_type || 'docdb';
+
+                options = options || {};
 
                 // aggregate cited references across all family members
                 var citations_set = new Set();
                 _.each(this.items, function(item) {
                     var exchange_document = new OpsExchangeDocument(item['exchange-document']);
+
+                    // filter US family members
+                    if (options.members_no_us) {
+                        var office = exchange_document.get('@country');
+                        if (office == 'US') {
+                            return;
+                        }
+                    }
+
                     var citations_local = exchange_document.attributes.get_patent_citation_list(false, 'epodoc');
                     _.each(citations_local, function(citation) {
                         citations_set.add(citation);
@@ -399,8 +411,8 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
                 var query = items.join(' ' + operator + ' ');
                 return query;
             },
-            get_same_citations_query: function() {
-                var items = this.get_patent_citation_list(false, 'epodoc');
+            get_same_citations_query: function(options) {
+                var items = this.get_patent_citation_list(false, 'epodoc', options);
                 return this.get_items_query(items, 'ct', 'OR');
             },
 
