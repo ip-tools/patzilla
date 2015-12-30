@@ -176,7 +176,7 @@ def ops_published_data_crawl(constituents, query, chunksize):
 
 
 
-@cache_region('search')
+@cache_region('medium')
 def inquire_images(patent):
 
     p = split_patent_number(patent)
@@ -230,34 +230,41 @@ def inquire_images(patent):
     for node in to_list(result['ops:document-instance']):
         key = node['@desc']
         info[key] = node
-
-    enrich_image_inquiry_info(info)
+        if enrich_image_inquiry_info(info):
+            break
 
     return info
 
 
 def enrich_image_inquiry_info(info):
-    """enrich image inquiry information"""
+    """
+    enrich image inquiry information
+    if DRAWINGS can properly detected, adds information to "meta" dictionary of document and returns True
+    """
 
     meta = {}
+    enriched = False
 
     # compute page offset to first drawing
     entry = info.get('FullDocument')
-    if entry and entry.has_key('ops:document-section'):
+    if entry and 'ops:document-section' in entry:
         sections = entry.get('ops:document-section', [])
         for section in to_list(sections):
             if section['@name'] == 'DRAWINGS':
                 meta['drawing-start-page'] = int(section['@start-page'])
+                enriched = True
                 break
 
     # clone number of drawings
-    if meta.has_key('drawing-start-page'):
-        if info.has_key('Drawing'):
+    if 'drawing-start-page' in meta:
+        if 'Drawing' in info:
             meta['drawing-total-count'] = int(info['Drawing']['@number-of-pages'])
         else:
             meta['drawing-total-count'] = int(info['FullDocument']['@number-of-pages']) - meta['drawing-start-page']
 
     info['META'] = meta
+
+    return enriched
 
 
 def get_ops_image_link_url(link, format, page=1):
