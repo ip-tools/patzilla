@@ -10,6 +10,7 @@ development
 - ui: improve display when no classifications are available
 - ui: citation references from non-US family members
 - middleware: add cache region “medium” with ttl of one day, set ttl of region “static” to one month (before: one year)
+- middleware: improve DRAWINGS decoding from OPS image inquiry response, has great impacts on US drawings display
 
 0.109.2
 =======
