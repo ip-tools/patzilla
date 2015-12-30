@@ -649,7 +649,7 @@
         <ul class="dropdown-menu">
             <% if (data.has_citations()) { %>
             <%
-            var citations_list  = data.get_patent_citation_list(false, 'epodoc');
+            var citations_list  = data.get_patent_citation_list(false, 'epodoc', options);
             var citations_comma = citations_list.join(',');
             %>
             <li>
@@ -665,7 +665,7 @@
             </li>
             -->
             <li>
-                <a href="?query=<%= encodeURIComponent(data.get_same_citations_query()) %>"
+                <a href="?query=<%= encodeURIComponent(data.get_same_citations_query(options)) %>"
                    class="query-link same-citations-link" data-length="<%= citations_list.length %>" target="_blank">
                     Documents citing same citations: ct in (56)
                 </a>
@@ -1048,7 +1048,12 @@
         <tr>
             <td><%= data.get_citations_environment_button() %></td>
             <td></td>
-            <td>All citation references (#<%= data.get_patent_citation_list(false, 'epodoc').length %>)</td>
+            <td>Citation references from all family members (#<%= data.get_patent_citation_list(false, 'epodoc').length %>)</td>
+        </tr>
+        <tr>
+            <td><%= data.get_citations_environment_button({members_no_us: true}) %></td>
+            <td></td>
+            <td>Citation references from non-US family members</td>
         </tr>
         </tbody>
     </table>

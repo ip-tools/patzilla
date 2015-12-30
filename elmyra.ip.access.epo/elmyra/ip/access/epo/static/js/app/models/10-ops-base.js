@@ -149,9 +149,10 @@ OpsBaseModel = Backbone.Model.extend({
             }
         },
 
-        get_citations_environment_button: function() {
+        get_citations_environment_button: function(options) {
+            options = options || {};
             var tpl = _.template($('#ops-citations-environment-button-template').html());
-            return tpl({data: this});
+            return tpl({data: this, options: options});
         },
 
         get_patent_citation_list: function(node, links, id_type) {
