@@ -26,22 +26,29 @@ def pair_to_cql(datasource, key, value):
 
             if 'within' in value:
                 within_dates = parse_date_within(value)
-                elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
-                if elements_are_years:
-                    fieldname = 'py'
 
                 cql_parts = []
                 if within_dates['startdate']:
-                    part = '{fieldname} >= {startdate}'.format(fieldname=fieldname, startdate=iso_to_german(within_dates['startdate']))
+                    startdate = within_dates['startdate']
+                    if len(startdate) == 4 and startdate.isdigit():
+                        fieldname = 'py'
+                    part = '{fieldname} >= {startdate}'.format(fieldname=fieldname, startdate=iso_to_german(startdate))
                     cql_parts.append(part)
+
                 if within_dates['enddate']:
-                    part = '{fieldname} <= {enddate}'.format(fieldname=fieldname, enddate=iso_to_german(within_dates['enddate']))
+                    enddate = within_dates['enddate']
+                    if len(enddate) == 4 and enddate.isdigit():
+                        fieldname = 'py'
+                    part = '{fieldname} <= {enddate}'.format(fieldname=fieldname, enddate=iso_to_german(enddate))
                     cql_parts.append(part)
 
                 cql_part = ' and '.join(cql_parts)
 
             else:
-                value = iso_to_german(value)
+                try:
+                    value = iso_to_german(value)
+                except ValueError as ex:
+                    return {'error': True, 'message': ex.message}
 
         elif key == 'inventor' or key == 'applicant':
             value = value.strip(' "')

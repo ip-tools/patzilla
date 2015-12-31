@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.111.0
+=======
+- middleware: improve parsing behavior for cql micro expressions regarding discrete years in half-bounded intervals
+
 0.110.0
 =======
 - ui: stop storing "title" attributes into BasketEntryModel objects, also remove when touching objects
