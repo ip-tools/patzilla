@@ -11,7 +11,7 @@ js:
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/standalone.js \
-		--preamble "// (c) 2013-2015 Elmyra UG - All rights reserved" \
+		--preamble "// (c) 2013-2016 Elmyra UG - All rights reserved" \
 		--mangle --compress \
 		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-standalone.min.map \
 		--source-map-url /static/js/o-standalone.min.map \
