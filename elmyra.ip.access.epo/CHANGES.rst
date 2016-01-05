@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.111.1
+=======
+- reflect year change in copyright footers - happy new year!
+
 0.111.0
 =======
 - middleware: improve parsing behavior for cql micro expressions regarding discrete years in half-bounded intervals
