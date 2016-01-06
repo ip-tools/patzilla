@@ -5,6 +5,12 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.111.2
+=======
+-"FulltextPRO "adapter: don’t decode xml from utf-8 when pretty printing
+- middleware: adapt tests to changes in US number normalization
+- middleware: reactivate SE..A to SE..L rewriting with number normalization
+
 0.111.1
 =======
 - reflect year change in copyright footers - happy new year!
