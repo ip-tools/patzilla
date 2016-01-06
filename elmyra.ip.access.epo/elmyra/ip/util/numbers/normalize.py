@@ -412,6 +412,7 @@ def normalize_patent_us(patent):
 
     # US applications: convert from 4+7=11 to 4+6=10
     # 2015-12-20: normalize"FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
+    # this might be OPS-specific
     elif length == 11:
         if patched['number'][4] == '0':
             patched['number'] = patched['number'][0:4] + patched['number'][5:]
@@ -565,8 +566,8 @@ def normalize_patent_se(patent):
 
     # 2015-09-01: mogrify kindcodes for patents from sweden, here: SE9503964A => SE9503964L
     # TODO: don't modify, add it to a variants list, as soon as we have a similar subsystem to "EP Archive Service" here
-    #if patched['kind'] == 'A':
-    #    patched['kind'] = 'L'
+    if patched['kind'] == 'A':
+        patched['kind'] = 'L'
 
     return patched
 
