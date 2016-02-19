@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+- middleware: improve logging for FulltextPRO
 0.111.2
 =======
 -"FulltextPRO "adapter: don’t decode xml from utf-8 when pretty printing
