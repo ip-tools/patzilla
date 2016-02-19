@@ -500,6 +500,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             });
         });
 
+        // strip kindcodes from numbers in numberlist
+        $('#btn-numberlist-strip-kindcodes').unbind('click');
+        $('#btn-numberlist-strip-kindcodes').click(function(e) {
+            e.preventDefault();
+            if (_this.check_numberlist_empty({'icon': 'icon-eraser'})) { return; }
+
+            var numberlist = $('#numberlist').val();
+            var numbers = numberlist.split('\n');
+            numbers = _(numbers).map(patent_number_strip_kindcode);
+            $('#numberlist').val(numbers.join('\n'));
+
+            opsChooserApp.ui.notify(
+                'Stripped patent kind codes',
+                {type: 'success', icon: 'icon-eraser', right: true});
+
+        });
+
     },
 
     clear_comfort_form: function() {

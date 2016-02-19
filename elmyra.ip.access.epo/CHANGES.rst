@@ -5,7 +5,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.112.0
+=======
 - middleware: improve logging for FulltextPRO
+- ui: strip kindcodes from numbers in numberlist
+
 0.111.2
 =======
 -"FulltextPRO "adapter: don’t decode xml from utf-8 when pretty printing
