@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.113.0
+=======
+- ui: compensate for anomaly with references-cited at EP2479266A1
+
 0.112.0
 =======
 - middleware: improve logging for FulltextPRO
