@@ -171,7 +171,7 @@ OpsBaseModel = Backbone.Model.extend({
             if (container_top) {
                 var container = to_list(container_top['citation']);
                 results = container
-                    .filter(function(item) { return item['patcit']; })
+                    .filter(function(item) { return item['patcit'] && item['patcit']['document-id']; })
                     .map(function(item) {
                         var document_id = self.get_document_id(item['patcit'], null, id_type);
                         var fullnumber = self.flatten_document_id(document_id).fullnumber;
