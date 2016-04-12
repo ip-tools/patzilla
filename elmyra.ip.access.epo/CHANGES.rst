@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Improve exception handling for"FulltextPRO "upstream
 
 0.113.0
 =======
