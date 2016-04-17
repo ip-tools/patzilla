@@ -192,6 +192,7 @@ def inquire_images(patent):
     #url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
 
     url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
+    log.debug('Inquire image information via {url}'.format(url=url_image_inquriy))
 
     error_msg_access = 'No image information for document={0}'.format(patent)
     error_msg_process = 'Error while processing image information for document={0}'.format(patent)
@@ -228,24 +229,55 @@ def inquire_images(patent):
 
     info = {}
     for node in to_list(result['ops:document-instance']):
+
+        # Suppress correction pages of amendments like US2010252183A1.
+        if is_amendment_only(node): continue
+
+        # Aggregate nodes into map, using the '@desc' attribute as key
         key = node['@desc']
         info[key] = node
-        if enrich_image_inquiry_info(info):
-            break
+
+    # Enrich image inquiry information. Compute image information for carousel widget.
+    enrich_image_inquiry_info(info)
 
     return info
 
 
+def is_fulldocument(node):
+    return '@desc' in node and node['@desc'] == u'FullDocument'
+
+def is_amendment_only(node):
+    """
+
+    Is FullDocument reference a correction page of amendments like US2010252183A1?
+
+    {u'@desc': u'FullDocument',
+         u'@link': u'published-data/images/US/8052819/X6/fullimage',
+         u'@number-of-pages': u'1',
+         u'@system': u'ops.epo.org',
+         u'ops:document-format-options': {u'ops:document-format': [{u'$': u'application/pdf'},
+                                                                   {u'$': u'application/tiff'}]},
+         u'ops:document-section': {u'@name': u'AMENDMENT',
+                                   u'@start-page': u'1'}}],
+    """
+    if is_fulldocument(node):
+        sections = to_list(node.get('ops:document-section', []))
+        if len(sections) == 1 and sections[0]['@name'] == u'AMENDMENT':
+            return True
+
+    return False
+
+
 def enrich_image_inquiry_info(info):
     """
-    enrich image inquiry information
-    if DRAWINGS can properly detected, adds information to "meta" dictionary of document and returns True
+    Enrich image inquiry information.
+    If DRAWINGS can be properly detected, add information to "meta" dictionary of document and return True.
     """
 
     meta = {}
     enriched = False
 
-    # compute page offset to first drawing
+    # Compute page offset to first drawing from "FullDocument" information
     entry = info.get('FullDocument')
     if entry and 'ops:document-section' in entry:
         sections = entry.get('ops:document-section', [])
@@ -255,12 +287,12 @@ def enrich_image_inquiry_info(info):
                 enriched = True
                 break
 
-    # clone number of drawings
+    # Compute number of drawing pages
     if 'drawing-start-page' in meta:
         if 'Drawing' in info:
             meta['drawing-total-count'] = int(info['Drawing']['@number-of-pages'])
         else:
-            meta['drawing-total-count'] = int(info['FullDocument']['@number-of-pages']) - meta['drawing-start-page']
+            meta['drawing-total-count'] = int(info['FullDocument']['@number-of-pages']) - meta['drawing-start-page'] + 1
 
     info['META'] = meta
 
