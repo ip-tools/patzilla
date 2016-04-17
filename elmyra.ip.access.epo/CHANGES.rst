@@ -8,6 +8,7 @@ development
 - Update"FulltextPRO "database search endpoint after server changeover
 - Improve OPS drawing inquiry re. US amendments/corrections
 - Improve"FulltextPRO "session management for error cases
+- Improve placeholders re. gracefulness to WO anomalies like WO2003049775A2 vs. WO03049775A2
 
 0.113.0
 =======
