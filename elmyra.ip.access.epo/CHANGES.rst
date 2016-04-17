@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - Improve exception handling for"FulltextPRO "upstream
+- Update"FulltextPRO "database search endpoint after server changeover
 
 0.113.0
 =======
