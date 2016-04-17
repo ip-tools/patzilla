@@ -554,15 +554,20 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             if (!result_found) {
 
-                // populate list of possible local alternatives for given number w/o kindcode
-                var alternatives_local = _.filter(documents_response_kindcode, function(item) {
+                // Compute alternatives
+                var alternatives = [];
+
+
+                // 1. Numbers w/o kindcode
+                var nokindcode = _.filter(documents_response_kindcode, function(item) {
                     return _.string.startsWith(item, document_requested_nokindcode);
                 });
+                Array.prototype.push.apply(alternatives, nokindcode);
 
-                // also add documents from full-cycle neighbours to list of possible local alternatives
+
+                // 2. Documents from full-cycle neighbours
                 var full_cycle_numbers = documents_full_cycle_map[document_requested_kindcode];
-
-                // fall back searching the full-cycle map w/o kindcodes
+                // Fall back searching the full-cycle map w/o kindcodes
                 if (_.isEmpty(full_cycle_numbers)) {
                     _.each(documents_full_cycle_map, function(value, key) {
                         if (_.string.startsWith(key, document_requested_nokindcode)) {
@@ -570,16 +575,30 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                         }
                     });
                 }
-
-                // propagate the results
                 if (!_.isEmpty(full_cycle_numbers)) {
-                    Array.prototype.push.apply(alternatives_local, full_cycle_numbers);
+                    Array.prototype.push.apply(alternatives, full_cycle_numbers);
                 }
+
+
+                // 3. Be graceful to WO anomalies like WO2003049775A2 vs. WO03049775A2
+                var wo_alternatives = [];
+                if (_.string.startsWith(document_requested_kindcode, "WO")) {
+                    wo_alternatives = _.filter(documents_response_kindcode, function(item) {
+                        // Denormalize WO number
+                        var wo_number = document_requested_kindcode.slice(2, -2);
+                        var wo_kindcode = document_requested_kindcode.slice(-2);
+                        // Strip century component from 4-digit year
+                        var wo_short = 'WO' + wo_number.slice(2) + wo_kindcode;
+                        return _.string.startsWith(item, wo_short);
+                    });
+                }
+                Array.prototype.push.apply(alternatives, wo_alternatives);
+
 
                 // per-document response
                 var document_missing = {
                     'number': document_requested_kindcode,
-                    'alternatives_local':_.unique(alternatives_local),
+                    'alternatives_local':_.unique(alternatives),
                 };
 
                 documents_missing.push(document_missing);
