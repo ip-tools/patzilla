@@ -7,6 +7,7 @@ development
 - Improve exception handling for"FulltextPRO "upstream
 - Update"FulltextPRO "database search endpoint after server changeover
 - Improve OPS drawing inquiry re. US amendments/corrections
+- Improve"FulltextPRO "session management for error cases
 
 0.113.0
 =======
