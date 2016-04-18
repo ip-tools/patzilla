@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.115.0
+=======
 - Don’t use DE..A8 family members as alternative for displaying drawings
 - Use alternatives from patent family also when displaying drawings of DE..A8 documents
 
