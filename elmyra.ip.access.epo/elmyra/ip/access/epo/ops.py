@@ -3,12 +3,12 @@
 import time
 import logging
 from pprint import pprint, pformat
-from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
-from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
-from simplejson.scanner import JSONDecodeError
 from beaker.cache import cache_region, region_invalidate
+from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
+from pyramid.threadlocal import get_current_request
+from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
 from elmyra.ip.util.numbers.common import decode_patent_number
@@ -175,6 +175,44 @@ def ops_published_data_crawl(constituents, query, chunksize):
     return response
 
 
+def image_representative_from_family(patent, countries, func_filter=None):
+
+    log.info('Finding alternative documents for drawings of {patent}'.format(patent=patent))
+
+    document             = patent.country + patent.number + patent.kind
+    document_no_kindcode = patent.country + patent.number
+    family = ops_family_members(document_no_kindcode)
+
+    # Compute alternative family members sorted by given countries
+    alternatives = family.publications_by_country(exclude=[document], countries=countries)
+    if func_filter:
+        alternatives = filter(func_filter, alternatives)
+
+    if alternatives:
+        # TODO: Currently using first item as representative. This might change.
+        representative = alternatives[0]
+        log.info('Drawings: Amending {document} to {representative} of {alternatives}'.format(**locals()))
+        patent.update(decode_patent_number(representative))
+        return True
+
+    return False
+
+
+def image_representative(patent):
+
+    # Amend document number for german Aktenzeichen to Offenlegungsschrift. The former does not carry drawings.
+    # Example: DE112013003369A5 to DE102012211542A1
+    if patent.country == 'DE' and (patent.kind == 'A5' or patent.kind == 'A8'):
+        def kindcode_filter(item):
+            return not (item.startswith('DE') and (item.endswith('A5') or item.endswith('A8')))
+        image_representative_from_family(patent, ['DE', 'WO'], kindcode_filter)
+
+
+    # Amend document number for European Search Report to  to Offenlegungsschrift. The former does not carry drawings.
+    # Example: EP1929706A4 to EP1929706A1
+    elif patent.country == 'EP' and (patent.kind == 'A4'):
+        image_representative_from_family(patent, ['EP', 'WO'])
+
 
 #@cache_region('medium')
 def inquire_images(document):
@@ -184,30 +222,7 @@ def inquire_images(document):
     if not patent:
         raise HTTPBadRequest('{0} is not a valid patent number'.format(document))
 
-
-    # Amend document number for german Aktenzeichen to Offenlegungsschrift. The former does not carry drawings.
-    # Example: DE112013003369A5 to DE102012211542A1
-    if patent.country == 'DE' and (patent.kind == 'A5' or patent.kind == 'A8'):
-        log.info('Finding alternative documents for drawings of {document}'.format(document=document))
-
-        document_no_kindcode = patent.country + patent.number
-        family = ops_family_members(document_no_kindcode)
-
-        # Compute alternative family members sorted by given countries
-        alternatives = family.publications_by_country(exclude=[document], countries=['DE', 'WO'])
-        def kindcode_filter(item):
-            if item.startswith('DE') and (item.endswith('A5') or item.endswith('A8')):
-                return False
-            return True
-        alternatives = filter(kindcode_filter, alternatives)
-
-        if alternatives:
-            # TODO: Currently using first item as representative. This might change.
-            representative = alternatives[0]
-            log.info('Drawings: Amending {document} to {representative} of {alternatives}'.format(**locals()))
-            document = representative
-            patent = decode_patent_number(document)
-
+    image_representative(patent)
 
     # v1: docdb
     if patent.kind:

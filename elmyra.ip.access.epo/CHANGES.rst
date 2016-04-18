@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - IFI: Enable expression parsing with “Class” criteria in comfort form
+- For EP..A4 documents, display drawings of family members
 
 0.115.0
 =======
