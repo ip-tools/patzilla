@@ -67,12 +67,15 @@ class IFIClaimsClient(object):
         starttime = timeit.default_timer()
         # https://cdws.ificlaims.com/search/query?q=pa:facebook
         # https://cdws.ificlaims.com/search/query?q=*:*&fl=ucid&rows=1
-        log.info(u'IFI search expression: {expression}'.format(expression=expression))
+        uri     = self.uri + self.path_search
+        params  = {'q': expression, 'fl': 'ucid', 'start': offset, 'rows': limit, 'sort': 'pd desc, ucid asc'}
+        log.info(u'IFI search. expression={expression}, uri={uri}, params={params}'.format(**locals()))
+
         headers = self.get_authentication_headers()
         headers.update({'Accept': 'application/json'})
         response = requests.get(
-            self.uri + self.path_search,
-            params={'q': expression, 'fl': 'ucid', 'start': offset, 'rows': limit, 'sort': 'pd desc'},
+            uri,
+            params=params,
             headers=headers,
             verify=self.tls_verify)
         duration = timeit.default_timer() - starttime

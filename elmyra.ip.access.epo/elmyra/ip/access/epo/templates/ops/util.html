@@ -14,24 +14,29 @@
         <div class="row-fluid">
             <div class="span12">
                 <div class="hero-unit">
-                    <h4>Placeholder for "<%= document_number %>"</h4>
-                    <p>Document not in result list</p>
+                    <h4>Document "<%= document_number %>" not in result list</h4>
+
                     <% if (!_.isEmpty(data['alternatives_local'])) { %>
                     <p>
-                        However, we identified one of these viable alternatives in the current page of the result list:
-                    <ul>
-                        <%
-                        _.each(data['alternatives_local'], function(alternative) {
-                        %>
-                        <li>
-                            <a href="javascript: opsChooserApp.ui.scroll_to_document('<%= alternative %>');">
-                                <%= alternative %>
-                            </a>
-                        </li>
-                        <%
-                        });
-                        %>
-                    </ul>
+                        Please check alternative representations listed below or enable the
+                        <button class="btn btn-small">
+                            <i class="icon-repeat"></i>
+                            Full cycle
+                        </button>
+                        mode to display all available kindcode variants.
+                        <ul>
+                            <%
+                            _.each(data['alternatives_local'], function(alternative) {
+                            %>
+                            <li>
+                                <a href="javascript: opsChooserApp.ui.scroll_to_document('<%= alternative %>');">
+                                    <%= alternative %>
+                                </a>
+                            </li>
+                            <%
+                            });
+                            %>
+                        </ul>
                     </p>
                     <% } %>
 
@@ -60,9 +65,9 @@
                                 The specific kindcode <strong>"<%= data['@kind'] %>"</strong> for the requested
                                 document <strong>"<%= data['@country'] %><%= data['@doc-number'] %>"</strong> is not listed,
                                 because another representative document was selected for display,
-                                maybe by using a specific search mode like "full-cycle" or "most-recent" modifiers.
+                                maybe by using specific search mode or modifiers.
                                 <br/>
-                                Try using a different search mode or even use
+                                Try using a different search mode or use the
                                 <button class="btn btn-small">
                                     <i class="icon-repeat"></i>
                                     Full cycle

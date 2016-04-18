@@ -793,6 +793,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             datasource_title = 'DPMA';
         } else if (datasource == 'ftpro') {
             datasource_title = 'FulltextPRO';
+        } else if (datasource == 'ifi') {
+            datasource_title = 'IFI Claims';
         }
 
         // human representation for search modifiers
@@ -990,11 +992,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             activate_placeholder(patentnumber, 'multi');
         }
         var input_class = form.find("input[name='class']");
+        /*
         if (_(['ifi']).contains(datasource)) {
             activate_placeholder(input_class, 'single');
         } else {
             activate_placeholder(input_class, 'multi');
         }
+        */
+        activate_placeholder(input_class, 'multi');
 
         // enrich form fields with actions
         _.each(form.find(".input-prepend"), function(item) {
