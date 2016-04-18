@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Don’t use DE..A8 family members as alternative for displaying drawings
 
 0.114.0
 =======

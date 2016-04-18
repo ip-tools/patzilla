@@ -195,6 +195,11 @@ def inquire_images(document):
 
         # Compute alternative family members sorted by given countries
         alternatives = family.publications_by_country(exclude=[document], countries=['DE', 'WO'])
+        def kindcode_filter(item):
+            if item.startswith('DE') and item.endswith('A8'):
+                return False
+            return True
+        alternatives = filter(kindcode_filter, alternatives)
 
         if alternatives:
             # TODO: Currently using first item as representative. This might change.
