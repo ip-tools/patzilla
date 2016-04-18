@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2007-2011 ***REMOVED***
-# (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
+import types
 import logging
+from bunch import Bunch
 from elmyra.ip.util.numbers.helper import strip_spaces
 
 """
@@ -16,12 +18,20 @@ def join_patent(patent):
         number = patent['country'] + patent['number'] + patent.get('kind', '')
         return number
 
+def decode_patent_number(patent):
+    variable_type = type(patent)
+    if variable_type in types.StringTypes:
+        decoded = split_patent_number(patent)
+    elif variable_type in (types.DictionaryType, Bunch):
+        decoded = patent
+    else:
+        raise TypeError('Patent from type "{type}" could not be decoded'.format(type=variable_type))
+    return decoded
 
 def split_patent_number(patent_number):
 
     if not patent_number:
         return
-
 
     # set common pattern for splitting patent number into segments
 
@@ -116,7 +126,7 @@ def split_patent_number(patent_number):
 
         split_patent_number_more(parts)
 
-        return parts
+        return Bunch(parts)
 
     else:
         logger.error('Could not parse patent number "{0}"'.format(patent_number))
