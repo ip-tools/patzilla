@@ -5,6 +5,7 @@ import re
 import types
 import logging
 from bunch import Bunch
+from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.numbers.helper import strip_spaces
 
 """
@@ -12,6 +13,11 @@ Common lowlevel functions
 """
 
 logger = logging.getLogger(__name__)
+
+class DocumentIdentifierBunch(SmartBunch):
+
+    def __str__(self):
+        return self.dump()
 
 def join_patent(patent):
     if patent:
@@ -22,7 +28,7 @@ def decode_patent_number(patent):
     variable_type = type(patent)
     if variable_type in types.StringTypes:
         decoded = split_patent_number(patent)
-    elif variable_type in (types.DictionaryType, Bunch):
+    elif variable_type is types.DictionaryType or isinstance(variable_type, Bunch):
         decoded = patent
     else:
         raise TypeError('Patent from type "{type}" could not be decoded'.format(type=variable_type))
@@ -126,7 +132,8 @@ def split_patent_number(patent_number):
 
         split_patent_number_more(parts)
 
-        return Bunch(parts)
+        dib = DocumentIdentifierBunch(parts)
+        return dib
 
     else:
         logger.error('Could not parse patent number "{0}"'.format(patent_number))
