@@ -2,6 +2,8 @@
 # (c) 2015-2016 Andreas Motl, Elmyra UG
 import types
 import logging
+import pyparsing
+from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within, iso_to_iso_compact
 from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.normalize import normalize_patent
@@ -104,16 +106,30 @@ class IFIClaimsExpression(object):
 
         elif key == 'class':
 
-            right_truncation = False
-            if value.endswith('*'):
-                right_truncation = True
+            # v1: Naive implementation can only handle single values
+            #value = ifi_convert_class(value)
 
-            ipc = IpcDecoder(value)
-            class_ifi = ipc.formatIFI()
-            value = class_ifi
+            # v2: Advanced implementation can handle expressions on field "class"
+            # Translate class expression from "H04L12/433 or H04L12/24"
+            # to "(ic:H04L0012433 OR cpc:H04L0012433) OR (ic:H04L001224 OR cpc:H04L001224)"
+            try:
+                query_object = CQL(value)
 
-            if right_truncation:
-                value += '*'
+                tokens_new = []
+                for token in query_object.tokens:
+                    if type(token) is pyparsing.ParseResults:
+                        if token.getName() == 'triple-short':
+                            item = ifi_convert_class(token[0])
+                            token = format_expression(format, fieldname, item)
+
+                    tokens_new.append(token)
+
+                query_object.tokens = tokens_new
+
+                expression = query_object.dumps()
+
+            except pyparsing.ParseException as ex:
+                return {'error': True, 'message': '<pre>' + str(ex.explanation) + '</pre>'}
 
 
         # ------------------------------------------
@@ -127,15 +143,7 @@ class IFIClaimsExpression(object):
         #   expression formatter
         # ------------------------------------------
         if not expression:
-            if type(fieldname) in types.StringTypes:
-                expression = format.format(fieldname, value)
-            elif type(fieldname) is types.ListType:
-                subexpressions = []
-                for fieldname in fieldname:
-                    subexpressions.append(format.format(fieldname, value))
-                expression = ' or '.join(subexpressions)
-                # surround with parentheses
-                expression = u'({0})'.format(expression)
+            expression = format_expression(format, fieldname, value)
             #print 'expression:', expression
 
         # ------------------------------------------
@@ -148,6 +156,34 @@ class IFIClaimsExpression(object):
                 expression = expression.replace(booli, booli.upper())
 
         return {'query': expression}
+
+
+def format_expression(format, fieldname, value):
+    expression = None
+    if type(fieldname) in types.StringTypes:
+        expression = format.format(fieldname, value)
+    elif type(fieldname) is types.ListType:
+        subexpressions = []
+        for fieldname in fieldname:
+            subexpressions.append(format.format(fieldname, value))
+        expression = ' or '.join(subexpressions)
+        # surround with parentheses
+        expression = u'({0})'.format(expression)
+    return expression
+
+def ifi_convert_class(value):
+    right_truncation = False
+    if value.endswith('*'):
+        right_truncation = True
+
+    ipc = IpcDecoder(value)
+    class_ifi = ipc.formatIFI()
+    value = class_ifi
+
+    if right_truncation:
+        value += '*'
+
+    return value
 
 
 # TODO: refactor elsewhere; together with same code from ftpro.search
