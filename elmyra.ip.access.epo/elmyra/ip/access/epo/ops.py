@@ -176,7 +176,7 @@ def ops_published_data_crawl(constituents, query, chunksize):
 
 
 
-@cache_region('medium')
+#@cache_region('medium')
 def inquire_images(document):
 
     patent = decode_patent_number(document)
@@ -187,7 +187,7 @@ def inquire_images(document):
 
     # Amend document number for german Aktenzeichen to Offenlegungsschrift. The former does not carry drawings.
     # Example: DE112013003369A5 to DE102012211542A1
-    if patent.country == 'DE' and patent.kind == 'A5':
+    if patent.country == 'DE' and (patent.kind == 'A5' or patent.kind == 'A8'):
         log.info('Finding alternative documents for drawings of {document}'.format(document=document))
 
         document_no_kindcode = patent.country + patent.number
@@ -196,7 +196,7 @@ def inquire_images(document):
         # Compute alternative family members sorted by given countries
         alternatives = family.publications_by_country(exclude=[document], countries=['DE', 'WO'])
         def kindcode_filter(item):
-            if item.startswith('DE') and item.endswith('A8'):
+            if item.startswith('DE') and (item.endswith('A5') or item.endswith('A8')):
                 return False
             return True
         alternatives = filter(kindcode_filter, alternatives)
