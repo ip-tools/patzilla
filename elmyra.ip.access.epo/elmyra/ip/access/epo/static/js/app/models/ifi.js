@@ -1,23 +1,23 @@
 // -*- coding: utf-8 -*-
 // (c) 2015 Andreas Motl, Elmyra UG
 
-SdpSearch = DatasourceSearch.extend({
-    url: '/api/sdp/published-data/search',
+IFIClaimsSearch = DatasourceSearch.extend({
+    url: '/api/ifi/published-data/search',
 });
 
-SdpResultEntry = Backbone.Model.extend({
+IFIClaimsResultEntry = Backbone.Model.extend({
 
     defaults: {
     },
 
 });
 
-SdpCrawler = DatasourceCrawler.extend({
+IFIClaimsCrawler = DatasourceCrawler.extend({
 
     initialize: function(options) {
-        log('SdpCrawler.initialize');
+        log('IFIClaimsCrawler.initialize');
         options = options || {};
-        options.datasource = 'sdp';
+        options.datasource = 'ifi';
         this.__proto__.constructor.__super__.initialize.apply(this, arguments);
     },
 
