@@ -34,8 +34,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (opsChooserApp.config.get('ftpro_enabled')) {
             $("#datasource > button[data-value='ftpro']").show();
         }
-        if (opsChooserApp.config.get('sdp_enabled')) {
-            $("#datasource > button[data-value='sdp']").show();
+        if (opsChooserApp.config.get('ifi_enabled')) {
+            $("#datasource > button[data-value='ifi']").show();
         }
 
         // switch cql field chooser when selecting datasource
@@ -972,7 +972,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // hide citations for certain search backends
         var citation = form.find("input[name='citation']").closest("div[class='control-group']");
-        if (_(['ops', 'depatisnet', 'sdp']).contains(datasource)) {
+        if (_(['ops', 'depatisnet', 'ifi']).contains(datasource)) {
             citation.show();
         } else if (_(['google', 'ftpro']).contains(datasource)) {
             citation.hide();
@@ -984,13 +984,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
 
         var patentnumber = form.find("input[name='patentnumber']");
-        if (_(['google', 'ftpro', 'sdp']).contains(datasource)) {
+        if (_(['google', 'ftpro', 'ifi']).contains(datasource)) {
             activate_placeholder(patentnumber, 'single');
         } else {
             activate_placeholder(patentnumber, 'multi');
         }
         var input_class = form.find("input[name='class']");
-        if (_(['sdp']).contains(datasource)) {
+        if (_(['ifi']).contains(datasource)) {
             activate_placeholder(input_class, 'single');
         } else {
             activate_placeholder(input_class, 'multi');

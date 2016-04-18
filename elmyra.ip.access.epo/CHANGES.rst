@@ -10,6 +10,7 @@ development
 - Improve"FulltextPRO "session management for error cases
 - Improve placeholders re. gracefulness to WO anomalies like WO2003049775A2 vs. WO03049775A2
 - Improve drawings carousel by using drawings from family members for references (Aktenzeichen) like DE112013003369A5
+- Reactivate SDP data adapter as IFI Claims
 
 0.113.0
 =======

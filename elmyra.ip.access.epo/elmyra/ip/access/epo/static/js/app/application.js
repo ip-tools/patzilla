@@ -213,23 +213,23 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             });
 
-        } else if (datasource == 'sdp') {
+        } else if (datasource == 'ifi') {
 
             this.trigger('search:before', search_info);
 
             // make the pager display the original query
             this.metadata.set('query_origin', query);
 
-            var sdpsearch = new SdpSearch();
-            sdpsearch.perform(query, options).done(function(response) {
+            var engine = new IFIClaimsSearch();
+            engine.perform(query, options).done(function(response) {
                 options = options || {};
 
-                console.log('sdp response:', response);
+                console.log('ifi response:', response);
 
                 self.propagate_datasource_message(response);
 
                 // propagate keywords
-                self.metadata.set('keywords', sdpsearch.keywords);
+                self.metadata.set('keywords', engine.keywords);
 
                 var publication_numbers = response['details'];
                 var hits = response['meta']['pager']['totalEntries'];
