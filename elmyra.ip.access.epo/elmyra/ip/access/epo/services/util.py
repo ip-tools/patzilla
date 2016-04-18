@@ -7,7 +7,7 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
 from elmyra.ip.access.google.search import GooglePatentsExpression
-from elmyra.ip.access.serviva.expression import ServivaExpression
+from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.util.cql.util import pair_to_cql
 from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
@@ -93,8 +93,8 @@ def make_expression(data):
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
 
-                elif datasource == 'sdp':
-                    expression_part = ServivaExpression.pair_to_solr(key, value, modifiers)
+                elif datasource == 'ifi':
+                    expression_part = IFIClaimsExpression.pair_to_solr(key, value, modifiers)
                     if expression_part:
                         if expression_part.has_key('keywords'):
                             keywords += expression_part['keywords']
@@ -124,7 +124,7 @@ def make_expression(data):
     if datasource in ['ops', 'depatisnet']:
         expression = ' and '.join(expression_parts)
 
-    elif datasource == 'sdp':
+    elif datasource == 'ifi':
         expression = ' AND '.join(expression_parts)
 
     elif datasource == 'ftpro':

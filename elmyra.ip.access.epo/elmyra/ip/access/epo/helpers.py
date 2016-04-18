@@ -46,7 +46,7 @@ class BackboneModelParameterFiddler(object):
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, FulltextPRO, SDP',
+            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, FulltextPRO',
             'ui.productname': 'elmyra <i class="circle-icon">IP</i> suite',
         }
 
@@ -142,22 +142,24 @@ class BackboneModelParameterFiddler(object):
                 params['setting.ui.page.statusline'] += ' <span id="ui-opaquelink-expiry"></span>'
 
         # 2.a compute whether datasource "FulltextPRO" is enabled
+        user_modules = params.get('user.modules', [])
+
         ftpro_allowed_hosts = [
             'localhost',
             'offgrid',
         ]
         params['ftpro_enabled'] = \
             params.get('request.host_name') in ftpro_allowed_hosts or \
-            'ftpro' in params.get('user.modules', [])
+            'ftpro' in user_modules
 
         # 2.b compute whether datasource "Serviva Data Proxy" is enabled
-        sdp_allowed_hosts = [
+        ificlaims_allowed_hosts = [
             'localhost',
             'offgrid',
             ]
-        params['sdp_enabled'] = \
-            params.get('request.host_name') in sdp_allowed_hosts or \
-            'sdp' in params.get('user.modules', [])
+        params['ifi_enabled'] = \
+            params.get('request.host_name') in ificlaims_allowed_hosts or \
+            'sdp' in user_modules or 'ifi' in user_modules
 
         # 2.c compute whether Google datasource is allowed
         params['google_allowed'] = params.get('request.host_name') in staging_hosts

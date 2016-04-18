@@ -50,8 +50,8 @@ ResultNumbersView = GenericResultView.extend({
             crawler_class = FulltextProCrawler;
             this.crawler_limit = 5000;
 
-        } else if (datasource == 'sdp') {
-            crawler_class = SdpCrawler;
+        } else if (datasource == 'ifi') {
+            crawler_class = IFIClaimsCrawler;
             this.crawler_limit = 50000;
 
         } else {
