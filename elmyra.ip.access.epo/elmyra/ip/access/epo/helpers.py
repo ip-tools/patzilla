@@ -143,13 +143,14 @@ class BackboneModelParameterFiddler(object):
 
         # 2.a compute whether datasource "FulltextPRO" is enabled
         user_modules = params.get('user.modules', [])
+        hostname = params.get('request.host_name')
 
         ftpro_allowed_hosts = [
             'localhost',
             'offgrid',
         ]
         params['ftpro_enabled'] = \
-            params.get('request.host_name') in ftpro_allowed_hosts or \
+            hostname in ftpro_allowed_hosts or \
             'ftpro' in user_modules
 
         # 2.b compute whether datasource "Serviva Data Proxy" is enabled
@@ -158,28 +159,27 @@ class BackboneModelParameterFiddler(object):
             'offgrid',
             ]
         params['ifi_enabled'] = \
-            params.get('request.host_name') in ificlaims_allowed_hosts or \
-            'sdp' in user_modules or 'ifi' in user_modules
+            hostname in ificlaims_allowed_hosts or \
+            'ifi' in user_modules
 
         # 2.c compute whether Google datasource is allowed
-        params['google_allowed'] = params.get('request.host_name') in staging_hosts
+        params['google_allowed'] = hostname in staging_hosts
 
 
         # 3. add badges for staging- and development-environments
-        host_name = params.get('request.host_name')
-        if host_name in staging_hosts:
+        if hostname in staging_hosts:
             badge_text = None
             label_kind = None
-            if 'staging' in host_name:
+            if 'staging' in hostname:
                 badge_text = 'staging'
                 label_kind = 'info'
-            elif 'develop' in host_name:
+            elif 'develop' in hostname:
                 badge_text = 'development'
                 label_kind = 'info'
-            elif 'localhost' in host_name:
+            elif 'localhost' in hostname:
                 badge_text = 'localhost'
                 label_kind = 'info'
-            elif 'localhost' in host_name:
+            elif 'localhost' in hostname:
                 badge_text = 'localhost'
                 label_kind = 'info'
             if badge_text and label_kind:
