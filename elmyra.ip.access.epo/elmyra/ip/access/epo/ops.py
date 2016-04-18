@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2015 Andreas Motl, Elmyra UG
+# (c) 2013-2016 Andreas Motl, Elmyra UG
 import time
 import logging
-from pprint import pprint
+from pprint import pprint, pformat
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from pyramid.threadlocal import get_current_request
 from cornice.util import json_error, to_list
@@ -11,12 +11,12 @@ from beaker.cache import cache_region, region_invalidate
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
-from elmyra.ip.util.numbers.common import split_patent_number
+from elmyra.ip.util.numbers.common import decode_patent_number
 
 log = logging.getLogger(__name__)
 
 
-ops_service_url = 'https://ops.epo.org/3.1/rest-services/'
+ops_service_url = 'https://ops.epo.org/3.1/rest-services'
 
 
 def get_ops_client():
@@ -177,25 +177,48 @@ def ops_published_data_crawl(constituents, query, chunksize):
 
 
 @cache_region('medium')
-def inquire_images(patent):
+def inquire_images(document):
 
-    p = split_patent_number(patent)
-    if not p:
-        raise HTTPBadRequest('{0} is not a valid patent number'.format(patent))
+    patent = decode_patent_number(document)
+
+    if not patent:
+        raise HTTPBadRequest('{0} is not a valid patent number'.format(document))
+
+
+    # Amend document number for german Aktenzeichen to Offenlegungsschrift. The former does not carry drawings.
+    # Example: DE112013003369A5 to DE102012211542A1
+    if patent.country == 'DE' and patent.kind == 'A5':
+        log.info('Finding alternative documents for drawings of {document}'.format(document=document))
+
+        document_no_kindcode = patent.country + patent.number
+        family = ops_family_members(document_no_kindcode)
+
+        # Compute alternative family members sorted by given countries
+        alternatives = family.publications_by_country(exclude=[document], countries=['DE', 'WO'])
+
+        if alternatives:
+            # TODO: Currently using first item as representative. This might change.
+            representative = alternatives[0]
+            log.info('Drawings: Amending {document} to {representative} of {alternatives}'.format(**locals()))
+            document = representative
+            patent = decode_patent_number(document)
+
 
     # v1: docdb
-    patent = p['country'] + '.' + p['number'] + '.' + p['kind']
-    url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/docdb/{patent}/images'
+    if patent.kind:
+        ops_patent = patent['country'] + '.' + patent['number'] + '.' + patent['kind']
+        url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/docdb/{ops_patent}/images'
 
     # v2: epodoc
-    #patent = p['country'] + p['number']
-    #url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{patent}/images'
+    else:
+        ops_patent = patent['country'] + patent['number']
+        url_image_inquriy_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/{ops_patent}/images'
 
-    url_image_inquriy = url_image_inquriy_tpl.format(patent=patent)
+    url_image_inquriy = url_image_inquriy_tpl.format(ops_patent=ops_patent)
     log.debug('Inquire image information via {url}'.format(url=url_image_inquriy))
 
-    error_msg_access = 'No image information for document={0}'.format(patent)
-    error_msg_process = 'Error while processing image information for document={0}'.format(patent)
+    error_msg_access = 'No image information for document={0}'.format(document)
+    error_msg_process = 'Error while processing image information for document={0}'.format(document)
 
     client = get_ops_client()
     response = client.get(url_image_inquriy, headers={'Accept': 'application/json'})
@@ -301,7 +324,7 @@ def enrich_image_inquiry_info(info):
 
 def get_ops_image_link_url(link, format, page=1):
     service_url = ops_service_url
-    url_tpl = '{service_url}{link}.{format}?Range={page}'
+    url_tpl = '{service_url}/{link}.{format}?Range={page}'
     url = url_tpl.format(**locals())
     return url
 
@@ -320,7 +343,7 @@ def get_ops_image(document, page, kind, format):
     if kind_requested == 'FullDocumentDrawing':
         kind = 'FullDocument'
 
-    # 1. inquire images to compute url to image resource
+    # 1. Inquire images to compute url to image resource
     image_info = inquire_images(document)
     if image_info:
         if image_info.has_key(kind):
@@ -418,6 +441,7 @@ def ops_family_inpadoc(reference_type, document_number, constituents):
     e.g. http://ops.epo.org/3.1/rest-services/family/publication/docdb/EP.1491501.A1/biblio,legal
 
     reference_type = publication|application|priority
+    constituents   = biblio|legal
     """
 
     url_tpl = 'https://ops.epo.org/3.1/rest-services/family/{reference_type}/epodoc/{document_number}/{constituents}.json'
@@ -470,7 +494,7 @@ def ops_register(reference_type, document_number, constituents):
 def handle_error(response, name):
     request = get_current_request()
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
-    response_dict['url'] = response_dict['url'].replace(ops_service_url, '/')
+    response_dict['url'] = response_dict['url'].replace(ops_service_url, '')
 
     if 'SERVER.DomainAccess' in response_dict['content']:
         response_dict['content'] += ' (OPS might be in maintenance mode)'
@@ -527,14 +551,20 @@ def pdf_document_build(patent):
     return pdf_document
 
 
-@cache_region('search')
-def ops_document_kindcodes(patent):
+def get_ops_biblio_url(patent):
 
-    p = split_patent_number(patent)
+    p = decode_patent_number(patent)
     patent = p['country'] + p['number'] # + '.' + p['kind']
 
-    url_biblio_tpl = 'https://ops.epo.org/3.1/rest-services/published-data/publication/docdb/{patent}/biblio/full-cycle'
-    url_biblio = url_biblio_tpl.format(patent=patent)
+    service_url = ops_service_url
+    url_tpl = '{service_url}/published-data/publication/docdb/{patent}/biblio/full-cycle'
+    url = url_tpl.format(**locals())
+    return url
+
+
+def get_ops_biblio_data(patent):
+
+    url_biblio = get_ops_biblio_url(patent)
 
     error_msg_access = 'No bibliographic information for document={0}'.format(patent)
     error_msg_process = 'Error while processing bibliographic information for document={0}'.format(patent)
@@ -561,6 +591,16 @@ def ops_document_kindcodes(patent):
         raise error
 
     documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
+
+    return documents
+
+
+@cache_region('search')
+def ops_document_kindcodes(patent):
+
+    error_msg_access = 'No bibliographic information for document={0}'.format(patent)
+
+    documents = get_ops_biblio_data(patent)
 
     kindcodes = []
     for document in documents:
@@ -617,42 +657,27 @@ def analytics_family(query):
                 family_representatives[family_id] = doc_number
 
 
-    # B. aggregate all family members
+    # B. Enrich all family representatives
     # https://ops.epo.org/3.1/rest-services/family/application/docdb/US19288494.xml
-    pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
-    pointer_publication_reference = JsonPointer('/publication-reference/document-id')
-    pointer_application_reference = JsonPointer('/application-reference/document-id')
-    #pointer_priority_claim_reference = JsonPointer('/priority-claim/document-id')
     for family_id, document_number in family_representatives.iteritems():
 
-        try:
-            response = ops_family_inpadoc('publication', document_number, '')
+        payload.setdefault(family_id, {})
 
+        # B.1 Aggregate all family members
+        try:
+             family = ops_family_members(document_number)
+             family_members = family.items
+             payload[family_id]['family-members'] = family_members
         except Exception as ex:
             request = get_current_request()
             del request.errors[:]
             log.warn('Could not fetch OPS family for {0}'.format(document_number))
             continue
 
-        payload.setdefault(family_id, {})
-        results = to_list(pointer_results.resolve(response))
-        family_members = []
-        for result in results:
-
-            # B.1 get publication and application references
-            pubref = pointer_publication_reference.resolve(result)
-            pubref_number, pubref_date = _get_document_number_date(pubref, 'docdb')
-            pubref_number_epodoc, pubref_date_epodoc = _get_document_number_date(pubref, 'epodoc')
-            appref = pointer_application_reference.resolve(result)
-            appref_number, appref_date = _get_document_number_date(appref, 'docdb')
-            family_members.append({
-                'publication': {'number-docdb': pubref_number, 'date': pubref_date, 'number-epodoc': pubref_number_epodoc, },
-                'application': {'number-docdb': appref_number, 'date': appref_date},
-            })
-
-            # B.2 use first active priority
+        # B.2 Use first active priority
+        for family_member_raw in family.raw:
             if 'priority-claim' not in payload[family_id]:
-                for priority_claim in to_list(result['priority-claim']):
+                for priority_claim in to_list(family_member_raw['priority-claim']):
                     try:
                         if priority_claim['priority-active-indicator']['$'] == 'YES':
                             prio_number, prio_date = _get_document_number_date(priority_claim['document-id'], 'docdb')
@@ -660,10 +685,7 @@ def analytics_family(query):
                     except KeyError:
                         pass
 
-        payload[family_id]['family-members'] = family_members
-
-
-        # B.3 compute word- and image-counts for EP publication
+        # B.3 Compute word- and image-counts for EP publication
         for statistics_country in ['EP', 'WO', 'AT', 'CA', 'CH', 'GB', 'ES']:
 
             if family_id in family_has_statistics:
@@ -762,6 +784,61 @@ def analytics_family(query):
 
 
     return payload
+
+def ops_family_members(document_number):
+
+    pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
+    pointer_publication_reference = JsonPointer('/publication-reference/document-id')
+    pointer_application_reference = JsonPointer('/application-reference/document-id')
+    #pointer_priority_claim_reference = JsonPointer('/priority-claim/document-id')
+
+    response = ops_family_inpadoc('publication', document_number, '')
+
+    family_members = OPSFamilyMembers()
+
+    family_members.raw = to_list(pointer_results.resolve(response))
+    for result in family_members.raw:
+
+        # B.1 get publication and application references
+        pubref = pointer_publication_reference.resolve(result)
+        pubref_number, pubref_date = _get_document_number_date(pubref, 'docdb')
+        pubref_number_epodoc, pubref_date_epodoc = _get_document_number_date(pubref, 'epodoc')
+        appref = pointer_application_reference.resolve(result)
+        appref_number, appref_date = _get_document_number_date(appref, 'docdb')
+        family_members.items.append({
+            'publication': {'number-docdb': pubref_number, 'date': pubref_date, 'number-epodoc': pubref_number_epodoc, },
+            'application': {'number-docdb': appref_number, 'date': appref_date},
+            })
+
+    return family_members
+
+class OPSFamilyMembers(object):
+
+    def __init__(self):
+        self.raw = []
+        self.items = []
+
+    def __repr__(self):
+        return u'<{name} object at 0x{id}>\nitems:\n{items}'.format(name=self.__class__.__name__, id=id(self), items=pformat(self.items))
+
+    def publications_by_country(self, exclude=None, countries=None):
+        exclude = exclude or []
+        countries = countries or []
+        member_publications = []
+        for country in countries:
+            country = country.upper()
+            for member in self.items:
+                publication = member['publication']
+                if publication['number-docdb'] in exclude or publication['number-epodoc'] in exclude:
+                    continue
+
+                publication_number = publication['number-docdb']
+
+                if publication_number.upper().startswith(country):
+                    member_publications.append(publication['number-docdb'])
+
+        return member_publications
+
 
 def _flatten_ops_json_list(ops_list):
     for ops_entry in ops_list:
