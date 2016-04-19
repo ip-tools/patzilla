@@ -13,6 +13,7 @@ development
 - Feature "Remove family members" for IFI Claims
 - Fix woes with javascript “htmlentities” machinery
 - Improve keyword propagation
+- DPMA: Adapt wildcard semantics in comfort form to world standards
 
 0.115.0
 =======

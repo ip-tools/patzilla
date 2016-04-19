@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 from elmyra.ip.util.cql.knowledge import datasource_indexnames
 from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within
 
@@ -54,6 +54,24 @@ def pair_to_cql(datasource, key, value):
             value = value.strip(' "')
             if not has_booleans(value) and should_be_quoted(value):
                 value = value.replace(' ', '(L)')
+
+        # 2016-04-19: Improve DEPATISnet convenience by adapting wildcard semantics to world standards
+        if '*' in value or '?' in value:
+            """
+            TRUNCATION/ WILDCARDS
+            ? 	no characters to any number of characters
+            ! 	precisely one character
+            # 	zero or one character
+
+            See also:
+            https://depatisnet.dpma.de/prod/en/hilfe/recherchemodi/experten-recherche/index.html
+
+            So, the translation table would be:
+            *  ->  ?
+            ?  ->  !
+            """
+            value = value.replace('?', '!')
+            value = value.replace('*', '?')
 
 
     elif datasource == 'ops':
