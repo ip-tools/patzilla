@@ -8,6 +8,7 @@ development
 - For EP..A4 documents, display drawings of family members
 - Improve design and layout of query expression history chooser
 - Improve OPS connection error handling
+- UI: Fix keyword propagation
 
 0.115.0
 =======
