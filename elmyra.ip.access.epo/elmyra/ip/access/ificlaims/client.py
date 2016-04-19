@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-# elmyra.ip.access.ificlaims.client: Lowlevel adapter to search provider "IFI Claims Direct"
+#
+# Lowlevel adapter to search provider "IFI Claims Direct"
+#
 import json
 import time
 import timeit
@@ -11,6 +13,7 @@ from beaker.cache import cache_region
 from elmyra.ip.access.epo.imageutil import to_png
 from elmyra.ip.access.ificlaims import get_ificlaims_client
 from elmyra.ip.access.serviva import get_serviva_client
+from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
@@ -54,9 +57,12 @@ class IFIClaimsClient(object):
         headers = {'X-User': self.username, 'X-Password': self.password}
         return headers
 
-    def search(self, expression, offset=0, limit=None):
+    def search(self, expression, options=None):
 
-        limit = limit or self.pagesize
+        options = options or SmartBunch()
+
+        offset = options.offset_remote or 0
+        limit  = options.limit or self.pagesize
 
         log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}".format(
             expression, offset, limit, **self.__dict__))
@@ -65,12 +71,20 @@ class IFIClaimsClient(object):
             self.login()
 
         starttime = timeit.default_timer()
+
+        # Define search request URI
         # https://cdws.ificlaims.com/search/query?q=pa:facebook
         # https://cdws.ificlaims.com/search/query?q=*:*&fl=ucid&rows=1
         uri     = self.uri + self.path_search
-        params  = {'q': expression, 'fl': 'ucid', 'start': offset, 'rows': limit, 'sort': 'pd desc, ucid asc'}
-        log.info(u'IFI search. expression={expression}, uri={uri}, params={params}'.format(**locals()))
 
+        # Define search request parameters
+        # 'family.simple': True,
+        params  = {'q': expression, 'fl': 'ucid,fam', 'start': offset, 'rows': limit, 'sort': 'pd desc, ucid asc'}
+
+        log.info(u'IFI search. expression={expression}, uri={uri}, params={params}, options={options}'.format(
+            expression=expression, uri=uri, params=params, options=options.dump()))
+
+        # Perform search request
         headers = self.get_authentication_headers()
         headers.update({'Accept': 'application/json'})
         response = requests.get(
@@ -80,13 +94,16 @@ class IFIClaimsClient(object):
             verify=self.tls_verify)
         duration = timeit.default_timer() - starttime
 
+        # Process search response
         if response.status_code == 200:
-            #print response.content
+
+            #print "response:", response.content        # debugging
+
             try:
-                #print "response:", response.content
                 search_results = self._search_parse_json(response.content)
                 if search_results:
 
+                    # Handle search errors
                     if 'error' in search_results['content']:
                         upstream_error = search_results['content']['error']
                         error = SearchException('Error in search expression')
@@ -94,48 +111,34 @@ class IFIClaimsClient(object):
                         log.error('{backend_name}: Error in search expression: {0}'.format(pformat(upstream_error), **self.__dict__))
                         raise error
 
-                    meta = {
-                        'time': search_results['time'],
-                        'status': search_results['status'],
-                        'params': search_results['content']['responseHeader']['params'],
-                        'pager': search_results['content']['responseHeader'].get('pager', {}),
-                    }
-                    meta['Offset'] = offset
-                    meta['Limit'] = limit
-                    log.info('{backend_name}: search succeeded. duration={duration}s, meta={meta}'.format(
-                        duration=round(duration, 1), meta=meta, **self.__dict__))
+                    # Mogrify search response
+                    # TODO: Generalize between all search backends
+                    sr = IFIClaimsSearchResponse(search_results, options=options)
+                    result = sr.render()
+                    duration = round(duration, 1)
 
-                    result = {
-                        'meta': meta,
-                        'numbers': [],
-                        'details': [],
-                    }
+                    result['meta']['Offset'] = offset
+                    result['meta']['Limit'] = limit
 
-                    if meta['pager'].get('totalEntries'):
+                    log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
+                        duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
-                        # parse results and extract numberlist
-                        sr = IFIClaimsSearchResponse(search_results['content']['response'])
-
-                        #meta['ResultLength'] = sr.get_length()
-                        result.update({
-                            'numbers': sr.get_numberlist(),
-                            'details': sr.get_details(),
-                        })
-                    else:
-                        log.warn('{backend_name}: search had empty results.'.format(**self.__dict__))
+                    if not result['numbers']:
+                        log.warn('{backend_name}: Search had empty results. duration={duration}s, meta={meta}'.format(
+                            duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
                     return result
 
                 else:
-                    log.error('{backend_name}: search failed. Search response could not be parsed. content={0}'.format(
+                    log.error('{backend_name}: Search failed. Search response could not be parsed. content={0}'.format(
                         response.content, **self.__dict__))
 
             except Exception as ex:
-                log.error('{backend_name}: search failed. Reason: {0} {1}. response={2}'.format(
+                log.error('{backend_name}: Search failed. Reason: {0} {1}. response={2}'.format(
                     ex.__class__, ex.message, response.content, **self.__dict__))
                 raise
         else:
-            message = '{backend_name}: search failed. status_code={0}, content={1}'.format(
+            message = '{backend_name}: Search failed. status_code={0}, content={1}'.format(
                 str(response.status_code) + ' ' + response.reason,
                 response.content, **self.__dict__)
             log.error(message)
@@ -453,14 +456,38 @@ class IFIClaimsClient(object):
 
 class IFIClaimsSearchResponse(object):
 
-    def __init__(self, response):
-        self.response = response
+    def __init__(self, input, options=None):
+
+        # arguments
+        self.input = input
+        self.options = options or {}
+
+        # setup
+        self.setup()
+
+        # actions
         self.enrich()
+
+        if 'feature_family_remove' in self.options and self.options['feature_family_remove']:
+            self.remove_family_members()
+
+    def setup(self):
+
+        meta = SmartBunch.bunchify({
+            'time': self.input['time'],
+            'status': self.input['status'],
+            'params': self.input['content']['responseHeader']['params'],
+            'pager': self.input['content']['responseHeader'].get('pager', {}),
+        })
+
+        self.response = self.input['content']['response']
+        self.output = SmartBunch(meta=meta, numbers=[], details=[])
+
 
     def enrich(self):
         for result in self.response['docs']:
             try:
-                ucid = result['ucid']
+                ucid = result[u'ucid']
                 cc, docno, kindcode = ucid.split('-')
                 number = cc + docno + kindcode
             except (KeyError, TypeError):
@@ -469,8 +496,18 @@ class IFIClaimsSearchResponse(object):
             #print 'number:', number, number_normalized
             if number_normalized:
                 number = number_normalized
-            result['publication_number'] = number
-            result['upstream_provider'] = 'ifi'
+            result[u'publication_number'] = number
+            result[u'upstream_provider'] = u'ifi'
+
+    def render(self):
+
+        if self.output.meta.pager.totalEntries:
+            # TODO: Generalize between"FulltextPRO "and IFI
+            # meta['ResultLength'] = sr.get_length()
+            self.output.numbers = self.get_numberlist()
+            self.output.details = self.get_details()
+
+        return self.output
 
     def get_length(self):
         return len(self.response['docs'])
@@ -484,6 +521,29 @@ class IFIClaimsSearchResponse(object):
 
     def get_details(self):
         return self.response['docs']
+
+    def remove_family_members(self):
+
+        # Filtering mechanics: Deduplicate by family id
+        seen = {}
+        stats = SmartBunch(removed = 0)
+        def munger(item):
+            fam = item['fam']
+            if fam in seen:
+                stats.removed += 1
+                return False
+            else:
+                seen[fam] = True
+                return True
+
+        # Apply family cleansing filter
+        self.response['docs'] = filter(munger, self.response['docs'])
+
+        # Update metadata
+        self.output.meta.pager.totalEntries      -= stats.removed
+        self.output.meta.pager.entriesOnThisPage -= stats.removed
+
+
 
 def ificlaims_client(vendor=None):
     if vendor == 'serviva':
@@ -511,11 +571,13 @@ def ificlaims_fetch(resource, format, options=None, vendor=None):
 
 
 #@cache_region('search')
-def ificlaims_search(query, offset, limit, vendor=None):
+def ificlaims_search(query, options=None):
 
-    client = ificlaims_client(vendor=vendor)
+    options = options or SmartBunch()
+
+    client = ificlaims_client(vendor=options.vendor)
     try:
-        return client.search(query, offset, limit)
+        return client.search(query, options)
 
     except SearchException as ex:
         client.stale = True

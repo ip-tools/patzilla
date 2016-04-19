@@ -10,6 +10,7 @@ development
 - Improve OPS connection error handling
 - UI: Fix keyword propagation
 - Generalize keyword field whitelist handling between OPS and DEPATISnet
+- Feature "Remove family members" for IFI Claims
 
 0.115.0
 =======

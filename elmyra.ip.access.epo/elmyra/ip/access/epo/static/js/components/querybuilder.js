@@ -999,11 +999,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var _this = this;
 
         // display "(Remove|Replace) family members" only for certain search backends
-        var button_family_remove = container.find("button[id='btn-family-remove'],button[id='btn-family-replace']");
+        var button_family_remove         = container.find("button[id='btn-family-remove']");
+        var button_family_remove_replace = container.find("button[id='btn-family-remove'],button[id='btn-family-replace']");
         if (_(['depatisnet']).contains(datasource)) {
+            button_family_remove_replace.show();
+        } else if (_(['ifi']).contains(datasource)) {
+            button_family_remove_replace.hide();
             button_family_remove.show();
         } else {
-            button_family_remove.hide();
+            button_family_remove_replace.hide();
         }
 
         // display "Full family" only for certain search backends
@@ -1151,7 +1155,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         modifier_buttons_selector += ',[data-name="order-past-first"]';
         modifier_buttons_selector += ',[data-name="order-recent-first"]';
 
-        if (_(['depatisnet']).contains(datasource)) {
+        if (_(['depatisnet', 'ifi']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-remove"]';
             modifier_buttons_selector += ',[data-name="family-replace"]';
         }

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2015 Andreas Motl, Elmyra UG
+# (c) 2013-2016 Andreas Motl, Elmyra UG
 import logging
-from beaker.cache import cache_region, region_invalidate
 from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.settings import asbool
+from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from beaker.cache import cache_region, region_invalidate
+from elmyra.ip.util.python import _exception_traceback
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.epo.espacenet import espacenet_claims, espacenet_description
 from elmyra.ip.access.epo.services import cql_prepare_query, propagate_keywords
-from elmyra.ip.util.python import _exception_traceback
+from elmyra.ip.access.epo.services.util import request_to_options
 
 log = logging.getLogger(__name__)
 
@@ -134,23 +135,6 @@ def depatisnet_published_data_crawl_handler(request):
 
         message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
         request.errors.add('depatisnet-published-data', 'crawl', message)
-
-
-def request_to_options(request, options):
-
-    # TODO: transfer all modifiers 1:1
-
-    if asbool(request.params.get('query_data[modifiers][family-remove]')):
-        options.update({'feature_family_remove': True})
-    elif asbool(request.params.get('query_data[modifiers][family-replace]')):
-        options.update({'feature_family_replace': True})
-
-    # this is awful, switch to JSON POST
-    for key, value in request.params.iteritems():
-        if key.startswith(u'query_data[sorting]'):
-            key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
-            options.setdefault('sorting', {})
-            options['sorting'][key] = value
 
 
 @cache_region('search', 'dpma_search')
