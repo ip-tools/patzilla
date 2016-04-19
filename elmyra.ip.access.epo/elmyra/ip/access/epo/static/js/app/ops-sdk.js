@@ -206,7 +206,6 @@ var IFI_CQL_FIELDS = [
         // Publication Information
         text: '<h4>Publication</h4>',
         children: [
-            { id: 'pn', text: _field_text_ifi('Publication identifier', 'pn', '(10, 11)') },
             { id: 'pnlang', text: _field_text_ifi('Publication language', 'pnlang', '(26)') },
             { id: 'pd', text: _field_text_ifi('Publication date', 'pd', '(40)') },
         ],
@@ -215,98 +214,98 @@ var IFI_CQL_FIELDS = [
         // Parties
         text: '<h4>Parties</h4>',
         children: [
-            { id: 'pa', text: _field_text_ifi('Applicants, Assignees', 'pa', '(71, 73)') },
-            { id: 'inv', text: _field_text_ifi('Inventors', 'inv', '(72)') },
-            { id: 'apl', text: _field_text_ifi('Applicants', 'apl', '(71)') },
-            { id: 'asg', text: _field_text_ifi('Assignees', 'asg', '(73)') },
-            { id: 'reasg', text: _field_text_ifi('Reassignees', 'reasg', '(73)') },
-            { id: 'agt', text: _field_text_ifi('Agents', 'agt', '(74)') },
-            { id: 'cor', text: _field_text_ifi('Correspondent name', 'cor', '') },
+            { id: 'pa',     text: _field_text_ifi('Applicants, Assignees', 'pa', '(71, 73)') },
+            { id: 'inv',    text: _field_text_ifi('Inventors', 'inv', '(72)') },
+            { id: 'apl',    text: _field_text_ifi('Applicants', 'apl', '(71)') },
+            { id: 'asg',    text: _field_text_ifi('Assignees', 'asg', '(73)') },
+            { id: 'reasg',  text: _field_text_ifi('Reassignees', 'reasg', '(73)') },
+            { id: 'agt',    text: _field_text_ifi('Agents', 'agt', '(74)') },
+            { id: 'cor',    text: _field_text_ifi('Correspondent name', 'cor', '') },
         ],
     },
     {
         // Text fields
         text: '<h4>Text</h4>',
         children: [
-            { id: 'text', text: _field_text_ifi('Title, Abstract, Description, Claims', 'text', '(54, 57)') },
-            { id: 'tac', text: _field_text_ifi('Title, Abstract, Claims', 'tac', '(54, 57)') },
-            { id: 'ttl', text: _field_text_ifi('Title', 'ttl', '(54)') },
-            { id: 'ab', text: _field_text_ifi('Abstract', 'ab', '(57)') },
-            { id: 'desc', text: _field_text_ifi('Description', 'desc', '(57)') },
-            { id: 'clm', text: _field_text_ifi('Claims', 'clm', '(57)') },
-            { id: 'aclm', text: _field_text_ifi('Amended claims', 'clm', '(57)') },
+            { id: 'text',   text: _field_text_ifi('Title, Abstract, Description, Claims', 'text', '(54, 57)') },
+            { id: 'tac',    text: _field_text_ifi('Title, Abstract, Claims', 'tac', '(54, 57)') },
+            { id: 'ttl',    text: _field_text_ifi('Title', 'ttl', '(54)') },
+            { id: 'ab',     text: _field_text_ifi('Abstract', 'ab', '(57)') },
+            { id: 'desc',   text: _field_text_ifi('Description', 'desc', '(57)') },
+            { id: 'clm',    text: _field_text_ifi('Claims', 'clm', '(57)') },
+            { id: 'aclm',   text: _field_text_ifi('Amended claims', 'clm', '(57)') },
         ],
     },
     {
         // Classifications
         text: '<h4>Classifications</h4>',
         children: [
-            { id: 'ic', text: _field_text_ifi('International classification', 'ic', '(51)') },
-            { id: 'cpc', text: _field_text_ifi('CP classification', 'cpc', '') },
-            { id: 'ecla', text: _field_text_ifi('ECLA classification', 'ecla', '') },
-            { id: 'uc', text: _field_text_ifi('US classification', 'uc', '') },
-            { id: 'fi', text: _field_text_ifi('FI classification', 'fi', '') },
-            { id: 'fterm', text: _field_text_ifi('F-Terms', 'fterm', '') },
+            { id: 'ic',     text: _field_text_ifi('International classification', 'ic', '(51)') },
+            { id: 'cpc',    text: _field_text_ifi('CP classification', 'cpc', '') },
+            { id: 'ecla',   text: _field_text_ifi('ECLA classification', 'ecla', '') },
+            { id: 'uc',     text: _field_text_ifi('US classification', 'uc', '') },
+            { id: 'fi',     text: _field_text_ifi('FI classification', 'fi', '') },
+            { id: 'fterm',  text: _field_text_ifi('F-Terms', 'fterm', '') },
         ],
     },
     {
         text: '<h4>Filing/Application and priority</h4>',
         children: [
             // Filing Information
-            { id: 'an', text: _field_text_ifi('Filing identifier', 'an', '(21)') },
+            { id: 'an',     text: _field_text_ifi('Filing identifier', 'an', '(21)') },
             { id: 'anlang', text: _field_text_ifi('Filing language', 'anlang', '(25)') },
-            { id: 'ad', text: _field_text_ifi('Filing date', 'ad', '(22)') },
+            { id: 'ad',     text: _field_text_ifi('Filing date', 'ad', '(22)') },
 
             // Priority Filing Information
-            { id: 'pri', text: _field_text_ifi('Priority identifiers', 'pri', '(31)') },
+            { id: 'pri',    text: _field_text_ifi('Priority identifiers', 'pri', '(31)') },
             { id: 'pridate', text: _field_text_ifi('Priority dates', 'pridate', '(32)') },
-            { id: 'regd', text: _field_text_ifi('DE registration date', 'regd', '') },
+            { id: 'regd',   text: _field_text_ifi('DE registration date', 'regd', '') },
         ],
     },
     {
         // International Filing and Publishing data
         text: '<h4>International Filing and Publishing data</h4>',
         children: [
-            { id: 'pctan', text: _field_text_ifi('PCT application identifier', 'pctan', '(86)') },
-            { id: 'pctad', text: _field_text_ifi('PCT application date', 'pctad', '(86)') },
-            { id: 'pctpn', text: _field_text_ifi('PCT publication identifier', 'pctpn', '(87)') },
-            { id: 'pctpd', text: _field_text_ifi('PCT publication date', 'pctpd', '(87)') },
-            { id: 'ds', text: _field_text_ifi('Designated states', 'ds', '(81)') },
+            { id: 'pctan',  text: _field_text_ifi('PCT application identifier', 'pctan', '(86)') },
+            { id: 'pctad',  text: _field_text_ifi('PCT application date', 'pctad', '(86)') },
+            { id: 'pctpn',  text: _field_text_ifi('PCT publication identifier', 'pctpn', '(87)') },
+            { id: 'pctpd',  text: _field_text_ifi('PCT publication date', 'pctpd', '(87)') },
+            { id: 'ds',     text: _field_text_ifi('Designated states', 'ds', '(81)') },
         ],
     },
     {
         // Citations
         text: '<h4>Citations</h4>',
         children: [
-            { id: 'pcit', text: _field_text_ifi('Patent citations (full information)', 'pcit', '') },
+            { id: 'pcit',   text: _field_text_ifi('Patent citations (full information)', 'pcit', '') },
             { id: 'pcitpn', text: _field_text_ifi('Patent citation identifier', 'pcitpn', '') },
-            { id: 'ncit', text: _field_text_ifi('Non-patent citations (full information)', 'ncit', '') },
+            { id: 'ncit',   text: _field_text_ifi('Non-patent citations (full information)', 'ncit', '') },
         ],
     },
     {
         // Related Documents
         text: '<h4>Related Documents</h4>',
         children: [
-            { id: 'relan', text: _field_text_ifi('Related applications', 'relan', '') },
-            { id: 'relad', text: _field_text_ifi('Related applications date', 'relad', '') },
-            { id: 'relpn', text: _field_text_ifi('Related publications identifier', 'relpn', '') },
-            { id: 'relpd', text: _field_text_ifi('Related publications publication date', 'relpd', '') },
+            { id: 'relan',  text: _field_text_ifi('Related applications', 'relan', '') },
+            { id: 'relad',  text: _field_text_ifi('Related applications date', 'relad', '') },
+            { id: 'relpn',  text: _field_text_ifi('Related publications identifier', 'relpn', '') },
+            { id: 'relpd',  text: _field_text_ifi('Related publications publication date', 'relpd', '') },
         ],
     },
     {
         // Legal Status Events
         text: '<h4>Legal Status Events</h4>',
         children: [
-            { id: 'ls', text: _field_text_ifi('Legal status: All legal status fields w/o lsconv, lsrf)', 'ls', '') },
+            { id: 'ls',     text: _field_text_ifi('Legal status: All legal status fields w/o lsconv, lsrf)', 'ls', '') },
             { id: 'lsconv', text: _field_text_ifi('Legal status conveyance', 'lsconv', '') },
-            { id: 'lsrf', text: _field_text_ifi('Legal status reel-frame', 'lsrf', '') },
+            { id: 'lsrf',   text: _field_text_ifi('Legal status reel-frame', 'lsrf', '') },
             { id: 'lstext', text: _field_text_ifi('Legal status text', 'lstext', '') },
         ],
     },
     {
         text: '<h4>Miscellaneous</h4>',
         children: [
-            { id: 'fam', text: _field_text('Family identifier', 'fam', '') },
+            { id: 'fam',    text: _field_text('Family identifier', 'fam', '') },
         ],
     },
 ];
