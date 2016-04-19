@@ -235,7 +235,7 @@ function htmlentities(string, quote_style, charset, double_encode) {
     //   example 2: htmlentities("foo'bar","ENT_QUOTES");
     //   returns 2: 'foo&#039;bar'
 
-    var hash_map = this.get_html_translation_table('HTML_ENTITIES', quote_style),
+    var hash_map = get_html_translation_table('HTML_ENTITIES', quote_style),
         symbol = '';
     string = string == null ? '' : string + '';
 
@@ -292,6 +292,9 @@ function get_html_translation_table(table, quote_style) {
     //   example 1: get_html_translation_table('HTML_SPECIALCHARS');
     //   returns 1: {'"': '&quot;', '&': '&amp;', '<': '&lt;', '>': '&gt;'}
 
+    // debugging
+    //log('table, quote_style:', table, quote_style);
+
     var entities = {},
         hash_map = {},
         decimal;
@@ -307,9 +310,18 @@ function get_html_translation_table(table, quote_style) {
     constMappingQuoteStyle[2] = 'ENT_COMPAT';
     constMappingQuoteStyle[3] = 'ENT_QUOTES';
 
+    /*
+    // buggy?
     useTable = !isNaN(table) ? constMappingTable[table] : table ? table.toUpperCase() : 'HTML_SPECIALCHARS';
     useQuoteStyle = !isNaN(quote_style) ? constMappingQuoteStyle[quote_style] : quote_style ? quote_style.toUpperCase() :
         'ENT_COMPAT';
+    */
+
+    useTable      = table       ? table.toUpperCase()       : 'HTML_SPECIALCHARS';
+    useQuoteStyle = quote_style ? quote_style.toUpperCase() : 'ENT_COMPAT';
+
+    // debugging
+    //log('useTable, useQuoteStyle:', useTable, useQuoteStyle);
 
     if (useTable !== 'HTML_SPECIALCHARS' && useTable !== 'HTML_ENTITIES') {
         throw new Error('Table: ' + useTable + ' not supported');
