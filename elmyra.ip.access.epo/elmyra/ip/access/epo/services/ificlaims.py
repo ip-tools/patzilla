@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2016 Andreas Motl, Elmyra UG
+#
+# Cornice services for search provider "IFI Claims Direct"
+#
 import re
+import cgi
 import json
 import time
 import logging
@@ -8,9 +12,11 @@ from cornice.service import Service
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from pyramid.settings import asbool
+from elmyra.ip.access.epo.services.util import request_to_options
 from elmyra.ip.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
 from elmyra.ip.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, SearchException, ificlaims_search, ificlaims_crawl
 from elmyra.ip.access.ificlaims.expression import should_be_quoted
+from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.data.zip import zip_multi
 from elmyra.ip.util.python import _exception_traceback
 
@@ -107,6 +113,7 @@ def ificlaims_deliver_handler(request):
 
 
 
+# TODO: implement as JSON POST
 @ificlaims_published_data_search_service.get(accept="application/json")
 def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI Claims Direct"""
@@ -121,14 +128,29 @@ def ificlaims_published_data_search_handler(request):
 
     #propagate_keywords(request, query_object)
 
-    # lazy-fetch more entries
+    # Lazy-fetch more entries
     # TODO: get from elmyra.ip.access.ificlaims
     limit = 250
     offset_local = int(request.params.get('range_begin', 0))
     offset_remote = int(offset_local / limit) * limit
 
+    # Compute query options, like
+    # - limit
+    # - sorting
+    # - whether to remove family members
+    options = SmartBunch(vendor=None)
+    options.update({
+        'limit': limit,
+        'offset_local': offset_local,
+        'offset_remote': offset_remote,
+    })
+
+    # Propagate request parameters to search options parameters
+    request_to_options(request, options)
+
     try:
-        data = ificlaims_search(query, offset_remote, limit)
+        data = ificlaims_search(query, options)
+        #print data.prettify()      # debugging
         return data
 
     except LoginException as ex:
@@ -137,7 +159,7 @@ def ificlaims_published_data_search_handler(request):
     except SearchException as ex:
         message = unicode(ex.message)
         if hasattr(ex, 'details'):
-            message += ': ' + ex.details
+            message += ': <pre>{details}</pre>'.format(details=cgi.escape(ex.details))
         request.errors.add('IFI', 'search', message)
 
     except SyntaxError as ex:
@@ -146,7 +168,7 @@ def ificlaims_published_data_search_handler(request):
     except OperationFailure as ex:
         log.error(ex)
         message = unicode(ex)
-        request.errors.add('IFI', 'query', message)
+        request.errors.add('IFI', 'internals', message)
 
 
 @ificlaims_published_data_crawl_service.get(accept="application/json")

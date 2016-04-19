@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-# elmyra.ip.access.ificlaims.api: Highlevel adapter to search provider "IFI Claims Direct"
+#
+# Highlevel adapter to search provider "IFI Claims Direct"
+#
 import json
 import logging
 from collections import OrderedDict
