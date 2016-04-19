@@ -25,16 +25,23 @@ DatasourceSearch = Backbone.Model.extend({
                 opsChooserApp.ui.indicate_activity(false);
                 //opsChooserApp.ui.reset_content();
 
-                // decode regular keywords
-                var keywords_regular = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
-                if (keywords_regular) {
-                    self.keywords = self.decode_header_json(keywords_regular) || [];
+                // Clear current keywords
+                self.keywords = [];
+
+                // Use keywords from comfort form
+                var keywords_comfort_raw = _options.keywords;
+                if (!_.isEmpty(keywords_comfort_raw)) {
+                    var keywords_comfort = self.decode_header_json(keywords_comfort_raw) || [];
+                    log('keywords_comfort:', keywords_comfort);
+                    self.keywords = self.keywords.concat(keywords_comfort);
                 }
 
-                // fallback keyword gathering from comfort form
-                if (_.isEmpty(self.keywords)) {
-                    var keywords_form = _options.keywords;
-                    self.keywords = self.decode_header_json(keywords_form) || [];
+                // Use keywords from search backend or query expression in expert mode
+                var keywords_backend_raw = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+                if (keywords_backend_raw) {
+                    var keywords_backend = self.decode_header_json(keywords_backend_raw) || [];
+                    log('keywords_backend:', keywords_backend);
+                    self.keywords = self.keywords.concat(keywords_backend);
                 }
 
             },

@@ -117,7 +117,7 @@ def make_expression(data):
                     expression_part.get('query') and expression_parts.append(expression_part.get('query'))
 
 
-    log.info("keywords: %s", keywords)
+    log.info("Propagating keywords from comfort form: {keywords}".format(keywords=keywords))
     request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
     # assemble complete expression from parts, connect them with AND operators

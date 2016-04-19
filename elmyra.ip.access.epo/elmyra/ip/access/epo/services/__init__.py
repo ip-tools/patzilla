@@ -51,7 +51,7 @@ def propagate_keywords(request, query_object):
             origin = 'compute'
             keywords = compute_keywords(query_object)
 
-        log.info('Propagating keywords from "{origin}": {keywords}'.format(origin=origin, keywords=keywords))
+        log.info('Propagating keywords from expression "{origin}": {keywords}'.format(origin=origin, keywords=keywords))
         request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
 def compute_keywords(query_object):
