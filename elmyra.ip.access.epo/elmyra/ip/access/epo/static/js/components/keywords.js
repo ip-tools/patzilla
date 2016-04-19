@@ -243,8 +243,9 @@ KeywordsController = Marionette.Controller.extend({
         var style_queue = _(this.colors_light).keys();
         var style_queue_work;
         var _this = this;
-        _.each(opsChooserApp.metadata.get('keywords'), function(keyword) {
-            log('keyword:', keyword);
+        var keywords = opsChooserApp.metadata.get('keywords');
+        log('metadata.keywords:', keywords);
+        _.each(keywords, function(keyword) {
             if (keyword) {
 
                 // refill style queue

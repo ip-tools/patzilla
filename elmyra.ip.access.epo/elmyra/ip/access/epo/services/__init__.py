@@ -40,13 +40,15 @@ def propagate_keywords(request, query_object):
     """propagate keywords to client for highlighting"""
     if query_object:
         if type(query_object) is CQL:
+            origin = 'cql'
             keywords = query_object.keywords()
             # TODO: how to build a unique list of keywords? the list now can contain lists (TypeError: unhashable type: 'list')
             # possible solution: iterate list, convert lists to tuples, then list(set(keywords)) is possible
         else:
+            origin = 'compute'
             keywords = compute_keywords(query_object)
 
-        log.info("keywords: %s", keywords)
+        log.info('Propagating keywords from "{origin}": {keywords}'.format(origin=origin, keywords=keywords))
         request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
 
 def compute_keywords(query_object):

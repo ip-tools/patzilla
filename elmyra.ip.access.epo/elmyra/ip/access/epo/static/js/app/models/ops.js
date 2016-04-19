@@ -21,11 +21,14 @@ OpsPublishedDataSearch = Backbone.Model.extend({
             data: $.param({ query: query, range: range}),
             success: function(model, response, options) {
 
-                var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
-                if (keywords) {
-                    // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
-                    keywords = keywords.replace(/(.+), \[.+\]/, '$1');
-                    self.keywords = jQuery.parseJSON(keywords);
+                // Only gather keywords in regular OPS search mode
+                if (metadata.get('searchmode') != 'subsearch') {
+                    var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+                    if (keywords) {
+                        // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+                        keywords = keywords.replace(/(.+), \[.+\]/, '$1');
+                        self.keywords = jQuery.parseJSON(keywords);
+                    }
                 }
 
                 opsChooserApp.ui.indicate_activity(false);

@@ -97,7 +97,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             var range = this.compute_range(options);
             this.trigger('search:before', _(search_info).extend({range: range}));
 
-            opsChooserApp.search.perform(this.documents, this.metadata, query, range).done(function() {
+            var engine = opsChooserApp.search;
+            engine.perform(this.documents, this.metadata, query, range).done(function() {
 
                 var hits = self.metadata.get('result_count');
                 if (hits > self.metadata.get('maximum_results')['ops']) {
@@ -105,7 +106,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                         'The first 2000 hits are accessible from OPS.  ' +
                         'You can narrow your search by adding more search criteria.', 'warning');
                 }
-                self.metadata.set('keywords', opsChooserApp.search.keywords);
+
+                // propagate keywords
+                log('engine.keywords:', engine.keywords);
+                self.metadata.set('keywords', engine.keywords);
 
                 // signal the results are ready
                 self.trigger('results:ready');
@@ -119,11 +123,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // make the pager display the original query
             this.metadata.set('query_origin', query);
 
-            var depatisnet = new DepatisnetSearch();
-            depatisnet.perform(query, options).done(function(response) {
+            var engine = new DepatisnetSearch();
+            engine.perform(query, options).done(function(response) {
 
                 self.propagate_datasource_message(response);
-                self.metadata.set('keywords', depatisnet.keywords);
+
+                // propagate keywords
+                log('engine.keywords:', engine.keywords);
+                self.metadata.set('keywords', engine.keywords);
+
+                // debugging
                 console.log('depatisnet response:', response);
 
                 var publication_numbers = response['numbers'];
@@ -143,17 +152,19 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // make the pager display the original query
             this.metadata.set('query_origin', query);
 
-            var google = new GooglePatentSearch();
-            google.perform(query, options).done(function(response) {
+            var engine = new GooglePatentSearch();
+            engine.perform(query, options).done(function(response) {
                 options = options || {};
 
                 self.propagate_datasource_message(response);
 
                 // propagate keywords
-                self.metadata.set('keywords', google.keywords);
+                log('engine.keywords:', engine.keywords);
+                self.metadata.set('keywords', engine.keywords);
 
+                // debugging
                 console.log('google response:', response);
-                console.log('google keywords:', google.keywords);
+                console.log('google keywords:', engine.keywords);
 
                 var publication_numbers = response['numbers'];
                 var hits = response['hits'];
@@ -191,8 +202,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // make the pager display the original query
             this.metadata.set('query_origin', query);
 
-            var ftprosearch = new FulltextProSearch();
-            ftprosearch.perform(query, options).done(function(response) {
+            var engine = new FulltextProSearch();
+            engine.perform(query, options).done(function(response) {
                 options = options || {};
 
                 console.log('ftpro response:', response);
@@ -200,7 +211,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 self.propagate_datasource_message(response);
 
                 // propagate keywords
-                self.metadata.set('keywords', ftprosearch.keywords);
+                log('engine.keywords:', engine.keywords);
+                self.metadata.set('keywords', engine.keywords);
 
                 var publication_numbers = response['details'];
                 var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
@@ -229,6 +241,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 self.propagate_datasource_message(response);
 
                 // propagate keywords
+                log('engine.keywords:', engine.keywords);
                 self.metadata.set('keywords', engine.keywords);
 
                 var publication_numbers = response['details'];
