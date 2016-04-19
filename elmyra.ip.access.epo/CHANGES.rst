@@ -12,6 +12,7 @@ development
 - Generalize keyword field whitelist handling between OPS and DEPATISnet
 - Feature "Remove family members" for IFI Claims
 - Fix woes with javascript “htmlentities” machinery
+- Improve keyword propagation
 
 0.115.0
 =======
