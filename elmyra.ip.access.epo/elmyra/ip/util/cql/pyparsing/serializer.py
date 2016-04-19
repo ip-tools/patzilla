@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
-import sys
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 import re
 import types
 import logging
 import StringIO
 from pyparsing import ParseResults
-from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards, termop, parse_cql
+from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards, termop
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results, token_to_triple
-from elmyra.ip.util.cql.knowledge import indexes_publication_number, indexes_keywords
+from elmyra.ip.util.cql.knowledge import indexes_publication_number
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.data.convert import shrink_list
 
@@ -81,7 +80,7 @@ def normalize_patentnumbers(tokens):
 
     walk_token_results(tokens, triple_callback=action)
 
-def get_keywords(triples):
+def get_keywords(triples, whitelist_indexes):
     """
     compute list of keywords
 
@@ -98,7 +97,7 @@ def get_keywords(triples):
     for triple in triples:
         try:
             index, binop, term = triple
-            if index.lower() in indexes_keywords:
+            if index.lower() in whitelist_indexes:
                 # for "any" or "all" relations ...
                 if binop in ['any', 'all']:
                     # strip single and double quotes from term
@@ -109,6 +108,7 @@ def get_keywords(triples):
                 else:
                     keywords.append(term)
         except ValueError as ex:
+            # TODO: Is it okay just passing on this exception?
             pass
 
     keywords = trim_keywords(keywords)

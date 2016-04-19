@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2015 Andreas Motl, Elmyra UG
+# (c) 2013-2016 Andreas Motl, Elmyra UG
 import json
 import logging
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import should_be_quoted
 from elmyra.ip.util.expression.keywords import clean_keyword
 from elmyra.ip.util.python import _exception_traceback
+from elmyra.ip.access.epo.ops import ops_keyword_fields
+from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +26,8 @@ def cql_prepare_query(query):
         #query = query_object.toCQL().strip()
 
         # v2 pyparsing CQL parser
-        query_object = CQL(query).polish()
+        keyword_fields = ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields
+        query_object = CQL(query, keyword_fields=keyword_fields).polish()
         query_recompiled = query_object.dumps()
 
         if query_recompiled:

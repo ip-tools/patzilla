@@ -6,8 +6,9 @@ from serializer import tokens_to_cql, expand_shortcut_notation, get_triples, get
 
 class CQL(object):
 
-    def __init__(self, cql=None, logging=True):
+    def __init__(self, cql=None, logging=True, keyword_fields=None):
         self.logging = logging
+        self.keyword_fields = keyword_fields or []
         self.tokens = []
         if cql:
             self.loads(cql)
@@ -27,7 +28,7 @@ class CQL(object):
         return triples
 
     def keywords(self):
-        return get_keywords(self.triples())
+        return get_keywords(self.triples(), self.keyword_fields)
 
     def expand_shortcuts(self):
         expand_shortcut_notation(self.tokens)

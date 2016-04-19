@@ -36,6 +36,73 @@ class IFIClaimsExpression(object):
         'citation':     'pcitpn',
     }
 
+    fieldnames = [
+        'pn', 'text', 'ic', 'cpc',
+        'pnlang', 'pd',
+
+        # Parties
+        'pa',
+        'inv',
+        'apl',
+        'asg',
+        'reasg',
+        'agt',
+        'cor',
+
+        # Text
+        'text',
+        'tac',
+        'ttl',
+        'ab',
+        'desc',
+        'clm',
+        'aclm',
+
+        # Classifications
+        'ic',
+        'cpc',
+        'ecla',
+        'uc',
+        'fi',
+        'fterm',
+
+        # Filing/Application and priority
+        'an',
+        'anlang',
+        'ad',
+        'pri',
+        'pridate',
+        'regd',
+
+        # International Filing and Publishing data
+        'pctan',
+        'pctad',
+        'pctpn',
+        'pctpd',
+        'ds',
+
+        # Citations
+        'pcit',
+        'pcitpn',
+        'ncit',
+
+        # Related Documents
+        'relan',
+        'relad',
+        'relpn',
+        'relpd',
+
+        # Legal Status Events
+        'ls',
+        'lsconv',
+        'lsrf',
+        'lstext',
+
+        # Miscellaneous
+        'fam',
+
+    ]
+
     @classmethod
     def pair_to_solr(cls, key, value, modifiers=None):
 
@@ -113,7 +180,7 @@ class IFIClaimsExpression(object):
             # Translate class expression from "H04L12/433 or H04L12/24"
             # to "(ic:H04L0012433 OR cpc:H04L0012433) OR (ic:H04L001224 OR cpc:H04L001224)"
             try:
-                query_object = CQL(value)
+                query_object = CQL(value, keyword_fields=cls.fieldnames)
 
                 tokens_new = []
                 for token in query_object.tokens:

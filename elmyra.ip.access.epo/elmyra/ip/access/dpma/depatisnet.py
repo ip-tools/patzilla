@@ -25,6 +25,15 @@ logger = logging.getLogger(__name__)
 
 class DpmaDepatisnetAccess:
 
+    # values of these indexes will be considered keywords
+    keyword_fields = [
+
+        # DEPATISnet
+        'ti', 'pa', 'in',
+        'ab', 'de', 'cl', 'bi',
+
+    ]
+
     def __init__(self):
         print 'DpmaDepatisnetAccess.__init__'
         self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'

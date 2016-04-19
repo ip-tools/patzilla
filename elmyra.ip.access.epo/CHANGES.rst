@@ -9,6 +9,7 @@ development
 - Improve design and layout of query expression history chooser
 - Improve OPS connection error handling
 - UI: Fix keyword propagation
+- Generalize keyword field whitelist handling between OPS and DEPATISnet
 
 0.115.0
 =======

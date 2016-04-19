@@ -19,6 +19,31 @@ log = logging.getLogger(__name__)
 ops_service_url = 'https://ops.epo.org/3.1/rest-services'
 
 
+# values of these indexes will be considered keywords
+ops_keyword_fields = [
+
+    # OPS
+    'title', 'ti',
+    'abstract', 'ab',
+    'titleandabstract', 'ta',
+    'txt',
+    'applicant', 'pa',
+    'inventor', 'in',
+    'inventorandapplicant', 'ia',
+
+    'ct', 'citation',
+
+    # classifications
+    'ipc', 'ic',
+    'cpc', 'cpci', 'cpca', 'cl',
+
+    # application and priority
+    'ap', 'applicantnumber', 'sap',
+    'pr', 'prioritynumber', 'spr',
+
+]
+
+
 def get_ops_client():
     request = get_current_request()
     oauth_client = request.ops_oauth_client
