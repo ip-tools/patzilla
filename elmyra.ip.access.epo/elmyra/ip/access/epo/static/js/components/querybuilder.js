@@ -755,14 +755,19 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     query_model_repr: function(query) {
 
+
+        // ------------------------------------------
+        // Crunch some data for query history display
+        // ------------------------------------------
+
         var flavor = query.get('flavor');
         var datasource = query.get('datasource');
         var query_data = query.get('query_data');
         var created = query.get('created');
         var result_count = query.get('result_count');
 
-        // compute title
-        var title = query.get('query_expression');
+        // Use query expression as title
+        var expression = query.get('query_expression');
         if ((flavor == 'comfort' || datasource == 'ftpro') && query_data && _.isObject(query_data['criteria'])) {
             // serialize query_data criteria
             var entries = _.map(query_data['criteria'], function(value, key) {
@@ -781,68 +786,132 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 }
                 return key + ': ' + value;
             });
-            title = entries.join(', ');
+            expression = entries.join(', ');
         }
+
+        // -----------------------------------------
+        // Humanize values for query history display
+        // -----------------------------------------
+
+        // Item date
         created = moment(created).fromNow();
 
-        // human representation for data source type
-        var datasource_title = datasource;
-        if (datasource == 'ops') {
-            datasource_title = 'EPO';
-        } else if (datasource == 'depatisnet') {
-            datasource_title = 'DPMA';
-        } else if (datasource == 'ftpro') {
-            datasource_title = 'FulltextPRO';
-        } else if (datasource == 'ifi') {
-            datasource_title = 'IFI Claims';
+        // Search flavor
+        var flavor_title = flavor;
+        if (flavor == 'comfort') {
+            flavor_title = 'Comfort';
+        } else if (flavor == 'cql') {
+            flavor_title = 'Expert';
         }
 
-        // human representation for search modifiers
-        var tags = [];
+        // Data source
+        var datasource_title = datasource;
+        var datasource_color = 'default';
+        if (datasource == 'ops') {
+            datasource_title = 'EPO';
+            datasource_color = 'important';
+        } else if (datasource == 'depatisnet') {
+            datasource_title = 'DPMA';
+            datasource_color = 'inverse';
+        } else if (datasource == 'ftpro') {
+            datasource_title = 'FulltextPRO';
+            datasource_color = 'success';
+        } else if (datasource == 'ifi') {
+            datasource_title = 'IFI Claims';
+            datasource_color = 'info';
+        }
+
+        // Result count
+        var hits_title =
+            (result_count ? Humanize.compactInteger(result_count, 1) : 'no') +
+                (result_count == 1 ? ' hit' : ' hits');
+
+        // Search modifiers
+        var tags_html = [];
         if (_.isObject(query_data) && _.isObject(query_data['modifiers'])) {
             if (query_data['modifiers']['full-cycle']) {
-                tags.push('fc');
+                tags_html.push(this.html_history_tag('Full cycle', {name: 'fc', width: 'narrow'}));
             }
 
             if (query_data['modifiers']['order-past-first']) {
-                tags.push('pf');
+                tags_html.push(this.html_history_tag('Past first', {name: 'pf', width: 'narrow'}));
             }
             if (query_data['modifiers']['order-recent-first']) {
-                tags.push('rf');
+                tags_html.push(this.html_history_tag('Recent first', {name: 'rf', width: 'narrow'}));
             }
 
             if (query_data['modifiers']['family-remove']) {
-                tags.push('-fam:rm');
+                tags_html.push(this.html_history_tag('Remove family members', {name: '-fam:rm', width: 'wide'}));
             }
             if (query_data['modifiers']['family-replace']) {
-                tags.push('-fam:rp');
+                tags_html.push(this.html_history_tag('Replace family members', {name: '-fam:rp', width: 'wide'}));
             }
             if (query_data['modifiers']['family-full']) {
-                tags.push('+fam');
+                tags_html.push(this.html_history_tag('Full family', {name: '+fam', width: 'narrow'}));
             }
         }
         if (_.isObject(query_data) && _.isObject(query_data['sorting'])) {
-            tags.push(query_data.sorting.field + ':' + query_data.sorting.order);
+            tags_html.push(query_data.sorting.field + ':' + query_data.sorting.order);
         }
 
-        var tags_repr = '';
-        if (!_.isEmpty(tags)) {
-            tags_repr = ' [' + tags.join(',') + ']';
-        }
+        // ------------------------------------------
+        //               Generate HTML
+        // ------------------------------------------
 
-        title += '<div class="pull-right"><small>' + [
-            flavor + tags_repr,
-            datasource_title,
-            created,
-            (result_count ? result_count : 'no') + (result_count == 1 ? ' hit' : ' hits')
-        ].join(', ') + '</small></div><div class="clearfix"></div>';
+        // Left side
+        var hits_bs =
+            '<small/>' +
+            this.html_history_tag(hits_title, {role: 'hits', type: 'badge', kind: result_count > 0 ? 'success' : 'default'}) +
+            '</small>';
+        var row1_left_side = [this.html_history_expression(expression)];
+        var row2_left_side = [this.html_history_expression(hits_bs)];
 
+
+        // Right side
+
+        // Bootstrapify labels
+        var row1_right_side = [
+            this.html_history_tag(created, {type: 'text'}),
+            this.html_history_tag(flavor_title, {role: 'flavor'}),
+            this.html_history_tag(datasource_title, {role: 'datasource', kind: datasource_color}),
+        ];
+        var row2_right_side = tags_html;
+
+
+        // The whole entry
+        var entry_html =
+            '<div class="container-fluid history-container">' +
+            '<div class="row-fluid history-row-1">' + row1_left_side.join('') + this.html_history_labels(row1_right_side.join('')) + '</div>' +
+            '<div class="row-fluid history-row-2">' + row2_left_side.join('') + this.html_history_labels(row2_right_side.join('')) + '</div>' +
+            '</div>';
         var entry = {
             id: query,
-            text: title,
+            text: entry_html,
         };
+
         return entry;
 
+    },
+
+    html_history_expression: function(content) {
+        return '<div class="span6 history-entry-expression">' + content + '</div>';
+    },
+
+    html_history_labels: function(content) {
+        return '<div class="span6 history-entry-labels"><small>' + content + '</small></div>';
+    },
+
+    html_history_tag: function(content, options) {
+        options = options || {};
+        options.type = options.type || 'label';
+        options.kind = options.kind || 'default';
+        var classes = [
+            options.type,
+            options.type + '-' + options.kind,
+            options.role  ? 'history-tag-' + options.role : '',
+            options.width ? 'history-tag-' + options.width : '',
+        ];
+        return '<span class="' + classes.join(' ') + '">' + content + '</span>';
     },
 
     cql_history_chooser_setup: function() {
@@ -917,7 +986,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var projectname = opsChooserApp.project.get('name');
         chooser_widget.select2({
             placeholder: 'Query history' + ' (' + projectname + ')',
-            dropdownCssClass: "bigdrop",
+            dropdownCssClass: "bigdrop history-dropdown",
             escapeMarkup: function(text) { return text; },
             data: (data || { results: [] }),
         });

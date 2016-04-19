@@ -6,6 +6,7 @@ development
 ===========
 - IFI: Enable expression parsing with “Class” criteria in comfort form
 - For EP..A4 documents, display drawings of family members
+- Improve design and layout of query expression history chooser
 
 0.115.0
 =======
