@@ -517,7 +517,7 @@ def handle_error(response, name):
     response_dict['url'] = response_dict['url'].replace(ops_service_url, '')
 
     if 'SERVER.DomainAccess' in response_dict['content']:
-        response_dict['content'] += ' (OPS might be in maintenance mode)'
+        response_dict['content'] += '<br/><br/>The OPS API might be in maintenance mode, this happens regularly at 05:00 hours CEST.'
 
     request.errors.add(name, 'http-response', response_dict)
 

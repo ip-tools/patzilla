@@ -4,6 +4,7 @@ import json
 import logging
 from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
 from pyramid.threadlocal import get_current_registry
+from requests.exceptions import ConnectionError
 from requests_oauthlib.oauth2_session import OAuth2Session
 from oauthlib.common import add_params_to_uri
 from zope.interface.declarations import implements
@@ -78,7 +79,7 @@ class OpsOAuth2Session(OAuth2Session):
 
             return response
 
-        except OAuth2Error as ex:
+        except (ConnectionError, OAuth2Error) as ex:
             ex.url = ex.uri
             ex.content = ex.description
             logger.error('OpsOAuth2Session {0} {1}. client_id={2}'.format(ex.__class__.__name__, ex.description, self.client_id))
