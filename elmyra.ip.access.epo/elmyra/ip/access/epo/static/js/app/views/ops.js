@@ -93,21 +93,60 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         // In other words, this is a central gateway between the jQuery DOM world and the Backbone Marionette world.
         // However, there should be better mechanisms. Investigate! (TODO)
         var container = $(this.el).find('.ops-collection-entry');
+        $(container).prop('view', this);
         $(container).prop('ops-document', this.model.attributes);
 
         // Swap bibliographic details with placeholder information if we encounter appropriate signal
         if (this.model.get('__type__') == 'ops-placeholder') {
             //log('this.model:', this.model);
 
-            // Replace details with placeholder
+            // Add placeholder
             var html = _.template($('#ops-entry-placeholder-template').html(), this.model.attributes, {variable: 'data'});
-            $(container).find('.ops-bibliographic-details').replaceWith(html);
+            $(container).find('.ops-bibliographic-details').before(html);
+
+            // Hide content area
+            $(container).find('.ops-bibliographic-details').hide();
 
             // Hide other elements displaying bibliographic data
             $(container).find('.header-biblio,.document-details-chooser').hide();
 
         }
 
+    },
+
+    signalDrawingLoaded: function() {
+        if (this.model.get('__type__') == 'ops-placeholder') {
+
+            // Skip swapping in the first drawing if document has alternative representations on the same result page
+            var has_alternatives = !_.isEmpty(this.model.get('alternatives_local'));
+            if (has_alternatives) {
+                return;
+            }
+
+            // Show content area again
+            var container = $(this.el).find('.ops-collection-entry');
+            $(container).find('.ops-bibliographic-details').show();
+
+            // We don't have any bibliographic data to display, so swap to informational message
+            var details = $(container).find('.ops-bibliographic-details').find('.document-details');
+            var info = $('<div class="span7"></div>');
+            details.replaceWith(info);
+
+            //log('model:', this.model);
+            var document_number = this.model.get_document_number();
+            var message_not_available =
+                'Bummer, OPS does not deliver any bibliographic data for the document "' + document_number + '" ' +
+                'and offers no alternative documents to consider.' +
+                '<br/><br/>' +
+                'However, a drawing was found in one of the upstream patent databases. ' +
+                'Please consider checking with the appropriate domestic office by selecting the ' +
+                '<a class="btn"><i class="icon-globe icon-large"></i></a> icon in the header bar of this document.' +
+                '<br/><br/>' +
+                'If the document is not available in any other form which satisfies your needs, ' +
+                'don\'t hesitate to report this problem to us!';
+
+            opsChooserApp.ui.user_alert(message_not_available, 'info', info);
+        }
     },
 
     events: {

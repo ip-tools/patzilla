@@ -115,9 +115,9 @@
                     </a>
 
                     <!-- external links -->
-                    <div class="btn-group btn-popover"
+                    <div class="btn-group btn-popover external-links"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
-                         data-content="Show more information from various patent offices"
+                         data-content="Show more information from domestic patent offices and other sources"
                          >
                         <a class="btn dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-globe icon-large"></i>
@@ -145,6 +145,19 @@
                                 </a>
                             </li>
 
+                            <% if (linkmaker.country == 'US') { %>
+                            <li>
+                                <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
+                                    [BIBLIO] <%= patent_number %> @ USPTO Applications
+                                </a>
+                            </li>
+                            <li data-office="US">
+                                <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
+                                    [BIBLIO] <%= patent_number %> @ USPTO Patents
+                                </a>
+                            </li>
+                            <% } %>
+
                             <li class="divider"/>
 
 
@@ -168,11 +181,13 @@
                                     [LEGAL] <%= patent_number %> @ DPMAregister
                                 </a>
                             </li>
+                            <% if (linkmaker.country == 'US') { %>
                             <li>
                                 <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank">
                                     [LEGAL] USPTO PAIR
                                 </a>
                             </li>
+                            <% } %>
                             <li class="divider"/>
 
 
@@ -201,7 +216,7 @@
 
                             <!-- PDF -->
                             <li><div style="padding-left: 10px">
-                                <h5><img src="/static/img/icons/pdf.svg" class="pdf-svg"/> &nbsp; PDF</h5>
+                                <h5><img src="/static/img/icons/pdf.svg" class="pdf-svg"/> &nbsp; PDF and Images</h5>
                             </div>
                             </li>
                             <li>
@@ -219,6 +234,20 @@
                                     [PDF] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
+
+                            <% if (linkmaker.country == 'US') { %>
+                            <li>
+                                <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
+                                    [PDF] <%= patent_number %> @ USPTO Applications
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
+                                    [PDF] <%= patent_number %> @ USPTO Patents
+                                </a>
+                            </li>
+                            <% } %>
+
                             <li class="divider"/>
 
 
@@ -350,11 +379,13 @@
                         <!-- carousel items -->
                         <div class="carousel-inner">
                             <div class="active item">
-                                <img src="<%= linkmaker.drawing_url() %>" alt="No drawing available."/>
+                                <img src="<%= linkmaker.drawing_url() %>"
+                                     alt="No drawing available."
+                                     onload="$(this).closest('.ops-collection-entry').prop('view').signalDrawingLoaded();"/>
                             </div>
                         </div>
                         <!-- carousel navigation -->
-                        <a class="carousel-control left do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
+                        <a class="carousel-control left  do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
                         <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
                     </div>
 
