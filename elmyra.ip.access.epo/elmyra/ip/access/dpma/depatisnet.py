@@ -32,6 +32,13 @@ class DpmaDepatisnetAccess:
         'ti', 'pa', 'in',
         'ab', 'de', 'cl', 'bi',
 
+        # classes
+        'ic', 'icb', 'icm', 'ics', 'ica', 'ici',
+        'icmv', 'icsv', 'icav',
+        'icml', 'icsl', 'ical',
+        'mcd', 'mcm', 'mcs', 'mca', 'mcml', 'mcsl', 'mcal',
+        'icp',
+
     ]
 
     def __init__(self):

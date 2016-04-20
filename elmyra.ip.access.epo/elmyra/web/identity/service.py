@@ -20,7 +20,7 @@ def attach_user(event):
     if userid:
         request.user = User.objects(userid=userid).first()
     else:
-        request.user = None
+        request.user = User()
 
 
 

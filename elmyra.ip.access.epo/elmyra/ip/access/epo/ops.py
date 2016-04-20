@@ -645,6 +645,7 @@ def ops_document_kindcodes(patent):
 
     error_msg_access = 'No bibliographic information for document={0}'.format(patent)
 
+    log.info('Retrieving kindcodes for document {document}'.format(document=patent))
     documents = get_ops_biblio_data(patent)
 
     kindcodes = []

@@ -39,8 +39,10 @@ def query_expression_util_handler(request):
     # TODO: improve error handling
 
     data = request.json
-
-    return make_expression(data)
+    log.info('[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
+    expression = make_expression(data)
+    log.info('[{userid}] Expression query: {expression}'.format(userid=request.user.userid, expression=expression))
+    return expression
 
 
 def make_expression(data):
