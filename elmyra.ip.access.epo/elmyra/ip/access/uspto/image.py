@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
-# (c) 2007,2008,2009,2010 ***REMOVED***
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2007-2010 ***REMOVED***
+# (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+import logging
 import urllib2
 import cookielib
 from BeautifulSoup import BeautifulSoup
 from elmyra.ip.util.numbers.common import split_patent_number
 
+log = logging.getLogger(__name__)
 
 def fetch_first_drawing(patent):
 
     number = patent['country'] + patent['number'] + patent['kind']
 
     #print "-" * 60
-    print "[uspto.client]"
+    log.info("[uspto.client]")
 
     type = 'patent'
 
@@ -41,19 +43,18 @@ def fetch_first_drawing(patent):
         url_path = '/.aiw?Docid=%s&idkey=NONE' % patent['number']
 
     for baseurl in baseurls:
-        print "INFO: Searching for tif document '%s' at server '%s'" % (number, baseurl)
+        log.info("Searching for tif document '%s' at server '%s'" % (number, baseurl))
         url = baseurl + url_path
         payload = fetch_first_drawing_do(number, baseurl, url)
         if payload:
             return payload
-
 
 def fetch_first_drawing_do(number, baseurl, url_initial):
 
     # 1. fetch and parse initial document page
     html_initial = fetch_url(url_initial)
     if not html_initial:
-        print "WARNING: No content in main document page '%s' (url: %s)" % (number, url_initial)
+        log.warning("No content in main document page '%s' (url: %s)" % (number, url_initial))
         return
 
     soup = BeautifulSoup(html_initial)
@@ -70,7 +71,7 @@ def fetch_first_drawing_do(number, baseurl, url_initial):
             url_drawing = anchor['href']
 
     if not url_drawing:
-        print "WARNING: No drawings found in index of screenscraped document '%s'" % number
+        log.warning("No drawings found in index of screenscraped document '%s'" % number)
         return
 
 
@@ -80,7 +81,7 @@ def fetch_first_drawing_do(number, baseurl, url_initial):
     #print html_drawing
 
     if not html_drawing:
-        print "WARNING: No content for drawing document page '%s' (url: %s)" % (number, url)
+        log.warning("No content for drawing document page '%s' (url: %s)" % (number, url))
         return
 
     soup = BeautifulSoup(html_drawing)
@@ -92,23 +93,23 @@ def fetch_first_drawing_do(number, baseurl, url_initial):
         #print url_tif
 
     if not url_tif:
-        print "WARNING: No tif url found in screenscraped document '%s'" % number
+        log.warning("No tif url found in screenscraped document '%s'" % number)
         return
 
 
     # 3. fetch tif payload
     url_tif_full = baseurl + url_tif
-    print "INFO: Fetching tif document '%s' from: %s" % (number, url_tif_full)
+    log.info("Fetching tif document '%s' from: %s" % (number, url_tif_full))
     tif_payload = fetch_url(url_tif_full)
 
     if tif_payload:
         length = len(tif_payload)
         #print length
         if length > 7000:
-            print "INFO: Found tif document '%s'. Length: %s" % (number, length)
+            log.info("Found tif document '%s'. Length: %s" % (number, length))
             return tif_payload
         else:
-            print "WARNING: Tif data length %s below threshold (7000 Bytes)" % length
+            log.warning("Tif data length %s below threshold (7000 Bytes)" % length)
             return
 
 
@@ -138,15 +139,13 @@ def fetch_url(url):
         handle.close()
 
     except IOError, e:
-        print 'We failed to open "%s".' % url
+        code = None
+        reason = None
         if hasattr(e, 'code'):
-            print 'We failed with error code - %s.' % e.code
-        elif hasattr(e, 'reason'):
-            print "The error object has the following 'reason' attribute :"
-            print e.reason
-            print "This usually means the server doesn't exist,"
-            print "is down, or we don't have an internet connection."
-            #sys.exit()
+            code = e.code
+        if hasattr(e, 'reason'):
+            reason = e.reason
+        log.error('We failed to open url "{url}". reason={reason}, code={code}'.format(url=url, reason=reason, code=code))
 
     return payload
 
