@@ -5,7 +5,11 @@
 CQL pyparsing parser tests: Generic extensions
 ==============================================
 
->>> from elmyra.ip.util.cql.pyparsing import CQL
+>>> from elmyra.ip.access.epo.ops import ops_keyword_fields
+>>> from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
+>>> def CQL(expression):
+...     from elmyra.ip.util.cql.pyparsing import CQL as UpstreamCQL
+...     return UpstreamCQL(expression, keyword_fields=ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields)
 
 
 Patent number normalization

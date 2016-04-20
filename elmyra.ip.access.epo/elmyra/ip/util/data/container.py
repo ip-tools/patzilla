@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2016 Andreas Motl, Elmyra UG
+import types
 from bunch import Bunch
 
 class SmartBunch(Bunch):
@@ -22,3 +23,11 @@ class SmartBunch(Bunch):
             return type(x)( cls.bunchify(v) for v in x )
         else:
             return x
+
+
+def unique_sequence(seq):
+    # https://stackoverflow.com/questions/480214/how-do-you-remove-duplicates-from-a-list-in-python-whilst-preserving-order/480227#480227
+    seen = set()
+    seen_add = seen.add
+    unhashable_types = (types.ListType, types.DictionaryType)
+    return [x for x in seq if type(x) in unhashable_types or not (x in seen or seen_add(x))]

@@ -13,7 +13,10 @@ see also:
 .. _DEPATISnet Expert mode guide: https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 .. _DEPATISnet Expertenrecherche Handbuch: https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
 
->>> from elmyra.ip.util.cql.pyparsing import CQL
+>>> from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
+>>> def CQL(expression):
+...     from elmyra.ip.util.cql.pyparsing import CQL as UpstreamCQL
+...     return UpstreamCQL(expression, keyword_fields=DpmaDepatisnetAccess.keyword_fields)
 
 
 Logic operators localized
@@ -195,7 +198,7 @@ Try some more complex queries containing *value shortcut notations*, *neighbourh
 u"(PA=siemens UND IN=Braun UND PUB >= 01.03.2010) or (PUB=M11-2009 UND PA=daimler?) or (AB=(!!!l\xf6sung or ###heizung or ?fahrzeug)) or (ICB='F17D 5/00' or ICB=F04D13-?) or bi=(mechanische (NOTW) Regler) or bi=(Cry1?(L)resist? or Cry1?(5A)tox? or Misch?(P)?wasser)"
 
 >>> CQL(largequery).keywords()
-[u'siemens', u'Braun', u'daimler', [u'mechanische', u'Regler']]
+[u'siemens', u'Braun', u'daimler', u'F17D 5/00', u'F04D13-', [u'mechanische', u'Regler']]
 
 
 Polishing
@@ -217,7 +220,7 @@ u'bi=(Cry1?(L)resist?)'
 u"(PA=siemens UND IN=Braun UND PUB >= 01.03.2010) or (PUB=M11-2009 UND PA=daimler?) or ((AB=!!!l\xf6sung or AB=###heizung or AB=?fahrzeug)) or (ICB='F17D 5/00' or ICB=F04D13-?) or bi=(mechanische (NOTW) Regler) or (bi=(Cry1?(L)resist?) or bi=(Cry1?(5A)tox?) or bi=(Misch?(P)?wasser))"
 
 >>> CQL(largequery).polish().keywords()
-[u'siemens', u'Braun', u'daimler', u'l\xf6sung', u'heizung', u'fahrzeug', [u'mechanische', u'Regler'], [u'Cry1', u'resist'], [u'Cry1', u'tox'], [u'Misch', u'wasser']]
+[u'siemens', u'Braun', u'daimler', u'l\xf6sung', u'heizung', u'fahrzeug', u'F17D 5/00', u'F04D13-', [u'mechanische', u'Regler'], [u'Cry1', u'resist'], [u'Cry1', u'tox'], [u'Misch', u'wasser']]
 
 
 From the wild
