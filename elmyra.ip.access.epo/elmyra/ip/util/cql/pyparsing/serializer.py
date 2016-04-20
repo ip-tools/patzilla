@@ -5,13 +5,23 @@ import types
 import logging
 import StringIO
 from pyparsing import ParseResults
-from elmyra.ip.util.cql.pyparsing.parser import booleans, wildcards, termop
+from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results, token_to_triple
 from elmyra.ip.util.cql.knowledge import indexes_publication_number
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.data.convert import shrink_list
 
 log = logging.getLogger(__name__)
+
+grammar = CQLGrammar()
+
+def parse_cql(cql):
+    """
+    Helper function for doctests
+    """
+    from . import CQL
+    c = CQL(cql)
+    return c.parse()
 
 def tokens_to_cql(tokens):
     """
@@ -56,7 +66,7 @@ def tokens_to_cql_buffer(tokens, buffer):
         elif tokentype in types.StringTypes:
             out = token
             # surround all boolean operators with whitespace
-            if token in booleans:
+            if token in grammar.booleans:
                 out = u' {0} '.format(token)
             buffer.write(out)
 
@@ -80,7 +90,7 @@ def normalize_patentnumbers(tokens):
 
     walk_token_results(tokens, triple_callback=action)
 
-def get_keywords(triples, whitelist_indexes):
+def get_keywords(triples, whitelist_indexes=None):
     """
     compute list of keywords
 
@@ -92,12 +102,17 @@ def get_keywords(triples, whitelist_indexes):
     >>> get_keywords(triples)
     [u'central', u'intelligence', u'agency']
 
+    >>> triples = []; get_triples(parse_cql('foo=bar and baz=qux'), triples)
+    >>> get_keywords(triples, ['baz'])
+    [u'qux']
+
     """
     keywords = []
     for triple in triples:
         try:
             index, binop, term = triple
-            if index.lower() in whitelist_indexes:
+            index_allowed = not whitelist_indexes or index.lower() in whitelist_indexes
+            if index_allowed:
                 # for "any" or "all" relations ...
                 if binop in ['any', 'all']:
                     # strip single and double quotes from term
@@ -133,9 +148,9 @@ def trim_keywords(keywords):
 
     """
     keywords_trimmed = []
-    stripchars = wildcards + '"\'() '
+    stripchars = grammar.wildcards + '"\'() '
     for keyword in keywords:
-        matches = re.split(termop.pattern, keyword, flags=termop.flags)
+        matches = re.split(grammar.termop.pattern, keyword, flags=grammar.termop.flags)
         matches = [match.strip(stripchars) for match in matches]
         keywords_trimmed.append(shrink_list(matches))
     return keywords_trimmed
@@ -181,7 +196,7 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
                 # Check whether term contains neighbourhood operators.
                 # If it does, put term inside parenthesis, which got lost while performing shortcut expansion.
                 if token:
-                    if re.match('.*(?:' + termop.pattern + ').*', token[0], flags=termop.flags):
+                    if re.match('.*(?:' + grammar.termop.pattern + ').*', token[0], flags=grammar.termop.flags):
                         token[0] = u'({0})'.format(token[0])
 
                 # Process triple in value shortcut notation (contains only the single term).
