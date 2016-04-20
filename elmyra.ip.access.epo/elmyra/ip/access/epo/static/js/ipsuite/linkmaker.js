@@ -29,6 +29,7 @@
             this.country = document['@country'];
             this.docnumber = document['@doc-number'];
             this.kind = document['@kind'];
+            this.fullnumber = this.country + this.docnumber + this.kind;
         }
 
         Object.defineProperty(this, 'document_number', {
@@ -61,7 +62,7 @@
         universal_pdf_url: function(document_id) {
             // /api/pdf/EP0666666B1
             if (!document_id) {
-                var url_tpl = _.template('/api/pdf/<%= country %><%= docnumber %><%= kind %>');
+                var url_tpl = _.template('/api/pdf/<%= fullnumber %>');
                 var url = url_tpl(this);
             } else {
                 var url_tpl = _.template('/api/pdf/<%= document_id %>');
@@ -72,7 +73,7 @@
 
         ops_pdf_url: function() {
             // /api/ops/EP0666666B1/pdf/all
-            var url_tpl = _.template('/api/ops/<%= country %><%= docnumber %><%= kind %>/pdf/all');
+            var url_tpl = _.template('/api/ops/<%= fullnumber %>/pdf/all');
             var url = url_tpl(this);
             return url;
         },
@@ -86,7 +87,7 @@
 
         depatisnet_pdf_url: function() {
             // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=AU002005309058B2
-            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=<%= country %><%= docnumber %><%= kind %>');
+            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=pdf&docid=<%= fullnumber %>');
             var url = url_tpl(this);
             return url;
         },
@@ -139,6 +140,35 @@
             return url;
         },
 
+        uspto_appft_biblio: function() {
+            // http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=20160105912
+            var url_tpl = _.template('http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=<%= docnumber %>');
+            var url = url_tpl(this);
+            return url;
+        },
+
+        uspto_appft_images: function() {
+            // http://pdfaiw.uspto.gov/.aiw?docid=20160105912
+            var url_tpl = _.template('http://pdfaiw.uspto.gov/.aiw?docid=<%= docnumber %>');
+            var url = url_tpl(this);
+            return url;
+        },
+
+        uspto_patft_biblio: function() {
+            // http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=9317610
+            var url_tpl = _.template('http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=<%= docnumber %>');
+            var url = url_tpl(this);
+            return url;
+        },
+
+        uspto_patft_images: function() {
+            // http://pdfpiw.uspto.gov/.piw?docid=9317610
+            var url_tpl = _.template('http://pdfpiw.uspto.gov/.piw?docid=<%= docnumber %>');
+            var url = url_tpl(this);
+            return url;
+        },
+
+
         uspto_pair_url: function() {
             // http://portal.uspto.gov/pair/PublicPair
             var url_tpl = _.template('http://portal.uspto.gov/pair/PublicPair');
@@ -165,7 +195,7 @@
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=DE20132003344U&type=application&format=epodoc
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=US201113881490&type=application&format=epodoc
             var document_id = this.document.get_application_reference('epodoc');
-            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0.4/html/viewCcd.html?num=<%= docnumber %>&type=application&format=epodoc');
+            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0.8/html/viewCcd.html?num=<%= fullnumber %>&type=application&format=epodoc');
             var url = url_tpl(document_id);
             return url;
         },
@@ -175,7 +205,7 @@
             // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=EP0666666A2
             // https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=EP666666A2
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=<%= country %><%= docnumber %><%= kind %>');
+            var url_tpl = _.template('https://depatisnet.dpma.de/DepatisNet/depatisnet?action=bibdat&docid=<%= fullnumber %>');
             var url = url_tpl(document_id);
             return url;
         },
@@ -191,7 +221,7 @@
         google_url: function() {
             // https://www.google.com/patents/EP0666666B1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/<%= country %><%= docnumber %><%= kind %>');
+            var url_tpl = _.template('https://www.google.com/patents/<%= fullnumber %>');
             var url = url_tpl(document_id);
             return url;
         },
@@ -199,7 +229,7 @@
         google_prior_art_url: function() {
             // https://www.google.com/patents/related/EP0666666B1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/related/<%= country %><%= docnumber %><%= kind %>');
+            var url_tpl = _.template('https://www.google.com/patents/related/<%= fullnumber %>');
             var url = url_tpl(document_id);
             return url;
         },

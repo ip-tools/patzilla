@@ -118,6 +118,8 @@ DocumentBaseController = Marionette.Controller.extend({
             }
         });
 
+        // FIXME: Does this still work? "document" seems to be undefined at this place.
+
         // override clicking on any inline links to propagate important
         // view state parameters by amending the url on the fly
         OpsBaseViewMixin.bind_query_links($(document));
@@ -368,7 +370,6 @@ DocumentCarouselController = Marionette.Controller.extend({
             // inquire it from image information metadata and save it as metadata into the corresponding dom element
             var totalcount = carousel.data('totalcount');
             if (!totalcount) {
-                totalcount = 1;
                 var document_number = carousel.closest('.ops-collection-entry').data('document-number');
                 if (!document_number) {
                     console.warn("document-number could not be found, won't proceed loading items into carousel");
@@ -378,7 +379,7 @@ DocumentCarouselController = Marionette.Controller.extend({
 
                 // TODO: refactor to models/ops.js
                 var image_info_url = _.template('/api/ops/<%= patent %>/image/info')({ patent: document_number });
-                //console.log(image_info_url);
+                //log('image_info_url:', image_info_url);
 
                 $.ajax({url: image_info_url, async: true}).success(function(payload) {
                     if (payload) {
@@ -422,8 +423,9 @@ DocumentCarouselController = Marionette.Controller.extend({
         // number of all drawings
         //var carousel = container.find('.drawings-carousel');
         var totalcount = $(carousel).data('totalcount');
-        if (totalcount)
+        if (totalcount) {
             container.find('.drawing-totalcount').text('/' + totalcount);
+        }
     },
 
     carousel_fetch_next: function(carousel) {

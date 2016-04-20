@@ -12,6 +12,14 @@ Features
 - DPMA: Adapt wildcard semantics in comfort form to world standards
 - Query builder: Improve design and layout of history chooser
 - Display: For EP..A4 documents, display drawings of family members
+- Display: Improve experience with brand new US documents not yet in OPS, Espacenet or other databases, e.g. US9317610B2
+
+    - If PDF can not be acquired elsewhere, redirect to USPTO servers
+    - If drawing actually gets loaded despite the document having no bibliographic information,
+      swap out the placeholder and display the drawing at least. Also improve feedback to the user.
+    - Add external links to USPTO for US documents
+    - Improve display of drawing "totalcount" value if there's no information about it
+
 
 Infrastructure
 --------------
