@@ -118,15 +118,17 @@ DocumentBaseController = Marionette.Controller.extend({
             }
         });
 
-        // FIXME: Does this still work? "document" seems to be undefined at this place.
 
-        // override clicking on any inline links to propagate important
+        // Apply stuff to all document panels
+        var entry_elements = $('.ops-collection-entry');
+
+        // Override clicking on any inline links to propagate important
         // view state parameters by amending the url on the fly
-        OpsBaseViewMixin.bind_query_links($(document));
+        OpsBaseViewMixin.bind_query_links(entry_elements);
 
-        // override clicking of "citation explore » documents with same citations" button
+        // Override clicking of "citation explore » documents with same citations" button
         // for introducing warning message when having len(citations) > 10
-        OpsBaseViewMixin.bind_same_citations_links($(document));
+        OpsBaseViewMixin.bind_same_citations_links(entry_elements);
 
     },
 

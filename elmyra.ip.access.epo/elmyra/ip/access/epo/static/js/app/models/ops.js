@@ -266,36 +266,17 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
 });
 
-OpsPublishedDataCrawler = Marionette.Controller.extend({
+OpsPublishedDataCrawler = DatasourceCrawler.extend({
 
     initialize: function(options) {
         log('OpsPublishedDataCrawler.initialize');
         options = options || {};
-        this.query = options.query;
-        this.constituents = options.constituents;
+        options.datasource = 'ops';
+        this.__proto__.constructor.__super__.initialize.apply(this, arguments);
     },
 
-    start: function() {
-        var deferred = $.Deferred();
-        var url_tpl = _.template('/api/ops/published-data/crawl/<%= constituents %>?query=<%= query %>');
-        var url = url_tpl({constituents: this.constituents, query: encodeURIComponent(this.query)});
-        var _this = this;
-        $.ajax({url: url, async: true})
-            .success(function(payload) {
-                if (payload) {
-                    if (_this.constituents == 'pub-number') {
-                        var numberlist = payload['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['publication-numbers'];
-                        deferred.resolve(numberlist);
-                    } else {
-                        deferred.reject('Unknown constituents "' + _this.constituents + '"');
-                    }
-                } else {
-                    deferred.reject('Empty response');
-                }
-            }).error(function(error) {
-                deferred.reject('API failed: ' + JSON.stringify(error));
-            });
-        return deferred;
+    decode_numberlist: function(payload) {
+        return payload['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['publication-numbers'];
     },
 
 });

@@ -33,6 +33,7 @@ Infrastructure
 
 - Add caching for drawings from USPTO and CIPO
 - UI: Improve error handling for batch requests
+- Use generic DatasourceCrawler also when doing batch requests to OPS to gain generic filtering routines
 
 
 Bugfixes
