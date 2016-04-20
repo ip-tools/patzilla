@@ -142,21 +142,39 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
             if (_.isObject(response)) {
                 length = Object.keys(response).length;
             }
-            var message = length + ' result item(s) fetched successfully.';
+            var message = (isNaN(length) ? 'No' : length) + ' result item(s) fetched successfully.';
             if (_this.message_more) {
                 message += _this.message_more;
             }
             _this.user_message(message, 'success');
 
-        }).fail(function(message, error) {
+        }).fail(function(response, error) {
 
                 // notify user
                 _this.indicate_activity(false);
 
-                var message =
-                    'Error while fetching results from datasource "' + _this.model.get('datasource') + '".' + '<br/>Reason: ' + message;
-                _this.user_message(message, 'error');
-                console.warn(message, error);
+                var message = response;
+                try {
+                    var data = $.parseJSON(response);
+                    var responseText = '';
+                    if (data['responseText']) {
+                        responseText = data['responseText'];
+                        data['responseText'] = '...';
+                    }
+                    message =
+                        '<pre>' + JSON.stringify(data, null, 2) + '</pre>' +
+                        (responseText ? '\n' + responseText : '');
+
+                } catch (ex) {
+                    console.warn('Could not parse error response:', ex);
+                }
+
+                var user_message =
+                    'Error while fetching results from datasource "' + _this.model.get('datasource') + '". ' +
+                    'Reason: ' + message;
+                _this.user_message(user_message, 'error');
+                console.warn('message:', user_message);
+                console.warn('error:  ', error);
 
             });
 

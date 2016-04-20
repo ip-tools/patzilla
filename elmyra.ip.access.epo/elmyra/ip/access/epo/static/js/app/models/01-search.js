@@ -120,7 +120,7 @@ DatasourceCrawler = Marionette.Controller.extend({
                     deferred.reject('Empty response');
                 }
             }).error(function(error) {
-                deferred.reject('API failed: ' + JSON.stringify(error));
+                deferred.reject(JSON.stringify(error));
             });
         return deferred;
     },

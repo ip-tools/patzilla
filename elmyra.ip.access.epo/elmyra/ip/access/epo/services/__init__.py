@@ -14,14 +14,14 @@ log = logging.getLogger(__name__)
 
 def cql_prepare_query(query, grammar=None, keyword_fields=None):
 
-    log.info('Parsing search expression "{query}" with grammar "{grammar}"'.format(
-        query=query, grammar=grammar and grammar.__name__ or 'default'))
+    log.info(u'Parsing search expression "{query}" with grammar "{grammar}"'.format(
+        query=query, grammar=grammar and grammar.__name__ or u'default'))
 
     keyword_fields = keyword_fields or ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields
 
     # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if should_be_quoted(query) and 'within' not in query:
-        query = '"%s"' % query
+    if should_be_quoted(query) and u'within' not in query:
+        query = u'"%s"' % query
 
     # Parse and recompile CQL query string to apply number normalization
     query_object = None
