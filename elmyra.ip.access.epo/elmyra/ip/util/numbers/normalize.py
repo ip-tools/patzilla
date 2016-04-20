@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2007-2011 ***REMOVED***
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
 import types
-from bunch import Bunch
 from elmyra.ip.util.numbers.denormalize import denormalize_patent_wo
 from elmyra.ip.util.numbers.helper import pad_left, trim_leading_zeros, fullyear_from_year
 from elmyra.ip.util.numbers.common import split_patent_number, join_patent
@@ -175,7 +174,7 @@ def depatisconnect_alternatives(number):
 def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=False):
 
     # 1. handle patent dicts or convert (split) from string
-    if type(number) in (types.DictType, Bunch):
+    if isinstance(number, types.DictionaryType):
         patent = number
     else:
         patent = split_patent_number(number)
@@ -190,7 +189,7 @@ def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=Fa
     # 3. result handling
 
     # 3.a) default mechanism: return what we've got
-    if type(number) in (types.DictType, Bunch):
+    if isinstance(number, types.DictionaryType):
         result = patent_normalized
     else:
         result = join_patent(patent_normalized)

@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 
 def cql_prepare_query(query, grammar=None, keyword_fields=None):
 
-    log.info('Parsing search expression "{query}" with grammar "{grammar}"'.format(query=query, grammar=grammar.__name__))
+    log.info('Parsing search expression "{query}" with grammar "{grammar}"'.format(
+        query=query, grammar=grammar and grammar.__name__ or 'default'))
 
     keyword_fields = keyword_fields or ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields
 
