@@ -4,22 +4,33 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+Features
+--------
 - IFI: Enable expression parsing with “Class” criteria in comfort form
-- For EP..A4 documents, display drawings of family members
-- Improve design and layout of query expression history chooser
-- Improve OPS connection error handling
-- UI: Fix keyword propagation
-- Generalize keyword field whitelist handling between OPS and DEPATISnet
-- Feature "Remove family members" for IFI Claims
-- Fix woes with javascript “htmlentities” machinery
-- Improve keyword propagation in general
+- IFI: Remove family members
 - DPMA: Adapt wildcard semantics in comfort form to world standards
-- Generalize query expression parsing between generic CQL (EPO, DEPATISnet) and Solr (IFI Claims)
+- Query builder: Improve design and layout of history chooser
+- Display: For EP..A4 documents, display drawings of family members
+
+Infrastructure
+--------------
+- Generalize keyword field whitelist handling between OPS and DEPATISnet
+- Generalize query expression parsing between CQL (EPO, DEPATISnet) and Solr (IFI Claims)
 
     - IFI: Improve keyword extraction and highlighting
     - IFI: Improve class rewriting in comfort form
     - IFI: Roundtrip class rewriting for proper keyword extraction from query expression
     - IFI: Basic software tests for query expression parsing
+
+- Add caching for drawings from USPTO and CIPO
+
+
+Bugfixes
+--------
+- Improve OPS connection error handling
+- Improve keyword extraction and propagation
+- Fix woes with javascript “htmlentities” machinery
 
 0.115.0
 =======
