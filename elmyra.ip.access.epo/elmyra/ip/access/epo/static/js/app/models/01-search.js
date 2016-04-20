@@ -107,9 +107,11 @@ DatasourceCrawler = Marionette.Controller.extend({
             .success(function(payload) {
                 if (payload) {
                     if (_this.constituents == 'pub-number') {
-                        var numberlist = payload['numbers'];
 
-                        // apply arbitrary named filter to numberlist
+                        // Get numberlist from response
+                        var numberlist = _this.decode_numberlist(payload);
+
+                        // Apply arbitrary named filter to numberlist
                         numberlist = _this.apply_filter(numberlist);
 
                         deferred.resolve(numberlist);
@@ -123,6 +125,10 @@ DatasourceCrawler = Marionette.Controller.extend({
                 deferred.reject(JSON.stringify(error));
             });
         return deferred;
+    },
+
+    decode_numberlist: function(payload) {
+        return payload['numbers'];
     },
 
     apply_filter: function(numberlist) {
