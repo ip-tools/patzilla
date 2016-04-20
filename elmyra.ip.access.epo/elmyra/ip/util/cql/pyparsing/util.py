@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 from pyparsing import ParseResults
-import types
 
 def get_literals(*elements):
     literals = []
@@ -19,6 +18,9 @@ def walk_token_results(tokens, *args, **kwargs):
             name = token.getName()
             if name.startswith('triple'):
                 triple = token_to_triple(token)
+
+                if 'token_callback' in kwargs:
+                    kwargs['token_callback'](token)
 
                 if triple:
                     index, binop, term = triple

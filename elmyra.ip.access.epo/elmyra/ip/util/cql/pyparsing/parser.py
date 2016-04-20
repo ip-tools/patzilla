@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 #
 # CQL grammar based on pyparsing
 # https://en.wikipedia.org/wiki/Contextual_Query_Language
@@ -73,127 +73,132 @@ unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isal
 #   B. symbols
 # ------------------------------------------
 
-# B.1 binary comparison operators
-cmp_single = u'= != < > <= >='.split()
-cmp_perl = u'eq ne lt gt le ge'.split()
-cmp_cql = u'exact within encloses all any any/relevant any/rel.lr'.split()
-binop_symbols = cmp_single + cmp_perl + cmp_cql
+class CQLGrammar(object):
 
-# B.2 boolean operators
-and_ = CaselessKeyword("and") | CaselessKeyword("UND")
-or_ = CaselessKeyword("or") | CaselessKeyword("ODER")
-not_ = CaselessKeyword("not") | CaselessKeyword("NICHT")
-prox_ = CaselessKeyword("prox") | CaselessKeyword("NAHE")
-booleans = get_literals(and_, or_, not_, prox_)
+    # Various sets of characters
+    wildcards  = wildcards
+    separators = separators
+    unicode_printables = unicode_printables
 
-# B.3 neighbourhood term operators
-# see also:
-# - https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
-# - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
+    def __init__(self):
+        self.parser = None
+        self.preconfigure()
+        self.configure()
+        self.build()
 
-# v1: this would work for simple term operators only
-#termop = oneOf("(W) (NOTW) (A) (P) (L)", caseless=True).setName("termop")
+    def preconfigure(self):
 
-# v2: use regexes for describing term operators like "(10A)"
-neighbourhood_symbols = '(W) (NOTW) (#W) (A) (#A) (P) (L)'.split()
-neighbourhood_symbols = ['\s?' + re.escape(symbol).replace('\#', '\d+') + '\s?' for symbol in neighbourhood_symbols]
+        # Binary comparison operators
+        self.cmp_single = u'= != < > <= >='.split()
+        self.cmp_perl = u'eq ne lt gt le ge'.split()
+        self.cmp_cql = u'exact within encloses all any any/relevant any/rel.lr'.split()
 
+        # Boolean operators
+        # TODO: Configure german operators with DPMAGrammar only
+        self.and_ = CaselessKeyword("and") | CaselessKeyword("UND")
+        self.or_ = CaselessKeyword("or") | CaselessKeyword("ODER")
+        self.not_ = CaselessKeyword("not") | CaselessKeyword("NICHT")
+        self.prox_ = CaselessKeyword("prox") | CaselessKeyword("NAHE")
 
-# ------------------------------------------
-#   C. building blocks
-# ------------------------------------------
-termop = Regex( "|".join(neighbourhood_symbols), re.IGNORECASE ).setParseAction( upcaseTokens ).setName("termop")
-termword = Word(unicode_printables + separators + wildcards).setName("term")
-termword_termop = (termword + OneOrMore( termop + termword ))
+        # Neighbourhood term operators
+        self.neighbourhood_symbols = '(W) (NOTW) (#W) (A) (#A) (P) (L)'.split()
 
+    def configure(self):
 
-# ------------------------------------------
-#   D. triple
-# ------------------------------------------
-index = Word(alphanums).setName("index")
-binop = oneOf(binop_symbols, caseless=True).setName("binop")
-term = (
+        # Binary comparison operators
+        self.binop_symbols = self.cmp_single + self.cmp_perl + self.cmp_cql
 
-    # term is a quoted string, easy peasy
-    quotedString.setName("term") ^
+        # Boolean operators
+        self.booleans    = get_literals(self.and_, self.or_, self.not_, self.prox_)
+        self.booleans_or = ( self.and_ | self.or_ | self.not_ | self.prox_ )
 
-    # term is just a termword, easy too
-    termword.setName("term") ^
+        # Neighbourhood term operators
+        # see also:
+        # - https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
+        # - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
-    # term contains neighbourhood operators, so should have been wrapped in parenthesis
-    Combine('(' + Suppress(ZeroOrMore(' ')) + termword_termop + Suppress(ZeroOrMore(' ')) + ')').setName("term") ^
+        # v1: this would work for simple term operators only
+        #self.termop = oneOf(self.neighbourhood_symbols, caseless=True).setName("termop")
 
-    # convenience/gracefulness: we also allow terms containing
-    # neighbourhood operators without being wrapped in parenthesis
-    Combine(termword_termop).setName("term")
+        # v2: use regexes for describing term operators like "(10A)"
+        self.neighbourhood_symbols = [
+            '\s?' + re.escape(symbol).replace('\#', '\d+') + '\s?'
+            for symbol in self.neighbourhood_symbols
+        ]
 
-)
+    def build(self):
 
-
-# ------------------------------------------
-#   E. condition
-# ------------------------------------------
-cqlStatement = Forward()
-
-# Parse regular cql condition notation 'index=term'.
-cqlConditionBase = Group(
-
-    # a regular triple
-    ( index + binop + term ).setResultsName("triple") |
-
-    # a regular subquery
-    ( "(" + cqlStatement + ")" ).setResultsName("subquery")
-)
-
-# Parse value shortcut notations like 'index=(term)' or 'index=(term1 and term2 or term3)'.
-cqlConditionShortcut = Group(
-
-    # a triple in value shortcut notation (contains only the single term)
-    # "term + NotAny(binop)" helps giving proper error messages like
-    # "ParseException: Expected term (at char 4)" for erroneous queries like "foo="
-    ( term + NotAny(binop) ).setResultsName("triple-short") |
-
-    # a subquery containing values in shortcut notation
-    ( index + binop + "(" + cqlStatement + ")" ).setResultsName("subquery-short")
-
-)
-
-#cqlCondition = cqlConditionBase
-cqlCondition = cqlConditionBase | cqlConditionShortcut
+        # ------------------------------------------
+        #   C. building blocks
+        # ------------------------------------------
+        self.termop = Regex( "|".join(self.neighbourhood_symbols), re.IGNORECASE ).setParseAction( upcaseTokens ).setName("termop")
+        termword = Word(self.unicode_printables + self.separators + self.wildcards).setName("term")
+        termword_termop = (termword + OneOrMore( self.termop + termword ))
 
 
-# ------------------------------------------
-#   F. statement
-# ------------------------------------------
+        # ------------------------------------------
+        #   D. triple
+        # ------------------------------------------
+        index = Word(alphanums).setName("index")
+        binop = oneOf(self.binop_symbols, caseless=True).setName("binop")
+        term = (
 
-cqlStatement << cqlCondition + ZeroOrMore( ( and_ | or_ | not_ | prox_ ) + cqlStatement )
+            # term is a quoted string, easy peasy
+            quotedString.setName("term") ^
 
-# apply SQL comment format
-cqlComment = "--" + restOfLine
-cqlStatement.ignore(cqlComment)
+            # term is just a termword, easy too
+            termword.setName("term") ^
+
+            # term contains neighbourhood operators, so should have been wrapped in parenthesis
+            Combine('(' + Suppress(ZeroOrMore(' ')) + termword_termop + Suppress(ZeroOrMore(' ')) + ')').setName("term") ^
+
+            # convenience/gracefulness: we also allow terms containing
+            # neighbourhood operators without being wrapped in parenthesis
+            Combine(termword_termop).setName("term")
+
+        )
 
 
+        # ------------------------------------------
+        #   E. condition
+        # ------------------------------------------
+        cqlStatement = Forward()
 
-def parse_cql(cql, logging=True):
-    """
-    Parse a CQL query string.
+        # Parse regular cql condition notation 'index=term'.
+        cqlConditionBase = Group(
 
-    >>> tokens = parse_cql('foo=bar')
-    >>> tokens
-    ([(['foo', u'=', 'bar'], {'triple': [((['foo', u'=', 'bar'], {}), 0)]})], {})
+            # a regular triple
+            ( index + binop + term ).setResultsName("triple") |
 
-    """
+            # a regular subquery
+            ( "(" + cqlStatement + ")" ).setResultsName("subquery")
+        )
 
-    tokens = []
-    try:
-        # make sure the whole query is parsed, otherwise croak
-        tokens = cqlStatement.parseString(cql, parseAll=True)
-        #tokens.pprint()
+        # Parse value shortcut notations like 'index=(term)' or 'index=(term1 and term2 or term3)'.
+        cqlConditionShortcut = Group(
 
-    except ParseException as ex:
-        ex.explanation = '%s\n%s\n%s' % (cql, ' ' * ex.loc + '^\n', ex)
-        if logging:
-            log.error('\n%s', ex.explanation)
-        raise
+            # a triple in value shortcut notation (contains only the single term)
+            # "term + NotAny(binop)" helps giving proper error messages like
+            # "ParseException: Expected term (at char 4)" for erroneous queries like "foo="
+            ( term + NotAny(binop) ).setResultsName("triple-short") |
 
-    return tokens
+            # a subquery containing values in shortcut notation
+            ( index + binop + "(" + cqlStatement + ")" ).setResultsName("subquery-short")
+
+        )
+
+        #cqlCondition = cqlConditionBase
+        cqlCondition = cqlConditionBase | cqlConditionShortcut
+
+
+        # ------------------------------------------
+        #   F. statement
+        # ------------------------------------------
+
+        cqlStatement << cqlCondition + ZeroOrMore( self.booleans_or + cqlStatement )
+
+        # apply SQL comment format
+        cqlComment = "--" + restOfLine
+        cqlStatement.ignore(cqlComment)
+
+        self.parser = cqlStatement

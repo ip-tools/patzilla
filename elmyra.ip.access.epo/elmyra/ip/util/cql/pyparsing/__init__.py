@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
+import pprint
+import logging
 import pyparsing
-from parser import parse_cql
-from serializer import tokens_to_cql, expand_shortcut_notation, get_triples, get_keywords, normalize_patentnumbers
+from .serializer import tokens_to_cql, expand_shortcut_notation, get_triples, get_keywords, normalize_patentnumbers
+from .parser import CQLGrammar
+
+log = logging.getLogger(__name__)
 
 class CQL(object):
 
-    def __init__(self, cql=None, logging=True, keyword_fields=None):
+    def __init__(self, cql='', grammar=None, logging=True, keyword_fields=None):
+        self.cql = cql.strip()
+        self.grammar = grammar or CQLGrammar
         self.logging = logging
         self.keyword_fields = keyword_fields or []
-        self.tokens = []
-        if cql:
-            self.loads(cql)
-
-    def loads(self, cql, strip=True):
-        if strip:
-            cql = cql.strip()
-        self.cql = cql
-        self.tokens = parse_cql(self.cql, self.logging)
+        self.tokens = self.parse()
 
     def dumps(self):
         return tokens_to_cql(self.tokens)
@@ -41,10 +39,50 @@ class CQL(object):
     def polish(self):
         return self.expand_shortcuts().normalize_numbers()
 
+    def parse(self):
+        """
+        Parse a CQL query string.
+
+        >>> tokens = parse_cql('foo=bar')
+        >>> tokens
+        ([(['foo', u'=', 'bar'], {'triple': [((['foo', u'=', 'bar'], {}), 0)]})], {})
+
+        """
+
+        tokens = []
+
+        if not self.cql:
+            return tokens
+
+        try:
+            # make sure the whole query is parsed, otherwise croak
+            tokens = self.grammar().parser.parseString(self.cql, parseAll=True)
+            #if self.logging:
+            #    log.info('tokens: %s', tokens.pformat())
+
+        except pyparsing.ParseException as ex:
+            ex.explanation = '%s\n%s\n%s' % (ex.pstr, ' ' * ex.loc + '^\n', ex)
+            #if self.logging:
+            #    log.error('\n%s', ex.explanation)
+            log.warning('Query expression "{query}" is invalid. ' \
+                        'Reason: {reason}\n{location}'.format(
+                query=self.cql, reason=unicode(ex), location=ex.explanation))
+            raise
+
+        return tokens
+
+
+def parse_cql(cql):
+    """
+    Helper function for doctests
+    """
+    c = CQL(cql)
+    return c.parse()
+
 
 # Monkeypatch flaw in pyparsing
 
-def pyparsing_parseresults_pop_fixed( self, *args, **kwargs):
+def pyparsing_parseresults_pop_fixed(self, *args, **kwargs):
     """Removes and returns item at specified index (default=last).
        Supports both list and dict semantics for pop(). If passed no
        argument or an integer argument, it will use list semantics
@@ -72,3 +110,13 @@ def pyparsing_parseresults_pop_fixed( self, *args, **kwargs):
         return defaultvalue
 
 pyparsing.ParseResults.pop = pyparsing_parseresults_pop_fixed
+
+def pyparsing_parseresults_pformat(self, *args, **kwargs):
+    """
+    Pretty-print formatter for parsed results as a list, using the C{pprint} module.
+    Accepts additional positional or keyword args as defined for the
+    C{pprint.pformat} method. (U{http://docs.python.org/3/library/pprint.html#pprint.pformat})
+    """
+    return pprint.pformat(self.asList(), *args, **kwargs)
+
+pyparsing.ParseResults.pformat = pyparsing_parseresults_pformat

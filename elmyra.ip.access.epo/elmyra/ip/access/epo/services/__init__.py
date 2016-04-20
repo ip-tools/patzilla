@@ -4,6 +4,7 @@ import json
 import logging
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.util import should_be_quoted
+from elmyra.ip.util.data.container import unique_sequence
 from elmyra.ip.util.expression.keywords import clean_keyword
 from elmyra.ip.util.python import _exception_traceback
 from elmyra.ip.access.epo.ops import ops_keyword_fields
@@ -11,7 +12,11 @@ from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 
 log = logging.getLogger(__name__)
 
-def cql_prepare_query(query):
+def cql_prepare_query(query, grammar=None, keyword_fields=None):
+
+    log.info('Parsing search expression "{query}" with grammar "{grammar}"'.format(query=query, grammar=grammar.__name__))
+
+    keyword_fields = keyword_fields or ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields
 
     # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
     if should_be_quoted(query) and 'within' not in query:
@@ -26,8 +31,7 @@ def cql_prepare_query(query):
         #query = query_object.toCQL().strip()
 
         # v2 pyparsing CQL parser
-        keyword_fields = ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields
-        query_object = CQL(query, keyword_fields=keyword_fields).polish()
+        query_object = CQL(query, grammar=grammar, keyword_fields=keyword_fields).polish()
         query_recompiled = query_object.dumps()
 
         if query_recompiled:
@@ -50,6 +54,9 @@ def propagate_keywords(request, query_object):
         else:
             origin = 'compute'
             keywords = compute_keywords(query_object)
+
+        # List of keywords should contain only unique items, if possible
+        keywords = unique_sequence(keywords)
 
         log.info('Propagating keywords from expression "{origin}": {keywords}'.format(origin=origin, keywords=keywords))
         request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
-from parser import parse_cql
+from . import CQL
 from serializer import tokens_to_cql, expand_shortcut_notation, get_triples, get_keywords, normalize_patentnumbers
 
+def parse_cql(cql):
+    c = CQL(cql)
+    return c.parse()
 
 def enrich_cql(cql):
     tokens = parse_cql(cql)

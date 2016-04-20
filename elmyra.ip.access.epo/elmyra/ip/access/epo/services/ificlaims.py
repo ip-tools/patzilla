@@ -9,13 +9,14 @@ import json
 import time
 import logging
 from cornice.service import Service
+from pyramid.settings import asbool
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from pyramid.settings import asbool
+from elmyra.ip.access.epo.services import cql_prepare_query, propagate_keywords
 from elmyra.ip.access.epo.services.util import request_to_options
 from elmyra.ip.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
 from elmyra.ip.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, SearchException, ificlaims_search, ificlaims_crawl
-from elmyra.ip.access.ificlaims.expression import should_be_quoted
+from elmyra.ip.access.ificlaims.expression import should_be_quoted, IFIClaimsGrammar, IFIClaimsExpression, rewrite_classes_ops
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.data.zip import zip_multi
 from elmyra.ip.util.python import _exception_traceback
@@ -118,15 +119,24 @@ def ificlaims_deliver_handler(request):
 def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI Claims Direct"""
 
-    # query expression
+    # Get hold of query expression
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
 
-    # fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
+    # Parse expression, extract and propagate keywords
+    query_object, query_recompiled = cql_prepare_query(
+        query, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
+
+    # Rewrite all patent classifications from IFI format to OPS format
+    # e.g. "G01F000184" to "G01F1/84"
+    rewrite_classes_ops(query_object)
+
+    # Propagate keywords to user interface
+    propagate_keywords(request, query_object)
+
+    # Fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
     if should_be_quoted(query):
         query = '"%s"' % query
-
-    #propagate_keywords(request, query_object)
 
     # Lazy-fetch more entries
     # TODO: get from elmyra.ip.access.ificlaims

@@ -12,8 +12,14 @@ development
 - Generalize keyword field whitelist handling between OPS and DEPATISnet
 - Feature "Remove family members" for IFI Claims
 - Fix woes with javascript “htmlentities” machinery
-- Improve keyword propagation
+- Improve keyword propagation in general
 - DPMA: Adapt wildcard semantics in comfort form to world standards
+- Generalize query expression parsing between generic CQL (EPO, DEPATISnet) and Solr (IFI Claims)
+
+    - IFI: Improve keyword extraction and highlighting
+    - IFI: Improve class rewriting in comfort form
+    - IFI: Roundtrip class rewriting for proper keyword extraction from query expression
+    - IFI: Basic software tests for query expression parsing
 
 0.115.0
 =======

@@ -4,6 +4,8 @@ import types
 import logging
 import pyparsing
 from elmyra.ip.util.cql.pyparsing import CQL
+from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
+from elmyra.ip.util.cql.pyparsing.util import walk_token_results
 from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within, iso_to_iso_compact
 from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.normalize import normalize_patent
@@ -11,6 +13,11 @@ from elmyra.ip.util.python import _exception_traceback
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+class IFIClaimsGrammar(CQLGrammar):
+    def preconfigure(self):
+        CQLGrammar.preconfigure(self)
+        self.cmp_single = u':'.split()
 
 class IFIClaimsExpression(object):
 
@@ -180,19 +187,14 @@ class IFIClaimsExpression(object):
             # Translate class expression from "H04L12/433 or H04L12/24"
             # to "(ic:H04L0012433 OR cpc:H04L0012433) OR (ic:H04L001224 OR cpc:H04L001224)"
             try:
-                query_object = CQL(value, keyword_fields=cls.fieldnames)
 
-                tokens_new = []
-                for token in query_object.tokens:
-                    if type(token) is pyparsing.ParseResults:
-                        if token.getName() == 'triple-short':
-                            item = ifi_convert_class(token[0])
-                            token = format_expression(format, fieldname, item)
+                # Parse value as simple query expression
+                query_object = CQL(cql=value)
 
-                    tokens_new.append(token)
+                # Rewrite all patent classifications in query expression ast from OPS format to IFI format
+                rewrite_classes_ifi(query_object, format, fieldname)
 
-                query_object.tokens = tokens_new
-
+                # Serialize into appropriate upstream datasource query expression syntax
                 expression = query_object.dumps()
 
             except pyparsing.ParseException as ex:
@@ -209,6 +211,7 @@ class IFIClaimsExpression(object):
         # ------------------------------------------
         #   expression formatter
         # ------------------------------------------
+        # Serialize into appropriate upstream datasource query expression syntax
         if not expression:
             expression = format_expression(format, fieldname, value)
             #print 'expression:', expression
@@ -223,6 +226,47 @@ class IFIClaimsExpression(object):
                 expression = expression.replace(booli, booli.upper())
 
         return {'query': expression}
+
+
+def rewrite_classes_ifi(query_object, format, fieldname):
+    """
+    Rewrite all patent classifications in query
+    expression ast from OPS format to IFI format
+    """
+
+    def token_callback(token, *args, **kwargs):
+
+        if len(token) == 1:
+            try:
+                class_ifi = ifi_convert_class(token[0])
+                token[0] = format_expression(format, fieldname, class_ifi)
+
+            except:
+                pass
+
+    walk_token_results(query_object.tokens, token_callback=token_callback)
+
+def rewrite_classes_ops(query_object):
+    """
+    Rewrite all patent classifications in query
+    expression ast from IFI format to OPS format
+    """
+
+    def triple_callback(token, index, binop, term):
+
+        if index in ['ic', 'cpc']:
+            try:
+                # Decode IPC or CPC class from format "G01F000184"
+                patent_class = IpcDecoder(term)
+
+                # Encode IPC or CPC class to format "G01F1/84"
+                # token[2] has a reference to "term"
+                token[2] = patent_class.formatOPS()
+
+            except:
+                pass
+
+    walk_token_results(query_object.tokens, triple_callback=triple_callback)
 
 
 def format_expression(format, fieldname, value):
