@@ -235,6 +235,8 @@ UiController = Marionette.Controller.extend({
                 message : message,
                 layout : 'attached',
                 effect : 'bouncyflip',
+                //layout : 'box',
+                //effect : 'flip',
                 type :   options.type, // notice, warning, error, success
                 wrapper: options.wrapper,
                 onClose : function() {
