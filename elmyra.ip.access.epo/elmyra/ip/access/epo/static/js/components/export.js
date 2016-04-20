@@ -11,7 +11,14 @@ ResultNumbersView = GenericResultView.extend({
 
     setup_data: function(data) {
 
+        var datasource = this.model.get('datasource');
         var numberlist = data;
+
+        if (!numberlist) {
+            this.message_more += '<br/>' +
+                'Remark: No result items from datasource "' + datasource + '".';
+            return;
+        }
 
         var numberlist_string = numberlist.join('\n');
 
@@ -21,7 +28,6 @@ ResultNumbersView = GenericResultView.extend({
         this.setup_numberlist_buttons(numberlist);
 
         if (numberlist.length >= this.crawler_limit) {
-            var datasource = this.model.get('datasource');
             this.message_more += '<br/>' +
                 'Remark: The maximum number of result items for datasource "' + datasource + '" is "' + this.crawler_limit + '".';
         }
@@ -37,7 +43,6 @@ ResultNumbersView = GenericResultView.extend({
 
         // compute crawler by datasource
         var crawler_class;
-        var crawler_limit;
         if (datasource == 'ops') {
             crawler_class = OpsPublishedDataCrawler;
             this.crawler_limit = 2000;

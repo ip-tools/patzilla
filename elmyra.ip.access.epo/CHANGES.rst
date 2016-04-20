@@ -32,6 +32,7 @@ Infrastructure
     - IFI: Basic software tests for query expression parsing
 
 - Add caching for drawings from USPTO and CIPO
+- UI: Improve error handling for batch requests
 
 
 Bugfixes
@@ -39,6 +40,7 @@ Bugfixes
 - Improve OPS connection error handling
 - Improve keyword extraction and propagation
 - Fix woes with javascript “htmlentities” machinery
+
 
 0.115.0
 =======
