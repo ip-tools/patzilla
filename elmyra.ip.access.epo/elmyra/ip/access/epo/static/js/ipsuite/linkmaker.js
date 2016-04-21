@@ -234,6 +234,13 @@
             return url;
         },
 
+        cipo_biblio: function() {
+            // http://brevets-patents.ic.gc.ca/opic-cipo/cpd/eng/patent/2702893/summary.html
+            var url_tpl = _.template('http://brevets-patents.ic.gc.ca/opic-cipo/cpd/eng/patent/<%= docnumber %>/summary.html');
+            var url = url_tpl(this);
+            return url;
+        },
+
         /*
         query_link: function(label, value, attribute) {
             var link_tpl = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');

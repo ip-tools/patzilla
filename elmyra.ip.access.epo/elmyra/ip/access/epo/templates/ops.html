@@ -158,6 +158,14 @@
                             </li>
                             <% } %>
 
+                            <% if (linkmaker.country == 'CA') { %>
+                            <li>
+                                <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" class="anchor-biblio-cipo">
+                                    [BIBLIO] <%= patent_number %> @ CIPO
+                                </a>
+                            </li>
+                            <% } %>
+
                             <li class="divider"/>
 
 
