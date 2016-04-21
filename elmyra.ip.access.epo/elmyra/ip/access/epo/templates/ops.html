@@ -111,7 +111,7 @@
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="PDF document"
                         >
-                        <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+                        <%= opsChooserApp.ui.pdf_icon() %>
                     </a>
 
                     <!-- external links -->
@@ -148,12 +148,12 @@
                             <% if (linkmaker.country == 'US') { %>
                             <li>
                                 <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
-                                    [BIBLIO] <%= patent_number %> @ USPTO Applications
+                                    [BIBLIO] <%= patent_number %> @ USPTO AppFT
                                 </a>
                             </li>
-                            <li data-office="US">
+                            <li>
                                 <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
-                                    [BIBLIO] <%= patent_number %> @ USPTO Patents
+                                    [BIBLIO] <%= patent_number %> @ USPTO PatFT
                                 </a>
                             </li>
                             <% } %>
@@ -216,7 +216,7 @@
 
                             <!-- PDF -->
                             <li><div style="padding-left: 10px">
-                                <h5><img src="/static/img/icons/pdf.svg" class="pdf-svg"/> &nbsp; PDF and Images</h5>
+                                <h5><%= opsChooserApp.ui.pdf_icon() %> &nbsp; PDF and Images</h5>
                             </div>
                             </li>
                             <li>
@@ -238,12 +238,12 @@
                             <% if (linkmaker.country == 'US') { %>
                             <li>
                                 <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
-                                    [PDF] <%= patent_number %> @ USPTO Applications
+                                    [PDF] <%= patent_number %> @ USPTO AppFT
                                 </a>
                             </li>
                             <li>
                                 <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
-                                    [PDF] <%= patent_number %> @ USPTO Patents
+                                    [PDF] <%= patent_number %> @ USPTO PatFT
                                 </a>
                             </li>
                             <% } %>
@@ -547,7 +547,7 @@
                                    data-toggle="popover" data-trigger="hover" data-placement="top"
                                    data-content="PDF document"
                                         >
-                                    <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+                                    <%= opsChooserApp.ui.pdf_icon() %>
                                 </a>
 
                                 <br/>
@@ -971,7 +971,7 @@
            data-toggle="popover" data-trigger="hover" data-placement="top"
            data-content="PDF document"
                 >
-            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+            <%= opsChooserApp.ui.pdf_icon() %>
         </a>
     </td>
     <td>
@@ -1051,7 +1051,7 @@
            data-toggle="popover" data-trigger="hover" data-placement="top"
            data-content="PDF document"
                 >
-            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+            <%= opsChooserApp.ui.pdf_icon() %>
         </a>
     </td>
 

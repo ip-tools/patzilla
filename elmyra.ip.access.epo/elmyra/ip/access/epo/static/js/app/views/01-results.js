@@ -123,10 +123,13 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
     start: function() {
 
-        this.indicate_activity(true);
-        this.user_message('Fetching results, please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
-
         var _this = this;
+
+        this.indicate_activity(true);
+        this.user_message(
+            'Fetching results from data source "' + _this.model.get('datasource') + '", ' +
+            'please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
+
         var fetcher = this.fetcher_factory();
         fetcher.start().then(function(response) {
 
@@ -142,7 +145,9 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
             if (_.isObject(response)) {
                 length = Object.keys(response).length;
             }
-            var message = (isNaN(length) ? 'No' : length) + ' result item(s) fetched successfully.';
+            var message =
+                (isNaN(length) ? 'No' : length) +
+                ' result item(s) fetched successfully from data source "' + _this.model.get('datasource') + '".';
             if (_this.message_more) {
                 message += _this.message_more;
             }
@@ -155,22 +160,34 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
                 var message = response;
                 try {
+
+                    // Try to decode main response from JSON
                     var data = $.parseJSON(response);
                     var responseText = '';
                     if (data['responseText']) {
                         responseText = data['responseText'];
                         data['responseText'] = '...';
                     }
+
+                    // Try to decode responseText from JSON
+                    try {
+                        var responseTextData = $.parseJSON(responseText);
+                        responseText = '<pre>' + JSON.stringify(responseTextData, null, 2) + '</pre>';
+                    } catch (ex) {
+                        console.warn('Data source crawler could not parse "responseText":', ex);
+                    }
+
+                    // Build user-facing error message
                     message =
                         '<pre>' + JSON.stringify(data, null, 2) + '</pre>' +
-                        (responseText ? '\n' + responseText : '');
+                        (responseText ? '<br/>' + responseText : '');
 
                 } catch (ex) {
-                    console.warn('Could not parse error response:', ex);
+                    console.warn('Data source crawler could not parse main error response:', ex);
                 }
 
                 var user_message =
-                    'Error while fetching results from datasource "' + _this.model.get('datasource') + '". ' +
+                    'Error while fetching results from data source "' + _this.model.get('datasource') + '". ' +
                     'Reason: ' + message;
                 _this.user_message(user_message, 'error');
                 console.warn('message:', user_message);
