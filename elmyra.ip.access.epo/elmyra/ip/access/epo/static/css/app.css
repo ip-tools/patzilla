@@ -1,5 +1,10 @@
 /* general */
 
+.monospace {
+    font-family: Monaco, "Lucida Console", monospace;
+}
+
+
 /*
 https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
 https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-break-after
@@ -430,7 +435,6 @@ dl.dl-horizontal-inline {
 
 
 #basket {
-    font-family: Monaco, "Lucida Console", monospace;
     font-size: smaller;
 }
 

@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-## (c) 2013-2015 Andreas Motl, Elmyra UG
+## (c) 2013-2016 Andreas Motl, Elmyra UG
 
 <script id="ops-entry-placeholder-template" type="text/x-underscore-template">
     <%text>
@@ -134,15 +134,24 @@
 
                     <div class="accordion-group noborder">
                     <div id="<%= report_issue_id %>" class="collapse">
-                        <textarea rows="13" cols="80" class="span8">
+                        <textarea rows="13" cols="80" class="span8 monospace">
 Dear Elmyra Support Team,
-we encountered a problem when displaying document "<%= document_number %>", please have a look into this issue.
+
+we encountered a problem when displaying the document "<%= document_number %>".
+Please have a look into this issue and get back to us.
+
 Thanks in advance and with kind regards.
 
-Additional information:
-The original query expression to datasource "<%= metadata.get('datasource') %>" was "<%= metadata.get('query_origin') %>", amended to "<%= metadata.get('query_real') %>" and the document in question occurred at result range "<%= metadata.get('result_range') %>".
+----
+We're adding more details to support investigating the issue:
 
-More remarks:
+Date of search:       <%= moment().format() %>
+Data source:          <%= metadata.get('datasource') %>
+Original expression:  <%= metadata.get('query_origin') %>
+Amended expression:   <%= metadata.get('query_real') %>
+Result range:         <%= metadata.get('result_range') %>
+
+Please add more remarks here:
 </textarea>
                         <br/>
                         <button class="btn btn-info btn-large" role="button"

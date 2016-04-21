@@ -41,12 +41,13 @@ Infrastructure
 - Enhance bulk request error handling
 
 
-Bugfixes
---------
+Bug fixes and minor updates
+---------------------------
 - Improve OPS connection error handling
 - Improve keyword extraction and propagation
 - Fix woes with javascript “htmlentities” machinery
 - Update/fix LinkMaker urls for Espacenet and Google
+- Improve wording on email for "Document unavailable » Report problem"
 
 
 0.115.0
