@@ -142,8 +142,8 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
                 'Please consider checking with the appropriate domestic office by selecting the ' +
                 '<a class="btn"><i class="icon-globe icon-large"></i></a> icon in the header bar of this document.' +
                 '<br/><br/>' +
-                'If the document is not available in any other form which satisfies your needs, ' +
-                'don\'t hesitate to report this problem to us!';
+                'If the document is not available in any form which satisfies your needs, ' +
+                'do not hesitate to report this problem to us!';
 
             opsChooserApp.ui.user_alert(message_not_available, 'info', info);
         }

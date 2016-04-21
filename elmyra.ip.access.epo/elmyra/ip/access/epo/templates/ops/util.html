@@ -14,9 +14,32 @@
         <div class="row-fluid">
             <div class="span12">
                 <div class="hero-unit">
-                    <h4>Document "<%= document_number %>" not in result list</h4>
 
-                    <% if (!_.isEmpty(data['alternatives_local'])) { %>
+                    <% if (_.isEmpty(data['alternatives_local'])) { %>
+                    <h4>Document "<%= document_number %>" not available</h4>
+                    <p>
+                        Sometimes a data source delivers search results of brand new patent applications or grants,
+                        whose bibliographic data is not yet available from OPS.
+
+                        For some offices, it is just due to lack of coverage.
+
+                        Make sure to check the full document as PDF
+                        <button class="btn btn-small">
+                            <%= opsChooserApp.ui.pdf_icon() %>
+                        </button>
+                        as well as the collection of links to external
+                        data sources
+                        <button class="btn btn-small">
+                            <i class="icon-globe icon-large"></i>
+                        </button>.
+                    </p>
+                    <p class="hero-smaller">
+                        If the document is not available in any form which satisfies your needs,
+                        do not hesitate to report this problem to us!
+                    </p>
+
+                    <% } else { %>
+                    <h4>Document representation "<%= document_number %>" not in result list</h4>
                     <p>
                         Please check alternative representations listed below or enable the
                         <button class="btn btn-small">
@@ -101,8 +124,8 @@
                                 or may contain an uncommon patent kind code, so trying different variants or even
                                 searching without kindcode might help.
                                 <p class="hero-smaller">
-                                    If the document is not available in any other form which satisfies your needs,
-                                    don't hesitate to report this problem to us!
+                                    If the document is not available in any form which satisfies your needs,
+                                    do not hesitate to report this problem to us!
                                 </p>
                             </li>
                         </ul>

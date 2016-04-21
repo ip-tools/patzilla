@@ -353,6 +353,10 @@ UiController = Marionette.Controller.extend({
         this.open_email('support@elmyra.de', 'Elmyra Navigator: ' + subject, body);
     },
 
+    pdf_icon: function() {
+        return '<img src="/static/img/icons/pdf.svg" class="pdf-svg"/>';
+    },
+
 });
 
 // setup controller

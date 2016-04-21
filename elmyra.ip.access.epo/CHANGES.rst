@@ -36,6 +36,8 @@ Infrastructure
 - UI: Improve error handling for batch requests
 - Use generic DatasourceCrawler also when doing batch requests to OPS to gain generic filtering routines
 - Improve image/pdf acquisition robustness
+- Improve user interface wording for placeholders and more
+- Enhance bulk request error handling
 
 
 Bugfixes
