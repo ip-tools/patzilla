@@ -213,7 +213,7 @@
         espacenet_worldwide_url: function() {
             // http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=US&NR=2014140267A1&KC=A1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/biblio?CC=<%= country %>&NR=<%= docnumber %>&KC=<%= kind %>');
             var url = url_tpl(document_id);
             return url;
         },
@@ -221,7 +221,7 @@
         google_url: function() {
             // https://www.google.com/patents/EP0666666B1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/<%= fullnumber %>');
+            var url_tpl = _.template('https://www.google.com/patents/<%= country %><%= docnumber %>');
             var url = url_tpl(document_id);
             return url;
         },
