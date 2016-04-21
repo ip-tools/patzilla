@@ -24,10 +24,9 @@ def join_patent(patent):
         return number
 
 def decode_patent_number(patent):
-    variable_type = type(patent)
-    if variable_type in types.StringTypes:
+    if isinstance(patent, types.StringTypes):
         decoded = split_patent_number(patent)
-    elif isinstance(variable_type, types.DictionaryType):
+    elif isinstance(patent, types.DictionaryType):
         decoded = patent
     else:
         raise TypeError('Patent from type "{type}" could not be decoded'.format(type=variable_type))

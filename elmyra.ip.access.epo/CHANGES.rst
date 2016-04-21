@@ -9,6 +9,7 @@ Features
 --------
 - IFI: Enable expression parsing with “Class” criteria in comfort form
 - IFI: Remove family members
+- IFI: Basic crawler
 - DPMA: Adapt wildcard semantics in comfort form to world standards
 - Query builder: Improve design and layout of history chooser
 - Display: For EP..A4 documents, display drawings of family members
