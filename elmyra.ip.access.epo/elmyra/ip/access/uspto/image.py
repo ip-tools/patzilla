@@ -2,10 +2,11 @@
 # (c) 2007-2010 ***REMOVED***
 # (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import logging
+import requests
 import urllib2
 import cookielib
 from BeautifulSoup import BeautifulSoup
-from elmyra.ip.util.numbers.common import split_patent_number
+from elmyra.ip.util.numbers.common import split_patent_number, decode_patent_number
 
 log = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ def fetch_first_drawing(patent):
     number = patent['country'] + patent['number'] + patent['kind']
 
     #print "-" * 60
-    log.info("[uspto.client]")
+    log.info('USPTO: Fetching first drawing of "{docnumber}"'.format(docnumber=number))
 
     type = 'patent'
 
@@ -43,8 +44,8 @@ def fetch_first_drawing(patent):
         url_path = '/.aiw?Docid=%s&idkey=NONE' % patent['number']
 
     for baseurl in baseurls:
-        log.info("Searching for tif document '%s' at server '%s'" % (number, baseurl))
         url = baseurl + url_path
+        log.info('USPTO: Searching for TIFF document "{docnumber}" at "{url}"'.format(docnumber=number, url=url))
         payload = fetch_first_drawing_do(number, baseurl, url)
         if payload:
             return payload
@@ -148,6 +149,39 @@ def fetch_url(url):
         log.error('We failed to open url "{url}". reason={reason}, code={code}'.format(url=url, reason=reason, code=code))
 
     return payload
+
+
+def get_images_view_url(document):
+
+    document = decode_patent_number(document)
+
+    reference_type = None
+    if len(document.number) <= 9:
+        reference_type = 'publication'
+    elif len(document.number) >= 10:
+        reference_type = 'application'
+
+    url_tpl = None
+    if reference_type == 'application':
+        # AppFT image server
+        # http://pdfaiw.uspto.gov/.aiw?docid=20160105912
+        url_tpl = 'http://pdfaiw.uspto.gov/.aiw?docid={docid}'
+
+    elif reference_type == 'publication':
+        # PatFT image server
+        # http://pdfpiw.uspto.gov/.piw?docid=9317610
+        url_tpl = 'http://pdfpiw.uspto.gov/.piw?docid={docid}'
+
+    if url_tpl:
+        url = url_tpl.format(docid=document.number)
+
+        # Pre-flight check upstream url for existence of document
+        try:
+            response = requests.get(url)
+            if 'is not a valid ID' not in response.content:
+                return {'location': url, 'origin': 'USPTO'}
+        except:
+            pass
 
 
 if __name__ == '__main__':

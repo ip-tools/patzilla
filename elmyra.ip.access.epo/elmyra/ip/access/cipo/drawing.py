@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
+import logging
 import requests
 from BeautifulSoup import BeautifulSoup
 from elmyra.ip.access.epo.imageutil import gif_to_tiff
 from elmyra.ip.util.numbers.common import split_patent_number
 
+log = logging.getLogger(__name__)
 
 cipo_baseurl = 'http://brevets-patents.ic.gc.ca'
 
 def fetch_first_drawing(patent):
+    log.info('CIPO: Fetching first drawing of "{patent}"'.format(patent=patent))
     drawing_url = get_first_drawing_url(patent)
+    log.info('CIPO: Fetching first drawing from "{url}"'.format(url=drawing_url))
     if drawing_url:
         response = requests.get(drawing_url)
         if response.status_code == 200:

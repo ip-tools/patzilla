@@ -2,7 +2,7 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound
+from pyramid.httpexceptions import HTTPNotFound, HTTPTemporaryRedirect
 from elmyra.ip.access.drawing import get_drawing_png
 from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
 from elmyra.ip.util.date import datetime_iso_filename, now
@@ -49,7 +49,7 @@ def pdf_serve_single(request):
 
     data = pdf_universal(patent)
 
-    if data.get('pdf'):
+    if 'pdf' in data and data['pdf']:
         # http://tools.ietf.org/html/rfc6266#section-4.2
         request.response.content_type = 'application/pdf'
         request.response.charset = None
@@ -57,8 +57,14 @@ def pdf_serve_single(request):
         request.response.headers['X-Pdf-Source'] = data['datasource']
         return data['pdf']
 
-    else:
-        raise HTTPNotFound('No PDF for document {0}'.format(patent))
+    elif 'meta' in data:
+        meta = data['meta']
+        if 'location' in meta and meta['location']:
+            url = meta['location']
+            log.info('Redirecting PDF request to "{url}"'.format(url=url))
+            raise HTTPTemporaryRedirect(location=url)
+
+    raise HTTPNotFound('No PDF for document {patent}'.format(patent=patent))
 
 
 def pdf_serve_multi(request):
