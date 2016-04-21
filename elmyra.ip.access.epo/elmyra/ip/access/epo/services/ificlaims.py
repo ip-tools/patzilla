@@ -148,7 +148,7 @@ def ificlaims_published_data_search_handler(request):
     # - limit
     # - sorting
     # - whether to remove family members
-    options = SmartBunch(vendor=None)
+    options = SmartBunch()
     options.update({
         'limit': limit,
         'offset_local': offset_local,
@@ -194,7 +194,7 @@ def ificlaims_published_data_crawl_handler(request):
 
     # constituents: abstract, biblio and/or full-cycle
     constituents = request.matchdict.get('constituents', 'full-cycle')
-    print 'constituents:', constituents
+    #print 'constituents:', constituents
 
     chunksize = int(request.params.get('chunksize', '5000'))
 

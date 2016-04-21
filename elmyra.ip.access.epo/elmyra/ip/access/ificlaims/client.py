@@ -157,7 +157,7 @@ class IFIClaimsClient(object):
 
         # fetch first chunk (1-chunksize) from upstream
         #first_chunk = self.search(expression, 0, chunksize)
-        first_chunk = ificlaims_search(expression, 0, chunksize)
+        first_chunk = ificlaims_search(expression, options=SmartBunch({'offset_remote': 0, 'limit': chunksize}))
         #print first_chunk
 
         total_count = int(first_chunk['meta'].get('pager', {}).get('totalEntries', 0))
@@ -171,6 +171,8 @@ class IFIClaimsClient(object):
         begin_second_chunk = chunksize
         chunks = [first_chunk]
         print 'range:', begin_second_chunk, total_count, chunksize
+        log.info('IFI: Crawling {total_count} items with {chunksize} per request'.format(
+            total_count=total_count, chunksize=chunksize))
         for range_begin in range(begin_second_chunk, total_count, chunksize):
 
             # countermeasure to robot flagging
@@ -178,9 +180,9 @@ class IFIClaimsClient(object):
             # <message>Recent behaviour implies you are a robot. The server is at the moment busy to serve robots. Please try again later</message>
             time.sleep(1)
 
-            log.info('IFI: Crawl range_begin: ' + str(range_begin))
+            log.info('IFI: Crawling from offset {offset}'.format(offset=str(range_begin)))
             #chunk = self.search(expression, range_begin, chunksize)
-            chunk = ificlaims_search(expression, range_begin, chunksize)
+            chunk = ificlaims_search(expression, options=SmartBunch({'offset_remote': range_begin, 'limit': chunksize}))
             #print 'chunk:', chunk
             chunks.append(chunk)
 
@@ -545,17 +547,18 @@ class IFIClaimsSearchResponse(object):
 
 
 
-def ificlaims_client(vendor=None):
-    if vendor == 'serviva':
+def ificlaims_client(options=None):
+    options = options or SmartBunch()
+    if 'vendor' in options and options.vendor == 'serviva':
         client = get_serviva_client()
     else:
         client = get_ificlaims_client()
     return client
 
 #@cache_region('static')
-def ificlaims_fetch(resource, format, options=None, vendor=None):
+def ificlaims_fetch(resource, format, options=None):
     options = options or {}
-    client = ificlaims_client(vendor=vendor)
+    client = ificlaims_client(options=options)
     if format in ['xml', 'json']:
         return client.text_fetch(resource, format)
     elif format == 'pdf':
@@ -575,7 +578,7 @@ def ificlaims_search(query, options=None):
 
     options = options or SmartBunch()
 
-    client = ificlaims_client(vendor=options.vendor)
+    client = ificlaims_client(options=options)
     try:
         return client.search(query, options)
 
@@ -589,8 +592,8 @@ def ificlaims_search(query, options=None):
 
 
 @cache_region('search')
-def ificlaims_crawl(constituents, query, chunksize, vendor=None):
-    client = ificlaims_client(vendor=vendor)
+def ificlaims_crawl(constituents, query, chunksize, options=None):
+    client = ificlaims_client(options=options)
     try:
         return client.crawl(constituents, query, chunksize)
     except SyntaxError as ex:
