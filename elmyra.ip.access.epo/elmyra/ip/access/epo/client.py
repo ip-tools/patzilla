@@ -62,6 +62,10 @@ class OpsOAuthClientPool(object):
 class OpsOAuth2Session(OAuth2Session):
 
     def __init__(self, *args, **kwargs):
+
+        # Remember the last throttling message in order to emit only changes to the log
+        self.throttle_last_log = None
+
         registry = get_current_registry()
         self.metrics_manager = registry.getUtility(IUserMetricsManager)
         super(OpsOAuth2Session, self).__init__(*args, **kwargs)
@@ -75,7 +79,10 @@ class OpsOAuth2Session(OAuth2Session):
                 self.metrics_manager.measure_upstream('ops', int(content_length))
 
             # FIXME: Temporary logging
-            logger.info('OPS X-Throttling-Control: {0}'.format(response.headers.get('x-throttling-control')))
+            x_throttling_control = response.headers.get('x-throttling-control')
+            if x_throttling_control != self.throttle_last_log:
+                self.throttle_last_log = x_throttling_control
+                logger.info('OPS X-Throttling-Control: {0}'.format(x_throttling_control))
 
             return response
 
