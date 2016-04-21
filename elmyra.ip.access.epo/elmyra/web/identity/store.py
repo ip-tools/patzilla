@@ -125,7 +125,7 @@ class UserMetricsManager(object):
         request = get_current_request()
         userid = request.user and request.user.userid or None
 
-        log.info('Measure transfer: userid={0}, upstream={1}, volume={2}'.format(userid, upstream, volume))
+        log.debug('Measure transfer: userid={0}, upstream={1}, volume={2}'.format(userid, upstream, volume))
         date = arrow.utcnow().format('YYYY-MM-DD')
         metrics, created = UserMetrics.objects.get_or_create(userid=userid, date=date)
         metrics.transfer.setdefault(upstream, {'total_response_size': 0, 'message_count': 0})

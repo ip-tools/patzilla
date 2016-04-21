@@ -47,7 +47,7 @@ ops_keyword_fields = [
 def get_ops_client():
     request = get_current_request()
     oauth_client = request.ops_oauth_client
-    log.info('OPS request with client-id {0}'.format(oauth_client.client_id))
+    log.debug('OPS request with client-id {0}'.format(oauth_client.client_id))
     return oauth_client
 
 @cache_region('search', 'ops_search')
