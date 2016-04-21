@@ -700,7 +700,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     propagate_datasource_message: function(response) {
         log('propagate_datasource_message');
-        this.ui.user_alert(response['message'], 'warning');
+        if (_.isObject(response.user_info)) {
+            this.ui.user_alert(response.user_info.message, response.user_info.kind);
+        } else if (response.message) {
+            this.ui.user_alert(response.message, 'warning');
+        }
     },
 
 

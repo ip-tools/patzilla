@@ -39,6 +39,7 @@ Infrastructure
 - Improve image/pdf acquisition robustness
 - Improve user interface wording for placeholders and more
 - Enhance bulk request error handling
+- IFI: Propagate information about removal of patent family members from middleware to frontend
 
 
 Bug fixes and minor updates
