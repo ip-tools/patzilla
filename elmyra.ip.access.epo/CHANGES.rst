@@ -46,6 +46,7 @@ Bugfixes
 - Improve OPS connection error handling
 - Improve keyword extraction and propagation
 - Fix woes with javascript “htmlentities” machinery
+- Update/fix LinkMaker urls for Espacenet and Google
 
 
 0.115.0
