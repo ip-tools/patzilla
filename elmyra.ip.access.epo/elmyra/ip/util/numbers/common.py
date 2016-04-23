@@ -90,7 +90,10 @@ def split_patent_number(patent_number):
         See also: http://www.epo.org/searching/asian/japan/numbering.html
         """
         # JPS5647318A, JP00000S602468B2
-        pattern = '^(\D\D)([SH\d|-]+?)(\D.?)?(_.+)?$'
+        #pattern = '^(\D\D)([SH\d|-]+?)(\D.?)?(_.+)?$'
+
+        # JPWO2013186910A1
+        pattern = '^(\D\D)((?:WO)?[SH\d|-]+?)(\D.?)?(_.+)?$'
 
     elif patent_number.startswith('IN'):
         """
