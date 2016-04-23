@@ -344,7 +344,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // compute query expression to display documents from OPS
         var query_ops_constraints = _(_.map(publication_numbers, function(publication_number) {
             if (publication_number) {
-                return field + '=' + '"' + _.string.trim(publication_number, '"') + '"';
+                // 2016-04-23: Do it without quotes. Does this break anything?
+                //return field + '=' + '"' + _.string.trim(publication_number, '"') + '"';
+                return field + '=' + _.string.trim(publication_number, '"');
             }
         }));
         var query_ops_cql = query_ops_constraints.join(' ' + operator + ' ');

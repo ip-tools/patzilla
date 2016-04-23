@@ -51,6 +51,7 @@ Bug fixes and minor updates
 - Fix woes with javascript “htmlentities” machinery
 - LinkMaker: Update/fix urls for Espacenet and Google
 - Improve wording on email for "Document unavailable » Report problem"
+- Don’t quote single numbers for OPS query expression in “perform_listsearch”
 
 
 0.115.0
