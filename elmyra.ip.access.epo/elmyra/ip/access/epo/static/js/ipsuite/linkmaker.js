@@ -241,6 +241,13 @@
             return url;
         },
 
+        wipo_biblio: function() {
+            // https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2016058745
+            var url_tpl = _.template('https://patentscope.wipo.int/search/en/detail.jsf?docId=<%= country %><%= docnumber %>');
+            var url = url_tpl(this);
+            return url;
+        },
+
         /*
         query_link: function(label, value, attribute) {
             var link_tpl = _.template('<a class="query-link" href="" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
