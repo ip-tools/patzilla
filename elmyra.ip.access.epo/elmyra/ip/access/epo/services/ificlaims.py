@@ -167,9 +167,18 @@ def ificlaims_published_data_search_handler(request):
         request.errors.add('IFI', 'login', ex.details)
 
     except SearchException as ex:
-        message = unicode(ex.message)
+        message = {'user': '', 'details': ''}
+        message_parts = []
+        if hasattr(ex, 'user_info'):
+            #message_parts.append(ex.user_info)
+            message['user'] = ex.user_info
+        if hasattr(ex, 'message'):
+            message_parts.append(cgi.escape(ex.__class__.__name__ + ': ' + unicode(ex.message)))
         if hasattr(ex, 'details'):
-            message += ': <pre>{details}</pre>'.format(details=cgi.escape(ex.details))
+            message_parts.append('<pre>{details}</pre>'.format(details=cgi.escape(ex.details)))
+
+        message['details'] = '<br/>'.join(message_parts)
+
         request.errors.add('IFI', 'search', message)
 
     except SyntaxError as ex:

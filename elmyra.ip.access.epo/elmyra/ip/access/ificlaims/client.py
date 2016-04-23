@@ -10,6 +10,7 @@ import logging
 import requests
 from pprint import pprint, pformat
 from beaker.cache import cache_region
+from requests.exceptions import ConnectionError, ConnectTimeout
 from elmyra.ip.access.epo.imageutil import to_png
 from elmyra.ip.access.ificlaims import get_ificlaims_client
 from elmyra.ip.access.serviva import get_serviva_client
@@ -19,7 +20,11 @@ from elmyra.ip.util.numbers.normalize import normalize_patent
 log = logging.getLogger(__name__)
 
 class IFIClaimsException(Exception):
-    pass
+    def __init__(self, *args, **kwargs):
+        self.user_info = ''
+        if kwargs.has_key('user_info'):
+            self.user_info = kwargs['user_info']
+        super(IFIClaimsException, self).__init__(*args)
 
 class LoginException(IFIClaimsException):
     pass
@@ -87,11 +92,19 @@ class IFIClaimsClient(object):
         # Perform search request
         headers = self.get_authentication_headers()
         headers.update({'Accept': 'application/json'})
-        response = requests.get(
-            uri,
-            params=params,
-            headers=headers,
-            verify=self.tls_verify)
+        try:
+            response = requests.get(
+                uri,
+                params=params,
+                headers=headers,
+                verify=self.tls_verify)
+        except (ConnectionError, ConnectTimeout) as ex:
+            log.error('IFI search for user "{username}" at "{uri}" failed. Reason: {0} {1}.'.format(
+                ex.__class__, ex.message, username=self.username, uri=uri))
+            #self.logout()
+            self.stale = True
+            raise SearchException(unicode(ex.__class__.__name__) + u': ' + unicode(ex.message),
+                user_info='Error or timeout while connecting to upstream database. Database might be offline.')
         duration = timeit.default_timer() - starttime
 
         # Process search response

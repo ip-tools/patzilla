@@ -101,7 +101,7 @@ HotkeysPlugin = Marionette.Controller.extend({
                 if (event.shiftKey == false) {
                     scroll_smooth(_this.app.viewport.next_item({paging: true}));
 
-                    // scroll to the best previous target element
+                // scroll to the best previous target element
                 } else if (event.shiftKey == true) {
                     scroll_smooth(_this.app.viewport.previous_item({paging: true}));
                 }

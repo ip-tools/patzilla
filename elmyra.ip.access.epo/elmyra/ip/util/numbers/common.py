@@ -11,7 +11,7 @@ from elmyra.ip.util.numbers.helper import strip_spaces
 Common lowlevel functions
 """
 
-logger = logging.getLogger(__name__)
+log = logging.getLogger(__name__)
 
 class DocumentIdentifierBunch(SmartBunch):
 
@@ -134,7 +134,7 @@ def split_patent_number(patent_number):
         return dib
 
     else:
-        logger.error('Could not parse patent number "{0}"'.format(patent_number))
+        log.error('Could not parse patent number "{0}"'.format(patent_number))
 
 
 def split_patent_number_more(patent):

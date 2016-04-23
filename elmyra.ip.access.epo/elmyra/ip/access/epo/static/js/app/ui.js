@@ -106,12 +106,16 @@ UiController = Marionette.Controller.extend({
             var response = jQuery.parseJSON(xhr.responseText);
             if (response['status'] == 'error') {
                 _.each(response['errors'], function(error) {
+                    // Unwrap rich description
+                    if (_.isObject(error.description)) {
+                        error.details = error.description.details;
+                        error.description = error.description.user;
+                    }
                     var tpl = _.template($('#cornice-error-template').html());
                     var alert_html = tpl(error);
                     $('#alert-area').append(alert_html);
                 });
                 $(".very-short").shorten({showChars: 0, moreText: 'more', lessText: 'less'});
-
             }
 
         // SyntaxError when decoding from JSON fails
