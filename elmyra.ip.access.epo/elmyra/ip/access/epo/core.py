@@ -37,27 +37,35 @@ def pdf_universal(patent):
 
         except:
 
-            # third, try building from OPS single images
-            try:
+            if document:
 
-                # 2016-04-21: Amend document number for CA documents
-                if document.country == 'CA':
-                    patent = document.country + document.number
+                # third, try building from OPS single images
+                try:
 
-                log.info('PDF - trying OPS: {0}'.format(patent))
+                    # 2016-04-21: Amend document number for CA documents, e.g. CA2702893C -> CA2702893A1
+                    # TOOD: Reenable feature, but only when prefixing document with a custom page
+                    #       informing the user about recent changes not yet arrived at EPO.
+                    #if document.country == 'CA':
+                    #    patent = document.country + document.number
 
-                pdf = pdf_document_build(patent)
-                datasource = 'ops'
+                    log.info('PDF - trying OPS: {0}'.format(patent))
 
-            except:
-                if document.country == 'US':
+                    pdf = pdf_document_build(patent)
+                    datasource = 'ops'
 
-                    log.info('PDF - trying to redirect to external data source: {0}'.format(patent))
-                    images_location = get_images_view_url(document)
-                    if images_location:
-                        meta.update(images_location)
-                    else:
-                        log.warning('PDF - not available at USPTO: {}'.format(patent))
+                except:
+                    if document.country == 'US':
+
+                        log.info('PDF - trying to redirect to external data source: {0}'.format(patent))
+                        images_location = get_images_view_url(document)
+                        if images_location:
+                            meta.update(images_location)
+                        else:
+                            log.warning('PDF - not available at USPTO: {}'.format(patent))
+
+            else:
+                log.error('Locating a document at the domestic office requires ' \
+                          'a decoded document number for "{}"'.format(patent))
 
     return {'pdf': pdf, 'datasource': datasource, 'meta': meta}
 
