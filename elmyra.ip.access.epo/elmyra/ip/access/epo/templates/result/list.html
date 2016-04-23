@@ -1,0 +1,291 @@
+## -*- coding: utf-8 -*-
+## (c) 2013-2016 Andreas Motl, Elmyra UG
+
+
+## ------------------------------------------
+##   metadata template
+## ------------------------------------------
+<%text>
+<script type="text/x-underscore-template" id="ops-metadata-template">
+    <!--
+    <div class="row-fluid" id="pagination-info">
+        <div class="span12 pagination-centered">
+
+            &nbsp;&nbsp;
+            current = <span class="badge badge-info"><%= data.result_range %></span>
+        </div>
+    </div>
+    -->
+
+    <div class="container-fluid ops-collection-meta" id="pagination-info">
+
+        <div class="row-fluid">
+
+            <div class="span8">
+
+                <!-- total result count -->
+                <div class="span3">
+                    Total:
+                    <br/>
+                    <span style="font-size: x-large" id="result-count-total"><%= data.result_count != null ? data.result_count : '--' %></span>
+
+                    <% if (asbool(data.config.get('debug')) && data.searchmode == 'subsearch') { %>
+                    <br/>
+                    View:
+                    <br/>
+                    <span style="font-size: x-large"><%= data.result_count_received %></span>
+                    <% } %>
+                </div>
+
+                <!-- current display range -->
+                <div class="span3">
+                    Range:
+                    <br/>
+                    <span style="font-size: x-large"><%= data.result_range != null ? data.result_range : '--' %></span>
+                </div>
+
+                <!-- current cql query string -->
+                <div class="span6">
+                    Query:
+                    <br/>
+                    <span style="font-size: small" class="cql-query">
+                        <%
+                        // HACK: workaround required, for whatever reason; WTF!?
+                        var _query;
+                        if (data.query_origin && data.query_origin.nodeName == 'TEXTAREA') {
+                            _query = data.query_real;
+                        } else {
+                            _query = data.query_origin;
+                        }
+                        print(htmlentities(_query, 'ENT_NOQUOTES'));
+                        %>
+                    </span>
+                    <br/>
+
+                    <%
+                    if (data && data.query_data && data.query_data.sorting) {
+                    %>
+                    Sorting:
+                    <br/>
+                        <span style="font-size: small" class="cql-query">
+                        <%
+                        var sorting = data.query_data.sorting;
+                        var sort_order_human = 'unknown';
+                        if (sorting.order == 'asc') {
+                            sort_order_human = 'ascending';
+                        } else if (sorting.order == 'desc') {
+                            sort_order_human = 'descending';
+                        }
+                        var message = 'field= sorting.field + ', order= sort_order_human;
+                        print(message);
+                        %>
+                        </span>
+                    <%
+                    }
+                    %>
+
+                    <% if (asbool(data.config.get('debug')) && (data.searchmode == 'subsearch') && data.query_real) { %>
+                    <hr class="no-margin"/>
+                    Query OPS:
+                    <br/>
+                    <span style="font-size: small" class="cql-query"><%= data.query_real %></span>
+                    <% } %>
+
+                </div>
+
+            </div>
+
+            <div class="span4 do-not-print non-liveview">
+
+                <% if (data.searchmode == 'subsearch' && !data.reviewmode) { %>
+                <div class="span6">
+
+                    <div class="btn-group btn-popover tabs content-chooser"
+                         data-toggle="popover" data-trigger="hover" data-placement="top"
+                         data-content="Toggle result view"
+                            >
+                        <button class="btn active" data-toggle="tab" data-list-type="ops">
+                            View
+                        </button>
+                        <button class="btn" data-toggle="tab" data-list-type="upstream">
+                            Results
+                        </button>
+                    </div>
+
+                </div>
+                <% } %>
+
+                <div class="span6 pull-right">
+
+                    <a id="basket-add-all-documents" role="button" class="btn btn-popover"
+                       data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add all documents of current result page to collection"
+                            >
+                        <i class="icon-white icon-plus"></i> Add visible
+                    </a>
+
+
+                    <div class="btn-group">
+                        <button class="btn dropdown-toggle" data-toggle="dropdown">
+                            <i class="icon-wrench"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right">
+
+                            <li>
+
+                                <!--
+                                <div class="dropdown-section-header">Highlighting</div>
+                                -->
+
+                                <a id="highlighting-map-edit-action" class="btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Edit keyword mapping for individual highlighting"
+                                        >
+                                    <i class="icon-edit"></i> &nbsp; Keyword editor
+                                </a>
+
+                                <a id="fetch-result-numbers-action" class="btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Fetch publication numbers of all results. This is the raw response of the datasource."
+                                        >
+                                    <i class="icon-download"></i> &nbsp; Fetch raw result numbers
+                                </a>
+
+                                <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
+                                        >
+                                    <i class="icon-download"></i> &nbsp; Fetch unique result numbers w/o kindcodes
+                                </a>
+
+                                <!--
+                                <hr class="divider"/>
+                                -->
+
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+                <!-- result list actions -->
+                <!-- PDF export and print view -->
+                <!--
+                <div class="btn-group btn-popover result-actions span5 pull-right"
+                     data-toggle="popover" data-trigger="hover" data-placement="top"
+                     data-content="Export results"
+                        >
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-download-alt icon-large2"></i> &nbsp; Export
+                    </button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="<%= data.get_url_pdf() %>" target="_blank">
+                                <img src="/static/img/icons/pdf.svg" class="pdf-svg"/> PDF
+                            </a>
+                            <a href="<%= data.get_url_print() %>" target="_blank">
+                                <i class="icon-print icon-large"></i> Print
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                -->
+
+            </div>
+
+        </div>
+    </div>
+
+</script>
+</%text>
+
+
+## ---------------------------------------------
+##   modal dialog for viewing arbitrary results
+## ---------------------------------------------
+<%text>
+<script type="text/x-underscore-template" id="result-template">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="result-label">Results</h3>
+    </div>
+    <div class="modal-body">
+        <div id="result-info">
+        </div>
+        <br/>
+        <textarea id="result-content" rows="13" cols="80" style="width: 97%"></textarea>
+
+    </div>
+    <div class="modal-footer">
+        <a id="result-to-basket-button" role="button" class="btn pull-left">
+            <i class="icon-plus" id="result-to-basket-indicator"></i> &nbsp; Add to document collection
+        </a>
+        <a id="result-to-clipboard-button" role="button" class="btn pull-left">
+            <i class="icon-copy"></i> &nbsp; Copy to clipboard
+        </a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+
+</script>
+</%text>
+
+
+## ------------------------------------------
+##   result information templates
+## ------------------------------------------
+<%text>
+<script type="text/x-underscore-template" id="family-members-removed-information-template">
+    <div class="row">
+        <div class="span6">
+            <strong>Removed <%= Humanize.intComma(data.count_removed) %> family members</strong> 
+            from results range <%= data.start %>-<%= data.end %>.
+            This gives an estimation of <strong><%= Humanize.intComma(data.count_total_estimated) %></strong> results
+            when grossed up against the total result count and will 
+            save on reviewing about <strong><%= Humanize.intComma(data.count_saved_estimated) %></strong> documents.
+        </div>
+        <div class="span5">
+            <div class="pull-right">
+                <button class="btn btn-default btn-large" role="button" data-toggle="collapse" data-target="#family-members-removed">
+                    Display <%= Humanize.intComma(data.count_removed) %> removed family
+                    <br/>
+                    members between <%= data.start %>-<%= data.end %>
+                </button>
+                <br/><br/>
+                <div id="family-members-removed" class="collapse">
+                    <textarea rows="20" class="monospace text-small"><%= _.pluck(data.family_members_removed, 'publication_number').join('\n') %></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-underscore-template" id="family-members-removed-empty-page-template">
+    <div class="row" id="family-members-removed-empty-page">
+        <div class="span6">
+            An empty result page was reached while having "Remove family members" enabled.
+            This indicates the family members have actually been removed from the current
+            result page of all results in total.
+            <br/><br/>
+            Background: We're fetching results in chunks of <%= data.chunksize %> items,
+            so the removal of family members leads to gaps at the end of each chunk.
+        </div>
+        <div class="span5">
+            <% if (data.recommended_next_page_local) { %>
+            You might want to just skip to the next page containing valid result items:
+            <br/><br/>
+            <button id="next-page-with-results-button" data-next-page="<%= data.recommended_next_page_local %>" class="btn btn-large btn-default pull-right" role="button">
+                Go to result page #<%= data.recommended_next_page_local %>
+            </button>
+            <% } else { %>
+            <div class="pull-right text-large text-align-right">
+                <strong>The end of the result list was reached.</strong>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</script>
+</%text>
