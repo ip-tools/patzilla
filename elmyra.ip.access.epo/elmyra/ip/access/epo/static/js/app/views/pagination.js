@@ -189,6 +189,11 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         return $(paginator).jqPagination('option', 'current_page', page);
     },
 
+    get_max_page: function(page) {
+        var paginator = $(this.el).find('.jqpagination').last();
+        return $(paginator).jqPagination('option', 'max_page');
+    },
+
     onDomRefresh: function() {
         console.log('PaginationView.onDomRefresh');
     },

@@ -51,6 +51,20 @@ ViewportPlugin = Marionette.Controller.extend({
 
         var origin = $('.ops-collection-entry:in-viewport');
         if (!origin.exists()) {
+
+            // 2016-04-23: Directly turn over to next page with results
+            // when hitting the "Removed family members" placeholder at the
+            // end of a remote result page.
+            var family_members_removed_empty_page = $('#family-members-removed-empty-page');
+            if (family_members_removed_empty_page.exists()) {
+                var next_page = $('#next-page-with-results-button').data('next-page');
+                if (next_page) {
+                    opsChooserApp.paginationViewBottom.set_page(next_page);
+                    return;
+                }
+            }
+
+            // Otherwise, use next regular entry as scroll target
             target = $('.ops-collection-entry:below-the-fold');
             return target;
         }
@@ -110,6 +124,17 @@ ViewportPlugin = Marionette.Controller.extend({
                     target = $('body');
                 }
             }
+        } else {
+
+            // 2016-04-23: Directly turn over to direct previous page
+            // when hitting the "Removed family members" placeholder at the
+            // end of a remote result page.
+            var family_members_removed_empty_page = $('#family-members-removed-empty-page');
+            if (family_members_removed_empty_page.exists()) {
+                opsChooserApp.paginationViewBottom.set_page('previous');
+                return;
+            }
+
         }
         return target;
     },
