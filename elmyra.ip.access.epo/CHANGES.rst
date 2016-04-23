@@ -11,6 +11,7 @@ Features
 - IFI: Remove family members
 - IFI: Basic crawler
 - CIPO: Add direkt link to CIPO, the Canadian Intellectual Property Office
+- WIPO: Add direkt link to WIPO, the World Intellectual Property Office
 - DPMA: Adapt wildcard semantics in comfort form to world standards
 - Query builder: Improve design and layout of history chooser
 - Display: For EP..A4 documents, display drawings of family members
@@ -48,7 +49,7 @@ Bug fixes and minor updates
 - Improve OPS connection error handling
 - Improve keyword extraction and propagation
 - Fix woes with javascript “htmlentities” machinery
-- Update/fix LinkMaker urls for Espacenet and Google
+- LinkMaker: Update/fix urls for Espacenet and Google
 - Improve wording on email for "Document unavailable » Report problem"
 
 

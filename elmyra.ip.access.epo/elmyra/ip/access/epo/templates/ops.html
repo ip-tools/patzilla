@@ -158,6 +158,14 @@
                             </li>
                             <% } %>
 
+                            <% if (linkmaker.country == 'WO') { %>
+                            <li>
+                                <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" class="anchor-biblio-wipo">
+                                    [BIBLIO] <%= patent_number %> @ WIPO
+                                </a>
+                            </li>
+                            <% } %>
+
                             <% if (linkmaker.country == 'CA') { %>
                             <li>
                                 <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" class="anchor-biblio-cipo">
