@@ -485,6 +485,7 @@ class IFIClaimsSearchResponse(object):
 
         # actions
         self.enrich()
+        self.compat()
 
         if 'feature_family_remove' in self.options and self.options['feature_family_remove']:
             self.remove_family_members()
@@ -492,6 +493,8 @@ class IFIClaimsSearchResponse(object):
     def setup(self):
 
         meta = SmartBunch.bunchify({
+            'navigator': {},
+            # TODO: Move to "upstream"
             'time': self.input['time'],
             'status': self.input['status'],
             'params': self.input['content']['responseHeader']['params'],
@@ -499,7 +502,12 @@ class IFIClaimsSearchResponse(object):
         })
 
         self.response = self.input['content']['response']
-        self.output = SmartBunch(meta=meta, numbers=[], details=[])
+        self.output = SmartBunch.bunchify({
+            'meta': meta,
+            'numbers': [],
+            'details': [],
+            'navigator': {},
+        })
 
 
     def enrich(self):
@@ -516,6 +524,14 @@ class IFIClaimsSearchResponse(object):
                 number = number_normalized
             result[u'publication_number'] = number
             result[u'upstream_provider'] = u'ifi'
+
+    def compat(self):
+        meta = self.output.meta
+        meta.navigator.count_total = int(self.output.meta.pager.totalEntries)
+        meta.navigator.count_page  = int(self.output.meta.pager.entriesOnThisPage)
+        meta.navigator.offset      = int(self.output.meta.params.start)
+        meta.navigator.limit       = int(self.output.meta.params.rows)
+        meta.navigator.postprocess = SmartBunch()
 
     def render(self):
 
@@ -547,7 +563,15 @@ class IFIClaimsSearchResponse(object):
         removed = []
         stats = SmartBunch(removed = 0)
         def family_remover(item):
+
             fam = item['fam']
+
+            # Sanity checks on family id
+            # Do not remove documents without valid family id
+            if not fam or fam in [u'0', u'-1']:
+                return True
+
+            # "Seen" filtering logic
             if fam in seen:
                 stats.removed += 1
                 removed.append(item)
@@ -556,38 +580,20 @@ class IFIClaimsSearchResponse(object):
                 seen[fam] = True
                 return True
 
-        # Update content
+
+        # Update metadata and content
+
         # 1. Apply family cleansing filter to main documents response
         self.response['docs'] = filter(family_remover, self.response['docs'])
-        start = int(self.output.meta.params.start)
-        rows = int(self.output.meta.params.rows)
 
-        # Compute ratio of removed family members vs. total results
-        family_removed_ratio = float(stats.removed) / self.output.meta.pager.entriesOnThisPage
+        # 2. Add list of removed family members to output
+        self.output.navigator.family_members = {'removed': removed}
+        #self.output['family-members-removed'] = removed
 
-        # Update metadata
-        self.output.meta.pager.entriesOnThisPage         -= stats.removed
+        # 3. Update metadata
+        self.output.meta.navigator.postprocess.action = 'feature_family_remove'
+        self.output.meta.navigator.postprocess.info   = stats
 
-        # Propagate more information to user
-        # Format number with decimal separator but no precision, e.g. 1,234,567,890
-        count_total           = self.output.meta.pager.totalEntries
-        count_total_estimated = count_total * (1 - family_removed_ratio)
-        count_saved_estimated = count_total - count_total_estimated
-        user_information = {
-            'message': u'<strong>Removed {count_removed} family members</strong> from results {start}-{end}. ' \
-                       u'<br/>' \
-                       u'This gives an estimation of <strong>{count_total_estimated}</strong> results ' \
-                       u'when grossed up against the total result count and will ' \
-                       u'save on reviewing about <strong>{count_saved_estimated}</strong> documents.'.format(
-                start                 = start,
-                end                   = start + rows,
-                count_removed         = stats.removed,
-                count_total_estimated = '{0:,.0f}'.format(count_total_estimated),
-                count_saved_estimated = '{0:,.0f}'.format(count_saved_estimated)
-            ),
-            'kind': u'info',
-            }
-        self.output.user_info = user_information
 
 def ificlaims_client(options=None):
     options = options or SmartBunch()

@@ -140,7 +140,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                 self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
                     // need to propagate again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                    self.propagate_datasource_message(response);
+                    self.propagate_datasource_message(response, options);
                 });
 
             });
@@ -220,7 +220,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                 self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
                     // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                    self.propagate_datasource_message(response);
+                    self.propagate_datasource_message(response, options);
                 });
 
             });
@@ -250,7 +250,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
                 self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
                     // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                    self.propagate_datasource_message(response);
+                    self.propagate_datasource_message(response, options);
                 });
 
             });
@@ -357,11 +357,15 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         //$('#query').val(query_origin);
 
         // querying by single document numbers has a limit of 10 at OPS
-        this.metadata.set('page_size', 10);
+        var page_size = 10;
+        this.metadata.set('page_size', page_size);
+        options.local_limit = page_size;
 
         // set parameter to control subsearch
         this.metadata.set('searchmode', 'subsearch');
 
+        // Propagate local hit count
+        options.local_hits = publication_numbers.length;
 
         // for having a reference to ourselves in nested scopes
         var self = this;
@@ -698,13 +702,85 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         return range;
     },
 
-    propagate_datasource_message: function(response) {
+    propagate_datasource_message: function(response, options) {
+
+        options = options || {};
+
         log('propagate_datasource_message');
+
+        // Generic backend message
         if (_.isObject(response.user_info)) {
             this.ui.user_alert(response.user_info.message, response.user_info.kind);
         } else if (response.message) {
             this.ui.user_alert(response.message, 'warning');
         }
+
+        this.propagate_datasource_signals(response, options);
+    },
+
+    propagate_datasource_signals: function(response, options) {
+
+        options = options || {};
+
+        // Special purpose user information signalling
+
+        // 1. Feature "Remove family members"
+        var meta = response.meta;
+        if (meta.navigator.postprocess.action == 'feature_family_remove') {
+
+            // How many documents have actually been removed on this result page?
+            var count_removed = meta.navigator.postprocess.info.removed;
+
+            // Get information from pager
+            var offset = meta.navigator.offset;
+            var limit  = meta.navigator.limit;
+
+            // Compute ratio of removed family members vs. total results on this result page
+            var family_removed_ratio = count_removed / meta.navigator.count_page;
+
+            // Compute estimated total savings on documents to review
+            var count_total           = meta.navigator.count_total;
+            var count_total_estimated = count_total * (1 - family_removed_ratio);
+            var count_saved_estimated = count_total - count_total_estimated;
+
+            // Propagate informational data to user
+            var tpldata = {
+                start: offset + 1,
+                end:   offset + limit,
+                count_removed: count_removed,
+                count_total_estimated: Math.floor(count_total_estimated),
+                count_saved_estimated: Math.floor(count_saved_estimated),
+                family_members_removed: response.navigator.family_members.removed,
+                chunksize: meta.navigator.limit,
+            };
+            var info_body = _.template($('#family-members-removed-information-template').html(), tpldata, {variable: 'data'});
+            this.ui.user_alert(info_body, 'info');
+
+            // Display additional information when reaching empty result pages
+            if (options.local_hits == 0 && options.local_limit && options.range_end && options.remote_limit) {
+                var recommended_next_page_remote = ((Math.floor((options.range_end - 1) / options.remote_limit) + 1) * options.remote_limit) + 1;
+                var recommended_next_page_local = Math.floor(recommended_next_page_remote / options.local_limit) + 1;
+
+                var max_page_local = opsChooserApp.paginationViewBottom.get_max_page();
+                var has_more_results = recommended_next_page_local <= max_page_local;
+
+                if (has_more_results) {
+                    tpldata.recommended_next_page_local = recommended_next_page_local;
+                }
+
+                var info_body = _.template($('#family-members-removed-empty-page-template').html(), tpldata, {variable: 'data'});
+                this.ui.user_alert(info_body, 'info');
+
+                // Go to page containing next results after the gap of removed items
+                if (has_more_results) {
+                    $('#next-page-with-results-button').on('click', function() {
+                        opsChooserApp.paginationViewBottom.set_page(recommended_next_page_local);
+                    });
+                }
+
+            }
+        }
+
     },
 
 

@@ -40,6 +40,7 @@ Infrastructure
 - Improve user interface wording for placeholders and more
 - Enhance bulk request error handling
 - IFI: Propagate information about removal of patent family members from middleware to frontend
+- Improve placeholders for feature “Remove family members”
 
 
 Bug fixes and minor updates

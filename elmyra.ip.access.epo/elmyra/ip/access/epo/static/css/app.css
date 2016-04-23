@@ -4,6 +4,18 @@
     font-family: Monaco, "Lucida Console", monospace;
 }
 
+.text-small {
+    font-size: small;
+}
+
+.text-large {
+    font-size: large;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
 
 /*
 https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
