@@ -282,6 +282,15 @@ ${ h.fiddler.render() | n }
                 <%= name %>
             </dd>
 
+            <% if (details) { %>
+            <dt>
+                Details
+            </dt>
+            <dd>
+                <%= details %>
+            </dd>
+            <% } %>
+
         </dl>
         </%text>
 
@@ -292,7 +301,7 @@ ${ h.fiddler.render() | n }
 
 <script id="alert-template" type="text/x-underscore-template">
     <%text>
-    <div class="alert alert-block alert-inline <%= clazz %>">
+    <div class="alert alert-block alert-inline <%= clazz %> user-alert">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4><%= title %></h4>
         <br/>

@@ -80,14 +80,21 @@ class OpsOAuth2Session(OAuth2Session):
 
             # FIXME: Temporary logging
             x_throttling_control = response.headers.get('x-throttling-control')
-            if x_throttling_control != self.throttle_last_log:
-                self.throttle_last_log = x_throttling_control
-                logger.info('OPS X-Throttling-Control: {0}'.format(x_throttling_control))
+            if x_throttling_control:
+                # Counter duplicate header problem, sometimes we receive
+                # idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30), idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30)
+                if len(x_throttling_control) > 150:
+                    x_throttling_control = x_throttling_control[:len(x_throttling_control)/2].strip(' ,')
+                if x_throttling_control != self.throttle_last_log:
+                    self.throttle_last_log = x_throttling_control
+                    logger.info('OPS X-Throttling-Control: {0}'.format(x_throttling_control))
 
             return response
 
         except (ConnectionError, OAuth2Error) as ex:
-            ex.url = ex.uri
+            ex.url = None
+            if hasattr(ex, 'uri'):
+                ex.url = ex.uri
             ex.content = ex.description
             logger.error('OpsOAuth2Session {0} {1}. client_id={2}'.format(ex.__class__.__name__, ex.description, self.client_id))
             return ex
