@@ -55,6 +55,7 @@ Bug fixes and minor updates
 - Improve wording on email for "Document unavailable » Report problem"
 - Don’t quote single numbers for OPS query expression in “perform_listsearch”
 - Improve document number decoder: Make it grok JP numbers like “JPWO2013186910A1”
+- Fix sorting of documents in subsearch- and numberlist-modes
 
 
 0.115.0

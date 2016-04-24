@@ -407,6 +407,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
 
             // ------------------------------------------
+            //   data propagation / rendering
+            // ------------------------------------------
+            // trigger re-rendering through model-change
+            _this.documents.trigger('reset', _this.documents);
+
+
+            // ------------------------------------------
             //   housekeeping
             // ------------------------------------------
             // undefine comparator after performing action in order not to poise other queries
@@ -452,64 +459,52 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             var document_id_full = document.get('@country') + document.get('@doc-number') + document.get('@kind');
             debug && log('document_id_full:', document_id_full);
 
-            // compare against document numbers _with_ kindcode
+
+            // 1. Compare against document numbers _with_ kindcode
             var index = findIndex(documents_requested, function(item) {
                 return _.string.startsWith(item, document_id_full);
             });
             debug && log('index-1', index);
+            if (index != undefined) return index;
 
-            // fall back to compare against document numbers w/o kindcode
-            if (index == undefined) {
 
-                var document_id_short = document.get('@country') + document.get('@doc-number');
-                index = findIndex(documents_requested, function(item) {
-                    return _.string.startsWith(item, document_id_short);
+            // 2. Fall back to compare against document numbers w/o kindcode
+            var document_id_short = document.get('@country') + document.get('@doc-number');
+            index = findIndex(documents_requested, function(item) {
+                return _.string.startsWith(item, document_id_short);
+            });
+            debug && log('index-2', index);
+            if (index != undefined) return index;
+
+            // 3. again, fall back to compare against full-cycle neighbors
+            var full_cycle_numbers_full = document.attributes.get_full_cycle_numbers();
+            var full_cycle_numbers = _.difference(full_cycle_numbers_full, [document_id_full]);
+
+            // check each full-cycle member ...
+            _.each(full_cycle_numbers, function(full_cycle_number) {
+                var full_cycle_number_nokindcode = patent_number_strip_kindcode(full_cycle_number);
+                // ... if it exists in list of requested documents
+                var index_tmp = findIndex(documents_requested, function(document_requested) {
+
+                    var outcome =
+                        _.string.startsWith(document_requested, full_cycle_number) ||
+                        _.string.startsWith(document_requested, full_cycle_number_nokindcode);
+                    return outcome;
                 });
-                // advance by one, since we usually want to insert _after_ that one
-                if (index != undefined) {
-                    index++;
+                if (index_tmp != undefined) {
+                    index = index_tmp;
                 }
-                debug && log('index-2', index);
+            });
+            debug && log('index-3', index);
+            if (index != undefined) return index;
+
+            // 4. if not found yet, put it to the end of the list
+            if (self.documents) {
+                index = self.documents.length;
             }
+            debug && log('index-4', index);
+            if (index != undefined) return index;
 
-            // again, fall back to compare against full-cycle neighbors
-            if (index == undefined) {
-
-                var full_cycle_numbers_full = document.attributes.get_full_cycle_numbers();
-                var full_cycle_numbers = _.difference(full_cycle_numbers_full, [document_id_full]);
-
-                // check each full-cycle member ...
-                _.each(full_cycle_numbers, function(full_cycle_number) {
-                    var full_cycle_number_nokindcode = patent_number_strip_kindcode(full_cycle_number);
-                    // ... if it exists in list of requested documents
-                    var index_tmp = findIndex(documents_requested, function(document_requested) {
-
-                        var outcome =
-                            _.string.startsWith(document_requested, full_cycle_number) ||
-                            _.string.startsWith(document_requested, full_cycle_number_nokindcode);
-                        return outcome;
-                    });
-                    if (index_tmp != undefined) {
-                        index = index_tmp;
-                    }
-                });
-
-                // advance by one, since we usually want to insert _after_ that one
-                if (index != undefined) {
-                    index++;
-                }
-                debug && log('index-3', index);
-            }
-
-            // if not found yet, put it to the end of the list
-            if (index == undefined) {
-                if (self.documents) {
-                    index = self.documents.length;
-                }
-                debug && log('index-4', index);
-            }
-
-            return index;
         }
 
     },
@@ -629,6 +624,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         debug && log('documents_missing:', documents_missing);
 
 
+        // Skip updating the collection of documents if nothing would change
+        if (_.isEmpty(documents_missing)) {
+            return;
+        }
+
         // inject placeholder objects for all missing documents
         var _this = this;
         _.each(documents_missing, function(document_missing) {
@@ -651,9 +651,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         if (this.documents.comparator) {
             this.documents.sort();
         }
-
-        // trigger re-rendering through model-change
-        this.documents.trigger('reset', this.documents);
 
     },
 
@@ -730,7 +727,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // 1. Feature "Remove family members"
         var meta = response.meta;
-        if (meta.navigator.postprocess.action == 'feature_family_remove') {
+        if (meta.navigator && meta.navigator.postprocess.action == 'feature_family_remove') {
 
             // How many documents have actually been removed on this result page?
             var count_removed = meta.navigator.postprocess.info.removed;
@@ -762,8 +759,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             // Display additional information when reaching empty result pages
             if (options.local_hits == 0 && options.local_limit && options.range_end && options.remote_limit) {
-                var recommended_next_page_remote = ((Math.floor((options.range_end - 1) / options.remote_limit) + 1) * options.remote_limit) + 1;
-                var recommended_next_page_local = Math.floor(recommended_next_page_remote / options.local_limit) + 1;
+                var recommended_next_page_remote =
+                    ((Math.floor((options.range_end - 1) / options.remote_limit) + 1) * options.remote_limit) + 1;
+                var recommended_next_page_local =
+                    Math.floor(recommended_next_page_remote / options.local_limit) + 1;
 
                 var max_page_local = opsChooserApp.paginationViewBottom.get_max_page();
                 var has_more_results = recommended_next_page_local <= max_page_local;
