@@ -10,9 +10,11 @@ from elmyra.ip.access.google.search import GooglePatentsExpression
 from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.util.cql.util import pair_to_cql
+from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
 from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
 from elmyra.ip.util.xml.format import pretty_print
+from elmyra.web.email.submit import email_issue_report
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +27,11 @@ numberlist_util_service = Service(
     name='numberlist-utility-service',
     path='/api/util/numberlist',
     description="Numberlist utility service")
+
+issue_reporter_service = Service(
+    name='issue-reporter-service',
+    path='/api/util/issue/report',
+    description="Issue reporter service")
 
 void_service = Service(
     name='void-service',
@@ -176,3 +183,35 @@ def request_to_options(request, options):
             key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
             options.setdefault('sorting', {})
             options['sorting'][key] = value
+
+
+@issue_reporter_service.post()
+def issue_reporter_handler(request):
+
+    targets = request.params.get('targets')
+
+    report_data = request.json
+    report_data.setdefault('application', {})
+    report = SmartBunch.bunchify(report_data)
+
+    # Add user information to issue report
+    user = request.user
+    if user:
+
+        # Anonymize sensitive user data
+        user.upstream_credentials = None
+
+        # Serialize user object and attach to report
+        report.application.user = SmartBunch(json.loads(user.to_json()))
+
+    # Send the whole beast to the standard application log
+    log.error('Issue report [{targets}]:\n{report}'.format(
+        report=report.pretty(),
+        targets=targets
+    ))
+
+    # TODO: Store the issue report into database
+    # TODO: What about other targets like "log:error", "log:warning", "human:support", "human:user"?
+    if 'human' in targets:
+        email_issue_report(report)
+

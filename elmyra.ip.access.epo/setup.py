@@ -56,6 +56,8 @@ requires = [
     'arrow==0.4.4',
     'transitions==0.2.4',
     'xlrd==0.9.3',
+    'Jinja2==2.8',
+    'validate_email==1.3',
 
     # ----------------------------------------------
     #   user interface
