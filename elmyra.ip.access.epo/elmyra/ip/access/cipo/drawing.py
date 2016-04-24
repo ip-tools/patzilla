@@ -14,16 +14,20 @@ cipo_baseurl = 'http://brevets-patents.ic.gc.ca'
 def fetch_first_drawing(patent):
     log.info('CIPO: Fetching first drawing of "{patent}"'.format(patent=patent))
     drawing_url = get_first_drawing_url(patent)
-    log.info('CIPO: Fetching first drawing from "{url}"'.format(url=drawing_url))
     if drawing_url:
+        log.info('CIPO: Fetching first drawing from "{url}"'.format(url=drawing_url))
         response = requests.get(drawing_url)
         if response.status_code == 200:
             return gif_to_tiff(response.content)
+    else:
+        log.warning("No content in main document page of '{}'".format(patent))
+
 
 def fetch_document_index(patent):
     # http://brevets-patents.ic.gc.ca/opic-cipo/cpd/eng/patent/141597/summary.html#cn-cont
     url_tpl = cipo_baseurl + '/opic-cipo/cpd/eng/patent/{number}/summary.html'
     url = url_tpl.format(number=patent['number'])
+    log.info('CIPO: Index url is "{}"'.format(url))
     response = requests.get(url)
     if response.status_code == 200:
         return response.text

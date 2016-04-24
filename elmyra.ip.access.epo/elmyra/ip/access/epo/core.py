@@ -95,7 +95,7 @@ def pdf_universal_multi(patents):
             'Delivered PDF files ({0}):\n'.format(len(delivered)) + '\n'.join(delivered) + \
             '\n\n' + \
             'Missing PDF files ({0}):\n'.format(len(missing)) + '\n'.join(missing)
-        archive.writestr('report.txt', report)
+        archive.writestr('@report.txt', report)
 
     buffer.seek(0)
     payload = buffer.read()
