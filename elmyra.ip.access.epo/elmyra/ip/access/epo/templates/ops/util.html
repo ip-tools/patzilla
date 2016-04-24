@@ -4,9 +4,8 @@
 <script id="ops-entry-placeholder-template" type="text/x-underscore-template">
     <%text>
     <%
-    var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
-    var report_issue_id = _.uniqueId('ops-placeholder-report-issue-');
     var accordion_id = _.uniqueId('ops-placeholder-accordion-');
+    var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
     var document_number = data.get_patent_number();
     var metadata = opsChooserApp.metadata;
     %>
@@ -69,7 +68,13 @@
                         <button class="btn btn-default" data-toggle="collapse" data-target="#<%= learn_more_id %>" data-parent="#<%= accordion_id %>">
                             Learn more
                         </button>
-                        <button class="btn btn-default" data-toggle="collapse" data-target="#<%= report_issue_id %>" data-parent="#<%= accordion_id %>">
+                        <button
+                                class="btn btn-danger report-issue-problem"
+                                data-report-origin="document"
+                                data-report-kind="not-available"
+                                data-report-item="<%= document_number %>"
+                                data-dialog-remark="Document <%= document_number %> is not available."
+                                >
                             Report problem
                         </button>
                     </p>
@@ -129,35 +134,6 @@
                                 </p>
                             </li>
                         </ul>
-                    </div>
-                    </div>
-
-                    <div class="accordion-group noborder">
-                    <div id="<%= report_issue_id %>" class="collapse">
-                        <textarea rows="13" cols="80" class="span8 monospace">
-Dear Elmyra Support Team,
-
-we encountered a problem when displaying the document "<%= document_number %>".
-Please have a look into this issue and get back to us.
-
-Thanks in advance and with kind regards.
-
-----
-We're adding more details to support investigating the issue:
-
-Date of search:       <%= moment().format() %>
-Data source:          <%= metadata.get('datasource') %>
-Original expression:  <%= metadata.get('query_origin') %>
-Amended expression:   <%= metadata.get('query_real') %>
-Result range:         <%= metadata.get('result_range') %>
-
-Please add more remarks here:
-</textarea>
-                        <br/>
-                        <button class="btn btn-info btn-large" role="button"
-                                onclick="javascript: opsChooserApp.ui.open_support_email('Problem when displaying document <%= document_number %>', $('#<%= report_issue_id %> textarea').val());">
-                            Send report as email
-                        </button>
                     </div>
                     </div>
 
