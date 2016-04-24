@@ -272,7 +272,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     // perform ops search and process response
     perform_listsearch: function(options, query_origin, entries, hits, field, operator) {
 
-        //log('perform_listsearch.options:', options);
+        options = options || {};
+
+        log('perform_listsearch.options:', options);
 
         //this.set_datasource('ops');
 

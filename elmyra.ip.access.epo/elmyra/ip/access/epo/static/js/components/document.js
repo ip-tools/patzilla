@@ -391,8 +391,8 @@ DocumentCarouselController = Marionette.Controller.extend({
                         _this.update_carousel_metadata(carousel);
                     }
                 }).error(function(error) {
-                        console.warn('Error while fetching total count of drawings', error);
-                    });
+                    console.warn('Error while fetching total count of drawings', error);
+                });
                 carousel.data('totalcount', totalcount);
                 _this.update_carousel_metadata(carousel);
             }

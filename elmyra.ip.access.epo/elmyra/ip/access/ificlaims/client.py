@@ -621,7 +621,7 @@ def ificlaims_fetch(resource, format, options=None):
         raise IFIClaimsFormatException(msg)
 
 
-#@cache_region('search')
+@cache_region('search')
 def ificlaims_search(query, options=None):
 
     options = options or SmartBunch()
