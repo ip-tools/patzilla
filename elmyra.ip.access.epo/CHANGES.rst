@@ -42,6 +42,7 @@ Infrastructure
 - Enhance bulk request error handling
 - IFI: Propagate information about removal of patent family members from middleware to frontend
 - Improve placeholders for feature “Remove family members”
+- “Report problem” subsystem
 
 
 Bug fixes and minor updates

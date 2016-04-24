@@ -64,6 +64,18 @@ UiController = Marionette.Controller.extend({
         });
 
 
+        $('.report-issue-feature').unbind('click');
+        $('.report-issue-feature').click(function(event) {
+            opsChooserApp.issues.dialog({
+                element: this,
+                event: event,
+                what: 'feature',
+                remark: 'It would be cool, if ...',
+                // TODO: What about other targets like "log:error", "log:warning", "human:support", "human:user"?
+                targets: 'human',
+            });
+        });
+
     },
 
     setup_text_tools: function() {

@@ -1152,7 +1152,18 @@ opsChooserApp.addRegions({
 });
 
 
-// global universal helpers, able to boot early
+// Universal helpers
+opsChooserApp.addInitializer(function(options) {
+    this.issues = new IssueReporterGui();
+    this.listenTo(this, 'application:ready', function() {
+        this.issues.setup_ui();
+    });
+    this.listenTo(this, 'results:ready', function() {
+        this.issues.setup_ui();
+    });
+});
+
+// Data storage components
 opsChooserApp.addInitializer(function(options) {
     this.storage = new StoragePlugin();
 
@@ -1164,8 +1175,6 @@ opsChooserApp.addInitializer(function(options) {
         this.storage.setup_ui();
     });
 });
-
-// data storage
 opsChooserApp.addInitializer(function(options) {
 
     // Set driver (optional)

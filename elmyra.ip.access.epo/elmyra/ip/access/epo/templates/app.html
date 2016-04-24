@@ -9,6 +9,13 @@
 ## http://davidsulc.com/blog/2012/04/15/a-simple-backbone-marionette-tutorial/
 ## https://github.com/davidsulc/backbone.marionette-collection-example
 
+<script type="text/javascript" src="/static/js/lib/stacktrace.min.js"></script>
+% if request.registry.settings.get('ipsuite.production') == 'true':
+<script type="text/javascript" src="/static/js/issue-reporter.min.js"></script>
+% else:
+<script type="text/javascript" src="/static/js/issue-reporter.js"></script>
+% endif
+
 % if request.registry.settings.get('ipsuite.production') == 'true':
 <script type="text/javascript" src="/static/js/config.min.js"></script>
 % else:
