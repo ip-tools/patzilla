@@ -37,6 +37,13 @@ js:
 		--mangle --compress \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js
 
+	# issue reporter
+	node_modules/.bin/uglifyjs \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.js \
+		--preamble "// (c) 2013-2016 Elmyra UG - All rights reserved" \
+		--mangle --compress \
+		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.min.js
+
 	# url cleaner
 	node_modules/.bin/uglifyjs \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.js \
@@ -46,6 +53,7 @@ js:
 	git diff --quiet --exit-code || git commit \
 		Makefile \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js \
+		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.min.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js \
 		-uno --untracked-files=no \
 		--message='release: minify javascript resources'

@@ -16,6 +16,10 @@
     text-align: right;
 }
 
+.full-width {
+    width: 100%;
+}
+
 
 /*
 https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
@@ -275,6 +279,21 @@ ul.breathe li {
 
 
 /* modal boxes */
+
+.modal-not-rounded {
+    border-radius: 0;
+}
+
+.modal-warning .modal-header {
+    background-color: #f89406;
+    color: black;
+}
+
+.modal-info .modal-header {
+    background-color: #51a351;
+    color: white;
+}
+
 
 /* http://www.revillwebdesign.com/change-the-height-width-and-position-of-a-modal-in-twitter-bootstrap/ */
 

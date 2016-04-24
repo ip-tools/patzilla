@@ -3,6 +3,7 @@ recursive-include elmyra/ip/access/epo *.ico *.png *.css *.gif *.jpg *.svg *.pt 
 exclude elmyra/ip/access/epo/static/js/app/*.js
 exclude elmyra/ip/access/epo/static/js/app/**/*.js
 exclude elmyra/ip/access/epo/static/js/config.js
+exclude elmyra/ip/access/epo/static/js/issue-reporter.js
 exclude elmyra/ip/access/epo/templates/urlcleaner.js
 prune elmyra/ip/access/epo/static/js/components
 prune elmyra/ip/access/epo/static/js/ipsuite
