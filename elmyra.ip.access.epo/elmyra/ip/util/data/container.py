@@ -8,8 +8,11 @@ class SmartBunch(Bunch):
     def dump(self):
         return self.toJSON()
 
-    def prettify(self):
+    def pretty(self):
         return self.toJSON(indent=4)
+
+    def prettify(self):
+        return self.pretty()
 
     @classmethod
     def bunchify(cls, x):

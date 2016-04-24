@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 import re
 
 _slugify_strip_re = re.compile(r'[^\w\s-]')
@@ -29,3 +29,8 @@ def slugify(value, strip_equals=True, lowercase=True):
 
     value =  _slugify_hyphenate_re.sub('-', value)
     return value
+
+def text_indent(text, amount=4, ch=' '):
+    # https://stackoverflow.com/questions/8234274/how-to-indent-the-content-of-a-string-in-python/8348914#8348914
+    padding = amount * ch
+    return padding + ('\n' + padding).join(text.split('\n'))
