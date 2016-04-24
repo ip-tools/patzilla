@@ -43,6 +43,7 @@ Infrastructure
 - IFI: Propagate information about removal of patent family members from middleware to frontend
 - Improve placeholders for feature “Remove family members”
 - “Report problem” subsystem
+- Display: Introduce mini menu
 
 
 Bug fixes and minor updates

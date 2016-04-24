@@ -9,6 +9,8 @@ UiController = Marionette.Controller.extend({
 
     setup_ui: function() {
 
+        var _this = this;
+
         // ------------------------------------------
         //   generic
         // ------------------------------------------
@@ -44,8 +46,9 @@ UiController = Marionette.Controller.extend({
         //   online help
         // ------------------------------------------
 
-        // transform query: open modal dialog to choose transformation kind
-        $('.link-help').click(function() {
+        // Open help in modal dialog
+        $('.action-online-help').unbind('click');
+        $('.action-online-help').on('click', function() {
 
             // v1: modal dialog
             //$('#help-modal').modal('show');
@@ -57,7 +60,8 @@ UiController = Marionette.Controller.extend({
         });
 
 
-        $('.link-fullscreen').click(function() {
+        $('.action-fullscreen').unbind('click');
+        $('.action-fullscreen').click(function() {
             if (screenfull.enabled) {
                 screenfull.request();
             }

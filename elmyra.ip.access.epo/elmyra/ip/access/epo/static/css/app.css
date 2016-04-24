@@ -20,6 +20,10 @@
     width: 100%;
 }
 
+.icon-bars:before {
+    content: "\f0c9";
+}
+
 
 /*
 https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
