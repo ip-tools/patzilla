@@ -535,3 +535,41 @@
 
 </%text>
 </script>
+
+<%text>
+<!-- modal dialog for choosing clipboard content modifier -->
+<div id="clipboard-modifier-chooser" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="clipboard-modifier-chooser-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="clipboard-modifier-chooser-label">Query transformation</h3>
+    </div>
+    <div class="modal-body">
+        Transform newline-separated data to syntactically correct query.
+        <br/><br/>
+        <div class="btn-group btn-group-vertical">
+            <button class="btn btn-large btn-success btn-clipboard-modifier" data-modifier="num">
+                <strong>Number: Publication-, application- or priority number</strong>
+                <br/><br/>
+                <small>e.g. "num=DE102012220639A1 OR num=EP0666666A2 OR num=..."</small>
+            </button>
+            <button class="btn btn-large btn-warning btn-clipboard-modifier" data-modifier="txt">
+                <strong>Text: Title, abstract, inventor-, or applicant name</strong>
+                <br/><br/>
+                <small>e.g. "txt=siemens OR txt=alstom OR txt=..."</small>
+            </button>
+            <button class="btn btn-large btn-danger btn-clipboard-modifier" data-modifier="cl">
+                <strong>Class: CPC or IPC8 class</strong>
+                <br/><br/>
+                <small>e.g. "cl=H04L12/24 OR cl=H04L12/26 OR cl=..."</small>
+            </button>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons-radio">
+            <button class="btn active" type="button" data-value="OR">OR</button>
+            <button class="btn"        type="button" data-value="AND">AND</button>
+        </div>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
+</%text>
