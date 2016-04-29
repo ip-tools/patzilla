@@ -153,6 +153,7 @@ ProjectModel = Backbone.RelationalModel.extend({
     save: function(key, val, options) {
         // http://jstarrdewar.com/blog/2012/07/20/the-correct-way-to-override-concrete-backbone-methods/
         this.set('modified', now_iso());
+        //this.set('modified', now_iso(), {silent: true});
         return Backbone.Model.prototype.save.call(this, key, val, options);
     },
 
@@ -337,6 +338,15 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
+    },
+
+    render_attempt: function(item) {
+        // Suppress rendering if model is present but nothing actually changed
+        if (item && item.changed && _.isEmpty(item.changed)) {
+            log('ProjectChooserView: Skip rendering');
+            return;
+        }
+        return Backbone.Marionette.ItemView.prototype.render.call(this);
     },
 
     onDomRefresh: function() {
