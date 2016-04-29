@@ -113,7 +113,7 @@ ProjectModel = Backbone.RelationalModel.extend({
                 query_expression: search_info.query,
                 query_data: search_info.query_data,
                 created: now_iso(),
-                project: _this,
+                //project: _this,
             });
 
             // don't record the same queries multiple times

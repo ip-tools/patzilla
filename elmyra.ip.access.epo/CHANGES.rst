@@ -58,6 +58,7 @@ Bug fixes and minor updates
 - Improve document number decoder: Make it grok JP numbers like “JPWO2013186910A1”
 - Fix sorting of documents in subsearch- and numberlist-modes
 - Deactivate downvoting EP..A3 documents when displaying most recent publication
+- Stop saving reference to project in QueryModel, this has led to dereferenced ProjectModel objects sucking up localStorage space
 
 
 0.115.0
