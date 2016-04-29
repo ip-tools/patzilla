@@ -20,8 +20,8 @@
     <%text>
     <%
 
-    // 1. log model item to assist in data exploration
-    console.log(data);
+    // 1. debugging: log model item to assist in data exploration
+    //console.log('ops-item:', data);
 
 
     // 2.2 prepare some template variables
@@ -591,14 +591,14 @@
 
                     <div id="document-details-claims-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
                         <strong>Claims</strong> <span class="document-details-language"></span>
-                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin hide"></i>
+                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
                         <br/><br/>
                         <span class="document-details-content keyword"></span>
                     </div>
 
                     <div id="document-details-description-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
                         <strong>Description</strong> <span class="document-details-language"></span>
-                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin hide"></i>
+                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
                         <br/><br/>
                         <span class="document-details-content keyword"></span>
                     </div>
@@ -620,7 +620,7 @@
                             <% } %>
                         </div>
                         &nbsp;&nbsp;&nbsp;
-                        <i class="document-details-spinner icon-refresh icon-spin hide"></i>
+                        <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
                         <br/><br/>
                         <span class="document-details-content keyword"></span>
                     </div>

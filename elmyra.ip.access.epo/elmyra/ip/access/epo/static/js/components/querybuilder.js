@@ -834,10 +834,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             }
 
             if (query_data['modifiers']['order-past-first']) {
-                tags_html.push(this.html_history_tag('Past first', {name: 'pf', width: 'narrow'}));
+                tags_html.push(this.html_history_tag('First pub.', {name: 'pf', width: 'narrow'}));
             }
             if (query_data['modifiers']['order-recent-first']) {
-                tags_html.push(this.html_history_tag('Recent first', {name: 'rf', width: 'narrow'}));
+                tags_html.push(this.html_history_tag('Recent pub.', {name: 'rf', width: 'narrow'}));
             }
 
             if (query_data['modifiers']['family-remove']) {
