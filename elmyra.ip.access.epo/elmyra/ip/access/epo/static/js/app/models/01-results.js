@@ -18,7 +18,7 @@ ResultCollection = Backbone.Collection.extend({
             log('Make IFIClaimsResultEntry');
             return new IFIClaimsResultEntry(attrs, options);
         } else {
-            console.error('Could not create result model instance for upstream provider "' + attrs.upstream_provider + '"');
+            console.warn('Could not create result model instance for upstream provider "' + attrs.upstream_provider + '"');
         }
     },
 

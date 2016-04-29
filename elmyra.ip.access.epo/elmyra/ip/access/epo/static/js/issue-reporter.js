@@ -248,6 +248,11 @@ IssueReporterGui = Backbone.Model.extend({
             },
         });
 
+        var html = $($(options.element).data('report-html')).html();
+        if (html) {
+            issue.set('html', html);
+        }
+
         var spinner = $(options.element_spinner);
         var status_text = $(options.element_status);
         spinner.show();
@@ -256,7 +261,7 @@ IssueReporterGui = Backbone.Model.extend({
             spinner.hide();
             opsChooserApp.ui.user_alert(
                 'Report sent successfully. Thank you for giving feedback, ' +
-                    'we will get back to you on this issue.', 'success', status_text);
+                'we will get back to you on this issue.', 'success', status_text);
         }).fail(function() {
             spinner.hide();
             opsChooserApp.ui.user_alert(

@@ -2,9 +2,11 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
+from pyramid.httpexceptions import HTTPNotFound
 from pyramid.settings import asbool
 from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate
 from elmyra.ip.access.epo.services import propagate_keywords, cql_prepare_query
+from elmyra.ip.access.generic.exceptions import NoResultsException
 from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.python import _exception_traceback
 
@@ -84,8 +86,14 @@ def ops_published_data_search_handler(request):
     if invalidate:
         ops_published_data_search_invalidate(constituents, query, range)
 
-    result = ops_published_data_search(constituents, query, range)
-    propagate_keywords(request, query_object)
+    try:
+        result = ops_published_data_search(constituents, query, range)
+        propagate_keywords(request, query_object)
+
+    except NoResultsException as ex:
+        # Forward response to let the frontend recognize zero hits
+        request.response.status = HTTPNotFound.code
+        return ex.data
 
     log.info('query finished')
 

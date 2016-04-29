@@ -4,7 +4,6 @@
 # Cornice services for search provider "IFI Claims Direct"
 #
 import re
-import cgi
 import json
 import time
 import logging
@@ -14,8 +13,9 @@ from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from elmyra.ip.access.epo.services import cql_prepare_query, propagate_keywords
 from elmyra.ip.access.epo.services.util import request_to_options
+from elmyra.ip.access.generic.exceptions import NoResultsException, SearchException
 from elmyra.ip.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
-from elmyra.ip.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, SearchException, ificlaims_search, ificlaims_crawl
+from elmyra.ip.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl
 from elmyra.ip.access.ificlaims.expression import should_be_quoted, IFIClaimsGrammar, IFIClaimsExpression, rewrite_classes_ops
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.data.zip import zip_multi
@@ -116,6 +116,7 @@ def ificlaims_deliver_handler(request):
 
 # TODO: implement as JSON POST
 @ificlaims_published_data_search_service.get(accept="application/json")
+@ificlaims_published_data_search_service.post(accept="application/json")
 def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI Claims Direct"""
 
@@ -151,8 +152,7 @@ def ificlaims_published_data_search_handler(request):
     options = SmartBunch()
     options.update({
         'limit': limit,
-        'offset_local': offset_local,
-        'offset_remote': offset_remote,
+        'offset': offset_remote,
     })
 
     # Propagate request parameters to search options parameters
@@ -164,33 +164,31 @@ def ificlaims_published_data_search_handler(request):
         return data
 
     except LoginException as ex:
-        request.errors.add('IFI', 'login', ex.details)
-
-    except SearchException as ex:
-        message = {'user': '', 'details': ''}
-        message_parts = []
-        if hasattr(ex, 'user_info'):
-            #message_parts.append(ex.user_info)
-            message['user'] = ex.user_info
-        if hasattr(ex, 'message'):
-            message_parts.append(cgi.escape(ex.__class__.__name__ + ': ' + unicode(ex.message)))
-        if hasattr(ex, 'details'):
-            message_parts.append('<pre>{details}</pre>'.format(details=cgi.escape(ex.details)))
-
-        message['details'] = '<br/>'.join(message_parts)
-
-        request.errors.add('IFI', 'search', message)
+        request.errors.add('ificlaims-search', 'login', ex.details)
+        log.warn(request.errors)
 
     except SyntaxError as ex:
-        request.errors.add('IFI', 'query', unicode(ex.msg))
+        request.errors.add('ificlaims-search', 'expression', unicode(ex.msg))
+        log.warn(request.errors)
+
+    except SearchException as ex:
+        message = ex.get_message()
+        request.errors.add('ificlaims-search', 'search', message)
+        log.warn(request.errors)
+
+    except NoResultsException as ex:
+        # Forward response to let the frontend recognize zero hits
+        request.response.status = HTTPNotFound.code
+        return ex.data
 
     except OperationFailure as ex:
-        log.error(ex)
         message = unicode(ex)
-        request.errors.add('IFI', 'internals', message)
+        request.errors.add('ificlaims-search', 'internals', message)
+        log.error(request.errors)
 
 
 @ificlaims_published_data_crawl_service.get(accept="application/json")
+@ificlaims_published_data_crawl_service.post(accept="application/json")
 def ificlaims_published_data_crawl_handler(request):
     """Crawl published-data at IFI Claims Direct"""
 
@@ -212,5 +210,6 @@ def ificlaims_published_data_crawl_handler(request):
         return result
 
     except Exception as ex:
-        log.error(u'IFI Claims crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
-        request.errors.add('ificlaims-published-data-crawl', 'query', str(ex))
+        request.errors.add('ificlaims-crawl', 'crawl', unicode(ex))
+        log.error(request.errors)
+        log.error(u'query="{0}", exception:\n{1}'.format(query, _exception_traceback()))

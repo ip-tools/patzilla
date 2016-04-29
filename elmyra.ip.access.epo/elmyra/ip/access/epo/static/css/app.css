@@ -12,6 +12,10 @@
     font-size: large;
 }
 
+.text-larger {
+    font-size: larger;
+}
+
 .text-align-right {
     text-align: right;
 }
@@ -251,6 +255,11 @@ ul.breathe li {
 }
 
 
+/* iframe for upstream errors in html */
+#error-iframe {
+    width: 100%;
+    height: 20em;
+}
 
 
 /* cql field chooser */

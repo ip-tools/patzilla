@@ -358,16 +358,16 @@ BasketModel = Backbone.RelationalModel.extend({
                     success: function() {
                         deferred.resolve(entry);
                     },
-                    error: function() {
+                    error: function(e) {
                         // HACK: sometimes, the item has vanished while fetching from store, so let's recreate it
-                        console.log('error while fetching basket entry:', entry);
+                        console.warn('Error while fetching basket entry:', e, entry);
                         entry.save(null, {
                             success: function() {
-                                console.log('success');
+                                console.log('Success when re-saving basket entry');
                                 deferred.resolve(entry);
                             },
                             error: function() {
-                                console.log('error');
+                                console.warn('Error when re-saving basket entry');
                                 deferred.resolve(entry);
                             },
                         });

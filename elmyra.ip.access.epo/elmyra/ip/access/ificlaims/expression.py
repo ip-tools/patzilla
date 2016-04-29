@@ -252,6 +252,9 @@ def rewrite_classes_ops(query_object):
     expression ast from IFI format to OPS format
     """
 
+    if not query_object:
+        return
+
     def triple_callback(token, index, binop, term):
 
         if index in ['ic', 'cpc']:

@@ -50,7 +50,7 @@ function normalize_numberlist(payload) {
                 deferred.reject();
             }
         }).error(function(xhr, settings) {
-            opsChooserApp.ui.propagate_alerts(xhr);
+            opsChooserApp.ui.propagate_backend_errors(xhr);
             deferred.reject();
         });
     return deferred.promise();

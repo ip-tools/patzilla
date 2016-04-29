@@ -115,29 +115,23 @@ UiController = Marionette.Controller.extend({
         }
     },
 
-    propagate_alerts: function(xhr, options) {
+    propagate_backend_errors: function(xhr, options) {
+
+        options = options || {};
+
+        log('propagate_backend_errors');
 
         $('#alert-area').empty();
         try {
             var response = jQuery.parseJSON(xhr.responseText);
-            if (response['status'] == 'error') {
-                _.each(response['errors'], function(error) {
-                    // Unwrap rich description
-                    if (_.isObject(error.description)) {
-                        error.details = error.description.details;
-                        error.description = error.description.user;
-                    }
-                    var tpl = _.template($('#cornice-error-template').html());
-                    var alert_html = tpl(error);
-                    $('#alert-area').append(alert_html);
-                });
-                $(".very-short").shorten({showChars: 0, moreText: 'more', lessText: 'less'});
-            }
 
-        // SyntaxError when decoding from JSON fails
         // Display detailed data from XHR response
         } catch (err) {
 
+            console.error('Problem while propagating backend alerts:', err);
+
+            // If decoding from JSON fails, make up a JSON error in
+            // cornice-compatible format from XHR response information
             var error = {
                 'location': 'unknown',
                 'name': xhr.statusText,
@@ -147,14 +141,83 @@ UiController = Marionette.Controller.extend({
                     'status_code': xhr.status,
                     'url': xhr.requestUrl || options.url,
                 }
-            }
+            };
 
-            var tpl = _.template($('#backend-error-template').html());
-            var alert_html = tpl(error);
-            $('#alert-area').append(alert_html);
+            var response = {
+                'status': 'error',
+                'errors': [error],
+            };
 
         }
 
+        return this.propagate_cornice_errors(response);
+
+    },
+
+    propagate_cornice_errors: function(response) {
+        log('propagate_cornice_errors');
+        var _this = this;
+        if (response['status'] == 'error') {
+            _.each(response['errors'], function(error) {
+
+                console.error('Backend error:', error);
+
+                if (_.isString(error.description)) {
+                    var tpl = _.template($('#cornice-error-template').html(), null, {variable: 'error'});
+                    //error.description = {content: error.description};
+
+                } else if (_.isObject(error.description)) {
+
+                    // Flavor 1: Handle objects with error.description.content
+                    // Convert simple error format to detailed error format
+                    if (error.description.content) {
+                        var tpl = _.template($('#backend-error-template').html());
+                        error.description = error.description || {};
+                        _(error.description).defaults({headers: {}});
+
+                    // Flavor 2: Handle objects with error.description.details
+                    // Unwrap rich description
+                    } else {
+                        var tpl = _.template($('#cornice-error-template').html(), null, {variable: 'error'});
+                        error.details = error.description.details;
+                        error.description = error.description.user;
+
+                    }
+
+                }
+
+                // Build error content and display in alert box
+                var alert_html = tpl(error);
+                $('#alert-area').append(alert_html);
+
+                // Display text/html error responses from OPS inside iframe
+                var html_error = $('#error-iframe').text();
+                if (html_error) {
+                    if (_.string.contains(html_error, 'OPS')) {
+                        var base_href = '<base href="https://ops.epo.org/" />';
+                        html_error = html_error.replace('<head>', '<head>' + base_href);
+                    }
+                    _this.iframe_write('error-iframe', html_error);
+                }
+
+            });
+            $('.very-short').shorten({showChars: 0, moreText: 'more', lessText: 'less'});
+            return true;
+        }
+        return false;
+    },
+
+    iframe_write: function(element_id, content) {
+        var iframe = document.getElementById(element_id);
+        iframe = iframe.contentWindow || (iframe.contentDocument.document || iframe.contentDocument);
+        iframe.document.open();
+        iframe.document.write(content);
+        iframe.document.close();
+    },
+
+    no_results_alert: function(search_info) {
+        var msg = _.template($('#no-results').html())(search_info);
+        this.user_alert(msg, 'warning');
     },
 
     do_element_visibility: function() {

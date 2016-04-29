@@ -91,12 +91,14 @@ class OpsOAuth2Session(OAuth2Session):
 
             return response
 
-        except (ConnectionError, OAuth2Error) as ex:
-            ex.url = None
-            if hasattr(ex, 'uri'):
-                ex.url = ex.uri
+        except OAuth2Error as ex:
+            ex.url = ex.uri
             ex.content = ex.description
-            logger.error('OpsOAuth2Session {0} {1}. client_id={2}'.format(ex.__class__.__name__, ex.description, self.client_id))
+            logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex.description, self.client_id))
+            return ex
+
+        except ConnectionError as ex:
+            logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex, self.client_id))
             return ex
 
 

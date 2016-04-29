@@ -1003,7 +1003,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var button_family_remove_replace = container.find("button[id='btn-family-remove'],button[id='btn-family-replace']");
         if (_(['depatisnet']).contains(datasource)) {
             button_family_remove_replace.show();
-        } else if (_(['ifi']).contains(datasource)) {
+        } else if (_(['ftpro', 'ifi']).contains(datasource)) {
             button_family_remove_replace.hide();
             button_family_remove.show();
         } else {
@@ -1155,9 +1155,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         modifier_buttons_selector += ',[data-name="order-past-first"]';
         modifier_buttons_selector += ',[data-name="order-recent-first"]';
 
-        if (_(['depatisnet', 'ifi']).contains(datasource)) {
+        if (_(['depatisnet']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-remove"]';
             modifier_buttons_selector += ',[data-name="family-replace"]';
+        }
+        if (_(['ftpro', 'ifi']).contains(datasource)) {
+            modifier_buttons_selector += ',[data-name="family-remove"]';
         }
         if (_(['ftpro']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-full"]';
@@ -1392,7 +1395,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 deferred.resolve('', '[]');
             }
         }).error(function(xhr, settings) {
-            opsChooserApp.ui.propagate_alerts(xhr);
+            opsChooserApp.ui.propagate_backend_errors(xhr);
             deferred.reject();
         });
         return deferred.promise();

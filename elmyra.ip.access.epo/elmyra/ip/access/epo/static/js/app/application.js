@@ -92,58 +92,71 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
 
         var self = this;
+        var _this = this;
 
+        // OPS is the main data source for bibliographic data.
+        // It is used for all things display.
         if (datasource == 'ops') {
             var range = this.compute_range(options);
-            this.trigger('search:before', _(search_info).extend({range: range}));
+            search_info.range = range;
+            this.trigger('search:before', search_info);
 
             var engine = opsChooserApp.search;
-            engine.perform(this.documents, this.metadata, query, range).done(function() {
+            engine.perform(this.documents, this.metadata, query, range).then(function() {
+
+                _this.trigger('search:success', search_info);
 
                 var hits = self.metadata.get('result_count');
-                if (hits > self.metadata.get('maximum_results')['ops']) {
-                    self.ui.user_alert('Total hits: ' + hits + '.    ' +
+                if (hits == 0) {
+                    _this.ui.no_results_alert(search_info);
+
+                } else if (hits > self.metadata.get('maximum_results')['ops']) {
+                    _this.ui.user_alert('Total hits: ' + hits + '.    ' +
                         'The first 2000 hits are accessible from OPS.  ' +
                         'You can narrow your search by adding more search criteria.', 'warning');
                 }
 
                 // propagate keywords
                 log('engine.keywords:', engine.keywords);
-                self.metadata.set('keywords', engine.keywords);
+                _this.metadata.set('keywords', engine.keywords);
 
                 // signal the results are ready
-                self.trigger('results:ready');
+                _this.trigger('results:ready');
+
+            }).fail(function(xhr) {
+
+                _this.trigger('search:failure', search_info);
+
+                if (xhr.status == 404) {
+
+                    // Propagate zero result count
+                    _this.metadata.set('result_count', 0);
+
+                    // Display "No results" notification
+                    _this.ui.no_results_alert(search_info);
+
+                }
+
+                // signal the results are ready
+                _this.trigger('results:ready');
 
             });
 
+        // Auxilliary data sources are used for searching
         } else if (datasource == 'depatisnet') {
-
-            this.trigger('search:before', search_info);
-
-            // make the pager display the original query
-            this.metadata.set('query_origin', query);
-
             var engine = new DepatisnetSearch();
-            engine.perform(query, options).done(function(response) {
+            search_info.engine = engine;
+            return this.generic_search(search_info, options);
 
-                self.propagate_datasource_message(response);
+        } else if (datasource == 'ftpro') {
+            var engine = new FulltextProSearch();
+            search_info.engine = engine;
+            return this.generic_search(search_info, options);
 
-                // propagate keywords
-                log('engine.keywords:', engine.keywords);
-                self.metadata.set('keywords', engine.keywords);
-
-                // debugging
-                console.log('depatisnet response:', response);
-
-                var publication_numbers = response['numbers'];
-                var hits = response['hits'];
-
-                self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-                    // need to propagate again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                    self.propagate_datasource_message(response, options);
-                });
-
-            });
+        } else if (datasource == 'ifi') {
+            var engine = new IFIClaimsSearch();
+            search_info.engine = engine;
+            return this.generic_search(search_info, options);
 
         } else if (datasource == 'google') {
 
@@ -156,11 +169,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             engine.perform(query, options).done(function(response) {
                 options = options || {};
 
-                self.propagate_datasource_message(response);
+                _this.trigger('search:success', search_info);
+
+                _this.propagate_datasource_message(response);
 
                 // propagate keywords
                 log('engine.keywords:', engine.keywords);
-                self.metadata.set('keywords', engine.keywords);
+                _this.metadata.set('keywords', engine.keywords);
 
                 // debugging
                 console.log('google response:', response);
@@ -177,16 +192,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
 
                         // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                        self.propagate_datasource_message(response);
+                        _this.propagate_datasource_message(response);
 
                         if (hits == null) {
-                            self.ui.user_alert(
+                            _this.ui.user_alert(
                                 'Result count unknown. At Google Patents, sometimes result counts are not displayed. ' +
                                 "Let's assume 1000 to make the paging work.", 'warning');
                         }
 
-                        if (hits > self.metadata.get('maximum_results')['google']) {
-                            self.ui.user_alert(
+                        if (hits > _this.metadata.get('maximum_results')['google']) {
+                            _this.ui.user_alert(
                                 'Total results ' + hits + '. From Google Patents, the first 1000 results are accessible. ' +
                                 'You might want to narrow your search by adding more search criteria.', 'warning');
                         }
@@ -195,69 +210,72 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             });
 
-        } else if (datasource == 'ftpro') {
-
-            this.trigger('search:before', search_info);
-
-            // make the pager display the original query
-            this.metadata.set('query_origin', query);
-
-            var engine = new FulltextProSearch();
-            engine.perform(query, options).done(function(response) {
-                options = options || {};
-
-                console.log('ftpro response:', response);
-
-                self.propagate_datasource_message(response);
-
-                // propagate keywords
-                log('engine.keywords:', engine.keywords);
-                self.metadata.set('keywords', engine.keywords);
-
-                var publication_numbers = response['details'];
-                var hits = response['meta']['MemCount']; // + '<br/>(' + response['meta']['DocCount'] + ')';
-                options['remote_limit'] = response['meta']['Limit'];
-
-                self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-                    // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                    self.propagate_datasource_message(response, options);
-                });
-
-            });
-
-        } else if (datasource == 'ifi') {
-
-            this.trigger('search:before', search_info);
-
-            // make the pager display the original query
-            this.metadata.set('query_origin', query);
-
-            var engine = new IFIClaimsSearch();
-            engine.perform(query, options).done(function(response) {
-                options = options || {};
-
-                console.log('ifi response:', response);
-
-                self.propagate_datasource_message(response);
-
-                // propagate keywords
-                log('engine.keywords:', engine.keywords);
-                self.metadata.set('keywords', engine.keywords);
-
-                var publication_numbers = response['details'];
-                var hits = response['meta']['pager']['totalEntries'];
-                options['remote_limit'] = response['meta']['Limit'];
-
-                self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-                    // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                    self.propagate_datasource_message(response, options);
-                });
-
-            });
-
         } else {
             this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'icon-search'});
         }
+
+    },
+
+    generic_search: function(search_info, options) {
+
+        this.trigger('search:before', search_info);
+
+        var engine = search_info.engine;
+        var query = search_info.query;
+
+        // make the pager display the original query
+        this.metadata.set('query_origin', query);
+
+        var _this = this;
+        return engine.perform(query, options).then(function(response) {
+            options = options || {};
+
+            _this.trigger('search:success', search_info);
+
+            log('upstream response:', response);
+            log('engine.keywords:', engine.keywords);
+
+            // Propagate information from backend to user interface
+            // Message and Keywords
+            _this.propagate_datasource_message(response);
+            _this.metadata.set('keywords', engine.keywords);
+
+            // Propagate page control parameters to listsearch
+            var hits = response.meta.navigator.count_total;
+            options['remote_limit'] = response.meta.navigator.limit;
+
+            // Propagate search results to listsearch
+            var publication_numbers = response['details'];
+
+            // Perform list search. Currently in buckets of 10.
+            _this.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').always(function() {
+                // Propagate upstream message again, because "perform_listsearch" currently clears it
+                // TODO: enhance mechanics!
+                _this.propagate_datasource_message(response, options);
+            });
+
+        }).fail(function(xhr) {
+
+            _this.trigger('search:failure', search_info);
+
+            if (xhr.status == 404) {
+
+                // Propagate zero result count
+                _this.metadata.set('result_count', 0);
+
+                // Display "No results" notification
+                _this.ui.no_results_alert(search_info);
+
+            } else {
+                // TODO: Propagate to frontend. Use "ui.user_alert" or "ui.propagate_cornice_errors"?
+                console.error('Generic data search failed:', xhr);
+            }
+
+            // Signal the results are ready to run other ui setup tasks
+            // e.g. Report issue machinery
+            _this.trigger('results:ready');
+
+        });
 
     },
 
@@ -269,12 +287,19 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
     },
 
-    // perform ops search and process response
+
+    // Perform ops search and process response
     perform_listsearch: function(options, query_origin, entries, hits, field, operator) {
 
         options = options || {};
 
+        // Debugging
+        /*
         log('perform_listsearch.options:', options);
+        log('perform_listsearch.query:  ', query_origin);
+        log('perform_listsearch.entries:', entries);
+        log('perform_listsearch.hits:   ', hits);
+        */
 
         //this.set_datasource('ops');
 
@@ -282,6 +307,22 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.ui.reset_content();
         //this.ui.reset_content({keep_pager: true, documents: true});
 
+        if (_.isEmpty(entries)) {
+
+            console.warn('Empty entries when performing listsearch at OPS');
+
+            // Display "No results" warning
+            var datasource = options.datasource || options.query_data.datasource;
+            this.ui.no_results_alert({datasource: datasource, query: query_origin});
+
+            // Signal the results are (not) ready
+            this.trigger('results:ready');
+
+            // Return something async void
+            var deferred = $.Deferred();
+            deferred.resolve();
+            return deferred.promise();
+        }
 
         // compute slice values
         var range = options && options.range ? options.range : '1-10';
@@ -300,6 +341,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
         console.log('local slices:', sstart, ssend);
 
+        // TODO: Get rid of this!?
         if (entries && (entries.length == 0 || sstart > entries.length)) {
 
             var deferred = $.Deferred();
@@ -324,7 +366,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             try {
                 this.results.reset(entries_sliced);
             } catch (ex) {
-                console.error('Problem propagating data to results collection', ex);
+                console.warn('Problem propagating data to results collection:', ex);
                 //throw(ex);
             }
         } else {
@@ -380,19 +422,19 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.documents_apply_comparator(publication_numbers);
 
         //var range = this.compute_range(options);
-        return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10', {silent: true}).done(function() {
+        return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10', {silent: true}).always(function() {
 
             // ------------------------------------------
             //   metadata propagation
             // ------------------------------------------
 
-            // show the original query
+            // Display original query
             self.metadata.set('query_origin', query_origin);
 
-            // show the original result size
+            // Override with original result count
             self.metadata.set('result_count', hits);
 
-            // amend the current result range and paging parameter
+            // Amend result range and paging parameter
             self.metadata.set('result_range', range);
 
             // FIXME: WTF - 17?
@@ -710,9 +752,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         log('propagate_datasource_message');
 
         // Generic backend message
-        if (_.isObject(response.user_info)) {
-            this.ui.user_alert(response.user_info.message, response.user_info.kind);
-        } else if (response.message) {
+        var bucket = undefined;
+        response && response.navigator && (bucket = response.navigator.user_info);
+        if (_.isObject(bucket)) {
+            this.ui.user_alert(bucket.message, bucket.kind);
+
+        } else if (_.isString(bucket)) {
+            this.ui.user_alert(bucket, 'info');
+        }
+
+        if (response.message) {
             this.ui.user_alert(response.message, 'warning');
         }
 
@@ -727,7 +776,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // 1. Feature "Remove family members"
         var meta = response.meta;
-        if (meta.navigator && meta.navigator.postprocess.action == 'feature_family_remove') {
+        if (meta && meta.navigator && meta.navigator.postprocess && meta.navigator.postprocess.action == 'feature_family_remove') {
 
             // How many documents have actually been removed on this result page?
             var count_removed = meta.navigator.postprocess.info.removed;
@@ -754,7 +803,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 family_members_removed: response.navigator.family_members.removed,
                 chunksize: meta.navigator.limit,
             };
-            var info_body = _.template($('#family-members-removed-information-template').html(), tpldata, {variable: 'data'});
+
+            if (count_removed > 0) {
+                var info_body = _.template($('#family-members-removed-some-template').html(), tpldata, {variable: 'data'});
+            } else {
+                var info_body = _.template($('#family-members-removed-none-template').html(), tpldata, {variable: 'data'});
+            }
             this.ui.user_alert(info_body, 'info');
 
             // Display additional information when reaching empty result pages
@@ -809,8 +863,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.project = project;
 
         // set hook to record all queries
-        this.stopListening(this, 'search:before');
-        this.listenTo(this, 'search:before', function(arguments) {
+        this.stopListening(this, 'search:success');
+        this.listenTo(this, 'search:success', function(arguments) {
             project.record_query(arguments);
         });
 
@@ -1093,8 +1147,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         this.basketModel.add(document_number).then(function(item) {
 
-            item.save({seen: true}, {
+            item.set('seen', true);
+            //item.set('seen', true, { silent: true });
+
+            item.save(null, {
                 success: function() {
+
+                    //console.info('"seen" save success', document_number, item);
 
                     // don't backpropagate in realtime, this would probably immediately color the document gray
                     //_this.basketModel.trigger('change:rate', item, document_number);

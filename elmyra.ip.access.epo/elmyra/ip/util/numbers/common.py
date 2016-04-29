@@ -19,9 +19,10 @@ class DocumentIdentifierBunch(SmartBunch):
         return self.dump()
 
 def join_patent(patent):
-    if patent:
-        number = patent['country'] + patent['number'] + patent.get('kind', '')
-        return number
+    if not patent:
+        return
+    number = patent['country'] + patent['number'] + patent.get('kind', '')
+    return number
 
 def decode_patent_number(patent):
     if isinstance(patent, types.StringTypes):

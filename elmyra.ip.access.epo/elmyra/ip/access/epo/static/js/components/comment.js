@@ -286,7 +286,7 @@ CommentsPlugin = Marionette.Controller.extend({
 
     comment_factory: function(itemview) {
         var project = opsChooserApp.project;
-        log('comment_factory using project:', project);
+        //log('comment_factory using project:', project);
         return new CommentManager({
             collection: this.store,
             project: project,
