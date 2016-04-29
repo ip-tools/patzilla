@@ -138,7 +138,7 @@ def split_patent_number(patent_number):
         return dib
 
     else:
-        log.error('Could not parse patent number "{0}"'.format(patent_number))
+        log.error(u'Could not parse patent number "{0}"'.format(patent_number))
 
 
 def split_patent_number_more(patent):
