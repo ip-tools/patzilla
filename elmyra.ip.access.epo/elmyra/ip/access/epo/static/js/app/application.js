@@ -301,7 +301,17 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         log('perform_listsearch.hits:   ', hits);
         */
 
+
+        // querying by single document numbers has a limit of 10 at OPS
+        var page_size = 10;
+        this.metadata.set('page_size', page_size);
+        options.local_limit = page_size;
+
+        // set parameter to control subsearch
+        this.metadata.set('searchmode', 'subsearch');
+
         //this.set_datasource('ops');
+
 
         this.ui.indicate_activity(false);
         this.ui.reset_content();
@@ -323,6 +333,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             deferred.resolve();
             return deferred.promise();
         }
+
 
         // compute slice values
         var range = options && options.range ? options.range : '1-10';
@@ -357,11 +368,56 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         }
 
+        // ------------------------------------------
+        //   metadata propagation
+        // ------------------------------------------
+        var _this = this;
+        var propagate_metadata = function() {
+
+            // Display original query
+            _this.metadata.set('query_origin', query_origin);
+
+            // Override with original result count
+            _this.metadata.set('result_count', hits);
+
+            // Amend result range and paging parameter
+            _this.metadata.set('result_range', range);
+
+            // FIXME: WTF - 17?
+            _this.metadata.set('pagination_entry_count', 17);
+
+        };
+
+
         // result entries to display
         var entries_sliced = entries.slice(sstart, ssend);
+        //log('entries_sliced:', entries_sliced);
+
+        // Propagate local hit count
+        options.local_hits = entries_sliced.length;
+
+
+        // If there are no results after slicing, skip searching at OPS,
+        // but pretend by making up metadata in the same way.
+        if (_.isEmpty(entries_sliced)) {
+
+            console.warn('Empty sliced entries when performing listsearch at OPS');
+
+            propagate_metadata();
+
+            this.documents.reset();
+
+            // Signal the results are (not) ready
+            this.trigger('results:ready');
+
+            // Return something async void
+            var deferred = $.Deferred();
+            deferred.resolve();
+            return deferred.promise();
+        }
+
 
         // propagate to generic result collection view
-        //log('entries_sliced:', entries_sliced);
         if (!_.isEmpty(entries_sliced) && _.isObject(entries_sliced[0])) {
             try {
                 this.results.reset(entries_sliced);
@@ -385,6 +441,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
         //log('publication_numbers:', publication_numbers);
 
+
         // compute query expression to display documents from OPS
         var query_ops_constraints = _(_.map(publication_numbers, function(publication_number) {
             if (publication_number) {
@@ -402,16 +459,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         //$('#query').val(query_origin);
 
-        // querying by single document numbers has a limit of 10 at OPS
-        var page_size = 10;
-        this.metadata.set('page_size', page_size);
-        options.local_limit = page_size;
-
-        // set parameter to control subsearch
-        this.metadata.set('searchmode', 'subsearch');
-
-        // Propagate local hit count
-        options.local_hits = publication_numbers.length;
 
         // for having a reference to ourselves in nested scopes
         var self = this;
@@ -427,18 +474,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // ------------------------------------------
             //   metadata propagation
             // ------------------------------------------
-
-            // Display original query
-            self.metadata.set('query_origin', query_origin);
-
-            // Override with original result count
-            self.metadata.set('result_count', hits);
-
-            // Amend result range and paging parameter
-            self.metadata.set('result_range', range);
-
-            // FIXME: WTF - 17?
-            self.metadata.set('pagination_entry_count', 17);
+            propagate_metadata();
 
 
             // ------------------------------------------
