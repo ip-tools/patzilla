@@ -104,10 +104,12 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                                 // downvote EP..A3 documents
                                 //log('exchange_documents:', exchange_documents);
+                                /*
                                 var document_id = exchange_documents[0].document_id;
                                 if (document_id['country'] == 'EP' && document_id['kind'] == 'A3') {
                                     _.move(exchange_documents, 0, 1);
                                 }
+                                */
                             }
                         }
 
