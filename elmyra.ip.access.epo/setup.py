@@ -129,13 +129,21 @@ setup(name='elmyra.ip.access.epo',
       test_suite='nose.collector',
       install_requires=requires,
       tests_require=test_requires,
+
       dependency_links=[
         'https://github.com/elmyra-org/js.marionette/tarball/1.1.0a2#egg=js.marionette-1.1.0a2',
       ],
-      entry_points="""\
-      [paste.app_factory]
-      main = elmyra.ip.access.epo:main
-      [beaker.backends]
-      mongodb = elmyra.ip.util.database.beaker_mongodb:MongoDBNamespaceManager
-      """,
-      )
+
+      entry_points={
+        'paste.app_factory': [
+            'main = elmyra.ip.access.epo:main',
+            ],
+        'beaker.backends': [
+            'mongodb = elmyra.ip.util.database.beaker_mongodb:MongoDBNamespaceManager',
+            ],
+        'console_scripts': [
+            'navigator-clean-browser-db = elmyra.ip.navigator.commands:clean_browser_database',
+            ],
+        },
+
+    )

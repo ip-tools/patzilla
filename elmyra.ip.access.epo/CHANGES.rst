@@ -45,6 +45,7 @@ Infrastructure
 - “Report problem” subsystem and user interface
 - Display: Introduce mini menu
 - Unify response data- and error-channels amongst all data sources
+- Add commandline tool for cleaning the IP Suite Navigator Browser database
 
 
 Bug fixes and minor updates
