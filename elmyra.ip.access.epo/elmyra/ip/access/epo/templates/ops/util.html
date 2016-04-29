@@ -6,15 +6,19 @@
     <%
     var accordion_id = _.uniqueId('ops-placeholder-accordion-');
     var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
-    var document_number = data.get_patent_number();
+    var document_number = model.get_document_number();
     var metadata = opsChooserApp.metadata;
+    var has_alternatives = !_.isEmpty(model.get('alternatives_local'));
+    var button_not_available_style = has_alternatives ? 'btn-default' : 'btn-danger';
+
+    var linkmaker = model.linkmaker;
     %>
     <div class="ops-collection-entry-inner container-fluid">
         <div class="row-fluid">
             <div class="span12">
                 <div class="hero-unit">
 
-                    <% if (_.isEmpty(data['alternatives_local'])) { %>
+                    <% if (!has_alternatives) { %>
                     <h4>Document "<%= document_number %>" not available</h4>
                     <p>
                         Sometimes a data source delivers search results of brand new patent applications or grants,
@@ -23,9 +27,16 @@
                         For some offices, it is just due to lack of coverage.
 
                         Make sure to check the full document as PDF
-                        <button class="btn btn-small">
+
+                        <!-- pdf document -->
+                        <a href="<%= linkmaker.universal_pdf_url() %>" target="ipsuite-pdf"
+                           class="btn btn-small btn-popover anchor-pdf" role="button"
+                           data-toggle="popover" data-trigger="hover" data-placement="top"
+                           data-content="PDF: <%= document_number %>"
+                                >
                             <%= opsChooserApp.ui.pdf_icon() %>
-                        </button>
+                        </a>
+
                         as well as the collection of links to external
                         data sources
                         <button class="btn btn-small">
@@ -40,15 +51,15 @@
                     <% } else { %>
                     <h4>Document representation "<%= document_number %>" not in result list</h4>
                     <p>
-                        Please check alternative representations listed below or enable the
+                        Please check alternative representations or enable the
                         <button class="btn btn-small">
                             <i class="icon-repeat"></i>
                             Full cycle
                         </button>
                         mode to display all available kindcode variants.
-                        <ul>
+                        <ul class="text-larger">
                             <%
-                            _.each(data['alternatives_local'], function(alternative) {
+                            _.each(model.get('alternatives_local'), function(alternative) {
                             %>
                             <li>
                                 <a href="javascript: opsChooserApp.ui.scroll_to_document('<%= alternative %>');">
@@ -69,7 +80,7 @@
                             Learn more
                         </button>
                         <button
-                                class="btn btn-danger report-issue-problem"
+                                class="btn <%= button_not_available_style %> report-issue-problem"
                                 data-report-origin="document"
                                 data-report-kind="not-available"
                                 data-report-item="<%= document_number %>"
@@ -90,8 +101,8 @@
                             <li>
                                 <h4 class="inline-head">Search mode</h4>
                                 <br/>
-                                The specific kindcode <strong>"<%= data['@kind'] %>"</strong> for the requested
-                                document <strong>"<%= data['@country'] %><%= data['@doc-number'] %>"</strong> is not listed,
+                                The specific kindcode <strong>"<%= model.get('@kind') %>"</strong> for the requested
+                                document <strong>"<%= model.get('@country') %><%= model.get('@doc-number') %>"</strong> is not listed,
                                 because another representative document was selected for display,
                                 maybe by using specific search mode or modifiers.
                                 <br/>

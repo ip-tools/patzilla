@@ -11,6 +11,7 @@ from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
+from elmyra.ip.access.generic.exceptions import NoResultsException
 from elmyra.ip.util.numbers.common import decode_patent_number
 
 log = logging.getLogger(__name__)
@@ -73,16 +74,25 @@ def ops_published_data_search(constituents, query, range):
     #print "response:", response
     #print "response body:", response.content
 
+    pointer_total_count = JsonPointer('/ops:world-patent-data/ops:biblio-search/@total-result-count')
 
     if response.status_code == 200:
         #print "content-type:", response.headers['content-type']
         if response.headers['content-type'] == 'application/json':
-            return response.json()
-        else:
-            return
-    else:
-        response = handle_error(response, 'ops-published-data-search')
-        raise response
+
+            # Decode OPS response from JSON
+            ops_response = response.json()
+
+            # Raise an exception on empty results to skip caching this response
+            count_total = int(pointer_total_count.resolve(ops_response))
+            if count_total == 0:
+                raise NoResultsException('No results', data=ops_response)
+
+            return ops_response
+
+
+    response = handle_error(response, 'ops-search')
+    raise response
 
 def ops_published_data_search_invalidate(constituents, query, range):
     region_invalidate(ops_published_data_search, None, 'ops_search', constituents, query, range)
@@ -536,15 +546,20 @@ def ops_register(reference_type, document_number, constituents):
         raise response
 
 
-def handle_error(response, name):
+def handle_error(response, location):
     request = get_current_request()
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
     response_dict['url'] = response_dict['url'].replace(ops_service_url, '')
 
+    # Compute name
+    name = 'http-response'
+    if 'CLIENT.CQL' in response_dict['content']:
+        name = 'expression'
+
     if 'SERVER.DomainAccess' in response_dict['content']:
         response_dict['content'] += '<br/><br/>The OPS API might be in maintenance mode, this happens regularly at 05:00 hours CEST.'
 
-    request.errors.add(name, 'http-response', response_dict)
+    request.errors.add(location, name, response_dict)
 
     response_json = json_error(request.errors)
     response_json.status = response.status_code

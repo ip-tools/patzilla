@@ -14,87 +14,86 @@ Normalize patent- and document-numbers.
 
 def patch_patent(patent):
 
-    if patent:
-        patched = patent.copy()
+    if not patent:
+        return
 
-        # strip leading zeros of *publication* to 6 digits, if seqnumber is longer than 6 digits
-        # examples: publication: AT401234; application: AT 967/1994 => AT96794
-        if patched['country'] == 'AT':
-            """
-            if len(patched['number']) > 6 and not '/' in patched['number']:
-                patched['number'] = trim_leading_zeros(patched['number'])
-                patched['number'] = pad_left(patched['number'], '0', 6)
-            """
+    patched = patent.copy()
+
+    # strip leading zeros of *publication* to 6 digits, if seqnumber is longer than 6 digits
+    # examples: publication: AT401234; application: AT 967/1994 => AT96794
+    if patched['country'] == 'AT':
+        """
+        if len(patched['number']) > 6 and not '/' in patched['number']:
             patched['number'] = trim_leading_zeros(patched['number'])
+            patched['number'] = pad_left(patched['number'], '0', 6)
+        """
+        patched['number'] = trim_leading_zeros(patched['number'])
 
-        # pad to 6 characters with leading zeros
-        elif patched['country'] == 'AR':
-            patched['number'] = patched['number'].lstrip('0').rjust(6, '0')
+    # pad to 6 characters with leading zeros
+    elif patched['country'] == 'AR':
+        patched['number'] = patched['number'].lstrip('0').rjust(6, '0')
 
-        elif patched['country'] == 'AU':
-            patched = normalize_patent_au(patched)
+    elif patched['country'] == 'AU':
+        patched = normalize_patent_au(patched)
 
-        elif patched['country'] == 'BR':
-            patched['number'] = patched['number'].lstrip('0')
+    elif patched['country'] == 'BR':
+        patched['number'] = patched['number'].lstrip('0')
 
-        # strip leading zeros with exception of kindcode == T1, then pad to 7 digits like EP
-        # "Veröffentlichung der europäischen Patentanmeldung"
-        elif patched['country'] == 'DE':
-            patched['number'] = trim_leading_zeros(patched['number'])
-            if patched.get('kind') == 'T1':
-                patched['number'] = pad_left(patched['number'], '0', 7)
-
-        # pad to 7 characters with leading zeros
-        elif patched['country'] == 'EP':
-            patched['number'] = trim_leading_zeros(patched['number'])
+    # strip leading zeros with exception of kindcode == T1, then pad to 7 digits like EP
+    # "Veröffentlichung der europäischen Patentanmeldung"
+    elif patched['country'] == 'DE':
+        patched['number'] = trim_leading_zeros(patched['number'])
+        if patched.get('kind') == 'T1':
             patched['number'] = pad_left(patched['number'], '0', 7)
 
-        elif patched['country'] == 'GE':
-            patched['number'] = patched['number'].lstrip('0')
+    # pad to 7 characters with leading zeros
+    elif patched['country'] == 'EP':
+        patched['number'] = trim_leading_zeros(patched['number'])
+        patched['number'] = pad_left(patched['number'], '0', 7)
 
-            # e.g.
-            # GE00U200501210Y = GEU20051210Y
-            # GE00P200503700B = GEP20053700B
-            print '77777777777:', patched['number'][5]
-            if patched['number'][5] == '0':
-                patched['number'] = patched['number'][:5] + patched['number'][6:]
+    elif patched['country'] == 'GE':
+        patched['number'] = patched['number'].lstrip('0')
+
+        # e.g.
+        # GE00U200501210Y = GEU20051210Y
+        # GE00P200503700B = GEP20053700B
+        print '77777777777:', patched['number'][5]
+        if patched['number'][5] == '0':
+            patched['number'] = patched['number'][:5] + patched['number'][6:]
 
 
-        elif patched['country'] == 'IT':
-            patched['number'] = patched['number'].lstrip('0')
-            patched = normalize_patent_it(patched)
+    elif patched['country'] == 'IT':
+        patched['number'] = patched['number'].lstrip('0')
+        patched = normalize_patent_it(patched)
 
-        # 2009-11-09: JP numbers
-        elif patched['country'] == 'JP':
-            patched = normalize_patent_jp(patched)
+    # 2009-11-09: JP numbers
+    elif patched['country'] == 'JP':
+        patched = normalize_patent_jp(patched)
 
-        # 2007-07-26: US applications are 4+7
-        elif patched['country'] == 'US':
-            patched = normalize_patent_us(patched)
+    # 2007-07-26: US applications are 4+7
+    elif patched['country'] == 'US':
+        patched = normalize_patent_us(patched)
 
-        # normalize wo numbers to 4+6 format
-        elif patched['country'] == 'WO':
-            # WOPCT/US86/01765 or WOEP/2004/008531
-            if patched['number'].startswith('PCT'):
-                patched = normalize_patent_wo_pct(patched)
-            else:
-                patched = normalize_patent_wo(patched)
-                #patched = denormalize_patent_wo(patched)
-
-        # 2015-09-01: SE numbers
-        elif patched['country'] == 'SE':
-            patched = normalize_patent_se(patched)
-            patched['number'] = trim_leading_zeros(patched['number'])
-
-        # strip leading zeros
+    # normalize wo numbers to 4+6 format
+    elif patched['country'] == 'WO':
+        # WOPCT/US86/01765 or WOEP/2004/008531
+        if patched['number'].startswith('PCT'):
+            patched = normalize_patent_wo_pct(patched)
         else:
-            patched['number'] = trim_leading_zeros(patched['number'])
-            pass
+            patched = normalize_patent_wo(patched)
+            #patched = denormalize_patent_wo(patched)
 
-        #print "patched (regular):", patent, patched
-        return patched
+    # 2015-09-01: SE numbers
+    elif patched['country'] == 'SE':
+        patched = normalize_patent_se(patched)
+        patched['number'] = trim_leading_zeros(patched['number'])
 
-    return patent
+    # strip leading zeros
+    else:
+        patched['number'] = trim_leading_zeros(patched['number'])
+
+    #print "patched (regular):", patent, patched
+    return patched
 
 
 def fix_patent(patent):

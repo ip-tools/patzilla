@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2016 Andreas Motl, Elmyra UG
 import logging
+from pprint import pprint
 from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region, region_invalidate
+from elmyra.ip.access.generic.exceptions import NoResultsException
 from elmyra.ip.util.python import _exception_traceback
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
@@ -41,6 +43,7 @@ depatisconnect_abstract_service = Service(
 
 # TODO: implement as JSON POST
 @depatisnet_published_data_search_service.get(accept="application/json")
+@depatisnet_published_data_search_service.post(accept="application/json")
 def depatisnet_published_data_search_handler(request):
     """Search for published-data at DEPATISnet"""
 
@@ -82,20 +85,28 @@ def depatisnet_published_data_search_handler(request):
         return dpma_published_data_search(query, options)
 
     except SyntaxError as ex:
-        request.errors.add('depatisnet-published-data', 'query-syntax', str(ex.msg))
+        request.errors.add('depatisnet-search', 'expression', str(ex.msg))
+        log.warn(request.errors)
+
+    except NoResultsException as ex:
+        # Forward response to let the frontend recognize zero hits
+        request.response.status = HTTPNotFound.code
+        return ex.data
 
     except Exception as ex:
         http_response = None
         if hasattr(ex, 'http_response'):
             http_response = ex.http_response
+        reason = u'{}: {}'.format(ex.__class__.__name__, ex.message)
         log.error(u'DEPATISnet search error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
-            query, ex, http_response, _exception_traceback()))
+            query, reason, http_response, _exception_traceback()))
 
-        message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
-        request.errors.add('depatisnet-published-data', 'search', message)
+        message = u'An exception occurred while processing your query<br/>Reason: {}'.format(reason)
+        request.errors.add('depatisnet-search', 'search', message)
 
 
 @depatisnet_published_data_crawl_service.get(accept="application/json")
+@depatisnet_published_data_crawl_service.post(accept="application/json")
 def depatisnet_published_data_crawl_handler(request):
     """Crawl published-data at DEPATISnet"""
 
@@ -124,7 +135,8 @@ def depatisnet_published_data_crawl_handler(request):
         return result
 
     except SyntaxError as ex:
-        request.errors.add('depatisnet-published-data', 'query-syntax', str(ex.msg))
+        request.errors.add('depatisnet-search', 'expression', str(ex.msg))
+        log.warn(request.errors)
 
     except Exception as ex:
         http_response = None
@@ -134,14 +146,21 @@ def depatisnet_published_data_crawl_handler(request):
             query, ex, http_response, _exception_traceback()))
 
         message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
-        request.errors.add('depatisnet-published-data', 'crawl', message)
+        request.errors.add('depatisnet-search', 'crawl', message)
 
 
 @cache_region('search', 'dpma_search')
 def dpma_published_data_search(query, options):
     options = options or {}
     depatisnet = DpmaDepatisnetAccess()
-    return depatisnet.search_patents(query, options)
+    data = depatisnet.search_patents(query, options)
+    #print data.prettify()      # debugging
+
+    # Raise an exception on empty results to skip caching this response
+    if data.meta.navigator.count_total == 0:
+        raise NoResultsException('No results', data=data)
+
+    return data
 
 def dpma_published_data_search_invalidate(*args):
     region_invalidate(dpma_published_data_search, None, 'dpma_search', *args)

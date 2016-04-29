@@ -4,42 +4,39 @@
 # Lowlevel adapter to search provider "IFI Claims Direct"
 #
 import json
-import time
 import timeit
 import logging
 import requests
-from pprint import pprint, pformat
+from pprint import pprint
 from beaker.cache import cache_region
 from requests.exceptions import ConnectionError, ConnectTimeout
 from elmyra.ip.access.epo.imageutil import to_png
+from elmyra.ip.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
+from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearchClient
 from elmyra.ip.access.ificlaims import get_ificlaims_client
 from elmyra.ip.access.serviva import get_serviva_client
 from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 
-class IFIClaimsException(Exception):
-    def __init__(self, *args, **kwargs):
-        self.user_info = ''
-        if kwargs.has_key('user_info'):
-            self.user_info = kwargs['user_info']
-        super(IFIClaimsException, self).__init__(*args)
-
-class LoginException(IFIClaimsException):
+class IFIClaimsException(GenericAdapterException):
     pass
 
-class SearchException(IFIClaimsException):
+class LoginException(IFIClaimsException):
     pass
 
 class IFIClaimsFormatException(IFIClaimsException):
     pass
 
-class IFIClaimsClient(object):
+class IFIClaimsClient(GenericSearchClient):
 
     def __init__(self, uri, username=None, password=None, token=None):
 
         self.backend_name = 'IFI'
+
+        self.search_method = ificlaims_search
+        self.crawl_max_count = 50000
+
         self.path_search            = '/search/query'
         self.path_text              = '/text/fetch'
         self.path_attachment_list   = '/attachment/list'
@@ -58,6 +55,9 @@ class IFIClaimsClient(object):
         self.token = True
         return True
 
+    def logout(self):
+        self.stale = True
+
     def get_authentication_headers(self):
         headers = {'X-User': self.username, 'X-Password': self.password}
         return headers
@@ -66,8 +66,11 @@ class IFIClaimsClient(object):
 
         options = options or SmartBunch()
 
-        offset = options.offset_remote or 0
-        limit  = options.limit or self.pagesize
+        options.setdefault('offset', 0)
+        options.setdefault('limit', self.pagesize)
+
+        offset = options.offset
+        limit  = options.limit
 
         log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}".format(
             expression, offset, limit, **self.__dict__))
@@ -99,138 +102,47 @@ class IFIClaimsClient(object):
                 headers=headers,
                 verify=self.tls_verify)
         except (ConnectionError, ConnectTimeout) as ex:
-            log.error('IFI search for user "{username}" at "{uri}" failed. Reason: {0} {1}.'.format(
-                ex.__class__, ex.message, username=self.username, uri=uri))
-            #self.logout()
-            self.stale = True
-            raise SearchException(unicode(ex.__class__.__name__) + u': ' + unicode(ex.message),
-                user_info='Error or timeout while connecting to upstream database. Database might be offline.')
+            self.logout()
+            raise self.search_failed(
+                ex=ex,
+                user_info='Error or timeout while connecting to upstream database. Database might be offline.',
+                meta={'username': self.username, 'uri': uri})
         duration = timeit.default_timer() - starttime
 
         # Process search response
         if response.status_code == 200:
-
             #print "response:", response.content        # debugging
 
-            try:
-                search_results = self._search_parse_json(response.content)
-                if search_results:
+            upstream_response = self._search_parse_json(response.content)
+            if upstream_response:
 
-                    # Handle search errors
-                    if 'error' in search_results['content']:
-                        upstream_error = search_results['content']['error']
-                        error = SearchException('Error in search expression')
-                        error.details = 'code={code}, msg={msg}'.format(**upstream_error)
-                        log.error('{backend_name}: Error in search expression: {0}'.format(pformat(upstream_error), **self.__dict__))
-                        raise error
+                # Handle search expression errors
+                if 'error' in upstream_response['content']:
+                    upstream_error = upstream_response['content']['error']
+                    message = u'{msg} (code={code})'.format(**upstream_error)
+                    raise SyntaxError(message)
 
-                    # Mogrify search response
-                    # TODO: Generalize between all search backends
-                    sr = IFIClaimsSearchResponse(search_results, options=options)
-                    result = sr.render()
-                    duration = round(duration, 1)
+                # Mogrify search response
+                # TODO: Generalize between all search backends
+                sr = IFIClaimsSearchResponse(upstream_response, options=options)
+                result = sr.render()
+                duration = round(duration, 1)
 
-                    result['meta']['Offset'] = offset
-                    result['meta']['Limit'] = limit
+                # TODO: Unify between"FulltextPRO "and IFI
+                log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
+                    duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
-                    log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
+                if not result['numbers']:
+                    log.warn('{backend_name}: Search had empty results. duration={duration}s, meta=\n{meta}'.format(
                         duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
-                    if not result['numbers']:
-                        log.warn('{backend_name}: Search had empty results. duration={duration}s, meta={meta}'.format(
-                            duration=duration, meta=result['meta'].prettify(), **self.__dict__))
+                return result
 
-                    return result
+            else:
+                raise self.search_failed('Search response could not be parsed', response=response)
 
-                else:
-                    log.error('{backend_name}: Search failed. Search response could not be parsed. content={0}'.format(
-                        response.content, **self.__dict__))
+        raise self.search_failed(response=response)
 
-            except Exception as ex:
-                log.error('{backend_name}: Search failed. Reason: {0} {1}. response={2}'.format(
-                    ex.__class__, ex.message, response.content, **self.__dict__))
-                raise
-        else:
-            message = '{backend_name}: Search failed. status_code={0}, content={1}'.format(
-                str(response.status_code) + ' ' + response.reason,
-                response.content, **self.__dict__)
-            log.error(message)
-            raise SearchException(message)
-
-
-    def crawl(self, constituents, expression, chunksize):
-        # TODO: refactor into base class (from ftpro.search as well)
-
-        if constituents not in ['pub-number', 'biblio']:
-            raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
-
-        real_constituents = constituents
-        if constituents == 'pub-number':
-            constituents = ''
-
-        # fetch first chunk (1-chunksize) from upstream
-        #first_chunk = self.search(expression, 0, chunksize)
-        first_chunk = ificlaims_search(expression, options=SmartBunch({'offset_remote': 0, 'limit': chunksize}))
-        #print first_chunk
-
-        total_count = int(first_chunk['meta'].get('pager', {}).get('totalEntries', 0))
-        log.info('IFI: Crawl total_count: %s', total_count)
-
-        # Limit maximum size
-        # TODO: make configurable, put into instance variable
-        total_count = min(total_count, 50000)
-
-        # collect upstream results
-        begin_second_chunk = chunksize
-        chunks = [first_chunk]
-        print 'range:', begin_second_chunk, total_count, chunksize
-        log.info('IFI: Crawling {total_count} items with {chunksize} per request'.format(
-            total_count=total_count, chunksize=chunksize))
-        for range_begin in range(begin_second_chunk, total_count, chunksize):
-
-            # countermeasure to robot flagging
-            # <code>CLIENT.RobotDetected</code>
-            # <message>Recent behaviour implies you are a robot. The server is at the moment busy to serve robots. Please try again later</message>
-            time.sleep(1)
-
-            log.info('IFI: Crawling from offset {offset}'.format(offset=str(range_begin)))
-            #chunk = self.search(expression, range_begin, chunksize)
-            chunk = ificlaims_search(expression, options=SmartBunch({'offset_remote': range_begin, 'limit': chunksize}))
-            #print 'chunk:', chunk
-            chunks.append(chunk)
-
-        result_count = len(chunks)
-        log.info('IFI: Crawling finished. result count: {result_count}'.format(result_count=result_count))
-
-        #return chunks
-
-        # merge chunks into single result
-        all_numbers = []
-        all_details = []
-        # TODO: summarize elapsed_time
-        for chunk in chunks:
-            #print 'chunk:', chunk
-            all_numbers += chunk['numbers']
-            all_details += chunk['details']
-
-        response = None
-        if real_constituents == 'pub-number':
-            response = first_chunk
-            response['meta'] = {'Success': 'true', 'MemCount': str(len(all_numbers))}
-            response['numbers'] = all_numbers
-            del response['details']
-
-        elif real_constituents == 'biblio':
-            response = first_chunk
-            #print 'all_details:', all_details
-            response['meta'] = {'Success': 'true', 'MemCount': str(len(all_numbers))}
-            response['details'] = all_details
-            #del response['details']
-
-        if not response:
-            raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
-
-        return response
 
 
     #@cache_region('search')
@@ -468,131 +380,68 @@ class IFIClaimsClient(object):
         data = json.loads(body)
         if data['status'] == 'success':
             return data
-        else:
-            raise SearchException('Could not read result information from search response', response_body=body)
 
 
-class IFIClaimsSearchResponse(object):
+class IFIClaimsSearchResponse(GenericSearchResponse):
 
-    def __init__(self, input, options=None):
+    def read(self):
 
-        # arguments
-        self.input = input
-        self.options = options or {}
-
-        # setup
-        self.setup()
-
-        # actions
-        self.enrich()
-        self.compat()
-
-        if 'feature_family_remove' in self.options and self.options['feature_family_remove']:
-            self.remove_family_members()
-
-    def setup(self):
-
-        meta = SmartBunch.bunchify({
-            'navigator': {},
-            # TODO: Move to "upstream"
+        # Read metadata
+        """
+        out:
+        "meta": {
+            "status": "success",
+            "params": {
+                "sort": "pd desc, ucid asc",
+                "rows": "250",
+                "indent": "true",
+                "qt": "premium",
+                "timeAllowed": "300000",
+                "q": "text:vibrat* AND (ic:G01F000184 OR cpc:G01F000184)",
+                "start": "0",
+                "wt": "json",
+                "fl": "ucid,fam"
+            },
+            "pager": {
+                "totalEntries": 6872,
+                "entriesOnThisPage": 250,
+                "firstPage": 1,
+                "lastPage": 28,
+                "previousPage": null,
+                "currentPage": 1,
+                "entriesPerPage": "250",
+                "nextPage": 2
+            },
+            "name": "ifi",
+            "time": "4.836163"
+        }
+        """
+        self.meta.upstream.update({
+            'name': 'ifi',
             'time': self.input['time'],
             'status': self.input['status'],
-            'params': self.input['content']['responseHeader']['params'],
-            'pager': self.input['content']['responseHeader'].get('pager', {}),
+            'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
+            'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
-        self.response = self.input['content']['response']
-        self.output = SmartBunch.bunchify({
-            'meta': meta,
-            'numbers': [],
-            'details': [],
-            'navigator': {},
-        })
+        self.meta.navigator.count_total = int(self.meta.upstream.pager.totalEntries)
+        self.meta.navigator.count_page  = int(self.meta.upstream.pager.entriesOnThisPage)
+        self.meta.navigator.offset      = int(self.meta.upstream.params.start)
+        self.meta.navigator.limit       = int(self.meta.upstream.params.rows)
+        self.meta.navigator.postprocess = SmartBunch()
 
+        # Read content
+        self.documents = self.input['content']['response']['docs']
+        self.read_documents()
 
-    def enrich(self):
-        for result in self.response['docs']:
-            try:
-                ucid = result[u'ucid']
-                cc, docno, kindcode = ucid.split('-')
-                number = cc + docno + kindcode
-            except (KeyError, TypeError):
-                number = None
-            number_normalized = normalize_patent(number)
-            #print 'number:', number, number_normalized
-            if number_normalized:
-                number = number_normalized
-            result[u'publication_number'] = number
-            result[u'upstream_provider'] = u'ifi'
+    def document_to_number(self, document):
+        ucid = document[u'ucid']
+        cc, docno, kindcode = ucid.split('-')
+        number = cc + docno + kindcode
+        return number
 
-    def compat(self):
-        meta = self.output.meta
-        meta.navigator.count_total = int(self.output.meta.pager.totalEntries)
-        meta.navigator.count_page  = int(self.output.meta.pager.entriesOnThisPage)
-        meta.navigator.offset      = int(self.output.meta.params.start)
-        meta.navigator.limit       = int(self.output.meta.params.rows)
-        meta.navigator.postprocess = SmartBunch()
-
-    def render(self):
-
-        if self.output.meta.pager.totalEntries:
-            # TODO: Generalize between"FulltextPRO "and IFI
-            # meta['ResultLength'] = sr.get_length()
-            self.output.numbers = self.get_numberlist()
-            self.output.details = self.get_details()
-
-        return self.output
-
-    def get_length(self):
-        return len(self.response['docs'])
-
-    def get_numberlist(self):
-        numbers = []
-        for result in self.response['docs']:
-            number = result['publication_number']
-            numbers.append(number)
-        return numbers
-
-    def get_details(self):
-        return self.response['docs']
-
-    def remove_family_members(self):
-
-        # Filtering mechanics: Deduplicate by family id
-        seen = {}
-        removed = []
-        stats = SmartBunch(removed = 0)
-        def family_remover(item):
-
-            fam = item['fam']
-
-            # Sanity checks on family id
-            # Do not remove documents without valid family id
-            if not fam or fam in [u'0', u'-1']:
-                return True
-
-            # "Seen" filtering logic
-            if fam in seen:
-                stats.removed += 1
-                removed.append(item)
-                return False
-            else:
-                seen[fam] = True
-                return True
-
-
-        # Update metadata and content
-
-        # 1. Apply family cleansing filter to main documents response
-        self.response['docs'] = filter(family_remover, self.response['docs'])
-
-        # 2. Add list of removed family members to output
-        self.output.navigator.family_members = {'removed': removed}
-        #self.output['family-members-removed'] = removed
-
-        # 3. Update metadata
-        self.output.meta.navigator.postprocess.action = 'feature_family_remove'
-        self.output.meta.navigator.postprocess.info   = stats
+    def document_to_family_id(self, document):
+        return document['fam']
 
 
 def ificlaims_client(options=None):
@@ -628,14 +477,14 @@ def ificlaims_search(query, options=None):
 
     client = ificlaims_client(options=options)
     try:
-        return client.search(query, options)
+        data = client.search(query, options)
+        # Raise an exception on empty results to skip caching this response
+        if data.meta.navigator.count_total == 0:
+            raise NoResultsException('No results', data=data)
+        return data
 
     except SearchException as ex:
         client.stale = True
-        raise
-
-    except SyntaxError as ex:
-        log.warn('Invalid query for IFI: %s' % ex.msg)
         raise
 
 

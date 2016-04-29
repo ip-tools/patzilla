@@ -242,6 +242,12 @@ HotkeysPlugin = Marionette.Controller.extend({
                 _this.app.set_datasource('ftpro');
             });
         }
+        if (opsChooserApp.config.get('ifi_enabled')) {
+            $(selector).on('keydown', null, 'ctrl+shift+i', function(event) {
+                $('#datasource button[data-value="ifi"]').button('toggle');
+                _this.app.set_datasource('ifi');
+            });
+        }
         $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
             _this.app.basketModel.review();
         });

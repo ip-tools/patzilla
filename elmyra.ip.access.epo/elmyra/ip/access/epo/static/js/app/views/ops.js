@@ -97,11 +97,15 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         $(container).prop('ops-document', this.model.attributes);
 
         // Swap bibliographic details with placeholder information if we encounter appropriate signal
+        // TODO: Really do this onDomRefresh?
         if (this.model.get('__type__') == 'ops-placeholder') {
             //log('this.model:', this.model);
 
+            // Massage LinkMaker to be suitable for use from placeholder template
+            this.model.linkmaker = new Ipsuite.LinkMaker(this.model.attributes);
+
             // Add placeholder
-            var html = _.template($('#ops-entry-placeholder-template').html(), this.model.attributes, {variable: 'data'});
+            var html = _.template($('#ops-entry-placeholder-template').html(), this.model, {variable: 'model'});
             $(container).find('.ops-bibliographic-details').before(html);
 
             // Hide content area

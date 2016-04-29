@@ -3,11 +3,11 @@
 
 
 <script id="backend-error-template" type="text/x-underscore-template">
+<%text>
 
-    <div class="alert alert-error alert-block alert-inline">
+    <div class="alert alert-error alert-block alert-inline error-panel">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>ERROR</h4>
-        <%text>
 
         <dl class="dl-horizontal dl-horizontal-biblio2">
 
@@ -15,7 +15,29 @@
                 Description
             </dt>
             <dd>
+                <% if (description['headers']['content-type'] == 'text/html') { %>
+                The upstream data source responded with an error message in HTML:
+                <br/><br/>
+                <iframe id="error-iframe"><%= description['content'] || '&nbsp;' %></iframe>
+                <% } else { %>
                 <h4><%= description['content'] || '&nbsp;' %></h4>
+                <% } %>
+            </dd>
+
+            <br/>
+
+            <dt>
+                Location
+            </dt>
+            <dd>
+                <%= location || '&nbsp;' %>
+            </dd>
+
+            <dt>
+                Name
+            </dt>
+            <dd>
+                <%= name || '&nbsp;' %>
             </dd>
 
             <br/>
@@ -35,20 +57,6 @@
             </dd>
 
             <dt>
-                Location
-            </dt>
-            <dd>
-                <%= location || '&nbsp;' %>
-            </dd>
-
-            <dt>
-                Name
-            </dt>
-            <dd>
-                <%= name || '&nbsp;' %>
-            </dd>
-
-            <dt>
                 URL
             </dt>
             <dd>
@@ -56,19 +64,34 @@
             </dd>
 
         </dl>
-    </%text>
+
+        <span class="pull-right">
+            <button
+                    class="btn btn-danger report-issue-problem"
+                    data-report-origin="document"
+                    data-report-kind="not-available"
+                    data-report-item="<%= name %> (<%= location %>)"
+                    data-report-html=".error-panel"
+                    data-dialog-remark="<%= _.string.dedent(_.string.strip(_.string.stripTags(description['content']))) %>"
+                    >
+                Report problem
+            </button>
+        </span>
+
+        <span class="clearfix"/>
 
     </div>
 
+</%text>
 </script>
 
 
 <script id="cornice-error-template" type="text/x-underscore-template">
+<%text>
 
-    <div class="alert alert-error alert-block alert-inline">
+    <div class="alert alert-error alert-block alert-inline error-panel">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         <h4>ERROR</h4>
-        <%text>
 
         <dl class="dl-horizontal dl-horizontal-biblio2">
 
@@ -76,7 +99,7 @@
                 Description
             </dt>
             <dd>
-                <h4><%= description %></h4>
+                <h4><%= error.description %></h4>
             </dd>
 
             <br/>
@@ -85,30 +108,46 @@
                 Location
             </dt>
             <dd>
-                <%= location %>
+                <%= error.location %>
             </dd>
 
             <dt>
                 Name
             </dt>
             <dd>
-                <%= name %>
+                <%= error.name %>
             </dd>
 
-            <% if (details) { %>
+            <% if (error.details) { %>
             <dt>
                 Details
             </dt>
             <dd>
-                <%= details %>
+                <%= error.details %>
             </dd>
             <% } %>
 
         </dl>
-    </%text>
+
+        <span class="pull-right">
+            <button
+                    class="btn btn-danger report-issue-problem"
+                    data-report-origin="document"
+                    data-report-kind="not-available"
+                    data-report-item="<%= error.name %> (<%= error.location %>)"
+                    data-report-html=".error-panel"
+                    data-dialog-remark-orig="<%= htmlentities(error.description) %>"
+                    data-dialog-remark="<%= _.string.dedent(_.string.strip(_.string.stripTags(error.description))) %>"
+                    >
+                Report problem
+            </button>
+        </span>
+
+        <span class="clearfix"/>
 
     </div>
 
+</%text>
 </script>
 
 

@@ -17,6 +17,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         //$(opsChooserApp.paginationViewBottom.el).hide();
 
         var self = this;
+        var _this = this;
         return this.fetch({
             data: $.param({ query: query, range: range}),
             success: function(model, response, options) {
@@ -35,8 +36,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 opsChooserApp.ui.reset_content();
 
                 console.log("response data:", response);
-
-                if (_.isEmpty(response)) {
+                // TODO: Get rid of this!? This should be handled by the error path if backend responds with proper HTTP status.
+                if (_.isEmpty(response) || opsChooserApp.ui.propagate_cornice_errors(response)) {
                     documents.reset();
                     return;
                 }
@@ -149,30 +150,19 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 metadata.set('keywords', _.union(self.keywords, metadata.get('keywords')));
 
             },
-            error: function(model, response) {
-
-                console.log("OpsPublishedDataSearch error: " + response.responseText);
+            error: function(model, xhr) {
 
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content({documents: true});
 
-                var response = jQuery.parseJSON(response.responseText);
-                if (response['status'] == 'error') {
-                    _.each(response['errors'], function(error) {
-                        var tpl = _.template($('#backend-error-template').html());
+                if (xhr.status == 404) {
+                    return;
 
-                        // convert simple error format to detailed error format
-                        error.description = error.description || {};
-                        if (_.isString(error.description)) {
-                            error.description = {content: error.description};
-                        }
-                        _(error.description).defaults({headers: {}});
-
-                        var alert_html = tpl(error);
-                        $('#alert-area').append(alert_html);
-                    });
-                    $(".very-short").shorten({showChars: 0, moreText: 'more', lessText: 'less'});
+                } else {
+                    console.error('OPS search failed:', xhr);
+                    opsChooserApp.ui.propagate_backend_errors(xhr);
                 }
+
             }
         });
 

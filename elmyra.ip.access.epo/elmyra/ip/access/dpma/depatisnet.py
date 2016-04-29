@@ -10,6 +10,7 @@ import mechanize
 import cookielib
 from BeautifulSoup import BeautifulSoup
 from xlrd import open_workbook
+from elmyra.ip.access.generic.search import GenericSearchResponse
 from elmyra.ip.util.date import from_german, date_iso
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.python import _exception_traceback
@@ -61,9 +62,12 @@ class DpmaDepatisnetAccess:
         # http://wwwsearch.sourceforge.net/mechanize/
         self.browser = mechanize.Browser()
         self.browser.set_cookiejar(cookielib.LWPCookieJar())
-        self.browser.addheaders = [('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1790.0 Safari/537.36')]
+        self.browser.addheaders = [('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')]
         # ignore robots.txt
         self.browser.set_handle_robots(False)
+
+    def logout(self):
+        self.browser = None
 
     def search_patents(self, query, options=None):
 
@@ -83,7 +87,7 @@ class DpmaDepatisnetAccess:
             self.browser.open(self.searchurl)
         except urllib2.HTTPError as ex:
             logger.critical('Hard error with DEPATISnet: {}'.format(ex))
-            self.browser = None
+            self.logout()
             raise
 
         # 2. submit form
@@ -119,11 +123,14 @@ class DpmaDepatisnetAccess:
         # decode response
         body = response.read().decode('iso-8859-1')
 
-        # check for error messages
-        error_message = self.find_errors(body)
-
         # hit count
         hits = 0
+
+        # list of result entries
+        results = []
+
+        # check for error messages
+        error_message = self.find_errors(body)
 
         # remove family members
         if 'feature_family_remove' in options:
@@ -163,15 +170,14 @@ class DpmaDepatisnetAccess:
             hits = int(matches.group(1))
 
 
-        # retrieve results via csv
-
         if 'did not match any documents' in body:
-            results = []
-            numbers = []
             #error_message = 'did not match any documents'
+            pass
 
         else:
             logger.debug('DEPATISnet xlsurl: %s' % self.xlsurl)
+
+            # Retrieve results via csv
             try:
                 xls_response = self.browser.open(self.xlsurl)
                 results = self.read_xls_response(xls_response)
@@ -183,24 +189,27 @@ class DpmaDepatisnetAccess:
             # debugging
             #print 'results:', results
 
-            # normalize patent numbers
-            numbers = [normalize_patent(result['pubnumber'], fix_kindcode=True) or result for result in results]
-
-
-        payload = {
+        upstream_response = {
             'hits': hits,
             'results': results,
-            'numbers': numbers,
             'query': query,
             'message': error_message,
         }
-        return payload
+
+        options['normalize_fix_kindcode'] = True
+        sr = DPMADepatisnetSearchResponse(upstream_response, options=options)
+        result = sr.render()
+        #print result.prettify()
+
+        return result
 
     def find_errors(self, body):
+
         if body == '':
+            self.logout()
             raise SyntaxError('Empty response from server')
 
-            # check for error messages
+        # check for error messages
         soup = BeautifulSoup(body)
         error_message = soup.find('div', {'class': 'error'})
         if error_message:
@@ -211,6 +220,7 @@ class DpmaDepatisnetAccess:
             error_message = ''
 
         if 'An error has occurred' in body:
+            error_message = error_message.replace('\t', '').replace('\r\n', '\n').strip()
             raise SyntaxError(error_message)
 
         return error_message
@@ -237,6 +247,84 @@ class DpmaDepatisnetAccess:
                 results.append(item)
 
         return results
+
+
+class DPMADepatisnetSearchResponse(GenericSearchResponse):
+
+    def read(self):
+
+        # Read metadata
+        """
+        in:
+        {
+            'hits': 263,
+            'results': [
+                {'appdate': '2004-06-03',
+                 'applicant': u'Rosemount Inc., Eden Prairie, Minn., US',
+                 'inventor': u'...',
+                 'pubdate': '2008-07-24',
+                 'pubnumber': u'DE602004008910T2',
+                 'title': u'[DE] FEHLERDIAGNOSEVORRICHTUNG UND -VERFAHREN BEI EINER PROZESSEINRICHTUNG UNTER VERWENDUNG EINES PROZESSABH\xc4NGIGEN SENSORSIGNALS'},
+                {'appdate': '2014-05-14',
+                 'applicant': u'Berkin B.V., Ruurlo, NL',
+                 'inventor': u'',
+                 'pubdate': '2014-08-28',
+                 'pubnumber': u'DE202014102258U1',
+                 'title': u'[DE] Str\xf6mungsmessvorrichtung zum Messen einer Str\xf6mung eines Mediums'},
+                # ...
+            ]
+            'numbers': [u'DE602004008910T2',
+                u'DE202014102258U1',
+                u'DE112004002042T5',
+                u'DE112004001503T5',
+                # ...
+            ]
+            'query': u'(pc=DE) and (bi=vibrat?) and (ic=G01F1/84)',
+            'message': 'Total hits:&nbsp;3283 &nbsp;&nbsp;  A random selection of&nbsp;1000&nbsp;hits is being displayed.',
+        }
+        """
+        self.meta.upstream.update({
+            'name': 'depatisnet',
+            'query': self.input['query'],
+            #'message': self.input['message'],
+            # TODO: Reference from IFI, fill up/unify.
+            #'time': self.input['time'],
+            #'status': self.input['status'],
+            #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
+            #'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+        })
+
+        self.meta.navigator.count_total = int(self.input['hits'])
+        self.meta.navigator.count_page  = len(self.input['results'])
+        # TODO: Fill up?
+        #self.meta.navigator.offset      = int(self.meta.upstream.Offset)
+        #self.meta.navigator.limit       = int(self.meta.upstream.Limit)
+        #self.meta.navigator.postprocess = SmartBunch()
+
+
+        # Propagate user message
+        if self.input['message']:
+            self.output.navigator.user_info = {'message': self.input['message'], 'kind': 'warning'}
+
+
+        # Read content
+        """
+        in:
+        "results": [{
+        }],
+        """
+        self.documents = self.input['results']
+        self.read_documents()
+
+    def document_to_number(self, document):
+        number = document['pubnumber']
+        return number
+
+    def remove_family_members(self):
+        """
+        DPMA provides "Remove family members" upstream
+        """
+        pass
 
 
 def excel_to_dict(payload):

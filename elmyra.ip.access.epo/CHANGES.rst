@@ -44,6 +44,7 @@ Infrastructure
 - Improve placeholders for feature “Remove family members”
 - “Report problem” subsystem and user interface
 - Display: Introduce mini menu
+- Unify response data- and error-channels amongst all data sources
 
 
 Bug fixes and minor updates

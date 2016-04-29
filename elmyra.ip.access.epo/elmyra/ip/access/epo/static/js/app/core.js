@@ -31,9 +31,13 @@ function propagate_opaque_errors() {
                 error.description = 'It looks like the token used to encode this request is invalid.' + ' (' + error.description + ')'
             }
 
-            var tpl = _.template($('#cornice-error-template').html());
-            var alert_html = tpl(error);
-            $('#alert-area').append(alert_html);
+            // TODO: Streamline error forwarding
+            var response = {
+                'status': 'error',
+                'errors': [error]
+            }
+            opsChooserApp.ui.propagate_cornice_errors(response);
+
         });
     }
 }

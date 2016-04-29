@@ -17,9 +17,9 @@ DatasourceSearch = Backbone.Model.extend({
         var self = this;
         var _options = options;
         return this.fetch({
-            //async: false,
-            // TODO: switch to JSON POST
-            //method: 'post',
+            async: true,
+            // TODO: Add JSON POST
+            method: 'post',
             data: $.param(query_parameters),
             success: function (payload, response, options) {
                 opsChooserApp.ui.indicate_activity(false);
@@ -47,12 +47,12 @@ DatasourceSearch = Backbone.Model.extend({
             },
             error: function(e, xhr) {
 
-                console.log("DatasourceSearch error: " + xhr.responseText);
+                console.error("DatasourceSearch error:", e, xhr);
 
                 opsChooserApp.ui.indicate_activity(false);
                 opsChooserApp.ui.reset_content({documents: true});
 
-                opsChooserApp.ui.propagate_alerts(xhr, {url: self.url});
+                opsChooserApp.ui.propagate_backend_errors(xhr, {url: self.url});
             }
         });
 

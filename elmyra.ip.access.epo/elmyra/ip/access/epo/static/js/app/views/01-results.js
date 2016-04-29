@@ -28,7 +28,7 @@ ResultCollectionView = Backbone.Marionette.CompositeView.extend({
         if (item.get('upstream_provider') == 'ftpro') {
             return FulltextProResultView;
         } else {
-            console.error('Could not create result view instance for upstream provider "' + model.get('upstream_provider') + '"');
+            console.error('Could not create result view instance for upstream provider "' + item.get('upstream_provider') + '"');
         }
     },
 
