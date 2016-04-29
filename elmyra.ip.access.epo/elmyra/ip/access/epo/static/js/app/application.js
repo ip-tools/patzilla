@@ -721,6 +721,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         //log('perform_numberlistsearch');
         var numberlist = this.parse_numberlist($('#numberlist').val());
         if (numberlist) {
+
+            // Reset pager and more before kicking off numberlist search
+            this.metadata.resetSomeDefaults(options);
+
             var _this = this;
             normalize_numberlist(numberlist.data.join(',')).then(function(normalized) {
                 var numbers_normalized = normalized['numbers-normalized']['all'];
