@@ -60,6 +60,7 @@ Bug fixes and minor updates
 - Fix sorting of documents in subsearch- and numberlist-modes
 - Deactivate downvoting EP..A3 documents when displaying most recent publication
 - Stop saving reference to project in QueryModel, this has led to dereferenced ProjectModel objects sucking up localStorage space
+- Fix pager setup on numberlistsearch
 
 
 0.115.0
