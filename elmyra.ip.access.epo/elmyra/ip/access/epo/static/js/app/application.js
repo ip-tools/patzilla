@@ -8,6 +8,17 @@
  */
 OpsChooserApp = Backbone.Marionette.Application.extend({
 
+    setup_ui: function() {
+        // Initialize content which still resides on page level (i.e. no template yet)
+        $('#query').val(opsChooserApp.config.get('query'));
+        $('#ui-title').html(getconfig('setting.ui.page.title'));
+        $('#ui-subtitle').html(getconfig('setting.ui.page.subtitle'));
+        $('#ui-statusline').html(getconfig('setting.ui.page.statusline'));
+        $('#ui-productname').html(getconfig('setting.ui.productname'));
+        $('#ui-footer').html(getconfig('setting.ui.page.footer', {after: '<br/>'}));
+        $('#ui-footer-version').html(getconfig('setting.ui.version', {after: '<br/>'}));
+    },
+
     get_datasource: function() {
         var datasource = $('#datasource > .btn.active').data('value');
         return datasource;
@@ -1240,6 +1251,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
  * ------------------------------------------
  */
 
+console.info('Load application components');
+
 opsChooserApp = new OpsChooserApp({config: ipsuiteNavigatorConfig});
 
 opsChooserApp.addRegions({
@@ -1356,9 +1369,44 @@ opsChooserApp.addInitializer(function(options) {
     //this.basket_activate(new BasketModel());
 });
 
-// main component event wiring
+
+// Main component event wiring
 opsChooserApp.addInitializer(function(options) {
 
+    // Application core, first stage boot process
+    this.listenTo(this, 'application:boot', function() {
+
+        console.info('Load main application (application:boot)');
+
+        this.setup_ui();
+
+        // Propagate "datasource" query parameter
+        var datasource = this.config.get('datasource');
+        if (datasource) {
+            this.set_datasource(datasource);
+        }
+
+        // Activate regular list region right now to avoid double rendering on initial page load
+        this.listRegion.show(this.collectionView);
+
+        // Hide pagination- and metadata-area to start from scratch
+        this.ui.reset_content();
+
+        // Propagate opaque error messages to alert area
+        propagate_opaque_errors();
+
+        // Enter second stage boot process
+        this.trigger('application:ready');
+
+        this.ui.do_element_visibility();
+
+    });
+
+    // Activate project as soon it's loaded from the datastore
+    this.listenTo(this, "project:ready", this.project_activate);
+
+
+    // Results were fetched, take action
     this.listenTo(this, 'results:ready', function() {
 
         // commit metadata, this will trigger e.g. PaginationView rendering
@@ -1372,10 +1420,19 @@ opsChooserApp.addInitializer(function(options) {
 
     });
 
-    // activate project as soon it's loaded from the datastore
-    this.listenTo(this, "project:ready", this.project_activate);
 
-    // kick off the search process immediately after initial project was created
-    this.listenToOnce(this, "project:ready", function() { this.perform_search(); });
+});
+
+// Kick off the search process triggered from query parameters
+opsChooserApp.addInitializer(function(options) {
+
+    // Just wait for project activation since this is a dependency before running
+    // a search because the query history is associated to the project.
+    this.listenToOnce(this, "project:ready", function() {
+
+        // Run search
+        this.perform_search();
+
+    });
 
 });

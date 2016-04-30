@@ -46,6 +46,7 @@ Infrastructure
 - Display: Introduce mini menu
 - Unify response data- and error-channels amongst all data sources
 - Add commandline tool for cleaning the IP Suite Navigator Browser database
+- Streamline Javascript application boot process
 
 
 Bug fixes and minor updates
