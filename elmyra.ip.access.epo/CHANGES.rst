@@ -64,6 +64,7 @@ Bug fixes and minor updates
 - Stop saving reference to project in QueryModel, this has led to dereferenced ProjectModel objects sucking up localStorage space
 - Fix pager setup on numberlistsearch
 - Fix family member removal notification: Differentiate between empty results from OPS in general and empty results after slicing
+- Don’t use review mode when sharing a basket via link as numberlist
 
 
 0.115.0

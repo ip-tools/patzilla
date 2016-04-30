@@ -397,7 +397,7 @@ BasketModel = Backbone.RelationalModel.extend({
             context: 'viewer',
             project: projectname,
             query: undefined,
-            datasource: 'review',
+            //datasource: 'review',
             numberlist: numbers_string,
         };
 
