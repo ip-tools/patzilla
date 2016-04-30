@@ -48,7 +48,7 @@ class GenericSearchClient(object):
 
         # fetch first chunk (1-chunksize) from upstream
         #first_chunk = self.search(expression, 0, chunksize)
-        first_chunk = self.search_method(expression, options=SmartBunch({'offset': 0, 'limit': chunksize}))
+        first_chunk = self.search_method(expression, SmartBunch({'offset': 0, 'limit': chunksize}))
         #print first_chunk
 
         #total_count = int(first_chunk['meta'].get('pager', {}).get('totalEntries', 0))
@@ -80,7 +80,7 @@ class GenericSearchClient(object):
             time.sleep(1)
 
             log.info(self.lm('Crawling from offset {offset}'.format(offset=offset)))
-            chunk = self.search_method(expression, options=SmartBunch({'offset': offset, 'limit': chunksize}))
+            chunk = self.search_method(expression, SmartBunch({'offset': offset, 'limit': chunksize}))
             chunks.append(chunk)
 
 
