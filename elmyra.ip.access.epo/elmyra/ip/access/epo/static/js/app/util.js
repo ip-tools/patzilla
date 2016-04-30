@@ -179,8 +179,8 @@ function dotresolve(cur, ns) {
     return cur;
 }
 
+// Underscore mixins with common iterator functions adapted to work with objects and maintain key/val pairs
 // https://gist.github.com/eethann/3430971
-// Underscore mixin with common iterator functions adapted to work with objects and maintain key/val pairs
 _.mixin({
     // ### _.objMap
     // _.map for objects, keeps key/value associations
@@ -222,6 +222,22 @@ _.mixin({
         });
     },
 });
+
+// Underscore mixins to sort object keys.
+// Like _.sortBy(), but on keys instead of values, returning an object, not an array. Defaults to alphanumeric sort.
+// https://gist.github.com/colingourlay/82506396503c05e2bb94
+_.mixin({
+    'sortKeysBy': function (obj, comparator) {
+        var keys = _.sortBy(_.keys(obj), function (key) {
+            return comparator ? comparator(obj[key], key) : key;
+        });
+
+        return _.object(keys, _.map(keys, function (key) {
+            return obj[key];
+        }));
+    }
+});
+
 
 function deferreds_bundle(deferreds) {
     // wait for all add operations to finish before signalling success

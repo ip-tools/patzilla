@@ -5,6 +5,8 @@ OpsBaseViewMixin = {
 
     bind_query_links: function(container) {
 
+        var _this = this;
+
         // run search actions when clicking query-links
         container.find(".query-link").unbind('click');
         container.find(".query-link").on('click', function(event) {
@@ -27,19 +29,20 @@ OpsBaseViewMixin = {
                 params['mode'] = 'liveview';
 
                 // compute opaque parameter token and reset href
-                var _this = this;
+                var __this = this;
                 opaque_param(params).then(function(opaque_query) {
-                    $(_this).attr('href', '?' + opaque_query);
-                })
+                    $(__this).attr('href', '?' + opaque_query);
+                });
 
-                // serialize state into regular query parameters otherwise
+            // otherwise, serialize state into regular query parameters
             } else {
-                $(this).attr('href', '?' + jQuery.param(params));
+                $(this).attr('href', '?' + opsChooserApp.permalink.serialize_params(params));
             }
 
         });
 
     },
+
 
     bind_same_citations_links: function(container) {
         // bind user notification to all same citations links of "explore citation environment" fame
