@@ -829,27 +829,35 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Search modifiers
         var tags_html = [];
         if (_.isObject(query_data) && _.isObject(query_data['modifiers'])) {
+
+            // Modifiers for OPS
             if (query_data['modifiers']['full-cycle']) {
                 tags_html.push(this.html_history_tag('Full cycle', {name: 'fc', width: 'narrow'}));
             }
-
-            if (query_data['modifiers']['order-past-first']) {
+            if (query_data['modifiers']['first-pub']) {
                 tags_html.push(this.html_history_tag('First pub.', {name: 'pf', width: 'narrow'}));
             }
-            if (query_data['modifiers']['order-recent-first']) {
+            if (query_data['modifiers']['recent-pub']) {
                 tags_html.push(this.html_history_tag('Recent pub.', {name: 'rf', width: 'narrow'}));
             }
 
+            // Modifiers for DPMA, FulltextPRO, IFI
             if (query_data['modifiers']['family-remove']) {
                 tags_html.push(this.html_history_tag('Remove family members', {name: '-fam:rm', width: 'wide'}));
             }
+
+            // Modifier for DPMA
             if (query_data['modifiers']['family-replace']) {
                 tags_html.push(this.html_history_tag('Replace family members', {name: '-fam:rp', width: 'wide'}));
             }
+
+            // Modifier for FulltextPRO
             if (query_data['modifiers']['family-full']) {
                 tags_html.push(this.html_history_tag('Full family', {name: '+fam', width: 'narrow'}));
             }
         }
+
+        // Sorting control
         if (_.isObject(query_data) && _.isObject(query_data['sorting'])) {
             tags_html.push(query_data.sorting.field + ':' + query_data.sorting.order);
         }
@@ -1152,8 +1160,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var datasource = opsChooserApp.get_datasource();
         var modifier_buttons_selector = 'button[data-name="full-cycle"]';
-        modifier_buttons_selector += ',[data-name="order-past-first"]';
-        modifier_buttons_selector += ',[data-name="order-recent-first"]';
+        modifier_buttons_selector += ',[data-name="first-pub"]';
+        modifier_buttons_selector += ',[data-name="recent-pub"]';
 
         if (_(['depatisnet']).contains(datasource)) {
             modifier_buttons_selector += ',[data-name="family-remove"]';

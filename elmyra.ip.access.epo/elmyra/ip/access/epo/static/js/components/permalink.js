@@ -7,6 +7,10 @@ PermalinkPlugin = Marionette.Controller.extend({
         console.log('PermalinkPlugin.initialize');
     },
 
+    setup_ui: function() {
+        var _this = this;
+    },
+
     dataurl: function() {
         // produce "data" url representation like "data:application/json;base64,ewogICAgImRhdGF..."
         var deferred = $.Deferred();
@@ -44,8 +48,8 @@ PermalinkPlugin = Marionette.Controller.extend({
     // TODO: refactor this elsewhere, e.g. some UrlBuilder?
     query_parameters_viewstate: function(uri) {
 
-        // aggregate parameters comprising viewer state, currently a 4-tuple
-        // see also config.js:history_pushstate
+        // Aggregate parameters comprising viewer state, currently a 4-tuple
+        // See also config.js:history_pushstate
         var config = opsChooserApp.config;
         var state = {
             mode: config.get('mode'),
@@ -54,13 +58,18 @@ PermalinkPlugin = Marionette.Controller.extend({
             datasource: config.get('datasource'),
         };
 
-        // remove parameters which do not differ from their default
+        // Add search modifiers and more to viewstate
+        var metadata_params = this.metadata_to_parameters();
+        _.extend(state, metadata_params);
+
+        // Remove parameters which do not differ from their default
         _.each(state, function(value, key) {
             if (config._originalAttributes[key] == value) {
                 delete state[key];
             }
         }, this);
 
+        // Merge viewstate with current url parameters and clean it up before shipping
         var params_computed = this.query_parameters(state, uri);
 
         return params_computed;
@@ -210,8 +219,72 @@ PermalinkPlugin = Marionette.Controller.extend({
         return deferred.promise();
     },
 
-    setup_ui: function() {
-        var _this = this;
+    metadata_to_parameters: function() {
+        // Propagate search modifiers from metadata to URL parameters
+
+        var params = {};
+
+        // 1. Let's start with search modifiers from "query_data"
+        var query_data = opsChooserApp.metadata.get('query_data');
+        if (query_data) {
+            _.each(query_data.modifiers, function(value, key) {
+                //log('modifier:', key, value);
+                if (_.isBoolean(value) && value) {
+                    _.defaults(params, {modifiers: []});
+                    params.modifiers.push(key);
+                }
+            });
+        }
+
+        // 2. TODO: Add sorting control and fulltext modifiers
+
+        return params;
+
+    },
+
+    parameters_to_metadata: function(params) {
+
+        var query_data = {};
+
+        // 1. Let's start with search modifiers, which should go back to "metadata.query_data"
+        // There's already a first stage which transports
+        // query parameters to the application configuration
+        var modifiers = opsChooserApp.config.get('modifiers');
+        if (modifiers) {
+            modifiers = modifiers.split(',');
+            _.each(modifiers, function(modifier) {
+                //log('modifier:', modifier);
+                _.defaults(query_data, {modifiers: {}});
+                query_data.modifiers[modifier] = true;
+            });
+        }
+
+        // 2. TODO: Add sorting control and fulltext modifiers
+
+        // Set metadata to empty object if undefined
+        var metadata_query_data = opsChooserApp.metadata.get('query_data');
+        if (metadata_query_data === undefined) {
+            opsChooserApp.metadata.set('query_data', {});
+        }
+
+        // Finally, update metadata object
+        _.extend(opsChooserApp.metadata.get('query_data'), query_data);
+
+    },
+
+    serialize_params: function(params) {
+
+        // Humanized URLs: Serialize specific lists as comma separated items, sorted by value
+        var array_whitelist = ['modifiers'];
+        _.each(params, function(value, key) {
+            if (_.isArray(value) && _.contains(array_whitelist, key)) {
+                value = value.sort().join(',');
+            }
+            params[key] = value;
+        });
+
+        // Serialize all items sorted by key
+        return jQuery.param(_.sortKeysBy(params));
     },
 
 });

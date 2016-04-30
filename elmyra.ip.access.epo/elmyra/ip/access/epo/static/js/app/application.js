@@ -51,8 +51,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     perform_search: function(options) {
 
         options = options || {};
+
         // propagate datasource
-        options.datasource = datasource;
+        // TODO: Fix me?
+        //options.datasource = datasource;
 
 
         // 1. initialize search
@@ -99,8 +101,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         }
         if (options.query_data) {
             this.metadata.set('query_data', options.query_data);
-            search_info.query_data = options.query_data;
         }
+        search_info.query_data = this.metadata.get('query_data');
 
         var self = this;
         var _this = this;
@@ -1429,6 +1431,15 @@ opsChooserApp.addInitializer(function(options) {
     // Just wait for project activation since this is a dependency before running
     // a search because the query history is associated to the project.
     this.listenToOnce(this, "project:ready", function() {
+
+        // Propagate search modifiers from query parameters to search engine metadata
+        this.permalink.parameters_to_metadata();
+
+        // Propagate search modifiers from search engine metadata to user interface
+        var query_data = this.metadata.get('query_data');
+        if (query_data) {
+            this.queryBuilderView.set_common_form_data(query_data);
+        }
 
         // Run search
         this.perform_search();

@@ -54,19 +54,20 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                     // get query_data from metadata
                     var query_data = metadata.get('query_data');
+                    _.defaults(query_data, {'modifiers': {}});
 
                     // document display strategy: regular vs. full-cycle
                     var mode_full_cycle = false;
                     if (query_data) {
-                        mode_full_cycle = query_data['modifiers']['full-cycle'];
+                        mode_full_cycle = Boolean(query_data['modifiers']['full-cycle']);
                     }
 
                     // document sort order: recent vs. descending
                     var order_recent_first = false;
                     var order_past_first = false;
                     if (query_data) {
-                        order_recent_first = query_data['modifiers']['order-recent-first'];
-                        order_past_first   = query_data['modifiers']['order-past-first'];
+                        order_recent_first = Boolean(query_data['modifiers']['recent-pub']);
+                        order_past_first   = Boolean(query_data['modifiers']['first-pub']);
                     }
 
                     // search_result is nested, collect representative result documents
