@@ -65,6 +65,7 @@ Bug fixes and minor updates
 - Fix pager setup on numberlistsearch
 - Fix family member removal notification: Differentiate between empty results from OPS in general and empty results after slicing
 - Don’t use review mode when sharing a basket via link as numberlist
+- Don’t display menu entrypoint in “liveview” mode
 
 
 0.115.0
