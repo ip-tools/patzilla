@@ -742,6 +742,17 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
         return numbers;
     },
 
+    get_placeholder_document_numbers: function() {
+        // Returns list of document numbers used as placeholders
+        var numbers = [];
+        _.each(this.models, function(model) {
+            if (model.get('__type__') == 'ops-placeholder') {
+                numbers.push(model.get_document_number());
+            }
+        });
+        return numbers;
+    },
+
 });
 
 

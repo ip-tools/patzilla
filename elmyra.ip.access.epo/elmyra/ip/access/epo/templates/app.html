@@ -31,9 +31,11 @@ debugmode = h.asbool(request.params.get('debug'))
 ${ h.fiddler.render() | n }
 </script>
 
-<!-- user interface: html templates -->
+<!-- user interface: inline html -->
 <%include file="app/header.html"/>
 <%include file="app/control.html"/>
+
+<!-- user interface: html templates -->
 <%include file="app/util.html"/>
 <%include file="help/issue-reporter.html"/>
 <%include file="querybuilder.html"/>

@@ -11,7 +11,10 @@ ResultItemView = Backbone.Marionette.ItemView.extend({
     serializeData: function() {
         var data = Backbone.Marionette.ItemView.prototype.serializeData.apply(this, arguments);
         // indicate whether result hit is missing in ops view collection
-        data.is_document_missing = !_(this.model.collection.reference_document_numbers).contains(this.model.get('publication_number'));
+        if (!_(this.model.collection.reference_document_numbers).contains(this.model.get('publication_number')) ||
+            _(this.model.collection.placeholder_document_numbers).contains(this.model.get('publication_number'))) {
+            data.is_document_missing = true;
+        }
         return data;
     },
 

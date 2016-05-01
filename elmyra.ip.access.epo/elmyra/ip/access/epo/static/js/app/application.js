@@ -529,6 +529,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // propagate list of found document numbers to results collection
             // in order to make it possible to indicate which documents are missing
             self.results.set_reference_document_numbers(self.documents.get_document_numbers());
+            self.results.set_placeholder_document_numbers(self.documents.get_placeholder_document_numbers());
 
             // signal the results are ready
             self.trigger('results:ready');
