@@ -102,7 +102,7 @@ _.string.dedent = function(str) {
     }
 
     // Amendment: Dedent everything
-    const re = new RegExp(`^[ \\t]+`, 'gm');
+    const re = new RegExp('^[ \\t]+', 'gm');
     return str.replace(re, '');
 };
 
