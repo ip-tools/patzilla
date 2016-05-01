@@ -11,6 +11,10 @@ ResultCollection = Backbone.Collection.extend({
         this.reference_document_numbers = document_numbers;
     },
 
+    set_placeholder_document_numbers: function(document_numbers) {
+        this.placeholder_document_numbers = document_numbers;
+    },
+
     model: function(attrs, options) {
         if (attrs.upstream_provider == 'ftpro') {
             return new FulltextProResultEntry(attrs, options);
