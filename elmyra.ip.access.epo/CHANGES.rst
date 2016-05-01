@@ -5,6 +5,9 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+0.116.0
+=======
+
 Features
 --------
 - IFI: Enable expression parsing with “Class” criteria in comfort form
