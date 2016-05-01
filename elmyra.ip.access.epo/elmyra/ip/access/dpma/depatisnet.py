@@ -207,7 +207,8 @@ class DpmaDepatisnetAccess:
 
         if body == '':
             self.logout()
-            raise SyntaxError('Empty response from server')
+            raise SyntaxError('Empty response from DPMA server. Please check your search criteria for syntax errors, '
+                              'otherwise don\'t hesitate to report this problem to us.')
 
         # check for error messages
         soup = BeautifulSoup(body)
