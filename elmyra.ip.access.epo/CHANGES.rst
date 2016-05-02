@@ -6,10 +6,14 @@ development
 ===========
 
 
+0.116.2
+=======
+- Fix some Javascript runtime errors reported by issue reporter on staging
+
+
 0.116.1
 =======
 - Issue reporter: Fix query expression to user interface propagation, for “no results” panel as well as the issue reporter dialog
-- Fix some Javascript runtime errors reported by issue reporter on staging
 
 
 0.116.0
