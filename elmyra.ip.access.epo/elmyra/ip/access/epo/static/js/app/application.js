@@ -962,8 +962,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // Be aware that the basket is not properly initialized yet at this point.
         // So potential listeners to configuration model change events currently
         // must not expect a *fully* initialized project/basket structure.
-        this.config.set('project', project.get('name'));
-
+        // 2016-05-02: Now updating config model after fetching the basket.
+        var register_project = function() {
+            _this.config.set('project', project.get('name'));
+        }
 
         // activate basket
         var basket = project.get('basket');
@@ -975,10 +977,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             success: function() {
                 $.when(basket.fetch_entries()).then(function() {
                     _this.basket_activate(basket);
+                    register_project();
                 });
             },
-            error: function(e) {
+            error: function(e, error) {
+                console.error('Error while fetching basket object for project "' + projectname + '":', e, error);
                 _this.basket_deactivate();
+                register_project();
             },
         });
 
@@ -1235,7 +1240,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // projects
         this.projects.reset();
-        this.projectChooserView.clear();
+
+        // Shutdown project choose, being graceful against timing issues re. object lifecycle
+        if (this.projectChooserView) {
+            this.projectChooserView.clear();
+        }
 
     },
 

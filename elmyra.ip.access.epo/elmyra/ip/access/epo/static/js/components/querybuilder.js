@@ -991,9 +991,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     cql_history_chooser_load_data: function(data) {
         var chooser_widget = $('#cql-history-chooser-select2');
-        var projectname = opsChooserApp.project.get('name');
         chooser_widget.select2({
-            placeholder: 'Query history' + ' (' + projectname + ')',
             dropdownCssClass: "bigdrop history-dropdown",
             escapeMarkup: function(text) { return text; },
             data: (data || { results: [] }),
