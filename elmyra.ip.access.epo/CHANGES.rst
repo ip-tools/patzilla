@@ -6,10 +6,14 @@ development
 ===========
 
 
+0.116.3
+=======
+- Fix another Javascript runtime error reported by issue reporter on staging
+  re. old query history items vs. new search modifiers
+
 0.116.2
 =======
 - Fix some Javascript runtime errors reported by issue reporter on staging
-
 
 0.116.1
 =======

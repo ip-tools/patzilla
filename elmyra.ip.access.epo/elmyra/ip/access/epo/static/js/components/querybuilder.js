@@ -1208,7 +1208,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         _.each(modifier_elements, function(element) {
             var name = $(element).data('name');
 
-            if (data['modifiers'] && data['modifiers'][name]) {
+            if (data && data.modifiers && data.modifiers[name]) {
                 $(element).addClass('active');
                 $(element).addClass('btn-info');
             } else {
@@ -1231,7 +1231,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
 
         // populate sorting state to user interface
-        if (data.sorting) {
+        if (data && data.sorting) {
             //log('data.sorting:', data.sorting);
             $('#sort-field-chooser').select2("val", data.sorting.field);
             $('#sort-order-chooser').data('value', data.sorting.order);
