@@ -306,22 +306,21 @@
 </script>
 
 <script id="no-results" type="text/x-underscore-template">
-    Searching for "<strong><%= htmlentities(query) %></strong>" at data source
-    "<strong><%= datasource %></strong>" did not match any documents.
-    <br/>
+    Searching for <pre class="inline"><%= data.query_display.replace(/&amp;quot;/g, '"') %></pre> at data source
+    <strong><%= data.datasource %></strong> did not match any documents.
     Please try refining search criteria or expression.
-    <br/><br/>
-    If you think this is a system failure, don't hesitate to report this issue to us:
-    &nbsp;
+    <br/>
+    If you think this is a system failure, don't hesitate to report this issue to us.
     <button
-            class="btn btn-warning report-issue-problem"
+            class="btn btn-warning report-issue-problem pull-right"
             data-report-origin="result"
             data-report-kind="not-available"
-            data-report-item="<%= query %>"
-            data-dialog-remark="Searching for &quot;<%= query %>&quot; at data source &quot;<%= datasource %>&quot; did not match any documents."
+            data-report-item="<%= data.query_dialog %>"
+            data-dialog-remark="Search did not match any documents at &quot;<%= data.datasource %>&quot;.&#13;Criteria: <%= data.query_dialog %>"
             >
         Report problem
     </button>
+    <div class="clearfix"/>
 </script>
 
 </%text>

@@ -5,6 +5,12 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+
+0.116.1
+=======
+- Issue reporter: Fix query expression to user interface propagation, for “no results” panel as well as the issue reporter dialog
+
+
 0.116.0
 =======
 

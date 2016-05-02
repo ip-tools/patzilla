@@ -480,6 +480,19 @@ function get_html_translation_table(table, quote_style) {
     return hash_map;
 }
 
+
+// https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/34064434#34064434
+function htmlDecode(input) {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+}
+
+// https://stackoverflow.com/questions/1912501/unescape-html-entities-in-javascript/35522849#35522849
+function htmlDecodeRelaxed(input) {
+    return $('<textarea />').html(input).text();
+}
+
+
 // http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
 var ModalRegion = Marionette.Region.extend({

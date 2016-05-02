@@ -184,7 +184,7 @@ IssueReporterGui = Backbone.Model.extend({
             dialog.find('#issue-reporter-what').val('');
         }
         if (options.remark) {
-            dialog.find('#issue-reporter-remark').val(options.remark);
+            dialog.find('#issue-reporter-remark').val(htmlDecodeRelaxed(options.remark));
         } else {
             dialog.find('#issue-reporter-remark').val('');
         }

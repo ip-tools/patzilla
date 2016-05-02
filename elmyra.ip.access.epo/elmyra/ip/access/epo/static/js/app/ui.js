@@ -216,7 +216,22 @@ UiController = Marionette.Controller.extend({
     },
 
     no_results_alert: function(search_info) {
-        var msg = _.template($('#no-results').html())(search_info);
+        var query_display = search_info.query;
+        var query_dialog  = search_info.query;
+        if (search_info.flavor == 'comfort' &&
+            _.isObject(search_info.query_data) && _.isObject(search_info.query_data.criteria)) {
+            query_display = JSON.stringify(search_info.query_data.criteria);
+            query_dialog  = htmlentities(query_display);
+        }
+        if (search_info.datasource == 'ftpro' && search_info.flavor == 'cql') {
+            query_display = htmlentities(search_info.query);
+            query_dialog  = '&#13;' + htmlentities(search_info.query);
+        }
+
+        //search_info.query_display = htmlentities(query_display);
+        search_info.query_display = query_display;
+        search_info.query_dialog  = query_dialog;
+        var msg = _.template($('#no-results').html(), null, {variable: 'data'})(search_info);
         this.user_alert(msg, 'warning');
     },
 
