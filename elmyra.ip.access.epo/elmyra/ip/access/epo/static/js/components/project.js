@@ -624,6 +624,12 @@ opsChooserApp.addInitializer(function(options) {
 
     // record results to query history
     this.listenTo(this, 'results:ready', function() {
+
+        if (!this.project) {
+            console.error('Could not save result count into query history object, project object empty or undefined.');
+            return;
+        }
+
         var result_count = this.metadata.get('result_count');
         if (this.project.query_recorded) {
             this.project.query_recorded.set('result_count', result_count);
