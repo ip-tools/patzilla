@@ -163,7 +163,8 @@ class BackboneModelParameterFiddler(object):
             'ifi' in user_modules
 
         # 2.c compute whether Google datasource is allowed
-        params['google_allowed'] = hostname in staging_hosts
+        #params['google_enabled'] = hostname in staging_hosts
+        params['google_enabled'] = False
 
 
         # 3. add badges for staging- and development-environments

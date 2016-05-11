@@ -6,6 +6,10 @@ development
 ===========
 
 
+0.116.4
+=======
+- Fix logic for displaying per-user-enabled data source buttons
+
 0.116.3
 =======
 - Fix another Javascript runtime error reported by issue reporter on staging

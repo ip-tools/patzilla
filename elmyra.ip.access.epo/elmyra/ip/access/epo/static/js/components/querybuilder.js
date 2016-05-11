@@ -30,13 +30,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // ------------------------------------------
         //   datasource selector
         // ------------------------------------------
-
-        if (opsChooserApp.config.get('ftpro_enabled')) {
-            $("#datasource > button[data-value='ftpro']").show();
-        }
-        if (opsChooserApp.config.get('ifi_enabled')) {
-            $("#datasource > button[data-value='ifi']").show();
-        }
+        this.display_datasource_buttons();
 
         // switch cql field chooser when selecting datasource
         // TODO: do it properly on the configuration data model
@@ -69,7 +63,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.setup_cql_field_chooser(flavor != 'cql');
 
             // show all search backends
-            $('#datasource button[data-value != "google"]').show();
+            _this.display_datasource_buttons();
 
             // application action: perform search
             // properly wire "send query" button
@@ -137,8 +131,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // switch datasource to epo
                 opsChooserApp.set_datasource('ops');
 
-                // hide other search backends
-                $('#datasource button[data-value != "ops"]').hide();
+                // hide other search backends, only display OPS
+                _this.display_datasource_buttons(['ops']);
 
                 // perform numberlist search
                 $('.btn-query-perform').click(function() {
@@ -249,6 +243,32 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         });
         */
+
+    },
+
+    display_datasource_buttons: function(whitelist) {
+
+        // At first, hide all buttons
+        $('#datasource button').hide();
+
+        // Then, compute data sources the user is allowed to see
+        if (_.isEmpty(whitelist)) {
+            whitelist = ['ops', 'depatisnet'];
+            if (opsChooserApp.config.get('google_enabled')) {
+                whitelist.push('google');
+            }
+            if (opsChooserApp.config.get('ftpro_enabled')) {
+                whitelist.push('ftpro');
+            }
+            if (opsChooserApp.config.get('ifi_enabled')) {
+                whitelist.push('ifi');
+            }
+        }
+
+        // Finally, activate buttons for allowed data sources
+        _.each(whitelist, function(item) {
+            $("#datasource > button[data-value='" + item + "']").show();
+        });
 
     },
 

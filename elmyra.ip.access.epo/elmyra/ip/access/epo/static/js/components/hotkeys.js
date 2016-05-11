@@ -228,7 +228,7 @@ HotkeysPlugin = Marionette.Controller.extend({
             $('#datasource button[data-value="depatisnet"]').button('toggle');
             _this.app.set_datasource('depatisnet');
         });
-        if (opsChooserApp.config.get('google_allowed')) {
+        if (opsChooserApp.config.get('google_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
                 var google_button = $('#datasource button[data-value="google"]');
                 google_button.show();
