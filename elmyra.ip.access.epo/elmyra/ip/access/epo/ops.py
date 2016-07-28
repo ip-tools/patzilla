@@ -249,7 +249,7 @@ def image_representative(patent):
         image_representative_from_family(patent, ['EP', 'WO'])
 
 
-#@cache_region('medium')
+@cache_region('medium')
 def inquire_images(document):
 
     patent = decode_patent_number(document)

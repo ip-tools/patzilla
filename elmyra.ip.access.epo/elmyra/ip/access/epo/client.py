@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 import json
 import logging
-from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
+from pprint import pprint
 from pyramid.threadlocal import get_current_registry
-from requests.exceptions import ConnectionError
-from requests_oauthlib.oauth2_session import OAuth2Session
-from oauthlib.common import add_params_to_uri
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from requests.exceptions import ConnectionError
+from requests_oauthlib.oauth2_session import OAuth2Session
+from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
+from oauthlib.common import add_params_to_uri
 from elmyra.web.identity.store import IUserMetricsManager
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,7 @@ def includeme(config):
     config.add_subscriber(attach_oauth_client, "pyramid.events.ContextFound")
 
 def attach_oauth_client(event):
+    #logger.info('Attaching OAuth client to request')
     request = event.request
     registry = request.registry
     #context = request.context
@@ -46,13 +48,13 @@ class OpsOAuthClientPool(object):
 
     def __init__(self):
         self.clients = {}
-        print 'OpsOAuthClientPool.__init__'
+        logger.info('Creating OpsOAuthClientPool')
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
-            logger.info('OpsOAuthClientPool.get: identifier={0}'.format(identifier))
+            # TODO: Use "debug" flag from some configuration setting
             factory = OpsOAuthClientFactory(credentials=credentials, debug=False)
-            self.clients[identifier] = factory.oauth_client_create()
+            self.clients[identifier] = factory.create_session(identifier=identifier)
         return self.clients.get(identifier)
 
 
@@ -63,25 +65,47 @@ class OpsOAuth2Session(OAuth2Session):
 
     def __init__(self, *args, **kwargs):
 
+        registry = get_current_registry()
+
         # Remember the last throttling message in order to emit only changes to the log
         self.throttle_last_log = None
 
-        registry = get_current_registry()
+        # Create metrics manager per OAuth session
         self.metrics_manager = registry.getUtility(IUserMetricsManager)
+
+        # Pass execution flow to parent constructor
         super(OpsOAuth2Session, self).__init__(*args, **kwargs)
 
     def request(self, *args, **kwargs):
 
+        #pprint(args)
+        #pprint(kwargs)
+
         try:
+            kwargs_real = kwargs.copy()
+            if 'provoke_failure' in kwargs:
+                del kwargs['provoke_failure']
+
             response = super(OpsOAuth2Session, self).request(*args, **kwargs)
+
+            # Debug path
+            if 'provoke_failure' in kwargs_real:
+                response.status_code = 403
+                response.headers['X-Anonymousquotaperminute-Used'] = '5'
+
+            # When OAuth authorization is lost, invalidate token and close connection
+            if self.is_anonymous(response):
+                self.disconnect()
+
+            # Success path
             content_length = response.headers.get('Content-Length')
             if content_length and content_length.isdigit():
                 self.metrics_manager.measure_upstream('ops', int(content_length))
 
-            # FIXME: Temporary logging
+            # Log X-Throttling-Control response header
             x_throttling_control = response.headers.get('x-throttling-control')
             if x_throttling_control:
-                # Counter duplicate header problem, sometimes we receive
+                # Counter duplicate header problem, sometimes we receive duplicate lines like:
                 # idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30), idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30)
                 if len(x_throttling_control) > 150:
                     x_throttling_control = x_throttling_control[:len(x_throttling_control)/2].strip(' ,')
@@ -95,11 +119,49 @@ class OpsOAuth2Session(OAuth2Session):
             ex.url = ex.uri
             ex.content = ex.description
             logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex.description, self.client_id))
+            self.disconnect()
             return ex
 
         except ConnectionError as ex:
             logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex, self.client_id))
+            self.disconnect()
             return ex
+
+    def disconnect(self, *args, **kwargs):
+        logger.warning('Invalidating token and closing connection for client_id={client_id}'.format(client_id=self.client_id))
+        self.token = self.get_empty_token()
+        return self.close(*args, **kwargs)
+
+    def is_anonymous(self, response):
+        """
+
+        # Anonymous access
+        'x-anonymousquotaperminute-used': '1'
+        'x-anonymousquotaperday-used': '10514'
+        'x-individualquotaperhour-used': '31544'
+
+        # Rejected after running into a quota limit
+        'x-rejection-reason': 'AnonymousQuotaPerDay'
+
+        # Authenticated access
+        'x-individualquotaperhour-used': '26287'
+        'x-registeredpayingquotaperweek-used': '375005228'
+
+        """
+        if 'x-anonymousquotaperminute-used' in response.headers or \
+           'x-anonymousquotaperday-used' in  response.headers:
+            return True
+        else:
+            return False
+
+    @classmethod
+    def get_empty_token(cls):
+        token = {
+            'access_token': 'UNKNOWN',
+            'token_type': 'Bearer',
+            'expires_in': '-30',     # initially 3600, need to be updated by you
+        }
+        return token
 
 
 class OpsOAuthClientFactory(object):
@@ -159,41 +221,85 @@ class OpsOAuthClientFactory(object):
         #session.register_compliance_hook('protected_request', _non_compliant_param_name)
         return session
 
-    def oauth_client_create(self):
+    def create_session(self, identifier=None):
 
-        #print '========= oauth_client_create'
+        client_id     = self.consumer_key
+        client_secret = self.consumer_secret
 
-        token = {
-            'access_token': 'eswfld123kjhn1v5423',
-            'refresh_token': 'asdfkljh23490sdf',
-            'token_type': 'Bearer',
-            'expires_in': '-30',     # initially 3600, need to be updated by you
-        }
+        logger.info('OpsOAuthClientFactory.create_session: ' \
+                    'identifier={identifier}, client_id={client_id}'.format(**locals()))
 
         token_url = 'https://ops.epo.org/3.1/auth/accesstoken'
         refresh_url = token_url
 
         extra = {
-            'client_id': self.consumer_key,
-            'client_secret': self.consumer_secret,
+            'client_id':     client_id,
+            'client_secret': client_secret,
         }
 
         def token_saver(token):
             #print "token_saver:", token
             pass
 
-        client = BackendApplicationClient(self.consumer_key)
+        client = BackendApplicationClient(client_id)
         client.prepare_refresh_body = client.prepare_request_body
         #print "BackendApplicationClient.request_body:", client.prepare_request_body()
         #'grant_type=client_credentials&scope=hello+world'
 
-        #print "OAuth2Session start"
+        empty_token = OpsOAuth2Session.get_empty_token()
         session = OpsOAuth2Session(
-            client_id=self.consumer_key,
+            client_id=client_id,
             client=client,
             auto_refresh_url=refresh_url, auto_refresh_kwargs=extra,
-            token=token, token_updater=token_saver)
+            token=empty_token, token_updater=token_saver)
 
         self.ops_compliance_fix(session)
 
         return session
+
+
+
+def make_request(session, url, **kwargs):
+    print '=' * 42
+    response = session.get(url, headers={'Accept': 'application/json'}, params={'q': 'pn=EP666666', 'Range': '1-10'}, **kwargs)
+
+    print 'status:', response.status_code
+    print 'method:', response.request.method
+    print 'url:', response.request.url
+    #if response.status_code == 200:
+    print 'headers:', response.headers
+    #print 'response:'; print response.content
+
+
+if __name__ == '__main__':
+
+    config_ini = 'elmyra.ip.access.epo/development.ini'
+
+    # Setup logging, manually
+    import logging.config
+    logging.config.fileConfig(config_ini)
+    logger.setLevel(logging.DEBUG)
+
+    # Bootstrap a Pyramid script
+    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/commandline.html#writing-a-script
+    from pyramid.paster import bootstrap
+    env = bootstrap(config_ini)
+
+    # Get request and registry objects from environment
+    request = env['request']
+    registry = env['registry']
+
+    # Get hold of appropriate utility
+    from elmyra.ip.access.epo.client import IOpsOAuthClientPool
+    pool = registry.getUtility(IOpsOAuthClientPool)
+    ops_session = pool.get('default')
+    print ops_session
+
+    url = 'https://ops.epo.org/3.1/rest-services/published-data/search/biblio'
+
+    make_request(ops_session, url)
+    make_request(ops_session, url, provoke_failure=True)
+
+    make_request(ops_session, url)
+    make_request(ops_session, url)
+
