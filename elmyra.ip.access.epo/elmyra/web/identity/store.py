@@ -123,6 +123,9 @@ class UserMetricsManager(object):
 
         # measure per-user
         request = get_current_request()
+        if not hasattr(request, 'user'):
+            return
+
         userid = request.user and request.user.userid or None
 
         log.debug('Measure transfer: userid={0}, upstream={1}, volume={2}'.format(userid, upstream, volume))

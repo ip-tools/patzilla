@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Improve robustness of OPS OAuth client
 
 
 0.116.4
