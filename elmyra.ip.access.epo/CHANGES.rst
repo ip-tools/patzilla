@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - Improve robustness of OPS OAuth client
+- Add Javascript components “jQuery Redirect” and “bootstrap-slider”
 
 
 0.116.4
