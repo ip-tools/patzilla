@@ -59,21 +59,31 @@
                 <div class="span6">
 
                     <!-- basket actions -->
-                    <div class="btn-group btn-popover pull-right do-not-print"
-                         data-toggle="popover" data-trigger="hover" data-placement="top"
-                         data-content="Share collection"
-                            >
+                    <div class="btn-group pull-right do-not-print">
+
                         <button
                                 id="basket-submit-button"
                                 type="submit" role="button" class="btn btn-popover"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                                data-content="Submit collection to origin or 3rd-party system"
+                                data-content="Submit to 3rd-party system"
                                 >
-                            <i class="icon-random"></i>
+                            <i class="icon-random icon-large"></i>
                             Submit
                         </button>
+
+                        <a id="dossier-export-button" class="btn btn-popover" role="button"
+                           data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                           data-content="Export project in multiple formats"
+                           >
+                            <i class="icon-save icon-large"></i>
+                            &nbsp;
+                            Export
+                        </a>
+
+                        <!--
                         <button class="btn dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-external-link"></i>
+                            <i class="icon-save icon-large"></i>
+                            &nbsp;
                             Share
                         </button>
                         <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -82,98 +92,13 @@
                         <ul class="dropdown-menu">
 
                             <li>
-                                <!--
-                                <button
-                                        id="basket-submit-button"
-                                        type="submit" role="button" class="btn btn-link btn-popover incognito pull-right"
-                                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                                        data-content="Submit collection to origin or 3rd-party system"
-                                        >
-                                    <span class="incognito">
-                                        <i class="icon-share"></i>
-                                        Submit
-                                    </span>
 
-                                </button>
-                                -->
-
-                                <!-- A. numberlist -->
-                                <div class="dropdown-section-header">
-                                    <i class="icon-align-left icon-large"></i>
-                                    &nbsp;
-                                    Numberlist
-                                </div>
-
-                                <a id="share-display-rated">
-                                    <i class="fa-icon icon-pushpin"></i>
-                                    &nbsp;&nbsp;
-                                    Display rated documents
-                                </a>
-                                <a id="share-display-seen">
-                                    <i class="fa-icon icon-eye-open"></i>
-                                    &nbsp;
-                                    Display seen documents
-                                </a>
-
-                                <a id="share-numberlist-email">
-                                    <i class="icon-envelope-alt"></i>
-                                    &nbsp;
-                                    Email
-                                </a>
-                                <a id="share-numberlist-clipboard">
-                                    <i class="icon-copy"></i>
-                                    &nbsp;
-                                    Clipboard
-                                </a>
-                                <a id="share-numberlist-url">
-                                    <i class="icon-external-link"></i>
-                                    &nbsp;
-                                    Link
-                                </a>
-                                <a id="share-numberlist-url-ttl">
-                                    <i class="icon-external-link"></i>
-                                    &nbsp;
-                                    Link, with expiration time
-                                    <i class="icon-time"></i>
-                                </a>
-
-                                <hr class="divider"/>
-
-                                <!-- B. documents -->
-
-                                <div class="dropdown-section-header">
-                                    <i class="icon-file-text-alt icon-large"></i>
-                                    &nbsp;
-                                    Documents
-                                </div>
-
-                                <a id="download-documents-pdf-archive">
-                                    <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
-                                    PDF Download
-                                </a>
-
-                                <!--
-                                <a id="share-documents-transfer">
-                                    <i class="icon-upload-alt"></i>
-                                    &nbsp;
-                                    Transfer by other means (FTP)
-                                </a>
-                                -->
-
-
-                                <!-- C. database -->
-
-                                <!--
-                                <hr class="divider"/>
                                 <div class="dropdown-section-header">
                                     <i class="icon-archive icon-large"></i>
                                     &nbsp;
                                     Database
                                 </div>
-                                -->
 
-                                <!-- permalink for review -->
-                                <!--
                                 <a class="permalink-review-liveview">
                                     <i class="icon-external-link"></i>
                                     &nbsp;
@@ -185,11 +110,14 @@
                                     Review project, with expiration time
                                     <i class="icon-time"></i>
                                 </a>
-                                -->
+
+                                <hr class="divider"/>
 
                             </li>
 
                         </ul>
+                        -->
+
                     </div>
 
                 </div>

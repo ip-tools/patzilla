@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2015 Andreas Motl, Elmyra UG
+// (c) 2014-2016 Andreas Motl, Elmyra UG
 
 QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
@@ -11,6 +11,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //this.listenTo(this, "item:rendered", this.setup_ui);
         this.config = this.templateHelpers.config = opsChooserApp.config;
         //this.setup_ui();
+        this.radios = new RadioPlus();
     },
 
     templateHelpers: {},
@@ -155,39 +156,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
         var common_buttons = $('.btn-full-cycle, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
+        common_buttons.unbind('click');
         common_buttons.on('click', function(e) {
 
             var already_active = $(this).hasClass('active');
-            var parent_data_toggle = $(this).parent().attr('data-toggle');
-
-            if (parent_data_toggle != 'buttons-radio') {
-                e.stopPropagation();
-            }
-
-            // don't toggle if data-toggle="button"
-            if ($(this).attr('data-toggle') != 'button') {
-                $(this).toggleClass('active');
-                $(this).toggleClass('btn-info');
-            }
-
-            // simulate "buttons-radio" behavior, but add a third state
-            if (parent_data_toggle == 'buttons-radio') {
-
-                // simulate third state (deactivate already pressed)
-                if (already_active) {
-                    $(this).removeClass('active');
-                    $(this).removeClass('btn-info');
-                    e.stopPropagation();
-
-                // simulate exclusive selection (radio behavior)
-                } else {
-                    $(this).parent().find('button').addClass('btn-info').not(this).removeClass('btn-info');
-                }
-
-            }
+            _this.radios.button_behaviour(this, e);
 
             // set label text
-            _this.buttonstate_to_label(this, already_active);
+            _this.radios.label_behaviour(this, already_active);
 
             // when clicking a mode button which augments search behavior, recompute upstream query expression
             // for search backends where query_data modifiers already influence the expression building
@@ -270,26 +246,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $("#datasource > button[data-value='" + item + "']").show();
         });
 
-    },
-
-    // set label text
-    buttonstate_to_label: function(element, default_state) {
-
-        // switch to default state
-        if (default_state) {
-            var active_target = $(element).data('active-target');
-            var active_text   = $(active_target).data('original-text');
-
-        // switch to state coming from selected button
-        } else {
-            var active_target = $(element).data('active-target');
-            var active_text   = $(element).data('active-text');
-        }
-
-        // set text to appropriate element
-        if (active_target && active_text) {
-            $(active_target).html(active_text);
-        }
     },
 
     // hide query textarea for ftpro, if not in debug mode
@@ -1201,7 +1157,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var datasource = opsChooserApp.get_datasource();
 
         var modifier_elements = this.get_form_modifier_elements();
-        var modifiers = this.collect_modifiers_from_ui(modifier_elements);
+        var modifiers = this.radios.get_state(modifier_elements);
         var sorting = this.collect_sorting_state_from_ui();
 
         var form_data = {
@@ -1237,7 +1193,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             }
 
             // set label text to default
-            _this.buttonstate_to_label(element, true);
+            _this.radios.label_behaviour(element, true);
 
         });
 
@@ -1245,7 +1201,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var is_active = $(element).hasClass('active');
             if (is_active) {
                 // set label text to selected one
-                _this.buttonstate_to_label(element, false);
+                _this.radios.label_behaviour(element, false);
             }
         });
 
@@ -1283,7 +1239,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // 2. collect modifiers from user interface
         var buttons = $('#querybuilder-area').find($('button[data-name="fulltext"]'));
-        var modifiers = this.collect_modifiers_from_ui(buttons);
+        var modifiers = this.radios.get_state(buttons);
 
         var payload = this.get_common_form_data();
 
@@ -1322,27 +1278,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             });
         }
 
-    },
-
-
-    collect_modifiers_from_ui: function(elements) {
-        var modifiers = {};
-        _.each(elements, function(element) {
-            var name = $(element).data('name');
-            var state = $(element).hasClass('active');
-
-            // handle modifier-based storage
-            var modifier = $(element).data('modifier');
-            if (modifier) {
-                var defaults = {};
-                defaults[name] = {};
-                _.defaults(modifiers, defaults);
-                modifiers[name][modifier] = state;
-            } else {
-                modifiers[name] = state;
-            }
-        });
-        return modifiers;
     },
 
     collect_sorting_state_from_ui: function() {
@@ -1409,8 +1344,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             beforeSend: function(xhr, settings) {
                 xhr.requestUrl = settings.url;
             },
-            async: false,
-            sync: true,
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
         }).success(function(payload, status, options) {

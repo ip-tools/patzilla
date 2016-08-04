@@ -49,6 +49,7 @@ ${ h.fiddler.render() | n }
 <%include file="ftpro.html"/>
 <%include file="permalink.html"/>
 <%include file="keyword-editor.html"/>
+<%include file="components/export.html"/>
 
 
 <!-- user interface: javascript resources -->
@@ -121,6 +122,7 @@ ${ h.fiddler.render() | n }
 <!-- application -->
 % if request.registry.settings.get('ipsuite.production') != 'true':
     <script type="text/javascript" src="/static/js/app/lib/linkmaker.js"></script>
+    <script type="text/javascript" src="/static/js/app/lib/radio-plus.js"></script>
     <script type="text/javascript" src="/static/js/app/lib/util.js"></script>
     <script type="text/javascript" src="/static/js/app/lib/patents.js"></script>
     <script type="text/javascript" src="/static/js/app/core.js"></script>
@@ -155,6 +157,7 @@ ${ h.fiddler.render() | n }
     <script type="text/javascript" src="/static/js/components/analytics.js"></script>
     <script type="text/javascript" src="/static/js/components/waypoints.js"></script>
     <script type="text/javascript" src="/static/js/components/reading.js"></script>
+    <script type="text/javascript" src="/static/js/components/export.js"></script>
 % endif
 
 </%block>

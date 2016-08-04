@@ -2,6 +2,7 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import json
 import logging
+from pprint import pprint
 from elmyra.ip.access.epo.util import dict_prefix_key
 from elmyra.ip.util.date import unixtime_to_human, datetime_isoformat, unixtime_to_datetime
 from elmyra.ip.util.python import _exception_traceback
@@ -62,10 +63,27 @@ class BackboneModelParameterFiddler(object):
         request_params = dict(request.params)
         user_params = {}
         if request.user:
+
+            # Formulate JS-domain settings
             user_params = dict_prefix_key({
                 'modules': request.user.modules,
-                'tags': request.user.tags,
-            }, 'user.')
+                'tags': request.user.tags},
+                'user.')
+
+            # Get representation of user attributes
+            user_dict = json.loads(request.user.to_json())
+
+            # Strip sensitive information
+            if '_id' in user_dict:
+                del user_dict['_id']
+            if 'password' in user_dict:
+                del user_dict['password']
+            if 'upstream_credentials' in user_dict:
+                del user_dict['upstream_credentials']
+
+            # Add whole user attributes to JS-domain
+            user_params['user'] = user_dict
+
         request_opaque = dict(request.opaque)
         request_opaque_meta = dict_prefix_key(dict(request.opaque_meta), 'opaque.meta.')
 

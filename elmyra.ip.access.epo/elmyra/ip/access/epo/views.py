@@ -45,6 +45,7 @@ def includeme(config):
     # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
+    config.add_route('patentsearch-quickview',  '/ops/browser/{qmode}/{field}/{value}')
     config.add_route('patentsearch-quick2',  '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('jump-dpmaregister2', '/ops/browser/office/dpma/register/application/{document_number}')
@@ -112,23 +113,31 @@ def opsbrowser_vanity(request):
     else:
         return get_redirect_query(request)
 
-    query = compute_query(field, value)
+    query = compute_expression(field, value)
     log.info('vanity url: "{0}" => "{1}"'.format(label, query))
 
     return get_redirect_query(request, query)
 
 @view_config(route_name='patentsearch-quick')
+@view_config(route_name='patentsearch-quickview')
 @view_config(route_name='patentsearch-quick2')
 def opsbrowser_quick(request):
     field = request.matchdict.get('field')
     value = request.matchdict.get('value')
     value2 = request.matchdict.get('value2')
 
-    query = compute_query(field, value, value2, parameters=request.params)
-    print 'quick:', query
-    return get_redirect_query(request, query)
+    # Compute query expression
+    expression = compute_expression(field, value, value2, parameters=request.params)
+    print 'quick expression:', expression
 
-def compute_query(field, value, value2=None, **kwargs):
+    # Translate "mode" segment into appropriate query parameters
+    query_args = None
+    if 'qmode' in request.matchdict and request.matchdict['qmode'] == 'view':
+        query_args = {'mode': 'liveview', 'context': 'viewer'}
+
+    return get_redirect_query(request, expression, query_args=query_args)
+
+def compute_expression(field, value, value2=None, **kwargs):
 
     if field == 'country':
         field = 'pn'
@@ -210,7 +219,9 @@ def compute_query(field, value, value2=None, **kwargs):
 
     return query
 
-def get_redirect_query(request, query=None):
+def get_redirect_query(request, expression=None, query_args=None):
+
+    query_args = query_args or {}
 
     # FIXME: does not work due reverse proxy anomalies, tune it to make it work!
     #query = '{field}={value}'.format(**locals())
@@ -225,8 +236,11 @@ def get_redirect_query(request, query=None):
         path = '/ops/browser'
 
     redirect_url = path
-    if query:
-        redirect_url += '?' + urlencode({'query': query})
+    if expression:
+        query_args.update({'query': expression})
+
+    if query_args:
+        redirect_url += '?' + urlencode(query_args)
 
     return HTTPFound(redirect_url)
 

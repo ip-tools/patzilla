@@ -188,6 +188,10 @@ class IFIClaimsExpression(object):
             # to "(ic:H04L0012433 OR cpc:H04L0012433) OR (ic:H04L001224 OR cpc:H04L001224)"
             try:
 
+                # Put value into parenthesis, to properly capture expressions
+                if value:
+                    value = u'({value})'.format(value=value)
+
                 # Parse value as simple query expression
                 query_object = CQL(cql=value)
 

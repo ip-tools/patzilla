@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 import ago
+import arrow
 import datetime
 from arrow.arrow import Arrow
 from dateutil.relativedelta import relativedelta
@@ -146,3 +147,10 @@ def year_range(date):
     end_date = Arrow.fromdatetime(end_date)
 
     return (start_date, end_date)
+
+
+def humanize_date_english(datestring):
+    date = arrow.get(datestring)
+    date = date.format('MMMM DD, YYYY') + ' at ' + date.format('HH:mm')
+    return date
+

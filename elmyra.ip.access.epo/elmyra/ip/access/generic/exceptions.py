@@ -2,8 +2,12 @@
 # (c) 2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import cgi
 import json
+import logging
+from contextlib import contextmanager
 from pyramid.httpexceptions import HTTPError
 from pyramid.response import Response
+
+log = logging.getLogger(__name__)
 
 class GenericAdapterException(Exception):
 
@@ -49,3 +53,13 @@ class ExampleJsonException(HTTPError, GenericAdapterException):
         Response.__init__(self, json.dumps(data, use_decimal=True))
         self.status = status
         self.content_type = 'application/json'
+
+
+# https://stackoverflow.com/questions/15572288/general-decorator-to-wrap-try-except-in-python/15573313#15573313
+@contextmanager
+def ignored(*exceptions):
+    try:
+        yield
+    except exceptions as ex:
+        log.warning('Ignored exception: {name}({ex})'.format(name=ex.__class__.__name__, ex=ex))
+

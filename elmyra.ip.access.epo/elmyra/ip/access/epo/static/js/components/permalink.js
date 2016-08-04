@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2016 Andreas Motl, Elmyra UG
 
 PermalinkPlugin = Marionette.Controller.extend({
 
@@ -84,8 +84,23 @@ PermalinkPlugin = Marionette.Controller.extend({
     },
 
     // build an opaque parameter permalink with expiration
-    make_uri_opaque: function(params) {
+    make_uri_opaque: function(params, options) {
         var deferred = $.Deferred();
+        var baseurl = this.get_baseurl_patentview();
+
+        // compute opaque parameter variant of permalink parameters
+        var params_computed = this.query_parameters(params);
+        opaque_param(params_computed, options).then(function(params_opaque) {
+            var permalink = baseurl + '?' + params_opaque;
+            deferred.resolve(permalink);
+        });
+
+        return deferred.promise();
+    },
+
+    // TODO: Refactor to LinkMaker
+    get_baseurl_patentview: function() {
+        //log('config:', opsChooserApp.config);
         var baseurl = opsChooserApp.config.get('baseurl');
 
         // when generating review-in-liveview-with-ttl links on patentsearch,
@@ -94,15 +109,7 @@ PermalinkPlugin = Marionette.Controller.extend({
         if (_.string.contains(host, 'patentsearch')) {
             baseurl = baseurl.replace('patentsearch', 'patentview');
         }
-
-        // compute opaque parameter variant of permalink parameters
-        var params_computed = this.query_parameters(params);
-        opaque_param(params_computed).then(function(params_opaque) {
-            var permalink = baseurl + '?' + params_opaque;
-            deferred.resolve(permalink);
-        });
-
-        return deferred.promise();
+        return baseurl;
     },
 
     popover_switch: function(element, content, options) {

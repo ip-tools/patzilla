@@ -58,6 +58,9 @@ requires = [
     'xlrd==0.9.3',
     'Jinja2==2.8',
     'validate_email==1.3',
+    'pandas==0.18.1',
+    'XlsxWriter==0.9.3',
+    'html2text==2016.5.29',
 
     # ----------------------------------------------
     #   user interface

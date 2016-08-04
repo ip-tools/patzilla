@@ -211,6 +211,31 @@ ProjectModel = Backbone.RelationalModel.extend({
         return main_deferred.promise();
     },
 
+    get_queries: function() {
+
+        var deferred = $.Deferred();
+
+        // fetch query objects and sort descending by creation date
+        var _this = this;
+        $.when(_this.fetch_queries()).then(function() {
+            var query_collection = _this.get('queries');
+            query_collection = sortCollectionByField(query_collection, 'created', 'asc');
+            var chooser_data = query_collection.map(function(query) {
+                return query.toJSON();
+            });
+            deferred.resolve(chooser_data);
+
+        }).fail(function() {
+            deferred.reject();
+        });
+
+        return deferred.promise();
+    },
+
+    get_comments: function() {
+        return opsChooserApp.comments.store.get_by_project(this);
+    },
+
 });
 
 ProjectCollection = Backbone.Collection.extend({
