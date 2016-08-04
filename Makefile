@@ -9,7 +9,6 @@ js:
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/standalone.js \
 		--preamble "// (c) 2013-2016 Elmyra UG - All rights reserved" \
 		--mangle --compress \
@@ -22,7 +21,6 @@ js:
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/ipsuite/*.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/embedded.js \
 		--preamble "// (c) 2013-2016 Elmyra UG - All rights reserved" \
 		--mangle --compress \
@@ -136,7 +134,7 @@ mongodb-ftpro-import:
 
 sloccount:
 	sloccount elmyra.ip.access.epo
-	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/{app,components,ipsuite}
+	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/{app,boot,components,config.js,issue-reporter.js}
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
