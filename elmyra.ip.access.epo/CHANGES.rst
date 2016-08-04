@@ -11,6 +11,8 @@ development
 ===========
 - Improve robustness of OPS OAuth client
 - Add Javascript components “jQuery Redirect” and “bootstrap-slider”
+- Improve data export facility and user interface
+- Add Python modules pandas, XlsxWriter and html2text
 
 
 0.116.4

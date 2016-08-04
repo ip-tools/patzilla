@@ -16,6 +16,9 @@
     font-size: larger;
 }
 
+.text-align-left {
+    text-align: left;
+}
 .text-align-right {
     text-align: right;
 }
@@ -31,6 +34,31 @@
 pre.inline {
     display: inline-block;;
 }
+
+
+/* export dialog */
+#export-dialog .modal-body .row-fluid {
+    margin-bottom: 2em;
+}
+
+.lead.inline {
+    margin: inherit;
+    vertical-align: middle;
+}
+
+.lead.section {
+    margin: inherit;
+}
+
+.lead.footer {
+    margin: inherit;
+    line-height: 42px;
+    vertical-align: middle;
+}
+
+
+
+
 
 /*
 https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
@@ -305,8 +333,13 @@ ul.breathe li {
     color: black;
 }
 
-.modal-info .modal-header {
+.modal-success .modal-header {
     background-color: #51a351;
+    color: white;
+}
+
+.modal-info .modal-header {
+    background-color: #3a87ad;
     color: white;
 }
 
@@ -321,6 +354,23 @@ ul.breathe li {
     width: 900px; /* SET THE WIDTH OF THE MODAL */
     margin: -50px 0 0 -450px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
 }
+
+/* generalization of a large modal */
+.modal-high .modal-body {
+    max-height: 750px;
+    height: 550px;
+}
+.modal-wide {
+    width: 950px; /* SET THE WIDTH OF THE MODAL */
+    margin: -50px 0 0 -500px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
+}
+
+.btn-symbol {
+    padding: 0.6em;
+    min-width: 5.5em;
+}
+
+
 
 /* clipboard modifier */
 .btn-clipboard-modifier {

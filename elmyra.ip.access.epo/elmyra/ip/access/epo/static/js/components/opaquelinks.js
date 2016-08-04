@@ -1,14 +1,16 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2016 Andreas Motl, Elmyra UG
 
 // generate opaque token from parameter object
-function opaquetoken(params) {
+function opaquetoken(params, options) {
     var deferred = $.Deferred();
+    var url = '/api/opaquelinks/token';
+    if (options && options.ttl) {
+        url += '?ttl=' + options.ttl;
+    }
     $.ajax({
         method: 'post',
-        url: '/api/opaquelinks/token',
-        async: false,
-        sync: true,
+        url: url,
         data: JSON.stringify(params),
         contentType: "application/json; charset=utf-8",
     }).success(function(payload) {
@@ -23,16 +25,17 @@ function opaquetoken(params) {
 }
 
 // generate url with opaque token from parameter object
-function opaquetoken_query(params) {
+function opaquetoken_query(params, options) {
     var deferred = $.Deferred();
-    opaquetoken(params).then(function(token) {
+    opaquetoken(params, options).then(function(token) {
         var query_part = 'op=' + token;
         deferred.resolve(query_part);
     });
     return deferred.promise();
 }
 
-function opaque_param(params) {
+function opaque_param(params, options) {
+
     // serialize state into opaque parameter token
     // TODO: make this idempotent by saving the original "href" contents into a "data" attribute
     // if we can reperform the token generation on each click, liveview documents will live forever
@@ -46,6 +49,6 @@ function opaque_param(params) {
     }
 
     // sign parameters, generate JWT token and opaque parameter url
-    return opaquetoken_query(params);
+    return opaquetoken_query(params, options);
 
 }

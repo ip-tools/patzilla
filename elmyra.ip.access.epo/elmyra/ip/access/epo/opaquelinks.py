@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 import logging
 import Crypto
+import datetime
 from pkg_resources import resource_filename
 from simplejson import JSONDecodeError
 from cornice.service import Service
@@ -114,7 +115,13 @@ def opaquelinks_token_handler(request):
     """Generate an opaquelinks token"""
     payload = request_payload(request)
     signer = request.registry.getUtility(ISigner)
-    return signer.sign(payload)
+
+    ttl = None
+    if 'ttl' in request.params:
+        ttl_seconds = int(request.params.get('ttl'))
+        ttl = datetime.timedelta(seconds=ttl_seconds)
+
+    return signer.sign(payload, ttl=ttl)
 
 
 @opaquelinks_verify_service.post(accept="application/json")

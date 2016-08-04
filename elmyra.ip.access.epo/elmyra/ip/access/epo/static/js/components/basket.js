@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2016 Andreas Motl, Elmyra UG
 
 function BasketError(message) {
     this.name    = 'BasketError';
@@ -125,7 +125,9 @@ BasketModel = Backbone.RelationalModel.extend({
                     deferred.resolve(entry);
 
                     // refresh gui, update timestamp
-                    !options.bulk && _this.trigger('change', _this);
+                    // 2016-08-03: Remove it, because it interacts badly with some button event registrations. Let's see how it goes....
+                    // 2016-08-04: Maybe it's important for getting the "Fade seen documents" feature right...
+                    //!options.bulk && _this.trigger('change', _this);
                 }});
             }
 
@@ -140,9 +142,9 @@ BasketModel = Backbone.RelationalModel.extend({
             return deferred.promise();
         }
 
-        // get title of selected document
-        // 2015-12-22: stop storing "title" attributes
-        //             deactivated due to default database size constraints (5 MB)
+        // Get title of selected document
+        // 2015-12-22: Stop storing "title" attributes.
+        //             Deactivated due to default database size constraints (5 MB)
         //             our first user seems to have hit this limit!
         /*
         // TODO: maybe prebuild/maintain an index in collection
@@ -245,7 +247,11 @@ BasketModel = Backbone.RelationalModel.extend({
 
             if (options.dismiss != undefined) {
                 var dismiss = entry.get('dismiss');
-                if (dismiss != undefined) {
+                if (dismiss == undefined) {
+                    if (options.dismiss == false) {
+                        return true;
+                    };
+                } else {
                     return dismiss == !options.dismiss;
                 }
             }
@@ -301,6 +307,16 @@ BasketModel = Backbone.RelationalModel.extend({
         });
     },
 
+    get_records: function(options) {
+        var entries = this.get_entries(options);
+        var baseurl = opsChooserApp.permalink.get_baseurl_patentview();
+        return entries.map(function(entry) {
+            var newentry = entry.toJSON();
+            newentry['url'] = baseurl + '/view/pn/' + newentry['number'];
+            return newentry;
+        });
+    },
+
     unicode_stars_list: function() {
         var entries = this.get_entries({'seen': false});
         return entries.map(function(entry) {
@@ -327,7 +343,8 @@ BasketModel = Backbone.RelationalModel.extend({
 
     review: function(options) {
 
-        var publication_numbers = this.get_numbers({honor_dismiss: true});
+        var publication_numbers = this.get_numbers();
+        //var publication_numbers = this.get_numbers({honor_dismiss: true});
 
         //log('publication_numbers:', publication_numbers);
         var hits = publication_numbers.length;
@@ -441,6 +458,21 @@ BasketModel = Backbone.RelationalModel.extend({
         return data;
     },
 
+    get_numberlist_url: function() {
+        if (this.empty()) {
+            return;
+        }
+        var url = opsChooserApp.permalink.make_uri(this.get_view_state());
+        return url;
+    },
+
+    get_numberlist_url_liveview: function(ttl) {
+        if (this.empty()) {
+            return;
+        }
+        return opsChooserApp.permalink.make_uri_opaque(this.get_view_state({mode: 'liveview'}), {ttl: ttl});
+    },
+
 });
 
 
@@ -551,6 +583,27 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
 
+        // Export Dossier
+        $('#dossier-export-button').unbind('click').bind('click', function(event) {
+
+            // Don't export empty baskets
+            if (_this.check_empty({kind: 'export'})) {
+                return;
+            }
+
+            // Open shiny export dialog
+            opsChooserApp.exporter.open_dialog({
+                element: this,
+                event: event,
+            });
+
+        });
+
+        this.$el.find('.btn-popover').popover();
+
+
+        /*
+
         // wire display-results buttons
         $('#share-display-rated').unbind('click');
         $('#share-display-rated').click(function(e) {
@@ -581,13 +634,6 @@ BasketView = Backbone.Marionette.ItemView.extend({
             var numbers = _this.model.get_numbers();
             return numbers.join('\n');
         }, {element: $('#share-numberlist-clipboard')});
-        /*
-        $('#share-numberlist-clipboard').unbind('click');
-        $('#share-numberlist-clipboard').click(function() {
-            if (_this.check_empty()) { return; }
-            var numbers = _this.model.get_numbers();
-        });
-        */
 
         // share via url
         $('#share-numberlist-url').unbind('click');
@@ -637,6 +683,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
             $(this).attr('target', '_blank');
             $(this).attr('href', '/api/pdf/' + numberlist.join(','));
         });
+
+        */
 
         // share via document transfer
         $('#share-documents-transfer').unbind('click');
@@ -707,6 +755,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         var verb = 'shared';
         if (options.kind == 'review') {
             verb = 'reviewed';
+        } else if (options.kind == 'export') {
+            verb = 'exported';
         }
         if (!options.icon) {
             options.icon = 'icon-external-link';

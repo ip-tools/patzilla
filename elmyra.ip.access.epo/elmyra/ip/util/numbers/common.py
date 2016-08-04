@@ -167,3 +167,11 @@ def modify_invalid_patent_number(patent_number):
     patent_number = patent_number.upper()
 
     return patent_number
+
+def encode_epodoc_number(document, options=None):
+    options = options or {}
+    thing = document.country + document.number
+    if document.kind and not ('nokind' in options and options['nokind']):
+        thing += '.' + document.kind
+    return thing
+

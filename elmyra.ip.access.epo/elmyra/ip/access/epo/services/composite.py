@@ -4,7 +4,7 @@ import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPTemporaryRedirect
 from elmyra.ip.access.drawing import get_drawing_png
-from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi
+from elmyra.ip.access.epo.core import pdf_universal, pdf_universal_multi_zip
 from elmyra.ip.util.date import datetime_iso_filename, now
 
 log = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ def pdf_serve_multi(request):
     patents = patents_raw.split(',')
     patents = [patent.strip() for patent in patents]
 
-    data = pdf_universal_multi(patents)
+    data = pdf_universal_multi_zip(patents)
     zipfilename = 'ipsuite-collection-pdf_{0}.zip'.format(datetime_iso_filename(now()))
 
     # http://tools.ietf.org/html/rfc6266#section-4.2

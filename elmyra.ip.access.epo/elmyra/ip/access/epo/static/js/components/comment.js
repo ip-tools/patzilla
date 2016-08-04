@@ -113,6 +113,18 @@ CommentCollection = Backbone.Collection.extend({
         return this.get_or_create({project: project, parent: document_number});
     },
 
+    get_by_project: function(project) {
+        return this.search({project: project});
+    },
+
+    search: function(options) {
+        // "collection.where" would return an array of models, but we want to continue working with a collection.
+        // https://stackoverflow.com/questions/10548685/tojson-on-backbone-collectionwhere/10549086#10549086
+        var result = this.where(options);
+        var resultCollection = new CommentCollection(result);
+        return resultCollection;
+    },
+
 });
 
 CommentButtonView = Backbone.Marionette.ItemView.extend({

@@ -3,12 +3,17 @@
 import re
 import json
 import logging
+import mimetypes
+from pprint import pprint
+from bunch import bunchify
 from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
+from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
 from elmyra.ip.access.google.search import GooglePatentsExpression
 from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
+from elmyra.ip.navigator.export import Dossier, DossierXlsx
 from elmyra.ip.util.cql.util import pair_to_cql
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
@@ -27,6 +32,11 @@ numberlist_util_service = Service(
     name='numberlist-utility-service',
     path='/api/util/numberlist',
     description="Numberlist utility service")
+
+export_util_service = Service(
+    name='export-utility-service',
+    path='/api/util/export/{kind}.{format}',
+    description="Export utility service")
 
 issue_reporter_service = Service(
     name='issue-reporter-service',
@@ -185,6 +195,95 @@ def request_to_options(request, options):
             options['sorting'][key] = value
 
 
+@export_util_service.post(renderer='null')
+def export_util_handler(request):
+
+    #print 'request.matchdict:', request.matchdict
+
+    output_kind   = request.matchdict['kind']
+    output_format = request.matchdict['format']
+
+    # Convert numberlists to Excel
+    if output_kind == 'numberlist':
+        numberlist = parse_numberlist(request.params.get('numberlist'))
+
+        payload = create_xlsx({'numberlist': numberlist})
+
+        # Export buffer to HTTP response
+        filename = '{0}.xlsx'.format('numberlist')
+        mimetype, encoding = mimetypes.guess_type(filename, strict=False)
+
+        request.response.content_type = mimetype
+        request.response.charset = None
+        request.response.headers['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=filename)
+
+        #response['numberlist'] = numberlist
+
+        # Send as response
+        return payload
+
+    elif output_kind == 'dossier':
+
+        log.info('Starting data export with format "{format}"'.format(format=output_format))
+        data = bunchify(json.loads(request.params.get('json')))
+
+        # Debugging
+        #print 'dossier-data:'; pprint(data.toDict())
+
+        payload = None
+        if output_format == 'xlsx':
+
+            # Generate rich Workbook
+            payload = DossierXlsx(data).create()
+
+            # TODO: Convert Workbook to PDF
+            # /Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir /Users/amo/tmp/oo /Users/amo/Downloads/huhu_2016-07-30T22-40-48+02-00.xlsx
+            # /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="pipe,name=navigator;urp;" --norestore --nologo --nodefault --headless
+            # /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="socket,host=localhost,port=2002;urp;" --norestore --nologo --nodefault --headless
+
+            # /Applications/LibreOffice.app/Contents/program/python
+            # import pyoo
+            # desktop = pyoo.LazyDesktop(pipe='navigator')
+            # doc = desktop.open_spreadsheet('/Users/amo/Downloads/dossier_haha_2016-08-01T07-14-20+02-00 (5).xlsx')
+            # doc.save('hello.pdf', filter_name=pyoo.FILTER_PDF_EXPORT)
+
+            # /Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv --listener
+            # /Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv --format=pdf --verbose ~/Downloads/dossier_haha_2016-08-01T07-14-20+02-00.xlsx
+
+        elif output_format == 'csv':
+            # TODO: Add comments inline into numberlist
+            dossier = Dossier(data)
+            payload = dossier.to_csv(dossier.df_documents)
+
+        elif output_format == 'zip':
+            dossier = Dossier(data)
+            payload = dossier.to_zip(options=data.get('options'))
+
+        else:
+            return HTTPBadRequest(u'Export format "{format}" is unknown.'.format(format=output_format))
+
+        # Send HTTP response
+        filename = 'dossier_{name}_{timestamp}.{format}'.format(
+            name=data.get('name', 'default'),
+            timestamp=data.get('project', {}).get('modified'),
+            format=output_format)
+        mimetype, encoding = mimetypes.guess_type(filename, strict=False)
+
+        request.response.content_type = mimetype
+        request.response.charset = None
+        request.response.headers['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=filename)
+
+        return payload
+
+    # TODO: Log request
+    log.error('Data export error')
+
+    # TODO: Proper error page for user to report this problem.
+    raise HTTPServerError('Data export error. Please contact support.')
+
+
+
+
 @issue_reporter_service.post()
 def issue_reporter_handler(request):
 
@@ -212,6 +311,8 @@ def issue_reporter_handler(request):
 
     # TODO: Store the issue report into database
     # TODO: What about other targets like "log:error", "log:warning", "human:support", "human:user"?
+
+    # Send email report
     if 'human' in targets:
         email_issue_report(report)
 
