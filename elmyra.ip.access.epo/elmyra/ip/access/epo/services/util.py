@@ -18,6 +18,7 @@ from elmyra.ip.util.cql.util import pair_to_cql
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
 from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
+from elmyra.ip.util.python import exception_traceback
 from elmyra.ip.util.xml.format import pretty_print
 from elmyra.web.email.submit import email_issue_report
 
@@ -224,43 +225,39 @@ def export_util_handler(request):
 
     elif output_kind == 'dossier':
 
-        log.info('Starting data export with format "{format}"'.format(format=output_format))
+        log.info('Starting dossier export to format "{format}"'.format(format=output_format))
         data = bunchify(json.loads(request.params.get('json')))
 
         # Debugging
         #print 'dossier-data:'; pprint(data.toDict())
 
         payload = None
-        if output_format == 'xlsx':
+        try:
+            if output_format == 'xlsx':
+                # Generate Office Open XML Workbook
+                payload = DossierXlsx(data).create()
 
-            # Generate rich Workbook
-            payload = DossierXlsx(data).create()
+            elif output_format == 'pdf':
+                # Generate Office Open XML Workbook and convert to PDF
+                dossier = DossierXlsx(data)
+                payload = dossier.to_pdf()
 
-            # TODO: Convert Workbook to PDF
-            # /Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir /Users/amo/tmp/oo /Users/amo/Downloads/huhu_2016-07-30T22-40-48+02-00.xlsx
-            # /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="pipe,name=navigator;urp;" --norestore --nologo --nodefault --headless
-            # /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="socket,host=localhost,port=2002;urp;" --norestore --nologo --nodefault --headless
+            elif output_format == 'csv':
+                # TODO: Add comments inline into numberlist
+                dossier = Dossier(data)
+                payload = dossier.to_csv(dossier.df_documents)
 
-            # /Applications/LibreOffice.app/Contents/program/python
-            # import pyoo
-            # desktop = pyoo.LazyDesktop(pipe='navigator')
-            # doc = desktop.open_spreadsheet('/Users/amo/Downloads/dossier_haha_2016-08-01T07-14-20+02-00 (5).xlsx')
-            # doc.save('hello.pdf', filter_name=pyoo.FILTER_PDF_EXPORT)
+            elif output_format == 'zip':
+                dossier = Dossier(data)
+                payload = dossier.to_zip(options=data.get('options'))
 
-            # /Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv --listener
-            # /Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv --format=pdf --verbose ~/Downloads/dossier_haha_2016-08-01T07-14-20+02-00.xlsx
+            else:
+                return HTTPBadRequest(u'Export format "{format}" is unknown.'.format(format=output_format))
 
-        elif output_format == 'csv':
-            # TODO: Add comments inline into numberlist
-            dossier = Dossier(data)
-            payload = dossier.to_csv(dossier.df_documents)
-
-        elif output_format == 'zip':
-            dossier = Dossier(data)
-            payload = dossier.to_zip(options=data.get('options'))
-
-        else:
-            return HTTPBadRequest(u'Export format "{format}" is unknown.'.format(format=output_format))
+        except Exception as ex:
+            message = u'Exporting format "{format}" failed.'.format(format=output_format)
+            log.warning('{message}. Exception:\n{trace}'.format(message=message, trace=exception_traceback()))
+            return HTTPServerError(message)
 
         # Send HTTP response
         filename = 'dossier_{name}_{timestamp}.{format}'.format(
