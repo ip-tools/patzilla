@@ -234,7 +234,7 @@ class DpmaDepatisnetAccess:
             if row:
                 try:
                     item = {
-                        'pubnumber': normalize_patent(row['Publication number']),
+                        'pubnumber': normalize_patent(row['Publication number']) or row['Publication number'],
                         'pubdate': row['Publication date'] and date_iso(from_german(row['Publication date'])) or None,
                         'appdate': row['Application date'] and date_iso(from_german(row['Application date'])) or None,
                         'title': row['Title'],

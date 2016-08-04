@@ -3,6 +3,7 @@
 import json
 import logging
 from pprint import pprint
+from pyramid.httpexceptions import HTTPBadGateway
 from pyramid.threadlocal import get_current_registry
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
@@ -125,7 +126,9 @@ class OpsOAuth2Session(OAuth2Session):
         except ConnectionError as ex:
             logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex, self.client_id))
             self.disconnect()
-            return ex
+            # Fake an exception which can be processed by downstream error handling infrastructure
+            error = HTTPBadGateway(u'Network error: Could not connect to OPS servers.')
+            raise error
 
     def disconnect(self, *args, **kwargs):
         logger.warning('Invalidating token and closing connection for client_id={client_id}'.format(client_id=self.client_id))
@@ -272,6 +275,10 @@ def make_request(session, url, **kwargs):
 
 
 if __name__ == '__main__':
+
+    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/commandline.html#writing-a-script
+    # https://stackoverflow.com/questions/6206556/running-scripts-within-pyramid-framework-ie-without-a-server
+    # https://stackoverflow.com/questions/12510133/share-pyramid-configuration-with-a-cli-script
 
     config_ini = 'elmyra.ip.access.epo/development.ini'
 

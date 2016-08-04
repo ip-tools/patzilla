@@ -4,7 +4,7 @@ import sys
 import traceback
 from StringIO import StringIO
 
-def _exception_traceback(exc_info=None):
+def exception_traceback(exc_info=None):
     """
     Return a string containing a traceback message for the given
     exc_info tuple (as returned by sys.exc_info()).
@@ -20,3 +20,5 @@ def _exception_traceback(exc_info=None):
     exc_type, exc_val, exc_tb = exc_info
     traceback.print_exception(exc_type, exc_val, exc_tb, file=excout)
     return excout.getvalue()
+
+_exception_traceback = exception_traceback

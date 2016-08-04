@@ -1,3 +1,6 @@
+## -*- coding: utf-8 -*-
+## (c) 2013-2016 Andreas Motl, Elmyra UG
+
 <script type="text/x-underscore-template" id="basket-template">
     <%text>
         <form id="basket-form" name="basket-form" method="post" action="<%= config.get('ship-url') %>" target="<%= config.get('ship-frame') %>">
@@ -28,9 +31,10 @@
                         <button id="basket-review-button"
                                 class="btn btn-popover" data-value="review"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                                data-content="Review collection"
+                                data-content="Review documents"
                                 >
-                            <i class="icon-indent-left"></i> Review
+                            <i class="icon-indent-left icon-large"></i>
+                            Review
                         </button>
                         <button id="basket-entry-count-button"
                                 class="btn btn-popover disabled"
@@ -42,7 +46,7 @@
                         </button>
                         <button id="basket-seen-count-button"
                                 class="btn btn-popover disabled"
-                                data-toggle="popover" data-trigger="hover" data-placement="right"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                 data-content="Number of seen but unrated documents"
                                 >
                             <i class="fa-icon icon-eye-open"></i>

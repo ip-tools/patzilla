@@ -237,6 +237,8 @@ UiController = Marionette.Controller.extend({
 
     do_element_visibility: function() {
 
+        //log('do_element_visibility', opsChooserApp.config);
+
         // hide all navigational- and action-elements when in print mode
         var MODE_PRINT = opsChooserApp.config.get('mode') == 'print';
         if (MODE_PRINT) {
@@ -425,8 +427,7 @@ UiController = Marionette.Controller.extend({
     copy_to_clipboard_bind_button: function(mimetype, payload, options) {
 
         // prevent default action on copy button
-        $(options.element).unbind('click');
-        $(options.element).click(function(e) {
+        $(options.element).unbind('click').bind('click', function(e) {
             e.preventDefault();
         });
 
