@@ -25,7 +25,7 @@ function propagate_opaque_errors() {
                 error.description =
                     'We are sorry, it looks like the validity time of this link has expired at ' + error.jwt_expiry_iso + '.' +
                         '<br/><br/>' +
-                        'Please contact us at <a href="mailto:support@elmyra.de">support@elmyra.de</a> for any commercial plans.';
+                        'Please contact us at <a href="mailto:purchase@elmyra.de">purchase@elmyra.de</a> for any commercial plans.';
             }
             if (error.location == 'JSON Web Signature') {
                 error.description = 'It looks like the token used to encode this request is invalid.' + ' (' + error.description + ')'

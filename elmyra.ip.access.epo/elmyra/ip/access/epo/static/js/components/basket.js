@@ -516,8 +516,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         }
 
         // import clipboard content by intercepting paste event
-        $('#basket').unbind('paste');
-        $("#basket").on('paste', function(e) {
+        $("#basket").unbind('paste').bind('paste', function(e) {
             e.preventDefault();
             var text = (e.originalEvent || e).clipboardData.getData('text');
             var entries = text.split(/[,;\r\n]/);
@@ -527,29 +526,25 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // basket import
-        $('#basket-import-button').unbind('click');
-        $('#basket-import-button').click(function(e) {
+        $('#basket-import-button').unbind('click').bind('click', function(e) {
             _this.future_premium_feature();
             return false;
         });
 
         // review feature: trigger search from basket content
-        $('#basket-review-button').unbind('click');
-        $('#basket-review-button').click(function(event) {
+        $('#basket-review-button').unbind('click').bind('click', function(event) {
             event.preventDefault();
             if (_this.check_empty({kind: 'review', icon: 'icon-indent-left'})) { return; }
             _this.model.review();
         });
         // disable counter buttons, required to retain popover
-        $('#basket-entry-count-button,#basket-seen-count-button').unbind('click');
-        $('#basket-entry-count-button,#basket-seen-count-button').click(function(event) {
+        $('#basket-entry-count-button,#basket-seen-count-button').unbind('click').bind('click', function(event) {
             event.preventDefault();
             event.stopPropagation();
         });
 
         // submit selected documents to origin or 3rd-party system
-        $('#basket-submit-button').unbind('click');
-        $('#basket-submit-button').click(function() {
+        $('#basket-submit-button').unbind('click').bind('click', function() {
             if (_this.check_empty()) { return; }
             var numbers = _this.model.get_numbers();
             $('textarea#basket').val(numbers.join('\n'));

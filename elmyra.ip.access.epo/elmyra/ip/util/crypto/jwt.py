@@ -84,11 +84,11 @@ class JwtSigner(object):
 
             return payload['data'], metadata
 
-        except ValueError as ex:
+        except (ValueError, TypeError) as ex:
             error_payload = {
                 'location': 'JSON Web Signature',
                 'name': ex.__class__.__name__,
-                'description': ex.message,
+                'description': str(ex),
                 'token': token,
             }
             raise JwtVerifyError(error_payload)
