@@ -9,11 +9,14 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.117.0
+=======
 - Improve robustness of OPS OAuth client
 - Add Javascript components “jQuery Redirect” and “bootstrap-slider”
 - Improve data export facility and user interface
 - Add Python modules pandas, XlsxWriter and html2text
-
+- Add XML Workbook to PDF conversion based on LibreOffice, unoconv and envoy
 
 0.116.4
 =======

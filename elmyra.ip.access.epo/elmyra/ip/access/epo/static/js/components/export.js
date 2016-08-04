@@ -51,9 +51,10 @@ ExportPlugin = Backbone.Model.extend({
             event.stopPropagation();
             event.preventDefault();
             $(this).toggleClass('active');
+            var active = $(this).hasClass('active');
             //log('active:', $(this).hasClass('active'));
             var target_selector = $(this).data('target');
-            _this.radios.toggle_element($(this).parent().find(target_selector));
+            _this.radios.toggle_element($(this).parent().find(target_selector), active);
         });
 
 
@@ -255,7 +256,7 @@ ExportPlugin = Backbone.Model.extend({
 
         if (_.any(state.format)) {
             var format = _.invert(state.format)[true];
-            if (_(['xlsx', 'csv', 'zip']).contains(format)) {
+            if (_(['csv', 'xlsx', 'pdf', 'zip']).contains(format)) {
                 if (format == 'zip' && !_.any(state.report) && !_.any(state.media)) {
                     spinner.hide();
                     _this.update_status('Please choose any report or media format.', false, true);

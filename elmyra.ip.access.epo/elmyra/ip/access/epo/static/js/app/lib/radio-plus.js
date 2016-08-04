@@ -54,9 +54,9 @@ RadioPlus = Backbone.Model.extend({
 
     },
 
-    toggle_element: function($el) {
-        $el.toggleClass('active');
-        $el.toggleClass('btn-info');
+    toggle_element: function($el, state) {
+        $el.toggleClass('active', state);
+        $el.toggleClass('btn-info', state);
     },
 
     // set label text

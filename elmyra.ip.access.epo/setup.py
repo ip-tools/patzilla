@@ -61,6 +61,7 @@ requires = [
     'pandas==0.18.1',
     'XlsxWriter==0.9.3',
     'html2text==2016.5.29',
+    'envoy==0.0.3',
 
     # ----------------------------------------------
     #   user interface

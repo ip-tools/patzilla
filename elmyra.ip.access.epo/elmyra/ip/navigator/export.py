@@ -8,6 +8,9 @@ import logging
 import pandas
 import numpy
 import html2text
+import envoy
+import shutil
+import tempfile
 from io import BytesIO
 from textwrap import dedent
 from lxml import etree as ET
@@ -183,19 +186,26 @@ class Dossier(object):
         buffer = BytesIO()
         with ZipFile(buffer, 'w', ZIP_DEFLATED) as zipfile:
 
-            # FIXME
-            #zipfile.writestr('readme.txt', 'Intentionally left blank.')
+            # FIXME: Add TERMS (liability waiver) and more...
+            zipfile.writestr('@readme.txt', u'Zip archive created by Elmyra IP Suite Navigator.')
 
             # Add text summary
             zipfile.writestr('@metadata.txt', self.get_author().encode('utf-8'))
             zipfile.writestr('@summary.txt', self.get_summary().encode('utf-8'))
 
+
             # Report files
             # ------------
 
             # Add Workbook
+            workbook_payload = None
             if options.report.xlsx:
-                zipfile.writestr('report/@dossier.xlsx', DossierXlsx(self.data).create())
+                workbook_payload = DossierXlsx(self.data).create()
+                zipfile.writestr('report/@dossier.xlsx', workbook_payload)
+
+            # Add Workbook in PDF format
+            if options.report.pdf:
+                zipfile.writestr('report/@dossier.pdf', DossierXlsx(self.data).to_pdf(payload=workbook_payload))
 
             # Add CSV
             if options.report.csv:
@@ -220,6 +230,9 @@ class Dossier(object):
             # Add XML data
             # TODO: Add @report.txt for reflecting missing documents, differentiate between different XML kinds.
             # TODO: Add more TEXT formats (.abstract.txt, .biblio.txt, .register.txt)
+            # TODO: Add ST.36 XML; e.g. from https://register.epo.org/download?number=EP08835045&tab=main&xml=st36
+            # via https://register.epo.org/application?number=EP08835045
+            # TODO: Add equivalents, e.g. http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP1000000/equivalents/biblio
             status = OrderedDict()
             for document in documents:
 
@@ -582,6 +595,77 @@ class DossierXlsx(Dossier):
 
         return worksheet
 
+    def to_pdf(self, payload=None):
+
+        # TODO: Run unoconv listener in background on production system: unoconv --listener --verbose
+
+        # /Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir /Users/amo/tmp/oo /Users/amo/Downloads/huhu_2016-07-30T22-40-48+02-00.xlsx
+        # /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="pipe,name=navigator;urp;" --norestore --nologo --nodefault --headless
+        # /Applications/LibreOffice.app/Contents/MacOS/soffice --accept="socket,host=localhost,port=2002;urp;" --norestore --nologo --nodefault --headless
+
+        # /Applications/LibreOffice.app/Contents/program/python
+        # import pyoo
+        # desktop = pyoo.LazyDesktop(pipe='navigator')
+        # doc = desktop.open_spreadsheet('/Users/amo/Downloads/dossier_haha_2016-08-01T07-14-20+02-00 (5).xlsx')
+        # doc.save('hello.pdf', filter_name=pyoo.FILTER_PDF_EXPORT)
+
+        # /Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv --listener --verbose
+        # /Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv --format=pdf --output=~/Downloads --verbose ~/Downloads/dossier_haha_2016-08-01T07-14-20+02-00.xlsx
+
+        # Find "unoconv" program
+        unoconv = self.find_unoconv()
+        if not unoconv:
+            raise KeyError('Could not find "unoconv" on system, aborting PDF conversion.')
+
+        # Generate Office Open XML Workbook
+        if not payload:
+            payload = self.create()
+
+        # Save to temporary file
+        xlsx_file = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=True)
+        xlsx_file.write(payload)
+        xlsx_file.flush()
+
+        # Create temporary path for PDF conversion
+        pdf_path = tempfile.mkdtemp()
+        #pdf_path = os.path.dirname(xlsx_file.name)
+
+        # Run conversion command ("unoconv", based on Open Office)
+        # "aptitude install unoconv" should get you started
+        """
+        -c, --connection=string  use a custom connection string
+        -l, --listener           start a permanent listener to use by unoconv clients
+        -n, --no-launch          fail if no listener is found (default: launch one)
+        """
+        command = [[unoconv, '--format=pdf', '--output={output}'.format(output=pdf_path), '--verbose', '--timeout=10', xlsx_file.name]]
+        process = envoy.run(command, timeout=15)
+
+        # Debugging
+        #print 'status:', process.status_code
+        #print 'command:', process.command
+        #print 'out:', process.std_out
+        #print 'err:', process.std_err
+        log.info('STDERR:\n{}'.format(process.std_err))
+
+        if process.status_code == 0:
+            pdf_name = os.path.join(pdf_path, os.path.basename(xlsx_file.name).replace('.xlsx', '.pdf'))
+            payload = file(pdf_name, 'r').read()
+            shutil.rmtree(pdf_path)
+            return payload
+        else:
+            log.error('XLSX->PDF conversion failed, status={status}, command={command}. Error:\n{error}'.format(
+                status=process.status_code, command=process.command, error=process.std_err))
+            raise OSError('XLSX->PDF conversion failed')
+
+    @staticmethod
+    def find_unoconv():
+        # Debian: aptitude install unoconv
+        # Mac OS X: YMMV
+        # TODO: Make unoconv configurable via ini file
+        programs = ['/Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv', '/usr/bin/unoconv']
+        for program in programs:
+            if os.path.isfile(program):
+                return program
 
 class ReportMetadata(OrderedDict):
 
