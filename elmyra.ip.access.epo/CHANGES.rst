@@ -13,6 +13,7 @@ development
   with xmlrpclib, switch API entrypoint at upstream data provider to improved Linux infrastructure
 - Try to improve TIFF to PNG conversion quality (contrast) by switching to more recent version of ImageMagick
 - React appropriately to “busy” or “overload” situations at OPS by introducing little amounts of delays in request processing
+- Improve robustness and logging on multi-stage fetching of PDF documents
 
 0.117.0
 =======
