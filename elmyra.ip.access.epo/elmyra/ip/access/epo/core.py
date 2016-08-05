@@ -3,12 +3,13 @@
 import logging
 from StringIO import StringIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
-from pyramid.httpexceptions import HTTPError
+from pyramid.httpexceptions import HTTPError, HTTPNotFound
 from elmyra.ip.access.uspto.image import get_images_view_url
 from elmyra.ip.util.numbers.common import decode_patent_number
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
 from elmyra.ip.access.epo.ops import pdf_document_build
+from elmyra.ip.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
 
@@ -25,12 +26,14 @@ def pdf_universal(patent):
     try:
         # Skip requests for documents w/o kindcode
         if not document.kind: raise ValueError(u'No kindcode')
-        log.info('PDF - trying archive (1): {0}'.format(number_normalized))
 
         pdf = archive_fetch_pdf(number_normalized)
         datasource = 'archive'
 
-    except:
+    except Exception as ex:
+
+        if not isinstance(ex, HTTPNotFound):
+            log.error(exception_traceback())
 
         # second, try archive again after running acquisition
         try:
@@ -38,13 +41,14 @@ def pdf_universal(patent):
             # Skip requests for documents w/o kindcode
             if not document.kind: raise ValueError(u'No kindcode')
 
-            log.info('PDF - trying archive (2): {0}'.format(number_normalized))
-
             run_acquisition(number_normalized, 'pdf')
-            pdf = archive_fetch_pdf(number_normalized)
+            pdf = archive_fetch_pdf(number_normalized, 2)
             datasource = 'archive'
 
-        except:
+        except Exception as ex:
+
+            if not isinstance(ex, HTTPNotFound):
+                log.error(exception_traceback())
 
             if document:
 
@@ -57,20 +61,24 @@ def pdf_universal(patent):
                     #if document.country == 'CA':
                     #    patent = document.country + document.number
 
-                    log.info('PDF - trying OPS: {0}'.format(patent))
+                    log.info('PDF OPS attempt for {0}'.format(patent))
 
                     pdf = pdf_document_build(patent)
                     datasource = 'ops'
 
-                except:
+                except Exception as ex:
+
+                    if not isinstance(ex, HTTPNotFound):
+                        log.error(exception_traceback())
+
                     if document.country == 'US':
 
-                        log.info('PDF - trying to redirect to external data source: {0}'.format(patent))
+                        log.info('PDF USPTO attempt for {0}'.format(patent))
                         images_location = get_images_view_url(document)
                         if images_location:
                             meta.update(images_location)
                         else:
-                            log.warning('PDF - not available at USPTO: {}'.format(patent))
+                            log.warning('PDF USPTO not available for {}'.format(patent))
 
             else:
                 log.error('Locating a document at the domestic office requires ' \
@@ -86,7 +94,7 @@ def pdf_universal_multi_zip(patents):
     payload = buffer.read()
     return {'zip': payload}
 
-def pdf_universal_multi(zipfile, patents, path=''):
+def pdf_universal_multi(zipfile, numbers, path=''):
 
     delivered = []
     missing = []
@@ -94,7 +102,13 @@ def pdf_universal_multi(zipfile, patents, path=''):
     #inode = ZipInfo('{path}/'.format(path=path))
     #zipfile.writestr(inode, '')
 
-    for patent in patents:
+    for patent in numbers:
+
+        # Skip empty numbers
+        if not patent:
+            continue
+
+        log.info('PDF request for document {document}'.format(document=patent))
         try:
             data = pdf_universal(patent)
             if 'pdf' in data and data['pdf']:
