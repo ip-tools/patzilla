@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2011 ***REMOVED***
-# (c) 2013-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import os
 import logging
 import StringIO
@@ -8,7 +8,7 @@ import subprocess
 import datetime
 from tempfile import NamedTemporaryFile
 from cornice.util import to_list
-
+from elmyra.ip.util.python.decorators import memoize
 
 log = logging.getLogger(__name__)
 
@@ -49,6 +49,27 @@ def gif_to_tiff(payload):
         log.error('GIF to TIFF conversion failed. returncode={returncode}, command="{command_string}", stdout={stdout}, stderr={stderr}'.format(returncode=proc.returncode, **locals()))
         raise Exception('GIF to TIFF conversion failed')
 
+@memoize
+def find_convert():
+    #
+    # Debian: aptitude install imagemagick
+    # /usr/bin/convert
+    #
+    # Mac OS X
+    # /opt/local/bin/convert
+    #
+    # Self-compiled
+    # /opt/imagemagick-7.0.2/bin/convert
+
+    # TODO: Make "convert" configurable via ini file
+    programs = [
+        '/opt/imagemagick-7.0.2/bin/convert',
+        '/opt/local/bin/convert',
+        '/usr/bin/convert',
+    ]
+    for program in programs:
+        if os.path.isfile(program):
+            return program
 
 def to_png(tiff_payload, format='tif'):
 
@@ -70,8 +91,10 @@ def to_png(tiff_payload, format='tif'):
     # ... so use ImageMagick! ;-(
     # http://www.imagemagick.org/pipermail/magick-users/2003-May/008869.html
     #convert_bin = os.path.join(os.path.dirname(__file__), 'imagemagick', 'convert.exe')
-    #command = ['convert', 'tif:-', '+set', 'date:create', '+set', 'date:modify', 'png:-']
-    command = ['convert', '{0}:-'.format(format),
+
+    convert = find_convert()
+    #command = [convert, 'tif:-', '+set', 'date:create', '+set', 'date:modify', 'png:-']
+    command = [convert, '{0}:-'.format(format),
                 '+set', 'date:create', '+set', 'date:modify',
                 # FIXME: make this configurable
                 '-resize', '457x',
