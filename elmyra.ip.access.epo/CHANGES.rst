@@ -9,6 +9,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Improve efficiency when accessing PDF archive: Use persistent requests session, use requests transport
+  with xmlrpclib, switch API entrypoint at upstream data provider to improved Linux infrastructure
 
 0.117.0
 =======

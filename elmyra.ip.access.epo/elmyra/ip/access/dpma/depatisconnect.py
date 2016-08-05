@@ -1,42 +1,74 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
+# (c) 2014-2016 Andreas Motl, Elmyra UG
 import logging
 import requests
+import xmlrpclib
 from StringIO import StringIO
 from lxml import etree as ET
 from lxml.builder import E
 from cornice.util import to_list
 from beaker.cache import cache_region, region_invalidate
 from pyramid.httpexceptions import HTTPNotFound
+from elmyra.ip.util.network.requests_xmlrpclib import RequestsTransport
 from elmyra.ip.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
 from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
 
 log = logging.getLogger(__name__)
 
-archive_service_baseurl = '***REMOVED***'
+
+# Local development
 #archive_service_baseurl = 'http://localhost:20300'
+
+# 2013-2016
+#archive_service_baseurl = '***REMOVED***'
+
+# 2016-
+use_https = True
+archive_service_baseurl = '***REMOVED***'
+
+
+client = None
+def get_client():
+    global client
+    if not client:
+        client = requests.Session()
+    return client
 
 def run_acquisition(document_number, doctypes=None):
     numbers = to_list(document_number)
     doctypes = doctypes or 'xml'
     doctypes = to_list(doctypes)
-    with XmlRpcTimeoutServer(archive_service_baseurl + '/RPC2', 15) as server:
-        return server.runAcquisition(numbers, doctypes)
+    log.info('PDF archive acquisition for doctypes={doctypes}, numbers={numbers}'.format(doctypes=doctypes, numbers=numbers))
+
+    # v1: Native xmlrpclib
+    #with XmlRpcTimeoutServer(archive_service_baseurl + '/RPC2', 15) as server:
+    #    return server.runAcquisition(numbers, doctypes)
+
+    # v2: With "requests" transport
+    url = archive_service_baseurl + '/RPC2'
+    transport = RequestsTransport(session=get_client(), timeout=(2, 17))
+    transport.use_https = use_https
+    server = xmlrpclib.ServerProxy(url, transport=transport)
+    return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
     # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
     url_tpl = archive_service_baseurl + '/download/xml:docinfo/{number}.xml?nodtd=1'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False, timeout=(2, 17))
+    response = get_client().get(url, timeout=(2, 17))
     return response
 
+def fetch_pdf(number, attempt=1):
+    log.info('PDF archive attempt #{attempt} for {number}'.format(attempt=attempt, number=number))
+    return fetch_pdf_real(number)
+
 @cache_region('static')
-def fetch_pdf(number):
+def fetch_pdf_real(number):
 
     # ***REMOVED***/download/pdf/EP666666B1.pdf
-    url_tpl = '***REMOVED***/download/pdf/{number}.pdf'
+    url_tpl = archive_service_baseurl + '/download/pdf/{number}.pdf'
     url = url_tpl.format(number=number)
-    response = requests.get(url, verify=False, timeout=(2, 90))
+    response = get_client().get(url, timeout=(2, 90))
     if response.status_code == 200:
         payload = response.content
         if payload:
