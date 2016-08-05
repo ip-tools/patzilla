@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2016 Andreas Motl, Elmyra UG
+import time
 import json
 import logging
 from pprint import pprint
@@ -106,6 +107,7 @@ class OpsOAuth2Session(OAuth2Session):
             # Log X-Throttling-Control response header
             x_throttling_control = response.headers.get('x-throttling-control')
             if x_throttling_control:
+
                 # Counter duplicate header problem, sometimes we receive duplicate lines like:
                 # idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30), idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30)
                 if len(x_throttling_control) > 150:
@@ -113,6 +115,36 @@ class OpsOAuth2Session(OAuth2Session):
                 if x_throttling_control != self.throttle_last_log:
                     self.throttle_last_log = x_throttling_control
                     logger.info('OPS X-Throttling-Control: {0}'.format(x_throttling_control))
+
+                # Kick in throttling on our side
+                # TODO: Improve context sensitivity, i.e. look at individual performance status attributes
+                """
+                Busy situation::
+
+                    idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30)
+                    busy (images=green:100, inpadoc=green:45, other=green:1000, retrieval=green:100, search=green:15)
+                    idle (images=green:200, inpadoc=green:60, other=green:1000, retrieval=green:200, search=green:30)
+                    busy (images=green:100, inpadoc=green:45, other=green:1000, retrieval=green:100, search=green:15)
+
+                Overload situation::
+
+                    busy       (images=black:0, inpadoc=green:45, other=green:1000, retrieval=green:100, search=green:15)
+                    overloaded (images=black:0, inpadoc=green:30, other=green:1000, retrieval=green:50, search=green:5)
+
+                """
+                busyness_kind = None
+                throttle_wait = None
+                if x_throttling_control.startswith('busy'):
+                    busyness_kind = 'busy'
+                    throttle_wait = 0.33
+                elif x_throttling_control.startswith('overloaded'):
+                    busyness_kind = 'overloaded'
+                    throttle_wait = 0.75
+
+                if throttle_wait:
+                    logger.info('OPS is {busyness_kind}, delaying request for {seconds} seconds'.format(
+                        busyness_kind=busyness_kind, seconds=throttle_wait))
+                    time.sleep(throttle_wait)
 
             return response
 
