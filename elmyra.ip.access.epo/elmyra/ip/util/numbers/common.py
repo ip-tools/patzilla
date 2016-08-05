@@ -30,7 +30,7 @@ def decode_patent_number(patent):
     elif isinstance(patent, types.DictionaryType):
         decoded = patent
     else:
-        raise TypeError('Patent from type "{type}" could not be decoded'.format(type=variable_type))
+        raise TypeError(u'Document number "{patent}" of type "{type}" could not be decoded'.format(patent=patent, type=type(patent)))
     return decoded
 
 def split_patent_number(patent_number):
