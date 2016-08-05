@@ -9,6 +9,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+0.118.0
+=======
 - Improve efficiency when accessing PDF archive: Use persistent requests session, use requests transport
   with xmlrpclib, switch API entrypoint at upstream data provider to improved Linux infrastructure
 - Try to improve TIFF to PNG conversion quality (contrast) by switching to more recent version of ImageMagick
