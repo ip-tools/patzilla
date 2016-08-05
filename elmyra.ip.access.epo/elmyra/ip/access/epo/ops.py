@@ -551,9 +551,10 @@ def ops_register(reference_type, document_number, constituents, xml=False):
     #print "response:", response.content
 
     if response.status_code == 200:
-        if response.headers['content-type'] == 'application/json':
+        content_type = response.headers['content-type']
+        if content_type == 'application/json':
             return response.json()
-        elif response.headers['content-type'] == 'text/xml':
+        elif content_type == 'text/xml':
             return response.content
         else:
             # TODO: handle error here?
@@ -587,7 +588,25 @@ def handle_error(response, location):
     response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.content
 
     #print "response:", response
-    log.warn(request.errors)
+    if len(request.errors) == 1:
+        error_info = request.errors[0].get('description')
+        #pprint(error_info)
+        if error_info.get('status_code') == 404:
+            error_content = error_info.get('content', '')
+            url = error_info.get('url')
+            status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
+            if 'CLIENT.InvalidCountryCode' in error_content:
+                ops_code = 'CLIENT.InvalidCountryCode'
+                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                log.error(message)
+                return response_json
+            if 'SERVER.EntityNotFound' in error_content:
+                ops_code = 'SERVER.EntityNotFound'
+                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                log.warning(message)
+                return response_json
+
+    log.error(u'OPS API errors:\n{}'.format(pformat(request.errors)))
     return response_json
 
 
@@ -607,7 +626,7 @@ def pdf_document_build(patent):
         raise HTTPNotFound(msg)
 
     page_count = int(resource_info['@number-of-pages'])
-    log.info('pdf_document_build collecting {0} pages for document {1}'.format(page_count, patent))
+    log.info('OPS PDF builder will collect {0} pages for document {1}'.format(page_count, patent))
     pdf_pages = []
     for page_number in range(1, page_count + 1):
         page = get_ops_image_pdf(patent, page_number)
@@ -666,6 +685,24 @@ def get_ops_biblio_data(patent, xml=False):
     client = get_ops_client()
 
     response = client.get(url_biblio, headers=get_accept_headers(xml=xml))
+
+    if response.status_code == 200:
+        content_type = response.headers['content-type']
+        if content_type == 'application/json':
+            data = response.json()
+            documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
+            return documents
+        elif content_type == 'text/xml':
+            return response.content
+        else:
+            # TODO: handle error here?
+            return
+    else:
+        response = handle_error(response, 'ops-biblio')
+        raise response
+
+
+    """
     if response.status_code != 200:
 
         log.error(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
@@ -687,10 +724,8 @@ def get_ops_biblio_data(patent, xml=False):
         error = HTTPError(error_msg_process)
         error.status_code = 500
         raise error
+    """
 
-    documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
-
-    return documents
 
 
 @cache_region('search')

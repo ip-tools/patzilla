@@ -14,6 +14,7 @@ development
 - Try to improve TIFF to PNG conversion quality (contrast) by switching to more recent version of ImageMagick
 - React appropriately to “busy” or “overload” situations at OPS by introducing little amounts of delays in request processing
 - Improve robustness and logging on multi-stage fetching of PDF documents
+- Improve data export robustness and logging
 
 0.117.0
 =======

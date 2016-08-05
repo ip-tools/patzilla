@@ -18,7 +18,9 @@ from bunch import bunchify, Bunch
 from json.encoder import JSONEncoder
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
+from cornice.util import _JSONError
 from xlsxwriter.worksheet import Worksheet
+from pyramid.httpexceptions import HTTPError
 from elmyra.ip.access.epo.core import pdf_universal_multi
 from elmyra.ip.access.epo.ops import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
 from elmyra.ip.access.generic.exceptions import ignored
@@ -154,16 +156,16 @@ class Dossier(object):
     def to_csv(dataframe):
         # Serialize as CSV
         buffer = BytesIO()
-        dataframe.to_csv(buffer, index=False)
+        dataframe.to_csv(buffer, index=False, encoding='utf-8')
         payload = buffer.getvalue()
         return payload
 
     @staticmethod
     def to_json(dataframe):
-        return json.dumps(dataframe.to_dict(), indent=4, cls=PandasJSONEncoder)
-        return dataframe.to_json()
+        return json.dumps(dataframe.to_dict(orient='records'), indent=4, cls=PandasJSONEncoder)
+        #return dataframe.to_json(orient='records', date_format='iso')
 
-    def to_zip(self, options=None):
+    def to_zip(self, request=None, options=None):
         """
          u'options': {u'media': {u'biblio': False,
                                  u'claims': False,
@@ -180,6 +182,12 @@ class Dossier(object):
         # TODO: PDF Extracts
 
         options = options or bunchify({'report': {}, 'media': {}})
+
+
+        # Remove entries with empty/undefined document numbers
+        self.df_documents.dropna(subset=['document'], inplace=True)
+
+        # Reject entries with seen == True
         filtered = self.df_documents[(self.df_documents.seen == False)]
         documents = list(filtered.document)
 
@@ -223,6 +231,8 @@ class Dossier(object):
             # Media files
             # -----------
 
+            fulltext_countries_excluded_ops = ['BE', 'CN', 'DD', 'DE', 'DK', 'FR', 'GR', 'HU', 'JP', 'LU', 'KR', 'RU', 'PT', 'SE', 'TR', 'SK', 'US']
+
             # Add full PDF documents
             if options.media.pdf:
                 pdf_universal_multi(zipfile, documents, path='media/pdf')
@@ -236,7 +246,13 @@ class Dossier(object):
             status = OrderedDict()
             for document in documents:
 
+                if not document or not document.strip():
+                    continue
+
+                log.info('XML data acquisition for document {document}'.format(document=document))
+
                 status.setdefault(document, OrderedDict())
+                patent = decode_patent_number(document)
 
                 # Add XML "bibliographic" data (full-cycle)
                 if options.media.biblio:
@@ -244,78 +260,99 @@ class Dossier(object):
                         biblio_payload = get_ops_biblio_data(document, True)
                         zipfile.writestr('media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
                         status[document]['biblio'] = True
-                    except:
-                        log.warning('Could not fetch XML bibliographic data for {document}. Exception:\n{trace}'.format(document=document, trace=exception_traceback()))
+
+                    except Exception as ex:
                         status[document]['biblio'] = False
+                        self.handle_exception(ex, 'biblio', document)
+
+                    self.clear_request_errors(request)
 
                 # Add XML "description" full text data
+                # OPS does not have full texts for DE, US, ...
                 if options.media.description:
-                    try:
-                        # Write XML
-                        document_number = encode_epodoc_number(decode_patent_number(document))
-                        description_payload = ops_description(document_number, True)
-                        zipfile.writestr('media/xml/{document}.description.xml'.format(document=document), description_payload)
-                        status[document]['description'] = True
+                    status[document]['description'] = False
+                    if patent.country not in fulltext_countries_excluded_ops:
+                        try:
+                            # Write XML
+                            document_number = encode_epodoc_number(patent)
+                            description_payload = ops_description(document_number, True)
+                            zipfile.writestr('media/xml/{document}.description.xml'.format(document=document), description_payload)
+                            status[document]['description'] = True
 
-                        # Write TEXT
-                        with ignored():
-                            text_payload = self.get_fulltext(description_payload, 'description')
-                            if text_payload:
-                                zipfile.writestr('media/txt/{document}.description.txt'.format(document=document), text_payload)
+                            # Write TEXT
+                            with ignored():
+                                text_payload = self.get_fulltext(description_payload, 'description')
+                                if text_payload:
+                                    zipfile.writestr('media/txt/{document}.description.txt'.format(document=document), text_payload.encode('utf-8'))
 
-                    except:
-                        log.warning('Could not fetch XML description data for {document}. Exception:\n{trace}'.format(document=document, trace=exception_traceback()))
-                        status[document]['description'] = False
+                        except Exception as ex:
+                            self.handle_exception(ex, 'description', document)
+
+                    self.clear_request_errors(request)
 
                 # Add XML "claims" full text data
+                # OPS does not have full texts for DE, US, ...
                 if options.media.claims:
-                    try:
-                        # Write XML
-                        document_number = encode_epodoc_number(decode_patent_number(document))
-                        claims_payload = ops_claims(document_number, True)
-                        zipfile.writestr('media/xml/{document}.claims.xml'.format(document=document), claims_payload)
-                        status[document]['claims'] = True
+                    status[document]['claims'] = False
+                    if patent.country not in fulltext_countries_excluded_ops:
+                        try:
+                            # Write XML
+                            document_number = encode_epodoc_number(patent)
+                            claims_payload = ops_claims(document_number, True)
+                            zipfile.writestr('media/xml/{document}.claims.xml'.format(document=document), claims_payload)
+                            status[document]['claims'] = True
 
-                        # Write TEXT
-                        with ignored():
-                            text_payload = self.get_fulltext(claims_payload.replace('<claim-text>', '<p>').replace('</claim-text>', '</p>'), 'claims')
-                            if text_payload:
-                                zipfile.writestr('media/txt/{document}.claims.txt'.format(document=document), text_payload)
+                            # Write TEXT
+                            with ignored():
+                                text_payload = self.get_fulltext(claims_payload.replace('<claim-text>', '<p>').replace('</claim-text>', '</p>'), 'claims')
+                                if text_payload:
+                                    zipfile.writestr('media/txt/{document}.claims.txt'.format(document=document), text_payload.encode('utf-8'))
 
-                    except:
-                        log.warning('Could not fetch XML claims data for {document}. Exception:\n{trace}'.format(document=document, trace=exception_traceback()))
-                        status[document]['claims'] = False
+                        except Exception as ex:
+                            self.handle_exception(ex, 'claims', document)
+
+                    self.clear_request_errors(request)
 
                 # Add XML register data
                 if options.media.register:
+
                     try:
-                        document_number = encode_epodoc_number(decode_patent_number(document))
+                        document_number = encode_epodoc_number(patent)
                         register_payload = ops_register('publication', document_number, 'biblio', True)
                         zipfile.writestr('media/xml/{document}.register.xml'.format(document=document), register_payload)
                         status[document]['register'] = True
-                    except:
-                        log.warning('Could not fetch XML register data for {document}. Exception:\n{trace}'.format(document=document, trace=exception_traceback()))
-                        status[document]['register'] = False
 
+                    except Exception as ex:
+                        status[document]['register'] = False
+                        self.handle_exception(ex, 'register', document)
+
+                    self.clear_request_errors(request)
 
                 # Add XML family data
                 if options.media.family:
                     try:
-                        document_number = encode_epodoc_number(decode_patent_number(document), {'nokind': True})
+                        document_number = encode_epodoc_number(patent, {'nokind': True})
                         family_payload = ops_family_inpadoc('publication', document_number, 'biblio', True)
                         zipfile.writestr('media/xml/{document}.family.xml'.format(document=document), family_payload)
                         status[document]['family'] = True
-                    except:
-                        log.warning('Could not fetch XML family data for {document}. Exception:\n{trace}'.format(document=document, trace=exception_traceback()))
+
+                    except Exception as ex:
                         status[document]['family'] = False
+                        self.handle_exception(ex, 'family', document)
+
+                    self.clear_request_errors(request)
 
 
             #print '====== status:'; pprint(status)
 
+
+
+            # Generate report
+            # ---------------
+
             # TODO: Format more professionally incl. generator description
             # TODO: Unify with "pdf_universal_multi"
 
-            # Generate report
             delivered_items = []
             missing_items = []
             for document, kinds in status.iteritems():
@@ -337,10 +374,10 @@ class Dossier(object):
             if delivered_items or missing_items:
 
                 report_template = dedent("""
-                Delivered files ({delivered_count}):
+                Delivered artifacts ({delivered_count}):
                 {delivered_files}
 
-                Missing files ({missing_count}):
+                Missing artifacts ({missing_count}):
                 {missing_files}
                 """).strip()
 
@@ -356,6 +393,24 @@ class Dossier(object):
         payload = buffer.getvalue()
 
         return payload
+
+    def handle_exception(self, ex, service_name, document):
+        if isinstance(ex, (_JSONError, HTTPError)) and hasattr(ex, 'status_int') and ex.status_int == 404:
+            log.warning(u'XML({service_name}, {document}) not found'.format(service_name=service_name, document=document))
+
+            # Signal exception has been handled (ignored)
+            return True
+        else:
+            log.warning(u'XML({service_name}, {document}) failed. ' \
+                        u'Exception:\n{trace}'.format(service_name=service_name, document=document, trace=exception_traceback()))
+
+        # Signal exception should be re-raised, maybe
+        return False
+
+    @staticmethod
+    def clear_request_errors(request):
+        # Reset cornice error store to prevent errors adding up on bulkyfied OPS requests
+        del request.errors[:]
 
     @staticmethod
     def get_fulltext(payload, what):
