@@ -249,7 +249,7 @@ def export_util_handler(request):
 
             elif output_format == 'zip':
                 dossier = Dossier(data)
-                payload = dossier.to_zip(options=data.get('options'))
+                payload = dossier.to_zip(request=request, options=data.get('options'))
 
             else:
                 return HTTPBadRequest(u'Export format "{format}" is unknown.'.format(format=output_format))

@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-# (c) 2013 Andreas Motl, Elmyra UG
-from fabric.contrib.project import rsync_project
+# (c) 2013-2016 Andreas Motl, Elmyra UG
 import os
 from distutils.core import run_setup
+from fabric.contrib.project import rsync_project
 from fabric.decorators import task, hosts
 from fabric.colors import yellow, red
 from fabric.utils import abort
 from fabric.state import env
 from cuisine import run, file_exists, file_is_dir, file_is_file, file_upload
-from pip.util import ask
+from pip.utils import ask
 
 env.colorize_errors = True
 env.confirm = False

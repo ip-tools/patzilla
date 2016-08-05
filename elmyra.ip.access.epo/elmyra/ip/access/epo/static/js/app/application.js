@@ -314,8 +314,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         log('perform_listsearch.hits:   ', hits);
         */
 
+        // Filter empty elements from entries
+        entries = _.filter(entries, function(entry) {
+            return !_.isEmpty(_.string.trim(entry));
+        });
 
-        // querying by single document numbers has a limit of 10 at OPS
+        // Querying by single document numbers has a limit of 10 at OPS
         var page_size = 10;
         this.metadata.set('page_size', page_size);
         options.local_limit = page_size;

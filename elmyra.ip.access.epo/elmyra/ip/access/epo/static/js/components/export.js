@@ -48,13 +48,21 @@ ExportPlugin = Backbone.Model.extend({
 
         // Select "All" buttons
         dialog.find('[data-toggle="select-all"]').unbind('click').bind('click', function(event) {
+
+            // Stop event from triggering other machinery
             event.stopPropagation();
             event.preventDefault();
+
+            // Manually toggle state
             $(this).toggleClass('active');
+
+            // Toggle linked elements
             var active = $(this).hasClass('active');
-            //log('active:', $(this).hasClass('active'));
             var target_selector = $(this).data('target');
             _this.radios.toggle_element($(this).parent().find(target_selector), active);
+
+            // Update selection text
+            _this.radios.update_selection(this);
         });
 
 

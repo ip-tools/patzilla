@@ -127,7 +127,9 @@ BasketModel = Backbone.RelationalModel.extend({
                     // refresh gui, update timestamp
                     // 2016-08-03: Remove it, because it interacts badly with some button event registrations. Let's see how it goes....
                     // 2016-08-04: Maybe it's important for getting the "Fade seen documents" feature right...
-                    //!options.bulk && _this.trigger('change', _this);
+                    //             Answer: Yes, it's very important for keeping the visual
+                    //             representation of basket contents in sync with the model.
+                    !options.bulk && _this.trigger('change', _this);
                 }});
             }
 
