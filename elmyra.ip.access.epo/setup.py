@@ -140,7 +140,7 @@ setup(name='elmyra.ip.access.epo',
           'elmyra.ip.access.epo': [
               'resources/*.*',
               'templates/*.mako',
-              'static/js/**/*.js', 'static/js/**/*.map', '**/**/*.css',
+              'static/js/**/*.js', 'static/js/**/*.map', 'static/js/**/*.swf', '**/**/*.css',
               '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg',
               'static/widget/**/**/*.*',
           ],
