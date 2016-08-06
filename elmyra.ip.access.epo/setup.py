@@ -54,6 +54,8 @@ requires = [
     'pyOpenSSL==16.0.0',
     'pyasn1==0.1.9',
     'ndg-httpsclient==0.4.2',
+    #'six>=1.5.2',
+    #'setuptools>=11.3',     # required for cryptography-1.4
 
 
     # ----------------------------------------------
