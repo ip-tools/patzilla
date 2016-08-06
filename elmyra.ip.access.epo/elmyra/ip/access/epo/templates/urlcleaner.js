@@ -24,7 +24,10 @@ if (database) {
     url_clean = uc_strip_param(url_clean, 'database');
 }
 
-// Clear "op=" query parameter when too long
+// Clear "op=" query parameter when too long to remove it from "Referer:" header.
+// Otherwise, this would clutter the access.log way too much.
+// TODO: Make this obsolete by moving to short-url sharing.
+// TODO: Or just turn off Referer logging on patentview-xyz domains or maybe strip "op" parameter with Nginx.
 var op = uc_get_param(url, 'op');
 if (op && op.length > 1400) {
     url_clean = uc_strip_param(url_clean, 'op');
