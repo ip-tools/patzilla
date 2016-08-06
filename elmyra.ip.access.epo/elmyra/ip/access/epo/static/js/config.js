@@ -38,9 +38,14 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
         var path = url.attr('path');
         if (url.attr('port')) baseurl += ':' + url.attr('port');
 
-        // Add path only if it is significant, don't add root namespace "/" as path,
-        // this would cause anomalies downstream by rendering https://example.org//your/path urls.
-        if (path != '/') {
+        if (path == '/') {
+            // Don't add path if it is the root namespace "/",
+            // this would cause anomalies downstream by rendering https://example.org//your/path urls.
+        } else if (_.string.startsWith(path, '/view')) {
+            // Also, don't add path if it is pointing to /view/... (e.g. /view/pn/EP0666666A2),
+            // because in this cases we want the link to be to the domain only (e.g. https://patentview-develop.elmyra.de/)
+            // TODO: Maybe also restrict to matching "patentview" in hostname
+        } else {
             baseurl += path;
         }
 
