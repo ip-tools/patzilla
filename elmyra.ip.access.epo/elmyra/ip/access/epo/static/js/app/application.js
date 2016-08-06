@@ -339,7 +339,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             console.warn('Empty entries when performing listsearch at OPS');
 
             // Display "No results" warning
-            var datasource = options.datasource || options.query_data.datasource;
+            var datasource = options.datasource || (options.query_data && options.query_data.datasource);
             this.ui.no_results_alert({datasource: datasource, query: query_origin});
 
             // Signal the results are (not) ready

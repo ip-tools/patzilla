@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2015 Andreas Motl, Elmyra UG
+# (c) 2013-2016 Andreas Motl, Elmyra UG
+import json
 import re
 import os
 import logging
@@ -42,10 +43,12 @@ def includeme(config):
     config.add_route('embedded-item', '/ops/browser/embed/item')
     config.add_route('embedded-list', '/ops/browser/embed/list')
 
+    # public
+    config.add_route('patentview',          '/ops/browser/view/{field}/{value}')
+
     # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
-    config.add_route('patentsearch-quickview',  '/ops/browser/{qmode}/{field}/{value}')
     config.add_route('patentsearch-quick2',  '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
     config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
     config.add_route('jump-dpmaregister2', '/ops/browser/office/dpma/register/application/{document_number}')
@@ -72,9 +75,26 @@ def navigator_standalone(request):
 def navigator_embedded(request):
     payload = {
         'project': 'elmyra.ip.access.epo',
-        }
+    }
     return payload
 
+@view_config(route_name='patentview', renderer='elmyra.ip.access.epo:templates/embedded.html')
+def patentview(request):
+
+    matchdict = request.matchdict.copy()
+    params = request.params.copy()
+
+    params['mode'] = 'liveview'
+    params['context'] = 'viewer'
+
+    payload = {
+        'project': 'elmyra.ip.access.epo',
+        'embed_options': json.dumps({
+            'matchdict': dict(matchdict),
+            'params': dict(params),
+        }),
+    }
+    return payload
 
 @view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
 def opspdf(request):
@@ -119,7 +139,6 @@ def opsbrowser_vanity(request):
     return get_redirect_query(request, query)
 
 @view_config(route_name='patentsearch-quick')
-@view_config(route_name='patentsearch-quickview')
 @view_config(route_name='patentsearch-quick2')
 def opsbrowser_quick(request):
     field = request.matchdict.get('field')
@@ -130,12 +149,8 @@ def opsbrowser_quick(request):
     expression = compute_expression(field, value, value2, parameters=request.params)
     print 'quick expression:', expression
 
-    # Translate "mode" segment into appropriate query parameters
-    query_args = None
-    if 'qmode' in request.matchdict and request.matchdict['qmode'] == 'view':
-        query_args = {'mode': 'liveview', 'context': 'viewer'}
-
-    return get_redirect_query(request, expression, query_args=query_args)
+    #return get_redirect_query(request, expression, query_args=query_args)
+    return get_redirect_query(request, expression)
 
 def compute_expression(field, value, value2=None, **kwargs):
 

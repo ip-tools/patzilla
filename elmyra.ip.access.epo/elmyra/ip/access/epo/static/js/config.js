@@ -35,9 +35,17 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
     update_baseurl: function() {
         var url = this.uri;
         var baseurl = url.attr('protocol') + '://' + url.attr('host');
+        var path = url.attr('path');
         if (url.attr('port')) baseurl += ':' + url.attr('port');
-        baseurl += url.attr('path');
+
+        // Add path only if it is significant, don't add root namespace "/" as path,
+        // this would cause anomalies downstream by rendering https://example.org//your/path urls.
+        if (path != '/') {
+            baseurl += path;
+        }
+
         this.set('baseurl', baseurl);
+
     },
 
     // send current state of config to browser history.pushState

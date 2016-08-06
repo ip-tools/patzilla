@@ -242,11 +242,11 @@
 <script id="family-members-removed-some-template" type="text/x-underscore-template">
     <div class="row">
         <div class="span6">
-            <strong>Removed <%= Humanize.intComma(data.count_removed) %> family members</strong> 
+            <strong>Removed <%= Humanize.intComma(data.count_removed) %> family members</strong>
             from results range <%= data.start %>-<%= data.end %>.
             <br/><br/>
             This gives an estimation of <strong><%= Humanize.intComma(data.count_total_estimated) %></strong> results
-            when grossed up against the total result count and will 
+            when grossed up against the total result count and will
             save on reviewing about <strong><%= Humanize.intComma(data.count_saved_estimated) %></strong> documents.
         </div>
         <div class="span5">
@@ -306,8 +306,8 @@
 </script>
 
 <script id="no-results" type="text/x-underscore-template">
-    Searching for <pre class="inline"><%= data.query_display.replace(/&amp;quot;/g, '"') %></pre> at data source
-    <strong><%= data.datasource %></strong> did not match any documents.
+    Searching for <pre class="inline"><%= data.query_display && data.query_display.replace(/&amp;quot;/g, '"') || 'n/a' %></pre> at data source
+    <strong><%= data.datasource || 'n/a' %></strong> did not match any documents.
     Please try refining search criteria or expression.
     <br/>
     If you think this is a system failure, don't hesitate to report this issue to us.
