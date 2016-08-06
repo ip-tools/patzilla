@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-08-06 0.119.4
+==================
+- Fix ZeroClipboard by adding missing *.swf files to python package
+
 2016-08-06 0.119.3
 ==================
 - Improve embedded rendering
