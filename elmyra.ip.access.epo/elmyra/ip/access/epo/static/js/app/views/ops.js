@@ -22,19 +22,22 @@ OpsBaseViewMixin = {
             // debugging
             //opsChooserApp.config.set('isviewer', true);
 
-            // when in liveview, scrumble database query and viewstate parameters into opaque parameter token
+            // When in liveview, scrumble database query and viewstate parameters into opaque parameter token
             if (opsChooserApp.config.get('isviewer')) {
 
-                // nail to liveview mode in any case
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Nail to liveview mode in any case
                 params['mode'] = 'liveview';
 
-                // compute opaque parameter token and reset href
-                var __this = this;
-                opaque_param(params).then(function(opaque_query) {
-                    $(__this).attr('href', '?' + opaque_query);
+                // Compute opaque link parameter and open url
+                opsChooserApp.permalink.make_uri_opaque(params).then(function(url) {
+                    open(url);
                 });
 
-            // otherwise, serialize state into regular query parameters
+
+            // Otherwise, serialize state into regular query parameters
             } else {
                 $(this).attr('href', '?' + opsChooserApp.permalink.serialize_params(params));
             }
