@@ -86,7 +86,7 @@ body {
     margin: 0px;
 }
 
-.page-footer {
+.page-footer,.page-footer a {
     color: #999999;
 }
 
@@ -152,7 +152,6 @@ p.hero-smaller {
 }
 
 .header-container {
-    background-image: url(/static/img/header-small.jpg);
     background-size: 1170px;
     background-repeat: no-repeat;
     background-position: 50px;
