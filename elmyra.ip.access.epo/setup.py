@@ -10,7 +10,7 @@ CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 requires = [
 
     # ----------------------------------------------
-    #   backend
+    #   Backend
     # ----------------------------------------------
     # pyramid core
     #'pyramid==1.5a2',
@@ -37,14 +37,29 @@ requires = [
     'python_jwt==0.3.1',
     'pbkdf2==1.3',
 
+
     # ----------------------------------------------
-    #   business logic
+    #   Infrastructure
     # ----------------------------------------------
-    'Bunch==1.0.1',
+
+    # HTTP
     'requests==2.5.1',
     'requests-oauthlib==0.4.0',
     'mechanize==0.2.5',
+
+    # HTML
     'BeautifulSoup==3.2.1',
+
+    # SNI support
+    'pyOpenSSL==16.0.0',
+    'pyasn1==0.1.9',
+    'ndg-httpsclient==0.4.2',
+
+
+    # ----------------------------------------------
+    #   Business logic
+    # ----------------------------------------------
+    'Bunch==1.0.1',
     'ago==0.0.6',
     'pyparsing==2.0.2',
     'mongoengine==0.8.7',
