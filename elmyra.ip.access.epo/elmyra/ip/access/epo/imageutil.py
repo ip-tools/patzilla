@@ -87,6 +87,19 @@ def to_png(tiff_payload, format='tif'):
         pass
     """
 
+    """
+    Instructions for building ImageMagick on Debian::
+
+        # https://packages.debian.org/source/wheezy/imagemagick
+        aptitude install build-essential checkinstall ghostscript libbz2-dev libexif-dev fftw-dev libfreetype6-dev libjasper-dev libjpeg-dev liblcms2-dev liblqr-1-0-dev libltdl-dev libpng-dev librsvg2-dev libtiff-dev libx11-dev libxext-dev libxml2-dev zlib1g-dev liblzma-dev libpango1.0-dev
+
+        ./configure --prefix=/opt/imagemagick-7.0.2
+        wget http://www.imagemagick.org/download/ImageMagick.tar.gz
+        # untar and cd
+        make -j6 && make install
+
+    """
+
 
     # ... so use ImageMagick! ;-(
     # http://www.imagemagick.org/pipermail/magick-users/2003-May/008869.html

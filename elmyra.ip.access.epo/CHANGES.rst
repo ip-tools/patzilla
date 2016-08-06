@@ -15,6 +15,8 @@ development
 - Improve efficiency when accessing PDF archive: Use persistent requests session, use requests transport
   with xmlrpclib, switch API entrypoint at upstream data provider to improved Linux infrastructure
 - Try to improve TIFF to PNG conversion quality (contrast) by switching to more recent version of ImageMagick
+  - Before: https://patentsearch.elmyra.de/api/drawing/BE1018034A6?page=2
+  - After: https://patentsearch-develop.elmyra.de/api/drawing/BE1018034A6?page=2
 - React appropriately to “busy” or “overload” situations at OPS by introducing little amounts of delays in request processing
 - Improve robustness and logging on multi-stage fetching of PDF documents
 - Improve data export robustness and logging
