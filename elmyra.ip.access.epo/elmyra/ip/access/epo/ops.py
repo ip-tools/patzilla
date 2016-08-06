@@ -438,12 +438,20 @@ def get_ops_image(document, page, kind, format):
 
     else:
         msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
+        log.error('[{code}] {message}'.format(code=response.status_code, message=msg))
+        response = handle_error(response, 'ops-image')
+        raise response
+
+    """
+    else:
+        msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
         log.warn('[{code}] {message}'.format(code=response.status_code, message=msg))
         error = HTTPError()
         error.explanation = msg
         error.status_code = response.status_code
         # TODO: respond with proper json error
         raise error
+    """
 
 
 @cache_region('static')
