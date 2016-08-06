@@ -34,8 +34,9 @@ EmbeddingController = Marionette.Controller.extend({
         $('.header-container').hide();
         $('#ops-pagination-region-top').hide();
         $('#ops-pagination-region-bottom').hide();
-        $('.page-footer').hide();
-        $('.page-footer').prev().hide();
+        //$('.page-footer').hide();
+        //$('.page-footer').prev().hide();
+        $('.footer-help').hide();
         $('#project-chooser-area').hide();
         $('#querybuilder-basket-area').hide();
     },
@@ -121,6 +122,8 @@ $(document).ready(function() {
 
     });
 
+
+    opsChooserApp.config.set('embedded', true);
 
     // Transfer some options to application before booting
     if (embed_options && embed_options.params) {

@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-08-06 0.119.3
+==================
+- Improve embedded rendering
+
 2016-08-06 0.119.2
 ==================
 - More fixes for proper url generation to patentview

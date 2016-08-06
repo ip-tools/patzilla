@@ -9,14 +9,21 @@
 OpsChooserApp = Backbone.Marionette.Application.extend({
 
     setup_ui: function() {
+
         // Initialize content which still resides on page level (i.e. no template yet)
-        $('#query').val(opsChooserApp.config.get('query'));
+        $('#query').val(this.config.get('query'));
         $('#ui-title').html(getconfig('setting.ui.page.title'));
         $('#ui-subtitle').html(getconfig('setting.ui.page.subtitle'));
         $('#ui-statusline').html(getconfig('setting.ui.page.statusline'));
         $('#ui-productname').html(getconfig('setting.ui.productname'));
         $('#ui-footer').html(getconfig('setting.ui.page.footer', {after: '<br/>'}));
         $('#ui-footer-version').html(getconfig('setting.ui.version', {after: '<br/>'}));
+
+        // Add background image to page header at runtime, only if not in embedded mode
+        if (!this.config.get('embedded')) {
+            $('.header-container').css('background-image', 'url(/static/img/header-small.jpg)');
+        }
+
     },
 
     get_datasource: function() {
