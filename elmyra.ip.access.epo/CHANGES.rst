@@ -9,6 +9,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Depend on more recent versions of Python modules (pyOpenSSL, pyasn1, ndg-httpsclient) to ensure SNI compatibility for egress HTTP requests
 
 2016-08-05 0.118.0
 ==================
