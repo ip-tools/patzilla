@@ -1,14 +1,31 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2016 Andreas Motl, Elmyra UG
 
 EmbeddingController = Marionette.Controller.extend({
 
     initialize: function() {
 
+        log('Embed options:', this.options);
+
         this.url = $.url(window.location.href);
+        log('Embed URL:', this.url);
+
+        // Use parameters from url first
         this.type = this.url.param('type');
         this.mode = this.url.param('mode');
         this.pubnumber = this.url.param('pn');
+
+        // Parameters from options (ex. embed_options) take precedence
+        if (this.options && this.options.matchdict) {
+            var field = this.options.matchdict.field;
+            var value = this.options.matchdict.value;
+            if (field && value) {
+                if (field == 'pn') {
+                    this.type = 'patent';
+                    this.pubnumber = value;
+                }
+            }
+        }
 
         this.hide_umbrella();
     },
@@ -31,18 +48,26 @@ EmbeddingController = Marionette.Controller.extend({
 
     run: function() {
         this.hide_regions();
-        opsChooserApp.perform_listsearch({}, undefined, [this.pubnumber], 1, 'pn', 'OR');
+        if (this.pubnumber) {
+            opsChooserApp.perform_listsearch({}, undefined, [this.pubnumber], 1, 'pn', 'OR');
+        } else {
+            opsChooserApp.ui.user_alert('404 Not Found', 'warning');
+        }
     },
 
     process_results: function() {
         opsChooserApp.basketRegion.close();
 
-        if (opsChooserApp.metadata.get('result_count_received') == 0) {
+        /*
+        log('results:', opsChooserApp.metadata.get('result_count_received'));
+        if (!opsChooserApp.metadata.get('result_count_received')) {
             opsChooserApp.ui.user_alert('No results for given criteria.', 'warning');
             return;
         }
+        */
 
         if (this.type == 'patent') {
+            $('#ops-collection-region').show();
 
         } else if (this.type == 'drawings') {
 
@@ -70,7 +95,7 @@ EmbeddingController = Marionette.Controller.extend({
             }
 
         } else {
-            opsChooserApp.ui.user_alert('Unknown embedding type.', 'error');
+            //opsChooserApp.ui.user_alert('Unknown embed type.', 'error');
             $('#ops-collection-region').hide();
         }
 
@@ -84,7 +109,7 @@ $(document).ready(function() {
 
     opsChooserApp.addInitializer(function(options) {
 
-        this.embeddingController = new EmbeddingController();
+        this.embeddingController = new EmbeddingController(options=embed_options);
 
         this.listenTo(this, 'application:ready', function() {
             this.embeddingController.run();
@@ -95,6 +120,17 @@ $(document).ready(function() {
         });
 
     });
+
+
+    // Transfer some options to application before booting
+    if (embed_options && embed_options.params) {
+        if (embed_options.params.context) {
+            opsChooserApp.config.set('context', embed_options.params.context);
+        }
+        if (embed_options.params.mode) {
+            opsChooserApp.config.set('mode', embed_options.params.mode);
+        }
+    }
 
     opsChooserApp.start();
     opsChooserApp.trigger('application:boot');

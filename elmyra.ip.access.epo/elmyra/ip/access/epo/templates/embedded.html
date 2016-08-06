@@ -3,6 +3,10 @@
 
 <%include file="app.html"/>
 
+<script type="text/javascript">
+    var embed_options = ${ embed_options or '{}' | n};
+</script>
+
 % if request.registry.settings.get('ipsuite.production') == 'true':
 <script type="text/javascript" src="/static/js/o-embedded.min.js"></script>
 % else:
