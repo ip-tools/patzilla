@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-08-07 0.119.6
+==================
+- Another attempt to fix liveview mode: Strip "op" parameter before computing drilldown opaque URLs.
+
 2016-08-07 0.119.5
 ==================
 - Attempt to fix liveview mode: Original "op" parameter was propagated without honoring clicked elements.

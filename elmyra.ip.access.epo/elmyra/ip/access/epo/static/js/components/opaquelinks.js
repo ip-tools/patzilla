@@ -50,6 +50,9 @@ function opaque_param(params, options) {
     }
     */
 
+    // Delete "op" parameter from URL
+    delete params['op'];
+
     // sign parameters, generate JWT token and opaque parameter url
     return opaquetoken_query(params, options);
 
