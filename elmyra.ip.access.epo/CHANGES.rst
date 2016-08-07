@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-08-07 0.119.5
+==================
+- Attempt to fix liveview mode: Original "op" parameter was propagated without honoring clicked elements.
+
 2016-08-06 0.119.4
 ==================
 - Fix ZeroClipboard by adding missing *.swf files to python package

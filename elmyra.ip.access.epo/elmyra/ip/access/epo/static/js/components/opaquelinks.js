@@ -44,9 +44,11 @@ function opaque_param(params, options) {
     params = params || {};
 
     // skip if "op" is already in url
+    /*
     if (params['op']) {
         return $.Deferred().resolve('op=' + params['op']);
     }
+    */
 
     // sign parameters, generate JWT token and opaque parameter url
     return opaquetoken_query(params, options);
