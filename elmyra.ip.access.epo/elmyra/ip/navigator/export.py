@@ -692,8 +692,8 @@ class DossierXlsx(Dossier):
         -l, --listener           start a permanent listener to use by unoconv clients
         -n, --no-launch          fail if no listener is found (default: launch one)
         """
-        command = [[unoconv, '--format=pdf', '--output={output}'.format(output=pdf_path), '--verbose', '--timeout=10', xlsx_file.name]]
-        process = envoy.run(command, timeout=15)
+        command = [[unoconv, '--format=pdf', '--output={output}'.format(output=pdf_path), '--verbose', '-vvvvv', '--timeout=10', xlsx_file.name]]
+        process = envoy.run(command, timeout=15, env={'HOME': '/tmp'})
 
         # Debugging
         #print 'status:', process.status_code
