@@ -99,7 +99,8 @@ class DpmaDepatisnetAccess:
         self.browser['hitsPerPage'] = [str(limit)]
 
         # turn on all fields
-        self.browser['DocId'] = ['on']      # Publication number
+        # 2016-10-06: Field got disabled upstream
+        #self.browser['DocId'] = ['on']      # Publication number
         self.browser['Ti'] = ['on']         # Title
         self.browser['In'] = ['on']         # Inventor
         self.browser['Pa'] = ['on']         # Applicant/Owner
