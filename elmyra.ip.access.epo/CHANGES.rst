@@ -10,6 +10,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - Fix DEPATISnet client re. form field "DocId"
+- Fix unoconv export re. HOME environment variable
 
 2016-08-07 0.119.6
 ==================
