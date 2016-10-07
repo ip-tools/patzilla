@@ -11,6 +11,7 @@ development
 ===========
 - Fix DEPATISnet client re. form field "DocId"
 - Fix unoconv export re. HOME environment variable
+- Swapping of family members by priority DE, EP, WO, US
 
 2016-08-07 0.119.6
 ==================

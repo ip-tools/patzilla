@@ -51,12 +51,150 @@ def get_ops_client():
     log.debug('OPS request with client-id {0}'.format(oauth_client.client_id))
     return oauth_client
 
+
+@cache_region('search', 'ops_search')
+def ops_published_data_search_swap_family(constituents, query, range):
+    results = ops_published_data_search(constituents, query, range)
+    #pprint(results)
+    numbers = results_swap_family_members(results)
+    #pprint(numbers)
+    return results
+
+def results_swap_family_members(response):
+
+    #pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/ops:publication-reference')
+    #entries = pointer_results.resolve(results)
+
+    publication_numbers = []
+
+    priorities = [
+        {'filter': lambda member_pubnum: member_pubnum.startswith('DE') and not member_pubnum.endswith('D1')},
+        {'filter': 'EP'},
+        {'filter': 'WO'},
+        {'filter': 'US'},
+    ]
+
+    def match_filter(item, filter):
+        if callable(filter):
+            outcome = filter(item)
+        else:
+            outcome = item.startswith(filter)
+        return outcome
+
+    pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
+    pointer_publication_reference = JsonPointer('/bibliographic-data/publication-reference/document-id')
+    #pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
+
+    # A.1 compute distinct list with unique families
+    family_representatives = {}
+    chunks = to_list(pointer_results.resolve(response))
+    all_results = []
+    for chunk in chunks:
+
+        #print 'chunk:', chunk
+
+        #chunk_results = to_list(pointer_publication_reference.resolve(chunk))
+        cycles = to_list(chunk['exchange-document'])
+        representation = cycles[0]
+
+        pubref = pointer_publication_reference.resolve(representation)
+        representation_pubref_epodoc, _ = _get_document_number_date(pubref, 'epodoc')
+
+        representation_pubrefs_docdb = []
+        for cycle in cycles:
+            pubref = pointer_publication_reference.resolve(cycle)
+            representation_pubref_docdb, _ = _get_document_number_date(pubref, 'docdb')
+            representation_pubrefs_docdb.append(representation_pubref_docdb)
+
+        # Debugging
+        #print 'representation_pubref_epodoc:', representation_pubref_epodoc
+        #print 'representation_pubrefs_docdb:', representation_pubrefs_docdb
+
+        try:
+            family_info = ops_family_members(representation_pubref_epodoc)
+        except:
+            chunk['exchange-document'] = representation
+            request = get_current_request()
+            del request.errors[:]
+            continue
+
+        #members = family_info.publications_by_country()
+        #pprint(members)
+
+        for prio in priorities:
+
+            filter = prio['filter']
+
+            # Debugging
+            #print 'checking prio:', filter
+
+            if match_filter(representation_pubref_epodoc, filter):
+                break
+
+            bibdata = None
+            found = False
+            for member in family_info.items:
+
+                # Debugging
+                #print 'member:'; pprint(member)
+
+                member_pubnum = member['publication']['number-docdb']
+
+                if match_filter(member_pubnum, filter):
+
+                    # Debugging
+                    #print 'member_pubnum:', member_pubnum
+
+                    try:
+                        bibdata = get_ops_biblio_data(member_pubnum)
+                    except:
+                        continue
+
+                    #pprint(bibdata)
+                    if bibdata:
+
+                        # TODO: Add marker that this document was swapped, display appropriately.
+                        found = True
+                        break
+
+            if found:
+
+                representation = bibdata
+                #print 'representation:'; pprint(representation)
+
+                representation[0].setdefault('__meta__', {})
+                representation[0]['__meta__']['swapped'] = {
+                    'canonical': representation_pubrefs_docdb[0],
+                    'list': [representation_pubref_epodoc] + representation_pubrefs_docdb,
+                    }
+
+                break
+
+        # TODO: Here, duplicate documents might be. Prune/deduplicate them.
+        # TODO: When choosing german family members (e.g. for EP666666), abstract is often missing.
+        # TODO: => Carry along from original representation.
+
+        """
+        for result in cycles:
+            #pprint(result)
+            pubref = pointer_publication_reference.resolve(result)
+            #print entry, pubref
+            pubref_number, pubref_date = _get_document_number_date(pubref, 'docdb')
+            publication_numbers.append(pubref_number)
+        """
+
+        chunk['exchange-document'] = representation
+
+    return publication_numbers
+
+
 @cache_region('search', 'ops_search')
 def ops_published_data_search(constituents, query, range):
 
     # query EPO OPS REST service
     url_tpl = "https://ops.epo.org/3.1/rest-services/published-data/search/{constituents}"
     url = url_tpl.format(constituents=constituents)
+    #print 'url:', url
 
     # v1: anonymous
     #import requests; client = requests
@@ -96,7 +234,6 @@ def ops_published_data_search(constituents, query, range):
 
 def ops_published_data_search_invalidate(constituents, query, range):
     region_invalidate(ops_published_data_search, None, 'ops_search', constituents, query, range)
-
 
 @cache_region('search')
 def ops_published_data_crawl(constituents, query, chunksize):
@@ -928,6 +1065,8 @@ def analytics_family(query):
     return payload
 
 def ops_family_members(document_number):
+
+    print '=========== ops_family_members:', document_number
 
     pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
     pointer_publication_reference = JsonPointer('/publication-reference/document-id')

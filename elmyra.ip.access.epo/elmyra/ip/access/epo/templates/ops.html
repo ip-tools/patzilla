@@ -23,6 +23,7 @@
     // 1. debugging: log model item to assist in data exploration
     //console.log('ops-item:', data);
 
+    var meta = data['__meta__'];
 
     // 2.2 prepare some template variables
 
@@ -46,8 +47,16 @@
             <!-- patent number -->
             <div class="span3 container-fluid">
                 <div class="header-compact">
-                    <%= data.enrich_link(patent_number, 'pn') %>
+                    <%= data.enrich_link(patent_number, 'pn', null, null, {'no_modifiers': true}) %>
                 </div>
+                <%
+                if (meta && meta['swapped'] && meta['swapped']['canonical']) {
+                    print('<div style="margin-top: 0.5em">');
+                    print('Original hit: ');
+                    print(data.enrich_link(meta['swapped']['canonical'], 'pn', null, null, {'no_modifiers': true}));
+                    print('</div>');
+                }
+                %>
             </div>
 
             <!-- dates -->
@@ -872,7 +881,7 @@
     </td>
 
     <td>
-        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+        <%= data.enrich_link(pubref.fullnumber, 'pn', null, null, {'no_modifiers': true}) %>
     </td>
 
     <td>
@@ -917,7 +926,7 @@
     </td>
 
     <td>
-        <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+        <%= data.enrich_link(pubref.fullnumber, 'pn', null, null, {'no_modifiers': true}) %>
         <br/>
         <%= pubref.isodate %>
     </td>

@@ -2,6 +2,8 @@
 # (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import time
 import logging
+from pprint import pprint
+from collections import defaultdict
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.access.generic.exceptions import SearchException
@@ -205,6 +207,7 @@ class GenericSearchResponse(object):
         # Filtering mechanics: Deduplicate by family id
         seen = {}
         removed = []
+        removed_map = defaultdict(list)
         stats = SmartBunch(removed = 0)
         def family_remover(item):
 
@@ -219,16 +222,18 @@ class GenericSearchResponse(object):
             if fam in seen:
                 stats.removed += 1
                 removed.append(item)
+                removed_map[fam].append(item)
                 return False
             else:
                 seen[fam] = True
+                #print 'representative: {rep} [{fam}]'.format(rep=item['publication_number'], fam=fam)
                 return True
-
 
         # Update metadata and content
 
         # 1. Apply family cleansing filter to main documents response
         self.documents = filter(family_remover, self.documents)
+        #print 'removed_map:'; pprint(removed_map)
 
         # 2. Add list of removed family members to output
         self.output.navigator.family_members = {'removed': removed}
