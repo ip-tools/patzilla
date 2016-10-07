@@ -500,6 +500,7 @@ dl.dl-horizontal-inline {
 .carousel-control {
     position: absolute;
     top: 95%;
+    margin-top: inherit;
 }
 
 /* Center drawings inside container */
@@ -508,6 +509,18 @@ dl.dl-horizontal-inline {
 }
 .carousel-inner>.item>img, .carousel-inner>.item>a>img {
     display: inline-block;
+}
+
+.carousel-control.rotate {
+    left: 50%;
+    right: 50%;
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: 2.8em;
+}
+.carousel-control.rotate>i {
+    margin-top2: 15px;
+    vertical-align: middle;
 }
 
 

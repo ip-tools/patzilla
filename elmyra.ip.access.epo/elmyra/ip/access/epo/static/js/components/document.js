@@ -364,6 +364,30 @@ DocumentCarouselController = Marionette.Controller.extend({
             _this.carousel_fetch_next(carousel);
         });
 
+        // Rotate drawings clockwise in steps of 90 degrees
+        $('.carousel-control.rotate').click(function(event, direction) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Find active drawing
+            var carousel = $(this).closest('.ops-collection-entry').find('.drawings-carousel');
+            var active_image = carousel.find('.carousel-inner .item.active img').first();
+            //log('active_image:', active_image);
+
+            // Compute relative rotation
+            var rotation = 90;
+            if (direction == 'counter') {
+                rotation = -90;
+            }
+
+            // Rotate image
+            var angle = active_image.data('angle') || 0;
+            angle = (angle + rotation) % 360;
+            active_image.data('angle', angle);
+            active_image.css('transform','rotate(' + angle + 'deg)');
+
+        });
+
         // lazy-initialize carousel to fetch totalcount from api and display page numbers
         $('.drawings-carousel').each(function(idx, carousel) {
             var carousel = $(carousel);
@@ -459,6 +483,7 @@ DocumentCarouselController = Marionette.Controller.extend({
 
         // manipulate nested img src: bump page number
         var img = $(blueprint).children('img');
+        img.css('transform', 'inherit');
         var src = img.attr('src').replace(/\?page=.*/, '');
         src += '?page=' + (item_index + 1);
         img.attr('src', src);

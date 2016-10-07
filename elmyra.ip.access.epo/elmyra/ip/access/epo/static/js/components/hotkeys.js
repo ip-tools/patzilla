@@ -141,7 +141,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
 
 
-        // navigate the drawings carousel with shift+left/right arrow keys
+        // Navigate the drawings carousel with shift+left/right arrow keys
         $(document).on('keydown', null, 'shift+right', function(event) {
             event.preventDefault();
             var drawings_carousel = _this.app.viewport.get_document().find('.drawings-carousel').first();
@@ -153,6 +153,18 @@ HotkeysPlugin = Marionette.Controller.extend({
             var drawings_carousel = _this.app.viewport.get_document().find('.drawings-carousel').first();
             var carousel_button_more = drawings_carousel.find('.carousel-control.left');
             carousel_button_more.trigger('click');
+        });
+        $(document).on('keydown', null, 'shift+down', function(event) {
+            event.preventDefault();
+            var drawings_carousel = _this.app.viewport.get_document().find('.drawings-carousel').first();
+            var carousel_button_more = drawings_carousel.find('.carousel-control.rotate');
+            carousel_button_more.trigger('click');
+        });
+        $(document).on('keydown', null, 'shift+up', function(event) {
+            event.preventDefault();
+            var drawings_carousel = _this.app.viewport.get_document().find('.drawings-carousel').first();
+            var carousel_button_more = drawings_carousel.find('.carousel-control.rotate');
+            carousel_button_more.trigger('click', 'counter');
         });
 
 
