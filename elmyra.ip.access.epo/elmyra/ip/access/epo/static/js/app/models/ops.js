@@ -16,10 +16,17 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         // TODO: enhance this as soon as we're in AMD land
         //$(opsChooserApp.paginationViewBottom.el).hide();
 
+        // Propagate family member swapping
+        var family_swap_default = false;
+        if (metadata.get('searchmode') != 'subsearch') {
+            var query_data = metadata.get('query_data');
+            family_swap_default = query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-default']);
+        }
+
         var self = this;
         var _this = this;
         return this.fetch({
-            data: $.param({ query: query, range: range}),
+            data: $.param({ query: query, range: range, family_swap_default: family_swap_default}),
             success: function(model, response, options) {
 
                 // Only gather keywords in regular OPS search mode

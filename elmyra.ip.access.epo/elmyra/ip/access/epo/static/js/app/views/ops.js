@@ -13,7 +13,8 @@ OpsBaseViewMixin = {
 
             // add important parameters which reflect current gui state (e.g. selected project)
             var href = $(this).attr('href');
-            var params = opsChooserApp.permalink.query_parameters_viewstate(href);
+            var no_modifiers = $(this).data('no-modifiers');
+            var params = opsChooserApp.permalink.query_parameters_viewstate(href, {'no_modifiers': no_modifiers});
 
             // regardless where the query originates from (e.g. datasource=review),
             // requests for query-links need switching to ops

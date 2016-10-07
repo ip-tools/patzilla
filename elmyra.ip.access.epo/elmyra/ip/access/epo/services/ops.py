@@ -4,7 +4,7 @@ import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.settings import asbool
-from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate
+from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate, ops_published_data_search_swap_family
 from elmyra.ip.access.epo.services import propagate_keywords, cql_prepare_query
 from elmyra.ip.access.generic.exceptions import NoResultsException
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -81,13 +81,19 @@ def ops_published_data_search_handler(request):
     range = request.params.get('range')
     range = range or '1-25'
 
+    # Search options
+    family_swap_default = asbool(request.params.get('family_swap_default'))
+
     # invalidate cache
     invalidate = asbool(request.params.get('invalidate', 'false'))
     if invalidate:
         ops_published_data_search_invalidate(constituents, query, range)
 
     try:
-        result = ops_published_data_search(constituents, query, range)
+        if family_swap_default:
+            result = ops_published_data_search_swap_family(constituents, query, range)
+        else:
+            result = ops_published_data_search(constituents, query, range)
         propagate_keywords(request, query_object)
 
     except NoResultsException as ex:

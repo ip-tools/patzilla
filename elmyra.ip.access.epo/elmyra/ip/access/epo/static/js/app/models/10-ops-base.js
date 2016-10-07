@@ -3,21 +3,24 @@
 
 OpsHelpers = Backbone.Model.extend({
 
-    enrich_links: function(container, attribute, value_modifier) {
-        var self = this;
+    enrich_links: function(container, attribute, value_modifier, options) {
+
+        options = options || {};
+
+        var _this = this;
         return _.map(container, function(item) {
 
             if (_.isString(item)) {
 
                 // v1 replace text with links
-                return self.enrich_link(item, attribute, item, value_modifier);
+                return _this.enrich_link(item, attribute, item, value_modifier, options);
 
                 // v2 use separate icon for link placement
                 //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
                 //return item + '&nbsp;&nbsp;' + link;
 
             } else if (_.isObject(item)) {
-                item.display = self.enrich_link(item.display, attribute, item.display, value_modifier);
+                item.display = _this.enrich_link(item.display, attribute, item.display, value_modifier, options);
                 return item;
 
             }
@@ -25,7 +28,9 @@ OpsHelpers = Backbone.Model.extend({
         });
     },
 
-    enrich_link: function(label, attribute, value, value_modifier) {
+    enrich_link: function(label, attribute, value, value_modifier, options) {
+
+        options = options || {};
 
         // fallback: use label, if no value is given
         if (!value) value = label;
@@ -58,12 +63,12 @@ OpsHelpers = Backbone.Model.extend({
             link_template = _.template('<a href="" class="query-link" data-query-attribute="<%= attribute %>" data-query-value="<%= value %>"><%= label %></a>');
         } else if (kind == 'external') {
             query = encodeURIComponent(attribute + '=' + value);
-            link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>"><%= label %></a>');
+            link_template = _.template('<a href="?query=<%= query %>" class="query-link incognito" target="<%= target %>" data-no-modifiers="<%= no_modifiers %>"><%= label %></a>');
         }
 
         // render link
         if (link_template) {
-            var link = link_template({label: label, attribute: attribute, value: value, target: target, query: query});
+            var link = link_template({label: label, attribute: attribute, value: value, target: target, query: query, 'no_modifiers': options.no_modifiers && 'true' || 'false'});
             return link;
         }
 
@@ -186,7 +191,7 @@ OpsBaseModel = Backbone.Model.extend({
                 ;
             }
             if (links) {
-                results = this.enrich_links(results, 'pn');
+                results = this.enrich_links(results, 'pn', null, {'no_modifiers': true});
             }
             return results;
         },

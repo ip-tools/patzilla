@@ -46,7 +46,9 @@ PermalinkPlugin = Marionette.Controller.extend({
 
     // build query parameters to view state
     // TODO: refactor this elsewhere, e.g. some UrlBuilder?
-    query_parameters_viewstate: function(uri) {
+    query_parameters_viewstate: function(uri, options) {
+
+        options = options || {};
 
         // Aggregate parameters comprising viewer state, currently a 4-tuple
         // See also config.js:history_pushstate
@@ -59,8 +61,10 @@ PermalinkPlugin = Marionette.Controller.extend({
         };
 
         // Add search modifiers and more to viewstate
-        var metadata_params = this.metadata_to_parameters();
-        _.extend(state, metadata_params);
+        if (!options.no_modifiers) {
+            var metadata_params = this.metadata_to_parameters();
+            _.extend(state, metadata_params);
+        }
 
         // Remove parameters which do not differ from their default
         _.each(state, function(value, key) {

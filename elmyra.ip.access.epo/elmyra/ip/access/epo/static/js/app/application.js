@@ -270,7 +270,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // Perform list search. Currently in buckets of 10.
             _this.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').always(function() {
                 // Propagate upstream message again, because "perform_listsearch" currently clears it
-                // TODO: enhance mechanics!
+                // TODO: Improve these mechanics!
                 _this.propagate_datasource_message(response, options);
             });
 
@@ -621,12 +621,18 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var documents_requested_kindcode = documents_requested;
         var documents_requested_nokindcode = _.map(documents_requested, patent_number_strip_kindcode);
 
+        debug && log('documents_requested_kindcode:', documents_requested_kindcode);
+        debug && log('documents_requested_nokindcode:', documents_requested_nokindcode);
+
         // list of documents in response with and w/o kindcode
         var documents_response_kindcode = [];
         var documents_response_nokindcode = [];
 
         // full-cycle publication numbers per document
         var documents_full_cycle_map = {};
+
+        // which documents have been swapped?
+        var documents_swapped = {};
 
         // collect information from response documents
         this.documents.each(function(document) {
@@ -643,10 +649,22 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     documents_full_cycle_map[number] = full_cycle_numbers;
                 }
             });
+
+            if (document.get('__meta__')) {
+                var swapped = document.get('__meta__')['swapped'];
+                if (swapped) {
+                    _.each(swapped['list'], function(item) {
+                        documents_swapped[item] = true;
+                    });
+                }
+            }
         });
+        var document_numbers_swapped = _.keys(documents_swapped);
+
         debug && log('documents_response_kindcode:', documents_response_kindcode);
         debug && log('documents_response_nokindcode:', documents_response_nokindcode);
         debug && log('documents_full_cycle_map:', documents_full_cycle_map);
+        debug && log('document_numbers_swapped:', document_numbers_swapped);
 
 
         // compute list of missing documents with local alternatives
@@ -669,6 +687,12 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 result_found =
                     result_found ||
                     _.contains(documents_response_nokindcode, document_requested_nokindcode);
+            }
+
+            // Don't display swapped documents as missing
+            if (_.contains(document_numbers_swapped, document_requested_kindcode) ||
+                _.contains(document_numbers_swapped, document_requested_nokindcode)) {
+                result_found = true;
             }
 
             if (!result_found) {

@@ -330,7 +330,7 @@
                 <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
 
                 <!-- analytics actions -->
-                <div id="analytics-actions" class="btn-group btn-popover pull-right"
+                <div id="analytics-actions" class="btn-group btn-popover pull-right hidden"
                      data-toggle="popover" data-trigger="hover" data-placement="top"
                      data-content="Run analytic queries"
                         >
@@ -376,11 +376,11 @@
 
         </div>
 
-        <div class="row-fluid">
+        <div class="row-fluid" style="">
 
-            <div class="span12 light-panel" style="width: 152%">
+            <div class="span12 light-panel" style="width: 152%; min-height: 6.5em">
 
-                <div class="span9">
+                <div class="span2">
 
                     <!-- send query to database -->
                     <div
@@ -400,15 +400,33 @@
                         </button>
                     </div>
 
+                </div>
+
+                <div class="span10">
+
+                <!-- First row -->
+                <div>
+
                     <!-- toggle mode: full-cycle -->
                     <button role="button"
                             class="btn btn-popover btn-full-cycle"
                             data-name="full-cycle"
                             data-toggle="buttons-checkbox"
-                            data-trigger="hover" data-placement="right" data-content="Display entire publication cycle for each document"
+                            data-trigger="hover" data-placement="bottom" data-content="Display entire publication cycle for each document"
                             >
                         <i class="icon-repeat"></i>
                         Full cycle
+                    </button>
+
+                    <!-- toggle mode: swap family members -->
+                    <button role="button"
+                            class="btn btn-popover btn-family-swap-default"
+                            data-name="family-swap-default"
+                            data-toggle="buttons-checkbox"
+                            data-trigger="hover" data-placement="bottom" data-content="Prefer display of family member prioritized by DE, EP, WO, US"
+                            >
+                        <i class="icon-repeat"></i>
+                        Family member by DE, EP, WO, US
                     </button>
 
                     <div class="btn-group" data-toggle="buttons-radio" id="mode-order-buttons">
@@ -449,6 +467,11 @@
 
                     </div>
 
+                </div>
+
+                <!-- Second row -->
+                <div style="margin-top: 0.5em">
+
                     <div class="btn-group" data-toggle="buttons-radio" id="family-remove-buttons">
 
                         <!-- toggle mode: remove family members -->
@@ -488,11 +511,7 @@
                         Full family
                     </button>
 
-                </div>
-
-                <div class="span3">
-
-                    <div id="sorting-chooser" class="pull-right">
+                    <div id="sorting-chooser" class="pull-right2" style="display: inline-block">
 
                         <!-- sorting field -->
                         <div id="sort-field-chooser" name="sort-field" style="width: 175px" size="1"></div>
@@ -505,6 +524,9 @@
                             <i class="icon-sort"></i>
                         </button>
                     </div>
+
+                </div>
+
 
                 </div>
 
