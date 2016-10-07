@@ -258,7 +258,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (opsChooserApp.get_datasource() == 'ftpro') {
             $('#query').hide();
             $('#query').parent().find('#query-alert').remove();
-            $('#query').parent().append('<div id="query-alert" class="alert alert-default">Expert mode not available for datasource "FulltextPRO".</div>');
+            $('#query').parent().append('<div id="query-alert" class="alert alert-default span10" style="margin-left: 0px;">Expert mode not available for datasource "FulltextPRO".</div>');
             var alert_element = $('#query').parent().find('#query-alert');
             alert_element.height($('#query').height() - 18);
             //alert_element.marginBottom($('#query').marginBottom());
@@ -581,6 +581,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             data: { results: fields_knowledge.fields },
             dropdownCssClass: "bigdrop",
             escapeMarkup: function(text) { return text; },
+            width: '100%',
         });
         $('#cql-field-chooser').unbind('change');
         $('#cql-field-chooser').on('change', function(event) {

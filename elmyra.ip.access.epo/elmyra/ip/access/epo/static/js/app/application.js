@@ -54,7 +54,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     // TODO: move to search.js
 
-    // perform ops search and process response
+    // Perform OPS search and process response
     perform_search: function(options) {
 
         options = options || {};

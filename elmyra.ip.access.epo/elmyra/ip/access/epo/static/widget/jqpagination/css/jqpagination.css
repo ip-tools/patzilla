@@ -72,25 +72,6 @@
   font-size: 30px; }
 
 
-/* medium class for production purposes */
-.medium.jqpagination {
-    /* margin: 10px 0; */
-}
-
-.medium.jqpagination a {
-    height: 30px;
-    width: 30px;
-    font-size: 25px;
-    line-height: 25px;
-}
-
-.medium.jqpagination input {
-    width: 243px;
-    height: 30px;
-    font-size: 15px;
-}
-
-
 /* log element for demo purposes */
 .log {
   display: none;

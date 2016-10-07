@@ -151,11 +151,13 @@ p.hero-smaller {
     margin-top: 8px;
 }
 
+/*
 .header-container {
     background-size: 1170px;
     background-repeat: no-repeat;
     background-position: 50px;
 }
+*/
 
 .header-container #ui-title,#ui-subtitle,#ui-statusline {
     margin-left: 25px;
@@ -313,6 +315,23 @@ ul.breathe li {
 .pagination a {
     color: black;
 }
+
+/* medium class for production purposes */
+.medium.jqpagination {
+    /* margin: 10px 0; */
+}
+.medium.jqpagination a {
+    height: 30px;
+    width: 30px;
+    font-size: 25px;
+    line-height: 25px;
+}
+.medium.jqpagination input {
+    width: 300px;
+    height: 30px;
+    font-size: 15px;
+}
+
 
 /* alert boxes */
 .alert-inline {
@@ -475,11 +494,20 @@ dl.dl-horizontal-inline {
 
 
 
-/* carousel for drawings */
-/* move control arrows to bottom of image */
+/* Carousel for drawings */
+
+/* Align control arrows at bottom of image */
 .carousel-control {
     position: absolute;
     top: 95%;
+}
+
+/* Center drawings inside container */
+.carousel-inner {
+    text-align: center;
+}
+.carousel-inner>.item>img, .carousel-inner>.item>a>img {
+    display: inline-block;
 }
 
 

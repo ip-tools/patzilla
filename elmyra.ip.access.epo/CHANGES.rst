@@ -13,6 +13,7 @@ development
 - Fix unoconv export re. HOME environment variable
 - Swapping of family members by priority DE, EP, WO, US
 - Improve FulltextPRO downtime message
+- Use wide layout for user interface
 
 2016-08-07 0.119.6
 ==================

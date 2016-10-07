@@ -4,16 +4,20 @@
 <%text>
 <script type="text/x-underscore-template" id="ops-pagination-template">
 
+    <!-- This template is used in regular mode -->
+
     <div id="pagination-widget">
 
         <div class="row-fluid" id="pagination-chooser">
 
-            <div class="span4 jqpagination medium">
-                <a href="#" class="first" data-action="first">&laquo;</a>
-                <a href="#" class="previous" data-action="previous">&lsaquo;</a>
-                <input type="text" readonly="readonly" />
-                <a href="#" class="next" data-action="next">&rsaquo;</a>
-                <a href="#" class="last" data-action="last">&raquo;</a>
+            <div class="span4">
+                <div class="jqpagination medium">
+                    <a href="#" class="first" data-action="first">&laquo;</a>
+                    <a href="#" class="previous" data-action="previous">&lsaquo;</a>
+                    <input type="text" readonly="readonly" />
+                    <a href="#" class="next" data-action="next">&rsaquo;</a>
+                    <a href="#" class="last" data-action="last">&raquo;</a>
+                </div>
             </div>
 
             <div class="span2">
@@ -39,7 +43,7 @@
 
 <script type="text/x-underscore-template" id="ops-pagination-template-liveview">
 
-    <!-- this template gets used in liveview mode -->
+    <!-- This template is used in liveview mode -->
 
     <div id="pagination-widget">
 
