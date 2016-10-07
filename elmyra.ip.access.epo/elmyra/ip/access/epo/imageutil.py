@@ -110,7 +110,7 @@ def to_png(tiff_payload, format='tif'):
     command = [convert, '{0}:-'.format(format),
                 '+set', 'date:create', '+set', 'date:modify',
                 # FIXME: make this configurable
-                '-resize', '457x',
+                '-resize', '530x',
                 '-colorspace', 'rgb', '-flatten', '-depth', '8',
                 '-antialias', '-quality', '100', '-density', '300',
                 #'-level', '30%,100%',

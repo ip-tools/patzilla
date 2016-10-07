@@ -189,7 +189,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     tagName: "div",
     id: "ops-collection-container",
-    className: "container",
+    className: "",
     template: "#ops-collection-template",
     itemView: OpsExchangeDocumentView,
 

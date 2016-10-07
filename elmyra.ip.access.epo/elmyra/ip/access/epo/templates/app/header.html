@@ -3,21 +3,23 @@
 
 ## title / headline
 <div class="container-fluid header-container">
-    <div class="span8">
-        <h3 id="ui-title" style="display: inline-block"></h3>
-        <span id="ui-subtitle"></span>
-        <div id="ui-statusline"></div>
-    </div>
-    <div class="span4">
-        <div class="pull-right">
-            <h3 id="ui-productname" style="display: inline-block"></h3>
-            ## TODO: Get rid of the double call to h.fiddler.compute_parameters()
-            ## TODO: Move to Javascript conditional after templating
-            <% effective_parameters = h.fiddler.compute_parameters() %>
-            % if effective_parameters.get('mode') != 'liveview':
-            &nbsp;&nbsp;&nbsp;
-            <%include file="menu.html"/>
-            % endif
+    <div class="row-fluid">
+        <div class="span8">
+            <h3 id="ui-title" style="display: inline-block"></h3>
+            <span id="ui-subtitle"></span>
+            <div id="ui-statusline"></div>
+        </div>
+        <div class="span4">
+            <div class="pull-right">
+                <h3 id="ui-productname" style="display: inline-block"></h3>
+                ## TODO: Get rid of the double call to h.fiddler.compute_parameters()
+                ## TODO: Move to Javascript conditional after templating
+                <% effective_parameters = h.fiddler.compute_parameters() %>
+                % if effective_parameters.get('mode') != 'liveview':
+                &nbsp;&nbsp;&nbsp;
+                <%include file="menu.html"/>
+                % endif
+            </div>
         </div>
     </div>
 </div>
