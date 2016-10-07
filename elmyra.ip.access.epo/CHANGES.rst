@@ -14,6 +14,7 @@ development
 - Swapping of family members by priority DE, EP, WO, US
 - Improve FulltextPRO downtime message
 - Use wide layout for user interface
+- Allow rotating of drawings
 
 2016-08-07 0.119.6
 ==================
