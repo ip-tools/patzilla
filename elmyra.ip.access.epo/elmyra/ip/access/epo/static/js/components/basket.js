@@ -67,22 +67,56 @@ BasketModel = Backbone.RelationalModel.extend({
 
     // initialize model from url query parameters ("numberlist")
     init_from_query: function() {
-        var deferreds = [];
+
         var _this = this;
 
         var numberlist = opsChooserApp.config.get('numberlist');
+        var context = opsChooserApp.config.get('context');
+
+        // Debugging
+        //log('numberlist:', numberlist);
+        //log('context:', context);
+
+        var deferred = $.Deferred();
 
         if (numberlist) {
+
             numberlist = decodeURIComponent(numberlist);
             var entries = numberlist.split(/[,\n]/);
-            _(entries).each(function(entry) {
-                var deferred = _this.add(entry);
-                deferreds.push(deferred);
-            });
+
+            if (context == 'viewer') {
+
+                _this.save({'entries': []}, {
+                    success: function() {
+                        var deferreds = [];
+                        $.when(_this.fetch_entries()).then(function() {
+                            _(entries).each(function(entry) {
+                                //log('entry:', entry);
+                                var deferred = _this.add(entry);
+                                deferreds.push(deferred);
+                            });
+                            deferreds.push(_this.fetch_entries());
+                        });
+                        // Wait for all "add" operations to finish before signalling success
+                        $.when(deferreds_bundle(deferreds)).then(function() {
+                            deferred.resolve();
+                        })
+                    },
+                    error: function() {
+                        console.error('Error creating basket from query parameters');
+                        deferred.resolve();
+                    },
+                });
+
+            } else {
+                deferred.resolve();
+            }
+
+        } else {
+            deferred.resolve();
         }
 
-        // wait for all add operations to finish before signalling success
-        return deferreds_bundle(deferreds);
+        return deferred.promise();
     },
 
     get_entry_by_number: function(item) {
@@ -346,9 +380,10 @@ BasketModel = Backbone.RelationalModel.extend({
     review: function(options) {
 
         var publication_numbers = this.get_numbers();
+        //var publication_numbers = this.get_numbers({seen: true});
         //var publication_numbers = this.get_numbers({honor_dismiss: true});
-
         //log('publication_numbers:', publication_numbers);
+
         var hits = publication_numbers.length;
 
         // TODO: decouple from referencing the main application object e.g. by using events!?
@@ -472,7 +507,7 @@ BasketModel = Backbone.RelationalModel.extend({
         if (this.empty()) {
             return;
         }
-        return opsChooserApp.permalink.make_uri_opaque(this.get_view_state({mode: 'liveview'}), {ttl: ttl});
+        return opsChooserApp.permalink.make_uri_opaque(this.get_view_state({mode: 'liveview', datasource: 'review'}), {ttl: ttl});
     },
 
 });
