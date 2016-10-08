@@ -15,6 +15,7 @@ development
 - Improve FulltextPRO downtime message
 - Use wide layout for user interface
 - Allow rotating of drawings
+- Fix liveview mode when exporting a large number of basket items re. "op" parameter url cleaning
 
 2016-08-07 0.119.6
 ==================

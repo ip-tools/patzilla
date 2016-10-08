@@ -94,6 +94,8 @@ PermalinkPlugin = Marionette.Controller.extend({
 
         // compute opaque parameter variant of permalink parameters
         var params_computed = this.query_parameters(params);
+        //log('params_computed:', params_computed);
+
         opaque_param(params_computed, options).then(function(params_opaque) {
             var permalink = baseurl + '?' + params_opaque;
             deferred.resolve(permalink);
