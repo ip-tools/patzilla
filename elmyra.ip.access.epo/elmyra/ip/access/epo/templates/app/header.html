@@ -1,10 +1,14 @@
 ## -*- coding: utf-8 -*-
 ## (c) 2013-2016 Andreas Motl, Elmyra UG
 
-## title / headline
-<div class="container-fluid header-container">
+## Header
+<script id="app-header-template" type="text/x-underscore-template">
+
+<%text>
+<div class="container-fluid header-container" style="<%= theme.header_background_url && ('background-image: url(' + theme.header_background_url + ')') || '' %>">
     <div class="row-fluid">
         <div class="span8">
+            <span id="menu-region"></span>
             <h3 id="ui-title" style="display: inline-block"></h3>
             <span id="ui-subtitle"></span>
             <div id="ui-statusline"></div>
@@ -12,16 +16,12 @@
         <div class="span4">
             <div class="pull-right">
                 <h3 id="ui-productname" style="display: inline-block"></h3>
-                ## TODO: Get rid of the double call to h.fiddler.compute_parameters()
-                ## TODO: Move to Javascript conditional after templating
-                <% effective_parameters = h.fiddler.compute_parameters() %>
-                % if effective_parameters.get('mode') != 'liveview':
-                &nbsp;&nbsp;&nbsp;
-                <%include file="menu.html"/>
-                % endif
             </div>
         </div>
     </div>
 </div>
+</%text>
 
 <br/>
+
+</script>

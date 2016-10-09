@@ -19,11 +19,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $('#ui-footer').html(getconfig('setting.ui.page.footer', {after: '<br/>'}));
         $('#ui-footer-version').html(getconfig('setting.ui.version', {after: '<br/>'}));
 
-        // Add background image to page header at runtime, only if not in embedded mode
-        if (!this.config.get('embedded')) {
-            $('.header-container').css('background-image', 'url(/static/img/header-small.jpg)');
-        }
-
     },
 
     get_datasource: function() {
@@ -1303,6 +1298,7 @@ console.info('Load application components');
 opsChooserApp = new OpsChooserApp({config: ipsuiteNavigatorConfig});
 
 opsChooserApp.addRegions({
+    mainRegion: "#main-region",
     queryBuilderRegion: "#querybuilder-region",
     basketRegion: "#basket-region",
     metadataRegion: "#ops-metadata-region",
@@ -1311,6 +1307,17 @@ opsChooserApp.addRegions({
     paginationRegionBottom: "#ops-pagination-region-bottom",
 });
 
+
+// Main application user interface
+opsChooserApp.addInitializer(function(options) {
+
+    this.theme = new ApplicationTheme({config: ipsuiteNavigatorConfig});
+    //log('this.applicationTheme:', this.applicationTheme);
+
+    this.layoutView = new LayoutView();
+    this.mainRegion.show(this.layoutView);
+
+});
 
 // Universal helpers
 opsChooserApp.addInitializer(function(options) {

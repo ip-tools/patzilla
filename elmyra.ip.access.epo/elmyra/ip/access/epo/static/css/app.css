@@ -86,10 +86,6 @@ body {
     margin: 0px;
 }
 
-.page-footer,.page-footer a {
-    color: #999999;
-}
-
 i.circle-icon {
     border: 4px solid #000000;
     border-radius: 50%;
@@ -168,6 +164,16 @@ p.hero-smaller {
 .header-container #ui-productname {
     margin-right: 25px;
 }
+
+.footer-container {
+    margin-top: 50px
+}
+
+.page-footer,.page-footer a {
+    color: #555555;
+}
+
+
 
 .inline-head {
     display: inline;

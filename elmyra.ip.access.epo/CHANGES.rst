@@ -18,6 +18,7 @@ development
 - Fix liveview mode when exporting a large number of basket items re. "op" parameter url cleaning
 - Introduce new cache area “longer” (1 week) for caching PNG drawings
 - Enable caching of static assets for 1 hour again
+- Use Marionette and Underscore templates for the basic application layout (header, content, footer)
 
 2016-08-07 0.119.6
 ==================

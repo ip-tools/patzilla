@@ -32,11 +32,14 @@ ${ h.fiddler.render() | n }
 </script>
 
 <!-- user interface: inline html -->
-<%include file="app/header.html"/>
-<%include file="app/control.html"/>
+<div id="main-region"></div>
 
 <!-- user interface: html templates -->
+<%include file="app/header.html"/>
+<%include file="app/footer.html"/>
+<%include file="app/menu.html"/>
 <%include file="app/util.html"/>
+<%include file="app/main.html"/>
 <%include file="help/issue-reporter.html"/>
 <%include file="querybuilder.html"/>
 <%include file="basket.html"/>
@@ -141,6 +144,7 @@ ${ h.fiddler.render() | n }
     <script type="text/javascript" src="/static/js/app/views/ops.js"></script>
     <script type="text/javascript" src="/static/js/app/views/ftpro.js"></script>
     <script type="text/javascript" src="/static/js/app/application.js"></script>
+    <script type="text/javascript" src="/static/js/app/main.js"></script>
     <script type="text/javascript" src="/static/js/app/ui.js"></script>
     <script type="text/javascript" src="/static/js/components/document.js"></script>
     <script type="text/javascript" src="/static/js/components/keywords.js"></script>
