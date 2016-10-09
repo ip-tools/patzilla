@@ -12,7 +12,7 @@ from elmyra.ip.access.cipo.drawing import fetch_first_drawing as get_cipo_image
 
 log = logging.getLogger(__name__)
 
-#@cache_region('medium')
+@cache_region('longer')
 def get_drawing_png(document, page, kind):
 
     # 2. Try to fetch drawing from OPS, fall back to other patent offices
