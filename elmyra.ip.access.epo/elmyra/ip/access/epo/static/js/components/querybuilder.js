@@ -569,8 +569,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // TODO: reduce conditional weirdness
         if (hide || !datasource || _(['review', 'google', 'ftpro']).contains(datasource) || queryflavor != 'cql') {
-            var container = $('#cql-field-chooser')[0].previousSibling;
-            $(container).hide();
+            var chooser = $('#cql-field-chooser');
+            if (chooser.exists()) {
+                var container = chooser[0].previousSibling;
+                $(container).hide();
+            }
             return;
         }
 
