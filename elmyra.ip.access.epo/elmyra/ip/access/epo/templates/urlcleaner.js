@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2016 Andreas Motl, Elmyra UG
 
-// this must be rendered inline to get rid of monster url parameters as early as possible
+// urlcleaner. Must be rendered inline to get rid of monster url parameters as early as possible.
 
 function uc_param_regex(name) {
     // https://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string
