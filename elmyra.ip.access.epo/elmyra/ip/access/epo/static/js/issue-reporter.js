@@ -131,8 +131,8 @@ IssueReport = Backbone.Model.extend({
         //   - Application runtime state
         //   - TODO: Request object
         this.get('meta').id              = this.uuid4();
-        this.get('application').config   = opsChooserApp.config.toJSON();
-        this.get('application').metadata = opsChooserApp.metadata.toJSON();
+        this.get('application').config   = opsChooserApp.config && opsChooserApp.config.toJSON() || {};
+        this.get('application').metadata = opsChooserApp.metadata && opsChooserApp.metadata.toJSON() || {};
 
     },
 

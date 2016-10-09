@@ -1493,8 +1493,11 @@ opsChooserApp.addInitializer(function(options) {
             this.queryBuilderView.set_common_form_data(query_data);
         }
 
-        // Run search
-        this.perform_search();
+        // The ui loading and lag woes are ready after the basket was fully initialized
+        this.listenToOnce(this, "basket:activated", function() {
+            // Run search
+            this.perform_search();
+        });
 
     });
 

@@ -19,6 +19,7 @@ development
 - Introduce new cache area “longer” (1 week) for caching PNG drawings
 - Enable caching of static assets for 1 hour again
 - Use Marionette and Underscore templates for the basic application layout (header, content, footer)
+- Improve application bootstrapping behavior
 
 2016-08-07 0.119.6
 ==================
