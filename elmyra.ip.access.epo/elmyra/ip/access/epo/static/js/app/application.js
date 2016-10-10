@@ -132,6 +132,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 // signal the results are ready
                 _this.trigger('results:ready');
 
+                // Record the current search query
+                search_info.result_count = hits;
+                _this.trigger('query:record', search_info);
+
             }).fail(function(xhr) {
 
                 _this.trigger('search:failure', search_info);
@@ -239,6 +243,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         return engine.perform(query, options).then(function(response) {
             options = options || {};
 
+            // Signal search success
             _this.trigger('search:success', search_info);
 
             log('upstream response:', response);
@@ -252,6 +257,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // Propagate page control parameters to listsearch
             var hits = response.meta.navigator.count_total;
             options['remote_limit'] = response.meta.navigator.limit;
+
+            // Record the current search query
+            search_info.result_count = hits;
+            _this.trigger('query:record', search_info);
 
             // Propagate search results to listsearch
             var publication_numbers = response['details'];
@@ -941,8 +950,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.project = project;
 
         // set hook to record all queries
-        this.stopListening(this, 'search:success');
-        this.listenTo(this, 'search:success', function(arguments) {
+        this.stopListening(this, 'query:record');
+        this.listenTo(this, 'query:record', function(arguments) {
             project.record_query(arguments);
         });
 
