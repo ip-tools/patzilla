@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2016 Andreas Motl, Elmyra UG
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
@@ -17,11 +17,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         //$(opsChooserApp.paginationViewBottom.el).hide();
 
         // Propagate family member swapping
-        var family_swap_default = false;
-        if (metadata.get('searchmode') != 'subsearch') {
-            var query_data = metadata.get('query_data');
-            family_swap_default = query_data && query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-default']);
-        }
+        var query_data = metadata.get('query_data');
+        var family_swap_default = query_data && query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-default']);
 
         var self = this;
         var _this = this;
