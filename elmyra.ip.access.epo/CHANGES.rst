@@ -9,6 +9,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2016-10-10 0.120.0
+==================
 - Fix DEPATISnet client re. form field "DocId"
 - Fix unoconv export re. HOME environment variable
 - Swapping of family members by priority DE, EP, WO, US
@@ -75,6 +78,7 @@ development
 2016-05-11 0.116.4
 ==================
 - Fix logic for displaying per-user-enabled data source buttons
+- Staging milestone
 
 2016-05-02 0.116.3
 ==================
