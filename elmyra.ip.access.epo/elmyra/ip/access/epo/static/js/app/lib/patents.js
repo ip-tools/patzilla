@@ -23,12 +23,13 @@ function split_patent_number(patent_number) {
     var patent = {};
 
     var match = patent_number_pattern.exec(patent_number);
+    if (!match) { return patent; }
 
     _.each(patent_number_pattern_groups, function(matchname, index) {
         var match_index = index + 1;
         try {
             patent[matchname] = match[match_index] || '';
-        } catch(ex) {
+        } catch (ex) {
             patent[matchname] = '';
         }
     });
