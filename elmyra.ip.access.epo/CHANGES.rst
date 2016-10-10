@@ -9,6 +9,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Fix biblio inquiry for family member swapping
 
 2016-10-11 0.120.1
 ==================

@@ -148,6 +148,8 @@ def results_swap_family_members(response):
                     try:
                         bibdata = get_ops_biblio_data(member_pubnum)
                     except:
+                        request = get_current_request()
+                        del request.errors[:]
                         continue
 
                     #pprint(bibdata)
@@ -803,7 +805,7 @@ def get_ops_biblio_url(patent):
         log.warning(message)
         raise ValueError(message)
 
-    patent = p['country'] + p['number'] # + '.' + p['kind']
+    patent = p['country'] + '.' + p['number'] # + '.' + p['kind']
 
     service_url = ops_service_url
     url_tpl = '{service_url}/published-data/publication/docdb/{patent}/biblio/full-cycle'
@@ -1066,7 +1068,7 @@ def analytics_family(query):
 
 def ops_family_members(document_number):
 
-    print '=========== ops_family_members:', document_number
+    #print '=========== ops_family_members:', document_number
 
     pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
     pointer_publication_reference = JsonPointer('/publication-reference/document-id')
