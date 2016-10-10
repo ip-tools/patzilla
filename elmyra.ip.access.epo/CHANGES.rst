@@ -9,7 +9,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2016-10-11 0.120.1
+==================
 - Fix priority swapping for data source DPMA and FulltextPRO
+- Fix query recording re. timing problems
 
 2016-10-10 0.120.0
 ==================

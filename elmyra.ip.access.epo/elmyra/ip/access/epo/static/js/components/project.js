@@ -91,7 +91,6 @@ ProjectModel = Backbone.RelationalModel.extend({
     record_query: function(search_info) {
 
         log('ProjectModel.record_query search_info:', search_info);
-        this.query_recorded = null;
 
         var flavor = search_info.flavor;
         var datasource = search_info.datasource;
@@ -113,6 +112,7 @@ ProjectModel = Backbone.RelationalModel.extend({
                 query_expression: search_info.query,
                 query_data: search_info.query_data,
                 created: now_iso(),
+                result_count: search_info.result_count,
                 //project: _this,
             });
 
@@ -120,7 +120,6 @@ ProjectModel = Backbone.RelationalModel.extend({
             var equals = recent && query.equals(recent);
             if (!equals) {
                 _this.history_add_query(query);
-                _this.query_recorded = query;
             } else {
                 query.destroy();
             }
@@ -645,21 +644,6 @@ opsChooserApp.addInitializer(function(options) {
             // load designated project
             _this.trigger('project:load', projectname);
         }});
-    });
-
-    // record results to query history
-    this.listenTo(this, 'results:ready', function() {
-
-        if (!this.project) {
-            console.error('Could not save result count into query history object, project object empty or undefined.');
-            return;
-        }
-
-        var result_count = this.metadata.get('result_count');
-        if (this.project.query_recorded) {
-            this.project.query_recorded.set('result_count', result_count);
-            this.project.query_recorded.save();
-        }
     });
 
     // Fetch all projects on application start and initialize designated or default project.
