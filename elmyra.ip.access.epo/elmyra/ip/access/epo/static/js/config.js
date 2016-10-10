@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2016 Andreas Motl, Elmyra UG
 
-IpsuiteNavigatorConfig = Backbone.Model.extend({
+NavigatorConfiguration = Backbone.Model.extend({
 
     defaults: {
         mode: undefined,
@@ -13,6 +13,8 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
 
     initialize: function(options) {
         var _this = this;
+
+        console.log('Initialize NavigatorConfiguration');
 
         options = options || {};
 
@@ -94,4 +96,25 @@ IpsuiteNavigatorConfig = Backbone.Model.extend({
 
     },
 
+});
+
+
+NavigatorTheme = Backbone.Model.extend({
+
+    defaults: {
+        header_background_url: null,
+    },
+
+    initialize: function() {
+
+        console.log('Initialize NavigatorTheme');
+
+        // Add background image to page header at runtime, just when not being in embedded mode.
+        if (!this.get('config').get('embedded')) {
+            //$('.header-container').css('background-image', 'url(/static/img/header-small.jpg)');
+            //this.$el.find('.header-container').css('background-image', 'url(/static/img/header-small.jpg)');
+            this.set('header_background_url', '/static/img/header-small.jpg');
+        }
+
+    },
 });

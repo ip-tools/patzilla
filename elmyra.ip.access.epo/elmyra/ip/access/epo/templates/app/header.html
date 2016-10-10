@@ -3,25 +3,22 @@
 
 ## Header
 <script id="app-header-template" type="text/x-underscore-template">
-
 <%text>
 <div class="container-fluid header-container" style="<%= theme.header_background_url && ('background-image: url(' + theme.header_background_url + ')') || '' %>">
     <div class="row-fluid">
         <div class="span8">
             <span id="menu-region"></span>
-            <h3 id="ui-title" style="display: inline-block"></h3>
-            <span id="ui-subtitle"></span>
-            <div id="ui-statusline"></div>
+            <h3 style="display: inline-block"><%= theme['ui.page.title'] %></h3>
+            <span><%= theme['ui.page.subtitle'] %></span>
+            <div><%= theme['ui.page.statusline'] %></div>
         </div>
         <div class="span4">
             <div class="pull-right">
-                <h3 id="ui-productname" style="display: inline-block"></h3>
+                <h3 style="display: inline-block"><%= theme['ui.productname.rich'] %></h3>
             </div>
         </div>
     </div>
 </div>
 </%text>
-
 <br/>
-
 </script>

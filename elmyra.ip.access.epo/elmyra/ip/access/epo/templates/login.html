@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-## (c) 2014 Andreas Motl, Elmyra UG
+## (c) 2014-2016 Andreas Motl, Elmyra UG
 
 <%inherit file="site.mako" />
 
@@ -26,7 +26,7 @@
         <div class="row-fluid">
 
             <div class="span12">
-                <h3 class="form-signin-heading-logo text-right">elmyra <i class="circle-icon">IP</i> suite</h3>
+                <h3 class="form-signin-heading-logo text-right">${theme['ui.productname.rich'] | n}</h3>
                 <h2 class="form-signin-heading">Please sign in</h2>
                 <input name="username" type="text" class="input-block-level" placeholder="Email address" value="${username}" autofocus="autofocus" />
                 <input name="password" type="password" class="input-block-level" placeholder="Password" />
@@ -45,7 +45,7 @@
                 <button class="btn btn-large btn-primary" type="submit"><i class="icon-signin"></i> &nbsp; Sign in</button>
             </div>
             <div class="span6">
-                <a class="btn btn-large pull-right" id="mail-register" href="mailto:purchase@elmyra.de" role="button">Register</a>
+                <a class="btn btn-large pull-right" id="mail-register" href="mailto:${theme['ui.email.purchase'] | n}" role="button">Register</a>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
                     <h4>Login failed</h4>
                     <br/>
                     Please check your credentials or
-                    <a id="mail-login-failed" href="mailto:support@elmyra.de">contact us for support</a>.
+                    <a id="mail-login-failed" href="mailto:${theme['ui.email.support'] | n}">contact us for support</a>.
                 </div>
                 % endif
             </div>
@@ -68,9 +68,7 @@
             <div class="span12">
                 <div class="alert alert-success alert-block">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <h4>Elmyra patent search</h4>
-                    <br/>
-                    You are welcome to register a 14 day trial account for free.
+                    You are welcome to register for a 14 day trial account.
                     <br/><br/>
                     Otherwise, please take a glimpse into a <a id="visit-demo" href="/" target="_blank">demo query</a>,
                     feel free to explore and drill down further.
@@ -82,7 +80,7 @@
             <div class="span12">
                 <hr class="clear-margin" style="margin-top: 10px"/>
                 <div class="page-footer pull-left">
-                    &copy; 2013-2016, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.
+                    ${theme['ui.vendor.copyright'] | n}
                 </div>
             </div>
         </div>
@@ -102,6 +100,14 @@
         console.log("document.ready");
 
         var url = $.url(window.location.href);
+        var domain = url.attr('host');
+
+        var tplvars = {
+            vendorname: '${theme['ui.vendor.name']}',
+            productname: '${theme['ui.productname']}',
+            username: '${username}',
+            domain: domain,
+        };
 
         if (url.param('error') == 'true') {
             window.setTimeout(function() {
@@ -116,11 +122,8 @@
         $('#mail-register').unbind('click');
         $('#mail-register').bind('click', function() {
 
-            var domain = url.attr('host');
-            var tplvars = {username: '${username}', domain: domain};
-
             <%text>
-            var subject = _.template('Elmyra patent search: Account registration on domain "<%= domain %>"')(tplvars);
+            var subject = _.template('<%= productname %>: Account registration on domain "<%= domain %>"')(tplvars);
             </%text>
             var body = _.template(_.string.ltrim($('#template-mail-register').html()))(tplvars);
 
@@ -131,11 +134,8 @@
         $('#mail-login-failed').unbind('click');
         $('#mail-login-failed').bind('click', function() {
 
-            var domain = url.attr('host');
-            var tplvars = {username: '${username}', domain: domain};
-
             <%text>
-            var subject = _.template('Elmyra patent search: Login keeps failing for account "<%= username %>" on domain "<%= domain %>"')(tplvars);
+            var subject = _.template('<%= productname %>: Login keeps failing for account "<%= username %>" on domain "<%= domain %>"')(tplvars);
             </%text>
             var body = _.template(_.string.ltrim($('#template-mail-login-failed').html()))(tplvars);
 
@@ -181,9 +181,9 @@
 
 <script type="text/x-underscore-template" id="template-mail-register">
 <%text>
-Dear Elmyra support team,
+Dear <%= vendorname %> support team,
 
-please register a new account for accessing the Elmyra patent search service
+please register a new account for accessing the <%= productname %>
 on domain "<%= domain %>" using the provided email address as my username.
 
 Thank you in advance, looking forward to hearing from you soon.
@@ -195,7 +195,7 @@ With kind regards,
 
 <script type="text/x-underscore-template" id="template-mail-login-failed">
 <%text>
-Dear Elmyra support team,
+Dear <%= vendorname %> support team,
 
 i tried to login into my account "<%= username %>" on domain "<%= domain %>"
 multiple times without success. Please get back to me to clear things up.
