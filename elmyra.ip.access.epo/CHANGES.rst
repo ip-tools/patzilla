@@ -9,6 +9,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Fix priority swapping for data source DPMA and FulltextPRO
 
 2016-10-10 0.120.0
 ==================
