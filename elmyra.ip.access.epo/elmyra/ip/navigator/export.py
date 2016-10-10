@@ -195,7 +195,7 @@ class Dossier(object):
         with ZipFile(buffer, 'w', ZIP_DEFLATED) as zipfile:
 
             # FIXME: Add TERMS (liability waiver) and more...
-            zipfile.writestr('@readme.txt', u'Zip archive created by Elmyra IP Suite Navigator.')
+            zipfile.writestr('@readme.txt', u'Zip archive created by Elmyra IP Navigator.')
 
             # Add text summary
             zipfile.writestr('@metadata.txt', self.get_author().encode('utf-8'))
@@ -498,7 +498,7 @@ class DossierXlsx(Dossier):
 
     def set_header_footer(self, worksheet):
         # http://xlsxwriter.readthedocs.io/example_headers_footers.html
-        header = u'&LElmyra IP Suite Navigator&RSearch report'
+        header = u'&LElmyra IP Navigator&RSearch report'
         worksheet.set_header(header)
         footer = u'&L&L&D &T&C&A&RPage &P of &N'
         worksheet.set_footer(footer)

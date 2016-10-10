@@ -35,7 +35,7 @@ StoragePlugin = Marionette.Controller.extend({
                     database: database,
                     metadata: {
                         type: 'elmyra.ipsuite.navigator.database',
-                        description: 'Database dump of Elmyra IP suite navigator',
+                        description: 'Database dump of Elmyra IP Navigator',
                         software_version: opsChooserApp.config.get('setting.app.software.version'),
                         database_version: _this.database_version,
                         database_name: localforage.config('name'),
