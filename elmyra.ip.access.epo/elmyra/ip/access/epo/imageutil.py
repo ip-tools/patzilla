@@ -107,7 +107,10 @@ def to_png(tiff_payload, format='tif'):
 
     convert = find_convert()
     #command = [convert, 'tif:-', '+set', 'date:create', '+set', 'date:modify', 'png:-']
-    command = [convert, '{0}:-'.format(format),
+    command = [
+                convert,
+                #'{0}:-'.format(format),
+                '-',                            # Convert from any format
                 '+set', 'date:create', '+set', 'date:modify',
                 # FIXME: make this configurable
                 '-resize', '530x',

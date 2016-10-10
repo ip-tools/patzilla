@@ -9,7 +9,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2016-10-11 0.120.2
+==================
 - Fix biblio inquiry for family member swapping
+- Fix drawing display of CA industrial design documents
 
 2016-10-11 0.120.1
 ==================

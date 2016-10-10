@@ -18,7 +18,11 @@ def fetch_first_drawing(patent):
         log.info('CIPO: Fetching first drawing from "{url}"'.format(url=drawing_url))
         response = requests.get(drawing_url)
         if response.status_code == 200:
-            return gif_to_tiff(response.content)
+            # v1: convert to tiff
+            #return gif_to_tiff(response.content)
+
+            # v2: let upstream infrastructure convert stuff universally
+            return response.content
     else:
         log.warning("No content in main document page of '{}'".format(patent))
 
@@ -38,6 +42,15 @@ def fetch_images_index(url):
         return response.text
 
 def get_first_drawing_url(patent):
+
+    # A. Industrial designs
+    # http://www.ic.gc.ca/cgi-bin/sc_mrksv/cipo/ind-design/getImage.pl?appNum=140249&extension=0&imageType=1&order=1&rotation=0&imageBrand=Application
+    if patent['kind'] == 'S':
+        url_tpl = 'http://www.ic.gc.ca/cgi-bin/sc_mrksv/cipo/ind-design/getImage.pl?appNum={number}&extension=0&imageType=1&order=1&rotation=0&imageBrand=Application'
+        url = url_tpl.format(number=patent['number'])
+        return url
+
+    # B. Patents
 
     # 1. fetch and parse document index page
     document_index_html = fetch_document_index(patent)

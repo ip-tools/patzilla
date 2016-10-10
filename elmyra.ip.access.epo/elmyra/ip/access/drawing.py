@@ -56,7 +56,7 @@ def get_drawing_png(document, page, kind):
 class PayloadEmpty(Exception):
     pass
 
-@cache_region('static')
+@cache_region('longer')
 def get_uspto_image_cached(document_id):
     payload = get_uspto_image(document_id)
     if payload:
@@ -64,7 +64,7 @@ def get_uspto_image_cached(document_id):
     else:
         raise PayloadEmpty('No payload')
 
-@cache_region('static')
+@cache_region('longer')
 def get_cipo_image_cached(document_id):
     payload = get_cipo_image(document_id)
     if payload:
