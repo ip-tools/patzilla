@@ -20,7 +20,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         var family_swap_default = false;
         if (metadata.get('searchmode') != 'subsearch') {
             var query_data = metadata.get('query_data');
-            family_swap_default = query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-default']);
+            family_swap_default = query_data && query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-default']);
         }
 
         var self = this;
@@ -61,21 +61,15 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                     // get query_data from metadata
                     var query_data = metadata.get('query_data');
+                    query_data = query_data || {};
                     _.defaults(query_data, {'modifiers': {}});
 
                     // document display strategy: regular vs. full-cycle
-                    var mode_full_cycle = false;
-                    if (query_data) {
-                        mode_full_cycle = Boolean(query_data['modifiers']['full-cycle']);
-                    }
+                    var mode_full_cycle = Boolean(query_data['modifiers']['full-cycle']);
 
                     // document sort order: recent vs. descending
-                    var order_recent_first = false;
-                    var order_past_first = false;
-                    if (query_data) {
-                        order_recent_first = Boolean(query_data['modifiers']['recent-pub']);
-                        order_past_first   = Boolean(query_data['modifiers']['first-pub']);
-                    }
+                    var order_recent_first = Boolean(query_data['modifiers']['recent-pub']);
+                    var order_past_first = Boolean(query_data['modifiers']['first-pub']);
 
                     // search_result is nested, collect representative result documents
                     // while retaining additional result documents inside ['bibliographic-data']['full-cycle']

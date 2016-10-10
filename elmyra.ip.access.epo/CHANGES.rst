@@ -21,6 +21,7 @@ development
 - Use Marionette and Underscore templates for the basic application layout (header, content, footer)
 - Improve application bootstrapping behavior
 - Improve application boostrapping: configuration vs. theme. Work towards a white-label version.
+- Attempt to fix to errors reported by issue reporter
 
 2016-08-07 0.119.6
 ==================
