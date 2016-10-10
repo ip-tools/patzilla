@@ -74,7 +74,7 @@ elseif config.auth.mode == 'login-form' then
 
         else
             local referer_path, referer_args = util.decode_referer()
-            local redirect_uri = util.get_uri(referer_path, referer_args, {username=args.username, error='true'})
+            local redirect_uri = util.get_uri(referer_path .. '/login', referer_args, {username=args.username, error='true'})
             ngx.log(ngx.WARN, 'Redirecting back to ' .. redirect_uri)
             ngx.redirect(redirect_uri)
         end
