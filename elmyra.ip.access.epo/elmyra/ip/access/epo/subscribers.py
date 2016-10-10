@@ -78,19 +78,9 @@ def add_renderer_globals(event):
     #    pass
     #renderer_globals["c"] = request.tmpl_context
 
-    # Site title
-    """
-    those three variables belong together. the browsertitle is:
-    - ``page_title + site_title`` or
-    - ``site_title + site_claim``
-
-    the title on the page is only rendered if ``page_title is not None``
-    """
+    # Page title
+    renderer_globals['theme'] = helpers.Bootstrapper().theme_parameters()
     renderer_globals['page_title'] = None
-    renderer_globals['site_title'] = u"Elmyra IP Suite Navigator"
-    renderer_globals['site_claim'] = u"Patent search"
-
-    renderer_globals['site_version'] = site_version
 
 
 def add_html_foundation(event):

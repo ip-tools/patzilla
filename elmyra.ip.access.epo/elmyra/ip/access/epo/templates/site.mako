@@ -3,21 +3,21 @@
 <head>
     <title><%block name="title">
         % if page_title is not None:
-            ${site_title} » ${page_title}
+            ${theme['ui.productname']} » ${page_title}
         % else:
-            ${site_title}
+            ${theme['ui.productname']}
         % endif
     </%block></title>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 
     ## <meta name="keywords" content="${_(u'META_SITE_Keywords')}" />
     ## <meta name="description" content="${_(u'META_SITE_Description')}" />
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-    <meta name="application-name" content="elmyra.ip.access.epo" />
+    <meta name="application-name" content="${theme['ui.productname']}" />
     ## +Snippets
-    <meta itemprop="name" content="elmyra.ip.access.epo">
+    <meta itemprop="name" content="${theme['ui.productname']}">
     <%block name="plus_description"></%block>
 
     <script type="application/javascript">
@@ -29,7 +29,7 @@
 % endif
     </script>
 
-    <link rel="search" type="application/opensearchdescription+xml" title="Elmyra patent search" href="/static/meta/opensearch.xml" />
+    <link rel="search" type="application/opensearchdescription+xml" title="${theme['ui.productname']}" href="/static/meta/opensearch.xml" />
     <link rel="shortcut icon" href="${url.app}/favicon.ico" />
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->

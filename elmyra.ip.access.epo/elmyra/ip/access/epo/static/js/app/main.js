@@ -1,24 +1,3 @@
-ApplicationTheme = Backbone.Model.extend({
-
-    defaults: {
-        header_background_url: null,
-    },
-
-    initialize: function() {
-
-        log('ApplicationTheme.initialize');
-
-        // Add background image to page header at runtime, just when not being in embedded mode.
-        if (!this.get('config').get('embedded')) {
-            //$('.header-container').css('background-image', 'url(/static/img/header-small.jpg)');
-            //this.$el.find('.header-container').css('background-image', 'url(/static/img/header-small.jpg)');
-            this.set('header_background_url', '/static/img/header-small.jpg');
-        }
-
-    },
-});
-
-
 LayoutView = Backbone.Marionette.Layout.extend({
 
     template: "#app-layout-template",
@@ -104,7 +83,12 @@ FooterView = Backbone.Marionette.ItemView.extend({
         this.config = this.templateHelpers.config = opsChooserApp.config;
     },
 
-    templateHelpers: {},
+    templateHelpers: function() {
+        return {
+            config: opsChooserApp.config.attributes,
+            theme: opsChooserApp.theme.attributes,
+        };
+    },
 
     onDomRefresh: function() {
         console.log('FooterView.onDomRefresh');

@@ -12,12 +12,6 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // Initialize content which still resides on page level (i.e. no template yet)
         $('#query').val(this.config.get('query'));
-        $('#ui-title').html(getconfig('setting.ui.page.title'));
-        $('#ui-subtitle').html(getconfig('setting.ui.page.subtitle'));
-        $('#ui-statusline').html(getconfig('setting.ui.page.statusline'));
-        $('#ui-productname').html(getconfig('setting.ui.productname'));
-        $('#ui-footer').html(getconfig('setting.ui.page.footer', {after: '<br/>'}));
-        $('#ui-footer-version').html(getconfig('setting.ui.version', {after: '<br/>'}));
 
     },
 
@@ -1295,7 +1289,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
 console.info('Load application components');
 
-opsChooserApp = new OpsChooserApp({config: ipsuiteNavigatorConfig});
+opsChooserApp = new OpsChooserApp({config: navigatorConfiguration, theme: navigatorTheme});
 
 opsChooserApp.addRegions({
     mainRegion: "#main-region",
@@ -1311,7 +1305,7 @@ opsChooserApp.addRegions({
 // Main application user interface
 opsChooserApp.addInitializer(function(options) {
 
-    this.theme = new ApplicationTheme({config: ipsuiteNavigatorConfig});
+    //this.theme = new ApplicationTheme({config: navigatorConfiguration});
     //log('this.applicationTheme:', this.applicationTheme);
 
     this.layoutView = new LayoutView();

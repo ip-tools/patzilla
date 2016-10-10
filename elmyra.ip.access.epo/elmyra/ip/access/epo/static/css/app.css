@@ -154,6 +154,9 @@ p.hero-smaller {
     background-position: 50px;
 }
 */
+.header-container {
+    min-height: 5em;
+}
 
 .header-container #ui-title,#ui-subtitle,#ui-statusline {
     margin-left: 25px;
@@ -163,6 +166,10 @@ p.hero-smaller {
 }
 .header-container #ui-productname {
     margin-right: 25px;
+}
+
+.header-container #menu-region {
+    margin-right: 1.3em;
 }
 
 .footer-container {
@@ -621,7 +628,7 @@ dl.dl-horizontal-inline {
     left: 38%;
 }
 .login-box {
-    max-width: 310px;
+    max-width: 350px;
     padding-top: 9px;
     padding-left: 29px;
     padding-right: 29px;
