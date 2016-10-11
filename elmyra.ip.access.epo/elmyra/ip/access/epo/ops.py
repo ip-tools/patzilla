@@ -12,7 +12,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from elmyra.ip.access.epo.util import object_attributes_to_dict
 from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
 from elmyra.ip.access.generic.exceptions import NoResultsException
-from elmyra.ip.util.numbers.common import decode_patent_number
+from elmyra.ip.util.numbers.common import decode_patent_number, split_patent_number
 
 log = logging.getLogger(__name__)
 
@@ -67,16 +67,20 @@ def results_swap_family_members(response):
 
     publication_numbers = []
 
+    # DE, EP..B, WO, EP..A2, EP..A3, EP, US
     priorities = [
-        {'filter': lambda member_pubnum: member_pubnum.startswith('DE') and not member_pubnum.endswith('D1')},
-        {'filter': 'EP'},
+        {'filter': lambda patent: patent.country.startswith('DE') and not patent.kind.startswith('D1')},
+        {'filter': lambda patent: patent.country.startswith('EP') and patent.kind.startswith('B')},
         {'filter': 'WO'},
+        {'filter': lambda patent: patent.country.startswith('EP') and patent.kind.startswith('A')},
+        {'filter': 'EP'},
         {'filter': 'US'},
     ]
 
     def match_filter(item, filter):
         if callable(filter):
-            outcome = filter(item)
+            patent = split_patent_number(item)
+            outcome = filter(patent)
         else:
             outcome = item.startswith(filter)
         return outcome
@@ -93,13 +97,16 @@ def results_swap_family_members(response):
 
         #print 'chunk:', chunk
 
+        # Prepare list of document cycles
         #chunk_results = to_list(pointer_publication_reference.resolve(chunk))
         cycles = to_list(chunk['exchange-document'])
-        representation = cycles[0]
 
+        # Publication number of first cycle in EPODOC format
+        representation = cycles[0]
         pubref = pointer_publication_reference.resolve(representation)
         representation_pubref_epodoc, _ = _get_document_number_date(pubref, 'epodoc')
 
+        # All publication numbers in DOCDB format
         representation_pubrefs_docdb = []
         for cycle in cycles:
             pubref = pointer_publication_reference.resolve(cycle)
@@ -110,6 +117,7 @@ def results_swap_family_members(response):
         #print 'representation_pubref_epodoc:', representation_pubref_epodoc
         #print 'representation_pubrefs_docdb:', representation_pubrefs_docdb
 
+        # Fetch family members. When failing, use first cycle as representation.
         try:
             family_info = ops_family_members(representation_pubref_epodoc)
         except:
@@ -121,6 +129,7 @@ def results_swap_family_members(response):
         #members = family_info.publications_by_country()
         #pprint(members)
 
+        # Find replacement from list of family members controlled by priority list.
         for prio in priorities:
 
             filter = prio['filter']
@@ -159,6 +168,9 @@ def results_swap_family_members(response):
                         found = True
                         break
 
+            # Swap representation of document by appropriate family member
+            # and set a marker in the data structure containing the original
+            # document number(s).
             if found:
 
                 representation = bibdata
