@@ -155,7 +155,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        var common_buttons = $('.btn-full-cycle, .btn-family-swap-default, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
+        var common_buttons = $('.btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
         common_buttons.unbind('click');
         common_buttons.on('click', function(e) {
 
@@ -814,8 +814,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (query_data['modifiers']['full-cycle']) {
                 tags_html.push(this.html_history_tag('Full cycle', {name: 'fc', width: 'narrow'}));
             }
-            if (query_data['modifiers']['family-swap-default']) {
-                tags_html.push(this.html_history_tag('Family member by DE, EP, WO, US', {name: 'fam:sd', width: 'x-wide'}));
+            if (query_data['modifiers']['family-swap-ger']) {
+                tags_html.push(this.html_history_tag('Family member by priority', {name: 'fam:sw-ger', width: 'wide'}));
             }
             if (query_data['modifiers']['first-pub']) {
                 tags_html.push(this.html_history_tag('First pub.', {name: 'pf', width: 'narrow'}));
@@ -1140,7 +1140,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     get_form_modifier_elements: function() {
 
         var datasource = opsChooserApp.get_datasource();
-        var modifier_buttons_selector = 'button[data-name="full-cycle"],[data-name="family-swap-default"]';
+        var modifier_buttons_selector = 'button[data-name="full-cycle"],[data-name="family-swap-ger"]';
         modifier_buttons_selector += ',[data-name="first-pub"]';
         modifier_buttons_selector += ',[data-name="recent-pub"]';
 

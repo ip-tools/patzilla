@@ -18,7 +18,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
         // Propagate family member swapping
         var query_data = metadata.get('query_data');
-        var family_swap_default = query_data && query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-default']);
+        var family_swap_default = query_data && query_data['modifiers'] && Boolean(query_data['modifiers']['family-swap-ger']);
 
         var self = this;
         var _this = this;
