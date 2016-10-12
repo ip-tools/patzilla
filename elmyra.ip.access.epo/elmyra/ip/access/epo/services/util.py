@@ -295,6 +295,7 @@ def issue_reporter_handler(request):
     if user:
 
         # Anonymize sensitive user data
+        user.password = None
         user.upstream_credentials = None
 
         # Serialize user object and attach to report

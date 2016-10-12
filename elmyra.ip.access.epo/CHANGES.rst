@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-10-12 0.121.1
+==================
+- Improve anonymization of sensitive user information re. issue reporter
+
 2016-10-12 0.121.0
 ==================
 - Improve swapping of family members by priority: DE, EP..B, WO, EP..A2, EP..A3, EP, US
