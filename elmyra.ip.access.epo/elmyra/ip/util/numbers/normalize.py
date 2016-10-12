@@ -17,6 +17,8 @@ def patch_patent(patent):
     if not patent:
         return
 
+    number_length = len(patent['number'])
+
     patched = patent.copy()
 
     # strip leading zeros of *publication* to 6 digits, if seqnumber is longer than 6 digits
@@ -46,6 +48,12 @@ def patch_patent(patent):
         if patched.get('kind') == 'T1':
             patched['number'] = pad_left(patched['number'], '0', 7)
 
+    # The Eurasian Patent Organization (EAPO)
+    # Pad to 6 characters with leading zeros
+    elif patched['country'] == 'EA' and number_length < 9:
+        patched['number'] = trim_leading_zeros(patched['number'])
+        patched['number'] = pad_left(patched['number'], '0', 6)
+
     # pad to 7 characters with leading zeros
     elif patched['country'] == 'EP':
         patched['number'] = trim_leading_zeros(patched['number'])
@@ -57,7 +65,7 @@ def patch_patent(patent):
         # e.g.
         # GE00U200501210Y = GEU20051210Y
         # GE00P200503700B = GEP20053700B
-        print '77777777777:', patched['number'][5]
+        #print '77777777777:', patched['number'][5]
         if patched['number'][5] == '0':
             patched['number'] = patched['number'][:5] + patched['number'][6:]
 
