@@ -10,9 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
-2016-10-12 0.121.1
+2016-10-12 0.122.0
 ==================
 - Improve anonymization of sensitive user information re. issue reporter
+- Improve patent number normalization support for EAPO numbers (Eurasian Patent Organization), e.g. EA21949B1
 
 2016-10-12 0.121.0
 ==================
