@@ -9,6 +9,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2016-10-12 0.121.0
+==================
 - Improve swapping of family members by priority: DE, EP..B, WO, EP..A2, EP..A3, EP, US
 
 2016-10-11 0.120.2
