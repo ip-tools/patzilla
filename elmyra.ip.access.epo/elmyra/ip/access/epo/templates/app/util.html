@@ -137,7 +137,11 @@
                     data-report-item="<%= error.name %> (<%= error.location %>)"
                     data-report-html=".error-panel"
                     data-dialog-remark-orig="<%= htmlentities(error.description) %>"
-                    data-dialog-remark="<%= _.string.dedent(_.string.strip(_.string.stripTags(error.description))) %>"
+                    data-dialog-remark="<%=
+                        _.string.dedent(_.string.strip(_.string.stripTags(error.description)))
+                        + '\n' +
+                        _.string.dedent(_.string.strip(_.string.stripTags(error.details)))
+                    %>"
                     >
                 Report problem
             </button>
