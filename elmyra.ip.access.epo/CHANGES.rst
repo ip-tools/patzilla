@@ -11,6 +11,7 @@ development
 ===========
 - Fix placeholder display re. WO2001000469A1 vs. WO0100469A1
 - Fix setup woes re. setuptools>=11.3 dependency
+- Reduce production search cache time to 2 hours
 
 2016-10-12 0.122.0
 ==================
