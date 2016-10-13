@@ -9,11 +9,13 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Fix placeholder display re. WO2001000469A1 vs. WO0100469A1
 
 2016-10-12 0.122.0
 ==================
 - Improve anonymization of sensitive user information re. issue reporter
 - Improve patent number normalization support for EAPO numbers (Eurasian Patent Organization), e.g. EA21949B1
+- [TAG] Staging milestone
 
 2016-10-12 0.121.0
 ==================
@@ -97,7 +99,7 @@ development
 2016-05-11 0.116.4
 ==================
 - Fix logic for displaying per-user-enabled data source buttons
-- Staging milestone
+- [TAG] Staging milestone
 
 2016-05-02 0.116.3
 ==================

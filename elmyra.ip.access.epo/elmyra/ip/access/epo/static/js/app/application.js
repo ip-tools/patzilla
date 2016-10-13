@@ -665,7 +665,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         debug && log('document_numbers_swapped:', document_numbers_swapped);
 
 
-        // compute list of missing documents with local alternatives
+        // Compute list of missing documents respecting local alternatives
 
         // v1: naive
         //var documents_missing = _.difference(documents_requested, documents_response);
@@ -721,19 +721,44 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 }
 
 
-                // 3. Be graceful to WO anomalies like WO2003049775A2 vs. WO03049775A2
-                var wo_alternatives = [];
+                // 3. Be graceful to WO anomalies like
+                //    - WO2003049775A2 vs. WO03049775A2 or
+                //    - WO2001000469A1 vs. WO0100469A1
                 if (_.string.startsWith(document_requested_kindcode, "WO")) {
-                    wo_alternatives = _.filter(documents_response_kindcode, function(item) {
+                    //log('documents_response_kindcode:', documents_response_kindcode);
+                    var wo_alternatives = _.filter(documents_response_kindcode, function(item) {
+
                         // Denormalize WO number
                         var wo_number = document_requested_kindcode.slice(2, -2);
                         var wo_kindcode = document_requested_kindcode.slice(-2);
+
                         // Strip century component from 4-digit year
-                        var wo_short = 'WO' + wo_number.slice(2) + wo_kindcode;
-                        return _.string.startsWith(item, wo_short);
+                        wo_number = wo_number.slice(2);
+
+                        // Compute alternative and compare with current item
+                        var wo_short_variants = [];
+                        wo_short_variants.push('WO' + wo_number + wo_kindcode);
+
+                        // Strip first digit from number after 2-digit year, if zero
+                        if (wo_number.slice(2, 3) == '0') {
+                            wo_number = wo_number.slice(0, 2) + wo_number.slice(3);
+                            wo_short_variants.push('WO' + wo_number + wo_kindcode);
+                        }
+                        //log('wo_short_variants:', wo_short_variants);
+
+                        var wo_found = false;
+                        _.each(wo_short_variants, function(wo_variant) {
+                            if (_.string.startsWith(item, wo_variant)) {
+                                wo_found = true;
+                                return;
+                            }
+                        });
+
+                        return wo_found;
+
                     });
+                    Array.prototype.push.apply(alternatives, wo_alternatives);
                 }
-                Array.prototype.push.apply(alternatives, wo_alternatives);
 
 
                 // per-document response
