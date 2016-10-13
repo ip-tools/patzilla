@@ -10,6 +10,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - Fix placeholder display re. WO2001000469A1 vs. WO0100469A1
+- Fix setup woes re. setuptools>=11.3 dependency
 
 2016-10-12 0.122.0
 ==================
