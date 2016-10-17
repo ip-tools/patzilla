@@ -13,6 +13,7 @@ development
 - Fix setup woes re. setuptools>=11.3 dependency
 - Reduce production search cache time to 2 hours
 - Catch new type of"FulltextPRO "error
+- Improve layout of search modifiers "Family member by priority" and "Remove family members"
 
 2016-10-12 0.122.0
 ==================
