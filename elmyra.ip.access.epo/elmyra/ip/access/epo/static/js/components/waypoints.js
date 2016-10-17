@@ -17,15 +17,13 @@ WaypointController = Marionette.Controller.extend({
         var current_header = null;
 
         // TODO: for letting the drawing follow the text
-        /*
-         $('.ops-collection-entry-heading-second').each(function() {
-         var sticky = new Waypoint.Sticky({
-         element: this
-         });
-         $(this).prop('sticky', sticky);
-         });
-         */
-        //log('waypoint:', $('.ops-collection-entry-heading')[0]);
+        $('.ops-collection-entry-heading-second').each(function() {
+            var sticky = new Waypoint.Sticky({
+                element: this
+            });
+            $(this).prop('sticky', sticky);
+        });
+        log('waypoint:', $('.ops-collection-entry-heading')[0]);
 
         Waypoint.destroyAll();
 
@@ -77,23 +75,28 @@ WaypointController = Marionette.Controller.extend({
 
                         // TODO: for letting the drawing follow the text
                         /*
-                         if (current_header) {
+                        if (current_header) {
 
-                         var sticky = $(current_header).prop('sticky');
-                         sticky.destroy();
-                         current_header = null;
+                            var sticky = $(current_header).prop('sticky');
+                            if (sticky) {
+                                sticky.destroy();
+                            }
+                            current_header = null;
 
-                         var container = $(this.element).closest('.ops-collection-entry')
-                         var elem = container.find('.ops-collection-entry-heading-second');
-                         setTimeout(function() {
-                         var sticky = new Waypoint.Sticky({
-                         element: $(elem)
-                         });
-                         $(elem).prop('sticky', sticky);
-                         }, 100);
+                            var container = $(this.element).closest('.ops-collection-entry')
+                            var elem = container.find('.ops-collection-entry-heading-second');
+                            log('sticky elem:', elem);
+                            //elem.show();
+                            setTimeout(function() {
+                                var sticky = new Waypoint.Sticky({
+                                    element: $(elem)
+                                });
+                                $(elem).prop('sticky', sticky);
+                            }, 100);
 
-                         }
-                         */
+                        }
+                        */
+
                     }
                 },
                 entered: function(direction) {
@@ -110,20 +113,20 @@ WaypointController = Marionette.Controller.extend({
 
                     // TODO: for letting the drawing follow the text
                     /*
-                     if (direction == 'down') {
-                     var container = $(this.element).closest('.ops-collection-entry')
-                     var elem = container.find('.ops-collection-entry-heading-second');
-                     elem.show();
-                     current_header = elem;
+                    if (direction == 'down') {
+                        var container = $(this.element).closest('.ops-collection-entry')
+                        var elem = container.find('.ops-collection-entry-heading-second');
+                        elem.show();
+                        current_header = elem;
 
-                     setTimeout(function() {
-                     var sticky = new Waypoint.Sticky({
-                     element: $(elem)
-                     });
-                     $(elem).prop('sticky', sticky);
-                     }, 100);
-                     }
-                     */
+                        setTimeout(function() {
+                            var sticky = new Waypoint.Sticky({
+                                element: $(elem)
+                            });
+                            $(elem).prop('sticky', sticky);
+                        }, 100);
+                    }
+                    */
                 }
             });
 
