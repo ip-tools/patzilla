@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-10-26 0.123.1
+==================
+- Fix logging error on"FulltextPRO "exception
+
 2016-10-18 0.123.0
 ==================
 - Fix placeholder display re. WO2001000469A1 vs. WO0100469A1
