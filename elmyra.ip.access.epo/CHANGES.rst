@@ -13,6 +13,7 @@ development
 2016-11-13 0.124.0
 ==================
 - Improve interactive DEPATISconnect behavior through fastpath document retrieval and acquisition
+- Fix Espacenet fulltext retrieval fallback
 
 2016-10-26 0.123.1
 ==================

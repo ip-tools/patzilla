@@ -16,7 +16,13 @@ logger = logging.getLogger(__name__)
 def espacenet_fetch(document_number, section, element_id):
 
     patent = normalize_patent(document_number, as_dict=True)
-    url_tpl = u'http://worldwide.espacenet.com/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
+
+    # 2014
+    #url_tpl = u'https://worldwide.espacenet.com/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
+
+    # 2016-11-13
+    url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
+
     url = url_tpl.format(section=section, **patent)
 
     logger.info('Accessing Espacenet: {}'.format(url))
