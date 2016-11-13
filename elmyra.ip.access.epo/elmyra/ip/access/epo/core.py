@@ -25,7 +25,8 @@ def pdf_universal(patent):
     # first, try archive
     try:
         # Skip requests for documents w/o kindcode
-        if not document.kind: raise ValueError(u'No kindcode')
+        if not document.kind:
+            raise ValueError(u'No kindcode for patent: {}'.format(patent))
 
         pdf = archive_fetch_pdf(number_normalized)
         datasource = 'archive'
@@ -35,6 +36,7 @@ def pdf_universal(patent):
         if not isinstance(ex, HTTPNotFound):
             log.error(exception_traceback())
 
+        """
         # second, try archive again after running acquisition
         try:
 
@@ -46,45 +48,51 @@ def pdf_universal(patent):
             datasource = 'archive'
 
         except Exception as ex:
+        """
+
+        if True:
 
             if not isinstance(ex, HTTPNotFound):
                 log.error(exception_traceback())
 
             if document:
 
-                # third, try building from OPS single images
-                try:
-
-                    # 2016-04-21: Amend document number for CA documents, e.g. CA2702893C -> CA2702893A1
-                    # TOOD: Reenable feature, but only when prefixing document with a custom page
-                    #       informing the user about recent changes not yet arrived at EPO.
-                    #if document.country == 'CA':
-                    #    patent = document.country + document.number
-
-                    log.info('PDF OPS attempt for {0}'.format(patent))
-
-                    pdf = pdf_document_build(patent)
-                    datasource = 'ops'
-
-                except Exception as ex:
-
-                    if not isinstance(ex, HTTPNotFound):
-                        log.error(exception_traceback())
-
-                    if document.country == 'US':
-
-                        log.info('PDF USPTO attempt for {0}'.format(patent))
-                        images_location = get_images_view_url(document)
-                        if images_location:
-                            meta.update(images_location)
-                        else:
-                            log.warning('PDF USPTO not available for {}'.format(patent))
+                pdf = pdf_from_ops(patent, document, meta)
+                datasource = 'ops'
 
             else:
                 log.error('Locating a document at the domestic office requires ' \
                           'a decoded document number for "{}"'.format(patent))
 
     return {'pdf': pdf, 'datasource': datasource, 'meta': meta}
+
+def pdf_from_ops(patent, document, meta):
+    # third, try building from OPS single images
+    try:
+
+        # 2016-04-21: Amend document number for CA documents, e.g. CA2702893C -> CA2702893A1
+        # TOOD: Reenable feature, but only when prefixing document with a custom page
+        #       informing the user about recent changes not yet arrived at EPO.
+        #if document.country == 'CA':
+        #    patent = document.country + document.number
+
+        log.info('PDF OPS attempt for {0}'.format(patent))
+
+        return pdf_document_build(patent)
+
+    except Exception as ex:
+
+        if not isinstance(ex, HTTPNotFound):
+            log.error(exception_traceback())
+
+        if document.country == 'US':
+
+            log.info('PDF USPTO attempt for {0}'.format(patent))
+            images_location = get_images_view_url(document)
+            if images_location:
+                meta.update(images_location)
+            else:
+                log.warning('PDF USPTO not available for {}'.format(patent))
 
 def pdf_universal_multi_zip(patents):
     buffer = StringIO()
