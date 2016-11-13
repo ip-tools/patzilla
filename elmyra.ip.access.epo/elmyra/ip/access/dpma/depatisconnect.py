@@ -52,8 +52,8 @@ def run_acquisition(document_number, doctypes=None):
     return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
-    # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1
-    url_tpl = archive_service_baseurl + '/download/xml:docinfo/{number}.xml?nodtd=1'
+    # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1&fastpath=true
+    url_tpl = archive_service_baseurl + '/download/xml:docinfo/{number}.xml?nodtd=1&fastpath=true'
     url = url_tpl.format(number=number)
     response = get_client().get(url, timeout=(2, 17))
     return response
@@ -66,7 +66,7 @@ def fetch_pdf(number, attempt=1):
 def fetch_pdf_real(number):
 
     # ***REMOVED***/download/pdf/EP666666B1.pdf
-    url_tpl = archive_service_baseurl + '/download/pdf/{number}.pdf'
+    url_tpl = archive_service_baseurl + '/download/pdf/{number}.pdf?fastpath=true'
     url = url_tpl.format(number=number)
     response = get_client().get(url, timeout=(2, 90))
     if response.status_code == 200:
@@ -108,6 +108,10 @@ def get_xml_real(number):
     if response.status_code == 200:
         return response.content
 
+    else:
+        raise ValueError('Retrieving XML document for "{0}" from DPMA failed'.format(number))
+
+    """
     elif response.status_code == 404:
 
         # fetch number from remote source and try again once
@@ -117,9 +121,7 @@ def get_xml_real(number):
                 return response.content
 
         raise KeyError('No XML document for "{0}" at DPMA'.format(number))
-    else:
-        raise ValueError('Retrieving XML document for "{0}" from DPMA failed'.format(number))
-
+    """
 
 def get_claims_or_description(document_number, xpath):
     """

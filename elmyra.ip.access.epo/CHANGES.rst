@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-11-13 0.124.0
+==================
+- Improve interactive DEPATISconnect behavior through fastpath document retrieval and acquisition
+
 2016-10-26 0.123.1
 ==================
 - Fix logging error on"FulltextPRO "exception
