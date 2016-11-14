@@ -106,7 +106,8 @@ EmbeddingController = Marionette.Controller.extend({
 
 $(document).ready(function() {
 
-    console.log("document.ready");
+    console.log("[embedded] document.ready");
+    opsChooserApp.config.set('embedded', true);
 
     opsChooserApp.addInitializer(function(options) {
 
@@ -121,9 +122,6 @@ $(document).ready(function() {
         });
 
     });
-
-
-    opsChooserApp.config.set('embedded', true);
 
     // Transfer some options to application before booting
     if (embed_options && embed_options.params) {

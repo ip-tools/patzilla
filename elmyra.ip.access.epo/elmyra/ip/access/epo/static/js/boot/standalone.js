@@ -3,7 +3,7 @@
 
 $(document).ready(function() {
 
-    console.log("document.ready");
+    console.log("[standalone] document.ready");
 
     // process and propagate application ingress parameters
     //var url = $.url(window.location.href);

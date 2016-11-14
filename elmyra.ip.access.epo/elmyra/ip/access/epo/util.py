@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# (c) 2013 Andreas Motl, Elmyra UG
+# (c) 2013-2016 Andreas Motl, Elmyra UG
 import traceback
+import collections
 from cornice.util import _JSONError
 
 def get_exception_message(ex, add_traceback=False):
@@ -42,6 +43,22 @@ def dict_prefix_key(d, prefix):
 def object_attributes_to_dict(obj, attribute_names):
     return dict([(attr, safe_value(getattr(obj, attr))) for attr in attribute_names if hasattr(obj, attr)])
 
+# https://gist.github.com/angstwad/bf22d1822c38a92ec0a9
+def dict_merge(dct, merge_dct):
+    """ Recursive dict merge. Inspired by :meth:``dict.update()``, instead of
+    updating only top-level keys, dict_merge recurses down into dicts nested
+    to an arbitrary depth, updating keys. The ``merge_dct`` is merged into
+    ``dct``.
+    :param dct: dict onto which the merge is executed
+    :param merge_dct: dct merged into dct
+    :return: None
+    """
+    for k, v in merge_dct.iteritems():
+        if (k in dct and isinstance(dct[k], dict)
+            and isinstance(merge_dct[k], collections.Mapping)):
+            dict_merge(dct[k], merge_dct[k])
+        else:
+            dct[k] = merge_dct[k]
 
 class XmlRendererTest(object):
     def __call__(self, data, context):

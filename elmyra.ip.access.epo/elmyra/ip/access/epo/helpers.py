@@ -3,7 +3,7 @@
 import json
 import logging
 from pprint import pprint
-from elmyra.ip.access.epo.util import dict_prefix_key
+from elmyra.ip.access.epo.util import dict_prefix_key, dict_merge
 from elmyra.ip.util.date import unixtime_to_human, datetime_isoformat, unixtime_to_datetime
 from elmyra.ip.util.python import _exception_traceback
 from pyramid.settings import asbool     # required by template
@@ -65,7 +65,7 @@ class Bootstrapper(object):
             'ui.vendor.name': 'Elmyra',
             'ui.vendor.copyright': u'&copy; 2013-2016, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.',
             'ui.productname': 'Elmyra IP Navigator',
-            'ui.productname.rich': 'Elmyra <i class="circle-icon">IP</i> Navigator',
+            'ui.productname.rich': '<span class="header-logo">Elmyra <i class="circle-icon">IP</i> Navigator</span>',
             'ui.email.purchase': 'purchase@elmyra.de',
             'ui.email.support': 'purchase@elmyra.de',
 
@@ -73,7 +73,186 @@ class Bootstrapper(object):
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
             'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, FulltextPRO, IFI Claims',
+
+            'ui.css': {
+                # Page header background
+                '.header-container': {
+                    'background-image': 'url(/static/img/header-small.jpg)',
+                },
+                '.header-inner-left': {
+                    'margin-top': '8px',
+                },
+                '.header-inner-right': {
+                    'margin-top': '10px',
+                },
+
+                '.header-logo': {
+                    'font-size': '24.5px',
+                    'line-height': '40px',
+                    'font-weight': 'bold',
+                },
+
             }
+        }
+
+        if 'patoffice-navigator' in self.hostname:
+            vendor_color = 'rgba(0, 125, 197, 0.72)'
+            dict_merge(data, {
+                'ui.productname.rich': '<span class="header-logo">PATOffice Navigator</span> <img width="130" src="/static/vendor/europatent/europatent_logo.png"/>',
+                'ui.header.background_image': None,
+                'ui.page.title': '',
+                'ui.css': {
+
+                    # Header styles
+                    '.header-container': {
+
+                        # Page header background
+                        'background-image': None,
+                        'background-color': vendor_color,
+                        'margin-bottom': '20px',
+
+                        # http://www.cssmatic.com/box-shadow
+                        '-webkit-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        '-moz-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        'box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        },
+
+                    '.header-inner-left': {
+                        'margin-top': '25px',
+                        },
+
+                    '.header-logo': {
+                        'font-size': '3em',
+                        'font-weight': 500,
+                        #'font-variant': 'small-caps',
+                        'letter-spacing': '0.05em',
+                        'color': '#333',
+                        'margin-right': '0.6em',
+                        },
+
+                    }
+            })
+
+        if 'inav-web' in self.hostname:
+            vendor_color = '#7ec622'
+            dict_merge(data, {
+                'ui.productname.rich': '<div class="header-logo">Navigator</div> <img width="400" src="/static/vendor/ftpro/ftpro_logo.png"/>',
+                'ui.header.background_image': None,
+                'ui.page.title': '',
+                'ui.css': {
+
+                    # Header styles
+                    '.header-container': {
+
+                        # Page header background
+                        'background-image': None,
+                        'background-color': vendor_color,
+                        'margin-bottom': '20px',
+
+                        # http://www.cssmatic.com/box-shadow
+                        '-webkit-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        '-moz-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        'box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        },
+
+                    '.header-inner-left': {
+                        'margin-top': '25px',
+                        },
+
+                    '.header-logo': {
+                        #'font-family': 'Arial Black',
+                        'font-size': '3em',
+                        'font-weight': 500,
+                        #'font-variant': 'small-caps',
+                        'letter-spacing': '0.05em',
+                        'color': '#fff',
+                        'margin-right': '0.6em',
+                        'line-height': '50px',
+                        },
+
+                    }
+            })
+
+        if 'patselect' in self.hostname:
+            vendor_color = 'rgba(54,127,179,0.71)'
+            dict_merge(data, {
+                'ui.productname.rich': '<span class="header-logo">Patselect</span> <img src="/static/vendor/serviva/serviva_logo.png"/>',
+                'ui.header.background_image': None,
+                'ui.page.title': '',
+                'ui.css': {
+
+                    # Header styles
+                    '.header-container': {
+
+                        # Page header background
+                        'background-image': None,
+                        'background-color': vendor_color,
+                        'margin-bottom': '20px',
+
+                        # http://www.cssmatic.com/box-shadow
+                        '-webkit-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        '-moz-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        'box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                    },
+
+                    '.header-inner-left': {
+                        'margin-top': '25px',
+                    },
+
+                    '.header-logo': {
+                        'font-size': '3em',
+                        'font-weight': 500,
+                        'font-variant': 'small-caps',
+                        'letter-spacing': '0.05em',
+                        'color': '#333',
+                        'margin-right': '0.4em',
+                    },
+
+                }
+            })
+
+        if 'sheldon' in self.hostname:
+            vendor_color = 'rgba(128,84,120,0.8)'
+            dict_merge(data, {
+                'ui.productname.rich': '<span class="header-logo">Sheldon Search</span> <img width="130" src="/static/vendor/mtc/mtc_logo.png"/>',
+                'ui.header.background_image': None,
+                'ui.page.title': '',
+                'ui.css': {
+
+                    # Header styles
+                    '.header-container': {
+
+                        # Page header background
+                        'background-image': None,
+                        'background-color': vendor_color,
+                        'margin-bottom': '20px',
+
+                        # http://www.cssmatic.com/box-shadow
+                        '-webkit-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        '-moz-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        'box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        },
+
+                    '.header-inner-left': {
+                        'margin-top': '15px',
+                        },
+                    '.header-inner-right': {
+                        'margin-top': '15px',
+                        },
+
+                    '.header-logo': {
+                        'font-family': 'Playfair Display',
+                        'font-size': '3em',
+                        'font-weight': '500',
+                        #'font-style': 'italic',
+                        'font-variant': 'small-caps',
+                        'letter-spacing': '0.05em',
+                        'color': '#333',
+                        'margin-right': '0.6em',
+                        },
+
+                    }
+            })
 
         return data
 
@@ -266,8 +445,10 @@ class BackboneModelParameterFiddler(object):
         tplvars = {}
         tplvars['parameters_json'] = json.dumps(boot.theme)
         javascript_theme = """
-            navigatorTheme = new NavigatorTheme({{config: navigatorConfiguration}});
-            navigatorTheme.set({parameters_json});
+            var theme_settings = {{}};
+            _.extend(theme_settings, {{config: navigatorConfiguration}});
+            _.extend(theme_settings, {parameters_json});
+            navigatorTheme = new NavigatorTheme(theme_settings);
         """.format(**tplvars)
 
         payload = '\n'.join([javascript_config, javascript_theme])
