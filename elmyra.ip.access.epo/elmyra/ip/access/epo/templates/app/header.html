@@ -4,17 +4,17 @@
 ## Header
 <script id="app-header-template" type="text/x-underscore-template">
 <%text>
-<div class="container-fluid header-container" style="<%= theme.header_background_url && ('background-image: url(' + theme.header_background_url + ')') || '' %>">
+<div class="container-fluid header-container">
     <div class="row-fluid">
-        <div class="span8">
+        <div class="span6 header-inner-left">
             <span id="menu-region"></span>
-            <h3 style="display: inline-block"><%= theme['ui.page.title'] %></h3>
+            <h3 style="display: inline-block; margin: 0"><%= theme['ui.page.title'] %></h3>
             <span><%= theme['ui.page.subtitle'] %></span>
             <div><%= theme['ui.page.statusline'] %></div>
         </div>
-        <div class="span4">
+        <div class="span6 header-inner-right">
             <div class="pull-right">
-                <h3 style="display: inline-block"><%= theme['ui.productname.rich'] %></h3>
+                <div style="display: inline-block"><%= theme['ui.productname.rich'] %></div>
             </div>
         </div>
     </div>
