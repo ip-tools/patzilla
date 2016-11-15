@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-11-15 0.125.1
+==================
+- Tune multi-vendor branding
+
 2016-11-15 0.125.0
 ==================
 - First version of multi-vendor branding
