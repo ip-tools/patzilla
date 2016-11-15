@@ -114,7 +114,10 @@ PermalinkPlugin = Marionette.Controller.extend({
         var host = opsChooserApp.config.get('request.host');
         if (_.string.contains(host, 'patentsearch')) {
             baseurl = baseurl.replace('patentsearch', 'patentview');
+        } else if (_.string.contains(host, 'ip-tools.io')) {
+            baseurl = baseurl.replace(host, 'patentview.ip-tools.io');
         }
+
         return baseurl;
     },
 

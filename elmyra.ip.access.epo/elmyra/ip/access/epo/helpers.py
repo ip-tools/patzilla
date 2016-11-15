@@ -96,8 +96,9 @@ class Bootstrapper(object):
         }
 
         if 'patoffice-navigator' in self.hostname:
-            vendor_color = 'rgba(0, 125, 197, 0.72)'
+            vendor_color = 'rgba(96, 125, 139, 0.4)'
             dict_merge(data, {
+                'ui.productname': 'PATOffice Navigator',
                 'ui.productname.rich': '<span class="header-logo">PATOffice Navigator</span> <img width="130" src="/static/vendor/europatent/europatent_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
@@ -118,8 +119,8 @@ class Bootstrapper(object):
                         },
 
                     '.header-inner-left': {
-                        'margin-top': '25px',
-                        },
+                        'margin-top': '35px',
+                    },
 
                     '.header-logo': {
                         'font-size': '3em',
@@ -136,6 +137,7 @@ class Bootstrapper(object):
         if 'inav-web' in self.hostname:
             vendor_color = '#7ec622'
             dict_merge(data, {
+                'ui.productname': ' FulltextPRONavigator',
                 'ui.productname.rich': '<div class="header-logo">Navigator</div> <img width="400" src="/static/vendor/ftpro/ftpro_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
@@ -176,6 +178,7 @@ class Bootstrapper(object):
         if 'patselect' in self.hostname:
             vendor_color = 'rgba(54,127,179,0.71)'
             dict_merge(data, {
+                'ui.productname': 'SERVIVA Patselect',
                 'ui.productname.rich': '<span class="header-logo">Patselect</span> <img src="/static/vendor/serviva/serviva_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
@@ -214,6 +217,7 @@ class Bootstrapper(object):
         if 'sheldon' in self.hostname:
             vendor_color = 'rgba(128,84,120,0.8)'
             dict_merge(data, {
+                'ui.productname': 'MTC Sheldon Search',
                 'ui.productname.rich': '<span class="header-logo">Sheldon Search</span> <img width="130" src="/static/vendor/mtc/mtc_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
