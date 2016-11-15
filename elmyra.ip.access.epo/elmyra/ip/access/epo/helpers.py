@@ -184,8 +184,8 @@ class Bootstrapper(object):
         if 'patselect' in self.hostname:
             vendor_color = 'rgba(54,127,179,0.71)'
             dict_merge(data, {
-                'ui.productname': 'SERVIVA Patselect',
-                'ui.productname.rich': '<span class="header-logo">Patselect</span> <img src="/static/vendor/serviva/serviva_logo.png"/>',
+                'ui.productname': 'SERVIVA Patselect Navigator',
+                'ui.productname.rich': '<span class="header-logo">Patselect Navigator</span> <img src="/static/vendor/serviva/serviva_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
                 'ui.css': {
@@ -214,7 +214,7 @@ class Bootstrapper(object):
                         'font-variant': 'small-caps',
                         'letter-spacing': '0.05em',
                         'color': '#333',
-                        'margin-right': '0.4em',
+                        'margin-right': '0.8em',
                     },
 
                 }
