@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2016-11-15 0.125.2
+==================
+- Tune branding for patentview.ip-tools.io
+
 2016-11-15 0.125.1
 ==================
 - Tune multi-vendor branding
