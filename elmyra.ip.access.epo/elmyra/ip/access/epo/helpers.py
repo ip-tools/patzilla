@@ -95,6 +95,12 @@ class Bootstrapper(object):
             }
         }
 
+        if self.hostname == 'patentview.ip-tools.io':
+            dict_merge(data, {
+                'ui.productname': 'Patent View',
+                'ui.productname.rich': '',
+            })
+
         if 'patoffice-navigator' in self.hostname:
             vendor_color = 'rgba(96, 125, 139, 0.4)'
             dict_merge(data, {
