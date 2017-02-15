@@ -18,6 +18,7 @@ If not, see <http://www.gnu.org/licenses/agpl-3.0.en.html>.
 ----
 
 Additional remarks:
+
 - The program is also licensed under the terms of the European Union Public Licence.
   The terms of the upcoming EUPL 1.2 apply, see file "EUPL-1.2.txt".
 - The program includes third-party components from different authors,
