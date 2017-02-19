@@ -422,6 +422,8 @@ limitations under the License.
 License Notice for ZeroClipboard
 ================================
 
+https://github.com/zeroclipboard/zeroclipboard/blob/master/LICENSE
+
 Copyright (c) 2009-2016 Jon Rohan, James M. Greene
 
 The MIT License (MIT)
@@ -504,7 +506,7 @@ License Notice for jquery-keyword-highlight
 
 https://github.com/alanphoon/jquery-keyword-highlight
 
-No license information is listed.
+This project does not provide any licensing information.
 
 
 
@@ -513,7 +515,7 @@ License Notice for jQuery Redirect Plugin
 
 https://github.com/mgalante/jquery.redirect
 
-No license information is listed.
+This project does not provide any licensing information.
 
 
 
