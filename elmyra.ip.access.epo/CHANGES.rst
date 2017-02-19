@@ -9,6 +9,8 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Update branding for vendor Europatent
+
 
 2016-11-15 0.125.3
 ==================

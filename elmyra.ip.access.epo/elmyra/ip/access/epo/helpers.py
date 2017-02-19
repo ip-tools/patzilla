@@ -101,7 +101,7 @@ class Bootstrapper(object):
                 'ui.productname.rich': '',
             })
 
-        if 'patoffice-navigator' in self.hostname:
+        if 'patoffice-navigator' in self.hostname or True:
             vendor_color = 'rgba(96, 125, 139, 0.4)'
             dict_merge(data, {
                 'ui.productname': 'PATOffice Navigator',
@@ -115,13 +115,17 @@ class Bootstrapper(object):
 
                         # Page header background
                         'background-image': None,
-                        'background-color': vendor_color,
-                        'margin-bottom': '20px',
+
+                        #'background-color': vendor_color,
+                        'padding-bottom': '10px',
+                        'border-bottom': '1px solid #aaaaaa',
+
+                        'margin-bottom': '0px',
 
                         # http://www.cssmatic.com/box-shadow
-                        '-webkit-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
-                        '-moz-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
-                        'box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        #'-webkit-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        #'-moz-box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
+                        #'box-shadow': '0px 10px 7px 3px {color}'.format(color=vendor_color),
                         },
 
                     '.header-inner-left': {
