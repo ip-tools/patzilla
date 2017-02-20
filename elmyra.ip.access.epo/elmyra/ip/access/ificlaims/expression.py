@@ -155,12 +155,12 @@ class IFIClaimsExpression(object):
 
                     parts = []
                     if within_dates['startdate']:
-                        within_dates['startdate'] = iso_to_iso_compact(german_to_iso(within_dates['startdate']))
+                        within_dates['startdate'] = iso_to_iso_compact(german_to_iso(within_dates['startdate'], graceful=True))
                     else:
                         within_dates['startdate'] = '*'
 
                     if within_dates['enddate']:
-                        within_dates['enddate'] = iso_to_iso_compact(german_to_iso(within_dates['enddate']))
+                        within_dates['enddate'] = iso_to_iso_compact(german_to_iso(within_dates['enddate'], graceful=True))
                     else:
                         within_dates['enddate'] = '*'
 

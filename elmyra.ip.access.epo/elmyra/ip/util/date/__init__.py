@@ -27,6 +27,7 @@ def german_to_iso(date, graceful=False):
     except ValueError:
         if not graceful:
             raise
+        date = parse_date_iso(date)
     return date_iso(date)
 
 def datetime_iso(date):
