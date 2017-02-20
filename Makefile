@@ -48,7 +48,7 @@ js:
 		--mangle --compress \
 		> elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js
 
-	git diff --quiet --exit-code || git commit \
+	-git diff --quiet --exit-code || git commit \
 		Makefile \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js \
 		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.min.js \
