@@ -406,7 +406,7 @@
                             <div class="active item">
                                 <img src="<%= linkmaker.drawing_url() %>"
                                      alt="No drawing available."
-                                     onload="$(this).closest('.ops-collection-entry').prop('view').signalDrawingLoaded();"/>
+                                     onload="var oce_view = $(this).closest('.ops-collection-entry').prop('view'); oce_view && oce_view.signalDrawingLoaded();"/>
                             </div>
                         </div>
                         <!-- carousel navigation -->
