@@ -63,7 +63,7 @@ class Bootstrapper(object):
 
         data = {
             'ui.vendor.name': 'Elmyra',
-            'ui.vendor.copyright': u'&copy; 2013-2016, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.',
+            'ui.vendor.copyright': u'&copy; 2013-2017, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.',
             'ui.productname': 'Elmyra IP Navigator',
             'ui.productname.rich': '<span class="header-logo">Elmyra <i class="circle-icon">IP</i> Navigator</span>',
             'ui.email.purchase': 'purchase@elmyra.de',
@@ -72,7 +72,7 @@ class Bootstrapper(object):
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, FulltextPRO, IFI Claims',
+            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, FulltextPRO, <a target="_blank" class="incognito pointer action-help-ificlaims">IFI Claims</a>',
 
             'ui.css': {
                 # Page header background
@@ -101,7 +101,7 @@ class Bootstrapper(object):
                 'ui.productname.rich': '',
             })
 
-        if 'patoffice-navigator' in self.hostname or True:
+        if 'patoffice-navigator' in self.hostname:
             vendor_color = 'rgba(96, 125, 139, 0.4)'
             dict_merge(data, {
                 'ui.productname': 'PATOffice Navigator',

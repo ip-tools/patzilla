@@ -33,8 +33,9 @@ def includeme(config):
     # serve login page
     config.add_route('login', '/ops/browser/login')
 
-    # serve help page
-    config.add_route('help', '/ops/browser/help')
+    # serve help pages
+    config.add_route('help-shortcuts', '/ops/browser/help/shortcuts')
+    config.add_route('help-ificlaims', '/ops/browser/help/ificlaims')
 
     # serve application
     config.add_route('patentsearch', '/ops/browser')
@@ -338,8 +339,12 @@ def login_page(request):
     }
     return tplvars
 
-@view_config(route_name='help', renderer='elmyra.ip.access.epo:templates/help.html')
-def help_page(request):
+@view_config(route_name='help-shortcuts', renderer='elmyra.ip.access.epo:templates/help.html')
+def help_shortcuts(request):
+    return {}
+
+@view_config(route_name='help-ificlaims', renderer='elmyra.ip.access.epo:templates/help/ificlaims.html')
+def help_ificlaims(request):
     return {}
 
 def favicon_view(request):

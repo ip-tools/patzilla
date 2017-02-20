@@ -60,15 +60,27 @@ UiController = Marionette.Controller.extend({
         // ------------------------------------------
 
         // Open help in modal dialog
-        $('.action-online-help').unbind('click');
-        $('.action-online-help').on('click', function() {
+        $('.action-help-shortcuts').unbind('click');
+        $('.action-help-shortcuts').on('click', function() {
 
             // v1: modal dialog
             //$('#help-modal').modal('show');
 
             // v2: different page
             var baseurl = opsChooserApp.config.get('baseurl');
-            var url = baseurl + '/help';
+            var url = baseurl + '/help/shortcuts';
+            $(this).attr('href', url);
+        });
+
+        $('.action-help-ificlaims').unbind('click');
+        $('.action-help-ificlaims').on('click', function() {
+
+            // v1: modal dialog
+            //$('#help-modal').modal('show');
+
+            // v2: different page
+            var baseurl = opsChooserApp.config.get('baseurl');
+            var url = baseurl + '/help/ificlaims';
             $(this).attr('href', url);
         });
 

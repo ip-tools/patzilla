@@ -1,0 +1,196 @@
+## -*- coding: utf-8 -*-
+## (c) 2017 Andreas Motl, Elmyra UG
+
+<%inherit file="../site.mako" />
+
+<%block name="body">
+
+<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/bs3-list-group.css" />
+
+## title / headline
+<div class="container-fluid">
+    <div class="span6">
+        <div class="pull-left">
+            <h3 id="ui-title" style="display: inline-block">Benutzerhandbuch für die Suche bei IFI Claims</h3>
+        </div>
+    </div>
+    <div class="span3">
+        <div class="pull-right">
+            <h3 id="ui-productname">Elmyra <i class="circle-icon">IP</i> Navigator</span></h3>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="span9">
+        <h4>Komfortsuche</h4>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+    <div class="span9">
+
+        <div class="list-group">
+
+            <div class="list-group-item">
+                <!-- <h4 class="list-group-item-heading">Komfortsuche</h4> -->
+                <p class="list-group-item-text">
+                    Die Komfortsuche kann Sie wie gewohnt bei ad hoc Abfragen und bei der Erschließung der Suchausdrücke für die Expertensuche unterstützen.
+                    Eine Beispielsuche, um Patentschriften des Anmelders »BSH BOSCH UND SIEMENS HAUSGERÄTE GMBH«
+                    in Zusammenhang mit den Klassen H04L12/433 und H04L12/24 (sowohl IPC als auch CPC) zu finden, ist wie gewohnt:
+                    <br/><br/>
+<pre>
+Applicant: Siemens and Bosch
+Class:     H04L12/433 or H04L12/24
+</pre>
+                    <br/>
+
+                    Dies entspricht dem folgenden Suchausdruck im Expertenmodus,
+                    bitte beachten Sie die Syntax für die Feldtrenner (hier ":" statt "="),
+                    die Großschreibung der Booleschen Operatoren
+                    sowie die Formatierung von Klassenangaben:
+                    <br/><br/>
+                    <pre>pa:(Siemens AND Bosch) AND ((ic:H04L0012433 OR cpc:H04L0012433) OR (ic:H04L001224 OR cpc:H04L001224))</pre>
+
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="container-fluid">
+    <div class="span9">
+        <h4>Expertensuche</h4>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+    <div class="span9">
+
+        <div class="list-group">
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Boolesche Operatoren</h4>
+                <p class="list-group-item-text">
+                    Der Suchindex unterstützt AND, OR und NOT als Boolesche Operatoren.
+                    Boolesche Operatoren müssen groß geschrieben werden. Wenn sie in Kleinbuchstaben eingegeben werden, werden sie als Begriffe gesucht.
+                    <br/><br/>
+
+                    <ul>
+                        <li>
+                            <b>AND</b>
+                            <br/>
+                            Der AND-Operator findet Dokumente, wenn beide Begriffe irgendwo im Text eines einzelnen Dokuments vorhanden sind.
+                            Dies entspricht einer Schnittmenge beider Suchmengen.
+                            Für die Suche nach Dokumenten, die "solar energy" und "heating" enthalten, verwenden Sie die Abfrage:
+                            <pre>"solar energy" AND heating</pre>
+                        </li>
+                        <li>
+                            <b>NOT</b>
+                            <br/>
+                            Der NOT-Operator schließt Dokumente aus, die den Suchbegriff nach "NOT" enthalten.
+                            Dies entspricht einer Differenz von Suchmengen. Das Symbol "!" kann an Stelle des Wortes "NOT" verwendet werden.
+                            Um nach Dokumenten zu suchen, die "solar energy" aber nicht "heating" enthalten, verwenden Sie die Abfrage:
+                            <pre>"solar energy" NOT heating</pre>
+                        </li>
+                        <li>
+                            <b>OR</b>
+                            <br/>
+                            Der ODER-Operator verknüpft zwei Begriffe und findet Dokumente, wenn eines der Begriffe in einem Dokument vorhanden ist.
+                            Dies entspricht einer Vereinigung von Suchmengen. Das Zeichen "||" Kann an Stelle des Wortes "OR" verwendet werden.
+                            Um nach Dokumenten zu suchen, die entweder "solar energy" oder "wind power" enthalten, verwenden Sie die Abfrage:
+                            <pre>"solar energy" OR "wind power"</pre>
+                        </li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Suche mit Wildcards</h4>
+                <p class="list-group-item-text">
+                <ul>
+                    <li>
+                        <b>?</b>
+                        <br/>
+                        Verwenden Sie das Fragezeichen, um ein einzelnes Zeichen (eins und nur eins) am Ende oder innerhalb
+                        eines Wortes darzustellen. Um beispielsweise nach der britischen oder amerikanischen Schreibweise
+                        des Wortes "galvanisiert" zu suchen (also "galvanised" oder "galvanized"),
+                        verwenden Sie den Suchbegriff "galvani?ed".
+                    </li>
+                    <li>
+                        <b>*</b>
+                        <br/>
+                        Verwenden Sie das Sternchen, um 0 bis beliebig viele Zeichen darzustellen.
+                        Um nach "test, tests, testing, tester" usw. zu suchen, verwenden Sie den Suchbegriff "test*".
+                        Um nach "Sulphur oder Sulfur" zu suchen, verwenden Sie den Suchbegriff: "sul*ur".
+                    </li>
+                    <li>
+                        Hinweis: Sie können die Symbole * oder ? nicht als erstes Zeichen eines Suchbegriffs verwenden.
+                    </li>
+                </ul>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Phrasen</h4>
+                <p class="list-group-item-text">
+                    Eine Phrase ist eine Gruppe von Wörtern, umgeben von doppelten Anführungszeichen.
+                    Um nur die Dokumente abzurufen, die die Phrase genau so finden, wie sie gesucht wurde,
+                    platzieren Sie die Phrase in Anführungszeichen. Beispiel:
+                    <br/><br/>
+                    <pre>"fuel cell"</pre>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Wortabstand / Näherungssuche</h4>
+                <p class="list-group-item-text">
+                    Die Näherungssuche sucht nach Wörtern in Dokumenten, die in einer bestimmten Nähe zueinander liegen.
+                    Um eine Näherungssuche durchzuführen, verwenden Sie das Tilde Symbol "~" am Ende einer Phrase.
+                    Um zum Beispiel nach den Begriffen "solar" und "generation" zu suchen,
+                    die mit einem Abstand von maximal von 5 Wörtern im gleichen Dokument vorkommen, verwenden Sie den Suchausdruck:
+                    <br/><br/>
+                    <pre>"solar generation"~5</pre>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Bereichssuche</h4>
+                <p class="list-group-item-text">
+                    Bereichsabfragen beschreiben Werte zwischen der unteren und oberen Grenze zweier Ausdrücke.
+                    In einer Bereichsabfrage muss der Operator 'TO' groß geschrieben werden.
+                    Der folgende Suchausdruck findet Dokumente, deren Veröffentlichungstermine Werte
+                    zwischen einschließlich 20020101 und 20030101 enthalten:
+                    <br/><br/>
+                    <pre>pd:[20020101 TO 20030101]</pre>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Smart search: Suche ohne Operatoren oder Feldbezeichner</h4>
+                <p class="list-group-item-text">
+                    <ul>
+                        <li>
+                            Der Standard-Operator für Boolesche Operatoren ist "AND". Das bedeutet, dass, wenn kein Operator angegeben
+                            wird, das System "AND" annimmt.
+                        </li>
+                        <li>
+                            Wenn in der Abfrage kein Feld angegeben ist, bezieht sich die Suche auf Titel, Abstract, Beschreibung und Ansprüche.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</%block>
