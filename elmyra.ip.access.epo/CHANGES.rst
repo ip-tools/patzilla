@@ -9,6 +9,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Fix typo in IFI Claims documentation
 
 2017-02-20 0.126.2
 ==================
