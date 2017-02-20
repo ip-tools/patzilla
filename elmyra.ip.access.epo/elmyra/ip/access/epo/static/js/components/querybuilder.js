@@ -234,7 +234,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 whitelist.push('google');
             }
             if (opsChooserApp.config.get('ftpro_enabled')) {
-                whitelist.push('ftpro');
+                //whitelist.push('ftpro');
             }
             if (opsChooserApp.config.get('ifi_enabled')) {
                 whitelist.push('ifi');

@@ -9,7 +9,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-02-20 0.127.0
+==================
 - Fix typo in IFI Claims documentation
+- Disable data source “FulltextPRO”
 
 2017-02-20 0.126.2
 ==================
