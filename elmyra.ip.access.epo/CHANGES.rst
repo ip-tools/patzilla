@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2017-02-20 0.126.2
+==================
+- Fix date parsing for full 4-digit years with IFI Claims
+
 2017-02-20 0.126.1
 ==================
 - Fix parsing regular ISO dates with IFI Claims

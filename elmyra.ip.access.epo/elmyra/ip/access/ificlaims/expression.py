@@ -153,15 +153,17 @@ class IFIClaimsExpression(object):
                     if elements_are_years:
                         fieldname = 'pdyear'
 
-                    parts = []
-                    if within_dates['startdate']:
-                        within_dates['startdate'] = iso_to_iso_compact(german_to_iso(within_dates['startdate'], graceful=True))
                     else:
+                        if within_dates['startdate']:
+                            within_dates['startdate'] = iso_to_iso_compact(german_to_iso(within_dates['startdate'], graceful=True))
+
+                        if within_dates['enddate']:
+                            within_dates['enddate'] = iso_to_iso_compact(german_to_iso(within_dates['enddate'], graceful=True))
+
+                    if not within_dates['startdate']:
                         within_dates['startdate'] = '*'
 
-                    if within_dates['enddate']:
-                        within_dates['enddate'] = iso_to_iso_compact(german_to_iso(within_dates['enddate'], graceful=True))
-                    else:
+                    if not within_dates['enddate']:
                         within_dates['enddate'] = '*'
 
                     expression = '{fieldname}:[{startdate} TO {enddate}]'.format(fieldname=fieldname, **within_dates)
