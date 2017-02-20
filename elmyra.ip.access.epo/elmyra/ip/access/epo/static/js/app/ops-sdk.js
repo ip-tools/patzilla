@@ -207,7 +207,9 @@ var IFI_CQL_FIELDS = [
         text: '<h4>Publication</h4>',
         children: [
             { id: 'pnlang', text: _field_text_ifi('Publication language', 'pnlang', '(26)') },
-            { id: 'pd', text: _field_text_ifi('Publication date', 'pd', '(40)') },
+            { id: 'pd',     text: _field_text_ifi('Publication date', 'pd', '(40)') },
+            { id: 'pdyear', text: _field_text_ifi('Publication year', 'pdyear', '(40)') },
+            { id: 'pnctry', text: _field_text_ifi('Country of publication', 'pnctry', '(19)') },
         ],
     },
     {
@@ -305,7 +307,7 @@ var IFI_CQL_FIELDS = [
     {
         text: '<h4>Miscellaneous</h4>',
         children: [
-            { id: 'fam',    text: _field_text('Family identifier', 'fam', '') },
+            { id: 'fam',    text: _field_text_ifi('Family identifier', 'fam', '') },
         ],
     },
 ];

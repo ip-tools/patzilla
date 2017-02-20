@@ -10,6 +10,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - Update branding for vendor Europatent
+- IFI Claims: Add handbook and fix field name chooser
 
 
 2016-11-15 0.125.3

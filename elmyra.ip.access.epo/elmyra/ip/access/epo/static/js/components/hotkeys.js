@@ -210,7 +210,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
             var baseurl = _this.app.config.get('baseurl');
-            var url = baseurl + '/help';
+            var url = baseurl + '/help/shortcuts';
             window.open(url);
         });
 
