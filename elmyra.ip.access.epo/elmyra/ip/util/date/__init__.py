@@ -21,6 +21,14 @@ def date_german(date):
 def from_german(date):
     return Arrow.strptime(date, '%d.%m.%Y')
 
+def german_to_iso(date, graceful=False):
+    try:
+        date = from_german(date)
+    except ValueError:
+        if not graceful:
+            raise
+    return date_iso(date)
+
 def datetime_iso(date):
     return date.strftime('%Y-%m-%d %H:%M:%S')
 

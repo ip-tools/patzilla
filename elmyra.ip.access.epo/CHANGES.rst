@@ -11,6 +11,7 @@ development
 ===========
 - Update branding for vendor Europatent
 - IFI Claims: Add handbook and fix field name chooser
+- Make comfort search at IFI Claims accept date expressions in german format
 
 
 2016-11-15 0.125.3
