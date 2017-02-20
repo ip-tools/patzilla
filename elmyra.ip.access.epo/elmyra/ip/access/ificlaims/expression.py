@@ -6,7 +6,7 @@ import pyparsing
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results
-from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within, iso_to_iso_compact
+from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within, iso_to_iso_compact, german_to_iso
 from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.python import _exception_traceback
@@ -155,12 +155,12 @@ class IFIClaimsExpression(object):
 
                     parts = []
                     if within_dates['startdate']:
-                        within_dates['startdate'] = iso_to_iso_compact(within_dates['startdate'])
+                        within_dates['startdate'] = iso_to_iso_compact(german_to_iso(within_dates['startdate']))
                     else:
                         within_dates['startdate'] = '*'
 
                     if within_dates['enddate']:
-                        within_dates['enddate'] = iso_to_iso_compact(within_dates['enddate'])
+                        within_dates['enddate'] = iso_to_iso_compact(german_to_iso(within_dates['enddate']))
                     else:
                         within_dates['enddate'] = '*'
 
