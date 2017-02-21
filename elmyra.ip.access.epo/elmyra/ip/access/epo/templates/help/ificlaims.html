@@ -25,10 +25,39 @@
 
 <div class="container-fluid">
     <div class="span9">
+        <h4>Überblick</h4>
+    </div>
+</div>
+<div class="container-fluid">
+
+    <div class="span9">
+
+        <div class="list-group">
+
+            <div class="list-group-item">
+                <p class="list-group-item-text">
+                    Die »CLAIMS® Global Patent Database« von »IFI CLAIMS Patent Services« (gegründet 1955)
+                    ist eine kommerzielle Datenbank für Patentdokumente.
+                    <br/><br/>
+
+                    Die Datenbank enthält über 90 Millionen Patentdokumente aus über 50 nationalen und internationalen Datenquellen
+                    und durchsuchbare Volltexte für Veröffentlichungen aus 11 Patentämtern (EP, WO, US, JP, CN, KR, CA, DE, ES, RU und IN).
+                    Begleitend sind bibliographische Daten und Abstracts von 90 Patentämtern aus der DOCDB Datenbank
+                    sowie Rechtsstände von 60 Ämtern aus der INPADOC Datenbank enthalten.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container-fluid">
+    <div class="span9">
         <h4>Komfortsuche</h4>
     </div>
 </div>
-
 <div class="container-fluid">
 
     <div class="span9">
@@ -70,7 +99,6 @@ Class:     H04L12/433 or H04L12/24
         <h4>Expertensuche</h4>
     </div>
 </div>
-
 <div class="container-fluid">
 
     <div class="span9">
@@ -78,7 +106,28 @@ Class:     H04L12/433 or H04L12/24
         <div class="list-group">
 
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">Boolesche Operatoren</h4>
+                <h4 class="list-group-item-heading">Generelle Regeln</h4>
+                <p class="list-group-item-text">
+                    <ul>
+                        <li>
+                            Feldnamen sind case sensitive, bitte verwenden Sie immer Kleinbuchstaben.
+                        </li>
+                        <li>
+                            Operatoren müssen groß geschrieben werden (z.B. AND, OR, NOT, TO).
+                        </li>
+                        <li>
+                            Anführungszeichen, die verwendet werden, um Phrasen einzuschließen,
+                            müssen "gerade Anführungszeichen" sein.
+                            Dies ist manchmal ein Problem, wenn Sie Daten per copy/paste aus
+                            einer anderen Quelle einfügen, wo „intelligente Anführungszeichen“
+                            verwendet worden sein könnten.
+                        </li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Operatoren</h4>
                 <p class="list-group-item-text">
                     Der Suchindex unterstützt AND, OR und NOT als Boolesche Operatoren.
                     Boolesche Operatoren müssen groß geschrieben werden. Wenn sie in Kleinbuchstaben eingegeben werden, werden sie als Begriffe gesucht.
@@ -123,14 +172,18 @@ Class:     H04L12/433 or H04L12/24
                         Verwenden Sie das Fragezeichen, um ein einzelnes Zeichen (eins und nur eins) am Ende oder innerhalb
                         eines Wortes darzustellen. Um beispielsweise nach der britischen oder amerikanischen Schreibweise
                         des Wortes "galvanisiert" zu suchen (also "galvanised" oder "galvanized"),
-                        verwenden Sie den Suchbegriff "galvani?ed".
+                        verwenden Sie den Suchausdruck:
+                        <br/>
+                        <pre>text:"galvani?ed"</pre>
                     </li>
                     <li>
                         <b>*</b>
                         <br/>
                         Verwenden Sie das Sternchen, um 0 bis beliebig viele Zeichen darzustellen.
                         Um nach "test, tests, testing, tester" usw. zu suchen, verwenden Sie den Suchbegriff "test*".
-                        Um nach "Sulphur oder Sulfur" zu suchen, verwenden Sie den Suchbegriff: "sul*ur".
+                        Um beispielsweise nach "Sulphur oder Sulfur" zu suchen, verwenden Sie den Suchausdruck:
+                        <br/>
+                        <pre>text:"sul*ur"</pre>
                     </li>
                     <li>
                         Hinweis: Sie können die Symbole * oder ? nicht als erstes Zeichen eines Suchbegriffs verwenden.
@@ -140,7 +193,7 @@ Class:     H04L12/433 or H04L12/24
             </div>
 
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">Phrasen</h4>
+                <h4 class="list-group-item-heading">Suche nach Phrasen</h4>
                 <p class="list-group-item-text">
                     Eine Phrase ist eine Gruppe von Wörtern, umgeben von doppelten Anführungszeichen.
                     Um nur die Dokumente abzurufen, die die Phrase genau so finden, wie sie gesucht wurde,
@@ -151,7 +204,7 @@ Class:     H04L12/433 or H04L12/24
             </div>
 
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">Wortabstand / Näherungssuche</h4>
+                <h4 class="list-group-item-heading">Suche mit Wortabstand (Näherungssuche)</h4>
                 <p class="list-group-item-text">
                     Die Näherungssuche sucht nach Wörtern in Dokumenten, die in einer bestimmten Nähe zueinander liegen.
                     Um eine Näherungssuche durchzuführen, verwenden Sie das Tilde Symbol "~" am Ende einer Phrase.
@@ -163,7 +216,34 @@ Class:     H04L12/433 or H04L12/24
             </div>
 
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">Bereichssuche</h4>
+                <h4 class="list-group-item-heading">Suche mit Wortabstand und Trunkierung</h4>
+                <p class="list-group-item-text">
+                    Um Suchausdrücke mit Wortabstand und Trunkierung zu kombinieren, muss dem Ausdruck die Zeichenkette
+                    <pre>{!complexphrase}</pre> vorangestellt werden.
+                    Die spezifische Syntax ist "{!complexphrase}[field name]:[query]".
+                    <br/><br/>
+
+                    Für eine Suche nach Dokumenten im Zusammenhang mit Solarenergiespeichermodulen
+                    könnte sich der folgende Suchausdruck eignen:
+                    <br/>
+                    <pre>{!complexphrase}text:"solar AND energy AND stor* AND modul*"~6</pre>
+                    <br/>
+
+                    Während die Standardvariante dieser Suche Wörter in der angegebenen Reihenfolge findet,
+                    ist es auch möglich, nach einer Phrase zu suchen, die dieselben Wörter in beliebiger Reihenfolge enthält:
+                    <br/>
+                    <pre>{!complexphrase inOrder=false}text:"solar AND energy AND stor* AND modul*"~6</pre>
+                    <br/>
+
+                    Für die Suche nach Dokumenten, die Informationen über thermische Barrieren enthalten,
+                    können Sie eine komplexe Phrasensuche wie folgt verwenden:
+                    <br/>
+                    <pre>{!complexphrase}text:"(thermal OR thermic OR thermo) barrier*"~8</pre>
+                </p>
+            </div>
+
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Suche in Wertebereichen</h4>
                 <p class="list-group-item-text">
                     Bereichsabfragen beschreiben Werte zwischen der unteren und oberen Grenze zweier Ausdrücke.
                     In einer Bereichsabfrage muss der Operator 'TO' groß geschrieben werden.
