@@ -10,6 +10,11 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2017-02-22 0.128.0
+==================
+- Update IFI Claims documentation
+- Add vendor branding for Europatent
+
 2017-02-20 0.127.0
 ==================
 - Fix typo in IFI Claims documentation
