@@ -101,7 +101,9 @@ class Bootstrapper(object):
                 'ui.productname.rich': '',
             })
 
-        if 'patoffice-navigator' in self.hostname:
+        if 'patoffice-navigator' in self.hostname or \
+            self.hostname.endswith('.europatent.net') or \
+            self.hostname.endswith('.patoffice.de'):
             vendor_color = 'rgba(96, 125, 139, 0.4)'
             dict_merge(data, {
                 'ui.productname': 'PATOffice Navigator',
