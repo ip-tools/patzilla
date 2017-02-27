@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
+# (c) 2014-2017 Andreas Motl, Elmyra UG
 import ago
 import arrow
+import logging
 import datetime
 from arrow.arrow import Arrow
 from dateutil.relativedelta import relativedelta
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 def now():
     return datetime.datetime.now()
@@ -29,6 +33,22 @@ def german_to_iso(date, graceful=False):
             raise
         date = parse_date_iso(date)
     return date_iso(date)
+
+def parse_date_universal(datestring):
+    formats = [
+        '%d.%m.%Y',     # german
+        '%Y-%m-%d',     # ISO
+        '%Y%m%d',       # ISO, compact
+        '%Y',           # Year only
+    ]
+    for format in formats:
+        logger.debug("Trying to parse date '{}' with format '{}'".format(datestring, format))
+        try:
+            parsed = Arrow.strptime(datestring, format)
+            logger.debug("Successfully parsed date '{}' with format '{}': {}".format(datestring, format, parsed))
+            return parsed
+        except:
+            pass
 
 def datetime_iso(date):
     return date.strftime('%Y-%m-%d %H:%M:%S')
