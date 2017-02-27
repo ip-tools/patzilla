@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2016 Andreas Motl, Elmyra UG
+# (c) 2015-2017 Andreas Motl, Elmyra UG
 import types
 import logging
 import pyparsing
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results
-from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within, iso_to_iso_compact, german_to_iso
+from elmyra.ip.util.date import parse_date_within, year_range_to_within, parse_date_universal
 from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.python import _exception_traceback
@@ -141,12 +141,20 @@ class IFIClaimsExpression(object):
 
             try:
 
+                parsed = False
+
+                # e.g. 1991
                 if len(value) == 4 and value.isdigit():
                     fieldname = 'pdyear'
+                    parsed = True
 
                 # e.g. 1990-2014, 1990 - 2014
                 value = year_range_to_within(value)
 
+                # e.g.
+                # within 1978,1986
+                # within 1900,2009-08-20
+                # within 2009-08-20,2011-03-03
                 if 'within' in value:
                     within_dates = parse_date_within(value)
                     elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
@@ -155,10 +163,10 @@ class IFIClaimsExpression(object):
 
                     else:
                         if within_dates['startdate']:
-                            within_dates['startdate'] = iso_to_iso_compact(german_to_iso(within_dates['startdate'], graceful=True))
+                            within_dates['startdate'] = parse_date_universal(within_dates['startdate']).format('YYYYMMDD')
 
                         if within_dates['enddate']:
-                            within_dates['enddate'] = iso_to_iso_compact(german_to_iso(within_dates['enddate'], graceful=True))
+                            within_dates['enddate'] = parse_date_universal(within_dates['enddate']).format('YYYYMMDD')
 
                     if not within_dates['startdate']:
                         within_dates['startdate'] = '*'
@@ -168,8 +176,8 @@ class IFIClaimsExpression(object):
 
                     expression = '{fieldname}:[{startdate} TO {enddate}]'.format(fieldname=fieldname, **within_dates)
 
-                else:
-                    value = iso_to_iso_compact(value)
+                elif not parsed:
+                    value = parse_date_universal(value).format('YYYYMMDD')
 
             except Exception as ex:
                 message = 'IFI query: Invalid date or range expression "{0}". Reason: {1}'.format(value, ex)
@@ -211,7 +219,7 @@ class IFIClaimsExpression(object):
         #   surround with parentheses
         # ------------------------------------------
         if key in ['fulltext', 'inventor', 'applicant', 'country', 'citation']:
-            if has_booleans(value) and not should_be_quoted(value):
+            if has_booleans(value) and not should_be_quoted(value) and not '{!complexphrase}' in value:
                 value = u'({0})'.format(value)
 
         # ------------------------------------------
@@ -219,7 +227,10 @@ class IFIClaimsExpression(object):
         # ------------------------------------------
         # Serialize into appropriate upstream datasource query expression syntax
         if not expression:
-            expression = format_expression(format, fieldname, value)
+            if key == 'fulltext' and '{!complexphrase}' in value:
+                expression = value
+            else:
+                expression = format_expression(format, fieldname, value)
             #print 'expression:', expression
 
         # ------------------------------------------

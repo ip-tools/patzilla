@@ -10,6 +10,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2017-02-27 0.128.2
+==================
+- Improve datetime and fulltext parsing for IFI Claims
+
 2017-02-27 0.128.1
 ==================
 - Improve IFI Claims interface and documentation re. “maxClauseCount is set to …” error messages
