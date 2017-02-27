@@ -239,6 +239,18 @@ Class:     H04L12/433 or H04L12/24
                     können Sie eine komplexe Phrasensuche wie folgt verwenden:
                     <br/>
                     <pre>{!complexphrase}text:"(thermal OR thermic OR thermo) barrier*"~8</pre>
+                    <hr/>
+                    <b>Einschränkungen</b>
+                    <br/>
+                    Diese Abfragevariante ist sensibel auf die Anzahl der eindeutigen Begriffe, die mit einem Muster verbunden sind.
+                    Das System erzeugt vor der Abfrage im Hintergrund einen Suchausdruck, in dem alle auf das Muster passenden Begriffe
+                    per <span class="monospace">"OR"</span> verknüpft werden.
+                    Zum Beispiel wird die Suche nach <span class="monospace">"a*"</span> eine große <span class="monospace">"OR"</span>-Klausel
+                    für alle Begriffe erzeugen, die mit dem einzelnen Buchstaben <span class="monospace">"a"</span> beginnen.
+                    <br/>
+                    Es kann klug sein, Wildcards auf mindestens zwei oder vorzugsweise drei Buchstaben als Präfix zu beschränken.
+                    Die Verwendung von sehr kurzen Präfixen kann dazu führen, dass viele Dokumente mit geringer Qualität zurückgegeben werden
+                    oder die Fehlermeldung "Too many terms in phrase expression, wildcard term prefixes might by too short." ausgelöst wird.
                 </p>
             </div>
 
