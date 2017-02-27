@@ -119,6 +119,10 @@ class IFIClaimsClient(GenericSearchClient):
                 # Handle search expression errors
                 if 'error' in upstream_response['content']:
                     upstream_error = upstream_response['content']['error']
+                    if upstream_error["code"] == 500 and u'maxClauseCount is set to' in upstream_error["msg"]:
+                        upstream_error["msg"] = \
+                            u'Too many terms in phrase expression, wildcard term prefixes might by too short.<br/>' + \
+                            upstream_error["msg"]
                     message = u'{msg} (code={code})'.format(**upstream_error)
                     raise SyntaxError(message)
 
