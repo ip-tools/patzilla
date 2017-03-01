@@ -9,6 +9,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- IFI Claims: Properly respond to “no servers hosting shard” error messages
 
 2017-02-27 0.128.2
 ==================
