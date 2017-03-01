@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 #
 # Lowlevel adapter to search provider "IFI Claims Direct"
 #
@@ -113,22 +113,36 @@ class IFIClaimsClient(GenericSearchClient):
         if response.status_code == 200:
             #print "response:", response.content        # debugging
 
-            upstream_response = self._search_parse_json(response.content)
-            if upstream_response:
+            response_data = json.loads(response.content)
+            if response_data['status'] == 'success':
+
+                # Debugging: Simulate error
+                #response_data['content']['error'] = {'code': 503, 'msg': 'no servers hosting shard'}
 
                 # Handle search expression errors
-                if 'error' in upstream_response['content']:
-                    upstream_error = upstream_response['content']['error']
+                if 'error' in response_data['content']:
+                    upstream_error = response_data['content']['error']
+
+                    # Enrich "maxClauseCount" message
                     if upstream_error["code"] == 500 and u'maxClauseCount is set to' in upstream_error["msg"]:
                         upstream_error["msg"] = \
-                            u'Too many terms in phrase expression, wildcard term prefixes might by too short.<br/>' + \
+                            u'Too many terms in phrase expression, wildcard term prefixes might by too short.\n<br/>' + \
                             upstream_error["msg"]
-                    message = u'{msg} (code={code})'.format(**upstream_error)
-                    raise SyntaxError(message)
+
+                        message = u'{msg} (code={code})'.format(**upstream_error)
+                        raise SyntaxError(message)
+
+                    # Enrich "no servers hosting shard" message
+                    if upstream_error["code"] == 503 and u'no servers hosting shard' in upstream_error["msg"]:
+                        message = u'{msg} (code={code})'.format(**upstream_error)
+                        raise self.search_failed(
+                            user_info=u'Error while connecting to upstream database. Database might be offline.',
+                            message=message,
+                            response=response)
 
                 # Mogrify search response
                 # TODO: Generalize between all search backends
-                sr = IFIClaimsSearchResponse(upstream_response, options=options)
+                sr = IFIClaimsSearchResponse(response_data, options=options)
                 result = sr.render()
                 duration = round(duration, 1)
 
@@ -141,6 +155,9 @@ class IFIClaimsClient(GenericSearchClient):
                         duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
                 return result
+
+            elif response_data['status'] == 'error':
+                raise self.search_failed(response_data['message'], response=response)
 
             else:
                 raise self.search_failed('Search response could not be parsed', response=response)
@@ -379,11 +396,6 @@ class IFIClaimsClient(GenericSearchClient):
         else:
             error = LoginException('Could not read token information from login response', response_body=body)
             raise error
-
-    def _search_parse_json(self, body):
-        data = json.loads(body)
-        if data['status'] == 'success':
-            return data
 
 
 class IFIClaimsSearchResponse(GenericSearchResponse):
