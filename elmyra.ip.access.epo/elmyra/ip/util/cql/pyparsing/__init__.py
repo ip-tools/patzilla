@@ -58,14 +58,14 @@ class CQL(object):
             # make sure the whole query is parsed, otherwise croak
             tokens = self.grammar().parser.parseString(self.cql, parseAll=True)
             #if self.logging:
-            #    log.info('tokens: %s', tokens.pformat())
+            #    log.info(u'tokens: %s', tokens.pformat())
 
         except pyparsing.ParseException as ex:
-            ex.explanation = '%s\n%s\n%s' % (ex.pstr, ' ' * ex.loc + '^\n', ex)
+            ex.explanation = u'%s\n%s\n%s' % (ex.pstr, u' ' * ex.loc + u'^\n', ex)
             #if self.logging:
             #    log.error('\n%s', ex.explanation)
-            log.warning('Query expression "{query}" is invalid. ' \
-                        'Reason: {reason}\n{location}'.format(
+            log.warning(u'Query expression "{query}" is invalid. ' \
+                        u'Reason: {reason}\n{location}'.format(
                 query=self.cql, reason=unicode(ex), location=ex.explanation))
             raise
 

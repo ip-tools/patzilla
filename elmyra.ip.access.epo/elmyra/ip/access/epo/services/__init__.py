@@ -47,14 +47,14 @@ def cql_prepare_query(query, grammar=None, keyword_fields=None):
 def propagate_keywords(request, query_object):
     """propagate keywords to client for highlighting"""
     if query_object:
-        if type(query_object) is CQL:
-            origin = 'cql'
+
+        try:
             keywords = query_object.keywords()
-            # TODO: how to build a unique list of keywords? the list now can contain lists (TypeError: unhashable type: 'list')
-            # possible solution: iterate list, convert lists to tuples, then list(set(keywords)) is possible
-        else:
-            origin = 'compute'
+            origin = 'cql'
+
+        except AttributeError:
             keywords = compute_keywords(query_object)
+            origin = 'compute'
 
         # List of keywords should contain only unique items, if possible
         keywords = unique_sequence(keywords)
