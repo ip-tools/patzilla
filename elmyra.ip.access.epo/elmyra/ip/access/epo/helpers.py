@@ -72,7 +72,7 @@ class Bootstrapper(object):
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, FulltextPRO, <a target="_blank" class="incognito pointer action-help-ificlaims">IFI Claims</a>',
+            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, <a target="_blank" class="incognito pointer action-help-ificlaims">IFI Claims</a>',
 
             'ui.css': {
                 # Page header background

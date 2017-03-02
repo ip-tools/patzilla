@@ -7,9 +7,9 @@ https://github.com/astraw/stdeb/blob/master/stdeb/transport.py
 Usage:
 
     >>> import xmlrpclib
-    >>> from transport import RequestsTransport
+    >>> #from transport import RequestsTransport
     >>> s = xmlrpclib.ServerProxy('http://yoursite.com/xmlrpc', transport=RequestsTransport())
-    >>> s.demo.sayHello()
+    >>> #s.demo.sayHello()
     Hello!
 """
 try:
