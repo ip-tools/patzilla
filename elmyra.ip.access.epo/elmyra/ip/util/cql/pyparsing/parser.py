@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
+# (c) 2014-2017 Andreas Motl, Elmyra UG
 #
 # CQL grammar based on pyparsing
 # https://en.wikipedia.org/wiki/Contextual_Query_Language
@@ -24,7 +24,7 @@ from pyparsing import \
     oneOf, upcaseTokens, delimitedList, restOfLine, \
     Forward, Group, Combine, Optional, ZeroOrMore, OneOrMore, \
     NotAny, Suppress, FollowedBy, StringEnd, \
-    ParseResults, ParseException
+    ParseResults, ParseException, removeQuotes
 from elmyra.ip.util.cql.pyparsing.util import get_literals
 
 
@@ -67,6 +67,9 @@ separators = u'/,.-'
 # all unicode characters
 # http://stackoverflow.com/questions/2339386/python-pyparsing-unicode-characters/2340659#2340659
 unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isalnum() and not unichr(c).isspace())
+
+# indexchars
+indexchars = alphanums + '{}!'
 
 
 # ------------------------------------------
@@ -139,9 +142,18 @@ class CQLGrammar(object):
         # ------------------------------------------
         #   D. triple
         # ------------------------------------------
+
         index = Word(alphanums).setName("index")
+
+        #index = Word(indexchars).setName("index")
+        #SolrProximitySuffix = Suppress(Optional(Word('~') + Word(nums)))
+
         binop = oneOf(self.binop_symbols, caseless=True).setName("binop")
         term = (
+
+            # Attempt to parse {!complexphrase}text:"((aussto* OR eject* OR pusher*) AND (verriegel* OR lock* OR sperr*))"~6 ...
+            # ... but failed.
+            #Combine(quotedString.setParseAction(removeQuotes) + SolrProximitySuffix).setName("term") ^
 
             # term is a quoted string, easy peasy
             quotedString.setName("term") ^

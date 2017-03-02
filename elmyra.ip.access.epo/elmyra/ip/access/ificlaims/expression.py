@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2017 Andreas Motl, Elmyra UG
+import re
 import types
 import logging
 import pyparsing
+from elmyra.ip.access.epo.services import cql_prepare_query
 from elmyra.ip.util.cql.pyparsing import CQL
 from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
 from elmyra.ip.util.cql.pyparsing.util import walk_token_results
+from elmyra.ip.util.data.container import unique_sequence
 from elmyra.ip.util.date import parse_date_within, year_range_to_within, parse_date_universal
 from elmyra.ip.util.ipc.parser import IpcDecoder
 from elmyra.ip.util.numbers.normalize import normalize_patent
@@ -18,6 +21,55 @@ class IFIClaimsGrammar(CQLGrammar):
     def preconfigure(self):
         CQLGrammar.preconfigure(self)
         self.cmp_single = u':'.split()
+
+class IFIClaimsParser(object):
+
+    def __init__(self, expression=None, modifiers=None):
+        self.expression = expression
+        self.query_object = None
+
+    def parse(self):
+
+        if self.query_object:
+            return self
+
+        # Parse expression, extract and propagate keywords
+        self.query_object, query_recompiled = cql_prepare_query(
+            self.expression, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
+
+        return self
+
+    def rewrite_classes_ops(self):
+        # Rewrite all patent classifications from IFI format to OPS format
+        # e.g. "G01F000184" to "G01F1/84"
+        rewrite_classes_ops(self.query_object)
+        return self
+
+    def dumps(self):
+        self.parse()
+        return self.query_object.dumps()
+
+    def trim_complexphrase(self):
+        """
+        Converts expressions with proximity operators to ones without them, like:
+        before: {!complexphrase}text:("parallel* AND schalt*"~6 AND "antrieb* AND stufe*"~3)
+        after:  {!complexphrase}text:((parallel* AND schalt*) AND (antrieb* AND stufe*))
+        """
+        #print >>sys.stderr, 'expression-before:', self.expression
+        self.expression = re.sub(u'"(.+?)"~\d+', u'(\\1)', self.expression)
+        #print >>sys.stderr, 'expression-after :', self.expression
+
+    def keywords(self):
+        self.trim_complexphrase()
+        self.parse()
+        self.rewrite_classes_ops()
+
+        keywords = self.query_object.keywords()
+
+        # List of keywords should contain only unique items
+        keywords = unique_sequence(keywords)
+
+        return keywords
 
 class IFIClaimsExpression(object):
 
@@ -46,6 +98,11 @@ class IFIClaimsExpression(object):
     fieldnames = [
         'pn', 'text', 'ic', 'cpc',
         'pnlang', 'pd',
+
+        # We don't want keywords for two-letter country-codes
+        #'pnctry',
+
+        '{!complexphrase}text',
 
         # Parties
         'pa',

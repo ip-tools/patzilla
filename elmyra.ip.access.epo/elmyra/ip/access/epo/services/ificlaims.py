@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2016 Andreas Motl, Elmyra UG
+# (c) 2015-2017 Andreas Motl, Elmyra UG
 #
 # Cornice services for search provider "IFI Claims Direct"
 #
@@ -11,12 +11,12 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from elmyra.ip.access.epo.services import cql_prepare_query, propagate_keywords
+from elmyra.ip.access.epo.services import propagate_keywords
 from elmyra.ip.access.epo.services.util import request_to_options
 from elmyra.ip.access.generic.exceptions import NoResultsException, SearchException
 from elmyra.ip.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
 from elmyra.ip.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl
-from elmyra.ip.access.ificlaims.expression import should_be_quoted, IFIClaimsGrammar, IFIClaimsExpression, rewrite_classes_ops
+from elmyra.ip.access.ificlaims.expression import should_be_quoted, IFIClaimsParser
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.data.zip import zip_multi
 from elmyra.ip.util.python import _exception_traceback
@@ -124,16 +124,9 @@ def ificlaims_published_data_search_handler(request):
     query = request.params.get('query', '')
     log.info('query raw: ' + query)
 
-    # Parse expression, extract and propagate keywords
-    query_object, query_recompiled = cql_prepare_query(
-        query, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
-
-    # Rewrite all patent classifications from IFI format to OPS format
-    # e.g. "G01F000184" to "G01F1/84"
-    rewrite_classes_ops(query_object)
-
-    # Propagate keywords to user interface
-    propagate_keywords(request, query_object)
+    # Parse expression, extract and propagate keywords to user interface
+    parser = IFIClaimsParser(query)
+    propagate_keywords(request, parser)
 
     # Fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
     if should_be_quoted(query):
