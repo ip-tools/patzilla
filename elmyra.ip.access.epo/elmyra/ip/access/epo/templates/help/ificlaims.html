@@ -239,7 +239,15 @@ Class:     H04L12/433 or H04L12/24
                     können Sie eine komplexe Phrasensuche wie folgt verwenden:
                     <br/>
                     <pre>{!complexphrase}text:"(thermal OR thermic OR thermo) barrier*"~8</pre>
+                    <br/>
+
+                    Um <span class="monospace">"complexphrase"</span> Ausdrücke miteinander zu verschneiden,
+                    können Sie sich an folgender Struktur orientieren:
+                    <br/>
+                    <pre>{!complexphrase}text:("parallel* AND schalt*"~6 AND "antrieb* AND stufe*"~3)</pre>
+
                     <hr/>
+
                     <b>Einschränkungen</b>
                     <br/>
                     Diese Abfragevariante ist sensibel auf die Anzahl der eindeutigen Begriffe, die mit einem Muster verbunden sind.
