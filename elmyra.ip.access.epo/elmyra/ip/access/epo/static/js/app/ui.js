@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2017 Andreas Motl, Elmyra UG
 
 UiController = Marionette.Controller.extend({
 
@@ -101,7 +101,7 @@ UiController = Marionette.Controller.extend({
                 what: 'feature',
                 remark: 'It would be cool, if ...',
                 // TODO: What about other targets like "log:error", "log:warning", "human:support", "human:user"?
-                targets: 'human',
+                targets: 'email:support',
             });
         });
 
@@ -471,10 +471,6 @@ UiController = Marionette.Controller.extend({
         var address_more = 'subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
         var address = address_email + '?' + address_more;
         $('<iframe src="' + address + '">').appendTo('body').css('display', 'none');
-    },
-
-    open_support_email: function(subject, body) {
-        this.open_email('support@elmyra.de', 'Elmyra Navigator: ' + subject, body);
     },
 
     pdf_icon: function() {

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2016-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import logging
 from email.utils import formataddr
 from validate_email import validate_email
 from pyramid.threadlocal import get_current_request
-from elmyra.ip.util.config import read_config, read_list
+from elmyra.ip.util.config import read_config, read_list, to_list
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.email.message import EmailMessage
 
@@ -26,8 +26,12 @@ def message_factory(**kwargs):
     if 'reply' in settings['email']:
         message.add_reply(read_list(settings['email']['reply']))
 
-    if 'recipients_human' in settings['email']:
-        message.add_recipient(read_list(settings['email']['recipients_human']))
+    if 'recipients' in kwargs:
+        for recipient in kwargs['recipients']:
+            if recipient in settings['email-recipients']:
+                message.add_recipient(read_list(settings['email-recipients'][recipient]))
+            else:
+                log.warn('Could not add recipient {}'.format(recipient))
 
     # Extend "Reply-To" address by email address of user
     # TODO: Maybe add current user also to _recipients_?
@@ -50,7 +54,9 @@ def message_factory(**kwargs):
     return message
 
 
-def email_issue_report(report):
+def email_issue_report(report, recipients):
+
+    recipients = to_list(recipients)
 
     identifier = None
     if isinstance(report, SmartBunch):
@@ -71,9 +77,10 @@ def email_issue_report(report):
     # Add JSON report as attachment
     files = {u'report.json': report.pretty()}
 
-    email = message_factory()
+    email = message_factory(recipients=recipients)
     email.send(
         subject     = subject,
         message     = message,
         files       = files
     )
+
