@@ -28,7 +28,7 @@ class GenericAdapterException(Exception):
         message_parts = []
         if hasattr(self, 'user_info'):
             #message_parts.append(ex.user_info)
-            message['user'] = self.user_info
+            message['user'] = self.user_info.replace('\n', '<br/>')
         if hasattr(self, 'message'):
             message_parts.append(cgi.escape(self.__class__.__name__ + ': ' + unicode(self.message)))
         if hasattr(self, 'details'):

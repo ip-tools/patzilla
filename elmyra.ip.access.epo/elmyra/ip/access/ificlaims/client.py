@@ -88,6 +88,7 @@ class IFIClaimsClient(GenericSearchClient):
         # Define search request parameters
         # 'family.simple': True,
         params  = {'q': expression, 'fl': 'ucid,fam', 'start': offset, 'rows': limit, 'sort': 'pd desc, ucid asc'}
+        # , 'fq': 'pd:[19000101 TO 20090820]'
 
         log.info(u'IFI search. expression={expression}, uri={uri}, params={params}, options={options}'.format(
             expression=expression, uri=uri, params=params, options=options.dump()))
@@ -122,22 +123,35 @@ class IFIClaimsClient(GenericSearchClient):
                 # Handle search expression errors
                 if 'error' in response_data['content']:
                     upstream_error = response_data['content']['error']
+                    message = u'{msg} (code={code})'.format(**upstream_error)
 
-                    # Enrich "maxClauseCount" message
+                    # Enrich "maxClauseCount" message, e.g. raised by {!complexphrase}text:"auto* AND leucht*"~5
                     if upstream_error["code"] == 500 and u'maxClauseCount is set to' in upstream_error["msg"]:
-                        upstream_error["msg"] = \
-                            u'Too many terms in phrase expression, wildcard term prefixes might by too short.\n<br/>' + \
-                            upstream_error["msg"]
-
-                        message = u'{msg} (code={code})'.format(**upstream_error)
-                        raise SyntaxError(message)
+                        raise self.search_failed(
+                            user_info=u'Too many terms in phrase expression, wildcard term prefixes might by too short.',
+                            message=message,
+                            response=response)
 
                     # Enrich "no servers hosting shard" message
-                    if upstream_error["code"] == 503 and u'no servers hosting shard' in upstream_error["msg"]:
-                        message = u'{msg} (code={code})'.format(**upstream_error)
+                    elif upstream_error["code"] == 503 and u'no servers hosting shard' in upstream_error["msg"]:
                         raise self.search_failed(
                             user_info=u'Error while connecting to upstream database. Database might be offline.',
                             message=message,
+                            response=response)
+
+                    # Enrich "SyntaxError" exception
+                    elif upstream_error["code"] == 400 and u'ParseException' in upstream_error["msg"]:
+                        user_info = upstream_error['msg'].replace(
+                            'org.apache.solr.search.SyntaxError: org.apache.lucene.queryparser.classic.ParseException:',
+                            'SyntaxError:')
+                        raise self.search_failed(
+                            user_info=user_info,
+                            message=message,
+                            response=response)
+
+                    else:
+                        raise self.search_failed(
+                            user_info=message,
                             response=response)
 
                 # Mogrify search response
