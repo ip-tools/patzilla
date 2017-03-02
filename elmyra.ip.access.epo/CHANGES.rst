@@ -2,11 +2,6 @@
 elmyra.ip.access.epo CHANGES
 ============================
 
-- BREAKING CHANGES with DEPATISnet comfort form wildcards.
-  Before: A47K?
-  After:  A47K*
-
-
 development
 ===========
 - IFI Claims: Properly respond to “no servers hosting shard” error messages
