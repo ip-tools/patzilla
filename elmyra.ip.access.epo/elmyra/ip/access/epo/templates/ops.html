@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-## (c) 2013-2015 Andreas Motl, Elmyra UG
+## (c) 2013-2017 Andreas Motl, Elmyra UG
 
 ## ------------------------------------------
 ##   ops document collection template
@@ -675,11 +675,20 @@
             <!-- actions -->
             <div class="span7 container-fluid document-actions">
                 <div class="alert alert-error alert-block">
-                    En error occurred when displaying this document:
+                    En error occurred when displaying the document '<%= patent_number %>', please report this problem to us.
                     <br/>
-                    <%= error_message %>
+                    Error message: <%= error_message %>
+                    <br/><br/><br/>
+                    <button
+                            class="btn btn-danger report-issue-problem pull-right"
+                            data-report-origin="result"
+                            data-report-kind="not-available"
+                            data-report-item="<%= patent_number %>"
+                            data-dialog-remark="En error occurred when displaying the document '<%= patent_number %>': <%= error_message %>."
+                            >
+                        Report problem
+                    </button>
                     <br/><br/>
-                    <a href="mailto:support@elmyra.de?subject=<%= encodeURIComponent('Elmyra IP Navigator: ' + subject)%>&body=<%= encodeURIComponent(body) %>" role="button" class="btn">Help to improve the system</a>
                 </div>
             </div>
 

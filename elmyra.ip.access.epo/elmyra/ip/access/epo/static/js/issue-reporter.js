@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2016 Andreas Motl, Elmyra UG
+// (c) 2016-2017 Andreas Motl, Elmyra UG
 
 IssueReporter = Backbone.Model.extend({
 
@@ -159,16 +159,20 @@ IssueReporterGui = Backbone.Model.extend({
 
     problem: function(options) {
 
+        options = options || {};
+
         options.what   = 'problem';
         options.remark = 'We experienced a problem with ...';
 
         // TODO: What about other targets like "log:error", "log:warning", "human:support", "human:user"?
-        options.targets = 'human';
+        options.targets = 'email:support';
 
         this.dialog(options);
     },
 
     dialog: function(options) {
+
+        options = options || {};
 
         var dialog = $('#issue-reporter-dialog');
 
@@ -235,10 +239,6 @@ IssueReporterGui = Backbone.Model.extend({
 
         var element = options.element;
 
-        // v1: naive
-        //opsChooserApp.ui.open_support_email('Problem when displaying document <%= document_number %>', $('#<%= report_text_id %> textarea').val());
-
-        // v2: enhanced
         var issue = new IssueReport({
             dialog: options.dialog,
             location: {
@@ -265,7 +265,7 @@ IssueReporterGui = Backbone.Model.extend({
         }).fail(function() {
             spinner.hide();
             opsChooserApp.ui.user_alert(
-                'Report failed. Please get back to us via support@elmyra.de.', 'error', status_text);
+                'Automatic system report failed. Please get back to us via vendor contact address.', 'error', status_text);
         });
     },
 
@@ -273,4 +273,4 @@ IssueReporterGui = Backbone.Model.extend({
 
 var issueReporter = new IssueReporter();
 //issueReporter.setup_stacktrace_interceptor({targets: 'log'});
-issueReporter.setup_stacktrace_interceptor({targets: 'log,human'});
+issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});

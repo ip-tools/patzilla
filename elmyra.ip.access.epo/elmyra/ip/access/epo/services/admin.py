@@ -20,7 +20,7 @@ admin_users_emails_service = Service(
 def admin_users_emails_handler(request):
     tag = request.params.get('tag')
     users = User.objects()
-    user_emails = ['support@elmyra.de']
+    user_emails = []
     for user in users:
         if '@' not in user.username:
             continue

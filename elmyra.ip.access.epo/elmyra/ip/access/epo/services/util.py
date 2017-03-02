@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import re
 import json
 import logging
@@ -14,6 +14,7 @@ from elmyra.ip.access.google.search import GooglePatentsExpression
 from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.navigator.export import Dossier, DossierXlsx
+from elmyra.ip.util.config import read_list
 from elmyra.ip.util.cql.util import pair_to_cql
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
@@ -311,6 +312,8 @@ def issue_reporter_handler(request):
     # TODO: What about other targets like "log:error", "log:warning", "human:support", "human:user"?
 
     # Send email report
-    if 'human' in targets:
-        email_issue_report(report)
+    for target in read_list(targets):
+        if target.startswith('email:'):
+            recipient = target.replace('email:', '')
+            email_issue_report(report, recipient)
 
