@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Fix support email delivery
 
 2017-03-02 0.129.0
 ==================

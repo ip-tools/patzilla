@@ -94,7 +94,7 @@ class EmailMessage(object):
             #   smtplib.SMTPServerDisconnected: Connection unexpectedly closed
             #
             send_email(recipients, message, smtp_settings=self.smtp_settings, mail_from=mail_from)
-            log.info(u'Email to recipients {recipients} sent successfully'.format(recipients=recipients))
+            log.info(u'Email to recipients "{recipients}" sent successfully'.format(recipients=recipients))
 
         except Exception as ex:
             # TODO: catch traceback when running in commandline mode

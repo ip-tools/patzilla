@@ -29,7 +29,7 @@ def message_factory(**kwargs):
     is_support_email = False
     if 'recipients' in kwargs:
         for recipient in kwargs['recipients']:
-            if recipient == 'email:support':
+            if recipient == 'support':
                 is_support_email = True
             if recipient in settings['email-recipients']:
                 message.add_recipient(read_list(settings['email-recipients'][recipient]))
