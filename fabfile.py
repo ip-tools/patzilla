@@ -53,12 +53,17 @@ def install(version, target):
 
         if not file_is_dir(venv_path):
             run('virtualenv --no-site-packages "{0}"'.format(venv_path))
-            setup_package('which', venv_path)
+            #setup_package('which', venv_path)
             # TODO: put these packages to a more convenient location
-            setup_package('/root/install/ops-chooser/js.*', venv_path)
 
+        setup_package('/root/install/ops-chooser/which*', venv_path)
+        setup_package('/root/install/ops-chooser/js.*', venv_path)
+        setup_package('/root/install/ops-chooser/fanstatic*', venv_path)
         setup_package(source_package, venv_path)
-        upload_config(source_config, target_path)
+
+        # After modifying production.ini of patoffice-navigator, don't upload/overwrite configuration file!
+        #upload_config(source_config, target_path)
+
         restart_service(target)
 
     else:
