@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-03-02 0.129.0
+==================
 - IFI Claims: Properly respond to “no servers hosting shard” error messages
 - IFI Claims: Improve keyword highlighting
 - Improve error handling
