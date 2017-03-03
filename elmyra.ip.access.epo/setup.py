@@ -13,7 +13,7 @@ requires = [
     #   Environment
     # ----------------------------------------------
     'setuptools>=11.3',
-    #'six>=1.5.2',
+    'six>=1.5.2',
 
 
     # ----------------------------------------------
@@ -23,6 +23,7 @@ requires = [
     #'pyramid==1.5a2',
     'pyramid==1.4.2',
     'pyramid_debugtoolbar',
+    'Pygments==2.2.0',
     'pyramid_mako',
     'Akhet==2.0',
     'waitress',
@@ -59,6 +60,7 @@ requires = [
 
     # SNI support
     'pyOpenSSL==16.0.0',
+    'cryptography>=1.3',
     'pyasn1==0.1.9',
     'ndg-httpsclient==0.4.2',
 
