@@ -9,6 +9,8 @@ development
 - Improve error handling
 - Keyword highlighting: Switch from whole words to fragments
 - Improve support- and system-email machinery
+- Move support email body template from code to configuration
+- Also add user as recipient for support emails
 
 2017-02-27 0.128.2
 ==================

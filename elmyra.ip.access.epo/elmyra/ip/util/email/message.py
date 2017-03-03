@@ -12,7 +12,7 @@ from elmyra.ip.util.config import read_config, to_list
 log = logging.getLogger(__name__)
 
 class EmailMessage(object):
-    
+
     def __init__(self, smtp_settings, email_settings, options=None):
         self.smtp_settings  = deepcopy(smtp_settings)
         self.email_settings = deepcopy(email_settings)
@@ -65,29 +65,13 @@ class EmailMessage(object):
         subject_real += u'{}'.format(subject)
 
         filenames = u'\n'.join([u'- ' + entry for entry in files.keys()])
-        text = u"""
-        Dear Product Team,
 
-        an event occurred in your software product.
+        body_template = textwrap.dedent(self.email_settings['body-template']).strip().decode('utf-8')
 
-        Message:
-        {{ message }}
-
-        {% if details: %}
-        Details: {{ details }}
-        {% endif %}
-
-        {% if filenames: %}
-        Files:
-        {{ filenames }}
-
-        Find the files attached to this email for your convenience.
-        {% endif %}
-        """
-
-        body_template = textwrap.dedent(text).strip()
         if 'signature' in self.email_settings:
-            body_template += u'\n--\n' + textwrap.dedent(self.email_settings['signature']).strip()
+            body_template += u'\n\n--\n' + textwrap.dedent(self.email_settings['signature']).strip() #.decode('utf-8')
+
+        body_template = body_template.replace('\\n', '\r')
 
         tplvars = deepcopy(locals())
         del tplvars['self']
