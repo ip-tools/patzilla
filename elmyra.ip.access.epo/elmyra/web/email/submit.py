@@ -26,15 +26,17 @@ def message_factory(**kwargs):
     if 'reply' in settings['email']:
         message.add_reply(read_list(settings['email']['reply']))
 
+    is_support_email = False
     if 'recipients' in kwargs:
         for recipient in kwargs['recipients']:
+            if recipient == 'email:support':
+                is_support_email = True
             if recipient in settings['email-recipients']:
                 message.add_recipient(read_list(settings['email-recipients'][recipient]))
             else:
-                log.warn('Could not add recipient {}'.format(recipient))
+                log.warning('Could not add recipient {}'.format(recipient))
 
-    # Extend "Reply-To" address by email address of user
-    # TODO: Maybe add current user also to _recipients_?
+    # Extend "To" and "Reply-To" addresses by email address of user
     #request.user.username = 'test@example.org'; request.user.fullname = 'Hello World'   # debugging
     if request.user.username:
         username = request.user.username
@@ -43,13 +45,22 @@ def message_factory(**kwargs):
                 pair = (request.user.fullname, username)
             else:
                 pair = (None, username)
+
             try:
-                reply_to = formataddr(pair)
-                message.add_reply(reply_to)
+                user_email = formataddr(pair)
             except Exception as ex:
-                log.warning('Computing "reply_to" failed: Could not decode email address from "{}": {}'.format(username, ex))
+                log.warning('Computing "user_email" failed: Could not decode email address from "{}": {}'.format(username, ex))
+                return message
+
+            # Add user email as "Reply-To" address
+            message.add_reply(user_email)
+
+            # If it's a support email, also add user as recipient
+            if is_support_email:
+                message.add_recipient(user_email)
+
         else:
-            log.warning('Computing "reply_to" failed: Email address "{}" is invalid'.format(username))
+            log.warning('Computing "user_email" failed: Email address "{}" is invalid'.format(username))
 
     return message
 
