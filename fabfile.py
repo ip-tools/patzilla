@@ -87,7 +87,7 @@ def restart_service(target):
         'patoffice':    'patentsearch.patoffice',
         'vdpm':         'patentsearch.vdpm',
     }
-    uwsgi_name = uwsgi_names.get(target)
+    uwsgi_name = uwsgi_names.get(target, target)
     if uwsgi_name:
         run('service uwsgi reload %s' % uwsgi_name)
     else:
