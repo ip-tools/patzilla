@@ -40,7 +40,7 @@ def install(version, target):
     if response == 'y':
 
         source_package = '/root/install/ops-chooser/elmyra.ip.access.epo-{version}.tar.gz'.format(version=version)
-        source_config = './elmyra.ip.access.epo/production.ini'
+        source_config = './elmyra.ip.access.epo/production.blueprint.ini'
 
         target_path = '/opt/elmyra/patentsearch/sites/' + target
         venv_path = target_path + '/.venv27'
@@ -61,8 +61,7 @@ def install(version, target):
         setup_package('/root/install/ops-chooser/fanstatic*', venv_path)
         setup_package(source_package, venv_path)
 
-        # After modifying production.ini of patoffice-navigator, don't upload/overwrite configuration file!
-        #upload_config(source_config, target_path)
+        upload_config(source_config, target_path)
 
         restart_service(target)
 
