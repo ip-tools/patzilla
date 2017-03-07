@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2017-03-07 0.130.1
+==================
+- Minor fix to allow exporting of projects with “seen only” documents
+
 2017-03-07 0.130.0
 ==================
 - Bugfix re. bad assignment between “seen” and “rated” documents in basket model
