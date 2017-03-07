@@ -59,12 +59,12 @@ def query_expression_util_handler(request):
 
     data = request.json
     log.info(u'[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
-    expression = make_expression(data)
-    log.info(u'[{userid}] Expression query: {expression}'.format(userid=request.user.userid, expression=expression))
-    return expression
+    expression_data = make_expression_filter(data)
+    log.info(u'[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
+    return expression_data
 
 
-def make_expression(data):
+def make_expression_filter(data):
 
     request = get_current_request()
 
@@ -78,6 +78,7 @@ def make_expression(data):
 
     expression = ''
     expression_parts = []
+    filter_parts = []
     keywords = []
 
     #if data['format'] == 'comfort':
@@ -102,6 +103,7 @@ def make_expression(data):
                     value = ' or '.join(entries)
 
                 expression_part = None
+                filter_part = None
 
                 if datasource in ['ops', 'depatisnet']:
                     expression_part = pair_to_cql(datasource, key, value)
@@ -115,13 +117,20 @@ def make_expression(data):
                             keywords += keywords_from_boolean_expression(key, value)
 
                 elif datasource == 'ifi':
-                    expression_part = IFIClaimsExpression.pair_to_solr(key, value, modifiers)
-                    if expression_part:
-                        if expression_part.has_key('keywords'):
-                            keywords += expression_part['keywords']
-                        else:
-                            keywords += keywords_from_boolean_expression(key, value)
 
+                    if key == 'pubdate':
+                        expression_part = {'empty': True}
+                        filter_part = IFIClaimsExpression.pair_to_solr(key, value, modifiers)
+
+                    else:
+                        expression_part = IFIClaimsExpression.pair_to_solr(key, value, modifiers)
+                        if expression_part:
+                            if expression_part.has_key('keywords'):
+                                keywords += expression_part['keywords']
+                            else:
+                                keywords += keywords_from_boolean_expression(key, value)
+
+                # Accumulate expression part
                 error_tpl = u'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
@@ -136,6 +145,9 @@ def make_expression(data):
 
                 else:
                     expression_part.get('query') and expression_parts.append(expression_part.get('query'))
+
+                if filter_part and filter_part.get('query'):
+                    filter_parts.append(filter_part.get('query'))
 
 
     log.info("Propagating keywords from comfort form: {keywords}".format(keywords=keywords))
@@ -162,7 +174,12 @@ def make_expression(data):
 
             expression = pretty_print(expression, xml_declaration=False)
 
-    return expression
+    payload = {
+        'expression': expression,
+        'filter': ' AND '.join(filter_parts),
+    }
+
+    return payload
 
 
 @numberlist_util_service.post()

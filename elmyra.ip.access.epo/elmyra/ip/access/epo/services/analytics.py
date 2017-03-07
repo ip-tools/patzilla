@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2015 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import logging
 import datetime
 import operator
@@ -11,7 +11,7 @@ from jsonpointer import JsonPointer
 from transitions.core import Machine
 from elmyra.ip.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
 from elmyra.ip.access.epo.services.dpma import dpma_published_data_search
-from elmyra.ip.access.epo.services.util import make_expression
+from elmyra.ip.access.epo.services.util import make_expression_filter
 from elmyra.ip.access.ftpro.search import ftpro_published_data_search, ftpro_published_data_crawl
 
 log = logging.getLogger(__name__)
@@ -30,11 +30,11 @@ def analytics_family_handler(request):
     # decode query parameters into datasource and criteria
     expression_data = _decode_expression_from_query(request)
 
-    query = make_expression({
+    query = make_expression_filter({
         'datasource': expression_data.get('datasource', 'ops'),
         'format': 'comfort',
         'criteria': expression_data['criteria'],
-    })
+    })['expression']
 
     response = analytics_family(query)
     return response
@@ -127,11 +127,11 @@ class QueryDateRangeNarrower(object):
         criteria['pubdate'] = u'within {date_from},{date_to}'.format(
                          date_from=self.date_from.format('YYYY-MM-DD'), date_to=self.date_to.format('YYYY-MM-DD'))
 
-        query = make_expression({
+        query = make_expression_filter({
             'datasource': self.datasource,
             'format': 'comfort',
             'criteria': criteria,
-        })
+        })['expression']
 
         if self.datasource == 'ops':
             self.response, self.hits = query_ops(query, limit=self.maxcount)

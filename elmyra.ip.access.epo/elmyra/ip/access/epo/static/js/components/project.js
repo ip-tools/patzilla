@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2015 Andreas Motl, Elmyra UG
+// (c) 2014-2017 Andreas Motl, Elmyra UG
 
 QueryModel = Backbone.RelationalModel.extend({
 
@@ -8,8 +8,9 @@ QueryModel = Backbone.RelationalModel.extend({
     defaults: {
         flavor: undefined,              // comfort, expert
         datasource: undefined,          // ops, depatisnet, ftpro
-        query_expression: undefined,    // query expression from expert mode
-        query_data: undefined,          // e.g. comfort mode form dictionary
+        query_data: undefined,          // comfort mode form dictionary
+        query_expert: undefined,        // expert mode query expression and filter
+        query_expression: undefined,    // expert mode query expression, deprecated
         created: undefined,
         result_count: undefined,
     },
@@ -21,7 +22,7 @@ QueryModel = Backbone.RelationalModel.extend({
     },
 
     equals: function(obj) {
-        var proplist = ['flavor', 'datasource', 'query_expression', 'query_data'];
+        var proplist = ['flavor', 'datasource', 'query_data', 'query_expert', 'query_expression'];
         var picked_this = _.pick(this.attributes, proplist);
         var picked_obj = _.pick(obj.attributes, proplist);
         var result = _.isEqual(picked_this, picked_obj);
@@ -109,8 +110,9 @@ ProjectModel = Backbone.RelationalModel.extend({
             var query = new QueryModel({
                 flavor: flavor,
                 datasource: datasource,
-                query_expression: search_info.query,
                 query_data: search_info.query_data,
+                query_expert: search_info.query,
+                query_expression: search_info.query.expression,
                 created: now_iso(),
                 result_count: search_info.result_count,
                 //project: _this,

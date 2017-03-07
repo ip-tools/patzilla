@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2017 Andreas Motl, Elmyra UG
 
 /**
  * ------------------------------------------
@@ -28,7 +28,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     get_query: function() {
-        return $('#query').val();
+        var payload = {
+            'expression': $('#query').val(),
+            'filter': $('#cql-filter').val(),
+        };
+        return payload;
     },
 
     disable_reviewmode: function() {
@@ -77,7 +81,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
         // 3. perform search
 
-        if (_.isEmpty(query)) {
+        if (_.isEmpty(query.expression)) {
             return;
         }
 
@@ -476,7 +480,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         console.log('OPS CQL query:', query_ops_cql);
 
         if (!query_origin) {
-            query_origin = query_ops_cql;
+            query_origin = {'expression': query_ops_cql};
         }
 
         //$('#query').val(query_origin);
@@ -491,7 +495,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         this.documents_apply_comparator(publication_numbers);
 
         //var range = this.compute_range(options);
-        return this.search.perform(this.documents, this.metadata, query_ops_cql, '1-10', {silent: true}).always(function() {
+        return this.search.perform(this.documents, this.metadata, {'expression': query_ops_cql}, '1-10', {silent: true}).always(function() {
 
             // ------------------------------------------
             //   metadata propagation

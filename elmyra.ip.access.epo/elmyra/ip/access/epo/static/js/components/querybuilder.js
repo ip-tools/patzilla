@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2016 Andreas Motl, Elmyra UG
+// (c) 2014-2017 Andreas Motl, Elmyra UG
 
 QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
@@ -101,6 +101,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // show history chooser
                 $('#cql-history-chooser').show();
+
+                // show filter field
+                if (opsChooserApp.get_datasource() == 'ifi') {
+                    $('#cql-filter-container').show();
+                } else {
+                    $('#cql-filter-container').hide();
+                }
 
                 // convert query from form fields to cql expression
                 _this.compute_comfort_query();
@@ -347,10 +354,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.clear_comfort_form();
         });
 
-        // clear the whole expression (export form)
+        // clear the whole expression (expert form)
         $('#btn-query-clear').unbind('click');
         $('#btn-query-clear').click(function() {
             $('#query').val('').focus();
+            $('#cql-filter').val('');
         });
 
         // transform query: open modal dialog to choose transformation kind
@@ -399,7 +407,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 mode: 'liveview',
                 context: 'viewer',
                 project: 'query-permalink',
-                query: opsChooserApp.get_query(),
+                query: opsChooserApp.get_query().expression,
                 datasource: opsChooserApp.get_datasource(),
             };
 
@@ -743,11 +751,26 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var flavor = query.get('flavor');
         var datasource = query.get('datasource');
         var query_data = query.get('query_data');
+        var query_expert = query.get('query_expert');
         var created = query.get('created');
         var result_count = query.get('result_count');
 
         // Use query expression as title
-        var expression = query.get('query_expression');
+        var expression = '';
+
+        if (flavor == 'cql') {
+            if (query_expert) {
+                var parts = [query_expert.expression];
+                if (query_expert.filter) {
+                    parts.push(query_expert.filter);
+                }
+                expression = parts.join(', ');
+            } else {
+                // Backward compatibility
+                expression = query.get('query_expression');
+            }
+        }
+
         if ((flavor == 'comfort' || datasource == 'ftpro') && query_data && _.isObject(query_data['criteria'])) {
             // serialize query_data criteria
             var entries = _.map(query_data['criteria'], function(value, key) {
@@ -947,8 +970,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                     _this.clear_comfort_form();
 
-                    var expression = query_object.get('query_expression');
-                    $('#query').val(expression);
+                    var query_expert = query_object.get('query_expert');
+                    if (query_expert && query_expert.expression) {
+                        $('#query').val(query_expert.expression);
+                        $('#cql-filter').val(query_expert.filter);
+                    } else {
+                        // Backward compatibility
+                        $('#query').val(query_object.get('query_expression'));
+                        $('#cql-filter').val('');
+                    }
 
                     var data = query_object.get('query_data');
                     _this.set_common_form_data(data);
@@ -1013,6 +1043,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             this.setup_sorting_chooser();
         } else {
             $('#sorting-chooser').hide();
+        }
+
+        // display CQL filter only for datasource IFI
+        if (_(['ifi']).contains(datasource)) {
+            $('#cql-filter-container').show();
+        } else {
+            $('#cql-filter-container').hide();
         }
 
     },
@@ -1328,12 +1365,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             return deferred;
         }
 
-        log('comfort form query:', JSON.stringify(payload));
+        log('Comfort form criteria:', JSON.stringify(payload));
 
         //$("#query").val('');
         $("#keywords").val('[]');
-        return this.compute_query_expression(payload).then(function(expression, keywords) {
-            $("#query").val(expression);
+        return this.compute_query_expression(payload).then(function(data, keywords) {
+            log('Expert query data:', JSON.stringify(data));
+            $("#query").val(data['expression']);
+            $("#cql-filter").val(data['filter']);
             $("#keywords").val(keywords);
 
         }).fail(function() {
@@ -1353,12 +1392,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             },
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
-        }).success(function(payload, status, options) {
-            if (payload) {
+        }).success(function(data, status, options) {
+            if (data) {
                 var keywords = options.getResponseHeader('X-Elmyra-Query-Keywords');
-                deferred.resolve(payload, keywords);
+                deferred.resolve(data, keywords);
             } else {
-                deferred.resolve('', '[]');
+                deferred.resolve({}, '[]');
             }
         }).error(function(xhr, settings) {
             opsChooserApp.ui.propagate_backend_errors(xhr);
