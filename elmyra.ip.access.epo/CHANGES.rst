@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-03-07 0.130.0
+==================
 - Bugfix re. bad assignment between “seen” and “rated” documents in basket model
 - Switch to interface flavor “expert” when signalling through url parameter “mode=expert”
 - IFI Claims: Distinguish between query expression and query filter parameters to better support certain time range searches
