@@ -292,12 +292,28 @@ BasketModel = Backbone.RelationalModel.extend({
                 }
             }
             if (options.seen != undefined) {
+                var score = entry.get('score');
                 var seen = entry.get('seen');
-                if (seen == undefined) {
-                    return options.seen;
+
+                var outcome;
+                if (score == undefined && seen == undefined) {
+                    outcome = !options.seen;
+                } else if (seen == undefined) {
+                    outcome = options.seen;
                 } else {
-                    return seen == !options.seen;
+                    outcome = seen == !options.seen;
                 }
+
+                // Debugging
+                /*
+                if (entry.get('number') == 'DE7914954U1') {
+                    log('options:', options);
+                    log('entry:', entry);
+                    log('outcome:', outcome);
+                }
+                */
+
+                return outcome;
             }
             return false;
         });

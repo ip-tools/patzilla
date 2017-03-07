@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Bugfix re. bad assignment between “seen” and “rated” documents in basket model
 
 2017-03-03 0.129.1
 ==================
