@@ -121,16 +121,19 @@ def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI Claims Direct"""
 
     # Get hold of query expression
-    query = request.params.get('query', '')
-    log.info('query raw: ' + query)
+    query = SmartBunch({
+        'expression': request.params.get('expression', ''),
+        'filter':     request.params.get('filter', ''),
+    })
+    log.info('query: {}'.format(query))
 
     # Parse expression, extract and propagate keywords to user interface
-    parser = IFIClaimsParser(query)
+    parser = IFIClaimsParser(query.expression)
     propagate_keywords(request, parser)
 
     # Fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
-    if should_be_quoted(query):
-        query = '"%s"' % query
+    if should_be_quoted(query.expression):
+        query.expression = '"%s"' % query.expression
 
     # Lazy-fetch more entries
     # TODO: get from elmyra.ip.access.ificlaims
@@ -186,7 +189,7 @@ def ificlaims_published_data_crawl_handler(request):
     """Crawl published-data at IFI Claims Direct"""
 
     # query expression
-    query = request.params.get('query', '')
+    query = request.params.get('expression', '')
     log.info('query raw: ' + query)
 
     if should_be_quoted(query):

@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2016 Andreas Motl, Elmyra UG
+// (c) 2013-2017 Andreas Motl, Elmyra UG
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
@@ -23,7 +23,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
         var self = this;
         var _this = this;
         return this.fetch({
-            data: $.param({ query: query, range: range, family_swap_default: family_swap_default}),
+            data: $.param({ expression: query.expression, filter: query.filter, range: range, family_swap_default: family_swap_default}),
             success: function(model, response, options) {
 
                 // Only gather keywords in regular OPS search mode
@@ -139,7 +139,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                 var result_count = biblio_search['@total-result-count'];
                 var result_range_node = biblio_search['ops:range'];
                 var result_range = result_range_node['@begin'] + '-' + result_range_node['@end'];
-                var query_origin = biblio_search['ops:query']['$'];
+                var query_origin = {'expression': biblio_search['ops:query']['$']};
                 var query_real = query_origin;
                 metadata.set({
                     result_count: result_count,

@@ -1,11 +1,11 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2017 Andreas Motl, Elmyra UG
 
 DatasourceSearch = Backbone.Model.extend({
     keywords: [],
     perform: function(query, options) {
 
-        var query_parameters = { query: query };
+        var query_parameters = { expression: query.expression, filter: query.filter };
         _.extend(query_parameters, options);
 
         // debugging

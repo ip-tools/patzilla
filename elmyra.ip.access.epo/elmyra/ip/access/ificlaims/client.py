@@ -62,7 +62,7 @@ class IFIClaimsClient(GenericSearchClient):
         headers = {'X-User': self.username, 'X-Password': self.password}
         return headers
 
-    def search(self, expression, options=None):
+    def search(self, query, options=None):
 
         options = options or SmartBunch()
 
@@ -73,7 +73,7 @@ class IFIClaimsClient(GenericSearchClient):
         limit  = options.limit
 
         log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}".format(
-            expression, offset, limit, **self.__dict__))
+            query.expression, offset, limit, **self.__dict__))
 
         if not self.token or self.stale:
             self.login()
@@ -87,11 +87,15 @@ class IFIClaimsClient(GenericSearchClient):
 
         # Define search request parameters
         # 'family.simple': True,
-        params  = {'q': expression, 'fl': 'ucid,fam', 'start': offset, 'rows': limit, 'sort': 'pd desc, ucid asc'}
-        # , 'fq': 'pd:[19000101 TO 20090820]'
+        params  = {
+            'q': query.expression, 'fq': query.filter,
+            'sort': 'pd desc, ucid asc',
+            'fl': 'ucid,fam',
+            'start': offset, 'rows': limit,
+        }
 
-        log.info(u'IFI search. expression={expression}, uri={uri}, params={params}, options={options}'.format(
-            expression=expression, uri=uri, params=params, options=options.dump()))
+        log.info(u'IFI search. query={query}, uri={uri}, params={params}, options={options}'.format(
+            query=query, uri=uri, params=params, options=options.dump()))
 
         # Perform search request
         headers = self.get_authentication_headers()

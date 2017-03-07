@@ -6,6 +6,7 @@ development
 ===========
 - Bugfix re. bad assignment between “seen” and “rated” documents in basket model
 - Switch to interface flavor “expert” when signalling through url parameter “mode=expert”
+- IFI Claims: Distinguish between query expression and query filter parameters to better support certain time range searches
 
 2017-03-03 0.129.1
 ==================

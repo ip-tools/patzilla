@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2015 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
@@ -70,7 +70,7 @@ def ops_published_data_search_handler(request):
     constituents = request.params.get('constituents', 'full-cycle')
 
     # CQL query string
-    query = request.params.get('query', '')
+    query = request.params.get('expression', '')
     log.info('query raw: %s', query)
 
     query_object, query = cql_prepare_query(query)
@@ -115,7 +115,7 @@ def ops_published_data_crawl_handler(request):
     print 'constituents:', constituents
 
     # CQL query string
-    query = request.params.get('query', '')
+    query = request.params.get('expression', '')
     log.info('query raw: ' + query)
 
     query_object, query = cql_prepare_query(query)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import logging
 from pprint import pprint
 from cornice.service import Service
@@ -50,7 +50,7 @@ def depatisnet_published_data_search_handler(request):
     #pprint(request.params)
 
     # CQL query string
-    query = request.params.get('query', '')
+    query = request.params.get('expression', '')
     log.info('query raw: ' + query)
 
     # lazy-fetch more entries up to maximum of depatisnet
@@ -111,7 +111,7 @@ def depatisnet_published_data_crawl_handler(request):
     """Crawl published-data at DEPATISnet"""
 
     # CQL query string
-    query = request.params.get('query', '')
+    query = request.params.get('expression', '')
     log.info('query raw: ' + query)
 
     query_object, query = cql_prepare_query(query)

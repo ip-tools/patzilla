@@ -1,3 +1,6 @@
+## -*- coding: utf-8 -*-
+## (c) 2013-2017 Andreas Motl, Elmyra UG
+
 <script type="text/x-underscore-template" id="querybuilder-template">
 
     <div id="querybuilder-area">
@@ -297,7 +300,11 @@
 
                 <!-- raw cql query string -->
                 <div class="tab-pane fade" id="querybuilder-cql-tab">
-                    <textarea class="span12" id="query" name="query" placeholder="Query expression" rows="7"></textarea>
+                    <textarea class="span12" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
+                    <span id="cql-filter-container" class="hide">
+                        Filter: <input name="cql-filter" id="cql-filter" style="width: 94%" placeholder="Query filter"/>
+                        <br/><br/>
+                    </span>
                     <input id="keywords" hidden="true" />
                 </div>
 
@@ -383,7 +390,7 @@
 
         <div class="row-fluid">
 
-            <div class="span12 light-panel" style="width: 152%; min-height: 6.5em">
+            <div class="span12 light-panel" style="width: 152%; min-height: 6.5em; margin-top: 2em">
 
                 <div class="span2">
 

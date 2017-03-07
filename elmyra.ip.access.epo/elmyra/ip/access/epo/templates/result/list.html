@@ -1,5 +1,5 @@
 ## -*- coding: utf-8 -*-
-## (c) 2013-2016 Andreas Motl, Elmyra UG
+## (c) 2013-2017 Andreas Motl, Elmyra UG
 
 
 ## ------------------------------------------
@@ -57,7 +57,15 @@
                         } else {
                             _query = data.query_origin;
                         }
-                        print(htmlentities(_query, 'ENT_NOQUOTES'));
+                        if (_query) {
+                            var expression = _query.expression;
+                            if (_query.filter) {
+                                expression += ' AND ' + _query.filter;
+                            }
+                            print(htmlentities(expression, 'ENT_NOQUOTES'));
+                        } else {
+                            print('--');
+                        }
                         %>
                     </span>
                     <br/>
