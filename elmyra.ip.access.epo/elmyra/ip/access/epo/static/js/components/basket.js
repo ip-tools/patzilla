@@ -342,7 +342,7 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     empty: function() {
-        var entries = this.get_entries({'seen': false});
+        var entries = this.get_entries();
         return entries.length == 0;
     },
 
