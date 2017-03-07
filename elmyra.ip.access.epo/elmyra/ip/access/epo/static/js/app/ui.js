@@ -41,11 +41,15 @@ UiController = Marionette.Controller.extend({
             $('.logout-button').hide();
         }
 
-        // switch query interface flavor to expert mode when receiving query via url
+        // Switch query interface flavor to expert mode when receiving query via url
         if (opsChooserApp.config.get('query')) {
             opsChooserApp.queryBuilderView.set_flavor('cql');
         }
 
+        // Switch query interface flavor to expert mode when signalled through url parameter
+        if (opsChooserApp.config.get('mode') == 'expert') {
+            opsChooserApp.queryBuilderView.set_flavor('cql');
+        }
 
         // ------------------------------------------
         //   cql query area
