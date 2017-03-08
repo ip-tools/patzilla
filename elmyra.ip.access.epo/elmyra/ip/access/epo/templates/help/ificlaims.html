@@ -126,6 +126,8 @@ Class:     H04L12/433 or H04L12/24
                 </p>
             </div>
 
+            <br/>
+
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Operatoren</h4>
                 <p class="list-group-item-text">
@@ -162,6 +164,8 @@ Class:     H04L12/433 or H04L12/24
                 </p>
             </div>
 
+            <br/>
+
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Suche mit Wildcards</h4>
                 <p class="list-group-item-text">
@@ -192,6 +196,8 @@ Class:     H04L12/433 or H04L12/24
                 </p>
             </div>
 
+            <br/>
+
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Suche nach Phrasen</h4>
                 <p class="list-group-item-text">
@@ -202,6 +208,8 @@ Class:     H04L12/433 or H04L12/24
                     <pre>"fuel cell"</pre>
                 </p>
             </div>
+
+            <br/>
 
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Suche mit Wortabstand (Näherungssuche)</h4>
@@ -214,6 +222,8 @@ Class:     H04L12/433 or H04L12/24
                     <pre>"solar generation"~5</pre>
                 </p>
             </div>
+
+            <br/>
 
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Suche mit Wortabstand und Trunkierung</h4>
@@ -247,8 +257,7 @@ Class:     H04L12/433 or H04L12/24
                     <pre>{!complexphrase}text:("parallel* AND schalt*"~6 AND "antrieb* AND stufe*"~3)</pre>
 
                     <hr/>
-
-                    <b>Einschränkungen</b>
+                    <b>Einschränkungen bei zu kurzen Suchmustern</b>
                     <br/>
                     Diese Abfragevariante ist sensibel auf die Anzahl der eindeutigen Begriffe, die mit einem Muster verbunden sind.
                     Das System erzeugt vor der Abfrage im Hintergrund einen Suchausdruck, in dem alle auf das Muster passenden Begriffe
@@ -259,8 +268,18 @@ Class:     H04L12/433 or H04L12/24
                     Es kann klug sein, Wildcards auf mindestens zwei oder vorzugsweise drei Buchstaben als Präfix zu beschränken.
                     Die Verwendung von sehr kurzen Präfixen kann dazu führen, dass viele Dokumente mit geringer Qualität zurückgegeben werden
                     oder die Fehlermeldung "Too many terms in phrase expression, wildcard term prefixes might by too short." ausgelöst wird.
+
+                    <hr/>
+                    <b>Einschränkungen bei der Kombination mit anderen Kriterien</b>
+                    <br/>
+                    <span class="monospace">{!complexphrase}</span> Fragmente sind sensibel bzgl. der Positionierung innerhalb
+                    eines Suchausdrucks mit weiteren Kriterien. Sie sollten am Anfang eines Suchausdrucks positioniert werden.
+                    Beispiel:
+                    <pre>{!complexphrase inOrder=false}text:"(palladium OR pd) (free OR no)"~3 AND pnctry:(de OR ep OR wo OR us) AND text:(flash AND (nickel OR ni)) AND ((ic:H01L002348 OR cpc:H01L002348))</pre>
                 </p>
             </div>
+
+            <br/>
 
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Suche in Wertebereichen</h4>
@@ -273,6 +292,8 @@ Class:     H04L12/433 or H04L12/24
                     <pre>pd:[20020101 TO 20030101]</pre>
                 </p>
             </div>
+
+            <br/>
 
             <div class="list-group-item">
                 <h4 class="list-group-item-heading">Smart search: Suche ohne Operatoren oder Feldbezeichner</h4>
