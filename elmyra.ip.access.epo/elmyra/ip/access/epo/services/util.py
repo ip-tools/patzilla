@@ -91,7 +91,15 @@ def make_expression_filter(data):
 
         else:
 
-            for key, value in criteria.iteritems():
+            # Bring criteria in order: Process "fulltext" first
+            keys = criteria.keys()
+            if 'fulltext' in keys:
+                keys.remove('fulltext')
+                keys.insert(0, 'fulltext')
+
+            for key in keys:
+
+                value = criteria.get(key)
 
                 if not value:
                     continue

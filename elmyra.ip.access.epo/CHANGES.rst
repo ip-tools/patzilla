@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-03-08 0.130.3
+==================
 - Update IFI Claims documentation re. combined {!complexphrase} expressions
+- Improve IFI Claims translation re. queries with {!complexphrase} fulltext criteria
 
 2017-03-08 0.130.2
 ==================
