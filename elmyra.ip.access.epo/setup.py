@@ -127,7 +127,7 @@ test_requires = [
 ]
 
 setup(name='elmyra.ip.access.epo',
-      version='0.130.1',
+      version='0.130.2',
       description='elmyra.ip.access.epo',
       long_description=README,
       classifiers=[
