@@ -93,11 +93,12 @@ DatasourceCrawler = Marionette.Controller.extend({
         var more_params = $.param({
             'query_data': this.query_data,
         });
-        var url_tpl = _.template('/api/<%= datasource %>/published-data/crawl/<%= constituents %>?query=<%= query %>&<%= more_params %>');
+        var url_tpl = _.template('/api/<%= datasource %>/published-data/crawl/<%= constituents %>?expression=<%= expression %>&filter=<%= filter %>&<%= more_params %>');
         var url = url_tpl({
             datasource: this.datasource,
             constituents: this.constituents,
-            query: encodeURIComponent(this.query),
+            expression: encodeURIComponent(this.query.expression),
+            filter: encodeURIComponent(this.query.filter),
             more_params: more_params,
         });
         //log('url:', url);

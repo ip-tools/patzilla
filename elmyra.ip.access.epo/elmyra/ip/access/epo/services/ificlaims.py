@@ -120,7 +120,7 @@ def ificlaims_deliver_handler(request):
 def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI Claims Direct"""
 
-    # Get hold of query expression
+    # Get hold of query expression and filter
     query = SmartBunch({
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
@@ -188,12 +188,15 @@ def ificlaims_published_data_search_handler(request):
 def ificlaims_published_data_crawl_handler(request):
     """Crawl published-data at IFI Claims Direct"""
 
-    # query expression
-    query = request.params.get('expression', '')
-    log.info('query raw: ' + query)
+    # Get hold of query expression and filter
+    query = SmartBunch({
+        'expression': request.params.get('expression', ''),
+        'filter':     request.params.get('filter', ''),
+        })
+    log.info('query: {}'.format(query))
 
-    if should_be_quoted(query):
-        query = '"%s"' % query
+    if should_be_quoted(query.expression):
+        query.expression = '"%s"' % query.expression
 
     # constituents: abstract, biblio and/or full-cycle
     constituents = request.matchdict.get('constituents', 'full-cycle')

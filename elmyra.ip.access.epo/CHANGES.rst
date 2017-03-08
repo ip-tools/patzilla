@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2017-03-08 0.130.2
+==================
+- Fix numberlist crawling after distinguishing between query expression and query filter parameters
+
 2017-03-07 0.130.1
 ==================
 - Minor fix to allow exporting of projects with “seen only” documents
