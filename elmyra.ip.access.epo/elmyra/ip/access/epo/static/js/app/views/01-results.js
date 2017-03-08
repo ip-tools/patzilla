@@ -158,6 +158,8 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
         }).fail(function(response, error) {
 
+                console.warn('error:  ', error);
+
                 // notify user
                 _this.indicate_activity(false);
 
@@ -192,9 +194,8 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
                 var user_message =
                     'Error while fetching results from data source "' + _this.model.get('datasource') + '". ' +
                     'Reason: ' + message;
-                _this.user_message(user_message, 'error');
                 console.warn('message:', user_message);
-                console.warn('error:  ', error);
+                _this.user_message(user_message, 'error');
 
             });
 
