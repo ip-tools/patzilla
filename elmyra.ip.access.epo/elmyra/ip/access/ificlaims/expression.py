@@ -276,7 +276,7 @@ class IFIClaimsExpression(object):
         #   surround with parentheses
         # ------------------------------------------
         if key in ['fulltext', 'inventor', 'applicant', 'country', 'citation']:
-            if has_booleans(value) and not should_be_quoted(value) and not '{!complexphrase}' in value:
+            if has_booleans(value) and not should_be_quoted(value) and not '{!complexphrase' in value:
                 value = u'({0})'.format(value)
 
         # ------------------------------------------
@@ -284,7 +284,7 @@ class IFIClaimsExpression(object):
         # ------------------------------------------
         # Serialize into appropriate upstream datasource query expression syntax
         if not expression:
-            if key == 'fulltext' and '{!complexphrase}' in value:
+            if key == 'fulltext' and '{!complexphrase' in value:
                 expression = value
             else:
                 expression = format_expression(format, fieldname, value)
