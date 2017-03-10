@@ -125,7 +125,7 @@ def ificlaims_published_data_search_handler(request):
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
     })
-    log.info('query: {}'.format(query))
+    log.info('Query: {}'.format(query))
 
     # Parse expression, extract and propagate keywords to user interface
     parser = IFIClaimsParser(query.expression)
