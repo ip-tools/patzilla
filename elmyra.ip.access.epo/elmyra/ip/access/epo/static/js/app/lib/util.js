@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2017 Andreas Motl, Elmyra UG
 
 function to_list(value) {
     return _.isArray(value) && value || [value];
@@ -545,4 +545,9 @@ function sortCollectionByField(collection, fieldName, direction) {
     collection.sort_key = fieldName;
     collection.sort();
     return collection;
+}
+
+// https://stackoverflow.com/questions/10934664/convert-string-in-dot-notation-to-get-the-object-reference/10934946#10934946
+function dotted_reference(obj, str) {
+    return str.split(".").reduce(function(o, x) { return o[x] }, obj);
 }

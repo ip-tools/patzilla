@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2017 Andreas Motl, Elmyra UG
 
 // strip patent kindcode for the poorest
 function patent_number_strip_kindcode(patent_number) {
@@ -14,9 +14,9 @@ function patent_number_strip_kindcode(patent_number) {
     return patent_number;
 }
 
-// derived from elmyra.ip.util.numbers.common
-// Also handle DE000B0012324MAZ
-var patent_number_pattern = /^(\D\D)(0*\D{0,2}[\d.]+?)([a-zA-Z].{0,2})?(_.+)?$/;
+// Derived from elmyra.ip.util.numbers.common.
+// Also handles DE000B0012324MAZ, IN2012KN00054A.
+var patent_number_pattern = /^(\D\D)(\d*\D{0,2}[\d.]+?)([a-zA-Z].{0,2})?(_.+)?$/;
 var patent_number_pattern_groups = ['country', 'number', 'kind', 'ext'];
 function split_patent_number(patent_number) {
 

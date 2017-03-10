@@ -52,4 +52,7 @@ def asbool(s):
     return s.lower() in truthy
 
 def read_list(string, separator=u','):
-    return map(unicode.strip, string.split(separator))
+    result = map(unicode.strip, string.split(separator))
+    if len(result) == 1 and not result[0]:
+        result = []
+    return result
