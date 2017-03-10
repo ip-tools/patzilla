@@ -62,6 +62,7 @@ class IFIClaimsClient(GenericSearchClient):
         headers = {'X-User': self.username, 'X-Password': self.password}
         return headers
 
+    @cache_region('search')
     def search(self, query, options=None):
 
         options = options or SmartBunch()
@@ -72,7 +73,7 @@ class IFIClaimsClient(GenericSearchClient):
         offset = options.offset
         limit  = options.limit
 
-        log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}".format(
+        log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}; user={username}".format(
             query.expression, offset, limit, **self.__dict__))
 
         if not self.token or self.stale:
@@ -184,7 +185,7 @@ class IFIClaimsClient(GenericSearchClient):
 
 
 
-    #@cache_region('search')
+    @cache_region('search')
     def text_fetch(self, ucid, format='xml'):
 
         """
@@ -192,7 +193,7 @@ class IFIClaimsClient(GenericSearchClient):
         EP666666A2 => EP0666666A2 (EP0666666A3, EP0666666B1)
         """
 
-        log.info(u"{backend_name}: text_fetch, ucid={ucid}".format(ucid=ucid, **self.__dict__))
+        log.info(u"{backend_name}: text_fetch, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
 
         starttime = timeit.default_timer()
 
@@ -223,7 +224,7 @@ class IFIClaimsClient(GenericSearchClient):
     #@cache_region('search')
     def attachment_list(self, ucid):
 
-        log.info(u"{backend_name}: attachment_list, ucid={ucid}".format(ucid=ucid, **self.__dict__))
+        log.info(u"{backend_name}: attachment_list, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
 
         if not self.token or self.stale:
             self.login()
@@ -252,7 +253,7 @@ class IFIClaimsClient(GenericSearchClient):
     #@cache_region('search')
     def attachment_fetch(self, path):
 
-        log.info(u"{backend_name}: attachment_fetch, path={path}".format(path=path, **self.__dict__))
+        log.info(u"{backend_name}: attachment_fetch, path={path}; user={username}".format(path=path, **self.__dict__))
 
         if not self.token or self.stale:
             self.login()
@@ -282,7 +283,7 @@ class IFIClaimsClient(GenericSearchClient):
 
     def pdf_fetch(self, ucid):
 
-        log.info(u"{backend_name}: pdf_fetch, ucid={ucid}".format(ucid=ucid, **self.__dict__))
+        log.info(u"{backend_name}: pdf_fetch, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
 
         attachments_response = self.attachment_list(ucid)
         if not attachments_response:
@@ -378,7 +379,7 @@ class IFIClaimsClient(GenericSearchClient):
 
     def tif_fetch(self, ucid, seq=1):
 
-        log.info(u"{backend_name}: tif_fetch, ucid={ucid}, seq={seq}".format(ucid=ucid, seq=seq, **self.__dict__))
+        log.info(u"{backend_name}: tif_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
 
         tif_attachments = self.tif_attachments(ucid)
 
@@ -398,7 +399,7 @@ class IFIClaimsClient(GenericSearchClient):
                 return self.attachment_fetch(path)
 
     def png_fetch(self, ucid, seq=1):
-        log.info(u"{backend_name}: png_fetch, ucid={ucid}, seq={seq}".format(ucid=ucid, seq=seq, **self.__dict__))
+        log.info(u"{backend_name}: png_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
         tif = self.tif_fetch(ucid, seq)
         if tif:
             png = to_png(tif)
@@ -504,7 +505,7 @@ def ificlaims_fetch(resource, format, options=None):
         raise IFIClaimsFormatException(msg)
 
 
-@cache_region('search')
+#@cache_region('search')
 def ificlaims_search(query, options=None):
 
     options = options or SmartBunch()

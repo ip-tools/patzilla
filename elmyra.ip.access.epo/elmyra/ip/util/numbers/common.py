@@ -99,9 +99,9 @@ def split_patent_number(patent_number):
     elif patent_number.startswith('IN'):
         """
         examples:
-        IN2011MU02282A, IN2009KN02715A
+        IN2011MU02282A, IN2009KN02715A, IND265197S
         """
-        pattern = '^(\D\D)(\d+\D*?\d+)(\D.?)?(_.+)?$'
+        pattern = '^(\D\D)(D?\d+\D*?\d+)(\D.?)?(_.+)?$'
 
     else:
         patent_number = modify_invalid_patent_number(patent_number)

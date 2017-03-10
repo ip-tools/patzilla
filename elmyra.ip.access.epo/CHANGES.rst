@@ -4,7 +4,11 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-03-10 0.131.0
+==================
 - Improve logging and error handling
+- Enable fulltext acquisition for countries BE, CA, CN, FR, GB, JP, KR, LU, NL, RU through IFI Claims
 
 2017-03-08 0.130.3
 ==================

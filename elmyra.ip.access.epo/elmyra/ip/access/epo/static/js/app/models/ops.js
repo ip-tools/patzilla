@@ -658,19 +658,8 @@ OpsExchangeDocument = OpsBaseModel.extend({
         },
 
         has_fulltext: function() {
-            /*
-            3.1.2. Fulltext inquiry and retrieval including description or claims
-                   Note, Currently full texts (description and/or claims) are only available for the following
-                   authorities: EP, WO, AT, CA (claims only), CH.
-
-               -- http://documents.epo.org/projects/babylon/eponet.nsf/0/7AF8F1D2B36F3056C1257C04002E0AD6/$File/OPS_RWS_ReferenceGuide_version1210_EN.pdf
-            */
-            var countries_allowed = ['EP', 'WO', 'AT', 'CA', 'CH'];
-
-            // 2014-07-02: Add fulltexts for DE and US through DEPATISconnect
-            countries_allowed.push('DE');
-            countries_allowed.push('US');
-
+            // Compute whether fulltexts are available for this document
+            var countries_allowed = opsChooserApp.config.get('system').total.fulltext_countries;
             return _(countries_allowed).contains(this['@country']);
         },
 

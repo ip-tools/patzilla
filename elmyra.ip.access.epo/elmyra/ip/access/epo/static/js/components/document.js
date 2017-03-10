@@ -219,13 +219,38 @@ DocumentDetailsController = Marionette.Controller.extend({
     },
 
     get_fulltext: function(document) {
-        var clazz = OpsFulltext;
-        var document_number = document.get_publication_number('epodoc');
 
+        // Resolve datasource by country
+        var datasource_name;
         var country = document['@country'];
-        if (_(['DE', 'US']).contains(country)) {
+        _.each(opsChooserApp.config.get('system').datasource, function(datasource_info, key) {
+            if (_.contains(datasource_info.fulltext_countries, country)) {
+                datasource_name = key;
+                return;
+            }
+        });
+
+        // Resolve handler and appropriate document number representation
+        var clazz;
+        var document_number;
+        if (datasource_name == 'ops') {
+            clazz = OpsFulltext;
+            document_number = document.get_publication_number('epodoc');
+
+        } else if (datasource_name == 'depatisconnect') {
             clazz = DepatisConnectFulltext;
             document_number = document.get_publication_number('docdb');
+
+        } else if (datasource_name == 'ificlaims') {
+            clazz = IFIClaimsFulltext;
+            document_number = document.get_publication_number('docdb');
+
+        } else {
+            opsChooserApp.ui.notify(
+                'Fulltext of document from country "' + country + '" not available. No appropriate datasource configured.',
+                {type: 'warning', icon: 'icon-file-text-alt'});
+            return;
+
         }
 
         return new clazz(document_number);
@@ -233,6 +258,11 @@ DocumentDetailsController = Marionette.Controller.extend({
 
     get_fulltext_details: function(details_type, document) {
         var ft = this.get_fulltext(document);
+        if (!ft) {
+            var deferred = $.Deferred();
+            deferred.reject({html: 'No data available'});
+            return deferred.promise();
+        }
         if (details_type == 'description') {
             return ft.get_description();
         } else if (details_type == 'claims') {
@@ -254,6 +284,11 @@ DocumentDetailsController = Marionette.Controller.extend({
                     $(content_element).html(data['html']);
                     data['lang'] && $(language_element).html('[' + data['lang'] + ']');
                     opsChooserApp.keywords.highlight($(content_element).find('*'));
+                }
+            }).fail(function(data) {
+                _this.indicate_activity(container, false);
+                if (data) {
+                    $(content_element).html(data['html']);
                 }
             });
         }

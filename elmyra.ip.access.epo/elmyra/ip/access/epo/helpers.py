@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
+# (c) 2014-2017 Andreas Motl, Elmyra UG
 import json
 import logging
 from pprint import pprint
 from elmyra.ip.access.epo.util import dict_prefix_key, dict_merge
-from elmyra.ip.util.date import unixtime_to_human, datetime_isoformat, unixtime_to_datetime
+from elmyra.ip.util.config import read_config, read_list
+from elmyra.ip.util.data.container import SmartBunch
+from elmyra.ip.util.date import datetime_isoformat, unixtime_to_datetime
 from elmyra.ip.util.python import _exception_traceback
-from pyramid.settings import asbool     # required by template
+from pyramid.settings import asbool     # Required by template, don't remove!
 from pyramid.threadlocal import get_current_request
 
 log = logging.getLogger(__name__)
@@ -272,6 +274,39 @@ class Bootstrapper(object):
 
         return data
 
+    def system_settings(self):
+
+        request = get_current_request()
+        pyramid_settings = request.registry.settings
+
+        # Read configuration file to get global settings
+        # TODO: Optimize: Only read once, not on each request!
+        # See also email:submit.py
+        all_settings = read_config(pyramid_settings['CONFIG_FILE'])
+
+        # Define baseline of system settings
+        system_settings = SmartBunch({
+            'datasources': [],
+            'datasource': SmartBunch(),
+            'total': SmartBunch.bunchify({'fulltext_countries': []}),
+        })
+
+        # Read system settings from configuration
+        system_settings.datasources = read_list(all_settings.get('ip_navigator', {}).get('datasources'))
+        for datasource in system_settings.datasources:
+            datasource_setting_key = 'datasource_{name}'.format(name=datasource)
+            datasource_settings = all_settings.get(datasource_setting_key, {})
+            datasource_settings['fulltext_countries'] = read_list(datasource_settings.get('fulltext_countries', ''))
+            datasource_settings['fulltext_enabled'] = asbool(datasource_settings.get('fulltext_enabled', False))
+            system_settings.datasource[datasource] = SmartBunch.bunchify(datasource_settings)
+
+            # Aggregate data for all countries
+            system_settings.total.fulltext_countries += datasource_settings['fulltext_countries']
+
+        #print 'system_settings:\n', system_settings
+
+        return system_settings
+
     def config_parameters(self):
 
         request = get_current_request()
@@ -334,7 +369,9 @@ class Bootstrapper(object):
         # 4. merge "request parameters"
         # 5. merge "user parameters"
         # 6. merge "opaque parameters" taking the highest precedence
-        params = environment
+        params = {}
+        params['system'] = self.system_settings()
+        params.update(environment)
         params.update(setting_params)
         params.update(request_opaque_meta)
         params.update(request_params)
@@ -466,6 +503,8 @@ class BackboneModelParameterFiddler(object):
             _.extend(theme_settings, {parameters_json});
             navigatorTheme = new NavigatorTheme(theme_settings);
         """.format(**tplvars)
+
+        #print 'javascript_config:', javascript_config
 
         payload = '\n'.join([javascript_config, javascript_theme])
         return payload
