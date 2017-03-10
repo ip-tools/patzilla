@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Improve logging and error handling
 
 2017-03-08 0.130.3
 ==================

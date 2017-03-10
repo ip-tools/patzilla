@@ -314,7 +314,10 @@
 </script>
 
 <script id="no-results" type="text/x-underscore-template">
-    Searching for <pre class="inline"><%= data.query_display && data.query_display.replace(/&amp;quot;/g, '"') || 'n/a' %></pre> at data source
+    <%
+    var query_display_html = htmlentities(data.query_display);
+    %>
+    Searching for <pre class="inline"><%= data.query_display %></pre> at data source
     <strong><%= data.datasource || 'n/a' %></strong> did not match any documents.
     Please try refining search criteria or expression.
     <br/>
@@ -323,8 +326,8 @@
             class="btn btn-warning report-issue-problem pull-right"
             data-report-origin="result"
             data-report-kind="not-available"
-            data-report-item="<%= data.query_dialog %>"
-            data-dialog-remark="Search did not match any documents at &quot;<%= data.datasource %>&quot;.&#13;Criteria: <%= data.query_dialog %>"
+            data-report-item="<%= query_display_html %>"
+            data-dialog-remark="Search did not match any documents at &quot;<%= data.datasource %>&quot;.&#13;Criteria:&#13;<%= query_display_html %>"
             >
         Report problem
     </button>

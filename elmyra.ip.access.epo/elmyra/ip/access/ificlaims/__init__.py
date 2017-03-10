@@ -12,5 +12,5 @@ logger = logging.getLogger(__name__)
 def get_ificlaims_client():
     request = get_current_request()
     client = request.ificlaims_client
-    logger.info('IFI Claims request with username {0}'.format(client.username))
+    #logger.info('IFI Claims request with username {0}'.format(client.username))
     return client
