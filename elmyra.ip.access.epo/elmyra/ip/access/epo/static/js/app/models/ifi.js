@@ -111,7 +111,10 @@ IFIClaimsFulltext = Marionette.Controller.extend({
     parse_claim_text: function(container) {
         var number;
         var text;
-        if (container['claim-text']) {
+        if (_.isArray(container['claim-text'])) {
+            // e.g. RU2015121704A
+            return this.parse_claim_list(container['claim-text']).join('<br/>');
+        } else if (_.isObject(container['claim-text'])) {
             // e.g. CN104154791B
             number = _.string.ltrim(container['@num'], '0');
             text = _.string.ltrim(container['claim-text']['$t']);
