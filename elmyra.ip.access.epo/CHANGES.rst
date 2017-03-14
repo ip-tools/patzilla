@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Improve fulltext/claims display for RU2015121704A via IFI Claims
 
 2017-03-10 0.131.0
 ==================
