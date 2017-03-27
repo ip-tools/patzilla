@@ -343,7 +343,6 @@
                         <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
                         <input name="application_date" type="hidden" value="<%= application_date %>"/>
                         <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
-                        <input name="ipcs" type="hidden" value="<%= data.get_ipcr_list().join('\n') %>"/>
                         <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
                         <!--
                         <input name="ship_action" type="submit" value="rate" class="btn"/>
@@ -478,31 +477,12 @@
                             <span class="clearfix"></span>
                             <dl class="dl-horizontal2 dl-horizontal-inline">
 
-                            <% if (data.has_ipc() || data.has_ipcr() || data.has_classifications()) { %>
+                            <%
+                            var classifications_map = data.get_classifications(true);
+                            var classification_schemes = data.get_classification_schemes();
+                            %>
 
-                                <% if (data.has_ipc()) { %>
-                                <dt>
-                                    IPC
-                                </dt>
-                                <dd class="keyword">
-                                    <%= data.get_ipc_list(true).join(', ') || '&nbsp;' %>
-                                </dd>
-                                <% } %>
-
-                                <% if (data.has_ipcr()) { %>
-                                <dt>
-                                    IPC-R
-                                </dt>
-                                <dd class="keyword">
-                                    <%= data.get_ipcr_list(true).join(', ') || '&nbsp;' %>
-                                </dd>
-                                <% } %>
-
-
-                                <%
-                                var classifications_map = data.get_classifications(true);
-                                var classification_schemes = data.get_classification_schemes();
-                                %>
+                            <% if (classifications_map) { %>
 
                                 <%
                                 _(classification_schemes).each(function(classification_scheme) {
@@ -522,7 +502,8 @@
                                 <% }); %>
 
                             <% } else { %>
-                            Classifications not available
+                                No classifications available
+
                             <% } %>
 
                             </dl>
@@ -555,6 +536,7 @@
                         </dd>
                         <br/>
 
+                        <% if (data.has_full_cycle()) { %>
                         <dt class="inid-tooltip" data-toggle="tooltip" title="full cycle">
                             (F)
                         </dt>
@@ -563,14 +545,14 @@
                             <br/>
                             <% _(data.get_full_cycle()).each(function(entry) { %>
 
-                                <%= entry.attributes.get_patent_number() %>,
-                                <%= entry.attributes.get_publication_date() %>
+                                <%= entry.get_patent_number() %>,
+                                <%= entry.get_publication_date() %>
                                 <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>
 
                                 &nbsp;&nbsp;
 
                                 <!-- pdf document -->
-                                <a href="<%= linkmaker.universal_pdf_url(entry.attributes.get_patent_number()) %>" target="ipsuite-pdf"
+                                <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="ipsuite-pdf"
                                    class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
                                    data-toggle="popover" data-trigger="hover" data-placement="top"
                                    data-content="PDF document"
@@ -584,6 +566,7 @@
 
                         </dd>
                         <br/>
+                        <% } %>
 
                         <% var npl_citations_rendered = data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>
                         <% if (npl_citations_rendered) { %>
@@ -757,16 +740,28 @@
 
 <%text>
 <script type="text/x-underscore-template" id="ops-biblio-party-template">
+
     <%
-    original = _.escape(_.escape(original));
-    epodoc = _.escape(_.escape(epodoc));
+    var content_parts = [];
+    if (original && canonical != original) {
+        content_parts.push(_.escape(_.escape('original: ' + original)));
+    }
+    if (epodoc && canonical != epodoc) {
+        content_parts.push(_.escape(_.escape('epodoc: ' + epodoc)));
+    }
+    var content = content_parts.join('<br/>');
     %>
+
     <%= display %>
+
+    <% if (content) { %>
     &nbsp;
     <a href="#" class="incognito do-not-print" onclick="javascript: $(this).popover({
         html: true,
-        content: 'original: <%= original %><br/>epodoc: <%= epodoc %>',
+        content: '<%= content %>',
         trigger: 'manual'}); $(this).popover('toggle'); return false;">...</a>
+    <% } %>
+
 </script>
 </%text>
 
@@ -829,7 +824,7 @@
     </td>
     <td>
         <%
-        _(data['priority-claim']).each(function(priority) {
+        _(to_list(data['priority-claim'])).each(function(priority) {
             //log('priority:', priority);
             var document_id = data.get_document_id(priority, null, 'docdb');
             print(document_id.fullnumber);

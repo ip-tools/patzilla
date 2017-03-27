@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2017 Andreas Motl, Elmyra UG
 
 OpsHelpers = Backbone.Model.extend({
 
@@ -78,8 +78,6 @@ OpsHelpers = Backbone.Model.extend({
 
 OpsBaseModel = Backbone.Model.extend({
 
-    defaults: _({}).extend(OpsHelpers.prototype, {
-
         get_document_id: function(node, reference_type, format) {
             /*
              reference_type = publication|application
@@ -108,6 +106,10 @@ OpsBaseModel = Backbone.Model.extend({
 
             return data;
 
+        },
+
+        get_document_number: function() {
+            return this.get_patent_number();
         },
 
         get_publication_reference: function(node, format) {
@@ -191,11 +193,9 @@ OpsBaseModel = Backbone.Model.extend({
                 ;
             }
             if (links) {
-                results = this.enrich_links(results, 'pn', null, {'no_modifiers': true});
+                results = OpsHelpers.prototype.enrich_links(results, 'pn', null, {'no_modifiers': true});
             }
             return results;
         },
-
-    }),
 
 });

@@ -69,6 +69,28 @@ OpsBaseViewMixin = {
 
 };
 
+TemplateHelperMixin = {
+
+    templateHelpers: function() {
+        var _this = this;
+        var funcs = {
+
+            // Propagate configuration object to template
+            config: opsChooserApp.config,
+
+            get_linkmaker: function() {
+                return new Ipsuite.LinkMaker(_this.model);
+            },
+        };
+
+        // Propagate whole model object to template
+        _.extend(funcs, this.model);
+
+        return funcs;
+    },
+
+};
+
 OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     //template: "#ops-entry-template",
     template: _.template($('#ops-entry-template').html(), this.model, {variable: 'data'}),
@@ -82,13 +104,6 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
     initialize: function() {
         console.log('OpsExchangeDocumentView.initialize');
-        this.templateHelpers.config = opsChooserApp.config;
-    },
-
-    templateHelpers: {
-        get_linkmaker: function() {
-            return new Ipsuite.LinkMaker(this);
-        },
     },
 
     onDomRefresh: function() {
@@ -101,7 +116,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         // However, there should be better mechanisms. Investigate! (TODO)
         var container = $(this.el).find('.ops-collection-entry');
         $(container).prop('view', this);
-        $(container).prop('ops-document', this.model.attributes);
+        $(container).prop('ops-document', this.model);
 
         // Swap bibliographic details with placeholder information if we encounter appropriate signal
         // TODO: Really do this onDomRefresh?
@@ -109,7 +124,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
             //log('this.model:', this.model);
 
             // Massage LinkMaker to be suitable for use from placeholder template
-            this.model.linkmaker = new Ipsuite.LinkMaker(this.model.attributes);
+            this.model.linkmaker = new Ipsuite.LinkMaker(this.model);
 
             // Add placeholder
             var html = _.template($('#ops-entry-placeholder-template').html(), this.model, {variable: 'model'});
@@ -185,6 +200,9 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     },
 
 });
+
+_.extend(OpsExchangeDocumentView.prototype, TemplateHelperMixin);
+
 
 OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     tagName: "div",
@@ -269,6 +287,8 @@ OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
     //style: 'margin-bottom: 10px',
 
 });
+_.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin);
+
 
 OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
@@ -284,6 +304,7 @@ OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
     }
 
 });
+_.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
 
 
 OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
@@ -295,6 +316,8 @@ OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
     //style: 'margin-bottom: 10px',
 
 });
+_.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin);
+
 
 OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
@@ -335,7 +358,7 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
                 // aggregate list of publication numbers of all family members
                 var members = [];
                 _.each(this.items, function(item) {
-                    var publication_number = OpsBaseModel.prototype.defaults.get_publication_number(item, id_type);
+                    var publication_number = OpsBaseModel.prototype.get_publication_number(item, id_type);
                     members.push(publication_number);
                 });
 
@@ -355,21 +378,29 @@ OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
     template: _.template($('#ops-family-citations-member-template').html(), this.model, {variable: 'data'}),
     tagName: 'tr',
 
-    templateHelpers: {
-        get_patent_citation_list: function(enrich) {
-            if (this['exchange-document']) {
+    templateHelpers: function() {
+
+        var funcs = {};
+        funcs = _.extend(funcs, OpsBaseModel.prototype, OpsHelpers.prototype);
+        funcs = _.extend(funcs, {
+            get_patent_citation_list: function(enrich) {
+                if (this['exchange-document']) {
+                    var exchange_document = new OpsExchangeDocument(this['exchange-document']);
+                    var citations = exchange_document.get_patent_citation_list(enrich);
+                    return citations;
+                } else {
+                    return [];
+                }
+            },
+            get_citations_environment_button: function() {
                 var exchange_document = new OpsExchangeDocument(this['exchange-document']);
-                var citations = exchange_document.attributes.get_patent_citation_list(enrich);
-                return citations;
-            } else {
-                return [];
-            }
-        },
-        get_citations_environment_button: function() {
-            var exchange_document = new OpsExchangeDocument(this['exchange-document']);
-            var citations_environment_button = exchange_document.attributes.get_citations_environment_button();
-            return citations_environment_button;
-        },
+                var citations_environment_button = exchange_document.get_citations_environment_button();
+                return citations_environment_button;
+            },
+        });
+
+        return funcs;
+
     },
 
 });
@@ -407,8 +438,9 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
     templateHelpers: function() {
 
-        // implement interface required for reusing #ops-citations-environment-button-template
-        return {
+        // Implement interface required for reusing #ops-citations-environment-button-template
+        var helpers = {};
+        helpers = _.extend(helpers, {
 
             // If your template needs access to the collection, you'll need to pass it via templateHelpers
             // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
@@ -443,7 +475,7 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
                         }
                     }
 
-                    var citations_local = exchange_document.attributes.get_patent_citation_list(false, 'epodoc');
+                    var citations_local = exchange_document.get_patent_citation_list(false, 'epodoc');
                     _.each(citations_local, function(citation) {
                         citations_set.add(citation);
                     });
@@ -473,7 +505,9 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
                 throw Error('not implemented');
             },
 
-        };
+        });
+
+        return helpers;
 
     },
 
@@ -494,7 +528,7 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
         _.each(this.collection.models, function(model) {
             var exchange_document = model.attributes['exchange-document'];
             if (exchange_document && exchange_document['bibliographic-data']) {
-                var citation_list = model.attributes.get_patent_citation_list(exchange_document['bibliographic-data'], false, 'epodoc');
+                var citation_list = model.get_patent_citation_list(exchange_document['bibliographic-data'], false, 'epodoc');
                 _.each(citation_list, function(citation_item) {
                     if (!citations[citation_item]) {
                         citations[citation_item] = 0;

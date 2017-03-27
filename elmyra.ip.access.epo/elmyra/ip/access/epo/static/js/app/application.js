@@ -85,7 +85,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        console.log('App.perform_search: datasource=' + datasource, 'query=' + query, 'options=', options);
+        console.log('App.perform_search: datasource=' + datasource, 'query=' + JSON.stringify(query), 'options=', options);
 
         // propagate keywords from comfort form for fallback mechanism
         options.keywords = $('#keywords').val();
@@ -582,7 +582,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             if (index != undefined) return index;
 
             // 3. again, fall back to compare against full-cycle neighbors
-            var full_cycle_numbers_full = document.attributes.get_full_cycle_numbers();
+            var full_cycle_numbers_full = document.get_full_cycle_numbers();
             var full_cycle_numbers = _.difference(full_cycle_numbers_full, [document_id_full]);
 
             // check each full-cycle member ...
@@ -644,7 +644,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             documents_response_nokindcode.push(document_id_nokindcode);
 
             // build map for each number knowing its full-cycle neighbours
-            var full_cycle_numbers_full = document.attributes.get_full_cycle_numbers();
+            var full_cycle_numbers_full = document.get_full_cycle_numbers();
             _.each(full_cycle_numbers_full, function(number) {
                 if (!documents_full_cycle_map[number]) {
                     var full_cycle_numbers = _.difference(full_cycle_numbers_full, [number]);
@@ -783,11 +783,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        // inject placeholder objects for all missing documents
+        // Inject placeholder objects for all missing documents
         var _this = this;
         _.each(documents_missing, function(document_missing) {
 
-            // split patent number into components
+            // Split patent number into components
             var patent = split_patent_number(document_missing.number);
 
             // inject placeholder model
@@ -808,7 +808,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     },
 
-    // initialize model from url query parameters ("numberlist")
+    // Initialize model from url query parameters ("numberlist")
     parse_numberlist: function(payload) {
         if (!_.isEmpty(payload)) {
             var fieldname;
@@ -1198,7 +1198,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // propagate basket contents to Add/Remove button states once when activating the basket
         // TODO: do this conditionally - only if Basket is enabled
         this.documents.each(function(document) {
-            var number = document.attributes.get_patent_number();
+            var number = document.get_patent_number();
             if (_this.basketModel) {
                 var entry = _this.basketModel.get_entry_by_number(number);
                 _this.basketController.link_document(entry, number);
