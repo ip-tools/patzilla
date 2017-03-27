@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-03-28 0.132.0
+==================
 - Improve fulltext/claims display for RU2015121704A via IFI Claims
 - Refactor bibliographic model implementation
 - Optionally display bibliographic data from IFI Claims (e.g. IN2015CH00356A)
