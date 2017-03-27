@@ -250,7 +250,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // Signal search success
             _this.trigger('search:success', search_info);
 
-            log('upstream response:', response);
+            log('upstream-response:', response);
             log('engine.keywords:', engine.keywords);
 
             // Propagate information from backend to user interface

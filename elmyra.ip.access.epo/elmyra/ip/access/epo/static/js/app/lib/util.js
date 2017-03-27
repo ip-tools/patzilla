@@ -22,6 +22,12 @@ function today_iso() {
     return moment().format('YYYY-MM-DD');
 }
 
+function isodate_compact_to_verbose(value) {
+    if (value) {
+        return moment(value, 'YYYYMMDD').format('YYYY-MM-DD');
+    }
+}
+
 function changeTooltipColorTo(color) {
     $('.tooltip-inner').css('background-color', color)
     $('.tooltip.top .tooltip-arrow').css('border-top-color', color);

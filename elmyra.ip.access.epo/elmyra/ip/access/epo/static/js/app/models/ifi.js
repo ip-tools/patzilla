@@ -51,6 +51,9 @@ IFIClaimsDocument = OpsHelpers.extend({
         return this.get('@country') + this.get('@doc-number') + this.get('@kind');
     },
 
+    get_document_number: function() {
+        return this.get_patent_number();
+    },
 
     get_document_id: function(node, reference_type, format) {
         /*
@@ -84,7 +87,7 @@ IFIClaimsDocument = OpsHelpers.extend({
         } else {
             data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
         }
-        data.isodate = this.format_date(data.date);
+        data.isodate = isodate_compact_to_verbose(data.date);
 
         return data;
 
@@ -189,7 +192,7 @@ IFIClaimsDocument = OpsHelpers.extend({
         classifications['IPC'] = this.get_classifications_ipc(links);
         classifications['IPC-R'] = this.get_classifications_ipcr(links);
         classifications['CPC'] = this.get_classifications_cpc(links);
-        log('classifications:', classifications);
+        //log('classifications:', classifications);
         return classifications;
     },
 
@@ -273,7 +276,7 @@ IFIClaimsDocument = OpsHelpers.extend({
         inventors_root_node = inventors_root_node || [];
         var inventors_node_list = to_list(inventors_root_node['inventor']);
         var inventors_list = this.parties_to_list(inventors_node_list);
-        log('inventors_list:', inventors_list);
+        //log('inventors_list:', inventors_list);
 
         if (links) {
             inventors_list = this.enrich_links(inventors_list, 'inventor');
@@ -332,7 +335,7 @@ IFIClaimsDocument = OpsHelpers.extend({
                 sequence_max = sequence;
             }
         });
-        console.log('party-groups:', groups);
+        //console.log('party-groups:', groups);
 
         // TODO: somehow display in gui which one is the "epodoc" and which one is the "original" value
         var entries = [];

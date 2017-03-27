@@ -102,7 +102,7 @@ OpsBaseModel = Backbone.Model.extend({
             } else {
                 data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
             }
-            data.isodate = this.format_date(data.date);
+            data.isodate = isodate_compact_to_verbose(data.date);
 
             return data;
 
@@ -148,12 +148,6 @@ OpsBaseModel = Backbone.Model.extend({
                 newdict[key] = value;
             });
             return newdict;
-        },
-
-        format_date: function(value) {
-            if (value) {
-                return moment(value, 'YYYYMMDD').format('YYYY-MM-DD');
-            }
         },
 
         get_citations_environment_button: function(options) {

@@ -694,11 +694,11 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
         },
 
         get_publication_date: function() {
-            return this.format_date(this.search_date(this.get('bibliographic-data')['publication-reference']['document-id']));
+            return isodate_compact_to_verbose(this.search_date(this.get('bibliographic-data')['publication-reference']['document-id']));
         },
 
         get_application_date: function() {
-            return this.format_date(this.search_date(this.get('bibliographic-data')['application-reference']['document-id']));
+            return isodate_compact_to_verbose(this.search_date(this.get('bibliographic-data')['application-reference']['document-id']));
         },
 
 });
