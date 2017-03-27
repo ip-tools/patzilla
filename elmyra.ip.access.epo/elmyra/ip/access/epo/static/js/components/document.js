@@ -222,7 +222,7 @@ DocumentDetailsController = Marionette.Controller.extend({
 
         // Resolve datasource by country
         var datasource_name;
-        var country = document['@country'];
+        var country = document.get('@country');
         _.each(opsChooserApp.config.get('system').datasource, function(datasource_info, key) {
             if (_.contains(datasource_info.fulltext_countries, country)) {
                 datasource_name = key;

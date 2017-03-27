@@ -82,7 +82,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                             representations.push(new OpsExchangeDocument(exchange_document));
                         });
                         _(exchange_documents).each(function(exchange_document) {
-                            exchange_document['bibliographic-data']['full-cycle'] = representations;
+                            exchange_document['full-cycle'] = representations;
                         });
 
 
@@ -275,20 +275,23 @@ OpsPublishedDataCrawler = DatasourceCrawler.extend({
 
 OpsExchangeDocument = OpsBaseModel.extend({
 
-    defaults: _({}).extend(OpsBaseModel.prototype.defaults, OpsHelpers.prototype, {
+        defaults: {},
 
-        selected: false,
-
-        // TODO: maybe move these methods to "viewHelpers"
-        // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
-        // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
-
-        get_patent_number: function() {
-            return this['@country'] + this['@doc-number'] + this['@kind'];
+        initialize: function(options) {
+            this.set('datasource', 'ops');
+            // TODO: enhance this as soon as we're in AMD land
+            this.printmode = opsChooserApp.config.get('mode') == 'print';
         },
 
-        get_document_number: function() {
-            return this.get_patent_number();
+        select: function() {
+            this.set('selected', true);
+        },
+        unselect: function() {
+            this.set('selected', false);
+        },
+
+        get_patent_number: function() {
+            return this.get('@country') + this.get('@doc-number') + this.get('@kind');
         },
 
         get_publication_number: function(format) {
@@ -301,9 +304,25 @@ OpsExchangeDocument = OpsBaseModel.extend({
             return document_id.fullnumber;
         },
 
+        get_publication_reference: function(format) {
+            return OpsBaseModel.prototype.get_publication_reference(this.get('bibliographic-data'), format);
+        },
+
+        get_application_reference: function(format) {
+            return OpsBaseModel.prototype.get_application_reference(this.get('bibliographic-data'), format);
+        },
+
+        get_patent_citation_list: function(links, id_type) {
+            return OpsBaseModel.prototype.get_patent_citation_list(this.get('bibliographic-data'), links, id_type);
+        },
+
+        has_full_cycle: function() {
+            return !_.isEmpty(this.get('full-cycle'));
+        },
+
         get_full_cycle: function() {
             var results = [];
-            var entries = this['bibliographic-data']['full-cycle'];
+            var entries = this.get('full-cycle');
             _(entries).each(function(entry) {
                 results.push(entry);
             });
@@ -317,17 +336,15 @@ OpsExchangeDocument = OpsBaseModel.extend({
             return numbers;
         },
 
-        get_publication_reference: function(format) {
-            return OpsBaseModel.prototype.defaults.get_publication_reference(this['bibliographic-data'], format);
-        },
+});
 
-        get_application_reference: function(format) {
-            return OpsBaseModel.prototype.defaults.get_application_reference(this['bibliographic-data'], format);
-        },
+_.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
 
-        get_patent_citation_list: function(links, id_type) {
-            return OpsBaseModel.prototype.defaults.get_patent_citation_list(this['bibliographic-data'], links, id_type);
-        },
+        selected: false,
+
+        // TODO: maybe move these methods to "viewHelpers"
+        // http://lostechies.com/derickbailey/2012/04/26/view-helpers-for-underscore-templates/
+        // https://github.com/marionettejs/backbone.marionette/wiki/View-helpers-for-underscore-templates#using-this-with-backbonemarionette
 
         get_title_list: function() {
             var title_list = [];
@@ -429,14 +446,15 @@ OpsExchangeDocument = OpsBaseModel.extend({
                 //entries.push(epodoc_value + ' / ' + original_value);
                 //entries.push(original_value);
 
-                var display_value = original_value;
+                var canonical_value = original_value;
                 if (epodoc_value) {
                     // strip country suffix from e.g. "L'ORÉAL [FR]"
-                    display_value = epodoc_value.replace(/\[.+?\]/, '').trim();
+                    canonical_value = epodoc_value.replace(/\[.+?\]/, '').trim();
                 }
 
                 var entry = {
-                    display: display_value,
+                    display: canonical_value,
+                    canonical: canonical_value,
                     epodoc: epodoc_value,
                     original: original_value,
                 }
@@ -448,10 +466,20 @@ OpsExchangeDocument = OpsBaseModel.extend({
 
         },
 
-        has_ipc: function() {
-            return !_.isEmpty(this['bibliographic-data']['classification-ipc']);
+        get_classification_schemes: function() {
+            return ['IPC', 'IPC-R', 'CPC', 'UC', 'FI', 'FTERM'];
         },
-        get_ipc_list: function(links) {
+
+        get_classifications: function(links) {
+            var classifications = {};
+            classifications['IPC'] = this.get_classifications_ipc(links);
+            classifications['IPC-R'] = this.get_classifications_ipcr(links);
+            _(classifications).extend(this.get_classifications_more(links));
+            //log('classifications:', classifications);
+            return classifications;
+        },
+
+        get_classifications_ipc: function(links) {
             var entries = [];
             var container = this['bibliographic-data']['classification-ipc'];
             if (container) {
@@ -467,10 +495,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
             return entries;
         },
 
-        has_ipcr: function() {
-            return !_.isEmpty(this['bibliographic-data']['classifications-ipcr']);
-        },
-        get_ipcr_list: function(links) {
+        get_classifications_ipcr: function(links) {
             var entries = [];
             var container = this['bibliographic-data']['classifications-ipcr'];
             if (container && container['classification-ipcr']) {
@@ -490,13 +515,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
             return entries;
         },
 
-        has_classifications: function() {
-            return !_.isEmpty(this['bibliographic-data']['patent-classifications']);
-        },
-        get_classification_schemes: function() {
-            return ['CPC', 'UC', 'FI', 'FTERM'];
-        },
-        get_classifications: function(links) {
+        get_classifications_more: function(links) {
 
             var classifications = {};
             var container = this['bibliographic-data']['patent-classifications'];
@@ -600,7 +619,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
         },
 
         has_citations: function() {
-            return this['bibliographic-data'] && Boolean(this['bibliographic-data']['references-cited']);
+            return this.get('bibliographic-data') && Boolean(this.get('bibliographic-data')['references-cited']);
         },
 
         get_citing_query: function() {
@@ -675,31 +694,12 @@ OpsExchangeDocument = OpsBaseModel.extend({
         },
 
         get_publication_date: function() {
-            return this.format_date(this.search_date(this['bibliographic-data']['publication-reference']['document-id']));
+            return this.format_date(this.search_date(this.get('bibliographic-data')['publication-reference']['document-id']));
         },
 
         get_application_date: function() {
-            return this.format_date(this.search_date(this['bibliographic-data']['application-reference']['document-id']));
+            return this.format_date(this.search_date(this.get('bibliographic-data')['application-reference']['document-id']));
         },
-
-    }),
-
-    initialize: function(options) {
-        // TODO: enhance this as soon as we're in AMD land
-        this.printmode = opsChooserApp.config.get('mode') == 'print';
-    },
-
-    get_document_number: function() {
-        return this.attributes.get_patent_number();
-    },
-
-    select: function() {
-        this.set('selected', true);
-    },
-    unselect: function() {
-        this.set('selected', false);
-    },
-
 
 });
 
@@ -719,7 +719,7 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
             numbers.push(model.get_document_number());
 
             // push more numbers from full-cycle
-            var full_cycle_numbers = model.attributes.get_full_cycle_numbers();
+            var full_cycle_numbers = model.get_full_cycle_numbers();
             Array.prototype.push.apply(numbers, full_cycle_numbers);
         });
 
@@ -818,11 +818,7 @@ OpsFulltext = Marionette.Controller.extend({
 
 
 
-OpsFamilyMember = OpsBaseModel.extend({
-
-    defaults: _({}).extend(OpsBaseModel.prototype.defaults, OpsHelpers.prototype, {
-    }),
-
+OpsFamilyMember = OpsBaseModel.extend(OpsHelpers.prototype, {
     parse: function(response) {
         response['priority-claim'] = to_list(response['priority-claim']);
         return response;

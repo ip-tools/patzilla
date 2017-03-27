@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2017 Andreas Motl, Elmyra UG
 
 // Ipsuite.LinkMaker
 (function(){
@@ -26,9 +26,9 @@
 
         if (document) {
             this.document = document;
-            this.country = document['@country'];
-            this.docnumber = document['@doc-number'];
-            this.kind = document['@kind'];
+            this.country = document.get('@country');
+            this.docnumber = document.get('@doc-number');
+            this.kind = document.get('@kind');
             this.fullnumber = this.country + this.docnumber + this.kind;
         }
 
