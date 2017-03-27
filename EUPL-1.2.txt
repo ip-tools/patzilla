@@ -299,3 +299,9 @@ Appendix
 - All other changes or additions to this Appendix require the production of a
   new EUPL version.
 
+
+                                     ===
+
+
+See also: https://en.wikipedia.org/wiki/European_Union_Public_Licence
+Upstream source for this file: https://joinup.ec.europa.eu/sites/default/files/ckeditor_files/files/EUPL%20v1_2%20-%20Draft%20EN%20v16-1.pdf
