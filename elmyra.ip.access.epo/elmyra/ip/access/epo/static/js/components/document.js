@@ -298,6 +298,9 @@ DocumentDetailsController = Marionette.Controller.extend({
     display_family: function(document, container, view_type) {
 
         var document_number = document.get_publication_number('epodoc');
+        if (document.get('datasource') == 'ifi') {
+            document_number = document.get_publication_number('docdb');
+        }
 
         // compute data collection and view class
         var view_class;

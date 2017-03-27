@@ -6,6 +6,7 @@ development
 ===========
 - Improve fulltext/claims display for RU2015121704A via IFI Claims
 - Refactor bibliographic model implementation
+- Optionally display bibliographic data from IFI Claims (e.g. IN2015CH00356A)
 
 2017-03-10 0.131.0
 ==================
