@@ -288,7 +288,7 @@ class Bootstrapper(object):
         system_settings = SmartBunch({
             'datasources': [],
             'datasource': SmartBunch(),
-            'total': SmartBunch.bunchify({'fulltext_countries': []}),
+            'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
         })
 
         # Read system settings from configuration
@@ -296,8 +296,10 @@ class Bootstrapper(object):
         for datasource in system_settings.datasources:
             datasource_setting_key = 'datasource_{name}'.format(name=datasource)
             datasource_settings = all_settings.get(datasource_setting_key, {})
-            datasource_settings['fulltext_countries'] = read_list(datasource_settings.get('fulltext_countries', ''))
             datasource_settings['fulltext_enabled'] = asbool(datasource_settings.get('fulltext_enabled', False))
+            datasource_settings['fulltext_countries'] = read_list(datasource_settings.get('fulltext_countries', ''))
+            datasource_settings['details_enabled'] = asbool(datasource_settings.get('details_enabled', False))
+            datasource_settings['details_countries'] = read_list(datasource_settings.get('details_countries', ''))
             system_settings.datasource[datasource] = SmartBunch.bunchify(datasource_settings)
 
             # Aggregate data for all countries

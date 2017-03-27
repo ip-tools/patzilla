@@ -790,14 +790,49 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             // Split patent number into components
             var patent = split_patent_number(document_missing.number);
 
-            // inject placeholder model
-            _this.documents.add(new GenericExchangeDocument({
-                '__type__': 'ops-placeholder',
-                '@country': patent.country,
-                '@doc-number': patent.number,
-                '@kind': patent.kind,
-                'alternatives_local': document_missing.alternatives_local,
-            }), {sort: false});
+            var placeholder;
+
+            // Fall back to IFI Claims for bibliographic data
+            var ificlaims_settings = opsChooserApp.config.get('system').datasource.ificlaims;
+            var ifi_allowed =
+                ificlaims_settings.details_enabled &&
+                _.contains(ificlaims_settings.details_countries, patent.country);
+
+            // || _.isEmpty(document_missing.alternatives_local)
+            if (ifi_allowed) {
+                var ifi_doc = new IFIClaimsDocument({document_number: document_missing.number});
+
+                // TODO:
+                // Move to async mode! The current problem is that setting "placeholder = ifi_doc" is too
+                // late for further processing, so the whole function must be made asynchronous.
+                var r = ifi_doc.fetch({sync: true, async: false})
+                    .success(function() {
+                        console.info('Document "' + document_missing.number + '" available at IFI Claims.');
+                        //log('ifi.document:', ifi_doc);
+                        placeholder = ifi_doc;
+                    })
+                    .fail(function() {
+                        console.warn('Document "' + document_missing.number + '" not available at IFI Claims.');
+                    });
+            }
+
+            // Use a generic placeholder for display as last resort
+            if (!placeholder) {
+                log('Add GenericExchangeDocument');
+                placeholder = new GenericExchangeDocument({
+                    '__type__': 'ops-placeholder',
+                    '@country': patent.country,
+                    '@doc-number': patent.number,
+                    '@kind': patent.kind,
+                    'alternatives_local': document_missing.alternatives_local,
+                });
+            }
+
+            // Inject placeholder model
+            if (placeholder) {
+                _this.documents.add(placeholder, {sort: false});
+            }
+
         });
         //log('documents:', this.documents);
 
