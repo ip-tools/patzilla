@@ -63,9 +63,16 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
          reference_type = publication|application
          format = docdb|epodoc
          */
+
+        // Let "epodoc" format converge to "epo" for IFI Claims
+        if (format == 'epodoc') {
+            format = 'epo';
+        }
+
         //node = node || {'document-id': this};
         node = node || this;
         //log('get_document_id - node:', node, 'reference-type:', reference_type, 'format:', format);
+
         var document_ids;
         if (reference_type) {
             var reference = reference_type + '-reference';
@@ -75,21 +82,25 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
         }
         //log('document_ids:', document_ids);
 
-        /*
         var document_id = _(document_ids).find(function(item) {
-            return item['@document-id-type'] == format;
+            return item['@format'] == format;
         });
-        */
-        var document_id = document_ids[0];
+
+        // Fall back to "format == epo" if no "format == docdb" item could be found
+        if (!document_id && format == 'docdb') {
+            document_id = _(document_ids).find(function(item) {
+                return item['@format'] == 'epo';
+            });
+        }
+
+        // Fall back to first entry if no @format attribute is present at all
+        if (!document_id) {
+            document_id = document_ids[0];
+        }
         //log('document_id:', document_id);
 
         var data = this.flatten_document_id(document_id);
-        if (format == 'epodoc') {
-            data.fullnumber = data.docnumber;
-
-        } else {
-            data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
-        }
+        data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
         data.isodate = isodate_compact_to_verbose(data.date);
 
         return data;
@@ -151,8 +162,8 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
         var appnumber_original = this.get_application_number('original');
         var entry =
             '<td class="span2">' + (this.get_application_date() || '--') + '</td>' +
-                '<td class="span3">' + (appnumber_epodoc || '--') + '</td>' +
-                '<td>';
+            '<td class="span3">' + (appnumber_epodoc || '--') + '</td>' +
+            '<td>';
         if (!_.isEmpty(appnumber_original)) {
             entry += 'original: ' + appnumber_original;
         }
@@ -256,10 +267,9 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
             return [];
         }
 
-        // TODO: Not ready yet
         applicants_root_node = applicants_root_node || [];
-        var applicants_node = applicants_root_node['applicant'];
-        var applicants_list = this.parties_to_list(applicants_node, 'applicant-name');
+        var applicants_node_list = to_list(applicants_root_node['applicant']);
+        var applicants_list = this.parties_to_list(applicants_node_list, 'applicant-name');
         if (links) {
             applicants_list = this.enrich_links(applicants_list, 'applicant');
         }
@@ -275,7 +285,6 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
             return [];
         }
 
-        // TODO: Not ready yet
         inventors_root_node = inventors_root_node || [];
         var inventors_node_list = to_list(inventors_root_node['inventor']);
         var inventors_list = this.parties_to_list(inventors_node_list);
@@ -316,10 +325,13 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
          },
         */
 
-        // deserialize list of parties (applicants/inventors) from exchange payload
+        // Deserialize list of parties (applicants/inventors) from exchange payload
         var sequence_max = "0";
         var groups = {};
         _.each(container, function(item) {
+
+            //log('party-item:', item);
+
             var data_format = item['@format'];
             var sequence = item['@sequence'];
             var value = _.string.trim(item['addressbook']['last-name']['$t'], ', ');
