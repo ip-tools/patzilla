@@ -5,6 +5,10 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 
+2017-03-28 0.132.2
+==================
+- Attempt to fix bibliographic model implementation again
+
 2017-03-28 0.132.1
 ==================
 - Fix bibliographic model implementations
