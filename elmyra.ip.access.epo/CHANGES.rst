@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-03-28 0.132.3
+==================
 - Improve/fix IFI Claims data model implementation
 - Add “CN” to list of countries where bibliographic data can be acquired from IFI Claims
 - Add datasource label to detail view
