@@ -5,6 +5,10 @@ GenericExchangeDocument = Backbone.Model.extend({});
 
 _.extend(GenericExchangeDocument.prototype, OpsBaseModel.prototype, OpsHelpers.prototype, {
 
+    get_datasource_label: function() {
+        return undefined;
+    },
+
     get_patent_number: function() {
         return this.get_document_id().fullnumber;
     },

@@ -581,6 +581,17 @@
                         <br/>
                         <% } %>
 
+                        <%
+                        var datasource_label = data.get_datasource_label();
+                        if (datasource_label) {
+                        %>
+                        <br/><br/><br/>
+                        <span class="pull-right text-small text-muted">
+                            Data source: <%= datasource_label %>
+                        </span>
+                        <span class="clearfix"></span>
+                        <% } %>
+
                     </dl>
                     </div>
 

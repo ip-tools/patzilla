@@ -23,6 +23,10 @@
     text-align: right;
 }
 
+.text-muted {
+    color: #777777;
+}
+
 .full-width {
     width: 100%;
 }

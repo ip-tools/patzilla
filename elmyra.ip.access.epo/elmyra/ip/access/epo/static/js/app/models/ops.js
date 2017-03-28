@@ -290,6 +290,10 @@ OpsExchangeDocument = OpsBaseModel.extend({
             this.set('selected', false);
         },
 
+        get_datasource_label: function() {
+            return 'EPO/OPS';
+        },
+
         get_patent_number: function() {
             return this.get('@country') + this.get('@doc-number') + this.get('@kind');
         },

@@ -50,6 +50,10 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
         return outcome;
     },
 
+    get_datasource_label: function() {
+        return 'IFI Claims';
+    },
+
     get_patent_number: function() {
         return this.get('@country') + this.get('@doc-number') + this.get('@kind');
     },
