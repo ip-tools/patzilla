@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Improve/fix IFI Claims data model implementation
 
 2017-03-28 0.132.2
 ==================
