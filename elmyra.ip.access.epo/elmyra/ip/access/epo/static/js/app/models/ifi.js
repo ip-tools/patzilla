@@ -21,7 +21,11 @@ IFIClaimsCrawler = DatasourceCrawler.extend({
 
 });
 
-IFIClaimsDocument = OpsHelpers.extend({
+
+
+IFIClaimsDocument = Backbone.Model.extend({});
+
+_.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototype, {
 
     initialize: function(options) {
         log('IFIClaimsDocument.initialize');
@@ -37,13 +41,12 @@ IFIClaimsDocument = OpsHelpers.extend({
 
     sync: function() {
         var outcome = Backbone.sync.apply(this, arguments);
-        //this.document = this.get('patent-document');
-        //_.extend(this, this.get('patent-document'));
 
         // Mungle local attributes to make it almost compliant to OPS model
-        this.set(this.get('patent-document'));
+        this.set(this.get('patent-document'), { silent: true });
+        this.unset('patent-document', { silent: true });
 
-        log('this:', this);
+        log('IFIClaimsDocument:', this);
         return outcome;
     },
 
