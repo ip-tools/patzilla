@@ -1206,7 +1206,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         $("#basket-add-all-documents").click(function() {
             // collect all document numbers
             _this.documents.each(function(document) {
-                var number = document.attributes.get_patent_number();
+                var number = document.get_patent_number();
                 _this.basketModel.add(number, {'reset_seen': true});
             });
 
