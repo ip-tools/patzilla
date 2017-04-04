@@ -11,6 +11,7 @@ development
 - Make IFI Claims data model grok patent citations
 - Enable documents from office “KR” for IFI Claims bibliographic data interface
 - Improve language priorization for fulltexts from IFI Claims: EN, DE, others
+- Add datasource label to fulltext sections
 
 2017-03-28 0.132.3
 ==================
