@@ -40,7 +40,14 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
     },
 
     sync: function() {
+
         var outcome = Backbone.sync.apply(this, arguments);
+
+        // Raise exception if document is empty
+        if (_.isEmpty(this.get('patent-document'))) {
+            var document_number = this.get('document_number');
+            throw new Error('Empty document ' + document_number + ' from IFI Claims');
+        }
 
         // Mungle local attributes to make it almost compliant to OPS model
         this.set(this.get('patent-document'), { silent: true });

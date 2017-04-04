@@ -805,15 +805,19 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 // TODO:
                 // Move to async mode! The current problem is that setting "placeholder = ifi_doc" is too
                 // late for further processing, so the whole function must be made asynchronous.
-                var r = ifi_doc.fetch({sync: true, async: false})
-                    .success(function() {
-                        console.info('Document "' + document_missing.number + '" available at IFI Claims.');
-                        //log('ifi.document:', ifi_doc);
-                        placeholder = ifi_doc;
-                    })
-                    .fail(function() {
-                        console.warn('Document "' + document_missing.number + '" not available at IFI Claims.');
-                    });
+                try {
+                    var r = ifi_doc.fetch({sync: true, async: false})
+                        .success(function() {
+                            console.info('Document "' + document_missing.number + '" available at IFI Claims.');
+                            //log('ifi.document:', ifi_doc);
+                            placeholder = ifi_doc;
+                        })
+                        .fail(function() {
+                            console.warn('Document "' + document_missing.number + '" not available at IFI Claims.');
+                        });
+                } catch(ex) {
+                    console.warn(ex);
+                }
             }
 
             // Use a generic placeholder for display as last resort
