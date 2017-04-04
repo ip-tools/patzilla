@@ -120,7 +120,14 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     get_entry_by_number: function(item) {
-        var entrymodels = this.get('entries').where({number: item});
+
+        // Fix exception flood occurred on 2017-03-29
+        var entries = this.get('entries');
+        if (!entries) {
+            return;
+        }
+
+        var entrymodels = entries.where({number: item});
         if (_.isEmpty(entrymodels)) {
             return;
         } else {
