@@ -278,11 +278,12 @@ DocumentDetailsController = Marionette.Controller.extend({
 
         if (content_element) {
             this.indicate_activity(container, true);
-            details.then(function(data) {
+            details.then(function(data, datasource_label) {
                 _this.indicate_activity(container, false);
                 if (data) {
                     $(content_element).html(data['html']);
                     data['lang'] && $(language_element).html('[' + data['lang'] + ']');
+                    $('.datasource-label').html(datasource_label);
                     opsChooserApp.keywords.highlight($(content_element).find('*'));
                 }
             }).fail(function(data) {

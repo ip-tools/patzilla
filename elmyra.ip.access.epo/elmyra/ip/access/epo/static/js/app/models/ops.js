@@ -754,6 +754,10 @@ OpsFulltext = Marionette.Controller.extend({
         this.document_number = document_number;
     },
 
+    get_datasource_label: function() {
+        return 'EPO/OPS';
+    },
+
     get_claims: function() {
 
         var _this = this;
@@ -775,7 +779,7 @@ OpsFulltext = Marionette.Controller.extend({
                         html: content_text,
                         lang: claims['@lang'],
                     };
-                    deferred.resolve(response);
+                    deferred.resolve(response, _this.get_datasource_label());
                 }
             }).error(function(error) {
                 console.warn('Error while fetching claims from OPS for', _this.document_number, error);
@@ -807,7 +811,7 @@ OpsFulltext = Marionette.Controller.extend({
                         html: content_text,
                         lang: description['@lang'],
                     };
-                    deferred.resolve(response);
+                    deferred.resolve(response, _this.get_datasource_label());
                 }
             }).error(function(error) {
                 console.warn('Error while fetching description from OPS for', _this.document_number, error);

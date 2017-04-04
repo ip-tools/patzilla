@@ -23,6 +23,10 @@ DepatisConnectFulltext = Marionette.Controller.extend({
         this.document_number = document_number;
     },
 
+    get_datasource_label: function() {
+        return 'DPMA/DEPATISnet';
+    },
+
     get_claims: function() {
 
         var _this = this;
@@ -35,7 +39,7 @@ DepatisConnectFulltext = Marionette.Controller.extend({
                     html: payload['xml'],
                     lang: payload['lang'],
                 };
-                deferred.resolve(response);
+                deferred.resolve(response, _this.get_datasource_label());
             }
         }).error(function(error) {
             console.warn('Error while fetching claims from DEPATISconnect for', _this.document_number, error);
@@ -59,7 +63,7 @@ DepatisConnectFulltext = Marionette.Controller.extend({
                         html: payload['xml'],
                         lang: payload['lang'],
                     };
-                    deferred.resolve(response);
+                    deferred.resolve(response, _this.get_datasource_label());
                 }
             }).error(function(error) {
                 console.warn('Error while fetching description from DEPATISconnect for', _this.document_number, error);

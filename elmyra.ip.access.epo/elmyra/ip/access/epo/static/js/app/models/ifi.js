@@ -497,6 +497,10 @@ IFIClaimsFulltext = Marionette.Controller.extend({
 
     },
 
+    get_datasource_label: function() {
+        return 'IFI Claims';
+    },
+
     get_claims: function() {
 
         var _this = this;
@@ -532,7 +536,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                         html: claims_parts.join('<br/><br/>'),
                         lang: document.claims['@lang'],
                     };
-                    deferred.resolve(data);
+                    deferred.resolve(data, _this.get_datasource_label());
                 }
             }).error(function(error) {
                 console.warn('Error while fetching claims from IFI Claims for', _this.document_number, error);
@@ -633,7 +637,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                         html: description_parts.join('<br/><br/>'),
                         lang: document.description['@lang'],
                     };
-                    deferred.resolve(data);
+                    deferred.resolve(data, _this.get_datasource_label());
                 }
 
             }).error(function(error) {
