@@ -175,7 +175,7 @@ BasketModel = Backbone.RelationalModel.extend({
             }
 
             if (options.reset_seen) {
-                entry.save({'seen': undefined}, {success: function() {
+                entry.save({'seen': false}, {success: function() {
                     _refetch();
                 }});
             } else {
