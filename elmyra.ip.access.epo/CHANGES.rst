@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-04-04 0.133.0
+==================
 - Fix parties (applicants, inventors) display for IFI Claims: An error occurred when displaying the document 'IN268402B’. Thanks, Benjamin!
 - Fix exception flood from basket model
 - Fix basket “Add visible” feature
