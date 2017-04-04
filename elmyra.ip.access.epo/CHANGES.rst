@@ -7,6 +7,7 @@ development
 - Fix parties (applicants, inventors) display for IFI Claims: An error occurred when displaying the document 'IN268402B’. Thanks, Benjamin!
 - Fix exception flood from basket model
 - Fix basket “Add visible” feature
+- Properly handle errors when IFI Claims delivers empty document for bibliographic data, e.g. IN268402A
 
 2017-03-28 0.132.3
 ==================
