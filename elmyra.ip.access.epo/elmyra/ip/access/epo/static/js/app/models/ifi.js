@@ -416,12 +416,63 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
         return this.get('claims') || this.get('description');
     },
 
+
     has_citations: function() {
         return this.get('bibliographic-data') && Boolean(this.get('bibliographic-data')['technical-data']['citations']);
     },
 
+    get_patent_citation_list: function(links, id_type) {
+
+        var _this = this;
+
+        var container_top = this.get('bibliographic-data')['technical-data']['citations']['patent-citations'];
+        if (container_top) {
+            var container = to_list(container_top['patcit']);
+            results = container
+                .filter(function(item) { return item['document-id']; })
+                .map(function(item) {
+                    var document_id = _this.get_document_id(item, null, id_type);
+                    var fullnumber = _this.flatten_document_id(document_id).fullnumber;
+
+                    // fall back to epodoc format, if ops format yields empty number
+                    if (_.isEmpty(fullnumber)) {
+                        document_id = _this.get_document_id(item, null, 'epodoc');
+                        fullnumber = _this.flatten_document_id(document_id).fullnumber;
+                    }
+                    return fullnumber;
+                })
+            ;
+        }
+        if (links) {
+            results = _this.enrich_links(results, 'pn', null, {'no_modifiers': true});
+        }
+        return results;
+    },
+
     get_npl_citation_list: function() {
         return [];
+    },
+
+
+    // Identical to OpsHelper....
+    get_citing_query: function() {
+        var query = 'ct=' + this.get_publication_number('epodoc');
+        return query;
+    },
+    get_same_citations_query: function() {
+        var items = this.get_patent_citation_list(false, 'epodoc');
+        return this.get_items_query(items, 'ct', 'OR');
+    },
+    get_all_citations_query: function() {
+        var items = this.get_patent_citation_list(false, 'epodoc');
+        return this.get_items_query(items, 'pn', 'OR');
+    },
+    get_items_query: function(items, fieldname, operator) {
+        // FIXME: limit query to 10 items due to ops restriction
+        items = items.slice(0, 10);
+        items = items.map(function(item) { return fieldname + '=' + item; });
+        var query = items.join(' ' + operator + ' ');
+        return query;
     },
 
 });
