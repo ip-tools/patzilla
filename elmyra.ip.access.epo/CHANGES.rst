@@ -9,6 +9,7 @@ development
 - Fix basket “Add visible” feature
 - Properly handle errors when IFI Claims delivers empty document for bibliographic data, e.g. IN268402A
 - Make IFI Claims data model grok patent citations
+- Enable documents from office “KR” for IFI Claims bibliographic data interface
 
 2017-03-28 0.132.3
 ==================
