@@ -271,7 +271,10 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
             return [];
         }
 
-        applicants_root_node = applicants_root_node || [];
+        if (!applicants_root_node) {
+            return [];
+        }
+
         var applicants_node_list = to_list(applicants_root_node['applicant']);
         var applicants_list = this.parties_to_list(applicants_node_list, 'applicant-name');
         if (links) {
@@ -289,7 +292,10 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
             return [];
         }
 
-        inventors_root_node = inventors_root_node || [];
+        if (!inventors_root_node) {
+            return [];
+        }
+
         var inventors_node_list = to_list(inventors_root_node['inventor']);
         var inventors_list = this.parties_to_list(inventors_node_list);
         //log('inventors_list:', inventors_list);
@@ -328,6 +334,8 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
              }
          },
         */
+
+        //log('party-container:', container);
 
         // Deserialize list of parties (applicants/inventors) from exchange payload
         var sequence_max = "0";

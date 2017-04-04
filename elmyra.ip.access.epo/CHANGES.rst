@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Fix parties (applicants, inventors) display for IFI Claims: An error occurred when displaying the document 'IN268402B’. Thanks, Benjamin!
 
 2017-03-28 0.132.3
 ==================
