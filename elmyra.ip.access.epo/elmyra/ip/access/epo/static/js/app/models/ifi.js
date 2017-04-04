@@ -516,16 +516,17 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     }
 
                     // Serialize claims to HTML
-                    var claims_parts = [];
+                    // TODO: Offer multiple languages at once
 
+                    // Collect claims by language
+                    var claims_by_language = {};
                     _.each(to_list(document.claims), function(claim_container) {
-                        // TODO: Offer more languages
                         var lang = claim_container['@lang'];
-                        if (_.contains(['EN', 'DE'], lang)) {
-                            claims_parts = _this.parse_claim_list(to_list(claim_container.claim));
-                            return;
-                        }
+                        claims_by_language[lang] = _this.parse_claim_list(to_list(claim_container.claim));
                     });
+
+                    // Get claims prioritized by language
+                    var claims_parts = _this.fulltext_by_language(claims_by_language);
 
                     var data = {
                         html: claims_parts.join('<br/><br/>'),
@@ -614,16 +615,18 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     }
 
                     // Serialize description to HTML
-                    var description_parts = [];
+                    // TODO: Offer multiple languages at once
 
+                    // Collect description by language
+                    var description_by_language = {};
                     _.each(to_list(document.description), function(description_container) {
-                        // TODO: Offer more languages than just "EN"
                         var lang = description_container['@lang'];
-                        if (lang == 'EN') {
-                            description_parts = _this.parse_description_container(description_container);
-                            return;
-                        }
+                        description_by_language[lang] = _this.parse_description_container(description_container);
                     });
+
+                    // Get description prioritized by language
+                    var description_parts = _this.fulltext_by_language(description_by_language);
+
                     //log('description_parts:', description_parts);
 
                     var data = {
@@ -738,6 +741,28 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         }
 
         return heading + text;
+    },
+
+    fulltext_by_language: function(data) {
+
+        var parts = [];
+
+        // Prioritize fulltext by language
+        _.each(['EN', 'DE'], function(language) {
+            if (data[language]) {
+                parts = data[language];
+                return;
+            }
+        });
+
+        // Fall back to any other language
+        if (_.isEmpty(parts) && !_.isEmpty(data)) {
+            var first_language = Object.keys(data)[0];
+            parts = data[first_language];
+        }
+
+        return parts;
+
     },
 
 });
