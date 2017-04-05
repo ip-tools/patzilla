@@ -5,6 +5,7 @@ elmyra.ip.access.epo CHANGES
 development
 ===========
 - Minor improvement to basket.add(…) method
+- Fix IFI Claims anomaly: KR20170037210A has "name" instead of "last-name" in applicants node
 
 2017-04-04 0.133.0
 ==================
