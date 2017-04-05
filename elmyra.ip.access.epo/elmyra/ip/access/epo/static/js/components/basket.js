@@ -147,6 +147,7 @@ BasketModel = Backbone.RelationalModel.extend({
 
         var _this = this;
 
+        if (_.isEmpty(number)) return;
         number = number.trim();
         if (_.isEmpty(number)) return;
 

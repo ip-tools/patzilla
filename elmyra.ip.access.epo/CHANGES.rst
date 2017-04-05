@@ -4,6 +4,7 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Minor improvement to basket.add(…) method
 
 2017-04-04 0.133.0
 ==================
