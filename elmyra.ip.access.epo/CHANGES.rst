@@ -7,6 +7,7 @@ development
 - Minor improvement to basket.add(…) method
 - Fix IFI Claims anomaly: KR20170037210A has "name" instead of "last-name" in applicants node
 - Also grok “image/jpeg” as source format from IFI Claims for delivering single pages and drawings
+- Enable caching for IFI Claims media downloads
 
 2017-04-04 0.133.0
 ==================
