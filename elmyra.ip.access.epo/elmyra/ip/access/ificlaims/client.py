@@ -371,7 +371,7 @@ class IFIClaimsClient(GenericSearchClient):
             """
 
             # filter tif references only
-            tif_attachments = filter(lambda attachment: attachment['media'] == 'image/tiff', attachments)
+            tif_attachments = filter(lambda attachment: attachment['media'] in ['image/tiff', 'image/jpeg'], attachments)
             #print 'tif_attachments:'
             #pprint(tif_attachments)
             return tif_attachments
