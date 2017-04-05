@@ -221,7 +221,7 @@ class IFIClaimsClient(GenericSearchClient):
             return response.content
 
 
-    #@cache_region('search')
+    @cache_region('medium')
     def attachment_list(self, ucid):
 
         log.info(u"{backend_name}: attachment_list, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
@@ -250,7 +250,7 @@ class IFIClaimsClient(GenericSearchClient):
                 ucid=ucid, status=response.status_code, response=response.content , **self.__dict__))
 
 
-    #@cache_region('search')
+    @cache_region('longer')
     def attachment_fetch(self, path):
 
         log.info(u"{backend_name}: attachment_fetch, path={path}; user={username}".format(path=path, **self.__dict__))
