@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-04-05 0.134.0
+==================
 - Minor improvement to basket.add(…) method
 - Fix IFI Claims anomaly: KR20170037210A has "name" instead of "last-name" in applicants node
 - Also grok “image/jpeg” as source format from IFI Claims for delivering single pages and drawings
