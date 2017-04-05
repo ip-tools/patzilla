@@ -353,7 +353,18 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
 
             var data_format = item['@format'];
             var sequence = item['@sequence'];
-            var value = _.string.trim(item['addressbook']['last-name']['$t'], ', ');
+
+            var value = '';
+
+            // Most documents use "last-name"
+            if (item['addressbook']['last-name']) {
+                value = _.string.trim(item['addressbook']['last-name']['$t'], ', ');
+
+            // Anomaly: KR20170037210A has "name" instead of "last-name"
+            } else if (item['addressbook']['name']) {
+                value = _.string.trim(item['addressbook']['name']['$t'], ', ');
+            }
+
             groups[data_format] = groups[data_format] || {};
             groups[data_format][sequence] = value;
 
