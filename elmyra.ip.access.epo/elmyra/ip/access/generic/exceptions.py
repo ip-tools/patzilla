@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2016-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import cgi
 import json
 import logging
@@ -28,13 +28,13 @@ class GenericAdapterException(Exception):
         message_parts = []
         if hasattr(self, 'user_info'):
             #message_parts.append(ex.user_info)
-            message['user'] = self.user_info.replace('\n', '<br/>')
+            message['user'] = cgi.escape(self.user_info)
         if hasattr(self, 'message'):
-            message_parts.append(cgi.escape(self.__class__.__name__ + ': ' + unicode(self.message)))
+            message_parts.append(self.__class__.__name__ + u': ' + u'<pre>{message}</pre>'.format(message=cgi.escape(self.message)))
         if hasattr(self, 'details'):
-            message_parts.append('<pre>{details}</pre>'.format(details=cgi.escape(self.details)))
+            message_parts.append(u'<pre>{message}</pre>'.format(message=cgi.escape(self.details)))
 
-        message['details'] = '<br/>'.join(message_parts)
+        message['details'] = u'<br/>'.join(message_parts)
 
         return message
 

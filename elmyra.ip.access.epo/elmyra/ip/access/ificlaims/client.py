@@ -3,6 +3,7 @@
 #
 # Lowlevel adapter to search provider "IFI Claims Direct"
 #
+import re
 import json
 import timeit
 import logging
@@ -128,7 +129,11 @@ class IFIClaimsClient(GenericSearchClient):
                 # Handle search expression errors
                 if 'error' in response_data['content']:
                     upstream_error = response_data['content']['error']
-                    message = u'{msg} (code={code})'.format(**upstream_error)
+
+                    if 'msg' not in upstream_error:
+                        upstream_error['msg'] = 'Reason unknown'
+
+                    message = u'Response status code: {code}\n\n{msg}'.format(**upstream_error)
 
                     # Enrich "maxClauseCount" message, e.g. raised by {!complexphrase}text:"auto* AND leucht*"~5
                     if upstream_error["code"] == 500 and u'maxClauseCount is set to' in upstream_error["msg"]:
@@ -144,11 +149,21 @@ class IFIClaimsClient(GenericSearchClient):
                             message=message,
                             response=response)
 
+                    # Regular traceback
+                    elif upstream_error["code"] == 500 and 'trace' in upstream_error:
+                        message = u'Response status code: {code}\n\n{trace}'.format(**upstream_error)
+                        raise self.search_failed(
+                            user_info=u'Unknown exception at search backend',
+                            message=message,
+                            response=response)
+
                     # Enrich "SyntaxError" exception
                     elif upstream_error["code"] == 400 and u'ParseException' in upstream_error["msg"]:
-                        user_info = upstream_error['msg'].replace(
-                            'org.apache.solr.search.SyntaxError: org.apache.lucene.queryparser.classic.ParseException:',
-                            'SyntaxError:')
+                        user_info = re.sub(
+                            r'.*(Encountered.*at line.*?\.).*',
+                            r'SyntaxError, can not parse query expression: \1',
+                            upstream_error["msg"],
+                            flags=re.DOTALL)
                         raise self.search_failed(
                             user_info=user_info,
                             message=message,
