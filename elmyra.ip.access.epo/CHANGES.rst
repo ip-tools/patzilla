@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-04-06 0.134.1
+==================
 - Improve search backend error handling and display
 
 2017-04-05 0.134.0
