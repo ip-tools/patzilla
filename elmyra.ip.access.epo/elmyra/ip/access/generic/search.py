@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import time
 import logging
 from pprint import pprint
@@ -28,12 +28,12 @@ class GenericSearchClient(object):
             message = u'{}: {}'.format(ex.__class__.__name__, ex.message)
 
         # Compute and emit log message
-        log_message = '{backend_name}: Search failed. message={message}'.format(message=message, **self.__dict__)
+        log_message = u'{backend_name}: Search failed. message={message}'.format(message=message, **self.__dict__)
         if meta:
             log_message += u', meta=' + unicode(meta)
         if response:
-            status = str(response.status_code) + u' ' + response.reason
-            log_message += u', status={status}, response=\n{response}'.format(status=status, response=response.content)
+            status = unicode(response.status_code) + u' ' + response.reason
+            log_message += u', status={status}, response=\n{response}'.format(status=status, response=response.content.decode('utf-8'))
         log.error(log_message)
 
         # Return exception object
