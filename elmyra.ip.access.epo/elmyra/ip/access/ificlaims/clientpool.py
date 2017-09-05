@@ -69,5 +69,5 @@ class IFIClaimsClientFactory(object):
             #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
 
     def client_create(self):
-        client = IFIClaimsClient(uri='https://cdws.ificlaims.com', username=self.username, password=self.password)
+        client = IFIClaimsClient(uri='***REMOVED***', username=self.username, password=self.password)
         return client
