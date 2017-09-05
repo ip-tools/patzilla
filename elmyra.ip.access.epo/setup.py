@@ -130,6 +130,7 @@ setup(name='elmyra.ip.access.epo',
       version='0.134.1',
       description='elmyra.ip.access.epo',
       long_description=README,
+      license="AGPL 3, EUPL 1.2",
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pyramid",
