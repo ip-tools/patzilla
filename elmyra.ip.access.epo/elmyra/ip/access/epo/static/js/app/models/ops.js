@@ -355,10 +355,12 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
             var title_node = this['bibliographic-data']['invention-title'];
             if (title_node) {
                 title_list = _.map(to_list(title_node), function(title) {
-                    var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '';
+                    var lang_prefix = title['@lang'] && '[' + title['@lang'].toUpperCase() + '] ' || '[OL] ';
                     return lang_prefix + title['$'];
                 });
             }
+            // Poor mans sorting. Will yield titles in order of DE, EN, FR, OL, which seems to be a reasonable order.
+            title_list.sort();
             return title_list;
         },
 
