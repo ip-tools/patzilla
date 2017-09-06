@@ -243,6 +243,9 @@ UiController = Marionette.Controller.extend({
 
             });
             $('.very-short').shorten({showChars: 0, moreText: 'more', lessText: 'less'});
+
+            opsChooserApp.issues.setup_ui();
+
             return true;
         }
         return false;
