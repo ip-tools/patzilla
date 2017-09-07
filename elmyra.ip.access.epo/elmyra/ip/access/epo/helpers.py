@@ -74,7 +74,7 @@ class Bootstrapper(object):
             'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, <a target="_blank" class="incognito pointer action-help-ificlaims">IFI Claims</a>',
+            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, <a target="_blank" class="incognito pointer action-help-ificlaims">IFI Claims</a>, <a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
 
             'ui.css': {
                 # Page header background
@@ -228,11 +228,11 @@ class Bootstrapper(object):
                 }
             })
 
-        if 'sheldon' in self.hostname:
-            vendor_color = 'rgba(128,84,120,0.8)'
+        if 'depatech' in self.hostname:
+            vendor_color = '#fff'
             dict_merge(data, {
-                'ui.productname': 'MTC Sheldon Search',
-                'ui.productname.rich': '<span class="header-logo">Sheldon Search</span> <img width="130" src="/static/vendor/mtc/mtc_logo.png"/>',
+                'ui.productname': 'MTC depa.tech',
+                'ui.productname.rich': '<img src="/static/vendor/mtc/depatech_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
                 'ui.css': {
@@ -259,13 +259,14 @@ class Bootstrapper(object):
                         },
 
                     '.header-logo': {
-                        'font-family': 'Playfair Display',
+                        'font-family': 'Ubuntu,Helvetica,Arial,Verdana,sans-serif',
                         'font-size': '3em',
+                        'font-style': 'normal',
+                        'font-variant': 'normal',
                         'font-weight': '500',
-                        #'font-style': 'italic',
-                        'font-variant': 'small-caps',
-                        'letter-spacing': '0.05em',
-                        'color': '#333',
+                        'font-stretch': 'condensed',
+                        'letter-spacing': '3px',
+                        'color': '#6c0439',
                         'margin-right': '0.6em',
                         },
 
@@ -407,7 +408,7 @@ class Bootstrapper(object):
             self.hostname in ftpro_allowed_hosts or \
             'ftpro' in user_modules
 
-        # 2.b compute whether datasource "Serviva Data Proxy" is enabled
+        # 2.b compute whether datasource "IFI Claims" is enabled
         ificlaims_allowed_hosts = [
             'localhost',
             'offgrid',
@@ -416,7 +417,16 @@ class Bootstrapper(object):
             self.hostname in ificlaims_allowed_hosts or \
             'ifi' in user_modules
 
-        # 2.c compute whether Google datasource is allowed
+        # 2.c compute whether datasource "MTC depa.tech" is enabled
+        depatech_allowed_hosts = [
+            'localhost',
+            'offgrid',
+            ]
+        params['depatech_enabled'] =\
+            self.hostname in depatech_allowed_hosts or\
+            'depatech' in user_modules
+
+        # 2.d compute whether Google datasource is allowed
         #params['google_enabled'] = hostname in self.staging_hosts
         params['google_enabled'] = False
 

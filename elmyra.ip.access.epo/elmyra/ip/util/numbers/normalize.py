@@ -12,7 +12,7 @@ Normalize patent- and document-numbers.
 """
 
 
-def patch_patent(patent):
+def patch_patent(patent, for_ops=True):
 
     if not patent:
         return
@@ -74,13 +74,25 @@ def patch_patent(patent):
         patched['number'] = patched['number'].lstrip('0')
         patched = normalize_patent_it(patched)
 
+    # 2017-09-06: KR numbers
+    # e.g. KR1020150124192A => KR20150124192A
+    elif patched['country'] == 'KR':
+        patched['number'] = trim_leading_zeros(patched['number'])
+        if len(patched['number']) > 11 and patched['number'][:2] == '10':
+            patched['number'] = patched['number'][2:]
+
     # 2009-11-09: JP numbers
     elif patched['country'] == 'JP':
         patched = normalize_patent_jp(patched)
 
+    # 2015-09-01: SE numbers
+    elif patched['country'] == 'SE':
+        patched = normalize_patent_se(patched)
+        patched['number'] = trim_leading_zeros(patched['number'])
+
     # 2007-07-26: US applications are 4+7
     elif patched['country'] == 'US':
-        patched = normalize_patent_us(patched)
+        patched = normalize_patent_us(patched, for_ops=for_ops)
 
     # normalize wo numbers to 4+6 format
     elif patched['country'] == 'WO':
@@ -91,20 +103,15 @@ def patch_patent(patent):
             patched = normalize_patent_wo(patched)
             #patched = denormalize_patent_wo(patched)
 
-    # 2015-09-01: SE numbers
-    elif patched['country'] == 'SE':
-        patched = normalize_patent_se(patched)
-        patched['number'] = trim_leading_zeros(patched['number'])
-
     # strip leading zeros
     else:
         patched['number'] = trim_leading_zeros(patched['number'])
 
-    #print "patched (regular):", patent, patched
+    print "patched (regular):", patent, patched
     return patched
 
 
-def fix_patent(patent):
+def fix_patent_kindcode_ops(patent):
     """
     e.g. AT362828E should be returned as AT362828T for querying at OPS
     """
@@ -178,7 +185,7 @@ def depatisconnect_alternatives(number):
     return numbers
 
 
-def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=False):
+def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False, for_ops=True):
 
     # 1. handle patent dicts or convert (split) from string
     if isinstance(number, types.DictionaryType):
@@ -187,11 +194,11 @@ def normalize_patent(number, as_dict = False, as_string = False, fix_kindcode=Fa
         patent = split_patent_number(number)
 
     # 2.a. normalize patent dict
-    patent_normalized = patch_patent(patent)
+    patent_normalized = patch_patent(patent, for_ops=for_ops)
 
     # 2.b. apply fixes
     if fix_kindcode:
-        fix_patent(patent_normalized)
+        fix_patent_kindcode_ops(patent_normalized)
 
     # 3. result handling
 
@@ -376,7 +383,7 @@ def normalize_patent_wo_pct(patent):
 
 
 
-def normalize_patent_us(patent):
+def normalize_patent_us(patent, for_ops=True):
 
     # USPTO number formats
 
@@ -412,22 +419,34 @@ def normalize_patent_us(patent):
 
     length = len(patched['number'])
 
-    # US applications: convert from 4+5=9 to 4+6=10
-    if length == 9:
-        padding = '0' * (10 - length)
-        patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
+    # OPS uses US patent publications in 4+6=10 format
+    # Examples: US2015322651A1, US2017250417A1
+    if for_ops:
 
-    # US applications: convert from 4+7=11 to 4+6=10
-    # 2015-12-20: normalize"FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
-    # this might be OPS-specific
-    elif length == 11:
-        if patched['number'][4] == '0':
-            patched['number'] = patched['number'][0:4] + patched['number'][5:]
+        # US applications: convert from 4+5=9 to 4+6=10
+        if length == 9:
+            padding = '0' * (10 - length)
+            patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
 
-    # US patents: trim to seven digits
+        # US applications: convert from 4+7=11 to 4+6=10
+        # 2015-12-20: normalize"FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
+        # this might be OPS-specific
+        elif length == 11:
+            if patched['number'][4] == '0':
+                patched['number'] = patched['number'][0:4] + patched['number'][5:]
+
+        # US patents: trim to seven digits
+        else:
+            patched['number'] = trim_leading_zeros(patched['number'])
+            #patched['number'] = pad_left(patched['number'], '0', 7)
+
     else:
-        patched['number'] = trim_leading_zeros(patched['number'])
-        #patched['number'] = pad_left(patched['number'], '0', 7)
+
+        # Convert from 4+5=9 or 4+6=10 to 4+7=11
+        # US20170000054A1
+        if length == 9 or length == 10:
+            padding = '0' * (11 - length)
+            patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
 
     return patched
 

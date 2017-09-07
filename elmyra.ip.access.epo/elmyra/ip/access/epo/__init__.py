@@ -29,6 +29,7 @@ def main(global_config, **settings):
     #config.include("elmyra.ip.access.ftpro.concordance")
     config.include("elmyra.ip.access.ificlaims.clientpool")
     #config.include("***REMOVED***")
+    config.include("elmyra.ip.access.depatech.clientpool")
     config.include("elmyra.web.pyramid")
     config.include(".client")
     config.include(".opaquelinks")

@@ -246,6 +246,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (opsChooserApp.config.get('ifi_enabled')) {
                 whitelist.push('ifi');
             }
+            if (opsChooserApp.config.get('depatech_enabled')) {
+                whitelist.push('depatech');
+            }
         }
 
         // Finally, activate buttons for allowed data sources
@@ -816,12 +819,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         } else if (datasource == 'depatisnet') {
             datasource_title = 'DPMA';
             datasource_color = 'inverse';
-        } else if (datasource == 'ftpro') {
-            datasource_title = 'FulltextPRO';
-            datasource_color = 'success';
         } else if (datasource == 'ifi') {
             datasource_title = 'IFI Claims';
             datasource_color = 'info';
+        } else if (datasource == 'depatech') {
+            datasource_title = 'depa.tech';
+            datasource_color = 'success';
         }
 
         // Result count
@@ -1075,7 +1078,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var citation = form.find("input[name='citation']").closest("div[class='control-group']");
         if (_(['ops', 'depatisnet', 'ifi']).contains(datasource)) {
             citation.show();
-        } else if (_(['google', 'ftpro']).contains(datasource)) {
+        } else if (_(['google', 'ftpro', 'depatech']).contains(datasource)) {
             citation.hide();
         }
 
@@ -1087,9 +1090,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var patentnumber = form.find("input[name='patentnumber']");
         if (_(['google', 'ftpro', 'ifi']).contains(datasource)) {
             activate_placeholder(patentnumber, 'single');
+        } else if (datasource == 'depatech') {
+            activate_placeholder(patentnumber, 'depatech');
         } else {
             activate_placeholder(patentnumber, 'multi');
         }
+
         var input_class = form.find("input[name='class']");
         /*
         if (_(['ifi']).contains(datasource)) {
@@ -1099,6 +1105,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
         */
         activate_placeholder(input_class, 'multi');
+
+        var inventor = form.find("input[name='inventor']");
+        if (datasource == 'depatech') {
+            activate_placeholder(inventor, 'depatech');
+        } else {
+            activate_placeholder(inventor, 'default');
+        }
 
         // enrich form fields with actions
         _.each(form.find(".input-prepend"), function(item) {
