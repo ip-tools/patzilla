@@ -120,12 +120,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 _this.trigger('search:success', search_info);
 
                 var hits = self.metadata.get('result_count');
+                var hits_max = self.metadata.get('maximum_results');
                 if (hits == 0) {
                     _this.ui.no_results_alert(search_info);
 
-                } else if (hits > self.metadata.get('maximum_results')['ops']) {
+                } else if (hits > hits_max) {
                     _this.ui.user_alert('Total hits: ' + hits + '.    ' +
-                        'The first 2000 hits are accessible from OPS.  ' +
+                        'The first ' + hits_max + ' hits are accessible from OPS.  ' +
                         'You can narrow your search by adding more search criteria.', 'warning');
                 }
 
@@ -254,6 +255,10 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             log('engine.keywords:', engine.keywords);
 
             // Propagate information from backend to user interface
+
+            // Max hits
+            _this.metadata.set('maximum_results', response.meta.navigator.max_hits);
+
             // Message and Keywords
             _this.propagate_datasource_message(response);
             _this.metadata.set('keywords', engine.keywords);
@@ -990,6 +995,16 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     });
                 }
 
+            }
+        }
+
+        if (meta && meta.navigator && meta.navigator.count_total) {
+            var hits = meta.navigator.count_total;
+            var hits_max = meta.navigator.max_hits;
+            if (hits > hits_max) {
+                this.ui.user_alert('Total hits: ' + hits + '.    ' +
+                    'The first ' + hits_max + ' hits are accessible from datasource "' + meta.upstream.name + '".  ' +
+                    'You can narrow your search by adding more search criteria.', 'warning');
             }
         }
 

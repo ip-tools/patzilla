@@ -202,12 +202,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         pagination_pagesize_choices: [25, 50, 75, 100],
         pagination_current_page: 1,
         keywords: [],
-        // TODO: move to their respective places
-        maximum_results: {
-            'ops': 2000,
-            'depatisnet': 1000,
-            'google': 1000,
-        },
+        maximum_results: 2000,
 
         get_url: function() {
             var url =
@@ -246,7 +241,8 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
     resetSomeDefaults: function(options) {
         this.set(_(this.defaults).pick(
-            'searchmode', 'result_count', 'result_range', 'result_count_received', 'query_origin', 'query_real', 'keywords'
+            'searchmode', 'result_count', 'result_range', 'result_count_received',
+            'query_origin', 'query_real', 'keywords', 'page_size', 'maximum_results'
         ));
         if (options && options.clear) {
             this.set(_(this.defaults).pick(

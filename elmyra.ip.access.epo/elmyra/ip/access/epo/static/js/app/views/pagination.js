@@ -199,8 +199,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     get_maximum_results: function() {
-        var datasource = this.model.get('datasource');
-        var maximum_results = this.model.get('maximum_results')[datasource] || Infinity;
+        var maximum_results = this.model.get('maximum_results') || Infinity;
         return maximum_results;
     },
 
