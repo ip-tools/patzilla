@@ -111,7 +111,7 @@ def get_keywords(triples, whitelist_indexes=None):
     for triple in triples:
         try:
             index, binop, term = triple
-            index_allowed = not whitelist_indexes or index.lower() in whitelist_indexes
+            index_allowed = (not whitelist_indexes) or (index in whitelist_indexes) or (index.lower() in whitelist_indexes)
             if index_allowed:
                 # for "any" or "all" relations ...
                 if binop in ['any', 'all']:
