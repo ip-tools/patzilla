@@ -18,6 +18,7 @@ development
 - depa.tech: Also search for priority number when using “Number” field in comfort search
 - depa.tech: Populate field symbol chooser for expert search
 - Bring list of global office links up to speed
+- Display both (docdb) and (epodoc) numbers at application reference
 
 2017-04-06 0.134.1
 ==================

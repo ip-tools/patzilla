@@ -608,11 +608,16 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
             return entries;
         },
         get_application_references: function(links) {
+            var appnumber_docdb = this.get_application_number('docdb');
             var appnumber_epodoc = this.get_application_number('epodoc');
             var appnumber_original = this.get_application_number('original');
             var entry =
                 '<td class="span2">' + (this.get_application_date() || '--') + '</td>' +
-                '<td class="span3">' + (this.enrich_link(appnumber_epodoc, 'sap') || '--') + '</td>' +
+                '<td class="span3">' +
+                    (this.enrich_link(appnumber_epodoc, 'sap') || '--') + ' (epodoc)' +
+                    '<br/>' +
+                    (this.enrich_link(appnumber_docdb, 'ap') || '--') + ' (docdb)' +
+                '</td>' +
                 '<td>';
             if (!_.isEmpty(appnumber_original)) {
                 entry += 'original: ' + appnumber_original;
