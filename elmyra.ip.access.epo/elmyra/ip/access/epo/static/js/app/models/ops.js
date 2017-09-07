@@ -89,7 +89,8 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                         // sort exchange documents by publication date
                         if (order_recent_first || order_past_first) {
                             exchange_documents = _.sortBy(exchange_documents, function(exchange_document) {
-                                var document_id = (new OpsBaseModel()).attributes.get_document_id(
+                                var _model = new OpsBaseModel();
+                                var document_id = _model.get_document_id(
                                     exchange_document['bibliographic-data'], 'publication', 'docdb');
                                 var isodate = document_id.isodate;
                                 exchange_document.document_id = document_id;
