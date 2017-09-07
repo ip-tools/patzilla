@@ -99,7 +99,7 @@ class DepaTechExpression(object):
         'fulltext':     ['AB', 'GT', 'ET', 'FT'],
         'applicant':    'PA',
         'inventor':     'IN',
-        'class':        ['IC', 'ICA', 'MC', 'NC'],
+        'class':        ['IC', 'NC'],
         'country':      'PC',
         'pubdate':      'DP',
         'appdate':      'AD',
@@ -319,7 +319,7 @@ def rewrite_classes_ops(query_object):
 
     def triple_callback(token, index, binop, term):
 
-        if index in ['ic', 'cpc']:
+        if index in ['IC', 'ICA', 'MC', 'NC']:
             try:
                 # Decode IPC or CPC class from format "G01F000184"
                 patent_class = IpcDecoder(term)
@@ -370,3 +370,7 @@ def should_be_quoted(value):
     return\
     '=' not in value and not has_booleans(value) and\
     ' ' in value and value[0] != '"' and value[-1] != '"'
+
+
+if __name__ == '__main__':
+    print DepaTechParser('IC:G01F000184').keywords()

@@ -19,6 +19,7 @@ development
 - depa.tech: Populate field symbol chooser for expert search
 - Bring list of global office links up to speed
 - Display both (docdb) and (epodoc) numbers at application reference
+- depa.tech: Highlighting for expert search
 
 2017-04-06 0.134.1
 ==================
