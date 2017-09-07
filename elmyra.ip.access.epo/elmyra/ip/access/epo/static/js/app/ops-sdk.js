@@ -24,6 +24,12 @@ function _field_text_ifi(label, fields, more, options) {
     return _field_text(label, fields, more, options);
 }
 
+function _field_text_depatech(label, fields, more, options) {
+    options = options || {};
+    options.sep = ':';
+    return _field_text(label, fields, more, options);
+}
+
 var OPS_CQL_FIELDS = [
     {
         text: '<h4>Popular</h4>',
@@ -312,6 +318,53 @@ var IFI_CQL_FIELDS = [
     },
 ];
 
+var DEPATECH_FIELDS = [
+    {
+        text: '<h4>Publication</h4>',
+        children: [
+            { id: 'PC', text: _field_text_depatech('Publishing country', ['PC'], '(19)') },
+            { id: 'DE', text: _field_text_depatech('Document number', ['DE'], '(10, 11)') },
+            { id: 'KI', text: _field_text_depatech('Kind code', ['KI'], '(12)') },
+            { id: 'DP', text: _field_text_depatech('Publication date', ['DP'], '(40)') },
+            { id: 'PA', text: _field_text_depatech('Applicant', ['PA'], '(71, 73)') },
+            { id: 'IN', text: _field_text_depatech('Inventor', ['IN'], '(72)') },
+        ],
+    },
+    {
+        text: '<h4>Text</h4>',
+        children: [
+            { id: 'GT', text: _field_text_depatech('German title', ['GT'], '(54)') },
+            { id: 'ET', text: _field_text_depatech('English title', ['ET'], '(54)') },
+            { id: 'FT', text: _field_text_depatech('French title', ['FT'], '(54)') },
+            { id: 'AB', text: _field_text_depatech('Abstract', ['AB'], '(57)') },
+        ],
+    },
+    {
+        text: '<h4>Application, priority and family</h4>',
+        children: [
+            { id: 'AP', text: _field_text_depatech('Application number', ['AN'], '(21)') },
+            { id: 'NP', text: _field_text_depatech('Priority number', ['NP'], '(31)') },
+            { id: 'PD', text: _field_text_depatech('Priority date', ['PD'], '(31)') },
+        ],
+    },
+    {
+        text: '<h4>Classification</h4>',
+        children: [
+            { id: 'IC', text: _field_text_depatech('IPC classification (main and auxiliary)', ['IC'], '') },
+            { id: 'ICA', text: _field_text_depatech('IPC classification (auxiliary)', ['ICA'], '') },
+            { id: 'MC', text: _field_text_depatech('First IPC classification (main)', ['MC'], '') },
+            { id: 'NC', text: _field_text_depatech('National classification', ['NC'], '') },
+        ],
+    },
+    {
+        text: '<h4>Miscellaneous</h4>',
+        children: [
+            { id: 'RN', text: _field_text_depatech('Representative / Agent', ['RN'], '') },
+            { id: 'DS', text: _field_text_depatech('Designated states', ['NP'], '') },
+            { id: 'KOR', text: _field_text_depatech('Correction info', ['KOR'], '') },
+        ],
+    },
+];
 
 var FIELDS_KNOWLEDGE = {
     'ops': {
@@ -332,5 +385,11 @@ var FIELDS_KNOWLEDGE = {
             'separator': ':',
         },
         'fields': IFI_CQL_FIELDS,
+    },
+    'depatech': {
+        'meta': {
+            'separator': ':',
+        },
+        'fields': DEPATECH_FIELDS,
     },
 };
