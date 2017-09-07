@@ -15,6 +15,7 @@ development
 - Improve number normalization around datasource IFI Claims
 - Fix document cycle sorting
 - Fix highlighting for Solr complexphrase expressions
+- depa.tech: Also search for priority number when using “Number” field in comfort form
 
 2017-04-06 0.134.1
 ==================
