@@ -96,13 +96,18 @@ OpsBaseModel = Backbone.Model.extend({
             });
 
             var data = this.flatten_document_id(document_id);
-            if (format == 'epodoc') {
+            if (format == 'docdb') {
+                data.isodate = isodate_compact_to_verbose(data.date);
+                data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
+
+            } else if (format == 'epodoc') {
+                data.isodate = isodate_compact_to_verbose(data.date);
                 data.fullnumber = data.docnumber;
 
-            } else {
-                data.fullnumber = (data.country || '') + (data.docnumber || '') + (data.kind || '');
+            } else if (format == 'original') {
+                data.fullnumber = data.docnumber;
+
             }
-            data.isodate = isodate_compact_to_verbose(data.date);
 
             return data;
 

@@ -17,6 +17,7 @@ development
 - Fix highlighting for Solr complexphrase expressions
 - depa.tech: Also search for priority number when using “Number” field in comfort search
 - depa.tech: Populate field symbol chooser for expert search
+- Bring list of global office links up to speed
 
 2017-04-06 0.134.1
 ==================

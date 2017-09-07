@@ -131,7 +131,7 @@
                         <a class="btn dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-globe icon-large"></i>
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu pull-right">
 
                             <!-- bibliographic data -->
                             <li><div style="padding-left: 10px">
@@ -157,12 +157,12 @@
                             <% if (linkmaker.country == 'US') { %>
                             <li>
                                 <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
-                                    [BIBLIO] <%= patent_number %> @ USPTO AppFT
+                                    [BIBLIO] <%= patent_number %> @ USPTO Application Database
                                 </a>
                             </li>
                             <li>
                                 <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
-                                    [BIBLIO] <%= patent_number %> @ USPTO PatFT
+                                    [BIBLIO] <%= patent_number %> @ USPTO Patent Database
                                 </a>
                             </li>
                             <% } %>
@@ -227,6 +227,21 @@
                                 </a>
                             </li>
                             <li>
+                                <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank">
+                                    [FAMILY] <%= patent_number %> @ USPTO Global Dossier (application)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank">
+                                    [FAMILY] <%= patent_number %> @ USPTO Global Dossier (publication)
+                                </a>
+                            </li>
+                            <li>
+                                <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank">
+                                    [FAMILY] <%= patent_number %> @ USPTO Global Dossier (patent)
+                                </a>
+                            </li>
+                            <li>
                                 <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank">
                                     [FAMILY] <%= patent_number %> @ INPADOC patent family
                                 </a>
@@ -263,29 +278,15 @@
                             <% if (linkmaker.country == 'US') { %>
                             <li>
                                 <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
-                                    [PDF] <%= patent_number %> @ USPTO AppFT
+                                    [PDF] <%= patent_number %> @ USPTO Application Database
                                 </a>
                             </li>
                             <li>
                                 <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
-                                    [PDF] <%= patent_number %> @ USPTO PatFT
+                                    [PDF] <%= patent_number %> @ USPTO Publication Database
                                 </a>
                             </li>
                             <% } %>
-
-                            <li class="divider"/>
-
-
-                            <!-- Research -->
-                            <li><div style="padding-left: 10px">
-                                <h5><i class="icon-fullscreen"></i> &nbsp; Research</h5>
-                            </div>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.google_prior_art_url() %>" target="_blank">
-                                    [PRIOR ART] <%= patent_number %> @ Google Prior Art Finder
-                                </a>
-                            </li>
 
                         </ul>
                     </div>
