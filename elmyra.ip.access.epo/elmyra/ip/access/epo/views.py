@@ -8,6 +8,7 @@ from pkg_resources import resource_filename
 from mongoengine.errors import NotUniqueError
 from elmyra.ip.access.dpma.dpmaregister import DpmaRegisterAccess
 from elmyra.ip.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
+from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.render.phantomjs import render_pdf
 from elmyra.ip.util.text.format import slugify
 from pyramid.encode import urlencode
@@ -50,9 +51,9 @@ def includeme(config):
     # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/ops/browser/{label}')
     config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
-    config.add_route('patentsearch-quick2',  '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
-    config.add_route('jump-dpmaregister', '/office/dpma/register/application/{document_number}')
-    config.add_route('jump-dpmaregister2', '/ops/browser/office/dpma/register/application/{document_number}')
+    config.add_route('patentsearch-quick2', '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
+    config.add_route('jump-office',                     '/office/{office}/{service}/{document_type}/{document_number}')
+    config.add_route('jump-office-local',   '/ops/browser/office/{office}/{service}/{document_type}/{document_number}')
 
     # demo stuff
     #config.add_route('angry-cats', '/angry-cats')
@@ -261,18 +262,67 @@ def get_redirect_query(request, expression=None, query_args=None):
     return HTTPFound(redirect_url)
 
 
-@view_config(route_name='jump-dpmaregister')
-@view_config(route_name='jump-dpmaregister2')
-def jump_dpmaregister(request):
+@view_config(route_name='jump-office')
+@view_config(route_name='jump-office-local')
+def jump_office(request):
+    office          = request.matchdict.get('office')
+    service         = request.matchdict.get('service')
+    document_type   = request.matchdict.get('document_type')
     document_number = request.matchdict.get('document_number')
-    redirect = request.params.get('redirect')
+    redirect        = request.params.get('redirect')
     if document_number:
-        dra = DpmaRegisterAccess()
-        url = dra.get_document_url(document_number)
-        if url and redirect:
-            return HTTPFound(location=url)
 
-    return HTTPNotFound('Could not find application number "{0}" in DPMAregister'.format(document_number))
+        url = None
+        if office == 'dpma' and service == 'register':
+            dra = DpmaRegisterAccess()
+            url = dra.get_document_url(document_number)
+
+        elif office == 'uspto' and service == 'biblio':
+
+            if document_type == 'publication':
+                # http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=9317610
+                document = normalize_patent(document_number, as_dict=True, for_ops=False)
+                url = 'http://patft.uspto.gov/netacgi/nph-Parser' \
+                      '?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1={number}.PN.'.format(**document)
+
+            elif document_type == 'application':
+                # http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=20160105912
+                document = normalize_patent(document_number, as_dict=True, for_ops=False)
+                url = 'http://appft.uspto.gov/netacgi/nph-Parser' \
+                      '?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1={number}'.format(**document)
+
+        elif office == 'uspto' and service == 'images':
+
+            if document_type == 'publication':
+                # http://pdfpiw.uspto.gov/.piw?docid=9317610
+                document = normalize_patent(document_number, as_dict=True, for_ops=False)
+                url = 'http://pdfpiw.uspto.gov/.piw?docid={number}'.format(**document)
+
+            elif document_type == 'application':
+                # http://pdfaiw.uspto.gov/.aiw?docid=20160105912
+                document = normalize_patent(document_number, as_dict=True, for_ops=False)
+                url = 'http://pdfaiw.uspto.gov/.aiw?docid={number}'.format(**document)
+
+        elif office == 'uspto' and service == 'global-dossier':
+            # https://globaldossier.uspto.gov/#/result/publication/DE/112015004959/1
+            normalized = normalize_patent(document_number, as_dict=True, for_ops=False)
+            url = 'https://globaldossier.uspto.gov/#/result/{document_type}/{country}/{number}/1'.format(
+                document_type=document_type, **normalized)
+
+        elif office == 'google' and service == 'patents':
+            # https://www.google.com/patents/EP0666666B1
+            # https://patents.google.com/patent/EP0666666B1
+            normalized = normalize_patent(document_number, for_ops=False)
+            url = 'https://patents.google.com/patent/{}'.format(normalized)
+
+        if url:
+            if redirect:
+                return HTTPFound(location=url)
+            else:
+                return url
+
+    return HTTPNotFound(u'Could not locate document "{document_number}" at {office}/{service}.'.format(
+        document_number=document_number, office=office, service=service))
 
 
 @view_config(route_name='admin-user-create', renderer='elmyra.ip.access.epo:templates/admin/user-create.html')

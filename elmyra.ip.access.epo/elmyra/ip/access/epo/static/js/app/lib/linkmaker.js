@@ -141,29 +141,25 @@
         },
 
         uspto_appft_biblio: function() {
-            // http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=20160105912
-            var url_tpl = _.template('http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=<%= docnumber %>');
+            var url_tpl = _.template('/office/uspto/biblio/application/<%= fullnumber %>?redirect=true');
             var url = url_tpl(this);
             return url;
         },
 
         uspto_appft_images: function() {
-            // http://pdfaiw.uspto.gov/.aiw?docid=20160105912
-            var url_tpl = _.template('http://pdfaiw.uspto.gov/.aiw?docid=<%= docnumber %>');
+            var url_tpl = _.template('/office/uspto/images/application/<%= fullnumber %>?redirect=true');
             var url = url_tpl(this);
             return url;
         },
 
         uspto_patft_biblio: function() {
-            // http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=9317610
-            var url_tpl = _.template('http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=<%= docnumber %>');
+            var url_tpl = _.template('/office/uspto/biblio/publication/<%= fullnumber %>?redirect=true');
             var url = url_tpl(this);
             return url;
         },
 
         uspto_patft_images: function() {
-            // http://pdfpiw.uspto.gov/.piw?docid=9317610
-            var url_tpl = _.template('http://pdfpiw.uspto.gov/.piw?docid=<%= docnumber %>');
+            var url_tpl = _.template('/office/uspto/images/publication/<%= fullnumber %>?redirect=true');
             var url = url_tpl(this);
             return url;
         },
@@ -195,7 +191,29 @@
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=DE20132003344U&type=application&format=epodoc
             // http://ccd.fiveipoffices.org/CCD-2.0/html/viewCcd.html?num=US201113881490&type=application&format=epodoc
             var document_id = this.document.get_application_reference('epodoc');
-            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.0.8/html/viewCcd.html?num=<%= fullnumber %>&type=application&format=epodoc');
+            var url_tpl = _.template('http://ccd.fiveipoffices.org/CCD-2.1.6/html/viewCcd.html?num=<%= fullnumber %>&type=application&format=epodoc');
+            var url = url_tpl(document_id);
+            return url;
+        },
+
+        global_dossier_application_viewer_url: function() {
+            var country = this.document.get_application_reference('docdb').country;
+            var docnumber = this.document.get_application_reference('original').docnumber;
+            var url_tpl = _.template('/office/uspto/global-dossier/application/<%= country %><%= docnumber %>?redirect=true');
+            var url = url_tpl({country: country, docnumber: docnumber});
+            return url;
+        },
+        global_dossier_publication_viewer_url: function() {
+            // https://globaldossier.uspto.gov/#/result/publication/DE/112015004959/1
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('/office/uspto/global-dossier/publication/<%= fullnumber %>?redirect=true');
+            var url = url_tpl(document_id);
+            return url;
+        },
+        global_dossier_patent_viewer_url: function() {
+            // https://globaldossier.uspto.gov/#/result/patent/US/5146634/1
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('/office/uspto/global-dossier/patent/<%= fullnumber %>?redirect=true');
             var url = url_tpl(document_id);
             return url;
         },
@@ -220,16 +238,9 @@
 
         google_url: function() {
             // https://www.google.com/patents/EP0666666B1
+            // https://patents.google.com/patent/EP0666666B1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/<%= country %><%= docnumber %>');
-            var url = url_tpl(document_id);
-            return url;
-        },
-
-        google_prior_art_url: function() {
-            // https://www.google.com/patents/related/EP0666666B1
-            var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://www.google.com/patents/related/<%= fullnumber %>');
+            var url_tpl = _.template('/office/google/patents/publication/<%= fullnumber %>?redirect=true');
             var url = url_tpl(document_id);
             return url;
         },
