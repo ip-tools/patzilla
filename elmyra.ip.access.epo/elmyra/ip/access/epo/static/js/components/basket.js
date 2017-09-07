@@ -349,8 +349,8 @@ BasketModel = Backbone.RelationalModel.extend({
         return numbers;
     },
 
-    empty: function() {
-        var entries = this.get_entries();
+    empty: function(options) {
+        var entries = this.get_entries(options);
         return entries.length == 0;
     },
 
@@ -409,6 +409,8 @@ BasketModel = Backbone.RelationalModel.extend({
         //log('publication_numbers:', publication_numbers);
 
         var hits = publication_numbers.length;
+
+        opsChooserApp.metadata.resetSomeDefaults({'clear': true});
 
         // TODO: decouple from referencing the main application object e.g. by using events!?
         opsChooserApp.set_datasource('review');
@@ -627,7 +629,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // review feature: trigger search from basket content
         $('#basket-review-button').unbind('click').bind('click', function(event) {
             event.preventDefault();
-            if (_this.check_empty({kind: 'review', icon: 'icon-indent-left'})) { return; }
+            if (_this.check_empty({kind: 'review', icon: 'icon-indent-left', seen: false})) { return; }
             _this.model.review();
         });
         // disable counter buttons, required to retain popover
@@ -822,7 +824,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         if (!options.icon) {
             options.icon = 'icon-external-link';
         }
-        if (this.model.empty()) {
+        if (this.model.empty(options)) {
             opsChooserApp.ui.notify(
                 "An empty collection can't be " + verb + ", please add some documents.",
                 {type: 'warning', icon: options.icon + ' icon-large'});
