@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2017 Andreas Motl, Elmyra UG
 import re
+import sys
 import types
 import logging
 import pyparsing
@@ -53,10 +54,11 @@ class IFIClaimsParser(object):
         """
         Converts expressions with proximity operators to ones without them, like:
         before: {!complexphrase}text:("parallel* AND schalt*"~6 AND "antrieb* AND stufe*"~3)
-        after:  {!complexphrase}text:((parallel* AND schalt*) AND (antrieb* AND stufe*))
+        after:                  text:((parallel* AND schalt*) AND (antrieb* AND stufe*))
         """
         #print >>sys.stderr, 'expression-before:', self.expression
         self.expression = re.sub(u'"(.+?)"~\d+', u'(\\1)', self.expression)
+        self.expression = self.expression.replace(u'{!complexphrase}', '')
         #print >>sys.stderr, 'expression-after :', self.expression
 
     def keywords(self):
@@ -382,3 +384,8 @@ def should_be_quoted(value):
     return\
     '=' not in value and not has_booleans(value) and\
     ' ' in value and value[0] != '"' and value[-1] != '"'
+
+
+if __name__ == '__main__':
+    print IFIClaimsParser('{!complexphrase}text:"(aussto* OR eject* OR pusher*) AND (verriegel* OR lock* OR sperr*)"~6').keywords()
+    print IFIClaimsParser('{!complexphrase}text:"parallel* AND schalt*"~6 AND ((ic:F16H006104 OR cpc:F16H006104))').keywords()
