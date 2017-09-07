@@ -49,6 +49,7 @@ class DpmaDepatisnetAccess:
         self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
         self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
         self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
+        self.search_max_hits = 1000
         self.setup_browser()
 
     def setup_browser(self):
@@ -75,6 +76,7 @@ class DpmaDepatisnetAccess:
         options = options or {}
 
         limit = options.get('limit', self.hits_per_page)
+        options.setdefault('max_hits', self.search_max_hits)
 
         logger.info('Searching documents. query="%s", options=%s' % (query, options))
 
@@ -298,6 +300,7 @@ class DPMADepatisnetSearchResponse(GenericSearchResponse):
 
         self.meta.navigator.count_total = int(self.input['hits'])
         self.meta.navigator.count_page  = len(self.input['results'])
+        self.meta.navigator.max_hits    = int(self.options.max_hits)
         # TODO: Fill up?
         #self.meta.navigator.offset      = int(self.meta.upstream.Offset)
         #self.meta.navigator.limit       = int(self.meta.upstream.Limit)
