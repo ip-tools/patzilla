@@ -1362,7 +1362,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // projects
         this.projects.reset();
 
-        // Shutdown project choose, being graceful against timing issues re. object lifecycle
+        // Shutdown project chooser, being graceful against timing issues re. object lifecycle
         if (this.projectChooserView) {
             this.projectChooserView.clear();
         }

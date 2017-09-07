@@ -362,6 +362,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
         this.data_list_selector = '#project-chooser-list ul';
 
+        // TODO: Optimize this!
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
     },
