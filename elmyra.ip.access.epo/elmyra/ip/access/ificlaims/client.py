@@ -17,6 +17,7 @@ from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearch
 from elmyra.ip.access.ificlaims import get_ificlaims_client
 from elmyra.ip.access.serviva import get_serviva_client
 from elmyra.ip.util.data.container import SmartBunch
+from elmyra.ip.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 
@@ -488,6 +489,9 @@ class IFIClaimsSearchResponse(GenericSearchResponse):
         ucid = document[u'ucid']
         cc, docno, kindcode = ucid.split('-')
         number = cc + docno + kindcode
+        number_normalized = normalize_patent(number)
+        if number_normalized:
+            number = number_normalized
         return number
 
     def document_to_family_id(self, document):
