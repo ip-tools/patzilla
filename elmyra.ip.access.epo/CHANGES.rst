@@ -4,6 +4,17 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+- Update IFI Claims API endpoint
+- Use [OL] prefix for displaying titles without @lang attribute
+- Fix online help link in menu
+- Fix issue reporter for query transformation
+- Refactor per-datasource max_hits mechanics
+- Fix behavior when reviewing empty basket
+- Add datasource depa.tech
+- Add branding for vendor MTC
+- Improve number normalization around datasource IFI Claims
+- Fix document cycle sorting
+- Fix highlighting for Solr complexphrase expressions
 
 2017-04-06 0.134.1
 ==================
