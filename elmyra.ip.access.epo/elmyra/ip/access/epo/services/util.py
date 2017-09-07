@@ -10,6 +10,7 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
+from elmyra.ip.access.depatech.expression import DepaTechExpression
 from elmyra.ip.access.google.search import GooglePatentsExpression
 from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
 from elmyra.ip.access.ftpro.expression import FulltextProExpression
@@ -138,6 +139,15 @@ def make_expression_filter(data):
                             else:
                                 keywords += keywords_from_boolean_expression(key, value)
 
+                elif datasource == 'depatech':
+
+                    expression_part = DepaTechExpression.pair_to_elasticsearch(key, value, modifiers)
+                    if expression_part:
+                        if expression_part.has_key('keywords'):
+                            keywords += expression_part['keywords']
+                        else:
+                            keywords += keywords_from_boolean_expression(key, value)
+
                 # Accumulate expression part
                 error_tpl = u'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
@@ -165,7 +175,7 @@ def make_expression_filter(data):
     if datasource in ['ops', 'depatisnet']:
         expression = ' and '.join(expression_parts)
 
-    elif datasource == 'ifi':
+    elif datasource in ['ifi', 'depatech']:
         expression = ' AND '.join(expression_parts)
 
     elif datasource == 'ftpro':

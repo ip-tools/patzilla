@@ -260,6 +260,13 @@ HotkeysPlugin = Marionette.Controller.extend({
                 _this.app.set_datasource('ifi');
             });
         }
+        if (opsChooserApp.config.get('depatech_enabled')) {
+            $(selector).on('keydown', null, 'ctrl+shift+t', function(event) {
+                $('#datasource button[data-value="depatech"]').button('toggle');
+                _this.app.set_datasource('depatech');
+            });
+        }
+
         $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
             _this.app.basketModel.review();
         });

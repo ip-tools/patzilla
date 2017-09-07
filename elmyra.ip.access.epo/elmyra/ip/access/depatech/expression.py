@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl, Elmyra UG
+# (c) 2017 Andreas Motl, Elmyra UG
 import re
 import types
 import logging
@@ -11,18 +11,19 @@ from elmyra.ip.util.cql.pyparsing.util import walk_token_results
 from elmyra.ip.util.data.container import unique_sequence
 from elmyra.ip.util.date import parse_date_within, year_range_to_within, parse_date_universal
 from elmyra.ip.util.ipc.parser import IpcDecoder
+from elmyra.ip.util.numbers.common import split_patent_number
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.python import _exception_traceback
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-class IFIClaimsGrammar(CQLGrammar):
+class DepaTechGrammar(CQLGrammar):
     def preconfigure(self):
         CQLGrammar.preconfigure(self)
         self.cmp_single = u':'.split()
 
-class IFIClaimsParser(object):
+class DepaTechParser(object):
 
     def __init__(self, expression=None, modifiers=None):
         self.expression = expression
@@ -35,12 +36,12 @@ class IFIClaimsParser(object):
 
         # Parse expression, extract and propagate keywords
         self.query_object, query_recompiled = cql_prepare_query(
-            self.expression, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
+            self.expression, grammar=DepaTechGrammar, keyword_fields=DepaTechExpression.fieldnames)
 
         return self
 
     def rewrite_classes_ops(self):
-        # Rewrite all patent classifications from IFI format to OPS format
+        # Rewrite all patent classifications from Lucene format to OPS format
         # e.g. "G01F000184" to "G01F1/84"
         rewrite_classes_ops(self.query_object)
         return self
@@ -49,18 +50,7 @@ class IFIClaimsParser(object):
         self.parse()
         return self.query_object.dumps()
 
-    def trim_complexphrase(self):
-        """
-        Converts expressions with proximity operators to ones without them, like:
-        before: {!complexphrase}text:("parallel* AND schalt*"~6 AND "antrieb* AND stufe*"~3)
-        after:  {!complexphrase}text:((parallel* AND schalt*) AND (antrieb* AND stufe*))
-        """
-        #print >>sys.stderr, 'expression-before:', self.expression
-        self.expression = re.sub(u'"(.+?)"~\d+', u'(\\1)', self.expression)
-        #print >>sys.stderr, 'expression-after :', self.expression
-
     def keywords(self):
-        self.trim_complexphrase()
         self.parse()
         self.rewrite_classes_ops()
 
@@ -71,104 +61,81 @@ class IFIClaimsParser(object):
 
         return keywords
 
-class IFIClaimsExpression(object):
+class DepaTechExpression(object):
 
     """
-    Translate discrete comfort form field values to Solr Query Syntax, as convenient as possible.
+    Translate discrete comfort form field values to Elasticsearch Query Syntax, as convenient as possible.
 
-    https://wiki.apache.org/solr/SolrQuerySyntax
-    https://wiki.apache.org/solr/CommonQueryParameters
-    https://stackoverflow.com/questions/796753/solr-fetching-date-ranges/796800#796800
-    https://cwiki.apache.org/confluence/display/solr/Working+with+Dates
+    https://confluence.mtc.berlin/display/DPS/es+-+search+API
+    https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html
     """
+
+    # TODO:
+
+    # via: DE.000102011105593.A1
+    # "KI": "A1"
+    # "RN": "BOEHMERT & BOEHMERT, 28209, Bremen, DE"
+
+    # via: WO.000002017017201.A1
+    # "NP": "EP15178648"
+    # "importId": [
+    #   "2017-05-WO"
+    # ]
+
+    # Publication number, e.g. "US.000000009407879.B2"
+    # "AN": "US14845439",
+    # "DE": "9407879",
 
     # map canonical field names to datasource-specific ones
     datasource_indexnames = {
-        'patentnumber': 'pn',
-        'fulltext':     'text',
-        'applicant':    'pa',
-        'inventor':     'inv',
-        'class':        ['ic', 'cpc'],
-        'country':      'pnctry',
-        'pubdate':      'pd',
-        'appdate':      'ad',
-        'citation':     'pcitpn',
+
+        # Will be transformed by custom logic into distinct fields PC, DE, KI
+        'patentnumber': None,
+
+        # TODO
+        #'applicationnumber': 'AN',
+        #'prioritynumber': 'NP',
+
+        'fulltext':     ['AB', 'GT', 'ET', 'FT'],
+        'applicant':    'PA',
+        'inventor':     'IN',
+        'class':        ['IC', 'ICA', 'MC', 'NC'],
+        'country':      'PC',
+        'pubdate':      'DP',
+        'appdate':      'AD',
+        #'citation':     None,
     }
 
     fieldnames = [
-        'pn', 'text', 'ic', 'cpc',
-        'pnlang', 'pd',
-
-        # We don't want keywords for two-letter country-codes
-        #'pnctry',
-
-        '{!complexphrase}text',
 
         # Parties
-        'pa',
-        'inv',
-        'apl',
-        'asg',
-        'reasg',
-        'agt',
-        'cor',
+        'PA',
+        'IN',
 
         # Text
-        'text',
-        'tac',
-        'ttl',
-        'ab',
-        'desc',
-        'clm',
-        'aclm',
+        'AB',
+        'GT',
+        'ET',
+        'FT',
 
         # Classifications
-        'ic',
-        'cpc',
-        'ecla',
-        'uc',
-        'fi',
-        'fterm',
+        'IC',
+        'ICA',
+        'MC',
+        'NC',
 
         # Filing/Application and priority
-        'an',
-        'anlang',
-        'ad',
-        'pri',
-        'pridate',
-        'regd',
+        'AN',
+        #'PC',      # We don't want keywords for two-letter country-codes
 
         # International Filing and Publishing data
-        'pctan',
-        'pctad',
-        'pctpn',
-        'pctpd',
-        'ds',
-
-        # Citations
-        'pcit',
-        'pcitpn',
-        'ncit',
-
-        # Related Documents
-        'relan',
-        'relad',
-        'relpn',
-        'relpd',
-
-        # Legal Status Events
-        'ls',
-        'lsconv',
-        'lsrf',
-        'lstext',
-
-        # Miscellaneous
-        'fam',
+        'DP',
+        'AD',
 
     ]
 
     @classmethod
-    def pair_to_solr(cls, key, value, modifiers=None):
+    def pair_to_elasticsearch(cls, key, value, modifiers=None):
 
         try:
             fieldname = cls.datasource_indexnames[key]
@@ -183,17 +150,37 @@ class IFIClaimsExpression(object):
         #   value mogrifiers
         # ------------------------------------------
         if key == 'patentnumber':
-            # TODO: parse more sophisticated to make things like "EP666666 or EP666667" or "?query=pn%3AEP666666&datasource=ifi" possible
-            # TODO: use different normalization flavor for IFI, e.g. JP01153210A will not work as JPH01153210A, which is required by OPS
-            value = normalize_patent(value)
+
+            # Transform into distinct fields PC, DE, KI
+
+            #if has_booleans(value):
+            #    value = '({})'.format(value)
+
+            expression_parts = []
+
+            # Publication number
+            patent = split_patent_number(value)
+
+            patent_normalized = normalize_patent(patent, for_ops=False)
+            if patent_normalized:
+                patent = patent_normalized
+
+            if patent:
+                subexpression = u'PC:{country} AND DE:{number}'.format(**patent)
+                if patent['kind']:
+                    subexpression += u' AND KI:{kind}'.format(**patent)
+                expression_parts.append(u'({})'.format(subexpression))
+
+            # Application number
+            subexpression = u'AN:{}'.format(value)
+            expression_parts.append(subexpression)
+            expression = u' OR '.join(expression_parts)
 
         elif key == 'pubdate':
 
             """
-            - pd:[19800101 TO 19851231]
-            - pd:[* TO 19601231]
-            - pdyear:[1980 TO 1985]
-            - pdyear:[* TO 1960]
+            - DP:[19800101 TO 19851231]
+            - DP:[* TO 19601231]
             """
 
             try:
@@ -202,8 +189,7 @@ class IFIClaimsExpression(object):
 
                 # e.g. 1991
                 if len(value) == 4 and value.isdigit():
-                    fieldname = 'pdyear'
-                    parsed = True
+                    value = u'within {}0101,{}1231'.format(value, value)
 
                 # e.g. 1990-2014, 1990 - 2014
                 value = year_range_to_within(value)
@@ -214,21 +200,19 @@ class IFIClaimsExpression(object):
                 # within 2009-08-20,2011-03-03
                 if 'within' in value:
                     within_dates = parse_date_within(value)
-                    elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
-                    if elements_are_years:
-                        fieldname = 'pdyear'
 
+                    if within_dates['startdate']:
+                        if len(within_dates['startdate']) == 4:
+                            within_dates['startdate'] += '0101'
+                        within_dates['startdate'] = parse_date_universal(within_dates['startdate']).format('YYYYMMDD')
                     else:
-                        if within_dates['startdate']:
-                            within_dates['startdate'] = parse_date_universal(within_dates['startdate']).format('YYYYMMDD')
-
-                        if within_dates['enddate']:
-                            within_dates['enddate'] = parse_date_universal(within_dates['enddate']).format('YYYYMMDD')
-
-                    if not within_dates['startdate']:
                         within_dates['startdate'] = '*'
 
-                    if not within_dates['enddate']:
+                    if within_dates['enddate']:
+                        if len(within_dates['enddate']) == 4:
+                            within_dates['enddate'] += '1231'
+                        within_dates['enddate'] = parse_date_universal(within_dates['enddate']).format('YYYYMMDD')
+                    else:
                         within_dates['enddate'] = '*'
 
                     expression = '{fieldname}:[{startdate} TO {enddate}]'.format(fieldname=fieldname, **within_dates)
@@ -237,7 +221,7 @@ class IFIClaimsExpression(object):
                     value = parse_date_universal(value).format('YYYYMMDD')
 
             except Exception as ex:
-                message = 'IFI query: Invalid date or range expression "{0}". Reason: {1}'.format(value, ex)
+                message = 'depatech query: Invalid date or range expression "{0}". Reason: {1}'.format(value, ex)
                 logger.warn(message + ' Exception was: {0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
@@ -248,7 +232,7 @@ class IFIClaimsExpression(object):
         elif key == 'class':
 
             # v1: Naive implementation can only handle single values
-            #value = ifi_convert_class(value)
+            #value = lucene_convert_class(value)
 
             # v2: Advanced implementation can handle expressions on field "class"
             # Translate class expression from "H04L12/433 or H04L12/24"
@@ -262,8 +246,8 @@ class IFIClaimsExpression(object):
                 # Parse value as simple query expression
                 query_object = CQL(cql=value)
 
-                # Rewrite all patent classifications in query expression ast from OPS format to IFI format
-                rewrite_classes_ifi(query_object, format, fieldname)
+                # Rewrite all patent classifications in query expression ast from OPS format to Lucene format
+                rewrite_classes_lucene(query_object, format, fieldname)
 
                 # Serialize into appropriate upstream datasource query expression syntax
                 expression = query_object.dumps()
@@ -271,12 +255,14 @@ class IFIClaimsExpression(object):
             except pyparsing.ParseException as ex:
                 return {'error': True, 'message': '<pre>' + str(ex.explanation) + '</pre>'}
 
+        elif key == 'country':
+            value = value.upper()
 
         # ------------------------------------------
         #   surround with parentheses
         # ------------------------------------------
         if key in ['fulltext', 'inventor', 'applicant', 'country', 'citation']:
-            if has_booleans(value) and not should_be_quoted(value) and not '{!complexphrase' in value:
+            if has_booleans(value) and not should_be_quoted(value):
                 value = u'({0})'.format(value)
 
         # ------------------------------------------
@@ -284,10 +270,7 @@ class IFIClaimsExpression(object):
         # ------------------------------------------
         # Serialize into appropriate upstream datasource query expression syntax
         if not expression:
-            if key == 'fulltext' and '{!complexphrase' in value:
-                expression = value
-            else:
-                expression = format_expression(format, fieldname, value)
+            expression = format_expression(format, fieldname, value)
             #print 'expression:', expression
 
         # ------------------------------------------
@@ -302,18 +285,18 @@ class IFIClaimsExpression(object):
         return {'query': expression}
 
 
-def rewrite_classes_ifi(query_object, format, fieldname):
+def rewrite_classes_lucene(query_object, format, fieldname):
     """
     Rewrite all patent classifications in query
-    expression ast from OPS format to IFI format
+    expression ast from OPS format to Lucene format
     """
 
     def token_callback(token, *args, **kwargs):
 
         if len(token) == 1:
             try:
-                class_ifi = ifi_convert_class(token[0])
-                token[0] = format_expression(format, fieldname, class_ifi)
+                class_lucene = lucene_convert_class(token[0])
+                token[0] = format_expression(format, fieldname, class_lucene)
 
             except:
                 pass
@@ -323,7 +306,7 @@ def rewrite_classes_ifi(query_object, format, fieldname):
 def rewrite_classes_ops(query_object):
     """
     Rewrite all patent classifications in query
-    expression ast from IFI format to OPS format
+    expression ast from Lucene format to OPS format
     """
 
     if not query_object:
@@ -359,14 +342,13 @@ def format_expression(format, fieldname, value):
         expression = u'({0})'.format(expression)
     return expression
 
-def ifi_convert_class(value):
+def lucene_convert_class(value):
     right_truncation = False
     if value.endswith('*'):
         right_truncation = True
 
     ipc = IpcDecoder(value)
-    class_ifi = ipc.formatLucene()
-    value = class_ifi
+    value = ipc.formatLucene()
 
     if right_truncation:
         value += '*'

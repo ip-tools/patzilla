@@ -176,6 +176,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             search_info.engine = engine;
             return this.generic_search(search_info, options);
 
+        } else if (datasource == 'depatech') {
+            var engine = new DepaTechSearch();
+            search_info.engine = engine;
+            return this.generic_search(search_info, options);
+
         } else if (datasource == 'google') {
 
             this.trigger('search:before', search_info);

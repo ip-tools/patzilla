@@ -152,9 +152,13 @@
                         <img src="/static/img/icons/pro.svg" class="square"/>
                       "FulltextPRO "
                     </button>
-                    <button class="btn hide" data-value="ifi">
+                    <button class="btn hide" data-value="ifi" style="height: 31px;" >
                         <div class="icon icon-globe icon-large" style="color: #3781b7;"/>
                         IFI
+                    </button>
+                    <button class="btn hide" data-value="depatech">
+                        <img src="/static/vendor/mtc/depatech_icon.jpg" style="height: 20px" />
+                        depa.tech
                     </button>
                 </div>
             </div>
@@ -178,7 +182,7 @@
                                     <div class="controls">
                                         <div class="input-prepend">
                                             <span class="add-on add-on-label">Number</span>
-                                            <input id="patentnumber" name="patentnumber" class="input-xlarge" data-placeholder-multi="EP666666 or EP666667" data-placeholder-single="EP666666" type="text" autofocus="autofocus">
+                                            <input id="patentnumber" name="patentnumber" class="input-xlarge" data-placeholder-multi="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-depatech="DE102011078918A1" type="text" autofocus="autofocus">
                                         </div>
                                     </div>
                                 </div>
@@ -209,7 +213,7 @@
                                     <div class="controls">
                                         <div class="input-prepend">
                                             <span class="add-on add-on-label">Inventor</span>
-                                            <input name="inventor" class="input-xlarge" placeholder="&quot;Edison Thomas&quot;" type="text">
+                                            <input name="inventor" class="input-xlarge" data-placeholder-default="&quot;Edison Thomas&quot;" data-placeholder-depatech="&quot;Robert Bosch&quot;" type="text">
                                         </div>
                                     </div>
                                 </div>
