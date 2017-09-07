@@ -176,6 +176,11 @@ class DepaTechExpression(object):
             expression_parts.append(subexpression)
             expression = u' OR '.join(expression_parts)
 
+            # Priority number
+            subexpression = u'NP:{}'.format(value)
+            expression_parts.append(subexpression)
+            expression = u' OR '.join(expression_parts)
+
         elif key == 'pubdate':
 
             """
