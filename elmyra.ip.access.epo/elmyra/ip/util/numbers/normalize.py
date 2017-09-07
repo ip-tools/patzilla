@@ -107,7 +107,7 @@ def patch_patent(patent, for_ops=True):
     else:
         patched['number'] = trim_leading_zeros(patched['number'])
 
-    print "patched (regular):", patent, patched
+    #print "patched (regular):", patent, patched
     return patched
 
 
