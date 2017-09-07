@@ -96,11 +96,6 @@ class IFIClaimsExpression(object):
     }
 
     fieldnames = [
-        'pn', 'text', 'ic', 'cpc',
-        'pnlang', 'pd',
-
-        # We don't want keywords for two-letter country-codes
-        #'pnctry',
 
         '{!complexphrase}text',
 
@@ -121,6 +116,7 @@ class IFIClaimsExpression(object):
         'desc',
         'clm',
         'aclm',
+        'pnlang',
 
         # Classifications
         'ic',
@@ -131,6 +127,8 @@ class IFIClaimsExpression(object):
         'fterm',
 
         # Filing/Application and priority
+        'pn',
+        #'pnctry',      # We don't want keywords for two-letter country-codes
         'an',
         'anlang',
         'ad',
@@ -139,6 +137,7 @@ class IFIClaimsExpression(object):
         'regd',
 
         # International Filing and Publishing data
+        'pd',
         'pctan',
         'pctad',
         'pctpn',
@@ -185,7 +184,7 @@ class IFIClaimsExpression(object):
         if key == 'patentnumber':
             # TODO: parse more sophisticated to make things like "EP666666 or EP666667" or "?query=pn%3AEP666666&datasource=ifi" possible
             # TODO: use different normalization flavor for IFI, e.g. JP01153210A will not work as JPH01153210A, which is required by OPS
-            value = normalize_patent(value)
+            value = normalize_patent(value, for_ops=False)
 
         elif key == 'pubdate':
 
