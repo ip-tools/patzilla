@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 from pprint import pprint
 from elmyra.ip.version import __VERSION__
 from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
