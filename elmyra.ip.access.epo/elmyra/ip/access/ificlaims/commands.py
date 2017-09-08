@@ -36,18 +36,24 @@ if __name__ == '__main__':
     #results = client.search('*:*')
     #pprint(results)
 
-    results = client.search('pa:siemens', 0, 10)
+    #results = client.search('pa:siemens', 0, 10)
     #results = client.search('pa:siemens OR pa:bosch', 0, 10)
     #results = client.search('pa:(siemens OR bosch)', 0, 10)
     #results = client.search('text:"solar energy"', 0, 10)
     #results = client.search('text:solar energy', 0, 10)
     #results = client.search(u'text:抑血管生成素的药物用途', 0, 10)
     #results = client.search(u'text:放射線を照射する放射線源と', 0, 10)
-    pprint(results)
+    #pprint(results)
 
     #results = client.text_fetch('US-20100077592-A1')
     #results = client.text_fetch('CN-1055497-A')
-    #print json.dumps(results)
+    #results = client.text_fetch('PL-2543232-T3')
+    #results = client.text_fetch('CA-2895851-A1')
+    #results = client.text_fetch('CA-167637-S')
+    #results = json.loads(client.text_fetch('CA-2886702-A1', 'json'))
+    results = json.loads(client.text_fetch('CA-2895852-A1', 'json'))
+
+    print json.dumps(results)
 
     #results = client.attachment_list('CN-1055497-A')
     #pprint(results)
