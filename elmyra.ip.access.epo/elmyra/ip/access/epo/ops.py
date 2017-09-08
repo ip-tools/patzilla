@@ -427,11 +427,10 @@ def inquire_images(document):
     response = client.get(url_image_inquriy, headers={'Accept': 'application/json'})
     if response.status_code != 200:
 
-        # make 404s cacheable
-        # FIXME: really!?
         if response.status_code == 404:
             log.warn(error_msg_access)
-            return
+            error = HTTPNotFound(error_msg_access)
+            error.status_code = response.status_code
 
         else:
             log.error(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
