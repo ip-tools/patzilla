@@ -13,6 +13,7 @@ from elmyra.ip.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
 
+# TODO: Refactor to elmyra.ip.access.composite
 def pdf_universal(patent):
 
     pdf = None
@@ -66,6 +67,7 @@ def pdf_universal(patent):
 
     return {'pdf': pdf, 'datasource': datasource, 'meta': meta}
 
+# TODO: Refactor to elmyra.ip.access.epo.ops.api
 def pdf_from_ops(patent, document, meta):
     # third, try building from OPS single images
     try:
