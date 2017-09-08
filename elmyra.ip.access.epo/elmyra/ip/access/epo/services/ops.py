@@ -4,7 +4,7 @@ import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.settings import asbool
-from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate, ops_published_data_search_swap_family
+from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate, ops_published_data_search_swap_family, ops_family_publication_docdb_xml
 from elmyra.ip.access.epo.services import propagate_keywords, cql_prepare_query
 from elmyra.ip.access.generic.exceptions import NoResultsException
 from elmyra.ip.util.numbers.common import split_patent_number
@@ -168,27 +168,13 @@ def ops_family_inpadoc_json_handler(request):
 
 @ops_family_inpadoc_service.get(accept='text/xml', renderer='xml')
 def ops_family_publication_xml_handler(request):
-    """
-    Download requested family publication information from OPS
-    e.g. http://ops.epo.org/3.1/rest-services/family/publication/docdb/EP.1491501.A1/biblio,legal
-    """
 
-    url_tpl = 'https://ops.epo.org/3.1/rest-services/family/publication/docdb/{patent}/{constituents}'
+    patent = request.matchdict.get('patent')
 
-    # split patent number
-    patent = split_patent_number(request.matchdict.get('patent'))
-    patent_dotted = '.'.join([patent['country'], patent['number'], patent['kind']])
+    # constituents: biblio, legal
+    constituents = request.params.get('constituents', '')
 
-    # constituents: biblio, legal, xxx?
-    constituents = request.params.get('constituents', 'biblio')
-
-    url = url_tpl.format(patent=patent_dotted, constituents=constituents)
-    client = get_ops_client()
-    #response = client.get(url, headers={'Accept': 'application/json'})
-    response = client.get(url, headers={'Accept': 'text/xml'})
-    #print "response:", response.content
-
-    return response.content
+    return ops_family_publication_docdb_xml(patent, constituents)
 
 
 @ops_pdf_service.get(renderer='pdf')
