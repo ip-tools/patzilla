@@ -356,8 +356,10 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
                     return lang_prefix + title['$'];
                 });
             }
+
             // Poor mans sorting. Will yield titles in order of DE, EN, FR, OL, which seems to be a reasonable order.
             title_list.sort();
+
             return title_list;
         },
 
@@ -384,19 +386,20 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
                     'acquire from different data source</a>');
             }
 
+            // Poor mans sorting. Will yield titles in order of DE, EN, FR, OL, which seems to be a reasonable order.
+            abstract_list.sort();
+
             return abstract_list;
         },
 
         get_applicants: function(links) {
 
             try {
-                var applicants_root_node = this['bibliographic-data']['parties']['applicants'];
+                var applicants_node = this['bibliographic-data']['parties']['applicants']['applicant'];
             } catch(e) {
                 return [];
             }
 
-            applicants_root_node = applicants_root_node || [];
-            var applicants_node = applicants_root_node['applicant'];
             var applicants_list = this.parties_to_list(applicants_node, 'applicant-name');
             if (links) {
                 applicants_list = this.enrich_links(applicants_list, 'applicant');
@@ -408,13 +411,11 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
         get_inventors: function(links) {
 
             try {
-                var inventors_root_node = this['bibliographic-data']['parties']['inventors'];
+                var inventors_node = this['bibliographic-data']['parties']['inventors']['inventor'];
             } catch(e) {
                 return [];
             }
 
-            inventors_root_node = inventors_root_node || [];
-            var inventors_node = inventors_root_node['inventor'];
             var inventor_list = this.parties_to_list(inventors_node, 'inventor-name');
             if (links) {
                 inventor_list = this.enrich_links(inventor_list, 'inventor');
@@ -425,10 +426,12 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
 
         parties_to_list: function(container, value_attribute_name) {
 
-            // deserialize list of parties (applicants/inventors) from exchange payload
+            //log('parties_to_list', container, value_attribute_name);
+
+            // Deserialize list of parties (applicants/inventors) from exchange payload
             var sequence_max = "0";
             var groups = {};
-            _.each(container, function(item) {
+            _.each(to_list(container), function(item) {
                 var data_format = item['@data-format'];
                 var sequence = item['@sequence'];
                 var value = _.string.trim(item[value_attribute_name]['name']['$'], ', ');
@@ -437,14 +440,14 @@ _.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
                 if (sequence > sequence_max)
                     sequence_max = sequence;
             });
-            //console.log(groups);
+            //log('groups:', groups);
 
             // TODO: somehow display in gui which one is the "epodoc" and which one is the "original" value
             var entries = [];
             _.each(_.range(1, parseInt(sequence_max) + 1), function(sequence) {
                 sequence = sequence.toString();
-                var epodoc_value = groups['epodoc'][sequence];
-                var original_value = groups['original'][sequence];
+                var epodoc_value   = groups['epodoc']   && groups['epodoc'][sequence]   || undefined;
+                var original_value = groups['original'] && groups['original'][sequence] || undefined;
 
                 //entries.push(epodoc_value + ' / ' + original_value);
                 //entries.push(original_value);

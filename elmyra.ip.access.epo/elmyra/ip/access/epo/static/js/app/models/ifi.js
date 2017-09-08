@@ -283,7 +283,7 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
         }
 
         var applicants_node_list = to_list(applicants_root_node['applicant']);
-        var applicants_list = this.parties_to_list(applicants_node_list, 'applicant-name');
+        var applicants_list = this.parties_to_list(applicants_node_list);
         if (links) {
             applicants_list = this.enrich_links(applicants_list, 'applicant');
         }
@@ -598,6 +598,8 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     text = text.replace(number + '. ', '');
                 } else if (_.string.startsWith(text, number + '.\t')) {
                     text = text.replace(number + '.\t', '');
+                } else if (_.string.startsWith(text, number)) {
+                    text = text.slice(1);
                 }
             }
             result = number + '. ' + text;
@@ -747,6 +749,9 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         }
 
         if (part['@num']) {
+            if (_.string.startsWith(text, part['@num'])) {
+                text = text.slice(part['@num'].length);
+            }
             text = '[' + part['@num'] + '] ' + text;
         }
 

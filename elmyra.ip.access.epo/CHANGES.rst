@@ -24,6 +24,7 @@ development
 - Improve patent number normalization and usage
 - Improve Espacenet screen scraper
 - Migrate to OPS API version 3.2
+- Improve/fix patent display after OPS 3.2 migration
 
 2017-04-06 0.134.1
 ==================
