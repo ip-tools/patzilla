@@ -4,6 +4,9 @@ elmyra.ip.access.epo CHANGES
 
 development
 ===========
+
+2017-09-08 0.135.0
+==================
 - Update IFI Claims API endpoint
 - Use [OL] prefix for displaying titles without @lang attribute
 - Fix online help link in menu
