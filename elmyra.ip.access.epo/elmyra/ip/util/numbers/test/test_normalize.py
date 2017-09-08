@@ -80,7 +80,7 @@ t['US09/930611A']    = 'US9930611A'
 # fantasy
 t['USD123456789']    = 'USD123456789'
 t['USRE123456789']   = 'USRE123456789'
-t['USRE1234E1']      = 'USRE01234E1'
+t['USRE1234E1']      = 'USRE1234E1'
 t['US6147451A']      = 'US6147451A'
 
 # from production
@@ -89,9 +89,8 @@ t['WODM 055039']         = 'WODM055039'         # see http://www.freepatentsonli
 t['DEM 89 08 812']       = 'DEM8908812'
 
 t['USRE039998E1']        = 'USRE39998E1'
-t['USRE1234E1']          = 'USRE01234E1'
 t['USD000123456']        = 'USD123456'
-t['USD1234']             = 'USD001234'
+t['USD1234']             = 'USD1234'
 t['USRX12']              = 'USRX12'
 
 t['WOPCT/WO9831467']     = 'WO1998031467'

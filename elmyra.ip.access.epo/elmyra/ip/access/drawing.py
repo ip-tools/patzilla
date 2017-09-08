@@ -12,6 +12,8 @@ from elmyra.ip.access.cipo.drawing import fetch_first_drawing as get_cipo_image
 
 log = logging.getLogger(__name__)
 
+# TODO: Refactor to elmyra.ip.access.composite.drawing
+
 @cache_region('longer')
 def get_drawing_png(document, page, kind):
 
@@ -23,8 +25,7 @@ def get_drawing_png(document, page, kind):
 
         # fallback to USPTO (U.S.)
         if document.upper().startswith('US'):
-            #document_id = split_patent_number(document)
-            document_id = normalize_patent(split_patent_number(document))
+            document_id = normalize_patent(split_patent_number(document), for_ops=False)
             try:
                 payload = get_uspto_image_cached(document_id)
             except PayloadEmpty as ex:
