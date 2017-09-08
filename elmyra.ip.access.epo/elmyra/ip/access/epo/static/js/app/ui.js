@@ -76,18 +76,6 @@ UiController = Marionette.Controller.extend({
             $(this).attr('href', url);
         });
 
-        $('.action-online-help').unbind('click');
-        $('.action-online-help').on('click', function() {
-
-            // v1: modal dialog
-            //$('#help-modal').modal('show');
-
-            // v2: different page
-            var baseurl = opsChooserApp.config.get('baseurl');
-            var url = baseurl + '/help/shortcuts';
-            $(this).attr('href', url);
-        });
-
         $('.action-help-ificlaims').unbind('click');
         $('.action-help-ificlaims').on('click', function() {
 

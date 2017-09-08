@@ -63,18 +63,31 @@ class Bootstrapper(object):
 
         request = get_current_request()
 
+        data_source_list = [
+            '<a href="https://ops.epo.org/" target="_blank" class="incognito pointer">EPO/OPS</a>',
+            '<a href="https://depatisnet.dpma.de" target="_blank" class="incognito pointer">DPMA/DEPATISnet</a>',
+            '<a href="https://www.uspto.gov/" target="_blank" class="incognito pointer">USPTO/PATIMG</a>',
+            '<a href="http://cipo.gc.ca" target="_blank" class="incognito pointer">CIPO</a>',
+            '<a href="https://www.ificlaims.com/" target="_blank" class="incognito pointer">IFI Claims</a>',
+            '<a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
+        ]
+
+        software_version_label = 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', '')
+        software_version_link  = '<a href="https://github.com/ip-tools/ip-navigator" target="_blank" ' \
+                                 'class="incognito pointer">{label}</a>'.format(label=software_version_label)
+
         data = {
             'ui.vendor.name': 'Elmyra',
-            'ui.vendor.copyright': u'&copy; 2013-2017, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.',
+            'ui.vendor.copyright': u'&copy; 2013-2017, <a href="https://www.elmyra.de/" class="incognito pointer" target="_blank">Elmyra UG</a> — All rights reserved.',
             'ui.productname': 'Elmyra IP Navigator',
             'ui.productname.rich': '<span class="header-logo">Elmyra <i class="circle-icon">IP</i> Navigator</span>',
             'ui.email.purchase': 'purchase@elmyra.de',
             'ui.email.support': 'purchase@elmyra.de',
 
-            'ui.version': 'Software release: ' + request.registry.settings.get('SOFTWARE_VERSION', ''),
+            'ui.version': software_version_link,
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: EPO/OPS, DPMA/DEPATISnet, USPTO/PATIMG, CIPO, <a target="_blank" class="incognito pointer action-help-ificlaims">IFI Claims</a>, <a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
+            'ui.page.footer': 'Data sources: ' + u', '.join(data_source_list),
 
             'ui.css': {
                 # Page header background
