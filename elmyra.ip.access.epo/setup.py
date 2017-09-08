@@ -127,7 +127,7 @@ test_requires = [
 ]
 
 setup(name='elmyra.ip.access.epo',
-      version='0.134.1',
+      version='0.135.0',
       description='elmyra.ip.access.epo',
       long_description=README,
       license="AGPL 3, EUPL 1.2",
