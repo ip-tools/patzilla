@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2007-2011 ***REMOVED***
-# (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2014-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
 import types
+from copy import copy
 from elmyra.ip.util.numbers.denormalize import denormalize_patent_wo
 from elmyra.ip.util.numbers.helper import pad_left, trim_leading_zeros, fullyear_from_year
 from elmyra.ip.util.numbers.common import split_patent_number, join_patent
@@ -19,7 +20,8 @@ def patch_patent(patent, for_ops=True):
 
     number_length = len(patent['number'])
 
-    patched = patent.copy()
+    patched = copy(patent)
+    #print 'patched:', patched
 
     # strip leading zeros of *publication* to 6 digits, if seqnumber is longer than 6 digits
     # examples: publication: AT401234; application: AT 967/1994 => AT96794
@@ -219,7 +221,7 @@ def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False,
 
 def patch_patent_old_archive(patent):
     if patent:
-        patched = patent.copy()
+        patched = copy(patent)
 
         if patched['country'] == 'WO':
             patched = denormalize_patent_wo(patched)
@@ -255,7 +257,7 @@ def normalize_patent_wo(patent):
 
     assert patent['country'] == 'WO'
 
-    patched = patent.copy()
+    patched = copy(patent)
 
     # filter: leave special documents untouched (with alphanumeric prefix)
     pattern = '^\D+'
@@ -332,7 +334,7 @@ def normalize_patent_wo_pct(patent):
 
     assert patent['country'] == 'WO'
 
-    patched = patent.copy()
+    patched = copy(patent)
     #print patched
 
     r = re.compile('[\/|-]')
@@ -398,6 +400,7 @@ def normalize_patent_us(patent, for_ops=True):
     #   Statutory Invention Registration  --    H001,523 H001234 H000001
     #   Re-examination                    --    RX12
     #   Additional Improvement            --    AI00,002 AI000318 AI00007
+    subtype_prefixes = ['D', 'PP', 'RD', 'RE', 'T', 'H', 'AI']
 
     # AppFT - Patent Applications
     # http://appft.uspto.gov/netahtml/PTO/srchnum.html
@@ -406,45 +409,53 @@ def normalize_patent_us(patent, for_ops=True):
 
     assert patent['country'] == 'US'
 
-    patched = patent.copy()
-
-    # filter: special document handling (with alphanumeric prefixes)
-    # trim and pad sequential number with zeros to get total length of 7 characters for patent number
-    if patched.has_key('number-type') and patched.has_key('number-real'):
-        subtype = patched['number-type']
-        seqnumber = patched['number-real']
-        if subtype in ('D', 'PP', 'RD', 'RE', 'T', 'H', 'AI'):
-            patched['number'] = subtype + pad_left(trim_leading_zeros(seqnumber), '0', 7 - len(subtype))
-        return patched
+    patched = copy(patent)
 
     length = len(patched['number'])
 
-    # OPS uses US patent publications in 4+6=10 format
-    # Examples: US2015322651A1, US2017250417A1
     if for_ops:
 
-        # US applications: convert from 4+5=9 to 4+6=10
+        # OPS uses US patent applications/publications in 4+6=10 format
+        # Examples: US2015322651A1, US2017250417A1
+
+        # US applications: Convert from 4+5=9 to 4+6=10
         if length == 9:
             padding = '0' * (10 - length)
             patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
 
-        # US applications: convert from 4+7=11 to 4+6=10
+        # US applications: Convert from 4+7=11 to 4+6=10
         # 2015-12-20: normalize"FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
         # this might be OPS-specific
         elif length == 11:
             if patched['number'][4] == '0':
                 patched['number'] = patched['number'][0:4] + patched['number'][5:]
 
-        # US patents: trim to seven digits
+        # US patents: Handle document numbers with character prefixes
+        # Trim leading zeros for OPS
+        elif 'number-type' in patched and 'number-real' in patched:
+            subtype = patched['number-type']
+            seqnumber = patched['number-real']
+            if subtype in subtype_prefixes:
+                patched['number'] = subtype + trim_leading_zeros(seqnumber)
+
+        # US patents: Trim to seven digits
         else:
             patched['number'] = trim_leading_zeros(patched['number'])
             #patched['number'] = pad_left(patched['number'], '0', 7)
 
     else:
 
+        # US patents: Handle document numbers with character prefixes
+        # Pad patent number with zeros to get total length of 7 characters
+        if 'number-type' in patched and 'number-real' in patched:
+            subtype = patched['number-type']
+            seqnumber = patched['number-real']
+            if subtype in subtype_prefixes:
+                patched['number'] = subtype + seqnumber.zfill(7)
+
         # Convert from 4+5=9 or 4+6=10 to 4+7=11
         # US20170000054A1
-        if length == 9 or length == 10:
+        elif length == 9 or length == 10:
             padding = '0' * (11 - length)
             patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
 
@@ -478,7 +489,7 @@ def normalize_patent_jp(patent):
 
     assert patent['country'] == 'JP'
 
-    patched = patent.copy()
+    patched = copy(patent)
 
     #print patched['number']
 
@@ -531,7 +542,7 @@ def normalize_patent_au(patent):
 
     assert patent['country'] == 'AU'
 
-    patched = patent.copy()
+    patched = copy(patent)
 
 
     length = len(patent['number'])
@@ -566,7 +577,7 @@ def normalize_patent_it(patent):
 
     assert patent['country'] == 'IT'
 
-    patched = patent.copy()
+    patched = copy(patent)
 
     # filter: special document handling (with alphanumeric prefixes)
     # trim and pad sequential number with zeros to get total length of 7 characters for patent number
@@ -586,7 +597,7 @@ def normalize_patent_se(patent):
 
     assert patent['country'] == 'SE'
 
-    patched = patent.copy()
+    patched = copy(patent)
 
     #print patched['number']
 

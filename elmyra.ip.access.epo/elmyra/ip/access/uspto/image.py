@@ -8,6 +8,7 @@ import cookielib
 from BeautifulSoup import BeautifulSoup
 from elmyra.ip.util.network.browser import regular_user_agent
 from elmyra.ip.util.numbers.common import split_patent_number, decode_patent_number
+from elmyra.ip.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 
@@ -154,7 +155,7 @@ def fetch_url(url):
 
 def get_images_view_url(document):
 
-    document = decode_patent_number(document)
+    document = normalize_patent(document, for_ops=False)
 
     reference_type = None
     if len(document.number) <= 9:
