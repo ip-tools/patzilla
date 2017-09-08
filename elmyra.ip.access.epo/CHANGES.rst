@@ -23,6 +23,7 @@ development
 - Use recent browser-like User-Agent across the board
 - Improve patent number normalization and usage
 - Improve Espacenet screen scraper
+- Migrate to OPS API version 3.2
 
 2017-04-06 0.134.1
 ==================

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
+# (c) 2014-2017 Andreas Motl, Elmyra UG
 import time
 import json
 import logging
@@ -12,6 +12,7 @@ from requests.exceptions import ConnectionError
 from requests_oauthlib.oauth2_session import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
 from oauthlib.common import add_params_to_uri
+from elmyra.ip.access.epo.ops import OPS_AUTH_URI, OPS_API_URI
 from elmyra.web.identity.store import IUserMetricsManager
 
 logger = logging.getLogger(__name__)
@@ -264,7 +265,7 @@ class OpsOAuthClientFactory(object):
         logger.info('OpsOAuthClientFactory.create_session: ' \
                     'identifier={identifier}, client_id={client_id}'.format(**locals()))
 
-        token_url = 'https://ops.epo.org/3.1/auth/accesstoken'
+        token_url = OPS_AUTH_URI + '/accesstoken'
         refresh_url = token_url
 
         extra = {
@@ -334,7 +335,7 @@ if __name__ == '__main__':
     ops_session = pool.get('default')
     print ops_session
 
-    url = 'https://ops.epo.org/3.1/rest-services/published-data/search/biblio'
+    url = '{baseuri}/published-data/search/biblio'.format(baseuri=OPS_API_URI)
 
     make_request(ops_session, url)
     make_request(ops_session, url, provoke_failure=True)
