@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015,2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
@@ -22,7 +22,10 @@ def espacenet_fetch(document_number, section, element_id):
     #url_tpl = u'https://worldwide.espacenet.com/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
 
     # 2016-11-13
-    url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
+    #url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
+
+    # 2017-09-08
+    url_tpl = u'https://worldwide.espacenet.com/publicationDetails/description?CC={country}&NR={number}{kind}'
 
     url = url_tpl.format(section=section, **patent)
 
@@ -34,16 +37,16 @@ def espacenet_fetch(document_number, section, element_id):
     message_fail = 'Fetching section "{section}" from Espacenet for "{document_number}" failed'.format(**locals())
 
     if response.status_code == 200:
-        # todo: when no result, "Claims not available" appears in response body
+        # TODO: when no result, "Claims not available" appears in response body
         soup = BeautifulSoup(response.content)
-        element = soup.find('div', {'id': element_id}).find('p')
+        element = soup.find('div', {'id': element_id})
         if element:
+            element = element.find('p')
             lang = element['lang']
             del element['class']
             content = element.prettify()
         else:
-            lang = None
-            content = ''
+            raise KeyError(message_404)
 
         data = {
             'xml': content,
