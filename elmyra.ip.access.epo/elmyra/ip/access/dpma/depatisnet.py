@@ -12,6 +12,7 @@ from BeautifulSoup import BeautifulSoup
 from xlrd import open_workbook
 from elmyra.ip.access.generic.search import GenericSearchResponse
 from elmyra.ip.util.date import from_german, date_iso
+from elmyra.ip.util.network.browser import regular_user_agent
 from elmyra.ip.util.numbers.normalize import normalize_patent
 from elmyra.ip.util.python import _exception_traceback
 
@@ -63,7 +64,7 @@ class DpmaDepatisnetAccess:
         # http://wwwsearch.sourceforge.net/mechanize/
         self.browser = mechanize.Browser()
         self.browser.set_cookiejar(cookielib.LWPCookieJar())
-        self.browser.addheaders = [('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')]
+        self.browser.addheaders = [('User-Agent', regular_user_agent)]
         # ignore robots.txt
         self.browser.set_handle_robots(False)
 

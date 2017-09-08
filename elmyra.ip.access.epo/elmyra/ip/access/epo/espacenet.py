@@ -3,6 +3,7 @@
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
+from elmyra.ip.util.network.browser import regular_user_agent
 from elmyra.ip.util.numbers.normalize import normalize_patent
 
 
@@ -26,7 +27,7 @@ def espacenet_fetch(document_number, section, element_id):
     url = url_tpl.format(section=section, **patent)
 
     logger.info('Accessing Espacenet: {}'.format(url))
-    response = requests.get(url)
+    response = requests.get(url, headers={'User-Agent': regular_user_agent})
     #print 'response.content:', response.content
 
     message_404 = 'No section "{section}" at Espacenet for "{document_number}"'.format(**locals())

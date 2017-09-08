@@ -6,6 +6,7 @@ import requests
 import urllib2
 import cookielib
 from BeautifulSoup import BeautifulSoup
+from elmyra.ip.util.network.browser import regular_user_agent
 from elmyra.ip.util.numbers.common import split_patent_number, decode_patent_number
 
 log = logging.getLogger(__name__)
@@ -117,7 +118,7 @@ def fetch_first_drawing_do(number, baseurl, url_initial):
 def fetch_url(url):
 
     txdata = None
-    txheaders =  {'User-agent' : 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'}
+    txheaders =  {'User-Agent': regular_user_agent}
 
     # clean up url
     url = url.replace("\r", "")

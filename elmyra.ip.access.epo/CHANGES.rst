@@ -20,6 +20,7 @@ development
 - Bring list of global office links up to speed
 - Display both (docdb) and (epodoc) numbers at application reference
 - depa.tech: Highlighting for expert search
+- Use recent browser-like User-Agent across the board
 
 2017-04-06 0.134.1
 ==================
