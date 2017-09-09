@@ -82,5 +82,6 @@ Cut a new release::
 
 Deploy to server::
 
+    make setup-maintenance
     make install target=develop     # develop,staging,prod
 

@@ -66,7 +66,7 @@ upload:
 	rsync -auv */dist/PatZilla-* root@almera.elmyra.de:/root/install/PatZilla/
 
 setup-maintenance:
-	source .venv27/bin/activate; pip install cuisine
+	source .venv27/bin/activate; pip install Fabric==1.8.0 cuisine
 
 install:
 	@# make install target=patoffice version=0.29.0

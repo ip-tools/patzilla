@@ -14,6 +14,7 @@ development
 - Trim down automatic user provisioning
 - Application configuration file cleanup
 - Namespace refactoring
+- Make tests work again
 
 2017-09-08 0.135.0
 ==================
