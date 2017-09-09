@@ -101,7 +101,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
         basket_button.on('click', function(event) {
             $('#result-to-basket-indicator').removeClass('icon-plus').addClass('icon-spinner icon-spin');
             setTimeout(function() {
-                $.when(opsChooserApp.basketModel.add_multi(numberlist)).then(function() {
+                $.when(opsChooserApp.basketModel.add_multi(numberlist, {reset_seen: true})).then(function() {
                     $('#result-to-basket-indicator').removeClass('icon-spinner icon-spin').addClass('icon-plus');
                     var message = 'Added ' + numberlist.length + ' patent numbers to document collection.';
                     _ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
@@ -134,6 +134,8 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
             'please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
 
         var fetcher = this.fetcher_factory();
+        if (!fetcher) return;
+
         fetcher.start().then(function(response) {
 
             // transfer data

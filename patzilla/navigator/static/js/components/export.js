@@ -154,7 +154,7 @@ ExportPlugin = Backbone.Model.extend({
         // ------------------------------------------
         // Setup "display" screen
         // ------------------------------------------
-        var numbers_rated = basket.get_numbers();
+        var numbers_rated = basket.get_numbers({seen: false});
         var numbers_seen = basket.get_numbers({seen: true});
         dialog.find('#result-count-rated').html('#' + numbers_rated.length);
         dialog.find('#result-count-seen').html('#' + numbers_seen.length);

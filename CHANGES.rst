@@ -24,6 +24,7 @@ development
 - Improve header layout in liveview mode
 - Upgrade to most recent versions of Python foundation modules across the board
 - OPS stopped delivering the elapsed time when crawling
+- Improve basket model and interaction sanity
 
 2017-09-08 0.135.0
 ==================

@@ -211,6 +211,10 @@ BasketModel = Backbone.RelationalModel.extend({
             /*query: null,*/
         });
 
+        if (options.reset_seen) {
+            entry.save({'seen': false});
+        }
+
         // save basket entry
         entry.save(null, {success: function() {
             var entries = _this.get('entries');
@@ -234,14 +238,17 @@ BasketModel = Backbone.RelationalModel.extend({
         return deferred.promise();
     },
 
-    add_multi: function(numberlist) {
+    add_multi: function(numberlist, options) {
+
+        options = options || {};
+        _(options).extend({bulk: true});
 
         var deferred = $.Deferred();
 
         var _this = this;
         var deferreds = [];
         _.each(numberlist, function(number) {
-            deferreds.push(_this.add(number, {bulk: true}));
+            deferreds.push(_this.add(number, options));
         });
         $.when.apply($, deferreds).then(function() {
             _this.refresh();
@@ -289,27 +296,29 @@ BasketModel = Backbone.RelationalModel.extend({
             // let all entries pass
             //return false;
 
+            var score = entry.get('score');
+            var seen = entry.get('seen');
+            var dismiss = entry.get('dismiss');
+
+            var outcome = false;
             if (options.dismiss != undefined) {
-                var dismiss = entry.get('dismiss');
-                if (dismiss == undefined) {
-                    if (options.dismiss == false) {
-                        return true;
-                    };
+                if (options.dismiss == false && (dismiss == undefined || dismiss == false)) {
+                    outcome = false;
+                } else if (options.dismiss == true && dismiss == true) {
+                    return false;
                 } else {
-                    return dismiss == !options.dismiss;
+                    return true;
                 }
             }
             if (options.seen != undefined) {
-                var score = entry.get('score');
-                var seen = entry.get('seen');
 
                 var outcome;
-                if (score == undefined && seen == undefined) {
-                    outcome = !options.seen;
+                if (options.seen == false && (seen == undefined || seen == false)) {
+                    outcome |= false;
                 } else if (seen == undefined) {
-                    outcome = options.seen;
+                    outcome |= options.seen;
                 } else {
-                    outcome = seen == !options.seen;
+                    outcome |= seen == !options.seen;
                 }
 
                 // Debugging
