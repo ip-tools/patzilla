@@ -37,7 +37,7 @@ DatasourceSearch = Backbone.Model.extend({
                 }
 
                 // Use keywords from search backend or query expression in expert mode
-                var keywords_backend_raw = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+                var keywords_backend_raw = options.xhr.getResponseHeader('X-PatZilla-Query-Keywords');
                 if (keywords_backend_raw) {
                     var keywords_backend = self.decode_header_json(keywords_backend_raw) || [];
                     log('keywords_backend:', keywords_backend);
@@ -60,7 +60,7 @@ DatasourceSearch = Backbone.Model.extend({
 
     decode_header_json: function(raw) {
 
-        // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+        // workaround for weird Chrome bug: "X-PatZilla-Query-Keywords" headers are recieved duplicated
         // example: ["siemens", "bosch"], ["siemens", "bosch"]
 
         if (raw) {

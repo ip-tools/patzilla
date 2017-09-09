@@ -18,6 +18,7 @@ development
 - Properly handle and propagate cache database connection errors
 - Disable automatic "admin" user provisioning
 - Documentation, “naming things” and further cleansing
+- Naming things: Rename HTTP header for transporting the keywords
 
 2017-09-08 0.135.0
 ==================
@@ -1035,7 +1036,7 @@ Bug fixes and minor updates
 
 2014-11-05 0.49.0
 =================
-- ui/middleware: fix for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+- ui/middleware: fix for weird Chrome bug: "X-PatZilla-Query-Keywords" headers are recieved duplicated
 - ui: paging layout overflow fix for Internet Explorer
 
 2014-11-05 0.47.0

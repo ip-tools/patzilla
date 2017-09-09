@@ -28,9 +28,9 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
                 // Only gather keywords in regular OPS search mode
                 if (metadata.get('searchmode') != 'subsearch') {
-                    var keywords = options.xhr.getResponseHeader('X-Elmyra-Query-Keywords');
+                    var keywords = options.xhr.getResponseHeader('X-PatZilla-Query-Keywords');
                     if (keywords) {
-                        // workaround for weird Chrome bug: "X-Elmyra-Query-Keywords" headers are recieved duplicated
+                        // workaround for weird Chrome bug: "X-PatZilla-Query-Keywords" headers are recieved duplicated
                         keywords = keywords.replace(/(.+), \[.+\]/, '$1');
                         self.keywords = jQuery.parseJSON(keywords);
                     }

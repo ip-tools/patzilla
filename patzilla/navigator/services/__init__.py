@@ -60,7 +60,7 @@ def propagate_keywords(request, query_object):
         keywords = unique_sequence(keywords)
 
         log.info('Propagating keywords from expression "{origin}": {keywords}'.format(origin=origin, keywords=keywords))
-        request.response.headers['X-Elmyra-Query-Keywords'] = json.dumps(keywords)
+        request.response.headers['X-PatZilla-Query-Keywords'] = json.dumps(keywords)
 
 def compute_keywords(query_object):
     keywords = []
