@@ -10,6 +10,7 @@ development
 - Improve datasource configuration mechanics
 - Improve OPS API error propagation
 - Pull application-wide OPS API authentication credentials from datasource settings
+- Update documentation re. database sandbox mode
 
 2017-09-08 0.135.0
 ==================

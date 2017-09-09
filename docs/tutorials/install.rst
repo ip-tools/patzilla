@@ -43,9 +43,13 @@ Production
     pip install --allow-external which --allow-external fanstatic --allow-external setuptools --allow-unverified setuptools --allow-unverified which --upgrade fanstatic==1.0a2
 
 
-Run development server
-======================
-::
+Run instance
+============
+Start database::
+
+    make mongodb-start
+
+Start web server::
 
     source .venv27/bin/activate
     pserve elmyra.ip.access.epo/development.ini --reload

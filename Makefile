@@ -121,7 +121,8 @@ nginx-start:
 	@$(nginx_path)/nginx/sbin/nginx -p $(nginx_path)/nginx -c `pwd`/nginx-auth/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
 
 mongodb-start:
-	mongod --dbpath=./var/lib/mongodb/ --smallfiles
+	mkdir -p ./var/lib/mongodb
+	mongod --dbpath=./var/lib/mongodb --smallfiles
 
 mongodb-ftpro-export:
 	mkdir -p var/tmp/mongodb
