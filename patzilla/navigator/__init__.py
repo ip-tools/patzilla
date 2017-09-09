@@ -26,6 +26,8 @@ def main(global_config, **settings):
     config.include('pyramid_mako')
     config.include('pyramid_fanstatic')
     config.include('pyramid_beaker')
+
+    config.scan('patzilla.util.web.pyramid.cornice')
     config.include('cornice')
 
     # Register generic components: URL generator, renderer globals
@@ -51,7 +53,7 @@ def main(global_config, **settings):
     if 'depatech' in datasources:
         config.include("patzilla.access.depatech.clientpool")
 
-    config.add_renderer('.html', 'pyramid.mako_templating.renderer_factory')
+    config.add_mako_renderer('.html')
     config.add_renderer('xml', XmlRenderer)
     config.add_renderer('png', PngRenderer)
     config.add_renderer('pdf', PdfRenderer)

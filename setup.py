@@ -12,8 +12,8 @@ requires = [
     # ----------------------------------------------
     #   Environment
     # ----------------------------------------------
-    'setuptools>=11.3',
-    'six>=1.5.2',
+    'setuptools>=36.4.0',
+    'six>=1.10.0',
 
 
     # ----------------------------------------------
@@ -21,28 +21,31 @@ requires = [
     # ----------------------------------------------
     # pyramid core
     #'pyramid==1.5a2',
-    'pyramid==1.4.2',
+    'pyramid==1.9.1',
     'pyramid_debugtoolbar',
     'Pygments==2.2.0',
     'pyramid_mako',
-    'Akhet==2.0',
+    'Jinja2==2.9.6',
+    #'Akhet==2.0',
     'waitress',
-    'Paste==1.7.5.1',
-    'PasteScript==1.7.5',
+    'Paste==2.0.3',
+    'PasteScript==2.0.2',
 
     # caching
-    'Beaker==1.7.0dev',
+    'Beaker==1.9.0',
     'pyramid_beaker==0.8',
-    'pymongo==2.8',
+
+    # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection" usage in "mongodb_gridfs_beaker" module.
+    'pymongo==2.9.5',
     'mongodb_gridfs_beaker==0.5.4',
 
     # web services
-    'cornice==0.15',
+    'cornice==2.4.0',
 
     # authorization
-    'PyCrypto==2.6.1',
-    'jws==0.1.2',
-    'python_jwt==0.3.1',
+    'pycrypto==2.6.1',
+    'jws==0.1.3',
+    'python_jwt==2.0.2',
     'pbkdf2==1.3',
 
 
@@ -51,9 +54,9 @@ requires = [
     # ----------------------------------------------
 
     # HTTP
-    'requests==2.5.1',
-    'requests-oauthlib==0.4.0',
-    'mechanize==0.2.5',
+    'requests==2.18.4',
+    'requests-oauthlib==0.8.0',
+    'mechanize==0.3.5',
 
     # HTML
     'BeautifulSoup==3.2.1',
@@ -61,38 +64,37 @@ requires = [
     # SNI support
     'pyOpenSSL>=16.0.0',
     'cryptography>=1.3',
-    'pyasn1==0.1.9',
-    'ndg-httpsclient==0.4.2',
+    'pyasn1==0.3.4',
+    'ndg-httpsclient==0.4.3',
 
 
     # ----------------------------------------------
     #   Business logic
     # ----------------------------------------------
     'Bunch==1.0.1',
-    'ago==0.0.6',
+    'ago==0.0.9',
     'pyparsing==2.0.2',
-    'mongoengine==0.8.7',
-    'blinker==1.3',
-    'python-dateutil==2.2',
-    'lxml==3.4.1',
+    'mongoengine==0.13.0',
+    'blinker==1.4',
+    'python-dateutil==2.6.1',
+    'lxml==3.8.0',
     'openpyxl==2.1.0',
-    'jsonpointer==1.6',
-    'arrow==0.4.4',
-    'transitions==0.2.4',
     'xlrd==0.9.3',
-    'Jinja2==2.8',
+    'XlsxWriter==0.9.3',
+    'jsonpointer==1.10',
+    'arrow==0.10.0',
+    'transitions==0.2.4',
     'validate_email==1.3',
     'pandas==0.18.1',
-    'XlsxWriter==0.9.3',
-    'html2text==2016.5.29',
+    'html2text==2016.9.19',
     'envoy==0.0.3',
 
     # ----------------------------------------------
     #   user interface
     # ----------------------------------------------
     # fanstatic
-    'fanstatic==1.0a2',
-    'pyramid_fanstatic==0.4',
+    'fanstatic==1.0a7',
+    'pyramid_fanstatic==0.5',
 
     # bootstrap
     'js.bootstrap==2.3.1',
@@ -128,7 +130,7 @@ test_requires = [
 
 setup(name='PatZilla',
       version='0.135.0',
-      description='PatZilla is a powerful patent data toolkit with a modern user interface.',
+      description='PatZilla is a powerful patent information research platform and toolkit with a modern user interface.',
       long_description=README,
       license="AGPL 3, EUPL 1.2",
       classifiers=[
@@ -166,9 +168,12 @@ setup(name='PatZilla',
         'paste.app_factory': [
             'main = patzilla.navigator:main',
             ],
-        'beaker.backends': [
-            'mongodb = patzilla.util.database.beaker_mongodb:MongoDBNamespaceManager',
-            ],
+
+        # Now a Beaker builtin as per "ext:mongodb"
+        #'beaker.backends': [
+        #    'mongodb = patzilla.util.database.beaker_mongodb:MongoDBNamespaceManager',
+        #    ],
+
         'console_scripts': [
             ],
         },

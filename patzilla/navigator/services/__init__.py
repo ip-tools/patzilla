@@ -2,6 +2,7 @@
 # (c) 2013-2016 Andreas Motl, Elmyra UG
 import json
 import logging
+import cornice
 from patzilla.util.cql.pyparsing import CQL
 from patzilla.util.cql.util import should_be_quoted
 from patzilla.util.data.container import unique_sequence
@@ -111,6 +112,9 @@ def scan_keywords(op, keywords):
 
 
 def handle_generic_exception(request, ex, backend_name, query):
+
+    if isinstance(ex, cornice.util._JSONError):
+        raise
 
     http_response = None
     if hasattr(ex, 'http_response'):

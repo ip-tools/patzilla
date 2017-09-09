@@ -3,8 +3,8 @@
 from __future__ import absolute_import
 import logging
 import datetime
-import jwt
 import jws
+import python_jwt as jwt
 from Crypto.Protocol.KDF import PBKDF2
 from Crypto.PublicKey import RSA
 from zope.interface.interface import Interface
@@ -58,14 +58,14 @@ class JwtSigner(object):
         # TODO: maybe croak if self.key is None
         ttl = ttl or self.ttl
         payload = {'data': data}
-        token = jwt.generate_jwt(payload, priv_key=self.key, algorithm='PS256', lifetime=ttl)
+        token = jwt.generate_jwt(payload, priv_key=self.key, algorithm='HS256', lifetime=ttl)
         return token
 
     def unsign(self, token):
         token = str(token)
         try:
             header_future, payload_future = jwt.process_jwt(token)
-            header, payload = jwt.verify_jwt(token, self.key)
+            header, payload = jwt.verify_jwt(token, pub_key=self.key, allowed_algs=['HS256', 'RS256', 'ES256'])
 
             if not payload.has_key('data'):
                 error_payload = {

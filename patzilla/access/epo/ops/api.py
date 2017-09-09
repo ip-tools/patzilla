@@ -731,7 +731,7 @@ def handle_error(response, location):
 
     request.errors.add(location, name, response_dict)
 
-    response_json = json_error(request.errors)
+    response_json = json_error(request)
     response_json.status = response.status_code
 
     # countermeasure against "_JSONError: <unprintable _JSONError object>" or the like

@@ -7,7 +7,7 @@ import arrow
 from pbkdf2 import crypt
 from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
-from mongoengine import connect as mongoengine_connect, signals, IntField
+from mongoengine import connect as mongoengine_connect, signals, IntField, DoesNotExist
 from mongoengine.document import Document
 from mongoengine.fields import StringField, ListField, DateTimeField, DictField
 from mongoengine.errors import NotUniqueError
@@ -133,7 +133,18 @@ class UserMetricsManager(object):
 
         log.debug('Measure transfer: userid={0}, upstream={1}, volume={2}'.format(userid, upstream, volume))
         date = arrow.utcnow().format('YYYY-MM-DD')
-        metrics, created = UserMetrics.objects.get_or_create(userid=userid, date=date)
+
+        # mongoengine 0.8.7
+        # metrics, created = UserMetrics.objects.get_or_create(userid=userid, date=date)
+
+        # mongoengine 0.13.0
+        # http://docs.mongoengine.org/guide/querying.html?highlight=get_or_create#retrieving-unique-results
+        try:
+            metrics = UserMetrics.objects.get(userid=userid, date=date)
+        except DoesNotExist:
+            metrics = UserMetrics(userid=userid, date=date)
+            metrics.save()
+
         metrics.transfer.setdefault(upstream, {'total_response_size': 0, 'message_count': 0})
         metrics.transfer[upstream]['total_response_size'] += volume
         metrics.transfer[upstream]['message_count'] += 1

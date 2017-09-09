@@ -1407,7 +1407,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             contentType: "application/json; charset=utf-8",
         }).success(function(data, status, options) {
             if (data) {
-                var keywords = options.getResponseHeader('X-PatZilla-Query-Keywords');
+                var keywords = options.getResponseHeader('X-Elmyra-Query-Keywords');
                 deferred.resolve(data, keywords);
             } else {
                 deferred.resolve({}, '[]');

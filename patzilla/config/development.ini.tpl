@@ -153,7 +153,7 @@ cache.regions = search, medium, longer, static
 cache.url = mongodb://localhost:27017/beaker.cache
 cache.key_length = 512
 
-cache.search.type = mongodb
+cache.search.type = ext:mongodb
 cache.search.sparse_collection = true
 
 cache.medium.type = mongodb_gridfs
