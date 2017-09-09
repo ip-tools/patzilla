@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014,2015,2016,2017 Andreas Motl, Elmyra UG
+# (c) 2014-2017 Andreas Motl, Elmyra UG
 import logging
 import requests
 import xmlrpclib
@@ -28,9 +28,9 @@ def includeme(config):
     application_settings = config.registry.application_settings
 
     try:
-        archive_service_baseurl = application_settings.datasource_depatisconnect.api_url
+        archive_service_baseurl = application_settings.datasource_depatisconnect.api_uri
     except:
-        raise NoOptionError('api_url', 'datasource_depatisconnect')
+        raise NoOptionError('api_uri', 'datasource_depatisconnect')
 
     if archive_service_baseurl.startswith('https'):
         use_https = True

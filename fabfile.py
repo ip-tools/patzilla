@@ -40,7 +40,7 @@ def install(version, target):
     if response == 'y':
 
         source_package = '/root/install/ops-chooser/elmyra.ip.access.epo-{version}.tar.gz'.format(version=version)
-        source_config = './elmyra.ip.access.epo/production.blueprint.ini'
+        source_config = './elmyra.ip.access.epo/production.ini.tpl'
 
         target_path = '/opt/elmyra/patentsearch/sites/' + target
         venv_path = target_path + '/.venv27'

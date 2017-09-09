@@ -43,10 +43,10 @@ def attach_oauth_client(event):
         datasource_settings = registry.datasource_settings
         datasources = datasource_settings.datasources
         datasource = datasource_settings.datasource
-        if 'ops' in datasources and 'ops' in datasource and 'consumer_key' in datasource.ops and 'consumer_secret' in datasource.ops:
+        if 'ops' in datasources and 'ops' in datasource and 'api_consumer_key' in datasource.ops and 'api_consumer_secret' in datasource.ops:
             system_credentials = {
-                'consumer_key': datasource.ops.consumer_key,
-                'consumer_secret': datasource.ops.consumer_secret,
+                'consumer_key': datasource.ops.api_consumer_key,
+                'consumer_secret': datasource.ops.api_consumer_secret,
             }
             request.ops_oauth_client = pool.get('system', system_credentials)
         else:

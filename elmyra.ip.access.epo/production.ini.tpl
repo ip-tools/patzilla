@@ -3,9 +3,15 @@
 ###
 
 [ip_navigator]
-datasources = ops, depatisconnect, ificlaims
+datasources = ops, depatisconnect, ificlaims, depatech
+
 
 [datasource_ops]
+
+# Application-wide authentication credentials
+api_consumer_key    = {ops_api_consumer_key}
+api_consumer_secret = {ops_api_consumer_secret}
+
 # 3.1.2. Fulltext inquiry and retrieval including description or claims
 #        Note, Currently full texts (description and/or claims) are only available for the following
 #        authorities: EP, WO, AT, CA (claims only), CH.
@@ -13,12 +19,27 @@ datasources = ops, depatisconnect, ificlaims
 fulltext_enabled = true
 fulltext_countries = EP, WO, AT, CH
 
+
 [datasource_depatisconnect]
+
+# Local development
+#api_uri = http://localhost:20300
+
+# Production
+api_uri = {depatisconnect_api_uri}
+
 # 2014-07-02: Add fulltexts for DE and US through DEPATISconnect
 fulltext_enabled = true
 fulltext_countries = DE, US
 
+
 [datasource_ificlaims]
+
+# API connection settings
+api_uri      = {ificlaims_api_uri}
+api_username = {ificlaims_api_username}
+api_password = {ificlaims_api_password}
+
 # 2017-03-09: Add fulltexts for more countries through IFI Claims
 fulltext_enabled = true
 fulltext_countries = BE, CA, CN, FR, GB, IN, JP, KR, LU, NL, RU
@@ -28,21 +49,30 @@ details_enabled = true
 details_countries = CN, IN, KR
 
 
+[datasource_depatech]
+
+# API connection settings
+api_uri      = {depatech_api_uri}
+api_username = {depatech_api_username}
+api_password = {depatech_api_password}
+
+
+
 [smtp]
 # smtp host information
-hostname = mail.example.net
+hostname = {smtp_hostname}
 port     = 587              ; smtp submission port, default: 25
 tls      = true             ; use TLS, default: true
-username = patentsearch@mail.example.net
-password = foobar
+username = {smtp_username}
+password = {smtp_password}
 
 [email]
 # Sender addresses "From" and "Reply-To"
-from      = Elmyra IP Navigator <patentsearch@mail.example.net>
-reply     = Elmyra Support <support@elmyra.de>
+from      = IP Navigator <navigator-system@example.org>
+reply     = IP Navigator Support <navigator-support@example.org>
 
 # Email content defaults
-subject-prefix = [elmyra-navigator]
+subject-prefix = [ip-navigator]
 body-template =
     Sehr geehrter Kunde,
     \n
@@ -54,7 +84,7 @@ body-template =
     Bitte kommen Sie sonst telefonisch auf uns zu, unsere Telefonnummer finden Sie in der E-Mail Signatur.
     \n
     Mit freundlichen Grüßen,
-    Ihr Elmyra IP Navigator Support Team.
+    Ihr IP Navigator Support Team.
     \n
     ----
     \n
@@ -74,18 +104,18 @@ body-template =
     {% endif %}
 
 signature =
-    Elmyra UG
-    Aufkirchner Straße 5
-    82335 Berg
+    ACME Inc.
+    Way 42
+    12345 Universe
 
-    Email: info@elmyra.de
-    Web: https://elmyra.de
+    Email: info@example.org
+    Web: https://example.org
 
 [email-recipients]
 
 # Recipient addresses "To:"
-support = Elmyra Navigator Support <a.motl@elmyra.de>
-system  = Elmyra Navigator System <a.motl@elmyra.de>
+support = IP Navigator Support <navigator-support@example.org>
+system  = IP Navigator System <navigator-system@example.org>
 
 
 ###

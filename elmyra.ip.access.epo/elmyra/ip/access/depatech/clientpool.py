@@ -15,11 +15,11 @@ logger = logging.getLogger(__name__)
 def includeme(config):
     application_settings = config.registry.application_settings
     try:
-        api_url = application_settings.datasource_depatech.api_url
+        api_uri = application_settings.datasource_depatech.api_uri
     except:
-        raise NoOptionError('api_url', 'datasource_depatech')
+        raise NoOptionError('api_uri', 'datasource_depatech')
 
-    config.registry.registerUtility(DepaTechClientPool(api_url=api_url))
+    config.registry.registerUtility(DepaTechClientPool(api_uri=api_uri))
     config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")
 
 def attach_depatech_client(event):
@@ -38,10 +38,10 @@ def attach_depatech_client(event):
         datasource_settings = registry.datasource_settings
         datasources = datasource_settings.datasources
         datasource = datasource_settings.datasource
-        if 'depatech' in datasources and 'depatech' in datasource and 'username' in datasource.depatech and 'password' in datasource.depatech:
+        if 'depatech' in datasources and 'depatech' in datasource and 'api_username' in datasource.depatech and 'api_password' in datasource.depatech:
             system_credentials = {
-                'username': datasource.depatech.username,
-                'password': datasource.depatech.password,
+                'username': datasource.depatech.api_username,
+                'password': datasource.depatech.api_password,
                 }
             request.depatech_client = pool.get('system', system_credentials)
         else:
@@ -58,15 +58,15 @@ class DepaTechClientPool(object):
 
     implements(IDepaTechClientPool)
 
-    def __init__(self, api_url):
-        self.api_url = api_url
+    def __init__(self, api_uri):
+        self.api_uri = api_uri
         self.clients = {}
         logger.info('Creating DepaTechClientPool')
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
             logger.info('DepaTechClientPool.get: identifier={0}'.format(identifier))
-            factory = DepaTechClientFactory(self.api_url, credentials=credentials, debug=False)
+            factory = DepaTechClientFactory(self.api_uri, credentials=credentials, debug=False)
             self.clients[identifier] = factory.client_create()
         return self.clients.get(identifier)
 
@@ -76,9 +76,9 @@ class DepaTechClientPool(object):
 # ------------------------------------------
 class DepaTechClientFactory(object):
 
-    def __init__(self, api_url, credentials=None, debug=False):
+    def __init__(self, api_uri, credentials=None, debug=False):
 
-        self.api_url = api_url
+        self.api_uri = api_uri
 
         if credentials:
             self.username = credentials['username']
@@ -94,5 +94,5 @@ class DepaTechClientFactory(object):
         #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
 
     def client_create(self):
-        client = DepaTechClient(uri=self.api_url, username=self.username, password=self.password)
+        client = DepaTechClient(uri=self.api_uri, username=self.username, password=self.password)
         return client
