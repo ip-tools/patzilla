@@ -8,6 +8,7 @@ development
 - Fix hard errors in the aftermath of repository cleanup
 - Improve exception handling for authentication errors against OPS API
 - Improve datasource configuration mechanics
+- Improve OPS API error propagation
 
 2017-09-08 0.135.0
 ==================

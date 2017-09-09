@@ -717,7 +717,6 @@ def handle_response(response, api_location):
 def handle_error(response, location):
     request = get_current_request()
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
-    response_dict['url'] = response_dict['url'].replace(OPS_API_URI, '')
 
     # Compute name
     name = 'http-response'
@@ -741,23 +740,40 @@ def handle_error(response, location):
     #print "response:", response
     if len(request.errors) == 1:
         error_info = request.errors[0].get('description')
-        #pprint(error_info)
         if error_info.get('status_code') == 404:
             error_content = error_info.get('content', '')
             url = error_info.get('url')
             status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
+
             if 'CLIENT.InvalidCountryCode' in error_content:
                 ops_code = 'CLIENT.InvalidCountryCode'
                 message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
                 return response_json
+
             if 'SERVER.EntityNotFound' in error_content:
                 ops_code = 'SERVER.EntityNotFound'
                 message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.warning(message)
                 return response_json
 
+            if 'OPS - 404' in error_content or 'Page not found' in error_content:
+                ops_code = '404 OPS Page not found'
+                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                log.error(message)
+                log.error(u'OPS API errors:\n{}'.format(pformat(request.errors)))
+                response_json.status_code = 502
+                return response_json
+
+            if 'This API version is not supported' in error_content:
+                ops_code = '404 API version not supported'
+                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                log.error(message)
+                response_json.status_code = 502
+                return response_json
+
     log.error(u'OPS API errors:\n{}'.format(pformat(request.errors)))
+
     return response_json
 
 
