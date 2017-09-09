@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 # ------------------------------------------
 def includeme(config):
     #config.add_subscriber(setup_oauth_client_pool, "pyramid.events.ApplicationCreated")
-    config.registry.registerUtility(OpsOAuthClientPool())
+    config.registry.registerUtility(OpsClientPool())
     config.add_subscriber(attach_oauth_client, "pyramid.events.ContextFound")
 
 def attach_oauth_client(event):
@@ -32,7 +32,7 @@ def attach_oauth_client(event):
     request = event.request
     registry = request.registry
 
-    pool = registry.getUtility(IOpsOAuthClientPool)
+    pool = registry.getUtility(IOpsClientPool)
 
     # User-associated OPS credentials
     if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ops'):
@@ -56,16 +56,16 @@ def attach_oauth_client(event):
 # ------------------------------------------
 #   pool as utility
 # ------------------------------------------
-class IOpsOAuthClientPool(Interface):
+class IOpsClientPool(Interface):
     pass
 
-class OpsOAuthClientPool(object):
+class OpsClientPool(object):
 
-    implements(IOpsOAuthClientPool)
+    implements(IOpsClientPool)
 
     def __init__(self):
         self.clients = {}
-        logger.info('Creating OpsOAuthClientPool')
+        logger.info('Creating OpsClientPool')
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
@@ -362,8 +362,8 @@ if __name__ == '__main__':
     registry = env['registry']
 
     # Get hold of appropriate utility
-    from elmyra.ip.access.epo.client import IOpsOAuthClientPool
-    pool = registry.getUtility(IOpsOAuthClientPool)
+    from elmyra.ip.access.epo.client import IOpsClientPool
+    pool = registry.getUtility(IOpsClientPool)
     ops_session = pool.get('default')
     print ops_session
 
