@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2007-2011 ***REMOVED***
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2007,2014 Andreas Motl <andreas.motl@elmyra.de>
 import re
 
 """

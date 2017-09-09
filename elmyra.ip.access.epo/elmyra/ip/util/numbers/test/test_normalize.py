@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2009 ***REMOVED***
-# (c) 2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2009,2015-2017 Andreas Motl <andreas.motl@elmyra.de>
 from collections import OrderedDict
 from elmyra.ip.util.numbers.normalize import normalize_patent
 
@@ -49,7 +48,7 @@ t['US20010003540']  = 'US2001003540'
 t['US2001003540']   = 'US2001003540'
 t['US200103540']    = 'US2001003540'
 
-***REMOVED***
+# EPD
 t['US07317210B2']    = 'US7317210B2'
 t['AT409 902B']      = 'AT409902B'
 t['DE31 00 442C1']   = 'DE3100442C1'

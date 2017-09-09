@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2011,2012,2013 ***REMOVED***
-# (c) 2014,2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2011,2014,2015 Andreas Motl <andreas.motl@elmyra.de>
 import sys
 import re
 import logging

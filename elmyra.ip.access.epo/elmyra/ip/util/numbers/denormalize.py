@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2007-2011 ***REMOVED***
-# (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2007,2014 Andreas Motl <andreas.motl@elmyra.de>
 from elmyra.ip.util.numbers.helper import pad_left, fullyear_from_year
 from elmyra.ip.util.numbers.common import join_patent, split_patent_number
 
