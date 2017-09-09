@@ -3,12 +3,12 @@
 import time
 import json
 import logging
+import requests
 from pprint import pprint
 from pyramid.httpexceptions import HTTPBadGateway
 from pyramid.threadlocal import get_current_registry
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
-from requests.exceptions import ConnectionError
 from requests_oauthlib.oauth2_session import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
 from oauthlib.common import add_params_to_uri
@@ -156,12 +156,25 @@ class OpsOAuth2Session(OAuth2Session):
             self.disconnect()
             return ex
 
-        except ConnectionError as ex:
+        except requests.exceptions.ConnectionError as ex:
             logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex, self.client_id))
             self.disconnect()
             # Fake an exception which can be processed by downstream error handling infrastructure
             error = HTTPBadGateway(u'Network error: Could not connect to OPS servers.')
             raise error
+
+        except requests.exceptions.HTTPError as ex:
+            logger.error('OpsOAuth2Session {0}: {1}. client_id={2}'.format(ex.__class__.__name__, ex, self.client_id))
+            self.disconnect()
+
+            # Fake an exception which can be processed by downstream error handling infrastructure
+            if hasattr(ex, 'response'):
+                error = HTTPBadGateway(u'Could not connect to OPS servers.')
+                error.code = int(ex.response.status_code)
+                error.status_code = ex.response.status_code
+                error.content_type = ex.response.content_type
+                error.explanation = ex.response.content
+                raise error
 
     def disconnect(self, *args, **kwargs):
         logger.warning('Invalidating token and closing connection for client_id={client_id}'.format(client_id=self.client_id))
@@ -229,19 +242,24 @@ class OpsOAuthClientFactory(object):
             else:
 
                 error_name = None
+                error_text = response.text
                 if 'ClientId is Invalid' in response.text:
                     error_name = 'invalid_client_id'
+                    error_text = 'ClientId is Invalid'
                 if 'Client credentials are invalid' in response.text:
                     error_name = 'access_denied'
+                    error_text = 'Client credentials are invalid'
 
                 oauth_error = {
                     'error': error_name,
-                    'error_description': 'OAuth error: {0}'.format(response.text),
+                    'error_description': 'OAuth error: {0}'.format(error_text),
                     'error_uri': response.url,
                 }
 
                 response.content_type = 'application/json'
                 response._content = json.dumps(oauth_error)
+
+                response.raise_for_status()
 
             return response
 
