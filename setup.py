@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 #from distutils.core import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, '../README.rst')).read()
+README = open(os.path.join(here, 'README.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 requires = [
@@ -126,9 +126,9 @@ test_requires = [
     'nose2-cov==1.0a4',
 ]
 
-setup(name='elmyra.ip.access.epo',
+setup(name='PatZilla',
       version='0.135.0',
-      description='elmyra.ip.access.epo',
+      description='PatZilla IP Navigator',
       long_description=README,
       license="AGPL 3, EUPL 1.2",
       classifiers=[
@@ -171,7 +171,6 @@ setup(name='elmyra.ip.access.epo',
             'mongodb = elmyra.ip.util.database.beaker_mongodb:MongoDBNamespaceManager',
             ],
         'console_scripts': [
-            'navigator-clean-browser-db = elmyra.ip.navigator.commands:clean_browser_database',
             ],
         },
 

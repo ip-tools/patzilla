@@ -47,8 +47,8 @@ Configure
 =========
 ::
 
-    cp elmyra.ip.access.epo/development.ini.tpl elmyra.ip.access.epo/development.ini
-    # edit elmyra.ip.access.epo/development.ini
+    cp patzilla/config/development.ini.tpl patzilla/config/development.ini
+    # edit patzilla/config/development.ini
 
 
 Run instance
