@@ -34,11 +34,11 @@ def attach_oauth_client(event):
 
     pool = registry.getUtility(IOpsClientPool)
 
-    # User-associated OPS credentials
+    # User-associated credentials
     if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ops'):
         request.ops_oauth_client = pool.get(request.user.userid, request.user.upstream_credentials['ops'])
 
-    # System-wide OPS credentials
+    # System-wide credentials
     else:
         datasource_settings = registry.datasource_settings
         datasources = datasource_settings.datasources

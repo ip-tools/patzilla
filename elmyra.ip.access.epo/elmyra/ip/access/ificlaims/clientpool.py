@@ -13,8 +13,6 @@ logger = logging.getLogger(__name__)
 #   bootstrapping
 # ------------------------------------------
 def includeme(config):
-    #config.add_subscriber(setup_oauth_client_pool, "pyramid.events.ApplicationCreated")
-
     application_settings = config.registry.application_settings
     try:
         api_url = application_settings.datasource_ificlaims.api_url
@@ -31,11 +29,11 @@ def attach_ificlaims_client(event):
 
     pool = registry.getUtility(IIFIClaimsClientPool)
 
-    # User-associated OPS credentials
+    # User-associated credentials
     if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ificlaims'):
         request.ificlaims_client = pool.get(request.user.userid, request.user.upstream_credentials['ificlaims'])
 
-    # System-wide OPS credentials
+    # System-wide credentials
     else:
         datasource_settings = registry.datasource_settings
         datasources = datasource_settings.datasources
