@@ -76,7 +76,7 @@ class Bootstrapper(object):
         data = {
             'ui.vendor.name': 'Elmyra',
             'ui.vendor.copyright': u'&copy; 2013-2017, <a href="https://www.elmyra.de/" class="incognito pointer" target="_blank">Elmyra UG</a> — All rights reserved.',
-            'ui.productname': 'Elmyra IP Navigator',
+            'ui.productname': 'IP Navigator',
             'ui.productname.rich': '<span class="header-logo">Elmyra <i class="circle-icon">IP</i> Navigator</span>',
             'ui.email.purchase': 'purchase@elmyra.de',
             'ui.email.support': 'purchase@elmyra.de',

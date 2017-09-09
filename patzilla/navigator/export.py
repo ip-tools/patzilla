@@ -59,6 +59,8 @@ class Dossier(object):
 
         self.metadata = ReportMetadata()
 
+        self.metadata.set('producer', u'IP Navigator')
+
         # Project metadata
         self.metadata.set('project_name',     self.data.project.name)
         self.metadata.set('project_created',  humanize_date_english(self.data.project.created))
@@ -149,8 +151,12 @@ class Dossier(object):
         output = self.format_with_metadata(self.summary_template)
         return output
 
-    def get_author(self):
-        return self.format_with_metadata(u'Author: {author_name} <{author_email}>\nCreated: {project_created}\nUpdated: {project_modified}')
+    def get_metadata(self):
+        return self.format_with_metadata(
+            u'Author:   {author_name} <{author_email}>\n'
+            u'Created:  {project_created}\n'
+            u'Updated:  {project_modified}\n'
+            u'Producer: {producer}')
 
     @staticmethod
     def to_csv(dataframe):
@@ -195,10 +201,10 @@ class Dossier(object):
         with ZipFile(buffer, 'w', ZIP_DEFLATED) as zipfile:
 
             # FIXME: Add TERMS (liability waiver) and more...
-            zipfile.writestr('@readme.txt', u'Zip archive created by Elmyra IP Navigator.')
+            zipfile.writestr('@readme.txt', u'Zip archive created by IP Navigator.')
 
             # Add text summary
-            zipfile.writestr('@metadata.txt', self.get_author().encode('utf-8'))
+            zipfile.writestr('@metadata.txt', self.get_metadata().encode('utf-8'))
             zipfile.writestr('@summary.txt', self.get_summary().encode('utf-8'))
 
 
@@ -498,7 +504,7 @@ class DossierXlsx(Dossier):
 
     def set_header_footer(self, worksheet):
         # http://xlsxwriter.readthedocs.io/example_headers_footers.html
-        header = u'&LElmyra IP Navigator&RSearch report'
+        header = u'&LIP Navigator&RSearch report'
         worksheet.set_header(header)
         footer = u'&L&L&D &T&C&A&RPage &P of &N'
         worksheet.set_footer(footer)
@@ -519,7 +525,7 @@ class DossierXlsx(Dossier):
         title_format = self.workbook.add_format({'align': 'center', 'valign': 'vcenter', 'font_size': 17, 'bold': True})
         cover_sheet.merge_range('A1:I2', title, title_format)
 
-        subtitle = self.get_author()
+        subtitle = self.get_metadata()
         subtitle_format = self.workbook.add_format({'align': 'left', 'valign': 'vcenter', 'indent': 2, 'top': 7, 'bottom': 7})
         cover_sheet.merge_range('B4:H7', subtitle, subtitle_format)
 

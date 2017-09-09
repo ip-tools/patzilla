@@ -208,7 +208,7 @@ port = 6543
 ###
 
 [loggers]
-keys = root, oauthlib, sqlalchemy, elmyraip
+keys = root, oauthlib, sqlalchemy, patzilla
 
 [handlers]
 keys = console
@@ -233,10 +233,10 @@ qualname = sqlalchemy.engine
 # "level = DEBUG" logs SQL queries and results.
 # "level = WARN" logs neither.  (Recommended for production systems.)
 
-[logger_elmyraip]
+[logger_patzilla]
 level = DEBUG
 handlers =
-qualname = elmyraip
+qualname = patzilla
 
 
 [handler_console]

@@ -808,7 +808,7 @@ def pdf_document_build(patent):
         page_sections = resource_info['ops:document-section']
         #pprint(page_sections)
 
-    metadata = pdf_make_metadata(patent, 'digi42, elmyra ip navigator', page_count, page_sections)
+    metadata = pdf_make_metadata(patent, 'ip-navigator:digi42', page_count, page_sections)
     pdf_document = pdf_set_metadata(pdf_document, metadata)
 
     # TODO: 4. add attachments (e.g. xml)

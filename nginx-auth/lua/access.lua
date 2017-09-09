@@ -74,7 +74,7 @@ end
 local user = isis.verify_cookie()
 if user then
 
-    -- permit admin access to elmyra staff only
+    -- permit admin access only to users with tag "staff"
     if request_uri:find("^/admin.*$") or request_uri:find("^/api/admin.*$") then
         if user.tags and util.table_contains(user.tags, 'staff') then
             return

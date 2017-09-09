@@ -13,21 +13,26 @@ From sources
 
 If you plan on contributing, this is the way to go!
 
-This will install every necessary packages to run the tests,
-build the documentation, build packages, etc.
+This will install every necessary packages to
+run a sandbox instance, run the tests,
+build the documentation, build the packages, etc.
 
 Setup
 =====
+Repository::
+
+    git clone https://github.com/ip-tools/ip-navigator.git
+
 Sandbox::
 
     virtualenv-2.7 --no-site-packages .venv27
     source .venv27/bin/activate
-    pip install --upgrade pip
 
 Prerequisites::
 
+    pip install --upgrade pip
     pip install cryptography
-    pip install 'https://github.com/trentm/which/tarball/master#egg=which'
+    pip install --allow-all-external 'https://github.com/trentm/which/tarball/master#egg=which'
     pip install --allow-all-external js.*/
 
 Application::

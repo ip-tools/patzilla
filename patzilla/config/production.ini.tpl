@@ -190,7 +190,7 @@ port = 9999
 ###
 
 [loggers]
-keys = root, elmyraip, sqlalchemy
+keys = root, sqlalchemy, patzilla
 
 [handlers]
 keys = console
@@ -202,10 +202,10 @@ keys = generic
 level = INFO
 handlers = console
 
-[logger_elmyraip]
+[logger_patzilla]
 level = WARN
 handlers =
-qualname = elmyraip
+qualname = patzilla
 
 [logger_sqlalchemy]
 level = WARN

@@ -17,6 +17,7 @@ development
 - Make tests work again
 - Properly handle and propagate cache database connection errors
 - Disable automatic "admin" user provisioning
+- Documentation, “naming things” and further cleansing
 
 2017-09-08 0.135.0
 ==================

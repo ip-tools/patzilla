@@ -100,7 +100,7 @@ def patentview(request):
 
 @view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
 def opspdf(request):
-    name = 'elmyra-patentsearch-' + request.params.get('query')
+    name = 'ip-navigator-' + request.params.get('query')
     filename = slugify(name, strip_equals=False, lowercase=False)
     suffix = '.pdf'
     request.response.headers['Content-Disposition'] = 'inline; filename={filename}{suffix}'.format(**locals())

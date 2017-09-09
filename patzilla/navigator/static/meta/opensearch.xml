@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-    <ShortName>Elmyra IP Navigator</ShortName>
-    <Description>A modern patent information research platform</Description>
-    <Tags>search patent trademark design</Tags>
+    <ShortName>IP Navigator</ShortName>
+    <Description>The IP Navigator is a powerful patent information research platform and toolkit with a modern user interface</Description>
+    <Tags>patent trademark design search research information management</Tags>
     <Contact>info@elmyra.de</Contact>
     <Developer>Elmyra UG</Developer>
     <InputEncoding>UTF-8</InputEncoding>
     <OutputEncoding>UTF-8</OutputEncoding>
-    <Url type="text/html" method="get" template="https://patentsearch.elmyra.de/?query={searchTerms}"/>
+    <Url type="text/html" method="get" template="https://patentsearch.ip-tools.io/?query={searchTerms}"/>
 </OpenSearchDescription>

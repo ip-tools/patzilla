@@ -119,7 +119,7 @@ if __name__ == '__main__':
 
     #message = EmailMessage(settings['smtp'], settings['email'], {'subject_prefix': 'acme-product', 'signature': signature})
     message = EmailMessage(settings['smtp'], settings['email'], {'subject_prefix': 'acme-product'})
-    message.add_recipient('amo@netfrag.org, a.motl@elmyra.de')
+    message.add_recipient('test@example.org')
     message.send(
         subject     = u'Self-test email from Räuber Hotzenplotz',
         message     = u'Self-test email from Räuber Hotzenplotz',
