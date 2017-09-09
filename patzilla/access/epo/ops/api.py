@@ -311,9 +311,9 @@ def ops_published_data_crawl(constituents, query, chunksize):
                         },
     """
     pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/ops:publication-reference')
-    pointer_time_elapsed = JsonPointer('/ops:world-patent-data/ops:meta/@value')
+    #pointer_time_elapsed = JsonPointer('/ops:world-patent-data/ops:meta/@value')
     all_results = []
-    time_elapsed = int(pointer_time_elapsed.resolve(first_chunk))
+    #time_elapsed = int(pointer_time_elapsed.resolve(first_chunk))
     for chunk in chunks:
 
         # FIXME: use this for "real_constituents == 'pub-number'" only
@@ -324,7 +324,7 @@ def ops_published_data_crawl(constituents, query, chunksize):
         #print 'chunk_results:', chunk_results
         all_results += chunk_results
 
-        time_elapsed += int(pointer_time_elapsed.resolve(chunk))
+        #time_elapsed += int(pointer_time_elapsed.resolve(chunk))
 
     response = None
     if real_constituents == 'pub-number':
@@ -350,7 +350,7 @@ def ops_published_data_crawl(constituents, query, chunksize):
         new_total_count = str(len(publication_numbers))
         pointer_total_count.set(response, new_total_count)
         set_pointer(response, '/ops:world-patent-data/ops:biblio-search/ops:range', {'@begin': '1', '@end': new_total_count})
-        pointer_time_elapsed.set(response, str(time_elapsed))
+        #pointer_time_elapsed.set(response, str(time_elapsed))
 
     if not response:
         raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
