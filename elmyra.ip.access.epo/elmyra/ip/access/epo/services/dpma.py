@@ -7,7 +7,7 @@ from pyramid.settings import asbool
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region, region_invalidate
 from elmyra.ip.access.generic.exceptions import NoResultsException
-from elmyra.ip.util.python import _exception_traceback
+from elmyra.ip.util.python import _exception_traceback, exception_traceback
 from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
 from elmyra.ip.access.epo.espacenet import espacenet_claims, espacenet_description
@@ -187,6 +187,11 @@ def depatisconnect_claims_handler_real(patent, invalidate=False):
         log.error('Fetching details from DEPATISconnect failed: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
 
+    except Exception as ex:
+        log.error('Unknown error from DEPATISconnect: %s %s.', type(ex), ex)
+        log.error(exception_traceback())
+        raise HTTPBadRequest(ex)
+
     return claims
 
 def espacenet_claims_handler_real(patent):
@@ -238,6 +243,11 @@ def depatisconnect_description_handler_real(patent):
 
     except ValueError as ex:
         log.error('Fetching details from DEPATISconnect failed: %s %s', type(ex), ex)
+        raise HTTPBadRequest(ex)
+
+    except Exception as ex:
+        log.error('Unknown error from DEPATISconnect: %s %s.', type(ex), ex)
+        log.error(exception_traceback())
         raise HTTPBadRequest(ex)
 
     return description

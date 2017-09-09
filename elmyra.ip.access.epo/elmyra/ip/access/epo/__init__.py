@@ -43,6 +43,9 @@ def main(global_config, **settings):
     if 'ops' in datasources:
         config.include("elmyra.ip.access.epo.client")
 
+    if 'depatisconnect' in datasources:
+        config.include("elmyra.ip.access.dpma.depatisconnect")
+
     if 'ificlaims' in datasources:
         config.include("elmyra.ip.access.ificlaims.clientpool")
 

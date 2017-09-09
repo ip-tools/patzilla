@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
+# (c) 2014,2015,2016,2017 Andreas Motl, Elmyra UG
 import logging
 import requests
 import xmlrpclib
 from StringIO import StringIO
+from ConfigParser import NoOptionError
 from lxml import etree as ET
 from lxml.builder import E
 from cornice.util import to_list
@@ -16,15 +17,23 @@ from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
 log = logging.getLogger(__name__)
 
 
-# Local development
-#archive_service_baseurl = 'http://localhost:20300'
+# ------------------------------------------
+#   bootstrapping
+# ------------------------------------------
+use_https = False
+archive_service_baseurl = None
+def includeme(config):
+    global use_https
+    global archive_service_baseurl
+    application_settings = config.registry.application_settings
 
-# 2013-2016
-#archive_service_baseurl = '***REMOVED***'
+    try:
+        archive_service_baseurl = application_settings.datasource_depatisconnect.api_url
+    except:
+        raise NoOptionError('api_url', 'datasource_depatisconnect')
 
-# 2016-
-use_https = True
-archive_service_baseurl = '***REMOVED***'
+    if archive_service_baseurl.startswith('https'):
+        use_https = True
 
 
 client = None
@@ -52,7 +61,7 @@ def run_acquisition(document_number, doctypes=None):
     return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
-    # ***REMOVED***/download/xml:docinfo/DE202014004373U1.xml?nodtd=1&fastpath=true
+    # /download/xml:docinfo/DE202014004373U1.xml?nodtd=1&fastpath=true
     url_tpl = archive_service_baseurl + '/download/xml:docinfo/{number}.xml?nodtd=1&fastpath=true'
     url = url_tpl.format(number=number)
     response = get_client().get(url, timeout=(2, 17))
@@ -65,7 +74,7 @@ def fetch_pdf(number, attempt=1):
 @cache_region('static')
 def fetch_pdf_real(number):
 
-    # ***REMOVED***/download/pdf/EP666666B1.pdf
+    # /download/pdf/EP666666B1.pdf
     url_tpl = archive_service_baseurl + '/download/pdf/{number}.pdf?fastpath=true'
     url = url_tpl.format(number=number)
     response = get_client().get(url, timeout=(2, 90))
