@@ -2,14 +2,11 @@
 # (c) 2014-2017 Andreas Motl, Elmyra UG
 import json
 import logging
-from pprint import pprint
-from patzilla.access.epo.util import dict_prefix_key, dict_merge
-from patzilla.util.config import read_config, read_list
-from patzilla.util.data.container import SmartBunch
+from pyramid.settings import asbool         # Keep this for h.asbool()
+from pyramid.threadlocal import get_current_request
+from patzilla.navigator.util import dict_prefix_key, dict_merge
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
-from pyramid.settings import asbool     # Required by template, don't remove!
-from pyramid.threadlocal import get_current_request
 
 log = logging.getLogger(__name__)
 

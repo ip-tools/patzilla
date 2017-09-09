@@ -145,7 +145,7 @@ setup(name='PatZilla',
       #packages=['patzilla.access.epo'],
       include_package_data=True,
       package_data={
-          'patzilla.access.epo': [
+          'patzilla.navigator': [
               'resources/*.*',
               'templates/*.mako',
               'static/js/**/*.js', 'static/js/**/*.map', 'static/js/**/*.swf', '**/**/*.css',
@@ -165,7 +165,7 @@ setup(name='PatZilla',
 
       entry_points={
         'paste.app_factory': [
-            'main = patzilla.access.epo:main',
+            'main = patzilla.navigator:main',
             ],
         'beaker.backends': [
             'mongodb = patzilla.util.database.beaker_mongodb:MongoDBNamespaceManager',

@@ -10,8 +10,8 @@ from dateutil.relativedelta import relativedelta
 from jsonpointer import JsonPointer
 from transitions.core import Machine
 from patzilla.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
-from patzilla.access.epo.services.dpma import dpma_published_data_search
-from patzilla.access.epo.services.util import make_expression_filter
+from patzilla.navigator.services.dpma import dpma_published_data_search
+from patzilla.navigator.services.util import make_expression_filter
 
 log = logging.getLogger(__name__)
 

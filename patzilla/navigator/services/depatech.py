@@ -9,8 +9,8 @@ from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from patzilla.access.depatech.client import depatech_search, LoginException, depatech_crawl
 from patzilla.access.depatech.expression import DepaTechParser, should_be_quoted
-from patzilla.access.epo.services import propagate_keywords
-from patzilla.access.epo.services.util import request_to_options
+from patzilla.navigator.services import propagate_keywords
+from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.util.data.container import SmartBunch
 from patzilla.util.python import _exception_traceback

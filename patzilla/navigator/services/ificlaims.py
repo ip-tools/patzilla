@@ -11,8 +11,8 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from patzilla.access.epo.services import propagate_keywords
-from patzilla.access.epo.services.util import request_to_options
+from patzilla.navigator.services import propagate_keywords
+from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
 from patzilla.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl

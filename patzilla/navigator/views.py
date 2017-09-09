@@ -65,22 +65,22 @@ def includeme(config):
     # negative lookahead to the rescue:
     # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
 
-@view_config(route_name='patentsearch', renderer='patzilla.access.epo:templates/standalone.html')
+@view_config(route_name='patentsearch', renderer='patzilla.navigator:templates/standalone.html')
 def navigator_standalone(request):
     payload = {
         'project': 'PatZilla',
     }
     return payload
 
-@view_config(route_name='embedded-item', renderer='patzilla.access.epo:templates/embedded.html')
-@view_config(route_name='embedded-list', renderer='patzilla.access.epo:templates/embedded.html')
+@view_config(route_name='embedded-item', renderer='patzilla.navigator:templates/embedded.html')
+@view_config(route_name='embedded-list', renderer='patzilla.navigator:templates/embedded.html')
 def navigator_embedded(request):
     payload = {
         'project': 'PatZilla',
     }
     return payload
 
-@view_config(route_name='patentview', renderer='patzilla.access.epo:templates/embedded.html')
+@view_config(route_name='patentview', renderer='patzilla.navigator:templates/embedded.html')
 def patentview(request):
 
     matchdict = request.matchdict.copy()
@@ -325,7 +325,7 @@ def jump_office(request):
         document_number=document_number, office=office, service=service))
 
 
-@view_config(route_name='admin-user-create', renderer='patzilla.access.epo:templates/admin/user-create.html')
+@view_config(route_name='admin-user-create', renderer='patzilla.navigator:templates/admin/user-create.html')
 def admin_user_create(request):
 
     success = False
@@ -380,7 +380,7 @@ def admin_user_create(request):
     tplvars['error'] = asbool(tplvars['error'])
     return tplvars
 
-@view_config(route_name='login', renderer='patzilla.access.epo:templates/login.html')
+@view_config(route_name='login', renderer='patzilla.navigator:templates/login.html')
 def login_page(request):
     tplvars = {
         'username': request.params.get('username', ''),
@@ -389,11 +389,11 @@ def login_page(request):
     }
     return tplvars
 
-@view_config(route_name='help-shortcuts', renderer='patzilla.access.epo:templates/help.html')
+@view_config(route_name='help-shortcuts', renderer='patzilla.navigator:templates/help.html')
 def help_shortcuts(request):
     return {}
 
-@view_config(route_name='help-ificlaims', renderer='patzilla.access.epo:templates/help/ificlaims.html')
+@view_config(route_name='help-ificlaims', renderer='patzilla.navigator:templates/help/ificlaims.html')
 def help_ificlaims(request):
     return {}
 
@@ -405,15 +405,15 @@ def favicon_view(request):
     else:
         return HTTPNotFound()
 
-@view_config(name='patentsearch-old', renderer='patzilla.access.epo:templates/app.html')
+@view_config(name='patentsearch-old', renderer='patzilla.navigator:templates/app.html')
 def ops_chooser(request):
     url = route_path('patentsearch', request, _query=request.params)
     return HTTPFound(location=url)
 
-@view_config(name='portfolio-demo', renderer='patzilla.access.epo:templates/portfolio-demo.mako')
+@view_config(name='portfolio-demo', renderer='patzilla.navigator:templates/portfolio-demo.mako')
 def portfolio(request):
     return {'project': 'PatZilla'}
 
-@view_config(name='angry-cats', renderer='patzilla.access.epo:templates/angry-cats.mako')
+@view_config(name='angry-cats', renderer='patzilla.navigator:templates/angry-cats.mako')
 def angry_cats(request):
     return {}

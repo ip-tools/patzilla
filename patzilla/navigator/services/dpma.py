@@ -11,8 +11,8 @@ from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 from patzilla.access.epo.espacenet import espacenet_claims, espacenet_description
-from patzilla.access.epo.services import cql_prepare_query, propagate_keywords
-from patzilla.access.epo.services.util import request_to_options
+from patzilla.navigator.services import cql_prepare_query, propagate_keywords
+from patzilla.navigator.services.util import request_to_options
 
 log = logging.getLogger(__name__)
 

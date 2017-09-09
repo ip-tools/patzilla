@@ -4,7 +4,7 @@ import re
 import types
 import logging
 import pyparsing
-from patzilla.access.epo.services import cql_prepare_query
+from patzilla.navigator.services import cql_prepare_query
 from patzilla.util.cql.pyparsing import CQL
 from patzilla.util.cql.pyparsing.parser import CQLGrammar
 from patzilla.util.cql.pyparsing.util import walk_token_results
