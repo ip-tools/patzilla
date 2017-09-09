@@ -9,8 +9,8 @@ development
 - Improve exception handling for authentication errors against OPS API
 - Improve datasource configuration mechanics
 - Improve OPS API error propagation
-- Pull application-wide OPS API authentication credentials from datasource settings
 - Update documentation re. database sandbox mode
+- Pull application-wide upstream API authentication credentials from datasource settings
 
 2017-09-08 0.135.0
 ==================

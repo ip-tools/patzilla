@@ -10,7 +10,7 @@ import logging
 import requests
 from pprint import pprint
 from beaker.cache import cache_region
-from requests.exceptions import ConnectionError, ConnectTimeout
+from requests.exceptions import RequestException
 from elmyra.ip.access.epo.imageutil import to_png
 from elmyra.ip.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearchClient
@@ -108,7 +108,7 @@ class IFIClaimsClient(GenericSearchClient):
                 params=params,
                 headers=headers,
                 verify=self.tls_verify)
-        except (ConnectionError, ConnectTimeout) as ex:
+        except RequestException as ex:
             self.logout()
             raise self.search_failed(
                 ex=ex,

@@ -28,7 +28,7 @@ def global_config(event):
 
     # Read configuration file to get global settings
     # TODO: Optimize: Only read once, not on each request!
-    application_settings = read_config(pyramid_settings['CONFIG_FILE'])
+    application_settings = read_config(pyramid_settings['CONFIG_FILE'], kind=SmartBunch)
 
     # Provide Paste configuration via registry object
     registry.application_settings = application_settings

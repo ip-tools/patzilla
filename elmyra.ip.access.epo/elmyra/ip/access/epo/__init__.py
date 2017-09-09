@@ -3,6 +3,7 @@
 from pprint import pprint
 from ConfigParser import NoOptionError
 from elmyra.ip.util.config import read_config
+from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.version import __VERSION__
 from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
 from pyramid.config import Configurator
@@ -13,13 +14,14 @@ def main(global_config, **settings):
     settings.setdefault('CONFIG_FILE', global_config.get('__file__'))
     settings.setdefault('SOFTWARE_VERSION', __VERSION__)
 
-    app_config = read_config(settings['CONFIG_FILE'])
+    application_settings = read_config(settings['CONFIG_FILE'], kind=SmartBunch)
     try:
-        datasources = app_config['ip_navigator']['datasources']
+        datasources = application_settings.ip_navigator.datasources
     except:
         raise NoOptionError('datasources', 'ip_navigator')
 
     config = Configurator(settings=settings)
+    config.registry.application_settings = application_settings
 
     # Addons
     config.include('pyramid_mako')
