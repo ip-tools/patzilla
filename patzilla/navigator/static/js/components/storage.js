@@ -61,7 +61,7 @@ StoragePlugin = Marionette.Controller.extend({
 
             // compute payload and filename
             var payload = JSON.stringify(backup, undefined, 4);
-            var filename = 'ipsuite-database_' + now_iso_filename() + '.json';
+            var filename = 'ip-navigator-database_' + now_iso_filename() + '.json';
 
             // write file
             if (!payload) {

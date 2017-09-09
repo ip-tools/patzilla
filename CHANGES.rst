@@ -25,6 +25,7 @@ development
 - Upgrade to most recent versions of Python foundation modules across the board
 - OPS stopped delivering the elapsed time when crawling
 - Improve basket model and interaction sanity
+- Database export filename: naming things
 
 2017-09-08 0.135.0
 ==================
