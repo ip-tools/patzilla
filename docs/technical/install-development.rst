@@ -1,8 +1,8 @@
-.. _install:
+.. _install-development:
 
-####################
-Install IP Navigator
-####################
+############################
+Install IP Navigator sandbox
+############################
 
 
 .. _run-ip-navigator-from-source:
@@ -76,16 +76,4 @@ Run tests
 
     make test options='--where patzilla.access.ftpro'
     make test options='--where patzilla.util.numbers.test.test_normalize'
-
-
-Release
-=======
-Cut a new release::
-
-    make release bump=minor         # patch,minor,major
-
-Deploy to server::
-
-    make setup-maintenance
-    make install target=develop     # develop,staging,prod
 
