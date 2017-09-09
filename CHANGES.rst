@@ -20,6 +20,8 @@ development
 - Documentation, “naming things” and further cleansing
 - Naming things: Rename HTTP header for transporting the keywords
 - Improve parsing robustness and error propagation on invalid “pubdate” fields
+- Be graceful on officelink hotkey selection problems
+- Improve header layout in liveview mode
 
 2017-09-08 0.135.0
 ==================
