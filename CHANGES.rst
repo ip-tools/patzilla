@@ -19,6 +19,7 @@ development
 - Disable automatic "admin" user provisioning
 - Documentation, “naming things” and further cleansing
 - Naming things: Rename HTTP header for transporting the keywords
+- Improve parsing robustness and error propagation on invalid “pubdate” fields
 
 2017-09-08 0.135.0
 ==================

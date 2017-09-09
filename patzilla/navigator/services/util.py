@@ -154,7 +154,7 @@ def make_expression_filter(data):
                     log.warn(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
-                elif expression_part.has_key('error'):
+                elif 'error' in expression_part:
                     message = error_tpl.format(key, value, datasource)
                     message += u'<br/>' + expression_part['message']
                     log.warn(message)
@@ -163,8 +163,18 @@ def make_expression_filter(data):
                 else:
                     expression_part.get('query') and expression_parts.append(expression_part.get('query'))
 
-                if filter_part and filter_part.get('query'):
-                    filter_parts.append(filter_part.get('query'))
+                # Accumulate filter part
+                error_tpl = u'Filter "{0}: {1}" has invalid format, datasource={2}.'
+                if filter_part:
+
+                    if 'error' in filter_part:
+                        message = error_tpl.format(key, value, datasource)
+                        message += u'<br/>' + filter_part['message']
+                        log.warn(message)
+                        request.errors.add('query-expression-utility-service', 'comfort-form', message)
+
+                    else:
+                        filter_part.get('query') and filter_parts.append(filter_part.get('query'))
 
 
     log.info("Propagating keywords from comfort form: {keywords}".format(keywords=keywords))

@@ -235,11 +235,15 @@ class IFIClaimsExpression(object):
                     expression = '{fieldname}:[{startdate} TO {enddate}]'.format(fieldname=fieldname, **within_dates)
 
                 elif not parsed:
-                    value = parse_date_universal(value).format('YYYYMMDD')
+                    value_date = parse_date_universal(value)
+                    if value_date:
+                        value = value_date.format('YYYYMMDD')
+                    else:
+                        raise ValueError(value)
 
             except Exception as ex:
-                message = 'IFI query: Invalid date or range expression "{0}". Reason: {1}'.format(value, ex)
-                logger.warn(message + ' Exception was: {0}'.format(_exception_traceback()))
+                message = 'IFI Claims query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
+                logger.warn(message + '\nException was:\n{0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
         elif key == 'inventor' or key == 'applicant':

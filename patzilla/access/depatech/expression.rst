@@ -8,16 +8,17 @@ depa.tech expression parser tests
 >>> from patzilla.access.depatech.expression import DepaTechParser, DepaTechExpression
 
 
+******************
+Bibliographic data
+******************
 
 Empty query
 ===========
 >>> DepaTechParser('').dumps()
 ''
 
-
-
-IPC/CPC queries
-===============
+IPC/CPC
+=======
 >>> DepaTechParser('H01F7/00').dumps()
 u'H01F7/00'
 
@@ -38,9 +39,19 @@ u'IC : G01F1/84'
 {'query': u'((IC:H01F000700 OR NC:H01F000700) NOT ((IC:H01F000702 OR NC:H01F000702) OR (IC:H02K00071876 OR NC:H02K00071876)))'}
 
 
+Publication date
+================
 
-Full text queries
-=================
+>>> DepaTechExpression.pair_to_elasticsearch('pubdate', 'foobar')
+{'message': 'depatech query: Invalid date or range expression "foobar". Reason: foobar.', 'error': True}
+
+
+*********
+Full text
+*********
+
+Simple expressions
+==================
 
 >>> DepaTechParser('GT:bildschirm').keywords()
 [u'bildschirm']

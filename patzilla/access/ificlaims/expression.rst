@@ -8,16 +8,17 @@ IFI Claims expression parser tests
 >>> from patzilla.access.ificlaims.expression import IFIClaimsParser, IFIClaimsExpression
 
 
+******************
+Bibliographic data
+******************
 
 Empty query
 ===========
 >>> IFIClaimsParser('').dumps()
 ''
 
-
-
-IPC/CPC queries
-===============
+IPC/CPC
+=======
 >>> IFIClaimsParser('H01F7/00').dumps()
 u'H01F7/00'
 
@@ -38,9 +39,19 @@ u'ic : G01F1/84'
 {'query': u'((ic:H01F000700 OR cpc:H01F000700) NOT ((ic:H01F000702 OR cpc:H01F000702) OR (ic:H02K00071876 OR cpc:H02K00071876)))'}
 
 
+Publication date
+================
 
-Full text queries
-=================
+>>> IFIClaimsExpression.pair_to_solr('pubdate', 'foobar')
+{'message': 'IFI Claims query: Invalid date or range expression "foobar". Reason: foobar.', 'error': True}
+
+
+*********
+Full text
+*********
+
+Simple expressions
+==================
 
 >>> IFIClaimsParser('ttl:bildschirm').keywords()
 [u'bildschirm']
