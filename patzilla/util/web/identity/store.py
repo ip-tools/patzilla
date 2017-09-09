@@ -144,6 +144,11 @@ class UserMetricsManager(object):
 #   provisioning
 # ------------------------------------------
 def provision_users(event):
+
+    # Disabled as of 2017-08-09.
+    # Enable temporarily again to create "admin" user on daemon start. YMMV.
+    return
+
     users = [
 
         User(

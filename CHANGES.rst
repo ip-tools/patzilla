@@ -16,6 +16,7 @@ development
 - Large namespace refactoring
 - Make tests work again
 - Properly handle and propagate cache database connection errors
+- Disable automatic "admin" user provisioning
 
 2017-09-08 0.135.0
 ==================
