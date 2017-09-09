@@ -141,21 +141,14 @@ class UserMetricsManager(object):
 #   provisioning
 # ------------------------------------------
 def provision_users(event):
-    ops_credentials_epd = {
-        'consumer_key': r'***REMOVED***',
-        'consumer_secret': r'***REMOVED***',
-    }
-    ftpro_credentials_f2015_0001 = {
-        'username': r'***REMOVED***',
-        'password': r'***REMOVED***',
-    }
     users = [
-        User(username = '***REMOVED***', password = '***REMOVED***', fullname = '***REMOVED***',
-            tags = ['elmyra-staff'],
-            modules = ['ftpro', 'keywords-user']),
-        User(username = '***REMOVED***',  password = '***REMOVED***', fullname = 'Andreas Motl',
-            tags = ['elmyra-staff'],
-            modules = ['ftpro', 'keywords-user']),
+
+        User(
+            fullname = 'Administrator',
+            username = 'admin',
+            password = 'admin',
+            tags     = ['staff'],
+            modules  = ['keywords-user', 'family-citations', 'analytics', 'ifi', 'depatech']),
 
         """
         User(
@@ -163,21 +156,6 @@ def provision_users(event):
             password = 'test',
             fullname = 'Markus Tester',
             tags = ['']
-        ),
-
-        User(
-            username = 'ep-test2',
-            password = 'test123',
-            fullname = '***REMOVED***',
-            tags = ['patoffice'],
-            upstream_credentials = {'ops': ops_credentials_epd}
-        ),
-        User(
-            username = 'ftpro',
-            password = 'ftpro',
-            fullname = ' FulltextPROTest',
-            tags = [],
-            upstream_credentials = {'ftpro': ftpro_credentials_f2015_0001}
         ),
         """
     ]

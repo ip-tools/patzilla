@@ -11,6 +11,7 @@ development
 - Improve OPS API error propagation
 - Update documentation re. database sandbox mode
 - Pull application-wide upstream API authentication credentials from datasource settings
+- Trim down automatic user provisioning
 
 2017-09-08 0.135.0
 ==================
