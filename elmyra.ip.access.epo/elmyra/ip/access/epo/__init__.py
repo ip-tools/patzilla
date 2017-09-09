@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 from pprint import pprint
+from ConfigParser import NoOptionError
+from elmyra.ip.util.config import read_config
 from elmyra.ip.version import __VERSION__
 from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
 from pyramid.config import Configurator
@@ -10,6 +12,12 @@ def main(global_config, **settings):
 
     settings.setdefault('CONFIG_FILE', global_config.get('__file__'))
     settings.setdefault('SOFTWARE_VERSION', __VERSION__)
+
+    app_config = read_config(settings['CONFIG_FILE'])
+    try:
+        datasources = app_config['ip_navigator']['datasources']
+    except:
+        raise NoOptionError('datasources', 'ip_navigator')
 
     config = Configurator(settings=settings)
 
@@ -27,14 +35,17 @@ def main(global_config, **settings):
     # Register subsystem components
     config.include("elmyra.web.identity")
     config.include("elmyra.ip.util.database.beaker_mongodb_gridfs")
-    #config.include("***REMOVED***")
-    #config.include("elmyra.ip.access.ftpro.concordance")
-    config.include("elmyra.ip.access.ificlaims.clientpool")
-    #config.include("***REMOVED***")
-    config.include("elmyra.ip.access.depatech.clientpool")
     config.include("elmyra.web.pyramid")
-    config.include(".client")
-    config.include(".opaquelinks")
+    config.include("elmyra.ip.access.epo.opaquelinks")
+
+    if 'ops' in datasources:
+        config.include("elmyra.ip.access.epo.client")
+
+    if 'ificlaims' in datasources:
+        config.include("elmyra.ip.access.ificlaims.clientpool")
+
+    if 'depatech' in datasources:
+        config.include("elmyra.ip.access.depatech.clientpool")
 
     config.add_renderer('.html', 'pyramid.mako_templating.renderer_factory')
     config.add_renderer('xml', XmlRenderer)

@@ -288,40 +288,9 @@ class Bootstrapper(object):
 
         return data
 
-    def system_settings(self):
-
+    def datasource_settings(self):
         request = get_current_request()
-        pyramid_settings = request.registry.settings
-
-        # Read configuration file to get global settings
-        # TODO: Optimize: Only read once, not on each request!
-        # See also email:submit.py
-        all_settings = read_config(pyramid_settings['CONFIG_FILE'])
-
-        # Define baseline of system settings
-        system_settings = SmartBunch({
-            'datasources': [],
-            'datasource': SmartBunch(),
-            'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
-        })
-
-        # Read system settings from configuration
-        system_settings.datasources = read_list(all_settings.get('ip_navigator', {}).get('datasources'))
-        for datasource in system_settings.datasources:
-            datasource_setting_key = 'datasource_{name}'.format(name=datasource)
-            datasource_settings = all_settings.get(datasource_setting_key, {})
-            datasource_settings['fulltext_enabled'] = asbool(datasource_settings.get('fulltext_enabled', False))
-            datasource_settings['fulltext_countries'] = read_list(datasource_settings.get('fulltext_countries', ''))
-            datasource_settings['details_enabled'] = asbool(datasource_settings.get('details_enabled', False))
-            datasource_settings['details_countries'] = read_list(datasource_settings.get('details_countries', ''))
-            system_settings.datasource[datasource] = SmartBunch.bunchify(datasource_settings)
-
-            # Aggregate data for all countries
-            system_settings.total.fulltext_countries += datasource_settings['fulltext_countries']
-
-        #print 'system_settings:\n', system_settings
-
-        return system_settings
+        return request.registry.datasource_settings
 
     def config_parameters(self):
 
@@ -386,7 +355,7 @@ class Bootstrapper(object):
         # 5. merge "user parameters"
         # 6. merge "opaque parameters" taking the highest precedence
         params = {}
-        params['system'] = self.system_settings()
+        params['system'] = self.datasource_settings()
         params.update(environment)
         params.update(setting_params)
         params.update(request_opaque_meta)

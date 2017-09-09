@@ -7,6 +7,7 @@ development
 - Fix: Don’t cache “404 Not Found” responses from OPS' image inquiry API
 - Fix hard errors in the aftermath of repository cleanup
 - Improve exception handling for authentication errors against OPS API
+- Improve datasource configuration mechanics
 
 2017-09-08 0.135.0
 ==================

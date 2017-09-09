@@ -14,25 +14,21 @@ log = logging.getLogger(__name__)
 def message_factory(**kwargs):
 
     request = get_current_request()
-    pyramid_settings = request.registry.settings
-
-    # Read configuration file to get global settings
-    # TODO: Optimize: Only read once, not on each request!
-    settings = read_config(pyramid_settings['CONFIG_FILE'])
+    application_settings = request.registry.application_settings
 
     # EmailMessage builder
-    message = EmailMessage(settings['smtp'], settings['email'])
+    message = EmailMessage(application_settings['smtp'], application_settings['email'])
 
-    if 'reply' in settings['email']:
-        message.add_reply(read_list(settings['email']['reply']))
+    if 'reply' in application_settings['email']:
+        message.add_reply(read_list(application_settings['email']['reply']))
 
     is_support_email = False
     if 'recipients' in kwargs:
         for recipient in kwargs['recipients']:
             if recipient == 'support':
                 is_support_email = True
-            if recipient in settings['email-recipients']:
-                message.add_recipient(read_list(settings['email-recipients'][recipient]))
+            if recipient in application_settings['email-recipients']:
+                message.add_recipient(read_list(application_settings['email-recipients'][recipient]))
             else:
                 log.warning('Could not add recipient {}'.format(recipient))
 
