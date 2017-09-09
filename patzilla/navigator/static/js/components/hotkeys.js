@@ -192,17 +192,20 @@ HotkeysPlugin = Marionette.Controller.extend({
         // open epo register information on "shift+alt+e"
         $(document).on('keydown', null, 'alt+shift+e', function(event) {
             event.preventDefault();
-            _this.app.viewport.get_document().find('a.anchor-register-epo')[0].click();
+            var element = _this.app.viewport.get_document().find('a.anchor-register-epo')[0];
+            element && element.click();
         });
         // open dpma register information on "shift+alt+d"
         $(document).on('keydown', null, 'alt+shift+d', function(event) {
             event.preventDefault();
-            _this.app.viewport.get_document().find('a.anchor-register-dpma')[0].click();
+            var element = _this.app.viewport.get_document().find('a.anchor-register-dpma')[0];
+            element && element.click();
         });
         // open ccd on "shift+c"
         $(document).on('keydown', null, 'shift+c', function(event) {
             event.preventDefault();
-            _this.app.viewport.get_document().find('a.anchor-ccd')[0].click();
+            var element = _this.app.viewport.get_document().find('a.anchor-ccd')[0]
+            element && element.click();
         });
 
 
