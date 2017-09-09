@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+from ConfigParser import NoOptionError
 import logging
+from pyramid.httpexceptions import HTTPBadGateway
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
 from elmyra.ip.access.depatech.client import DepaTechClient
@@ -11,8 +13,13 @@ logger = logging.getLogger(__name__)
 #   bootstrapping
 # ------------------------------------------
 def includeme(config):
-    #config.add_subscriber(setup_oauth_client_pool, "pyramid.events.ApplicationCreated")
-    config.registry.registerUtility(DepaTechClientPool())
+    application_settings = config.registry.application_settings
+    try:
+        api_url = application_settings.datasource_depatech.api_url
+    except:
+        raise NoOptionError('api_url', 'datasource_depatech')
+
+    config.registry.registerUtility(DepaTechClientPool(api_url=api_url))
     config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")
 
 def attach_depatech_client(event):
@@ -21,10 +28,24 @@ def attach_depatech_client(event):
     #context = request.context
 
     pool = registry.getUtility(IDepaTechClientPool)
+
+    # User-associated credentials
     if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('depatech'):
         request.depatech_client = pool.get(request.user.userid, request.user.upstream_credentials['depatech'])
+
+    # System-wide credentials
     else:
-        request.depatech_client = pool.get('default')
+        datasource_settings = registry.datasource_settings
+        datasources = datasource_settings.datasources
+        datasource = datasource_settings.datasource
+        if 'depatech' in datasources and 'depatech' in datasource and 'username' in datasource.depatech and 'password' in datasource.depatech:
+            system_credentials = {
+                'username': datasource.depatech.username,
+                'password': datasource.depatech.password,
+                }
+            request.depatech_client = pool.get('system', system_credentials)
+        else:
+            request.depatech_client = pool.get('defunct')
 
 
 # ------------------------------------------
@@ -37,14 +58,15 @@ class DepaTechClientPool(object):
 
     implements(IDepaTechClientPool)
 
-    def __init__(self):
+    def __init__(self, api_url):
+        self.api_url = api_url
         self.clients = {}
-        print 'DepaTechClientPool.__init__'
+        logger.info('Creating DepaTechClientPool')
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
             logger.info('DepaTechClientPool.get: identifier={0}'.format(identifier))
-            factory = DepaTechClientFactory(credentials=credentials, debug=False)
+            factory = DepaTechClientFactory(self.api_url, credentials=credentials, debug=False)
             self.clients[identifier] = factory.client_create()
         return self.clients.get(identifier)
 
@@ -54,20 +76,23 @@ class DepaTechClientPool(object):
 # ------------------------------------------
 class DepaTechClientFactory(object):
 
-    def __init__(self, credentials=None, debug=False):
+    def __init__(self, api_url, credentials=None, debug=False):
+
+        self.api_url = api_url
 
         if credentials:
-            # User-associated credentials
             self.username = credentials['username']
             self.password = credentials['password']
-        else:
-            # Elmyra credentials
-            self.username = r'***REMOVED***'
-            self.password = r'***REMOVED***'
 
-            #if debug:
-            #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
+        else:
+            message = u'No credentials configured for depa.tech API.'
+            logger.error(u'DepaTechClientFactory: ' + message)
+            raise HTTPBadGateway(message)
+
+
+        #if debug:
+        #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
 
     def client_create(self):
-        client = DepaTechClient(uri='***REMOVED***', username=self.username, password=self.password)
+        client = DepaTechClient(uri=self.api_url, username=self.username, password=self.password)
         return client

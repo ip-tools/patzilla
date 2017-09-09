@@ -8,7 +8,7 @@ import timeit
 import logging
 import requests
 from beaker.cache import cache_region
-from requests.exceptions import ConnectionError, ConnectTimeout
+from requests import RequestException
 from elmyra.ip.access.depatech import get_depatech_client
 from elmyra.ip.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearchClient
@@ -92,7 +92,7 @@ class DepaTechClient(GenericSearchClient):
                 headers=headers,
                 auth=(self.username, self.password),
                 verify=self.tls_verify)
-        except (ConnectionError, ConnectTimeout) as ex:
+        except RequestException as ex:
             raise self.search_failed(
                 ex=ex,
                 user_info='Error or timeout while connecting to upstream database. Database might be offline.',
