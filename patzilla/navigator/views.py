@@ -26,7 +26,7 @@ def includeme(config):
     # serve favicon.ico
     # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
     config.add_route('favicon', '/ops/browser/favicon.ico')
-    config.add_view('patzilla.access.epo.views.favicon_view', route_name='favicon')
+    config.add_view('patzilla.navigator.views.favicon_view', route_name='favicon')
 
     # serve admin page
     config.add_route('admin-user-create', '/ops/browser/admin/user/create')
@@ -90,7 +90,7 @@ def patentview(request):
     params['context'] = 'viewer'
 
     payload = {
-        'project': 'patzilla.access.epo',
+        'project': 'PatZilla',
         'embed_options': json.dumps({
             'matchdict': dict(matchdict),
             'params': dict(params),
@@ -399,7 +399,7 @@ def help_ificlaims(request):
 
 def favicon_view(request):
     # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
-    icon = resource_filename('patzilla.access.epo', 'static/favicon.ico')
+    icon = resource_filename('patzilla.navigator', 'static/favicon.ico')
     if os.path.isfile(icon):
         return FileResponse(icon, request=request)
     else:

@@ -11,7 +11,7 @@ import requests
 from pprint import pprint
 from beaker.cache import cache_region
 from requests.exceptions import RequestException
-from patzilla.access.epo.imageutil import to_png
+from patzilla.util.image.convert import to_png
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
 from patzilla.access.ificlaims import get_ificlaims_client

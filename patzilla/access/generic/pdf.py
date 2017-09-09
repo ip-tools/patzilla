@@ -8,7 +8,7 @@ from patzilla.access.uspto.image import get_images_view_url
 from patzilla.util.numbers.common import decode_patent_number
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
-from patzilla.access.epo.ops import pdf_document_build
+from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
 from patzilla.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
@@ -80,7 +80,7 @@ def pdf_from_ops(patent, document, meta):
 
         log.info('PDF OPS attempt for {0}'.format(patent))
 
-        return pdf_document_build(patent)
+        return ops_build_pdf(patent)
 
     except Exception as ex:
 

@@ -5,7 +5,7 @@
 CQL pyparsing parser tests: Generic extensions
 ==============================================
 
->>> from patzilla.access.epo.ops import ops_keyword_fields
+>>> from patzilla.access.epo.ops.api import ops_keyword_fields
 >>> from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 >>> def CQL(expression):
 ...     from patzilla.util.cql.pyparsing import CQL as UpstreamCQL

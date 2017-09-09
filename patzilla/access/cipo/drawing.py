@@ -4,7 +4,6 @@ import re
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
-from patzilla.access.epo.imageutil import gif_to_tiff
 from patzilla.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)

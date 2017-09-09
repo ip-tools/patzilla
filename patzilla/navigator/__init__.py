@@ -40,7 +40,7 @@ def main(global_config, **settings):
     config.include("patzilla.navigator.opaquelinks")
 
     if 'ops' in datasources:
-        config.include("patzilla.access.epo.client")
+        config.include("patzilla.access.epo.ops.client")
 
     if 'depatisconnect' in datasources:
         config.include("patzilla.access.dpma.depatisconnect")

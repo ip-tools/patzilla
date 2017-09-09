@@ -9,7 +9,7 @@ class TestMyView(unittest.TestCase):
         testing.tearDown()
 
     def test_it(self):
-        from .patzilla.navigator.views import navigator_standalone
+        from patzilla.navigator.views import navigator_standalone
         request = testing.DummyRequest()
         info = navigator_standalone(request)
         self.assertEqual(info['project'], 'PatZilla')

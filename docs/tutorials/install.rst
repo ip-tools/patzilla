@@ -32,7 +32,6 @@ Prerequisites::
 
 Application::
 
-    cd patzilla.access.epo
     python setup.py develop
 
 
@@ -60,7 +59,7 @@ Start database::
 Start web server::
 
     source .venv27/bin/activate
-    pserve patzilla.access.epo/development.ini --reload
+    pserve patzilla/config/development.ini --reload
 
 
 Run tests

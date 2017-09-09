@@ -128,7 +128,7 @@ test_requires = [
 
 setup(name='PatZilla',
       version='0.135.0',
-      description='PatZilla IP Navigator',
+      description='PatZilla is a powerful patent data toolkit with a modern user interface.',
       long_description=README,
       license="AGPL 3, EUPL 1.2",
       classifiers=[
@@ -142,7 +142,6 @@ setup(name='PatZilla',
       url='',
       keywords='web wsgi pylons pyramid',
       packages=find_packages(),
-      #packages=['patzilla.access.epo'],
       include_package_data=True,
       package_data={
           'patzilla.navigator': [

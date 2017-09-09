@@ -9,7 +9,7 @@ from cornice.service import Service
 from dateutil.relativedelta import relativedelta
 from jsonpointer import JsonPointer
 from transitions.core import Machine
-from patzilla.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
+from patzilla.access.epo.ops.api import analytics_family, ops_published_data_search, _result_list_compact
 from patzilla.navigator.services.dpma import dpma_published_data_search
 from patzilla.navigator.services.util import make_expression_filter
 

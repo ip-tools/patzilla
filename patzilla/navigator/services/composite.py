@@ -4,7 +4,7 @@ import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPTemporaryRedirect
 from patzilla.access.drawing import get_drawing_png
-from patzilla.access.epo.core import pdf_universal, pdf_universal_multi_zip
+from patzilla.access.generic.pdf import pdf_universal, pdf_universal_multi_zip
 from patzilla.util.date import datetime_iso_filename, now
 
 log = logging.getLogger(__name__)

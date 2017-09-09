@@ -6,53 +6,53 @@ js:
 
 	# standalone application
 	node_modules/.bin/uglifyjs \
-		patzilla/access/epo/static/js/app/*.js \
-		patzilla/access/epo/static/js/app/**/*.js \
-		patzilla/access/epo/static/js/components/*.js \
-		patzilla/access/epo/static/js/boot/standalone.js \
+		patzilla/navigator/static/js/app/*.js \
+		patzilla/navigator/static/js/app/**/*.js \
+		patzilla/navigator/static/js/components/*.js \
+		patzilla/navigator/static/js/boot/standalone.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		--source-map patzilla/access/epo/static/js/o-standalone.min.map \
+		--source-map patzilla/navigator/static/js/o-standalone.min.map \
 		--source-map-url /static/js/o-standalone.min.map \
-		> patzilla/access/epo/static/js/o-standalone.min.js
+		> patzilla/navigator/static/js/o-standalone.min.js
 
 	# embedded application
 	node_modules/.bin/uglifyjs \
-		patzilla/access/epo/static/js/app/*.js \
-		patzilla/access/epo/static/js/app/**/*.js \
-		patzilla/access/epo/static/js/components/*.js \
-		patzilla/access/epo/static/js/boot/embedded.js \
+		patzilla/navigator/static/js/app/*.js \
+		patzilla/navigator/static/js/app/**/*.js \
+		patzilla/navigator/static/js/components/*.js \
+		patzilla/navigator/static/js/boot/embedded.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		--source-map patzilla/access/epo/static/js/o-embedded.min.map \
+		--source-map patzilla/navigator/static/js/o-embedded.min.map \
 		--source-map-url /static/js/o-embedded.min.map \
-		> patzilla/access/epo/static/js/o-embedded.min.js
+		> patzilla/navigator/static/js/o-embedded.min.js
 
 	# configuration
 	node_modules/.bin/uglifyjs \
-		patzilla/access/epo/static/js/config.js \
+		patzilla/navigator/static/js/config.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		> patzilla/access/epo/static/js/config.min.js
+		> patzilla/navigator/static/js/config.min.js
 
 	# issue reporter
 	node_modules/.bin/uglifyjs \
-		patzilla/access/epo/static/js/issue-reporter.js \
+		patzilla/navigator/static/js/issue-reporter.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		> patzilla/access/epo/static/js/issue-reporter.min.js
+		> patzilla/navigator/static/js/issue-reporter.min.js
 
 	# url cleaner
 	node_modules/.bin/uglifyjs \
-		patzilla/access/epo/templates/urlcleaner.js \
+		patzilla/navigator/templates/urlcleaner.js \
 		--mangle --compress \
-		> patzilla/access/epo/templates/urlcleaner.min.js
+		> patzilla/navigator/templates/urlcleaner.min.js
 
 	-git diff --quiet --exit-code || git commit \
 		Makefile \
-		patzilla/access/epo/static/js/config.min.js \
-		patzilla/access/epo/static/js/issue-reporter.min.js \
-		patzilla/access/epo/templates/urlcleaner.min.js \
+		patzilla/navigator/static/js/config.min.js \
+		patzilla/navigator/static/js/issue-reporter.min.js \
+		patzilla/navigator/templates/urlcleaner.min.js \
 		-uno --untracked-files=no \
 		--message='release: minify javascript resources'
 
@@ -97,8 +97,8 @@ test:
 		--doctest-tests         \
 		--doctest-extension=rst \
 		--doctest-options=doctestencoding=utf-8,+ELLIPSIS,+NORMALIZE_WHITESPACE,+REPORT_UDIFF \
-		--exclude-dir=patzilla/access/epo/static \
-		--exclude-dir=patzilla/access/epo/templates \
+		--exclude-dir=patzilla/navigator/static \
+		--exclude-dir=patzilla/navigator/templates \
 		--exclude-dir=patzilla/util/database \
 		--exclude-dir=patzilla/util/web/uwsgi \
 		--nocapture \
@@ -136,7 +136,7 @@ mongodb-ftpro-import:
 
 sloccount:
 	sloccount patzilla
-	sloccount --addlang js patzilla/access/epo/static/js/{app,boot,components,config.js,issue-reporter.js}
+	sloccount --addlang js patzilla/navigator/static/js/{app,boot,components,config.js,issue-reporter.js}
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'

@@ -7,7 +7,7 @@ from patzilla.util.cql.util import should_be_quoted
 from patzilla.util.data.container import unique_sequence
 from patzilla.util.expression.keywords import clean_keyword
 from patzilla.util.python import _exception_traceback
-from patzilla.access.epo.ops import ops_keyword_fields
+from patzilla.access.epo.ops.api import ops_keyword_fields
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 
 log = logging.getLogger(__name__)

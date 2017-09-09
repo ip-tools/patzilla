@@ -21,8 +21,8 @@ from collections import OrderedDict
 from cornice.util import _JSONError
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError
-from patzilla.access.epo.core import pdf_universal_multi
-from patzilla.access.epo.ops import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
+from patzilla.access.generic.pdf import pdf_universal_multi
+from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
 from patzilla.access.generic.exceptions import ignored
 from patzilla.util.date import humanize_date_english
 from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number

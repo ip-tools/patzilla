@@ -2,7 +2,7 @@
 # (c) 2013-2017 Andreas Motl, Elmyra UG
 import time
 import logging
-from pprint import pprint, pformat
+from pprint import  pformat
 from cornice.util import json_error, to_list
 from beaker.cache import cache_region, region_invalidate
 from simplejson.scanner import JSONDecodeError
@@ -10,7 +10,7 @@ from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerEx
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
 from patzilla.navigator.util import object_attributes_to_dict
-from patzilla.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
+from patzilla.util.image.convert import pdf_join, pdf_set_metadata, pdf_make_metadata
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.numbers.common import decode_patent_number, split_patent_number
 
