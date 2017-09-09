@@ -13,7 +13,6 @@ from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
 from elmyra.ip.access.depatech.expression import DepaTechExpression
 from elmyra.ip.access.google.search import GooglePatentsExpression
 from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
-from elmyra.ip.access.ftpro.expression import FulltextProExpression
 from elmyra.ip.navigator.export import Dossier, DossierXlsx
 from elmyra.ip.util.config import read_list
 from elmyra.ip.util.cql.util import pair_to_cql

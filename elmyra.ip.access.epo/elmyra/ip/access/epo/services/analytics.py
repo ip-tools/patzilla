@@ -12,7 +12,6 @@ from transitions.core import Machine
 from elmyra.ip.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
 from elmyra.ip.access.epo.services.dpma import dpma_published_data_search
 from elmyra.ip.access.epo.services.util import make_expression_filter
-from elmyra.ip.access.ftpro.search import ftpro_published_data_search, ftpro_published_data_crawl
 
 log = logging.getLogger(__name__)
 

@@ -15,7 +15,6 @@ from elmyra.ip.access.epo.imageutil import to_png
 from elmyra.ip.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearchClient
 from elmyra.ip.access.ificlaims import get_ificlaims_client
-from elmyra.ip.access.serviva import get_serviva_client
 from elmyra.ip.util.data.container import SmartBunch
 from elmyra.ip.util.numbers.normalize import normalize_patent
 

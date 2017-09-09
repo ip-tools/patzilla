@@ -59,7 +59,7 @@ requires = [
     'BeautifulSoup==3.2.1',
 
     # SNI support
-    'pyOpenSSL==16.0.0',
+    'pyOpenSSL>=16.0.0',
     'cryptography>=1.3',
     'pyasn1==0.1.9',
     'ndg-httpsclient==0.4.2',
