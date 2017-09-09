@@ -127,7 +127,7 @@ system  = IP Navigator System <navigator-system@example.org>
 use = egg:PasteDeploy#prefix
 
 [app:main]
-use = egg:elmyra.ip.access.epo
+use = egg:PatZilla
 filter-with = prefix-middleware
 #filter-with = translogger
 

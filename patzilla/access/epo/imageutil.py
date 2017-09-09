@@ -7,7 +7,7 @@ import subprocess
 import datetime
 from tempfile import NamedTemporaryFile
 from cornice.util import to_list
-from elmyra.ip.util.python.decorators import memoize
+from patzilla.util.python.decorators import memoize
 
 log = logging.getLogger(__name__)
 

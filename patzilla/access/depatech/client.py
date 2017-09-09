@@ -9,11 +9,11 @@ import logging
 import requests
 from beaker.cache import cache_region
 from requests import RequestException
-from elmyra.ip.access.depatech import get_depatech_client
-from elmyra.ip.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
-from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearchClient
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.access.depatech import get_depatech_client
+from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
+from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 

@@ -5,7 +5,7 @@
 IFI Claims expression parser tests
 ==================================
 
->>> from elmyra.ip.access.ificlaims.expression import IFIClaimsParser, IFIClaimsExpression
+>>> from patzilla.access.ificlaims.expression import IFIClaimsParser, IFIClaimsExpression
 
 
 

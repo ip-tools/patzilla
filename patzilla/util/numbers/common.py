@@ -3,8 +3,8 @@
 import re
 import types
 import logging
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.numbers.helper import strip_spaces
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.numbers.helper import strip_spaces
 
 """
 Common lowlevel functions

@@ -2,7 +2,7 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
-from elmyra.web.identity.store import User, UserHistory
+from patzilla.util.web.identity.store import User, UserHistory
 
 log = logging.getLogger(__name__)
 

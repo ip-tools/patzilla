@@ -3,11 +3,11 @@
 import json
 import logging
 from pprint import pprint
-from elmyra.ip.access.epo.util import dict_prefix_key, dict_merge
-from elmyra.ip.util.config import read_config, read_list
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.date import datetime_isoformat, unixtime_to_datetime
-from elmyra.ip.util.python import _exception_traceback
+from patzilla.access.epo.util import dict_prefix_key, dict_merge
+from patzilla.util.config import read_config, read_list
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
+from patzilla.util.python import _exception_traceback
 from pyramid.settings import asbool     # Required by template, don't remove!
 from pyramid.threadlocal import get_current_request
 

@@ -159,7 +159,7 @@ function verify_cookie()
         http://seb.dbzteam.org/crypto/python-oauth-timing-hmac.pdf
         http://carlos.bueno.org/2011/10/timing.html
         http://www.levigross.com/2014/02/07/constant-time-comparison-functions-in-python-haskell-clojure-java-etc/
-        see also: elmyra.web.identity
+        see also: patzilla.util.web.identity
         ]]
 
         if ttl >= 0 and encode_token(user, timestamp) == token then

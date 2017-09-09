@@ -21,12 +21,12 @@ from collections import OrderedDict
 from cornice.util import _JSONError
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError
-from elmyra.ip.access.epo.core import pdf_universal_multi
-from elmyra.ip.access.epo.ops import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
-from elmyra.ip.access.generic.exceptions import ignored
-from elmyra.ip.util.date import humanize_date_english
-from elmyra.ip.util.numbers.common import decode_patent_number, encode_epodoc_number
-from elmyra.ip.util.python import exception_traceback
+from patzilla.access.epo.core import pdf_universal_multi
+from patzilla.access.epo.ops import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
+from patzilla.access.generic.exceptions import ignored
+from patzilla.util.date import humanize_date_english
+from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number
+from patzilla.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
 

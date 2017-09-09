@@ -4,11 +4,11 @@ import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.settings import asbool
-from elmyra.ip.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate, ops_published_data_search_swap_family, ops_family_publication_docdb_xml
-from elmyra.ip.access.epo.services import propagate_keywords, cql_prepare_query
-from elmyra.ip.access.generic.exceptions import NoResultsException
-from elmyra.ip.util.numbers.common import split_patent_number
-from elmyra.ip.util.python import _exception_traceback
+from patzilla.access.epo.ops import ops_published_data_crawl, inquire_images, get_ops_image, ops_family_inpadoc, get_ops_client, pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_published_data_search, ops_published_data_search_invalidate, ops_published_data_search_swap_family, ops_family_publication_docdb_xml
+from patzilla.access.epo.services import propagate_keywords, cql_prepare_query
+from patzilla.access.generic.exceptions import NoResultsException
+from patzilla.util.numbers.common import split_patent_number
+from patzilla.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
 

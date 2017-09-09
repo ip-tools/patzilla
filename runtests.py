@@ -8,7 +8,7 @@ from nose.plugins.manager import PluginManager
 from nose.plugins.doctests import Doctest
 from nose.plugins import builtin
 from nose_exclude import NoseExclude
-from elmyra.ip.util.test.doctest_nose_plugin import DoctestFix
+from patzilla.util.test.doctest_nose_plugin import DoctestFix
 
 if __name__ == '__main__':
 

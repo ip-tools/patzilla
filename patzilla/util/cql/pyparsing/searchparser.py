@@ -62,7 +62,7 @@ TODO:
 """
 from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppress, Optional, OneOrMore, oneOf, nums, Literal
 from sets import Set
-from elmyra.ip.util.cql.pyparsing.parser import separators, wildcards
+from patzilla.util.cql.pyparsing.parser import separators, wildcards
 
 # define characters comprising a word
 #wordchars = alphanums + separators + wildcards

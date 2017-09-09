@@ -2,7 +2,7 @@
 # (c) 2009,2015 Andreas Motl <andreas.motl@elmyra.de>
 import nose.tools
 from collections import OrderedDict
-from elmyra.ip.util.numbers.common import split_patent_number
+from patzilla.util.numbers.common import split_patent_number
 
 
 good = OrderedDict()

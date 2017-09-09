@@ -4,9 +4,9 @@ import time
 import logging
 from pprint import pprint
 from collections import defaultdict
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.access.generic.exceptions import SearchException
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.access.generic.exceptions import SearchException
 
 log = logging.getLogger(__name__)
 

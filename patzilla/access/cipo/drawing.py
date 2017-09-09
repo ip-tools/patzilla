@@ -4,8 +4,8 @@ import re
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
-from elmyra.ip.access.epo.imageutil import gif_to_tiff
-from elmyra.ip.util.numbers.common import split_patent_number
+from patzilla.access.epo.imageutil import gif_to_tiff
+from patzilla.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
 

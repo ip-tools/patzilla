@@ -6,13 +6,13 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region, region_invalidate
-from elmyra.ip.access.generic.exceptions import NoResultsException
-from elmyra.ip.util.python import _exception_traceback, exception_traceback
-from elmyra.ip.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
-from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
-from elmyra.ip.access.epo.espacenet import espacenet_claims, espacenet_description
-from elmyra.ip.access.epo.services import cql_prepare_query, propagate_keywords
-from elmyra.ip.access.epo.services.util import request_to_options
+from patzilla.access.generic.exceptions import NoResultsException
+from patzilla.util.python import _exception_traceback, exception_traceback
+from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
+from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
+from patzilla.access.epo.espacenet import espacenet_claims, espacenet_description
+from patzilla.access.epo.services import cql_prepare_query, propagate_keywords
+from patzilla.access.epo.services.util import request_to_options
 
 log = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ def depatisnet_published_data_search_handler(request):
     log.info('query raw: ' + query)
 
     # lazy-fetch more entries up to maximum of depatisnet
-    # TODO: get from elmyra.ip.access.dpma.depatisnet
+    # TODO: get from patzilla.access.dpma.depatisnet
     request_size = 250
     if int(request.params.get('range_begin', 0)) > request_size:
         request_size = 1000

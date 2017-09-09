@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2009,2015-2017 Andreas Motl <andreas.motl@elmyra.de>
 from collections import OrderedDict
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.util.numbers.normalize import normalize_patent
 
 
 t = OrderedDict()

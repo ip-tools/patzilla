@@ -3,7 +3,7 @@
 
 # this is a namespace package
 from pkgutil import extend_path
-from elmyra.web.pyramid.renderer import json_pretty_renderer
+from patzilla.util.web.pyramid.renderer import json_pretty_renderer
 
 __path__ = extend_path(__path__, __name__)
 

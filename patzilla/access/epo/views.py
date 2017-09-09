@@ -6,18 +6,18 @@ import os
 import logging
 from pkg_resources import resource_filename
 from mongoengine.errors import NotUniqueError
-from elmyra.ip.access.dpma.dpmaregister import DpmaRegisterAccess
-from elmyra.ip.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.util.render.phantomjs import render_pdf
-from elmyra.ip.util.text.format import slugify
+from patzilla.access.dpma.dpmaregister import DpmaRegisterAccess
+from patzilla.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.render.phantomjs import render_pdf
+from patzilla.util.text.format import slugify
 from pyramid.encode import urlencode
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from pyramid.response import Response, FileResponse
 from pyramid.settings import asbool
 from pyramid.url import route_path
 from pyramid.view import view_config
-from elmyra.web.identity.store import User
+from patzilla.util.web.identity.store import User
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ def includeme(config):
     # serve favicon.ico
     # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
     config.add_route('favicon', '/ops/browser/favicon.ico')
-    config.add_view('elmyra.ip.access.epo.views.favicon_view', route_name='favicon')
+    config.add_view('patzilla.access.epo.views.favicon_view', route_name='favicon')
 
     # serve admin page
     config.add_route('admin-user-create', '/ops/browser/admin/user/create')
@@ -65,22 +65,22 @@ def includeme(config):
     # negative lookahead to the rescue:
     # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
 
-@view_config(route_name='patentsearch', renderer='elmyra.ip.access.epo:templates/standalone.html')
+@view_config(route_name='patentsearch', renderer='patzilla.access.epo:templates/standalone.html')
 def navigator_standalone(request):
     payload = {
-        'project': 'elmyra.ip.access.epo',
+        'project': 'PatZilla',
     }
     return payload
 
-@view_config(route_name='embedded-item', renderer='elmyra.ip.access.epo:templates/embedded.html')
-@view_config(route_name='embedded-list', renderer='elmyra.ip.access.epo:templates/embedded.html')
+@view_config(route_name='embedded-item', renderer='patzilla.access.epo:templates/embedded.html')
+@view_config(route_name='embedded-list', renderer='patzilla.access.epo:templates/embedded.html')
 def navigator_embedded(request):
     payload = {
-        'project': 'elmyra.ip.access.epo',
+        'project': 'PatZilla',
     }
     return payload
 
-@view_config(route_name='patentview', renderer='elmyra.ip.access.epo:templates/embedded.html')
+@view_config(route_name='patentview', renderer='patzilla.access.epo:templates/embedded.html')
 def patentview(request):
 
     matchdict = request.matchdict.copy()
@@ -90,7 +90,7 @@ def patentview(request):
     params['context'] = 'viewer'
 
     payload = {
-        'project': 'elmyra.ip.access.epo',
+        'project': 'patzilla.access.epo',
         'embed_options': json.dumps({
             'matchdict': dict(matchdict),
             'params': dict(params),
@@ -325,7 +325,7 @@ def jump_office(request):
         document_number=document_number, office=office, service=service))
 
 
-@view_config(route_name='admin-user-create', renderer='elmyra.ip.access.epo:templates/admin/user-create.html')
+@view_config(route_name='admin-user-create', renderer='patzilla.access.epo:templates/admin/user-create.html')
 def admin_user_create(request):
 
     success = False
@@ -380,7 +380,7 @@ def admin_user_create(request):
     tplvars['error'] = asbool(tplvars['error'])
     return tplvars
 
-@view_config(route_name='login', renderer='elmyra.ip.access.epo:templates/login.html')
+@view_config(route_name='login', renderer='patzilla.access.epo:templates/login.html')
 def login_page(request):
     tplvars = {
         'username': request.params.get('username', ''),
@@ -389,31 +389,31 @@ def login_page(request):
     }
     return tplvars
 
-@view_config(route_name='help-shortcuts', renderer='elmyra.ip.access.epo:templates/help.html')
+@view_config(route_name='help-shortcuts', renderer='patzilla.access.epo:templates/help.html')
 def help_shortcuts(request):
     return {}
 
-@view_config(route_name='help-ificlaims', renderer='elmyra.ip.access.epo:templates/help/ificlaims.html')
+@view_config(route_name='help-ificlaims', renderer='patzilla.access.epo:templates/help/ificlaims.html')
 def help_ificlaims(request):
     return {}
 
 def favicon_view(request):
     # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
-    icon = resource_filename('elmyra.ip.access.epo', 'static/favicon.ico')
+    icon = resource_filename('patzilla.access.epo', 'static/favicon.ico')
     if os.path.isfile(icon):
         return FileResponse(icon, request=request)
     else:
         return HTTPNotFound()
 
-@view_config(name='patentsearch-old', renderer='elmyra.ip.access.epo:templates/app.html')
+@view_config(name='patentsearch-old', renderer='patzilla.access.epo:templates/app.html')
 def ops_chooser(request):
     url = route_path('patentsearch', request, _query=request.params)
     return HTTPFound(location=url)
 
-@view_config(name='portfolio-demo', renderer='elmyra.ip.access.epo:templates/portfolio-demo.mako')
+@view_config(name='portfolio-demo', renderer='patzilla.access.epo:templates/portfolio-demo.mako')
 def portfolio(request):
-    return {'project': 'elmyra.ip.access.epo'}
+    return {'project': 'PatZilla'}
 
-@view_config(name='angry-cats', renderer='elmyra.ip.access.epo:templates/angry-cats.mako')
+@view_config(name='angry-cats', renderer='patzilla.access.epo:templates/angry-cats.mako')
 def angry_cats(request):
     return {}

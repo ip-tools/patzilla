@@ -11,12 +11,12 @@ import requests
 from pprint import pprint
 from beaker.cache import cache_region
 from requests.exceptions import RequestException
-from elmyra.ip.access.epo.imageutil import to_png
-from elmyra.ip.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
-from elmyra.ip.access.generic.search import GenericSearchResponse, GenericSearchClient
-from elmyra.ip.access.ificlaims import get_ificlaims_client
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.access.epo.imageutil import to_png
+from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
+from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
+from patzilla.access.ificlaims import get_ificlaims_client
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 

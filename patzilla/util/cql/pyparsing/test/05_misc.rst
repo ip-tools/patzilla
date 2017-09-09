@@ -7,7 +7,7 @@ CQL pyparsing parser tests: Miscellaneous and errors
 
 This tests miscellaneous query features and erroneous queries.
 
->>> from elmyra.ip.util.cql.pyparsing import CQL
+>>> from patzilla.util.cql.pyparsing import CQL
 
 
 Queries with UTF-8 characters

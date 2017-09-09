@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2016 Andreas Motl, Elmyra UG
-from elmyra.ip.util.cql.knowledge import datasource_indexnames
-from elmyra.ip.util.date import parse_date_within, iso_to_german, year_range_to_within
+from patzilla.util.cql.knowledge import datasource_indexnames
+from patzilla.util.date import parse_date_within, iso_to_german, year_range_to_within
 
 def pair_to_cql(datasource, key, value):
 

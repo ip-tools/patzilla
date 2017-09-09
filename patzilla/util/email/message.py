@@ -7,7 +7,7 @@ import textwrap
 import jinja2
 from copy import deepcopy
 from core import build_email, send_email
-from elmyra.ip.util.config import read_config, to_list
+from patzilla.util.config import read_config, to_list
 
 log = logging.getLogger(__name__)
 

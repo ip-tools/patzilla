@@ -3,9 +3,9 @@
 import re
 import types
 from copy import copy
-from elmyra.ip.util.numbers.denormalize import denormalize_patent_wo
-from elmyra.ip.util.numbers.helper import pad_left, trim_leading_zeros, fullyear_from_year
-from elmyra.ip.util.numbers.common import split_patent_number, join_patent
+from patzilla.util.numbers.denormalize import denormalize_patent_wo
+from patzilla.util.numbers.helper import pad_left, trim_leading_zeros, fullyear_from_year
+from patzilla.util.numbers.common import split_patent_number, join_patent
 
 """
 Normalize patent- and document-numbers.

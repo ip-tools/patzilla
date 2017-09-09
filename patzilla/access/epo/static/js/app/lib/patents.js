@@ -14,7 +14,7 @@ function patent_number_strip_kindcode(patent_number) {
     return patent_number;
 }
 
-// Derived from elmyra.ip.util.numbers.common.
+// Derived from patzilla.util.numbers.common.
 // Also handles DE000B0012324MAZ, IN2012KN00054A.
 var patent_number_pattern = /^(\D\D)(\d*\D{0,2}[\d.]+?)([a-zA-Z].{0,2})?(_.+)?$/;
 var patent_number_pattern_groups = ['country', 'number', 'kind', 'ext'];

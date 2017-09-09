@@ -5,7 +5,7 @@ from ConfigParser import NoOptionError
 from pyramid.httpexceptions import HTTPBadGateway
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
-from elmyra.ip.access.depatech.client import DepaTechClient
+from patzilla.access.depatech.client import DepaTechClient
 
 logger = logging.getLogger(__name__)
 

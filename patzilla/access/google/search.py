@@ -7,8 +7,8 @@ import sys
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
-from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.util.expression.keywords import keywords_from_boolean_expression
+from patzilla.util.numbers.normalize import normalize_patent
 
 
 """

@@ -10,9 +10,9 @@ from lxml.builder import E
 from cornice.util import to_list
 from beaker.cache import cache_region, region_invalidate
 from pyramid.httpexceptions import HTTPNotFound
-from elmyra.ip.util.network.requests_xmlrpclib import RequestsTransport
-from elmyra.ip.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
-from elmyra.web.util.xmlrpclib import XmlRpcTimeoutServer
+from patzilla.util.network.requests_xmlrpclib import RequestsTransport
+from patzilla.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
+from patzilla.util.web.util.xmlrpclib import XmlRpcTimeoutServer
 
 log = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import parser as cheshire3_parser
 from parser import SearchClause, CQLParser, Diagnostic
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.util.numbers.normalize import normalize_patent
 
 
 class SmartSearchClause(SearchClause):

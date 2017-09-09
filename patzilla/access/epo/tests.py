@@ -12,4 +12,4 @@ class TestMyView(unittest.TestCase):
         from .views import navigator_standalone
         request = testing.DummyRequest()
         info = navigator_standalone(request)
-        self.assertEqual(info['project'], 'elmyra.ip.access.epo')
+        self.assertEqual(info['project'], 'PatZilla')

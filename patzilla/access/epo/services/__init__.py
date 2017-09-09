@@ -2,13 +2,13 @@
 # (c) 2013-2016 Andreas Motl, Elmyra UG
 import json
 import logging
-from elmyra.ip.util.cql.pyparsing import CQL
-from elmyra.ip.util.cql.util import should_be_quoted
-from elmyra.ip.util.data.container import unique_sequence
-from elmyra.ip.util.expression.keywords import clean_keyword
-from elmyra.ip.util.python import _exception_traceback
-from elmyra.ip.access.epo.ops import ops_keyword_fields
-from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
+from patzilla.util.cql.pyparsing import CQL
+from patzilla.util.cql.util import should_be_quoted
+from patzilla.util.data.container import unique_sequence
+from patzilla.util.expression.keywords import clean_keyword
+from patzilla.util.python import _exception_traceback
+from patzilla.access.epo.ops import ops_keyword_fields
+from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 
 log = logging.getLogger(__name__)
 

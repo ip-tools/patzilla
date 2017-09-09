@@ -142,17 +142,17 @@ setup(name='PatZilla',
       url='',
       keywords='web wsgi pylons pyramid',
       packages=find_packages(),
-      #packages=['elmyra.ip.access.epo'],
+      #packages=['patzilla.access.epo'],
       include_package_data=True,
       package_data={
-          'elmyra.ip.access.epo': [
+          'patzilla.access.epo': [
               'resources/*.*',
               'templates/*.mako',
               'static/js/**/*.js', 'static/js/**/*.map', 'static/js/**/*.swf', '**/**/*.css',
               '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg',
               'static/widget/**/**/*.*',
           ],
-          'elmyra.ip.util.render': ['*.js'],
+          'patzilla.util.render': ['*.js'],
       },
       zip_safe=False,
       test_suite='nose.collector',
@@ -165,10 +165,10 @@ setup(name='PatZilla',
 
       entry_points={
         'paste.app_factory': [
-            'main = elmyra.ip.access.epo:main',
+            'main = patzilla.access.epo:main',
             ],
         'beaker.backends': [
-            'mongodb = elmyra.ip.util.database.beaker_mongodb:MongoDBNamespaceManager',
+            'mongodb = patzilla.util.database.beaker_mongodb:MongoDBNamespaceManager',
             ],
         'console_scripts': [
             ],

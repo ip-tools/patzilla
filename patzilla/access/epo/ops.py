@@ -9,10 +9,10 @@ from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest
-from elmyra.ip.access.epo.util import object_attributes_to_dict
-from elmyra.ip.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
-from elmyra.ip.access.generic.exceptions import NoResultsException
-from elmyra.ip.util.numbers.common import decode_patent_number, split_patent_number
+from patzilla.access.epo.util import object_attributes_to_dict
+from patzilla.access.epo.imageutil import pdf_join, pdf_set_metadata, pdf_make_metadata
+from patzilla.access.generic.exceptions import NoResultsException
+from patzilla.util.numbers.common import decode_patent_number, split_patent_number
 
 log = logging.getLogger(__name__)
 

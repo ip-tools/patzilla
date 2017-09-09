@@ -12,10 +12,10 @@ see also:
 - https://confluence.ificlaims.com:8090/display/PUB20beta/2016/02/29/Understanding+the+SOLR+Result+Set+-+sort+parameter
 
 
->>> from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
->>> from elmyra.ip.access.ificlaims.expression import IFIClaimsGrammar, IFIClaimsExpression
+>>> from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
+>>> from patzilla.access.ificlaims.expression import IFIClaimsGrammar, IFIClaimsExpression
 >>> def CQL(expression):
-...     from elmyra.ip.util.cql.pyparsing import CQL as UpstreamCQL
+...     from patzilla.util.cql.pyparsing import CQL as UpstreamCQL
 ...     return UpstreamCQL(expression, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
 
 

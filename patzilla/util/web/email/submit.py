@@ -4,9 +4,9 @@ import logging
 from email.utils import formataddr
 from validate_email import validate_email
 from pyramid.threadlocal import get_current_request
-from elmyra.ip.util.config import read_config, read_list, to_list
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.email.message import EmailMessage
+from patzilla.util.config import read_config, read_list, to_list
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.email.message import EmailMessage
 
 log = logging.getLogger(__name__)
 

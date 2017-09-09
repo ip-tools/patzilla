@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
-from elmyra.ip.util.cql.pyparsing.parser import wildcards
+from patzilla.util.cql.pyparsing.parser import wildcards
 
 def clean_keyword(keyword):
     return keyword.strip(wildcards + ' "()')

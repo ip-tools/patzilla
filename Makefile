@@ -1,4 +1,4 @@
-#VERSION := $(shell cat elmyra.ip.access.epo/elmyra/ip/version.py | awk '{ print $$3 }' | tr -d "'")
+#VERSION := $(shell cat patzilla/version.py | awk '{ print $$3 }' | tr -d "'")
 #$(error VERSION=$(VERSION))
 
 js:
@@ -6,64 +6,64 @@ js:
 
 	# standalone application
 	node_modules/.bin/uglifyjs \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/standalone.js \
+		patzilla/access/epo/static/js/app/*.js \
+		patzilla/access/epo/static/js/app/**/*.js \
+		patzilla/access/epo/static/js/components/*.js \
+		patzilla/access/epo/static/js/boot/standalone.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-standalone.min.map \
+		--source-map patzilla/access/epo/static/js/o-standalone.min.map \
 		--source-map-url /static/js/o-standalone.min.map \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-standalone.min.js
+		> patzilla/access/epo/static/js/o-standalone.min.js
 
 	# embedded application
 	node_modules/.bin/uglifyjs \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/app/**/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/components/*.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/boot/embedded.js \
+		patzilla/access/epo/static/js/app/*.js \
+		patzilla/access/epo/static/js/app/**/*.js \
+		patzilla/access/epo/static/js/components/*.js \
+		patzilla/access/epo/static/js/boot/embedded.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		--source-map elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-embedded.min.map \
+		--source-map patzilla/access/epo/static/js/o-embedded.min.map \
 		--source-map-url /static/js/o-embedded.min.map \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/o-embedded.min.js
+		> patzilla/access/epo/static/js/o-embedded.min.js
 
 	# configuration
 	node_modules/.bin/uglifyjs \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.js \
+		patzilla/access/epo/static/js/config.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js
+		> patzilla/access/epo/static/js/config.min.js
 
 	# issue reporter
 	node_modules/.bin/uglifyjs \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.js \
+		patzilla/access/epo/static/js/issue-reporter.js \
 		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
 		--mangle --compress \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.min.js
+		> patzilla/access/epo/static/js/issue-reporter.min.js
 
 	# url cleaner
 	node_modules/.bin/uglifyjs \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.js \
+		patzilla/access/epo/templates/urlcleaner.js \
 		--mangle --compress \
-		> elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js
+		> patzilla/access/epo/templates/urlcleaner.min.js
 
 	-git diff --quiet --exit-code || git commit \
 		Makefile \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/config.min.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/issue-reporter.min.js \
-		elmyra.ip.access.epo/elmyra/ip/access/epo/templates/urlcleaner.min.js \
+		patzilla/access/epo/static/js/config.min.js \
+		patzilla/access/epo/static/js/issue-reporter.min.js \
+		patzilla/access/epo/templates/urlcleaner.min.js \
 		-uno --untracked-files=no \
 		--message='release: minify javascript resources'
 
 sdist:
-	cd elmyra.ip.access.epo; python setup.py sdist
+	python setup.py sdist
 	cd js.jquery_shorten; python setup.py sdist
 	cd js.purl; python setup.py sdist
 	cd js.underscore_string; python setup.py sdist
 
 upload:
-	rsync -auv */dist/elmyra.ip.access.epo-* root@almera.elmyra.de:/root/install/ops-chooser/
+	rsync -auv */dist/PatZilla-* root@almera.elmyra.de:/root/install/PatZilla/
 
 setup-maintenance:
 	source .venv27/bin/activate; pip install cuisine
@@ -97,15 +97,16 @@ test:
 		--doctest-tests         \
 		--doctest-extension=rst \
 		--doctest-options=doctestencoding=utf-8,+ELLIPSIS,+NORMALIZE_WHITESPACE,+REPORT_UDIFF \
-		--where=elmyra.ip.access.epo \
-		--exclude-dir=elmyra/ip/util/database \
-		--exclude-dir=elmyra/ip/access/epo/static \
-		--exclude-dir=elmyra/ip/access/epo/templates \
-		--exclude-dir=elmyra/web/uwsgi \
+		--exclude-dir=patzilla/access/epo/static \
+		--exclude-dir=patzilla/access/epo/templates \
+		--exclude-dir=patzilla/util/database \
+		--exclude-dir=patzilla/util/web/uwsgi \
 		--nocapture \
 		--nologcapture \
 		--verbose \
 		$(options)
+
+#		--where=patzilla.access.epo \
 
 # +REPORT_ONLY_FIRST_FAILURE
 
@@ -134,8 +135,8 @@ mongodb-ftpro-import:
 	mongoimport --db ipsuite_development --collection ftpro_ipc_class < var/tmp/mongodb/ftpro_ipc_class.mongodb
 
 sloccount:
-	sloccount elmyra.ip.access.epo
-	sloccount --addlang js elmyra.ip.access.epo/elmyra/ip/access/epo/static/js/{app,boot,components,config.js,issue-reporter.js}
+	sloccount patzilla
+	sloccount --addlang js patzilla/access/epo/static/js/{app,boot,components,config.js,issue-reporter.js}
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'

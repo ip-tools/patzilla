@@ -2,10 +2,10 @@
 # (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 from pprint import pprint
 from ConfigParser import NoOptionError
-from elmyra.ip.util.config import read_config
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.version import __VERSION__
-from elmyra.ip.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
+from patzilla.util.config import read_config
+from patzilla.util.data.container import SmartBunch
+from patzilla.version import __VERSION__
+from patzilla.access.epo.util import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
 from pyramid.config import Configurator
 
 def main(global_config, **settings):
@@ -35,22 +35,22 @@ def main(global_config, **settings):
     #config.include("akhet.static")
 
     # Register subsystem components
-    config.include("elmyra.web.identity")
-    config.include("elmyra.ip.util.database.beaker_mongodb_gridfs")
-    config.include("elmyra.web.pyramid")
-    config.include("elmyra.ip.access.epo.opaquelinks")
+    config.include("patzilla.util.web.identity")
+    config.include("patzilla.util.database.beaker_mongodb_gridfs")
+    config.include("patzilla.util.web.pyramid")
+    config.include("patzilla.access.epo.opaquelinks")
 
     if 'ops' in datasources:
-        config.include("elmyra.ip.access.epo.client")
+        config.include("patzilla.access.epo.client")
 
     if 'depatisconnect' in datasources:
-        config.include("elmyra.ip.access.dpma.depatisconnect")
+        config.include("patzilla.access.dpma.depatisconnect")
 
     if 'ificlaims' in datasources:
-        config.include("elmyra.ip.access.ificlaims.clientpool")
+        config.include("patzilla.access.ificlaims.clientpool")
 
     if 'depatech' in datasources:
-        config.include("elmyra.ip.access.depatech.clientpool")
+        config.include("patzilla.access.depatech.clientpool")
 
     config.add_renderer('.html', 'pyramid.mako_templating.renderer_factory')
     config.add_renderer('xml', XmlRenderer)

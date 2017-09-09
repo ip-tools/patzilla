@@ -5,7 +5,7 @@
 depa.tech expression parser tests
 =================================
 
->>> from elmyra.ip.access.depatech.expression import DepaTechParser, DepaTechExpression
+>>> from patzilla.access.depatech.expression import DepaTechParser, DepaTechExpression
 
 
 

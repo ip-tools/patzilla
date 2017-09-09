@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-# elmyra.ip.access.ificlaims.cli: Adapter to search provider "IFI Claims Direct"
+# patzilla.access.ificlaims.cli: Adapter to search provider "IFI Claims Direct"
 import json
 import logging
 from pprint import pprint
-from elmyra.ip.access.ificlaims.clientpool import IFIClaimsClientFactory
+from patzilla.access.ificlaims.clientpool import IFIClaimsClientFactory
 
 if __name__ == '__main__':
     """
     Synopsis::
 
-        python elmyra/ip/access/ificlaims/commands.py | jq .
-        python elmyra/ip/access/ificlaims/commands.py | xmllint --format -
+        python patzilla/access/ificlaims/commands.py | jq .
+        python patzilla/access/ificlaims/commands.py | xmllint --format -
 
     Todo:
         - Pass output type (json/xml) via parameter

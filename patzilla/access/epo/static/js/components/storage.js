@@ -34,8 +34,8 @@ StoragePlugin = Marionette.Controller.extend({
                 var backup = {
                     database: database,
                     metadata: {
-                        type: 'elmyra.ipsuite.navigator.database',
-                        description: 'Database dump of Elmyra IP Navigator',
+                        type: 'patzilla.navigator.database',
+                        description: 'IP Navigator database dump',
                         software_version: opsChooserApp.config.get('setting.app.software.version'),
                         database_version: _this.database_version,
                         database_name: localforage.config('name'),
@@ -118,8 +118,16 @@ StoragePlugin = Marionette.Controller.extend({
         //var filetype = backup && backup['metadata'] && backup['metadata']['type'];
         var filetype = dotresolve(backup, 'metadata.type');
         var database = dotresolve(backup, 'database');
-        if (filetype != 'elmyra.ipsuite.navigator.database' || !database) {
-            var message = 'ERROR: Database dump format is invalid';
+
+        if (filetype == 'patzilla.navigator.database' || filetype == 'elmyra.ipsuite.navigator.database') {
+            var message = 'ERROR: Database dump format "' + filetype + '" is invalid.';
+            console.error(message);
+            _ui.notify(message, {type: 'error'});
+            return;
+        }
+
+        if (!database) {
+            var message = 'ERROR: Database is empty.';
             console.error(message);
             _ui.notify(message, {type: 'error'});
             return;

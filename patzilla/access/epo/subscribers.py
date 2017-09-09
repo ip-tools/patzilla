@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2013,2014 Andreas Motl, Elmyra UG
 import logging
-from elmyra.ip.util.config import read_config, read_list, asbool
-from elmyra.ip.util.data.container import SmartBunch
+from patzilla.util.config import read_config, read_list, asbool
+from patzilla.util.data.container import SmartBunch
 from pyramid.threadlocal import get_current_request
 from pyramid.url import route_url
 from akhet.urlgenerator import URLGenerator as ApplicationURLGenerator

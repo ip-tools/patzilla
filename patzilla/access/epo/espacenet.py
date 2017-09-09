@@ -3,8 +3,8 @@
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
-from elmyra.ip.util.network.browser import regular_user_agent
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.util.network.browser import regular_user_agent
+from patzilla.util.numbers.normalize import normalize_patent
 
 
 """

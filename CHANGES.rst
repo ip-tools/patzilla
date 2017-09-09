@@ -1,6 +1,6 @@
-============================
-elmyra.ip.access.epo CHANGES
-============================
+====================
+IP Navigator CHANGES
+====================
 
 development
 ===========
@@ -13,6 +13,7 @@ development
 - Pull application-wide upstream API authentication credentials from datasource settings
 - Trim down automatic user provisioning
 - Application configuration file cleanup
+- Namespace refactoring
 
 2017-09-08 0.135.0
 ==================

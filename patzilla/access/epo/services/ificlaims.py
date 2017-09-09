@@ -11,15 +11,15 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from elmyra.ip.access.epo.services import propagate_keywords
-from elmyra.ip.access.epo.services.util import request_to_options
-from elmyra.ip.access.generic.exceptions import NoResultsException, SearchException
-from elmyra.ip.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
-from elmyra.ip.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl
-from elmyra.ip.access.ificlaims.expression import should_be_quoted, IFIClaimsParser
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.data.zip import zip_multi
-from elmyra.ip.util.python import _exception_traceback
+from patzilla.access.epo.services import propagate_keywords
+from patzilla.access.epo.services.util import request_to_options
+from patzilla.access.generic.exceptions import NoResultsException, SearchException
+from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
+from patzilla.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl
+from patzilla.access.ificlaims.expression import should_be_quoted, IFIClaimsParser
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.zip import zip_multi
+from patzilla.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
 
@@ -136,7 +136,7 @@ def ificlaims_published_data_search_handler(request):
         query.expression = '"%s"' % query.expression
 
     # Lazy-fetch more entries
-    # TODO: get from elmyra.ip.access.ificlaims
+    # TODO: get from patzilla.access.ificlaims
     limit = 250
     offset_local = int(request.params.get('range_begin', 0))
     offset_remote = int(offset_local / limit) * limit

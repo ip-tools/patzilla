@@ -10,11 +10,11 @@ import mechanize
 import cookielib
 from BeautifulSoup import BeautifulSoup
 from xlrd import open_workbook
-from elmyra.ip.access.generic.search import GenericSearchResponse
-from elmyra.ip.util.date import from_german, date_iso
-from elmyra.ip.util.network.browser import regular_user_agent
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.util.python import _exception_traceback
+from patzilla.access.generic.search import GenericSearchResponse
+from patzilla.util.date import from_german, date_iso
+from patzilla.util.network.browser import regular_user_agent
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.python import _exception_traceback
 
 
 """

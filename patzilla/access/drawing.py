@@ -3,16 +3,16 @@
 import logging
 from beaker.cache import cache_region
 from pyramid.httpexceptions import HTTPInternalServerError, HTTPNotFound
-from elmyra.ip.util.numbers.common import split_patent_number
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.access.epo.imageutil import to_png
-from elmyra.ip.access.epo.ops import get_ops_image
-from elmyra.ip.access.uspto.image import fetch_first_drawing as get_uspto_image
-from elmyra.ip.access.cipo.drawing import fetch_first_drawing as get_cipo_image
+from patzilla.util.numbers.common import split_patent_number
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.access.epo.imageutil import to_png
+from patzilla.access.epo.ops import get_ops_image
+from patzilla.access.uspto.image import fetch_first_drawing as get_uspto_image
+from patzilla.access.cipo.drawing import fetch_first_drawing as get_cipo_image
 
 log = logging.getLogger(__name__)
 
-# TODO: Refactor to elmyra.ip.access.composite.drawing
+# TODO: Refactor to patzilla.access.composite.drawing
 
 @cache_region('longer')
 def get_drawing_png(document, page, kind):

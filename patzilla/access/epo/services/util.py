@@ -10,18 +10,18 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
-from elmyra.ip.access.depatech.expression import DepaTechExpression
-from elmyra.ip.access.google.search import GooglePatentsExpression
-from elmyra.ip.access.ificlaims.expression import IFIClaimsExpression
-from elmyra.ip.navigator.export import Dossier, DossierXlsx
-from elmyra.ip.util.config import read_list
-from elmyra.ip.util.cql.util import pair_to_cql
-from elmyra.ip.util.data.container import SmartBunch
-from elmyra.ip.util.expression.keywords import keywords_from_boolean_expression
-from elmyra.ip.util.numbers.numberlists import parse_numberlist, normalize_numbers
-from elmyra.ip.util.python import exception_traceback
-from elmyra.ip.util.xml.format import pretty_print
-from elmyra.web.email.submit import email_issue_report
+from patzilla.access.depatech.expression import DepaTechExpression
+from patzilla.access.google.search import GooglePatentsExpression
+from patzilla.access.ificlaims.expression import IFIClaimsExpression
+from patzilla.navigator.export import Dossier, DossierXlsx
+from patzilla.util.config import read_list
+from patzilla.util.cql.util import pair_to_cql
+from patzilla.util.data.container import SmartBunch
+from patzilla.util.expression.keywords import keywords_from_boolean_expression
+from patzilla.util.numbers.numberlists import parse_numberlist, normalize_numbers
+from patzilla.util.python import exception_traceback
+from patzilla.util.xml.format import pretty_print
+from patzilla.util.web.email.submit import email_issue_report
 
 log = logging.getLogger(__name__)
 

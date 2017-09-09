@@ -7,10 +7,10 @@ from pkg_resources import resource_filename
 from simplejson import JSONDecodeError
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPBadRequest
-from elmyra.ip.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
-from elmyra.ip.util.date import datetime_iso, unixtime_to_datetime
+from patzilla.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
+from patzilla.util.date import datetime_iso, unixtime_to_datetime
 try:
-    from elmyra.web.uwsgi.uwsgidecorators import postfork
+    from patzilla.util.web.uwsgi.uwsgidecorators import postfork
 except ImportError:
     class postfork(object):
         def __init__(self, f):
@@ -32,7 +32,7 @@ def includeme(config):
     signer = JwtSigner()
 
     # v1: always create a key
-    #signer.genkey('12345', salt='elmyra.ipsuite.navigator.opaquelinks', keysize=768)
+    #signer.genkey('12345', salt='patzilla.navigator.opaquelinks', keysize=768)
 
     # v2: have a key on the filesystem
     keyfile = resource_filename(__name__, 'resources/opaquelinks.pem')

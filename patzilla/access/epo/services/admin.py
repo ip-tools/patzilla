@@ -5,9 +5,9 @@ import arrow
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.response import Response
-from elmyra.ip.access.epo.ops import ops_service_usage
-from elmyra.ip.util.date import week_range, month_range, year_range
-from elmyra.web.identity.store import User
+from patzilla.access.epo.ops import ops_service_usage
+from patzilla.util.date import week_range, month_range, year_range
+from patzilla.util.web.identity.store import User
 
 log = logging.getLogger(__name__)
 

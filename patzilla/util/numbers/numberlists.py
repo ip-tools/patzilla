@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import re
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.util.numbers.normalize import normalize_patent
 
 def parse_numberlist(rawdata):
     pattern = re.compile(u'[,\n]')

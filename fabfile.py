@@ -24,7 +24,7 @@ def install(version, target):
         abort('Task argument "target" is required.')
 
     current_dir = os.path.dirname(__file__)
-    project_path = os.path.join(current_dir, 'elmyra.ip.access.epo')
+    project_path = current_dir
     pkg_version = setuptools_get_version(project_path)
     pkg_name = setuptools_get_name(project_path)
 
@@ -39,8 +39,8 @@ def install(version, target):
 
     if response == 'y':
 
-        source_package = '/root/install/ops-chooser/elmyra.ip.access.epo-{version}.tar.gz'.format(version=version)
-        source_config = './elmyra.ip.access.epo/production.ini.tpl'
+        source_package = '/root/install/PatZilla/PatZilla-{version}.tar.gz'.format(version=version)
+        source_config = './patzilla/config/production.ini.tpl'
 
         target_path = '/opt/elmyra/patentsearch/sites/' + target
         venv_path = target_path + '/.venv27'
@@ -56,9 +56,9 @@ def install(version, target):
             #setup_package('which', venv_path)
             # TODO: put these packages to a more convenient location
 
-        setup_package('/root/install/ops-chooser/which*', venv_path)
-        setup_package('/root/install/ops-chooser/js.*', venv_path)
-        setup_package('/root/install/ops-chooser/fanstatic*', venv_path)
+        setup_package('/root/install/PatZilla/which*', venv_path)
+        setup_package('/root/install/PatZilla/js.*', venv_path)
+        setup_package('/root/install/PatZilla/fanstatic*', venv_path)
         setup_package(source_package, venv_path)
 
         upload_config(source_config, target_path)

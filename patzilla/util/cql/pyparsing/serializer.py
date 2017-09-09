@@ -5,11 +5,11 @@ import types
 import logging
 import StringIO
 from pyparsing import ParseResults
-from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
-from elmyra.ip.util.cql.pyparsing.util import walk_token_results, token_to_triple
-from elmyra.ip.util.cql.knowledge import indexes_publication_number
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.util.data.convert import shrink_list
+from patzilla.util.cql.pyparsing.parser import CQLGrammar
+from patzilla.util.cql.pyparsing.util import walk_token_results, token_to_triple
+from patzilla.util.cql.knowledge import indexes_publication_number
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.data.convert import shrink_list
 
 log = logging.getLogger(__name__)
 

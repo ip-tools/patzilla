@@ -6,10 +6,10 @@
 import json
 import logging
 from collections import OrderedDict
-from elmyra.ip.access.ificlaims.client import ificlaims_fetch, IFIClaimsException
-from elmyra.ip.util.numbers.common import split_patent_number
-from elmyra.ip.util.python import _exception_traceback
-from elmyra.ip.util.xml.format import pretty_print
+from patzilla.access.ificlaims.client import ificlaims_fetch, IFIClaimsException
+from patzilla.util.numbers.common import split_patent_number
+from patzilla.util.python import _exception_traceback
+from patzilla.util.xml.format import pretty_print
 
 logger = logging.getLogger(__name__)
 

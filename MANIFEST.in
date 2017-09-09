@@ -1,10 +1,10 @@
 include *.txt *.ini *.cfg *.rst
-recursive-include elmyra/ip/access/epo *.ico *.png *.css *.gif *.jpg *.svg *.pt *.txt *.mak *.mako *.html *.xml *.js *.map *.swf *.pem
-exclude elmyra/ip/access/epo/static/js/app/*.js
-exclude elmyra/ip/access/epo/static/js/app/**/*.js
-exclude elmyra/ip/access/epo/static/js/config.js
-exclude elmyra/ip/access/epo/static/js/issue-reporter.js
-exclude elmyra/ip/access/epo/templates/urlcleaner.js
-prune elmyra/ip/access/epo/static/js/components
-prune elmyra/ip/access/epo/static/js/ipsuite
-recursive-include elmyra/ip/util/render *.js
+recursive-include patzilla/access/epo *.ico *.png *.css *.gif *.jpg *.svg *.pt *.txt *.mak *.mako *.html *.xml *.js *.map *.swf *.pem
+exclude patzilla/access/epo/static/js/app/*.js
+exclude patzilla/access/epo/static/js/app/**/*.js
+exclude patzilla/access/epo/static/js/config.js
+exclude patzilla/access/epo/static/js/issue-reporter.js
+exclude patzilla/access/epo/templates/urlcleaner.js
+prune patzilla/access/epo/static/js/components
+prune patzilla/access/epo/static/js/ipsuite
+recursive-include patzilla/util/render *.js

@@ -32,7 +32,7 @@ Prerequisites::
 
 Application::
 
-    cd elmyra.ip.access.epo
+    cd patzilla.access.epo
     python setup.py develop
 
 
@@ -60,22 +60,27 @@ Start database::
 Start web server::
 
     source .venv27/bin/activate
-    pserve elmyra.ip.access.epo/development.ini --reload
+    pserve patzilla.access.epo/development.ini --reload
 
 
 Run tests
 =========
 ::
 
+    make test-setup
     make test
 
-    make test options='--where elmyra.ip.access.ftpro'
-    make test options='--where elmyra.ip.util.numbers.test.test_normalize'
+    make test options='--where patzilla.access.ftpro'
+    make test options='--where patzilla.util.numbers.test.test_normalize'
 
 
 Release
 =======
-::
+Cut a new release::
 
-    make release bump=minor
+    make release bump=minor         # patch,minor,major
+
+Deploy to server::
+
+    make install target=develop     # develop,staging,prod
 

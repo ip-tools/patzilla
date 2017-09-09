@@ -5,15 +5,15 @@ import sys
 import types
 import logging
 import pyparsing
-from elmyra.ip.access.epo.services import cql_prepare_query
-from elmyra.ip.util.cql.pyparsing import CQL
-from elmyra.ip.util.cql.pyparsing.parser import CQLGrammar
-from elmyra.ip.util.cql.pyparsing.util import walk_token_results
-from elmyra.ip.util.data.container import unique_sequence
-from elmyra.ip.util.date import parse_date_within, year_range_to_within, parse_date_universal
-from elmyra.ip.util.ipc.parser import IpcDecoder
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.util.python import _exception_traceback
+from patzilla.access.epo.services import cql_prepare_query
+from patzilla.util.cql.pyparsing import CQL
+from patzilla.util.cql.pyparsing.parser import CQLGrammar
+from patzilla.util.cql.pyparsing.util import walk_token_results
+from patzilla.util.data.container import unique_sequence
+from patzilla.util.date import parse_date_within, year_range_to_within, parse_date_universal
+from patzilla.util.ipc.parser import IpcDecoder
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.python import _exception_traceback
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

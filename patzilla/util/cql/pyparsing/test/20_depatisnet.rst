@@ -13,9 +13,9 @@ see also:
 .. _DEPATISnet Expert mode guide: https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 .. _DEPATISnet Expertenrecherche Handbuch: https://depatisnet.dpma.de/depatisnet/htdocs/prod/de/hilfe/recherchemodi/experten-recherche/
 
->>> from elmyra.ip.access.dpma.depatisnet import DpmaDepatisnetAccess
+>>> from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 >>> def CQL(expression):
-...     from elmyra.ip.util.cql.pyparsing import CQL as UpstreamCQL
+...     from patzilla.util.cql.pyparsing import CQL as UpstreamCQL
 ...     return UpstreamCQL(expression, keyword_fields=DpmaDepatisnetAccess.keyword_fields)
 
 

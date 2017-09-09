@@ -25,7 +25,7 @@ from pyparsing import \
     Forward, Group, Combine, Optional, ZeroOrMore, OneOrMore, \
     NotAny, Suppress, FollowedBy, StringEnd, \
     ParseResults, ParseException, removeQuotes
-from elmyra.ip.util.cql.pyparsing.util import get_literals
+from patzilla.util.cql.pyparsing.util import get_literals
 
 
 log = logging.getLogger(__name__)

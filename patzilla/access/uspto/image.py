@@ -5,9 +5,9 @@ import requests
 import urllib2
 import cookielib
 from BeautifulSoup import BeautifulSoup
-from elmyra.ip.util.network.browser import regular_user_agent
-from elmyra.ip.util.numbers.common import split_patent_number, decode_patent_number
-from elmyra.ip.util.numbers.normalize import normalize_patent
+from patzilla.util.network.browser import regular_user_agent
+from patzilla.util.numbers.common import split_patent_number, decode_patent_number
+from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 

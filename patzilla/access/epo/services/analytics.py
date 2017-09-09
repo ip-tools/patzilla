@@ -9,9 +9,9 @@ from cornice.service import Service
 from dateutil.relativedelta import relativedelta
 from jsonpointer import JsonPointer
 from transitions.core import Machine
-from elmyra.ip.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
-from elmyra.ip.access.epo.services.dpma import dpma_published_data_search
-from elmyra.ip.access.epo.services.util import make_expression_filter
+from patzilla.access.epo.ops import analytics_family, ops_published_data_search, _result_list_compact
+from patzilla.access.epo.services.dpma import dpma_published_data_search
+from patzilla.access.epo.services.util import make_expression_filter
 
 log = logging.getLogger(__name__)
 

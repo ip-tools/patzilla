@@ -4,16 +4,16 @@ import logging
 from StringIO import StringIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 from pyramid.httpexceptions import HTTPError, HTTPNotFound
-from elmyra.ip.access.uspto.image import get_images_view_url
-from elmyra.ip.util.numbers.common import decode_patent_number
-from elmyra.ip.util.numbers.normalize import normalize_patent
-from elmyra.ip.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
-from elmyra.ip.access.epo.ops import pdf_document_build
-from elmyra.ip.util.python import exception_traceback
+from patzilla.access.uspto.image import get_images_view_url
+from patzilla.util.numbers.common import decode_patent_number
+from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
+from patzilla.access.epo.ops import pdf_document_build
+from patzilla.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
 
-# TODO: Refactor to elmyra.ip.access.composite
+# TODO: Refactor to patzilla.access.composite
 def pdf_universal(patent):
 
     pdf = None
@@ -67,7 +67,7 @@ def pdf_universal(patent):
 
     return {'pdf': pdf, 'datasource': datasource, 'meta': meta}
 
-# TODO: Refactor to elmyra.ip.access.epo.ops.api
+# TODO: Refactor to patzilla.access.epo.ops.api
 def pdf_from_ops(patent, document, meta):
     # third, try building from OPS single images
     try:
