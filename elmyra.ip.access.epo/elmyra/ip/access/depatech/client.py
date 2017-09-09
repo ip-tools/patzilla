@@ -66,7 +66,7 @@ class DepaTechClient(GenericSearchClient):
         starttime = timeit.default_timer()
 
         # Define search request URI
-        # ***REMOVED***/es/deparom/_search?q=AB:cloud-computing
+        # https://api.depa.tech/es/deparom/_search?q=AB:cloud-computing
         uri     = self.uri + self.path_search
 
         # Define search request parameters

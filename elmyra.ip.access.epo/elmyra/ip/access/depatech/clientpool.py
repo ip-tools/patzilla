@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-from ConfigParser import NoOptionError
 import logging
+from ConfigParser import NoOptionError
 from pyramid.httpexceptions import HTTPBadGateway
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
