@@ -11,7 +11,7 @@ from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 from patzilla.access.epo.espacenet import espacenet_claims, espacenet_description
-from patzilla.navigator.services import cql_prepare_query, propagate_keywords
+from patzilla.navigator.services import cql_prepare_query, propagate_keywords, handle_generic_exception
 from patzilla.navigator.services.util import request_to_options
 
 log = logging.getLogger(__name__)
@@ -94,14 +94,7 @@ def depatisnet_published_data_search_handler(request):
         return ex.data
 
     except Exception as ex:
-        http_response = None
-        if hasattr(ex, 'http_response'):
-            http_response = ex.http_response
-        reason = u'{}: {}'.format(ex.__class__.__name__, ex.message)
-        log.error(u'DEPATISnet search error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
-            query, reason, http_response, _exception_traceback()))
-
-        message = u'An exception occurred while processing your query<br/>Reason: {}'.format(reason)
+        message = handle_generic_exception(request, ex, 'depatisnet-search', query)
         request.errors.add('depatisnet-search', 'search', message)
 
 

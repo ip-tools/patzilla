@@ -35,7 +35,10 @@ def setup_mongoengine(event):
     registry = event.app.registry
     mongodb_uri = registry.settings.get('mongodb.ipsuite.uri')
     mongodb_database = parse_uri(mongodb_uri)['database']
-    mongoengine_connect(mongodb_database, host=mongodb_uri)
+    try:
+        mongoengine_connect(mongodb_database, host=mongodb_uri)
+    except Exception as ex:
+        log.critical('Failed to connect to MongoDB database at %s. Reason: %s', mongodb_uri, ex)
 
 # provide lowlevel access to the pymongo connection via ``request.db``
 def setup_pymongo(event):

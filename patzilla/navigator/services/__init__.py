@@ -109,3 +109,22 @@ def scan_keywords(op, keywords):
     hasattr(op, 'leftOperand') and scan_keywords(op.leftOperand, keywords)
     hasattr(op, 'rightOperand') and scan_keywords(op.rightOperand, keywords)
 
+
+def handle_generic_exception(request, ex, backend_name, query):
+
+    http_response = None
+    if hasattr(ex, 'http_response'):
+        http_response = ex.http_response
+
+    module_name = ex.__class__.__module__
+    class_name = ex.__class__.__name__
+    reason = u'{}.{}: {}'.format(module_name, class_name, ex.message)
+
+    log.critical(u'{backend_name} error: query="{query}", reason={reason}\nresponse:\n{http_response}\nexception:\n{exception}'.format(
+        exception=_exception_traceback(), **locals()))
+
+    message = u'An exception occurred while processing your query.<br/>\nReason: {}<br/><br/>\n'.format(reason)
+    if module_name == 'pymongo.errors':
+        message += 'Error connecting to cache database. Please report this problem to us.'
+
+    return message

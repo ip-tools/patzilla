@@ -9,7 +9,7 @@ from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from patzilla.access.depatech.client import depatech_search, LoginException, depatech_crawl
 from patzilla.access.depatech.expression import DepaTechParser, should_be_quoted
-from patzilla.navigator.services import propagate_keywords
+from patzilla.navigator.services import propagate_keywords, handle_generic_exception
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.util.data.container import SmartBunch
@@ -94,6 +94,9 @@ def depatech_published_data_search_handler(request):
         request.errors.add('depatech-search', 'internals', message)
         log.error(request.errors)
 
+    except Exception as ex:
+        message = handle_generic_exception(request, ex, 'depatech-search', query)
+        request.errors.add('depatech-search', 'search', message)
 
 @depatech_published_data_crawl_service.get(accept="application/json")
 @depatech_published_data_crawl_service.post(accept="application/json")

@@ -11,7 +11,7 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from patzilla.navigator.services import propagate_keywords
+from patzilla.navigator.services import propagate_keywords, handle_generic_exception
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
@@ -182,6 +182,9 @@ def ificlaims_published_data_search_handler(request):
         request.errors.add('ificlaims-search', 'internals', message)
         log.error(request.errors)
 
+    except Exception as ex:
+        message = handle_generic_exception(request, ex, 'ificlaims-search', query)
+        request.errors.add('ificlaims-search', 'search', message)
 
 @ificlaims_published_data_crawl_service.get(accept="application/json")
 @ificlaims_published_data_crawl_service.post(accept="application/json")
