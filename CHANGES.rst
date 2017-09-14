@@ -28,6 +28,7 @@ development
 - Database export filename: naming things
 - Introduce webpack for bundling the Javascript/CSS assets
 - Mangle Javascript code into a suitable form for being webpacked
+- Update claims fulltext manipulation for DEPATISconnect
 
 2017-09-08 0.135.0
 ==================

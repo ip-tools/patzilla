@@ -206,7 +206,9 @@ def depatisconnect_claims(document_number, invalidate=False):
         claim_number = claim.xpath('@num')[0]
 
         # put number before section
-        claim.insert(0, E.span(claim_number + '. '))
+        claim_number_stripped = claim_number.lstrip('0')
+        if '<claim-text><b>{}</b>'.format(claim_number_stripped) not in ET.tostring(claim):
+            claim.insert(0, E.span(claim_number + '. '))
 
         # put some space after section
         claim.append(E.br())
