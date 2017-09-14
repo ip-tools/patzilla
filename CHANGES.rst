@@ -35,6 +35,7 @@ development
 - Reduce notification popup display time from six to four seconds
 - Introduce webpacked version of login.js
 - Fix redirect on failed logins
+- Protect sensible configuration settings from leaking into javascript environment
 
 2017-09-08 0.135.0
 ==================

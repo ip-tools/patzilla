@@ -42,6 +42,7 @@ def global_config(event):
 
     # Read system settings from configuration
     datasource_settings.datasources = read_list(application_settings.get('ip_navigator', {}).get('datasources'))
+    datasource_settings.protected_fields = read_list(application_settings.get('ip_navigator', {}).get('datasources_protected_fields'))
     for datasource in datasource_settings.datasources:
         application_settings_key = 'datasource_{name}'.format(name=datasource)
         datasource_info = application_settings.get(application_settings_key, {})

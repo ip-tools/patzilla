@@ -5,6 +5,9 @@
 [ip_navigator]
 datasources = ops, depatisconnect, ificlaims, depatech
 
+# Fields to protect from being leaked into Javascript environment
+datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, api_username, api_password
+
 
 [datasource_ops]
 

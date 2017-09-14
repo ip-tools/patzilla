@@ -7,6 +7,7 @@ from pyramid.threadlocal import get_current_request
 from patzilla.navigator.util import dict_prefix_key, dict_merge
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
+from patzilla.util.data.container import SmartBunch
 
 log = logging.getLogger(__name__)
 
@@ -286,8 +287,16 @@ class Bootstrapper(object):
         return data
 
     def datasource_settings(self):
+        """Return datasource settings accounting for sensible settings like API URI and credentials"""
         request = get_current_request()
-        return request.registry.datasource_settings
+        datasource_settings = SmartBunch.bunchify(request.registry.datasource_settings)
+        if 'protected_fields' in datasource_settings:
+            for fieldname in datasource_settings.protected_fields:
+                for name, settings in datasource_settings.datasource.iteritems():
+                    if fieldname in settings:
+                        del settings[fieldname]
+            del datasource_settings['protected_fields']
+        return datasource_settings
 
     def config_parameters(self):
 
@@ -476,8 +485,8 @@ class BackboneModelParameterFiddler(object):
         # merge hidden request parameters, e.g. "database=" gets stripped away form site.mako to avoid referrer spam
         # push current configuration state to browser history
         tplvars = boot.__dict__.copy()
-        tplvars['config'] = json.dumps(boot.config)
-        tplvars['theme']  = json.dumps(boot.theme)
+        tplvars['config'] = json.dumps(tplvars['config'])
+        tplvars['theme']  = json.dumps(tplvars['theme'])
         javascript_config = 'var navigator_configuration = {config};'.format(**tplvars)
         javascript_theme  = 'var navigator_theme = {theme};'.format(**tplvars)
         payload = '\n'.join([javascript_config, javascript_theme])
