@@ -1,12 +1,11 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2017 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
-require('notify-combined');
 var screenfull = require('screenfull');
 
 // ZeroClipboard
-var ZeroClipboard = require('ZeroClipboard');
-ZeroClipboard.config({ swfPath: require('ZeroClipboard.swf') });
+var ZeroClipboard = require('zeroclipboard/dist/ZeroClipboard.js');
+ZeroClipboard.config({ swfPath: require('zeroclipboard/dist/ZeroClipboard.swf') });
 
 // NotificationFx
 require('notificator');
@@ -43,9 +42,6 @@ UiController = Marionette.Controller.extend({
         $('.btn-popover').popover();
 
         this.setup_text_tools();
-
-        // defaults for notification popups
-        $.notify.defaults({className: 'info', showAnimation: 'fadeIn', hideAnimation: 'fadeOut', autoHideDelay: 4000, showDuration: 300});
 
         // logout button
         if (opsChooserApp.config.get('mode') == 'liveview') {

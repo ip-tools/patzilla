@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2015 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
-require('jquery-autonumeric');
+require('autonumeric');
 
 DocumentBaseController = Marionette.Controller.extend({
 

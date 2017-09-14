@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2016-2017 Andreas Motl, Elmyra UG
-var StackTrace = require('stacktrace');
+var StackTrace = require('stacktrace-js');
 
 IssueReporter = Backbone.Model.extend({
 
