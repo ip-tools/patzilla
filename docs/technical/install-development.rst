@@ -68,9 +68,10 @@ Run tests
 =========
 ::
 
-    make test-setup
+    pip install -e .[test]
     make test
 
-    make test options='--where patzilla.access.ftpro'
+    make test options='--where patzilla.access.ificlaims'
+    make test options='--where patzilla.access.depatech'
     make test options='--where patzilla.util.numbers.test.test_normalize'
 

@@ -131,12 +131,14 @@ setup(name='PatZilla',
       test_suite='nose.collector',
       install_requires=requires,
       tests_require=test_requires,
-
+      extras_require={
+          'test': test_requires,
+      },
 
       entry_points={
         'paste.app_factory': [
             'main = patzilla.navigator:main',
-            ],
+        ],
 
         # Now a Beaker builtin as per "ext:mongodb"
         #'beaker.backends': [
@@ -144,7 +146,8 @@ setup(name='PatZilla',
         #    ],
 
         'console_scripts': [
-            ],
-        },
+        ],
+
+      },
 
     )

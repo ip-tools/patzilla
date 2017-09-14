@@ -91,6 +91,7 @@ install-nginx-auth:
 
 test:
 	@python runtests.py          \
+		$(options)              \
 		--all-modules           \
 		--traverse-namespace    \
 		--with-doctest          \
@@ -103,19 +104,13 @@ test:
 		--exclude-dir=patzilla/util/web/uwsgi \
 		--nocapture \
 		--nologcapture \
-		--verbose \
-		$(options)
-
-#		--where=patzilla.access.epo \
+		--verbose
 
 # +REPORT_ONLY_FIRST_FAILURE
 
 
 test-cover:
 	$(MAKE) test options="--with-coverage"
-
-test-setup:
-	pip install nose==1.3.3 nose-exclude==0.2.0 nose2-cov==1.0a4
 
 nginx_path=/Users/amo/dev/celeraone/sources/c1-ocb-integrator/rem_rp/parts/openresty
 nginx-start:
