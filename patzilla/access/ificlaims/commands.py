@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 # patzilla.access.ificlaims.cli: Adapter to search provider "IFI Claims Direct"
+import sys
 import json
 import logging
 from pprint import pprint
@@ -29,8 +30,11 @@ if __name__ == '__main__':
         }
     cache = CacheManager(**parse_cache_config_options(cache_opts))
 
+    api_uri  = sys.argv[1]
+    username = sys.argv[2]
+    password = sys.argv[3]
 
-    client = IFIClaimsClientFactory().client_create()
+    client = IFIClaimsClientFactory(api_uri, credentials={'username': username, 'password': password}).client_create()
     client.login()
 
     #results = client.search('*:*')
@@ -51,7 +55,8 @@ if __name__ == '__main__':
     #results = client.text_fetch('CA-2895851-A1')
     #results = client.text_fetch('CA-167637-S')
     #results = json.loads(client.text_fetch('CA-2886702-A1', 'json'))
-    results = json.loads(client.text_fetch('CA-2895852-A1', 'json'))
+    #results = json.loads(client.text_fetch('CA-2895852-A1', 'json'))
+    results = json.loads(client.text_fetch('CA-108104-S', 'json'))
 
     print json.dumps(results)
 
