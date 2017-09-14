@@ -34,6 +34,7 @@ development
 - Improve fulltext display re. OPS API 3.2 changes
 - Reduce notification popup display time from six to four seconds
 - Introduce webpacked version of login.js
+- Fix redirect on failed logins
 
 2017-09-08 0.135.0
 ==================
