@@ -41,6 +41,7 @@ IssueReporter = Backbone.Model.extend({
                 var stackframes_serialized = stackframes.map(function(sf) {
                     return sf.toString();
                 });
+                console.log('Collecting stacktrace succeeded');
 
                 // Add stackframes to issue report
                 report.get('javascript').stackframes = stackframes_serialized;
@@ -53,6 +54,8 @@ IssueReporter = Backbone.Model.extend({
             // Fallback stacktrace.js error handler
             var stacktrace_errback = function(err) {
 
+                console.warn('Collecting stacktrace failed');
+
                 // Send error to Javascript console
                 console.error(error);
 
@@ -63,7 +66,9 @@ IssueReporter = Backbone.Model.extend({
 
             // Register stacktrace.js handlers
             // Callback is called with an Array[StackFrame]
+            console.log('Collecting stacktrace');
             StackTrace.fromError(error).then(stacktrace_callback).catch(stacktrace_errback);
+
         };
 
     },
@@ -88,9 +93,11 @@ IssueReporter = Backbone.Model.extend({
             async: true,
             data: JSON.stringify(report.toJSON()),
             contentType: "application/json; charset=utf-8",
+
         }).success(function(response, status, options) {
             console.log('Successfully submitted issue report to backend');
             deferred.resolve(response, status, options);
+
         }).error(function(xhr, settings) {
             console.warn('Error submitting issue report to backend');
             deferred.reject(xhr, settings);

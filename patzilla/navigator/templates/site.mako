@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="$ {locale_code[:2]}" lang="$ {locale_code[:2]}">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title><%block name="title">
         % if page_title is not None:
