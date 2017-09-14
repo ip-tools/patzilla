@@ -376,6 +376,7 @@ UiController = Marionette.Controller.extend({
                 onClose : function() {
                     //bttn.disabled = false;
                 },
+                ttl: 4000,
                 //ttl: 100000,
             });
 
