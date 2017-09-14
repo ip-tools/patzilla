@@ -89,34 +89,6 @@ requires = [
     'html2text==2016.9.19',
     'envoy==0.0.3',
 
-    # ----------------------------------------------
-    #   user interface
-    # ----------------------------------------------
-    # fanstatic
-    'fanstatic==1.0a7',
-    'pyramid_fanstatic==0.5',
-
-    # bootstrap
-    'js.bootstrap==2.3.1',
-    #'js.bootstrap==3.0.0.1',
-
-    # jquery
-    'js.jquery==1.9.1',
-    'js.jquery_shorten==1.0.0a1',
-    'js.purl==2.3.1a1',
-    'js.select2==3.4.1',
-
-    # jquerui
-    #'js.jqueryui==1.10.3',
-    #'js.jqueryui_bootstrap==0.0.0',
-
-    # fontawesome
-    'css.fontawesome==3.2.1',
-
-    # marionette, backbone and prerequisites
-    'js.marionette==1.1.0a2',
-    'js.underscore_string==2.3.0a1',
-
 ]
 
 test_requires = [
@@ -160,9 +132,6 @@ setup(name='PatZilla',
       install_requires=requires,
       tests_require=test_requires,
 
-      dependency_links=[
-        'https://github.com/elmyra-org/js.marionette/tarball/1.1.0a2#egg=js.marionette-1.1.0a2',
-      ],
 
       entry_points={
         'paste.app_factory': [

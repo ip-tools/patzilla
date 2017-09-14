@@ -138,8 +138,6 @@ pyramid.debug_routematch = false
 pyramid.default_locale_name = en
 pyramid.includes =
 
-fanstatic.minified = true
-
 # cache settings
 cache.regions = search, medium, longer, static
 cache.url = mongodb://localhost:27017/beaker.cache

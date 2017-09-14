@@ -20,7 +20,6 @@ def includeme(config):
     config.add_subscriber(create_url_generators, "pyramid.events.ContextFound")
     config.add_subscriber(create_tools, "pyramid.events.ContextFound")
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
-    config.add_subscriber(add_html_foundation, "pyramid.events.BeforeRender")
 
 def global_config(event):
     registry = event.app.registry
@@ -95,10 +94,6 @@ def add_renderer_globals(event):
     # use event as renderer globals
     renderer_globals = event
 
-    # initialize fanstatic
-    #needed = fanstatic.init_needed(base_url='http://localhost:6543')
-    #renderer_globals["needed"] = needed
-
     renderer_globals["h"] = helpers
     request = event.get("request") or get_current_request()
     if not request:     # pragma: no cover
@@ -118,49 +113,3 @@ def add_renderer_globals(event):
     # Page title
     renderer_globals['theme'] = helpers.Bootstrapper().theme_parameters()
     renderer_globals['page_title'] = None
-
-
-def add_html_foundation(event):
-
-    # setup javascript foundation
-
-    # underscore.string
-    from js.underscore_string import underscore_string
-    underscore_string.need()
-
-    # backbone.marionette
-    from js.marionette import marionette
-    marionette.need()
-
-    # jquery
-    #from js.jquery import jquery
-    #jquery.need()
-    from js.jquery_shorten import jquery_shorten
-    jquery_shorten.need()
-    from js.purl import purl
-    purl.need()
-
-    from js.select2 import select2
-    select2.need()
-
-    # jqueryui
-    #from js.jqueryui import jqueryui, base as jqueryui_base, smoothness as jqueryui_smoothness
-    #from js.jqueryui_bootstrap import jqueryui_bootstrap
-    #jqueryui.need()
-    #jqueryui_base.need()
-    #jqueryui_smoothness.need()
-    #jqueryui_bootstrap.need()
-
-
-    # setup css foundation
-
-    # bootstrap
-    from js.bootstrap import bootstrap, bootstrap_responsive_css
-    #from js.bootstrap import bootstrap_theme
-    bootstrap.need()
-    #bootstrap_theme.need()
-    bootstrap_responsive_css.need()
-
-    # fontawesome
-    from css.fontawesome import fontawesome
-    fontawesome.need()

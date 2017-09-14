@@ -24,7 +24,6 @@ def main(global_config, **settings):
 
     # Addons
     config.include('pyramid_mako')
-    config.include('pyramid_fanstatic')
     config.include('pyramid_beaker')
 
     config.scan('patzilla.util.web.pyramid.cornice')

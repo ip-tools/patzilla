@@ -40,11 +40,8 @@ Application::
     python setup.py develop
 
 
-Production
-----------
 ::
 
-    pip install --allow-external which --allow-external fanstatic --allow-external setuptools --allow-unverified setuptools --allow-unverified which --upgrade fanstatic==1.0a2
 
 
 Configure

@@ -143,11 +143,6 @@ pyramid.default_locale_name = en
 # '127.0.0.1' and '::1'.
 # debugtoolbar.hosts = 127.0.0.1 ::1
 
-#fanstatic.base_url = http://localhost:6543
-#fanstatic.bottom = true
-#fanstatic.debug = true
-fanstatic.minified = true
-
 # cache settings
 cache.regions = search, medium, longer, static
 cache.url = mongodb://localhost:27017/beaker.cache

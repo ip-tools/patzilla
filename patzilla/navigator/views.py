@@ -58,11 +58,15 @@ def includeme(config):
     # demo stuff
     #config.add_route('angry-cats', '/angry-cats')
 
-    # at route "patentsearch-quick2", exclude access to javascript .map files, these would match, see::
-    #   $ curl --silent -i http://localhost:6543/ops/browser/fanstatic/jquery/jquery.min.map | grep Location
-    #   Location: http://localhost:6543/ops/browser?query=fanstatic%3Djquery
+    # Remark:
+    # At route "patentsearch-quick2", exclude access to javascript .map files. Otherwise, these would match.
     #
-    # negative lookahead to the rescue:
+    # Example::
+    #
+    #   $ curl --silent -i http://localhost:6543/ops/browser/static/jquery/jquery.min.map | grep Location
+    #   Location: http://localhost:6543/ops/browser?query=static%3Djquery
+    #
+    # Negative lookahead to the rescue:
     # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
 
 @view_config(route_name='patentsearch', renderer='patzilla.navigator:templates/standalone.html')

@@ -56,9 +56,7 @@ def install(version, target):
             #setup_package('which', venv_path)
             # TODO: put these packages to a more convenient location
 
-        setup_package('/root/install/PatZilla/which*', venv_path)
-        setup_package('/root/install/PatZilla/js.*', venv_path)
-        setup_package('/root/install/PatZilla/fanstatic*', venv_path)
+        #setup_package('/root/install/PatZilla/which*', venv_path)
         setup_package(source_package, venv_path)
 
         upload_config(source_config, target_path)

@@ -15,7 +15,7 @@ local isis = require('lib/isis')
 local util = require('lib/util')
 
 local request_uri = ngx.var.request_uri
-local static_resource = request_uri:find("^/fanstatic/.*$") or request_uri:find("^/static.*$")
+local static_resource = request_uri:find("^/static.*$")
 
 
 -- ------------------------------------------
