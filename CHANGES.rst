@@ -26,6 +26,7 @@ development
 - OPS stopped delivering the elapsed time when crawling
 - Improve basket model and interaction sanity
 - Database export filename: naming things
+- Introduce webpack for bundling the Javascript/CSS assets
 
 2017-09-08 0.135.0
 ==================
