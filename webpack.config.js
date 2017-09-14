@@ -16,6 +16,7 @@ module.exports = {
     entry: {
         'app-standalone': ['./js/boot/standalone.js'],
         'app-embedded':   ['./js/boot/embedded.js'],
+        'app-login':      ['./js/app/login.js'],
         'app-help':       ['./widget/help/help.js'],
     },
 
