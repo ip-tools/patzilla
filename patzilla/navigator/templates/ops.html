@@ -87,12 +87,14 @@
                         <% if (data.has_fulltext()) { %>
                         <button class="btn" data-toggle="tab"
                                 href="#document-details-claims-container-<%= patent_number %>"
+                                data-details-title="Claims"
                                 data-details-type="claims"
                                 >
                             Claims
                         </button>
                         <button class="btn" data-toggle="tab"
                                 href="#document-details-description-container-<%= patent_number %>"
+                                data-details-title="Description"
                                 data-details-type="description"
                                 >
                             Desc
@@ -599,31 +601,13 @@
                     </div>
 
                     <div id="document-details-claims-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
-                        <strong>Claims</strong> <span class="document-details-language"></span>
-                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
-                        <br/><br/>
-                        <span class="document-details-content keyword"></span>
-
-                        <br/><br/><br/>
-                        <span class="pull-right text-small text-muted">
-                            Data source: <span class="datasource-label"></span>
-                        </span>
-                        <span class="clearfix"></span>
-
+                        <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
+                        <span class="content-nt"></span>
                     </div>
 
                     <div id="document-details-description-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
-                        <strong>Description</strong> <span class="document-details-language"></span>
-                        &nbsp;&nbsp;&nbsp;<i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
-                        <br/><br/>
-                        <span class="document-details-content keyword"></span>
-
-                        <br/><br/><br/>
-                        <span class="pull-right text-small text-muted">
-                            Data source: <span class="datasource-label"></span>
-                        </span>
-                        <span class="clearfix"></span>
-
+                        <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
+                        <span class="content-nt"></span>
                     </div>
 
                     <div id="document-details-family-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
@@ -664,6 +648,20 @@
 
 
 <%text>
+
+<script id="document-fulltext-template" type="text/x-underscore-template">
+    <strong><%= data.title %></strong> <%= data.language ? '[' + data.language + ']' : '' %>
+    <br/><br/>
+    <span class="keyword"><%= data.content %></span>
+    <br/><br/><br/>
+    <% if (data.datasource) { %>
+    <span class="pull-right text-small text-muted">
+        Data source: <span class="datasource-label"><%= data.datasource %></span>
+    </span>
+    <% } %>
+    <span class="clearfix"></span>
+</script>
+
 <script id="ops-entry-error-template" type="text/x-underscore-template">
 
     <%

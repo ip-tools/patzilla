@@ -830,17 +830,21 @@ OpsFulltext = Marionette.Controller.extend({
             .success(function(payload) {
                 if (payload) {
                     var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
-                    //console.log('claims', document_number, claims);
+                    //console.log('claims', claims);
 
-                    // TODO: maybe unify with display_description
-                    var content_parts = _(to_list(claims['claim']['claim-text'])).map(function(item) {
-                        return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
+                    var response = {};
+                    _(to_list(claims)).each(function(claims_per_language) {
+                        // TODO: maybe unify with display_description
+                        var content_parts = _(to_list(claims_per_language['claim']['claim-text'])).map(function(item) {
+                            return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
+                        });
+                        var language = claims_per_language['@lang'];
+                        response[language] = {
+                            text: content_parts.join('\n'),
+                            lang: language,
+                        };
                     });
-                    var content_text = content_parts.join('\n');
-                    var response = {
-                        html: content_text,
-                        lang: claims['@lang'],
-                    };
+
                     deferred.resolve(response, _this.get_datasource_label());
                 }
             }).error(function(error) {

@@ -176,13 +176,14 @@ DocumentDetailsController = Marionette.Controller.extend({
 
             var container = $($(e.target).attr('href'));
             var details_type = $(this).data('details-type');
+            var details_title = $(this).data('details-title');
 
             var document = opsChooserApp.document_base.get_document_by_element(this);
 
             if (document) {
                 if (_(['claims', 'description']).contains(details_type)) {
                     var details = _this.get_fulltext_details(details_type, document);
-                    _this.display_details(details, container);
+                    _this.display_fulltext(container, details_title, details);
 
                 } else if (details_type == 'family') {
 
@@ -272,26 +273,54 @@ DocumentDetailsController = Marionette.Controller.extend({
         }
     },
 
-    display_details: function(details, container) {
+    display_fulltext: function(container, title, details) {
         var _this = this;
 
-        var content_element = container.find('.document-details-content');
-        var language_element = container.find('.document-details-language');
+        var content_element = container.find('.content-nt');
+
+        var template = _.template($('#document-fulltext-template').html(), {variable: 'data'});
 
         if (content_element) {
             this.indicate_activity(container, true);
             details.then(function(data, datasource_label) {
                 _this.indicate_activity(container, false);
                 if (data) {
-                    $(content_element).html(data['html']);
-                    data['lang'] && $(language_element).html('[' + data['lang'] + ']');
-                    $('.datasource-label').html(datasource_label);
-                    opsChooserApp.keywords.highlight($(content_element).find('*'));
+
+                    // Legacy format: Object w/o language, just contains "html" and "lang" attributes.
+                    if (data.html) {
+                        var content = template({
+                            title: title,
+                            language: data.lang,
+                            content: data.html,
+                            datasource: datasource_label,
+                        });
+                        content_element.html(content);
+
+                    // New format: Object keyed by language.
+                    } else {
+                        var parts = [];
+                        for (var key in data) {
+                            var item = data[key];
+                            parts.push(template({
+                                title: title,
+                                language: item.lang,
+                                content: item.text,
+                                datasource: datasource_label,
+                            }));
+                        };
+                        content_element.html(parts.join('<hr/>'));
+                    }
+                    if (opsChooserApp.keywords) {
+                        opsChooserApp.keywords.highlight($(content_element).find('*'));
+                    } else {
+                        console.warn('Keywords subsystem not started. Keyword highlighting not available.')
+                    }
                 }
             }).fail(function(data) {
+                log('Fetching fulltext for document failed:', data);
                 _this.indicate_activity(container, false);
-                if (data) {
-                    $(content_element).html(data['html']);
+                if (data && data.html) {
+                    content_element.html(template({title: title, content: data.html}));
                 }
             });
         }

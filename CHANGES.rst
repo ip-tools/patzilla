@@ -31,6 +31,7 @@ development
 - Fix test framework
 - Update claims fulltext manipulation for DEPATISconnect
 - Introduce component activation conditionals and improve wording
+- Improve fulltext display re. OPS API 3.2 changes
 
 2017-09-08 0.135.0
 ==================
