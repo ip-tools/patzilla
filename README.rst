@@ -38,5 +38,5 @@ but we welcome community contributions!
 See `install docs`_ for more information.
 
 
-.. _install docs: docs/tutorials/install.rst
+.. _install docs: docs/technical/install-development.rst
 .. _Elmyra UG: https://elmyra.de/

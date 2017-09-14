@@ -56,6 +56,9 @@ js:
 		-uno --untracked-files=no \
 		--message='release: minify javascript resources'
 
+js-nt:
+	./node_modules/.bin/webpack --display detailed --display-error-details
+
 sdist:
 	python setup.py sdist
 	cd js.jquery_shorten; python setup.py sdist
