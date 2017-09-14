@@ -116,8 +116,9 @@ IssueReport = Backbone.Model.extend({
         },
         application: {
         },
-        window: {
+        environment: {
             location: window.location.href,
+            useragent: navigator.userAgent,
         },
     },
 
