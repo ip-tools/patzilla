@@ -4,7 +4,7 @@ require('../boot.js');
 
 $(document).ready(function() {
 
-    console.log("[standalone] document.ready");
+    console.info("Start application [standalone]");
 
     // process and propagate application ingress parameters
     //var url = $.url(window.location.href);

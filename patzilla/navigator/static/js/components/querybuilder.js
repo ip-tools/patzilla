@@ -409,6 +409,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-query-permalink').click(function(e) {
 
             e.preventDefault();
+            e.stopPropagation();
+
             if (_this.check_query_empty({'icon': 'icon-external-link'})) { return; }
 
             var anchor = this;
@@ -427,7 +429,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 //$(anchor).attr('href', url);
 
                 // v2: open permalink popover
-                e.stopPropagation();
                 opsChooserApp.permalink.popover_show(anchor, url, {
                     title: 'External query review',
                     intro:
@@ -722,9 +723,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     cql_history_chooser_get_data: function() {
 
-        log('cql_history_chooser_get_data: begin');
-
         var deferred = $.Deferred();
+
+        if (!opsChooserApp.project) {
+            var message = 'Project subsystem not started. Query history not available.';
+            console.warn(message);
+            opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-time'});
+            deferred.reject();
+            return deferred.promise();
+        }
+
+        log('cql_history_chooser_get_data: begin');
 
         // fetch query objects and sort descending by creation date
         var _this = this;
@@ -996,9 +1005,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             }
 
-            // destroy widget and close dropdown container
-            $(this).data('select2').destroy();
-            $(this).dropdown().toggle();
+            // Destroy widget and close dropdown container
+            _this.cql_history_chooser_destroy($(this));
 
         });
 
@@ -1006,10 +1014,20 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         this.cql_history_chooser_get_data().then(function(data) {
             _this.cql_history_chooser_load_data(data);
             deferred.resolve();
+        }).fail(function(event) {
+            deferred.reject();
+            _this.cql_history_chooser_destroy($(chooser_widget));
         });
 
         return deferred.promise();
 
+    },
+
+    cql_history_chooser_destroy: function(element) {
+        // Destroy widget and close dropdown container
+        element.data('select2').destroy();
+        element.dropdown().toggle();
+        //element.closest('#cql-history-chooser-container').hide();
     },
 
     cql_history_chooser_load_data: function(data) {

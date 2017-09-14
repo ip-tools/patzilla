@@ -665,6 +665,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // Export Dossier
         $('#dossier-export-button').unbind('click').bind('click', function(event) {
 
+            if (!opsChooserApp.component_enabled('export')) {
+                var message = 'Export feature not enabled.';
+                console.warn(message);
+                opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-save'});
+                return;
+            }
+
             // Don't export empty baskets
             if (_this.check_empty({kind: 'export'})) {
                 return;

@@ -904,7 +904,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 _this.perform_listsearch(options, undefined, publication_numbers, hits, numberlist.fieldname, 'OR');
             });
         } else {
-            this.ui.notify("An empty numberlist can't be requested, please add some publication numbers.", {type: 'warning', icon: 'icon-align-justify'});
+            this.ui.notify(
+                "An empty numberlist can't be requested, please add some document numbers.",
+                {type: 'warning', icon: 'icon-align-justify'});
         }
     },
 
@@ -1169,8 +1171,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         // B. event listeners
 
         // toggle appropriate Add/Remove button when entries get added or removed from basket
-        // TODO: are old bindings killed properly?
-        // FIXME: this stopListening is brutal!
+        // TODO: Are old bindings killed properly?
+        // FIXME: This style of stopListening is brutal!
         this.stopListening(null, "change:add");
         this.stopListening(null, "change:remove");
         this.stopListening(null, "change:rate");
@@ -1202,6 +1204,11 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     },
 
     basket_bind_actions: function() {
+
+        if (!this.basketModel) {
+            console.warn('Basket subsystem not started. Rating not available.');
+            return;
+        }
 
         // TODO: maybe use an event handler for this, instead of a direct method call (e.g. "item:rendered")
 

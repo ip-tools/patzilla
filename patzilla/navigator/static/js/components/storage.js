@@ -13,7 +13,7 @@ StoragePlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('StoragePlugin.initialize');
-        this.database_version = '0.0.1';
+        this.database_version = '1.0.0';
     },
 
     dump: function() {
@@ -63,6 +63,8 @@ StoragePlugin = Marionette.Controller.extend({
 
     dbexport: function() {
 
+        log('StoragePlugin.dbexport');
+
         var _this = this;
 
         this.dump().then(function(backup) {
@@ -104,7 +106,7 @@ StoragePlugin = Marionette.Controller.extend({
                     payload = payload_dataurl.data;
                 }
                 if (!payload_dataurl || !payload) {
-                    var message = 'ERROR: data URL format is invalid';
+                    var message = 'ERROR: Data URL format is invalid';
                     console.error(message + '; payload=' + payload);
                     opsChooserApp.ui.notify(message, {type: 'error'});
                     return;
@@ -128,7 +130,7 @@ StoragePlugin = Marionette.Controller.extend({
         var filetype = dotresolve(backup, 'metadata.type');
         var database = dotresolve(backup, 'database');
 
-        if (filetype == 'patzilla.navigator.database' || filetype == 'elmyra.ipsuite.navigator.database') {
+        if (filetype != 'patzilla.navigator.database' && filetype != 'elmyra.ipsuite.navigator.database') {
             var message = 'ERROR: Database dump format "' + filetype + '" is invalid.';
             console.error(message);
             opsChooserApp.ui.notify(message, {type: 'error'});

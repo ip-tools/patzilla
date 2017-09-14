@@ -182,7 +182,7 @@ ProjectModel = Backbone.RelationalModel.extend({
     fetch_queries: function() {
         var main_deferred = $.Deferred();
 
-        // fetch associated basket objects
+        // Fetch associated QueryModel objects
         var _this = this;
         $.when(this.fetchRelated('queries')).then(function() {
             var query_collection = _this.get('queries');
@@ -634,7 +634,9 @@ opsChooserApp.addInitializer(function(options) {
 
     // fetch all projects and activate designated one
     this.listenTo(this, 'projects:initialize', function(projectname) {
-        console.log('projects:initialize');
+
+        log('projects:initialize received');
+
         var _this = this;
 
         // use project name from config (propagated from current url)

@@ -5,6 +5,8 @@
 <script id="app-menu-template" type="text/x-underscore-template">
 
 <span class="btn-group btn-popover do-not-print">
+<%text>
+
     <button class="btn dropdown-toggle" data-toggle="dropdown">
         <i class="fa-icon icon-bars icon-3x"></i>
     </button>
@@ -21,11 +23,13 @@
                 Sign out
             </a>
 
+            <% if (opsChooserApp.component_enabled('keywords')) { %>
             <a class="action-keyword-editor">
                 <i class="icon-edit"></i>
                 &nbsp;
                 Edit keywords for highlighting
             </a>
+            <% } %>
 
             <a class="action-fullscreen" target="_blank">
                 <i class="icon-fullscreen"></i>
@@ -36,6 +40,7 @@
             <hr class="divider"/>
 
 
+            <% if (opsChooserApp.component_enabled('storage')) { %>
             <!-- Database -->
             <div class="dropdown-section-header">Database</div>
 
@@ -56,6 +61,7 @@
             </a>
 
             <hr class="divider"/>
+            <% } %>
 
 
             <!-- Online help -->
@@ -87,6 +93,8 @@
         </li>
 
     </ul>
+
+</%text>
 </span>
 
 </script>

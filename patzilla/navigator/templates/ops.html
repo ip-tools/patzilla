@@ -308,6 +308,7 @@
 
                     % if ship_mode == 'multi-numberlist':
                     <%text>
+                    <% if (opsChooserApp.component_enabled('basket')) { %>
                     <span class="pull-right">
                     <a id="remove-patent-number-<%= patent_number %>" role="button" class="btn-popover incognito remove-patent-number pointer"
                        data-patent-number="<%= patent_number %>"
@@ -331,6 +332,7 @@
                     </a>
                     -->
 
+                    <% } %>
                     </%text>
                     % endif
 
