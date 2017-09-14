@@ -1,5 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2016 Andreas Motl, Elmyra UG
+require('jquery.redirect');
+require('bootstrap-slider');
+require('bootstrap-slider/dist/css/bootstrap-slider');
 
 ExportPlugin = Backbone.Model.extend({
 
@@ -93,18 +96,18 @@ ExportPlugin = Backbone.Model.extend({
         var notification_wrapper = dialog[0];
 
         // Copy/paste links on "link-embed" screen
-        _ui.copy_to_clipboard('text/plain', function() {
+        opsChooserApp.ui.copy_to_clipboard('text/plain', function() {
             return dialog.find('#share-link-numberlist').val();
         }, {element: dialog.find('#share-link-numberlist-copy'), wrapper: notification_wrapper});
-        _ui.copy_to_clipboard('text/plain', function() {
+        opsChooserApp.ui.copy_to_clipboard('text/plain', function() {
             return dialog.find('#share-link-external').val();
         }, {element: dialog.find('#share-link-external-copy'), wrapper: notification_wrapper});
 
         // Copy/paste document numbers on "display" screen
-        _ui.copy_to_clipboard_bind_button('text/plain', function() {
+        opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
             return dialog.find('#result-content-rated').val();
         }, {element: dialog.find('#result-content-rated-copy'), wrapper: notification_wrapper});
-        _ui.copy_to_clipboard_bind_button('text/plain', function() {
+        opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
             return dialog.find('#result-content-seen').val();
         }, {element: dialog.find('#result-content-seen-copy'), wrapper: notification_wrapper});
 
@@ -189,6 +192,11 @@ ExportPlugin = Backbone.Model.extend({
         // Show dialog
         // ------------------------------------------
         dialog.modal('show');
+
+        // Prevent displaying the modal under backdrop
+        // https://weblog.west-wind.com/posts/2016/Sep/14/Bootstrap-Modal-Dialog-showing-under-Modal-Background
+        dialog.appendTo("body");
+
         dialog.find('#export-dialog-status').empty();
 
     },
@@ -345,6 +353,7 @@ ExportPlugin = Backbone.Model.extend({
 opsChooserApp.addInitializer(function(options) {
 
     this.exporter = new ExportPlugin();
+    this.register_component('export');
 
     /*
     this.listenTo(this, 'basket:activated', function(basket) {

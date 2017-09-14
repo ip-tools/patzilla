@@ -1,26 +1,9 @@
 ## -*- coding: utf-8 -*-
-## (c) 2013-2016 Andreas Motl, Elmyra UG
+## (c) 2013-2017 Andreas Motl, Elmyra UG
 
 <%inherit file="site.mako" />
 
 <%block name="body">
-
-## http://bootsnipp.com/snipps/e-mail-interface-like-gmail
-## http://davidsulc.com/blog/2012/04/15/a-simple-backbone-marionette-tutorial/
-## https://github.com/davidsulc/backbone.marionette-collection-example
-
-<script type="text/javascript" src="/static/js/lib/stacktrace.min.js"></script>
-% if request.registry.settings.get('ipsuite.production') == 'true':
-<script type="text/javascript" src="/static/js/issue-reporter.min.js"></script>
-% else:
-<script type="text/javascript" src="/static/js/issue-reporter.js"></script>
-% endif
-
-% if request.registry.settings.get('ipsuite.production') == 'true':
-<script type="text/javascript" src="/static/js/config.min.js"></script>
-% else:
-<script type="text/javascript" src="/static/js/config.js"></script>
-% endif
 
 <%
 # FIXME: this is the last thing we have to keep until this bunch of html got refactored into a template
@@ -29,6 +12,8 @@ debugmode = h.asbool(request.params.get('debug'))
 
 <!-- user interface: inline html -->
 <div id="main-region"></div>
+
+<span style="display: none">
 
 <!-- user interface: html templates -->
 <%include file="app/header.html"/>
@@ -50,121 +35,6 @@ debugmode = h.asbool(request.params.get('debug'))
 <%include file="keyword-editor.html"/>
 <%include file="components/export.html"/>
 
-
-<!-- application configuration -->
-<script type="application/javascript">
-    ${ h.fiddler.render() | n }
-</script>
-
-
-<!-- user interface: javascript resources -->
-
-<!-- common -->
-<script type="text/javascript" src="/static/js/lib/es6-shim.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/Blob.js"></script>
-<script type="text/javascript" src="/static/js/lib/FileSaver.js"></script>
-<script type="text/javascript" src="/static/js/lib/dataurl.js"></script>
-<script type="text/javascript" src="/static/js/lib/lz-string-1.3.3-min.js"></script>
-<script type="text/javascript" src="/static/js/lib/memoize.js"></script>
-<script type="text/javascript" src="/static/js/lib/humanize.min.js"></script>
-
-<!-- storage -->
-<script type="text/javascript" src="/static/js/lib/backbone-relational.js"></script>
-
-## <!-- TODO: minify again, but currently includes important patches -->
-## <!-- <script type="text/javascript" src="/static/js/lib/localforage.min.js"></script> -->
-<script type="text/javascript" src="/static/js/lib/localforage.js"></script>
-
-## <!-- TODO: minify again, but currently includes important patches -->
-## <!-- <script type="text/javascript" src="/static/js/lib/localforage.backbone-0.4.0.min.js"></script> -->
-<script type="text/javascript" src="/static/js/lib/localforage.backbone.js"></script>
-
-
-<!-- user interface: libraries -->
-<script type="text/javascript" src="/static/js/lib/backbone-dom-to-view.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.caret-1.5.1.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.hotkeys.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.highlight.bartaz.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery-autonumeric.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.viewport.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.base64.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/bootbox-2.3.2.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/moment-with-langs.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/bootstrap-tab-button.js"></script>
-<script type="text/javascript" src="/static/js/lib/notify-combined.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/ZeroClipboard.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/screenfull.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.waypoints.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.waypoints.sticky.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.waypoints.inview.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/ToProgress.min.js"></script>
-<script type="text/javascript" src="/static/js/lib/jquery.redirect.js"></script>
-
-<!-- user interface: widgets -->
-<script type="text/javascript" src="/static/widget/bootstrap-editable/js/bootstrap-editable.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/widget/bootstrap-editable/css/bootstrap-editable.css" />
-<script type="text/javascript" src="/static/widget/raty/jquery.raty.js"></script>
-
-<!-- notificator widget -->
-<script type="text/javascript" src="/static/widget/notificator/js/modernizr.custom.js"></script>
-<script type="text/javascript" src="/static/widget/notificator/js/classie.js"></script>
-<script type="text/javascript" src="/static/widget/notificator/js/notificationFx.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/widget/notificator/css/ns-default.css" />
-<link rel="stylesheet" type="text/css" href="/static/widget/notificator/css/ns-style-attached.css" />
-
-<!-- pagination widget -->
-<script type="text/javascript" src="/static/widget/jqpagination/js/jquery.jqpagination.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/widget/jqpagination/css/jqpagination.css" />
-
-<!-- slider widget -->
-<script type="text/javascript" src="/static/widget/slider/bootstrap-slider.min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/widget/slider/bootstrap-slider.min.css" />
-
-
-<!-- application -->
-<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
-
-<!-- application -->
-% if request.registry.settings.get('ipsuite.production') != 'true':
-    <script type="text/javascript" src="/static/js/app/lib/linkmaker.js"></script>
-    <script type="text/javascript" src="/static/js/app/lib/radio-plus.js"></script>
-    <script type="text/javascript" src="/static/js/app/lib/util.js"></script>
-    <script type="text/javascript" src="/static/js/app/lib/patents.js"></script>
-    <script type="text/javascript" src="/static/js/app/core.js"></script>
-    <script type="text/javascript" src="/static/js/app/ops-sdk.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/01-results.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/01-search.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/10-ops-base.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/ops.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/generic.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/depatisnet.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/google.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/ftpro.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/ifi.js"></script>
-    <script type="text/javascript" src="/static/js/app/models/depatech.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/01-results.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/pagination.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/ops.js"></script>
-    <script type="text/javascript" src="/static/js/app/views/ftpro.js"></script>
-    <script type="text/javascript" src="/static/js/app/application.js"></script>
-    <script type="text/javascript" src="/static/js/app/main.js"></script>
-    <script type="text/javascript" src="/static/js/app/ui.js"></script>
-    <script type="text/javascript" src="/static/js/components/document.js"></script>
-    <script type="text/javascript" src="/static/js/components/keywords.js"></script>
-    <script type="text/javascript" src="/static/js/components/opaquelinks.js"></script>
-    <script type="text/javascript" src="/static/js/components/querybuilder.js"></script>
-    <script type="text/javascript" src="/static/js/components/basket.js"></script>
-    <script type="text/javascript" src="/static/js/components/project.js"></script>
-    <script type="text/javascript" src="/static/js/components/comment.js"></script>
-    <script type="text/javascript" src="/static/js/components/storage.js"></script>
-    <script type="text/javascript" src="/static/js/components/permalink.js"></script>
-    <script type="text/javascript" src="/static/js/components/hotkeys.js"></script>
-    <script type="text/javascript" src="/static/js/components/viewport.js"></script>
-    <script type="text/javascript" src="/static/js/components/crawler.js"></script>
-    <script type="text/javascript" src="/static/js/components/analytics.js"></script>
-    <script type="text/javascript" src="/static/js/components/waypoints.js"></script>
-    <script type="text/javascript" src="/static/js/components/reading.js"></script>
-    <script type="text/javascript" src="/static/js/components/export.js"></script>
-% endif
+</span>
 
 </%block>

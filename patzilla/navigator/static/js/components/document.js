@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2015 Andreas Motl, Elmyra UG
+require('jquery.shorten.1.0');
+require('jquery-autonumeric');
 
 DocumentBaseController = Marionette.Controller.extend({
 
@@ -89,7 +91,7 @@ DocumentBaseController = Marionette.Controller.extend({
             if (embed_item_url) {
 
                 // 1. compute url to component
-                var _tpl = _.template(embed_item_url, null, { interpolate: /\{\{(.+?)\}\}/g });
+                var _tpl = _.template(embed_item_url, { interpolate: /\{\{(.+?)\}\}/g });
                 var embed_real_url = _tpl({publication_number: document_number});
 
                 // 2. create an iframe

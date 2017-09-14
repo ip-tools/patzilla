@@ -129,7 +129,6 @@ module.exports = {
 
         alias: {
             'patzilla.app.main':                    path.resolve(__contextpath, 'js', 'app', 'main.js'),
-            'patzilla.app.start':                   path.resolve(__contextpath, 'js', 'app', 'start.js'),
             'patzilla.app.core':                    path.resolve(__contextpath, 'js', 'app', 'core.js'),
             'patzilla.app.ui':                      path.resolve(__contextpath, 'js', 'app', 'ui.js'),
             'patzilla.backend.fields':              path.resolve(__contextpath, 'js', 'app', 'ops-sdk.js'),

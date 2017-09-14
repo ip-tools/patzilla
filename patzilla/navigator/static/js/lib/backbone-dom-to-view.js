@@ -1,4 +1,5 @@
 // http://stackoverflow.com/questions/5013848/backbone-js-given-an-element-how-do-i-get-the-view/13238343#13238343
+require('backbone');
 
 (function($) {
 

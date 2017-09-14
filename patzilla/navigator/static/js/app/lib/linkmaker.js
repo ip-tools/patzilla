@@ -16,7 +16,7 @@
     // be attached to this. Exported for both the browser and the server.
     var Ipsuite;
     if (typeof exports !== 'undefined') {
-        Ipsuite = exports;
+        Ipsuite = exports.Ipsuite = {};
     } else {
         Ipsuite = root.Ipsuite = {};
     }

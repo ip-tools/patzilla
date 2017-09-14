@@ -1,5 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2017 Andreas Motl, Elmyra UG
+require('patzilla.components.storage');
+require('x-editable/dist/bootstrap-editable/js/bootstrap-editable');
+require('x-editable/dist/bootstrap-editable/css/bootstrap-editable');
+
 
 QueryModel = Backbone.RelationalModel.extend({
 
@@ -238,6 +242,9 @@ ProjectModel = Backbone.RelationalModel.extend({
     },
 
 });
+
+Backbone.Relational.store.addModelScope({QueryModel: QueryModel, ProjectModel: ProjectModel});
+
 
 ProjectCollection = Backbone.Collection.extend({
     sync: Backbone.localforage.sync('Project'),
@@ -493,11 +500,11 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         delete_button.click(function(e) {
 
             var projectname = opsChooserApp.config.get('project');
-            _ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
+            opsChooserApp.ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
 
                 _this.model.destroy({success: function() {
 
-                    _ui.notify(
+                    opsChooserApp.ui.notify(
                         'Project "' + _this.model.get('name') + '" deleted.',
                         {type: 'success', icon: 'icon-trash'});
 
@@ -520,7 +527,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                         opsChooserApp.trigger('projects:initialize');
 
                         // notify user about the completed action
-                        _ui.notify(
+                        opsChooserApp.ui.notify(
                             'Project "' + _this.model.get('name') + '" deleted.<br/>Recreated default project.',
                             {type: 'success', icon: 'icon-trash'});
 
@@ -549,7 +556,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                 placeholder: 'Enter project name',
                 success: function(response, projectname) {
                     opsChooserApp.trigger('project:load', projectname);
-                    _ui.notify(
+                    opsChooserApp.ui.notify(
                         'Project "' + projectname + '" created.',
                         {type: 'success', icon: 'icon-plus'});
                 },
@@ -628,6 +635,7 @@ opsChooserApp.addInitializer(function(options) {
     // fetch all projects and activate designated one
     this.listenTo(this, 'projects:initialize', function(projectname) {
         console.log('projects:initialize');
+        var _this = this;
 
         // use project name from config (propagated from current url)
         if (!projectname) {
@@ -640,13 +648,22 @@ opsChooserApp.addInitializer(function(options) {
         }
         */
 
-        this.projects = new ProjectCollection();
+        this.listenTo(opsChooserApp, 'localforage:ready', function() {
+            log('localforage:ready-project');
+            _this.projects = new ProjectCollection();
+            _this.projects.fetch({
+                success: function(response) {
+                    // load designated project
+                    _this.trigger('project:load', projectname);
+                },
+                error: function(response) {
+                    console.log('fetch-error');
+                    // load designated project
+                    //_this.trigger('project:load', projectname);
+                },
+            });
+        });
 
-        var _this = this;
-        this.projects.fetch({success: function(response) {
-            // load designated project
-            _this.trigger('project:load', projectname);
-        }});
     });
 
     // Fetch all projects on application start and initialize designated or default project.

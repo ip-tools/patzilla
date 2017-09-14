@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+require('underscore');
+require('underscore.string');
 
 function to_list(value) {
     return _.isArray(value) && value || [value];
@@ -66,15 +68,8 @@ if (Function.prototype.bind) {
     var log = function() {};
 }
 
-// ------------------------------------------
-//   Addons to Underscore.js 1.4.4
-// ------------------------------------------
-// http://stackoverflow.com/questions/572604/javascript-how-to-extend-array-prototype-push/572631#572631
-_.clear = function(array) {
-    array.length = 0;
-};
 
-// _.findIndex was added in Underscore.js 1.8
+// TODO: Use _.findIndex from Underscore.js 1.8
 // https://stackoverflow.com/questions/21631127/find-the-array-index-of-an-object-with-a-specific-key-value-in-underscore/24588304#24588304
 var findIndex = function(arr, cond) {
     var i, x;
@@ -84,97 +79,7 @@ var findIndex = function(arr, cond) {
     }
 };
 
-/*
- _.move - takes array and moves item at index and moves to another index; great for use with jQuery.sortable()
- https://gist.github.com/kjantzer/3974823
- */
-_.mixin({
-    move: function(array, fromIndex, toIndex) {
-        array.splice(toIndex, 0, array.splice(fromIndex, 1)[0]);
-        return array;
-    }
-});
 
-
-/*
- "Strip leading whitespace from each line in a string" by Sindre Sorhus
- https://github.com/sindresorhus/strip-indent/blob/master/index.js
- */
-_.string.dedent = function(str) {
-    const match = str.match(/^[ \t]*(?=\S)/gm);
-
-    if (!match) {
-        return str;
-    }
-
-    // Amendment: Dedent everything
-    const re = new RegExp('^[ \\t]+', 'gm');
-    return str.replace(re, '');
-};
-
-
-// ------------------------------------------
-//   Addons to jQuery
-// ------------------------------------------
-
-// qnotify
-(function($) {
-    $.fn.extend({
-        qnotify: function(message, options) {
-            options = options || {};
-            _.defaults(options, {className: 'info', position: 'bottom'});
-            if (options.error) options.className = 'error';
-            if (options.success) options.className = 'success';
-            if (options.warn || options.warning) options.className = 'warning';
-            $(this).notify(message, options);
-        },
-
-    });
-})(jQuery);
-
-// .exists()
-// https://stackoverflow.com/questions/920236/how-can-i-detect-if-a-selector-returns-null/920322#920322
-$.fn.exists = function () {
-    return this.length !== 0;
-}
-
-// https://stackoverflow.com/questions/964734/hitting-enter-does-not-post-form-in-ie8/4629047#4629047
-// Recreating normal browser behavior in Javascript. Thank you, Microsoft.
-// Same behaviour in Safari. :-)
-jQuery.fn.handle_enter_keypress = function() {
-
-    // https://stackoverflow.com/questions/9847580/how-to-detect-safari-chrome-ie-firefox-and-opera-browser/9851769#9851769
-
-    // At least IE6
-    var isInternetExplorer = /*@cc_on!@*/false || !!document.documentMode;
-
-    // At least Safari 3+: "[object HTMLElementConstructor]"
-    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
-
-    if (isInternetExplorer || isSafari) {
-        $(this).find('input').keypress(function(e) {
-            // If the key pressed was enter
-            if (e.which == '13') {
-                $(this).closest('form')
-                    .find('button[type=submit],input[type=submit]')
-                    .filter(':first').click();
-            }
-        });
-    }
-}
-
-// .toggleCheck()
-// https://stackoverflow.com/questions/4177159/toggle-checkboxes-on-off/18268117#18268117
-$.fn.toggleCheck = function() {
-    if (!$(this).exists()) {
-        return;
-    }
-
-    var element = this[0];
-    if (element.tagName === 'INPUT') {
-        $(element).prop('checked', !($(element).prop('checked')));
-    }
-}
 
 // http://stackoverflow.com/questions/3344392/dynamic-deep-selection-for-a-javascript-object/3344487#3344487
 function dotresolve(cur, ns) {
@@ -184,66 +89,6 @@ function dotresolve(cur, ns) {
         cur = cur[ns.shift()] || undefined;
     return cur;
 }
-
-// Underscore mixins with common iterator functions adapted to work with objects and maintain key/val pairs
-// https://gist.github.com/eethann/3430971
-_.mixin({
-    // ### _.objMap
-    // _.map for objects, keeps key/value associations
-    objMap: function (input, mapper, context) {
-        return _.reduce(input, function (obj, v, k) {
-            obj[k] = mapper.call(context, v, k, input);
-            return obj;
-        }, {}, context);
-    },
-    // ### _.objFilter
-    // _.filter for objects, keeps key/value associations
-    // but only includes the properties that pass test().
-    objFilter: function (input, test, context) {
-        return _.reduce(input, function (obj, v, k) {
-            if (test.call(context, v, k, input)) {
-                obj[k] = v;
-            }
-            return obj;
-        }, {}, context);
-    },
-    // ### _.objReject
-    //
-    // _.reject for objects, keeps key/value associations
-    // but does not include the properties that pass test().
-    objReject: function (input, test, context) {
-        return _.reduce(input, function (obj, v, k) {
-            if (!test.call(context, v, k, input)) {
-                obj[k] = v;
-            }
-            return obj;
-        }, {}, context);
-    },
-    // ### _.objRejectEmpty
-    //
-    // reject all items with empty values
-    objRejectEmpty: function(input) {
-        return _.objReject(input, function(value, key) {
-            return _.isEmpty(value);
-        });
-    },
-});
-
-// Underscore mixins to sort object keys.
-// Like _.sortBy(), but on keys instead of values, returning an object, not an array. Defaults to alphanumeric sort.
-// https://gist.github.com/colingourlay/82506396503c05e2bb94
-_.mixin({
-    'sortKeysBy': function (obj, comparator) {
-        var keys = _.sortBy(_.keys(obj), function (key) {
-            return comparator ? comparator(obj[key], key) : key;
-        });
-
-        return _.object(keys, _.map(keys, function (key) {
-            return obj[key];
-        }));
-    }
-});
-
 
 function deferreds_bundle(deferreds) {
     // wait for all add operations to finish before signalling success
@@ -499,28 +344,6 @@ function htmlDecodeRelaxed(input) {
 }
 
 
-// http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
-// see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
-var ModalRegion = Marionette.Region.extend({
-    constructor: function() {
-        Marionette.Region.prototype.constructor.apply(this, arguments);
-
-        this.ensureEl();
-        this.$el.toggleClass('fade hide', true);
-        this.$el.on('hidden', {region:this}, function(event) {
-            event.data.region.close();
-        });
-    },
-
-    onShow: function() {
-        this.$el.modal('show');
-    },
-
-    onClose: function() {
-        this.$el.modal('hide');
-    }
-});
-
 // https://stackoverflow.com/questions/3898130/how-to-check-if-a-user-has-scrolled-to-the-bottom/10795797#10795797
 var getDocumentHeight = function() {
     var D = document;
@@ -557,3 +380,24 @@ function sortCollectionByField(collection, fieldName, direction) {
 function dotted_reference(obj, str) {
     return str.split(".").reduce(function(o, x) { return o[x] }, obj);
 }
+
+
+exports.log = log;
+exports.asbool = asbool;
+exports.to_list = to_list;
+exports.quotate = quotate;
+exports.htmlentities = htmlentities;
+exports.htmlDecodeRelaxed = htmlDecodeRelaxed;
+exports.findIndex = findIndex;
+exports.deferreds_bundle = deferreds_bundle;
+exports.dotresolve = dotresolve;
+exports.dotted_reference = dotted_reference;
+exports.sortCollectionByField = sortCollectionByField;
+exports.getDocumentHeight = getDocumentHeight;
+
+exports.today_iso = today_iso;
+exports.now_iso = now_iso;
+exports.now_iso_filename = now_iso_filename;
+exports.now_iso_human = now_iso_human;
+exports.timestamp = timestamp;
+exports.isodate_compact_to_verbose = isodate_compact_to_verbose;

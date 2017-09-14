@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2015 Andreas Motl, Elmyra UG
+require('patzilla.views.common');
+require('patzilla.views.results');
 
 ResultNumbersView = GenericResultView.extend({
 
@@ -99,5 +101,7 @@ opsChooserApp.addInitializer(function(options) {
         });
 
     });
+
+    this.register_component('crawler');
 
 });

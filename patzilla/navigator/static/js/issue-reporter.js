@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2016-2017 Andreas Motl, Elmyra UG
+var StackTrace = require('stacktrace');
 
 IssueReporter = Backbone.Model.extend({
 
@@ -195,6 +196,11 @@ IssueReporterGui = Backbone.Model.extend({
 
         // Setup and reset
         dialog.modal('show');
+
+        // Prevent displaying the modal under backdrop
+        // https://weblog.west-wind.com/posts/2016/Sep/14/Bootstrap-Modal-Dialog-showing-under-Modal-Background
+        dialog.appendTo("body");
+
         dialog.find('#issue-reporter-send-button').show();
         dialog.find('#issue-reporter-status').empty();
 

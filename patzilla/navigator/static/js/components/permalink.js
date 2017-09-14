@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2016 Andreas Motl, Elmyra UG
+var dataurl = require('dataurl').dataurl;
+var opaque_param = require('patzilla.components.opaquelinks').opaque_param;
 
 PermalinkPlugin = Marionette.Controller.extend({
 
@@ -174,14 +176,19 @@ PermalinkPlugin = Marionette.Controller.extend({
                 $(tip).find('#permalink-open').click(function(e) {
                     e.preventDefault();
                     window.open(uri);
+                    $(element).popover('toggle');
                 });
 
                 // copy permalink to clipboard
                 var copy_button = $(tip).find('#permalink-copy');
-                _ui.copy_to_clipboard_bind_button('text/plain', uri, {element: copy_button[0], wrapper: this.el});
+                opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', uri, {
+                    element: copy_button[0],
+                    wrapper: this.el,
+                    callback: function() { $(element).popover('toggle'); },
+                });
 
                 // apply more generic augmentations
-                _ui.setup_text_tools();
+                opsChooserApp.ui.setup_text_tools();
 
             }
 
@@ -233,59 +240,6 @@ PermalinkPlugin = Marionette.Controller.extend({
         });
 
         return deferred.promise();
-    },
-
-    metadata_to_parameters: function() {
-        // Propagate search modifiers from metadata to URL parameters
-
-        var params = {};
-
-        // 1. Let's start with search modifiers from "query_data"
-        var query_data = opsChooserApp.metadata.get('query_data');
-        if (query_data) {
-            _.each(query_data.modifiers, function(value, key) {
-                //log('modifier:', key, value);
-                if (_.isBoolean(value) && value) {
-                    _.defaults(params, {modifiers: []});
-                    params.modifiers.push(key);
-                }
-            });
-        }
-
-        // 2. TODO: Add sorting control and fulltext modifiers
-
-        return params;
-
-    },
-
-    parameters_to_metadata: function(params) {
-
-        var query_data = {};
-
-        // 1. Let's start with search modifiers, which should go back to "metadata.query_data"
-        // There's already a first stage which transports
-        // query parameters to the application configuration
-        var modifiers = opsChooserApp.config.get('modifiers');
-        if (modifiers) {
-            modifiers = modifiers.split(',');
-            _.each(modifiers, function(modifier) {
-                //log('modifier:', modifier);
-                _.defaults(query_data, {modifiers: {}});
-                query_data.modifiers[modifier] = true;
-            });
-        }
-
-        // 2. TODO: Add sorting control and fulltext modifiers
-
-        // Set metadata to empty object if undefined
-        var metadata_query_data = opsChooserApp.metadata.get('query_data');
-        if (metadata_query_data === undefined) {
-            opsChooserApp.metadata.set('query_data', {});
-        }
-
-        // Finally, update metadata object
-        _.extend(opsChooserApp.metadata.get('query_data'), query_data);
-
     },
 
     serialize_params: function(params) {

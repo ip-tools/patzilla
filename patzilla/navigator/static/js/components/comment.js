@@ -1,5 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2014 Andreas Motl, Elmyra UG
+require('patzilla.components.storage');
+require('backbone-dom-to-view');
+
 
 CommentModel = Backbone.RelationalModel.extend({
 
@@ -257,14 +260,25 @@ CommentsPlugin = Marionette.Controller.extend({
         // this will get used later for renewing the comment managers when a project switch occurs
         this.itemviews = [];
 
-        // setup the data store
+        // Setup the data store
+        this.listenTo(opsChooserApp, 'localforage:ready', function() {
+            log('localforage:ready-comment');
+            _this.setup_component(options);
+        });
+
+    },
+
+    setup_component: function(options) {
+
         this.store = new CommentCollection();
+
+        // Setup the data store
         this.store.fetch({success: function(response) {
             log('CommentsPlugin: fetch ready');
             // FIXME: nobody currently waits for this to happen
         }});
 
-        // forward control to a new item-specific CommentManager after itemview got rendered
+        // Forward control to a new item-specific CommentManager after itemview got rendered
         this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
 
             // place CommentManager inside itemview for external access (e.g. viewport)
@@ -332,19 +346,23 @@ CommentsPlugin = Marionette.Controller.extend({
 // setup plugin
 opsChooserApp.addInitializer(function(options) {
 
-    // Initialize comments plugin
-    // HACK: Postpone initialization until projects:initialize happens, if another
-    //       load operation (e.g. by database-transfer) is already in progress.
-    // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
-    if (!this.LOAD_IN_PROGRESS) {
-        this.comments = new CommentsPlugin({view: this.collectionView});
+    this.listenToOnce(this, "application:init", function() {
 
-    } else {
-        this.listenTo(this, 'projects:initialize', function() {
+        // Initialize comments plugin
+        // HACK: Postpone initialization until projects:initialize happens, if another
+        //       load operation (e.g. by database-transfer) is already in progress.
+        // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
+        if (!this.LOAD_IN_PROGRESS) {
             this.comments = new CommentsPlugin({view: this.collectionView});
-        });
 
-    }
+        } else {
+            this.listenTo(this, 'projects:initialize', function() {
+                this.comments = new CommentsPlugin({view: this.collectionView});
+            });
 
+        }
+
+
+    });
 
 });

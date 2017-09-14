@@ -1,6 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
+// jqPagination, a jQuery pagination plugin
+require('jqpagination');
+
 PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
     template: _.template($('#ops-pagination-template').html(), this.model),

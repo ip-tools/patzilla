@@ -87,7 +87,7 @@ Dark style for displaying keys on a white or light background
 Fancy style: css-class to experiments with
  */
 .kbKeyFancy{
-  cursor:url(res/ico/bluescreen16.ico);
+  /* cursor:url(res/ico/bluescreen16.ico); */
 }
 /*
 Simple style: ideal for formal documents, with a lighter background
@@ -218,7 +218,7 @@ Light style: css-class to experiments with
 	background-color:#999;
 	color:#fff;
 	line-height:.9em;
-	width:1.2em
+	width:1.2em;
 	height:1.2em;
 	max-height:30px;
 	max-height:30px;
@@ -246,7 +246,7 @@ kbd > b.kbConcat {
 	background-color:#fff;
 	color:#000;
 	line-height:.9em;
-	width:1.2em
+	width:1.2em;
 	height:1.2em;
 	max-height:30px;
 	max-height:30px;

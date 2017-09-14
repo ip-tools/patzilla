@@ -1,5 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+require('patzilla.util.common');
+require('./01-search.js');
+require('./10-ops-base.js');
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
@@ -250,6 +253,58 @@ OpsExchangeMetadata = Backbone.Model.extend({
                 'pagination_current_page'
             ));
         }
+    },
+
+    to_parameters: function() {
+        // Propagate search modifiers from metadata to URL parameters
+
+        var params = {};
+
+        // 1. Let's start with search modifiers from "query_data"
+        var query_data = this.get('query_data');
+        if (query_data) {
+            _.each(query_data.modifiers, function(value, key) {
+                //log('modifier:', key, value);
+                if (_.isBoolean(value) && value) {
+                    _.defaults(params, {modifiers: []});
+                    params.modifiers.push(key);
+                }
+            });
+        }
+
+        // 2. TODO: Add sorting control and fulltext modifiers
+
+        return params;
+
+    },
+
+    apply_modifiers: function(modifiers) {
+
+        var query_data = {};
+
+        // 1. Let's start with search modifiers, which should go back to "metadata.query_data"
+        // There's already a first stage which transports
+        // query parameters to the application configuration
+        if (modifiers) {
+            modifiers = modifiers.split(',');
+            _.each(modifiers, function(modifier) {
+                //log('modifier:', modifier);
+                _.defaults(query_data, {modifiers: {}});
+                query_data.modifiers[modifier] = true;
+            });
+        }
+
+        // 2. TODO: Add sorting control and fulltext modifiers
+
+        // Set metadata to empty object if undefined
+        var metadata_query_data = this.get('query_data');
+        if (metadata_query_data === undefined) {
+            this.set('query_data', {});
+        }
+
+        // Finally, update metadata object
+        _.extend(this.get('query_data'), query_data);
+
     },
 
 });

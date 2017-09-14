@@ -393,3 +393,5 @@ var FIELDS_KNOWLEDGE = {
         'fields': DEPATECH_FIELDS,
     },
 };
+
+exports.FIELDS_KNOWLEDGE = FIELDS_KNOWLEDGE;

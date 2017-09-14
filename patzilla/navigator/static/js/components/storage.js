@@ -1,5 +1,13 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014,2017 Andreas Motl, Elmyra UG
+require('blobjs');
+var dataurl = require('dataurl').dataurl;
+var saveAs = require('file-saver').saveAs;
+var localforage = require('localforage');
+
+require('backbone-relational');
+require('localforage-backbone');
+
 
 StoragePlugin = Marionette.Controller.extend({
 
@@ -65,15 +73,16 @@ StoragePlugin = Marionette.Controller.extend({
 
             // write file
             if (!payload) {
-                _ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
+                opsChooserApp.ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
                 return;
             }
+
             var blob = new Blob([payload], {type: "application/json"});
             saveAs(blob, filename);
 
             // notify user
             var size_kb = Math.round(blob.size / 1000);
-            _ui.notify(
+            opsChooserApp.ui.notify(
                 'Database exported successfully, size is ' + size_kb + 'kB.',
                 {type: 'success', icon: 'icon-save'});
 
@@ -97,7 +106,7 @@ StoragePlugin = Marionette.Controller.extend({
                 if (!payload_dataurl || !payload) {
                     var message = 'ERROR: data URL format is invalid';
                     console.error(message + '; payload=' + payload);
-                    _ui.notify(message, {type: 'error'});
+                    opsChooserApp.ui.notify(message, {type: 'error'});
                     return;
                 }
             }
@@ -109,7 +118,7 @@ StoragePlugin = Marionette.Controller.extend({
                 var msg = error.message;
                 var message = 'ERROR: JSON format is invalid, ' + msg;
                 console.error(message + '; payload=' + payload);
-                _ui.notify(message, {type: 'error'});
+                opsChooserApp.ui.notify(message, {type: 'error'});
                 return;
             }
         }
@@ -122,14 +131,14 @@ StoragePlugin = Marionette.Controller.extend({
         if (filetype == 'patzilla.navigator.database' || filetype == 'elmyra.ipsuite.navigator.database') {
             var message = 'ERROR: Database dump format "' + filetype + '" is invalid.';
             console.error(message);
-            _ui.notify(message, {type: 'error'});
+            opsChooserApp.ui.notify(message, {type: 'error'});
             return;
         }
 
         if (!database) {
             var message = 'ERROR: Database is empty.';
             console.error(message);
-            _ui.notify(message, {type: 'error'});
+            opsChooserApp.ui.notify(message, {type: 'error'});
             return;
         }
 
@@ -170,7 +179,7 @@ StoragePlugin = Marionette.Controller.extend({
             // activate project
             opsChooserApp.trigger('projects:initialize');
 
-            _ui.notify(
+            opsChooserApp.ui.notify(
                 'Database imported successfully',
                 {type: 'success', icon: 'icon-folder-open-alt'});
 
@@ -240,7 +249,7 @@ StoragePlugin = Marionette.Controller.extend({
             if (file_type != 'application/json') {
                 var message = 'ERROR: File type is ' + (file_type ? file_type : 'unknown') + ', but should be application/json';
                 //log('import message:', message);
-                _ui.notify(message, {type: 'error'});
+                opsChooserApp.ui.notify(message, {type: 'error'});
                 return;
             }
 
@@ -254,7 +263,7 @@ StoragePlugin = Marionette.Controller.extend({
             reader.onerror = function(e) {
                 var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
                 //log('import message:', message);
-                _ui.notify(message, {type: 'error'});
+                opsChooserApp.ui.notify(message, {type: 'error'});
             }
             reader.readAsText(file);
 
@@ -271,13 +280,13 @@ StoragePlugin = Marionette.Controller.extend({
         $('#database-wipe-button').unbind();
         $('#database-wipe-button').click(function(e) {
 
-            _ui.confirm('This will wipe the whole local database including custom keywords. Are you sure?').then(function() {
+            opsChooserApp.ui.confirm('This will wipe the whole local database including custom keywords. Are you sure?').then(function() {
 
                 // wipe the database
                 _this.dbreset({shutdown_gui: true});
 
                 // notify user about the completed action
-                _ui.notify(
+                opsChooserApp.ui.notify(
                     'Database wiped successfully. You should create a new project before starting over.',
                     {type: 'success', icon: 'icon-trash'});
 
@@ -289,8 +298,57 @@ StoragePlugin = Marionette.Controller.extend({
 
 });
 
-// setup plugin (DONE in app/main.js, because we need it early!)
-/*
+
+// Data storage components
 opsChooserApp.addInitializer(function(options) {
+
+    var _this = this;
+
+    // Set database name from "context" query parameter
+    localforage.config({name: this.config.get('context')});
+
+    // Set localforage driver
+    // We use Local Storage here to make introspection easier.
+    // TODO: Maybe disable on production
+    localforage.setDriver(localforage.LOCALSTORAGE, function() {
+        console.info("localforage: Driver is ready");
+        _this.trigger('localforage:ready');
+    });
+
+    // Import database from url :-)
+    // TODO: I'd like this to have storage.js make it on its own, but that'd be too late :-(
+    //       check again what we could achieve...
+    var database_dump = this.config.get('database');
+    if (database_dump) {
+
+        // When importing a database dump, we assign "context=viewer" a special meaning here:
+        // the database scope will always be cleared beforehand to avoid project name collisions.
+        // Ergo the "viewer" context is considered a *very transient* datastore.
+        if (this.config.get('context') == 'viewer') {
+            this.storage.dbreset();
+        }
+
+        // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
+        this.LOAD_IN_PROGRESS = true;
+
+        // TODO: resolve project name collisions!
+        this.storage.dbimport(database_dump);
+    }
+
+    this.register_component('storage');
+
 });
-*/
+
+opsChooserApp.addInitializer(function(options) {
+
+    this.storage = new StoragePlugin();
+
+    this.listenTo(this, 'application:ready', function() {
+        this.storage.setup_ui();
+    });
+
+    this.listenTo(this, 'results:ready', function() {
+        this.storage.setup_ui();
+    });
+
+});

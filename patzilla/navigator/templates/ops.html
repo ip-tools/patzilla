@@ -433,7 +433,7 @@
                         <dd class="keyword">
                             <%=
                             data.get_applicants(true).map(function(item) {
-                                return _.template($('#ops-biblio-party-template').html(), item);
+                                return _.template($('#ops-biblio-party-template').html())(item);
                             }).join('<br/>') || '&nbsp;'
                             %>
                         </dd>
@@ -444,7 +444,7 @@
                         <dd class="keyword">
                             <%=
                             data.get_inventors(true).map(function(item) {
-                                return _.template($('#ops-biblio-party-template').html(), item);
+                                return _.template($('#ops-biblio-party-template').html())(item);
                             }).join('<br/>') || '&nbsp;'
                             %>
                         </dd>

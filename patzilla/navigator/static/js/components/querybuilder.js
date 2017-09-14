@@ -1,5 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2017 Andreas Motl, Elmyra UG
+require('select2/select2.js');
+require('select2/select2.css');
+require('jquery-caret-plugin/dist/jquery.caret.js');
+var bootbox = require('bootbox');
+var FIELDS_KNOWLEDGE = require('patzilla.backend.fields').FIELDS_KNOWLEDGE;
 
 QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
@@ -333,21 +338,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn"><i class="icon-copy"></i> &nbsp; Copy to clipboard</a>';
 
             var entries = _this.get_comfort_form_entries();
-            var data = entries.join('\n');
+            var data = entries.join('\n') + '\n';
             var modal_html = '<pre>' + data + '</pre>' + copy_button;
 
-            var box = bootbox.dialog(
-                modal_html, [{
-                    "label": 'OK',
-                    "icon" : 'OK',
-                    "callback": null,
-                }],
-                {header: 'Contents of comfort form'});
-            //log('box:', box);
+            var box = bootbox.alert({
+                title: 'Contents of comfort form',
+                message: modal_html,
+            });
 
             // bind clipboard copy button
             var copy_button = box.find('#comfort-form-copy-button');
-            _ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: box[0]});
+            opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: box[0]});
 
         });
 
@@ -368,7 +369,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-query-transform').unbind('click');
         $('#btn-query-transform').click(function() {
             if (_this.check_query_empty({'icon': 'icon-exchange'})) { return; }
-            $('#clipboard-modifier-chooser').modal('show');
+
+            var dialog = $('#clipboard-modifier-chooser');
+            dialog.modal('show');
+
+            // Prevent displaying the modal under backdrop
+            // https://weblog.west-wind.com/posts/2016/Sep/14/Bootstrap-Modal-Dialog-showing-under-Modal-Background
+            dialog.appendTo("body");
         });
 
         // open query chooser
@@ -1446,8 +1453,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 // setup component
 opsChooserApp.addInitializer(function(options) {
 
-    this.queryBuilderView = new QueryBuilderView({});
-    this.queryBuilderRegion.show(this.queryBuilderView);
+    this.listenToOnce(this, 'application:init', function() {
+        this.queryBuilderView = new QueryBuilderView({});
+        this.queryBuilderRegion.show(this.queryBuilderView);
+    });
 
     // Special bootstrap handling for numberlist=EP666666,EP666667:
     this.listenTo(this, 'application:ready', function() {

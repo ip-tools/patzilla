@@ -1,5 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+require('patzilla.models.generic');
+require('patzilla.models.search');
+require('patzilla.models.depatisnet');
+require('patzilla.models.ificlaims');
+require('patzilla.models.depatech');
 
 /**
  * ------------------------------------------
@@ -970,9 +975,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             };
 
             if (count_removed > 0) {
-                var info_body = _.template($('#family-members-removed-some-template').html(), tpldata, {variable: 'data'});
+                var info_body = _.template($('#family-members-removed-some-template').html(), {variable: 'data'})(tpldata);
             } else {
-                var info_body = _.template($('#family-members-removed-none-template').html(), tpldata, {variable: 'data'});
+                var info_body = _.template($('#family-members-removed-none-template').html(), {variable: 'data'})(tpldata);
             }
             this.ui.user_alert(info_body, 'info');
 
@@ -990,7 +995,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     tpldata.recommended_next_page_local = recommended_next_page_local;
                 }
 
-                var info_body = _.template($('#family-members-removed-empty-page-template').html(), tpldata, {variable: 'data'});
+                var info_body = _.template($('#family-members-removed-empty-page-template').html(), {variable: 'data'})(tpldata);
                 this.ui.user_alert(info_body, 'info');
 
                 // Go to page containing next results after the gap of removed items
@@ -1237,22 +1242,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         });
 
         // setup rating widget
-        console.log('setup rating widget');
-        //$('.rating-widget').raty('destroy');
-        $('.rating-widget').raty({
-            number: 3,
-            hints: ['slightly relevant', 'relevant', 'important'],
-            cancel: true,
-            cancelHint: 'not relevant',
-            dismissible: true,
-            path: '/static/widget/raty/img',
-            action: function(data, evt) {
-                var score = data.score;
-                var dismiss = data.dismiss;
-                var document_number = $(this).data('document-number');
-                _this.document_rate(document_number, score, dismiss);
-            },
-        });
+        this.rating.setup_ui({callback: _.bind(this.document_rate, this)});
 
         // propagate basket contents to Add/Remove button states once when activating the basket
         // TODO: do this conditionally - only if Basket is enabled
@@ -1375,221 +1365,13 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         return module_abo || development_mode;
     },
 
-});
+    register_component: function(name) {
+        this.config.get('component_list').push(name);
+    },
 
-
-/**
- * ------------------------------------------
- *           bootstrap application
- * ------------------------------------------
- */
-
-console.info('Load application components');
-
-opsChooserApp = new OpsChooserApp({config: navigatorConfiguration, theme: navigatorTheme});
-
-opsChooserApp.addRegions({
-    mainRegion: "#main-region",
-    queryBuilderRegion: "#querybuilder-region",
-    basketRegion: "#basket-region",
-    metadataRegion: "#ops-metadata-region",
-    listRegion: "#ops-collection-region",
-    paginationRegionTop: "#ops-pagination-region-top",
-    paginationRegionBottom: "#ops-pagination-region-bottom",
-});
-
-
-// Main application user interface
-opsChooserApp.addInitializer(function(options) {
-
-    //this.theme = new ApplicationTheme({config: navigatorConfiguration});
-    //log('this.applicationTheme:', this.applicationTheme);
-
-    this.layoutView = new LayoutView();
-    this.mainRegion.show(this.layoutView);
-
-});
-
-// Universal helpers
-opsChooserApp.addInitializer(function(options) {
-    this.issues = new IssueReporterGui();
-    this.listenTo(this, 'application:ready', function() {
-        this.issues.setup_ui();
-    });
-    this.listenTo(this, 'results:ready', function() {
-        this.issues.setup_ui();
-    });
-});
-
-// Data storage components
-opsChooserApp.addInitializer(function(options) {
-    this.storage = new StoragePlugin();
-
-    this.listenTo(this, 'application:ready', function() {
-        this.storage.setup_ui();
-    });
-
-    this.listenTo(this, 'results:ready', function() {
-        this.storage.setup_ui();
-    });
-});
-opsChooserApp.addInitializer(function(options) {
-
-    // Set driver (optional)
-    // We use Local Storage here to make introspection easier.
-    // TODO: disable on production
-    localforage.setDriver('localStorageWrapper');
-
-    // set database name from "context" query parameter
-    localforage.config({name: this.config.get('context')});
-
-    // import database from url :-)
-    // TODO: i'd like this to have storage.js make it on its own, but that'd be too late :-(
-    //       check again what we could achieve...
-    var database_dump = this.config.get('database');
-    if (database_dump) {
-
-        // When importing a database dump, we assign "context=viewer" a special meaning here:
-        // the database scope will always be cleared beforehand to avoid project name collisions.
-        // Ergo the "viewer" context is considered a *very transient* datastore.
-        if (this.config.get('context') == 'viewer') {
-            this.storage.dbreset();
-        }
-
-        // TODO: project and comment loading vs. application bootstrapping are not synchronized yet
-        this.LOAD_IN_PROGRESS = true;
-
-        // TODO: resolve project name collisions!
-        this.storage.dbimport(database_dump);
-    }
-
-});
-
-// initialize models
-opsChooserApp.addInitializer(function(options) {
-
-    // application domain model objects
-    this.search = new OpsPublishedDataSearch();
-    this.metadata = new OpsExchangeMetadata();
-    this.documents = new OpsExchangeDocumentCollection();
-    this.results = new ResultCollection();
-
-});
-
-// initialize views
-opsChooserApp.addInitializer(function(options) {
-
-    // bind model objects to view objects
-    this.metadataView = new MetadataView({
-        model: this.metadata
-    });
-    this.collectionView = new OpsExchangeDocumentCollectionView({
-        collection: this.documents
-    });
-    this.resultView = new ResultCollectionView({
-        collection: this.results
-    });
-
-    this.paginationViewTop = new PaginationView({
-        model: this.metadata
-    });
-    this.paginationViewBottom = new PaginationView({
-        model: this.metadata,
-        bottom_pager: true,
-    });
-
-    // bind view objects to region objects
-    this.metadataRegion.show(this.metadataView);
-    this.paginationRegionTop.show(this.paginationViewTop);
-    this.paginationRegionBottom.show(this.paginationViewBottom);
-});
-
-// activate anonymous basket (non-persistent/project-associated)
-opsChooserApp.addInitializer(function(options) {
-    // remark: the model instance created here will get overwritten later
-    //         by a project-specific basket when activating a project
-    // reason: we still do it here for the case we decide to deactivate the project
-    //         subsystem in certain modes (dunno whether this will work out)
-    // update [2014-06-08]: deactivated anonymous basket until further
-    //this.basket_activate(new BasketModel());
-});
-
-
-// Main component event wiring
-opsChooserApp.addInitializer(function(options) {
-
-    // Application core, first stage boot process
-    this.listenTo(this, 'application:boot', function() {
-
-        console.info('Load main application (application:boot)');
-
-        this.setup_ui();
-
-        // Propagate "datasource" query parameter
-        var datasource = this.config.get('datasource');
-        if (datasource) {
-            this.set_datasource(datasource);
-        }
-
-        // Activate regular list region right now to avoid double rendering on initial page load
-        this.listRegion.show(this.collectionView);
-
-        // Hide pagination- and metadata-area to start from scratch
-        this.ui.reset_content();
-
-        // Propagate opaque error messages to alert area
-        propagate_opaque_errors();
-
-        // Enter second stage boot process
-        this.trigger('application:ready');
-
-        this.ui.do_element_visibility();
-
-    });
-
-    // Activate project as soon it's loaded from the datastore
-    this.listenTo(this, "project:ready", this.project_activate);
-
-
-    // Results were fetched, take action
-    this.listenTo(this, 'results:ready', function() {
-
-        // commit metadata, this will trigger e.g. PaginationView rendering
-        this.metadata.trigger('commit');
-
-        // show documents (ops results) in collection view
-        // explicitly switch list region to OPS collection view
-        if (this.listRegion.currentView !== this.collectionView) {
-            this.listRegion.show(this.collectionView);
-        }
-
-    });
-
-
-});
-
-// Kick off the search process triggered from query parameters
-opsChooserApp.addInitializer(function(options) {
-
-    // Just wait for project activation since this is a dependency before running
-    // a search because the query history is associated to the project.
-    this.listenToOnce(this, "project:ready", function() {
-
-        // Propagate search modifiers from query parameters to search engine metadata
-        this.permalink.parameters_to_metadata();
-
-        // Propagate search modifiers from search engine metadata to user interface
-        var query_data = this.metadata.get('query_data');
-        if (query_data) {
-            this.queryBuilderView.set_common_form_data(query_data);
-        }
-
-        // The ui loading and lag woes are ready after the basket was fully initialized
-        this.listenToOnce(this, "basket:activated", function() {
-            // Run search
-            this.perform_search();
-        });
-
-    });
+    component_enabled: function(name) {
+        //log('is_enabled?: ', this.config.get('component_list'), name);
+        return _.contains(this.config.get('component_list'), name);
+    },
 
 });

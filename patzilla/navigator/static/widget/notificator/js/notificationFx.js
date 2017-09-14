@@ -8,6 +8,10 @@
  * Copyright 2014, Codrops
  * http://www.codrops.com
  */
+
+require("imports-loader?this=>window!exports-loader?window.Modernizr!./modernizr.custom");
+var classie = require('./classie');
+
 ;( function( window ) {
 	
 	'use strict';

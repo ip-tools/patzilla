@@ -1,5 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2016 Andreas Motl, Elmyra UG
+require('patzilla.components.storage');
+var memoize = require('memoize');
+require('raty');
+
 
 function BasketError(message) {
     this.name    = 'BasketError';
@@ -569,6 +573,9 @@ BasketEntryModel = Backbone.RelationalModel.extend({
     },
 });
 
+Backbone.Relational.store.addModelScope({BasketModel: BasketModel, BasketEntryModel: BasketEntryModel});
+
+
 BasketView = Backbone.Marionette.ItemView.extend({
 
     template: "#basket-template",
@@ -701,7 +708,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // share via clipboard
-        _ui.copy_to_clipboard('text/plain', function() {
+         opsChooserApp.ui.copy_to_clipboard('text/plain', function() {
             if (_this.check_empty()) { return; }
             var numbers = _this.model.get_numbers();
             return numbers.join('\n');
@@ -993,10 +1000,41 @@ BasketListView = GenericResultView.extend({
 });
 
 
+RatingController = Marionette.Controller.extend({
+
+    initialize: function(options) {
+        console.log('RatingController.initialize');
+    },
+
+    setup_ui: function(options) {
+
+        console.log('Setup rating widget');
+        //$('.rating-widget').raty('destroy');
+        $('.rating-widget').raty({
+            number: 3,
+            hints: ['slightly relevant', 'relevant', 'important'],
+            cancel: true,
+            cancelHint: 'not relevant',
+            dismissible: true,
+            path: '/static/widget/raty/img',
+            action: function(data, evt) {
+                var score = data.score;
+                var dismiss = data.dismiss;
+                var document_number = $(this).data('document-number');
+                options.callback(document_number, score, dismiss);
+            },
+        });
+
+    },
+
+
+});
+
 // setup component
 opsChooserApp.addInitializer(function(options) {
 
     this.basketController = new BasketController();
+    this.rating = new RatingController();
 
     // Special bootstrap handling for datasource=review:
     // This activates the review after both the application
@@ -1010,5 +1048,7 @@ opsChooserApp.addInitializer(function(options) {
             });
         }
     });
+
+    this.register_component('basket');
 
 });

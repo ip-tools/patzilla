@@ -61,3 +61,7 @@ function normalize_numberlist(payload) {
         });
     return deferred.promise();
 }
+
+exports.patent_number_strip_kindcode = patent_number_strip_kindcode;
+exports.normalize_numberlist = normalize_numberlist;
+exports.split_patent_number = split_patent_number;

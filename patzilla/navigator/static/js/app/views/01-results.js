@@ -93,7 +93,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
         // setup copy-to-clipboard button
         var clipboard_button = this.$el.find('#result-to-clipboard-button');
-        _ui.copy_to_clipboard_bind_button('text/plain', numberlist_string, {element: clipboard_button[0], wrapper: this.el});
+        opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', numberlist_string, {element: clipboard_button[0], wrapper: this.el});
 
         // setup insert-to-basket button
         var basket_button = this.$el.find('#result-to-basket-button');
@@ -104,7 +104,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
                 $.when(opsChooserApp.basketModel.add_multi(numberlist, {reset_seen: true})).then(function() {
                     $('#result-to-basket-indicator').removeClass('icon-spinner icon-spin').addClass('icon-plus');
                     var message = 'Added ' + numberlist.length + ' patent numbers to document collection.';
-                    _ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
+                    opsChooserApp.ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
                 });
             }, 50);
         });

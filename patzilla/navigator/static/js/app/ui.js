@@ -1,5 +1,16 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2017 Andreas Motl, Elmyra UG
+require('jquery.shorten.1.0');
+require('notify-combined');
+var screenfull = require('screenfull');
+
+// ZeroClipboard
+var ZeroClipboard = require('ZeroClipboard');
+ZeroClipboard.config({ swfPath: require('ZeroClipboard.swf') });
+
+// NotificationFx
+require('notificator');
+
 
 UiController = Marionette.Controller.extend({
 
@@ -192,7 +203,7 @@ UiController = Marionette.Controller.extend({
                 console.error('Backend error:', error);
 
                 if (_.isString(error.description)) {
-                    var tpl = _.template($('#cornice-error-template').html(), null, {variable: 'error'});
+                    var tpl = _.template($('#cornice-error-template').html(), {variable: 'error'});
                     //error.description = {content: error.description};
 
                 } else if (_.isObject(error.description)) {
@@ -207,7 +218,7 @@ UiController = Marionette.Controller.extend({
                     // Flavor 2: Handle objects with error.description.details
                     // Unwrap rich description
                     } else {
-                        var tpl = _.template($('#cornice-error-template').html(), null, {variable: 'error'});
+                        var tpl = _.template($('#cornice-error-template').html(), {variable: 'error'});
                         error.details = error.description.details;
                         error.description = error.description.user;
 
@@ -254,7 +265,7 @@ UiController = Marionette.Controller.extend({
             query_display = JSON.stringify(search_info.query_data.criteria);
         }
         search_info.query_display = query_display;
-        var msg = _.template($('#no-results').html(), null, {variable: 'data'})(search_info);
+        var msg = _.template($('#no-results').html(), {variable: 'data'})(search_info);
         this.user_alert(msg, 'warning');
     },
 
@@ -404,7 +415,7 @@ UiController = Marionette.Controller.extend({
                 var message =
                     'Copying data to clipboard not possible, Adobe Flash Player plugin is required.<br/>' +
                     '<a href="https://get.adobe.com/flashplayer/" target="_blank">Install Adobe Flash Player</a>.';
-                _ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
             });
             return;
         }
@@ -428,7 +439,7 @@ UiController = Marionette.Controller.extend({
                 //event.target.style.display = "none";
                 if (_.isEmpty(event.data)) {
                     var message = "Empty content, nothing copied to clipboard.";
-                    _ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                    opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
                     return;
                 }
                 var size_value = event.data[mimetype].length;
@@ -438,7 +449,10 @@ UiController = Marionette.Controller.extend({
                     var size_label = 'kB';
                 }
                 var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
-                _ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
+                opsChooserApp.ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
+                if (options.callback) {
+                    options.callback();
+                }
             });
 
             deferred.resolve(zeroclipboard);
@@ -477,12 +491,11 @@ UiController = Marionette.Controller.extend({
 
 });
 
+
 // setup controller
-var _ui;
 opsChooserApp.addInitializer(function(options) {
 
     this.ui = new UiController();
-    _ui = this.ui;
 
     this.listenTo(this, 'application:ready', function() {
         this.ui.setup_ui();

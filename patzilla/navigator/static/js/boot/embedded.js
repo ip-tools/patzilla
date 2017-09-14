@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2016 Andreas Motl, Elmyra UG
+require('../boot.js');
 
 EmbeddingController = Marionette.Controller.extend({
 
@@ -134,7 +135,7 @@ $(document).ready(function() {
     }
 
     opsChooserApp.start();
-    opsChooserApp.trigger('application:boot');
+    opsChooserApp.trigger('application:init');
 
     // Automatically run search after bootstrapping application.
     // However, from now on [2014-05-21] this gets triggered by "project:ready" events.

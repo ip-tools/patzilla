@@ -294,22 +294,22 @@ ul.breathe li {
 
 /* notification box */
 .ns-box {
-    font-size: 130%;
+    font-size: 130% !important;
 }
 .ns-type-success {
-    color: #468847;
-    background-color: #dff0d8;
-    border-color: #d6e9c6;
+    color: #468847 !important;
+    background-color: #dff0d8 !important;
+    border-color: #d6e9c6 !important;
 }
 .ns-type-error {
-    color: #b94a48;
-    background-color: #f2dede;
-    border-color: #eed3d7;
+    color: #b94a48 !important;
+    background-color: #f2dede !important;
+    border-color: #eed3d7 !important;
 }
 .ns-type-warning {
-    color: #ffffff;
-    background-color: #f89406;
-    border-color: #c67605;
+    color: #ffffff !important;
+    background-color: #f89406 !important;
+    border-color: #c67605 !important;
 }
 
 

@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
+require('jquery.highlight.bartaz');
+require('patzilla.util.linkmaker');
 
 OpsBaseViewMixin = {
 
@@ -121,13 +123,12 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         // Swap bibliographic details with placeholder information if we encounter appropriate signal
         // TODO: Really do this onDomRefresh?
         if (this.model.get('__type__') == 'ops-placeholder') {
-            //log('this.model:', this.model);
 
             // Massage LinkMaker to be suitable for use from placeholder template
             this.model.linkmaker = new Ipsuite.LinkMaker(this.model);
 
             // Add placeholder
-            var html = _.template($('#ops-entry-placeholder-template').html(), this.model, {variable: 'model'});
+            var html = _.template($('#ops-entry-placeholder-template').html(), {variable: 'model'})(this.model);
             $(container).find('.ops-bibliographic-details').before(html);
 
             // Hide content area

@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2015 Andreas Motl, Elmyra UG
+var ToProgress = require('ToProgress');
 
 ReadingController = Marionette.Controller.extend({
 

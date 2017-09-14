@@ -32,23 +32,10 @@
     <link rel="search" type="application/opensearchdescription+xml" title="${theme['ui.productname']}" href="/static/meta/opensearch.xml" />
     <link rel="shortcut icon" href="${url.app}/favicon.ico" />
 
-    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-    <!--[if lt IE 9]>
-        <script src="${url.app}/js/html5.js"></script>
-    <![endif]-->
-
-    ## <link rel="apple-touch-icon-precomposed"
-    ##       sizes="144x144" href="${url.app}/ico/apple-touch-icon-144-precomposed.png" />
-    ## <link rel="apple-touch-icon-precomposed"
-    ##       sizes="114x114" href="${url.app}/ico/apple-touch-icon-114-precomposed.png" />
-    ## <link rel="apple-touch-icon-precomposed"
-    ##       sizes="72x72" href="${url.app}/ico/apple-touch-icon-72-precomposed.png" />
-    ## <link rel="apple-touch-icon-precomposed"
-    ##       href="${url.app}/ico/apple-touch-icon-57-precomposed.png" />
-
 </head>
 
 <body>
 ${self.body()}
 </body>
+
 </html>

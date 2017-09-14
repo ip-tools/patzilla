@@ -57,3 +57,5 @@ function opaque_param(params, options) {
     return opaquetoken_query(params, options);
 
 }
+
+exports.opaque_param = opaque_param;

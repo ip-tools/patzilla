@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
+require('../boot.js');
 
 $(document).ready(function() {
 
@@ -12,7 +13,7 @@ $(document).ready(function() {
     //query = 'publicationnumber=US2013255753A1';
 
     opsChooserApp.start();
-    opsChooserApp.trigger('application:boot');
+    opsChooserApp.trigger('application:init');
 
     // Automatically run search after bootstrapping application.
     // However, from now on [2014-05-21] this gets triggered by "project:ready" events.

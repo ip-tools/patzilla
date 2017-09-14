@@ -7,8 +7,13 @@
     var embed_options = ${ embed_options or '{}' | n};
 </script>
 
+<!-- application configuration -->
+<script type="application/javascript">
+    ${ h.fiddler.render() | n }
+</script>
+
 % if request.registry.settings.get('ipsuite.production') == 'true':
 <script type="text/javascript" src="/static/js/o-embedded.min.js"></script>
 % else:
-<script type="text/javascript" src="/static/js/boot/embedded.js"></script>
+<script type="text/javascript" src="/static/assets/app-embedded.bundle.js"></script>
 % endif

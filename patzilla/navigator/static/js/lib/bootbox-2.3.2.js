@@ -509,3 +509,5 @@ var bootbox = window.bootbox || (function($) {
 
     return that;
 })( window.jQuery );
+
+exports.bootbox = bootbox;

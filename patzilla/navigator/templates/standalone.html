@@ -3,8 +3,14 @@
 
 <%include file="app.html"/>
 
+<!-- Application configuration -->
+<script type="application/javascript">
+    ${ h.fiddler.render() | n }
+</script>
+
+<!-- Application bundle -->
 % if request.registry.settings.get('ipsuite.production') == 'true':
 <script type="text/javascript" src="/static/js/o-standalone.min.js"></script>
 % else:
-<script type="text/javascript" src="/static/js/boot/standalone.js"></script>
+<script type="text/javascript" src="/static/assets/app-standalone.bundle.js"></script>
 % endif

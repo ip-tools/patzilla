@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2014,2015 Andreas Motl, Elmyra UG
+require('jquery.highlight.bartaz');
 
 KeywordMapModel = Backbone.RelationalModel.extend({
 
@@ -303,4 +304,5 @@ opsChooserApp.addInitializer(function(options) {
         this.keywords.setup_ui();
         this.keywords.highlight();
     });
+    this.register_component('keywords');
 });

@@ -476,27 +476,10 @@ class BackboneModelParameterFiddler(object):
         # merge hidden request parameters, e.g. "database=" gets stripped away form site.mako to avoid referrer spam
         # push current configuration state to browser history
         tplvars = boot.__dict__.copy()
-        tplvars['parameters_json'] = json.dumps(boot.config)
-        javascript_config = """
-            {name} = new NavigatorConfiguration();
-            {name}.set({parameters_json});
-            {name}.set(window.request_hidden);
-            if ({name}.get('opaque.meta.status') != 'error') {{
-                {name}.history_pushstate();
-            }}
-        """.format(name=self.name, **tplvars)
-
-        tplvars = {}
-        tplvars['parameters_json'] = json.dumps(boot.theme)
-        javascript_theme = """
-            var theme_settings = {{}};
-            _.extend(theme_settings, {{config: navigatorConfiguration}});
-            _.extend(theme_settings, {parameters_json});
-            navigatorTheme = new NavigatorTheme(theme_settings);
-        """.format(**tplvars)
-
-        #print 'javascript_config:', javascript_config
-
+        tplvars['config'] = json.dumps(boot.config)
+        tplvars['theme']  = json.dumps(boot.theme)
+        javascript_config = 'var navigator_configuration = {config};'.format(**tplvars)
+        javascript_theme  = 'var navigator_theme = {theme};'.format(**tplvars)
         payload = '\n'.join([javascript_config, javascript_theme])
         return payload
 

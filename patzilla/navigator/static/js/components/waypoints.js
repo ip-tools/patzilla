@@ -1,5 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2015 Andreas Motl, Elmyra UG
+require('waypoints/lib/jquery.waypoints.js');
+require('waypoints/lib/shortcuts/inview.js');
+require('waypoints/lib/shortcuts/sticky.js');
 
 WaypointController = Marionette.Controller.extend({
 
