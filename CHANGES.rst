@@ -4,6 +4,9 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-09-15 0.136.0
+==================
 - Fix: Don’t cache “404 Not Found” responses from OPS' image inquiry API
 - Fix hard errors in the aftermath of repository cleanup
 - Improve exception handling for authentication errors against OPS API
