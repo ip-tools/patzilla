@@ -27,6 +27,7 @@ Repository
 Get the source code::
 
     git clone https://github.com/ip-tools/ip-navigator.git
+    cd ip-navigator
 
 
 Python sandbox
@@ -64,10 +65,11 @@ Rebundle on file change::
 
 Configure
 =========
-::
+Use a configuration template::
 
     cp patzilla/config/development.ini.tpl patzilla/config/development-local.ini
-    # edit patzilla/config/development-local.ini
+
+Then, edit `patzilla/config/development-local.ini` according to your needs.
 
 
 Run instance
@@ -99,10 +101,15 @@ Go to http://localhost:6544
 
 Run tests
 =========
-::
+Setup::
 
     make setup-test
+
+Run all tests::
+
     make test
+
+Run selected test suite::
 
     make test options='--where patzilla.access.ificlaims'
     make test options='--where patzilla.access.depatech'
