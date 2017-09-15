@@ -242,10 +242,10 @@ class Bootstrapper(object):
                 }
             })
 
-        if 'depatech' in self.hostname:
+        if 'depatech' in self.hostname or 'depa.tech' in self.hostname:
             vendor_color = '#fff'
             dict_merge(data, {
-                'ui.productname': 'MTC depa.tech',
+                'ui.productname': 'depa.tech navigator',
                 'ui.productname.rich': '<img src="/static/vendor/mtc/depatech_logo.png"/>',
                 'ui.header.background_image': None,
                 'ui.page.title': '',
