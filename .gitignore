@@ -5,7 +5,8 @@
 /.venv*
 *.egg-info
 MANIFEST
-dist/
+/build
+/dist
 /var
 /node_modules
 .coverage

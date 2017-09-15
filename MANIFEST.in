@@ -1,8 +1,10 @@
 include setup.cfg *.txt *.rst
-recursive-include patzilla/navigator *.ico *.png *.css *.gif *.jpg *.svg *.pt *.txt *.mak *.mako *.html *.xml *.js *.map *.swf *.pem *.ini.tpl
-recursive-include patzilla/navigator/static/assets *.*
-recursive-include patzilla/util *.js
+exclude .bumpversion.cfg
+recursive-include patzilla/navigator *.pt *.mak *.mako *.html *.xml *.pem *.ini.tpl
 exclude patzilla/navigator/templates/urlcleaner.js
-prune patzilla/navigator/static/js
-prune patzilla/navigator/static/css
-prune patzilla/navigator/static/widget
+prune patzilla/navigator/static
+recursive-include patzilla/navigator/static/assets *.min.js.map
+recursive-include patzilla/navigator/static/img *.*
+recursive-include patzilla/navigator/static/vendor *.*
+recursive-include patzilla/navigator/static/assets *.min.js *.min.js.map *.svg *.png *.jpg *.gif *.ico *.swf *.eot *.ttf *.woff
+recursive-include patzilla/util *.js

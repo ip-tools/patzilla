@@ -55,7 +55,11 @@ Fetch all module dependencies::
 
 Bundle application and all required assets::
 
-    ./node_modules/.bin/webpack
+    yarn run build
+
+Rebundle on file change::
+
+    yarn run watch
 
 
 Configure
@@ -68,6 +72,9 @@ Configure
 
 Run instance
 ============
+
+Application container
+---------------------
 Start database::
 
     make mongodb-start
@@ -77,12 +84,24 @@ Start web server::
     source .venv27/bin/activate
     pserve patzilla/config/development-local.ini --reload
 
+Go to http://localhost:6543/ops/browser
+
+
+Nginx
+-----
+::
+
+    make nginx-start
+
+
+Go to http://localhost:6544
+
 
 Run tests
 =========
 ::
 
-    pip install -e .[test]
+    make setup-test
     make test
 
     make test options='--where patzilla.access.ificlaims'

@@ -2,46 +2,6 @@
 #$(error VERSION=$(VERSION))
 
 js:
-	@#echo bundling javascript for release=$(VERSION)
-
-	# standalone application
-	node_modules/.bin/uglifyjs \
-		patzilla/navigator/static/js/app/*.js \
-		patzilla/navigator/static/js/app/**/*.js \
-		patzilla/navigator/static/js/components/*.js \
-		patzilla/navigator/static/js/boot/standalone.js \
-		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
-		--mangle --compress \
-		--source-map patzilla/navigator/static/js/o-standalone.min.map \
-		--source-map-url /static/js/o-standalone.min.map \
-		> patzilla/navigator/static/js/o-standalone.min.js
-
-	# embedded application
-	node_modules/.bin/uglifyjs \
-		patzilla/navigator/static/js/app/*.js \
-		patzilla/navigator/static/js/app/**/*.js \
-		patzilla/navigator/static/js/components/*.js \
-		patzilla/navigator/static/js/boot/embedded.js \
-		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
-		--mangle --compress \
-		--source-map patzilla/navigator/static/js/o-embedded.min.map \
-		--source-map-url /static/js/o-embedded.min.map \
-		> patzilla/navigator/static/js/o-embedded.min.js
-
-	# configuration
-	node_modules/.bin/uglifyjs \
-		patzilla/navigator/static/js/config.js \
-		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
-		--mangle --compress \
-		> patzilla/navigator/static/js/config.min.js
-
-	# issue reporter
-	node_modules/.bin/uglifyjs \
-		patzilla/navigator/static/js/issue-reporter.js \
-		--preamble "// (c) 2013-2017 Elmyra UG - All rights reserved" \
-		--mangle --compress \
-		> patzilla/navigator/static/js/issue-reporter.min.js
-
 	# url cleaner
 	node_modules/.bin/uglifyjs \
 		patzilla/navigator/templates/urlcleaner.js \
@@ -50,26 +10,25 @@ js:
 
 	-git diff --quiet --exit-code || git commit \
 		Makefile \
-		patzilla/navigator/static/js/config.min.js \
-		patzilla/navigator/static/js/issue-reporter.min.js \
 		patzilla/navigator/templates/urlcleaner.min.js \
 		-uno --untracked-files=no \
 		--message='release: minify javascript resources'
 
-js-nt:
-	./node_modules/.bin/webpack --display detailed --display-error-details
+js-release: js
+	@echo Bundling Javascript/CSS resources for release=$(VERSION)
+	yarn run release
 
 sdist:
 	python setup.py sdist
-	cd js.jquery_shorten; python setup.py sdist
-	cd js.purl; python setup.py sdist
-	cd js.underscore_string; python setup.py sdist
 
 upload:
 	rsync -auv */dist/PatZilla-* root@almera.elmyra.de:/root/install/PatZilla/
 
+setup-test:
+	source .venv27/bin/activate; pip install -e .[test]
+
 setup-maintenance:
-	source .venv27/bin/activate; pip install Fabric==1.8.0 cuisine
+	source .venv27/bin/activate; pip install -e .[deployment]
 
 install:
 	@# make install target=patoffice version=0.29.0
@@ -86,7 +45,7 @@ push:
 #release:
 #	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
 
-release: js bumpversion push sdist upload
+release: js-release bumpversion push sdist upload
 
 install-nginx-auth:
 	rsync -azuv nginx-auth/* root@almera.elmyra.de:/opt/elmyra/patentsearch/nginx-auth/

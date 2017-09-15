@@ -120,12 +120,12 @@ setup(name='PatZilla',
       package_data={
           'patzilla.navigator': [
               'resources/*.*',
-              'templates/*.mako',
+              'templates/*.mako', 'templates/*.html',
               'static/js/**/*.js', 'static/js/**/*.map', 'static/js/**/*.swf', '**/**/*.css',
               '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg',
               'static/widget/**/**/*.*',
           ],
-          'patzilla.util.render': ['*.js'],
+          'patzilla.util': ['*.js'],
       },
       zip_safe=False,
       test_suite='nose.collector',
@@ -133,6 +133,10 @@ setup(name='PatZilla',
       tests_require=test_requires,
       extras_require={
           'test': test_requires,
+          'deployment': [
+              'Fabric==1.8.0',
+              'cuisine',
+          ],
       },
 
       entry_points={

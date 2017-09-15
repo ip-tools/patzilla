@@ -1,6 +1,5 @@
 // -*- coding: utf-8 -*-
 // (c) 2017 Andreas Motl, Elmyra UG
-
 const path = require('path');
 const webpack = require('webpack');
 
@@ -10,6 +9,9 @@ const webpack = require('webpack');
 const __contextpath = path.resolve(__dirname, 'patzilla', 'navigator', 'static');
 
 module.exports = {
+
+    cache: true,
+    devtool: "cheap-source-map",
 
     context: __contextpath,
 
@@ -173,6 +175,8 @@ module.exports = {
     },
 
     plugins: [
+
+        // https://webpack.js.org/plugins/provide-plugin/
         new webpack.ProvidePlugin({
             '$': 'jquery',
             'jQuery': 'jquery',
@@ -185,6 +189,7 @@ module.exports = {
             'Marionette': 'backbone.marionette',
             'Backbone.Marionette': 'backbone.marionette',
         }),
+
     ],
 
 };
