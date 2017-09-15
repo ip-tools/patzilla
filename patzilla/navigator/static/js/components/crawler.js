@@ -36,6 +36,10 @@ ResultNumbersView = GenericResultView.extend({
 
     },
 
+    has_criteria: function() {
+        return Boolean(this.model.get('query_origin'));
+    },
+
     fetcher_factory: function() {
 
         var query = this.model.get('query_origin');
@@ -83,21 +87,40 @@ opsChooserApp.addInitializer(function(options) {
         // wire fetch-results buttons
         $('#fetch-result-numbers-action').unbind('click');
         $('#fetch-result-numbers-action').click(function(e) {
-            var modal = new ModalRegion({el: '#modal-area'});
-            // reset all filters
+
+            // Reset all filters
             _this.metadata.set('filter', {});
             var result_numbers_view = new ResultNumbersView({model: _this.metadata});
+
+            // Sanity checks
+            if (!result_numbers_view.has_criteria()) {
+                opsChooserApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
+                return;
+            }
+
+            // Display dialog
+            var modal = new ModalRegion({el: '#modal-area'});
             modal.show(result_numbers_view);
         });
+
         $('#fetch-result-numbers-no-kindcodes-action').unbind('click');
         $('#fetch-result-numbers-no-kindcodes-action').click(function(e) {
-            var modal = new ModalRegion({el: '#modal-area'});
 
-            // set signal to apply filter "strip_kindcodes" on response
+            // Reset all filters
+            // Set signal to apply filter "strip_kindcodes" on response
             _this.metadata.set('filter', {'strip_kindcodes': true});
-
             var result_numbers_view = new ResultNumbersView({model: _this.metadata});
+
+            // Sanity checks
+            if (!result_numbers_view.has_criteria()) {
+                opsChooserApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
+                return;
+            }
+
+            // Display dialog
+            var modal = new ModalRegion({el: '#modal-area'});
             modal.show(result_numbers_view);
+
         });
 
     });

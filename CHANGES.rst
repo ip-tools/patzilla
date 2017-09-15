@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Fix opaquelinks subsystem
+- Fix exception when crawling without criteria
 
 2017-09-15 0.136.0
 ==================
