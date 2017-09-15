@@ -36,6 +36,7 @@ development
 - Introduce webpacked version of login.js
 - Fix redirect on failed logins
 - Protect sensible configuration settings from leaking into javascript environment
+- Use vendor information from application settings
 
 2017-09-08 0.135.0
 ==================

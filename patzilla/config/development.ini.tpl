@@ -2,6 +2,15 @@
 # General application configuration
 ###
 
+[vendor]
+organization        = PatZilla
+productname         = IP Navigator
+productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
+copyright_html      = &copy; 2013-2017, <a href="https://www.example.org/" class="incognito pointer" target="_blank">ACME Inc.</a> — All rights reserved.
+email_purchase      = purchase@example.org
+email_support       = support@example.org
+
+
 [ip_navigator]
 datasources = ops, depatisconnect, ificlaims, depatech
 

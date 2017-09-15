@@ -60,6 +60,7 @@ class Bootstrapper(object):
         """define default settings"""
 
         request = get_current_request()
+        registry = request.registry
 
         data_source_list = [
             '<a href="https://ops.epo.org/" target="_blank" class="incognito pointer">EPO/OPS</a>',
@@ -74,13 +75,14 @@ class Bootstrapper(object):
         software_version_link  = '<a href="https://github.com/ip-tools/ip-navigator" target="_blank" ' \
                                  'class="incognito pointer">{label}</a>'.format(label=software_version_label)
 
+        vendor = registry.application_settings.vendor
         data = {
-            'ui.vendor.name': 'Elmyra',
-            'ui.vendor.copyright': u'&copy; 2013-2017, <a href="https://www.elmyra.de/" class="incognito pointer" target="_blank">Elmyra UG</a> — All rights reserved.',
-            'ui.productname': 'IP Navigator',
-            'ui.productname.rich': '<span class="header-logo">Elmyra <i class="circle-icon">IP</i> Navigator</span>',
-            'ui.email.purchase': 'purchase@elmyra.de',
-            'ui.email.support': 'purchase@elmyra.de',
+            'ui.vendor.name': vendor.organization,
+            'ui.vendor.copyright': vendor.copyright_html,
+            'ui.productname': vendor.productname,
+            'ui.productname.rich': vendor.productname_html,
+            'ui.email.purchase': vendor.email_purchase,
+            'ui.email.support': vendor.email_support,
 
             'ui.version': software_version_link,
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
