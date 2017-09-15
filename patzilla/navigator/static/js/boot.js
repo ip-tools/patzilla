@@ -23,7 +23,6 @@ require('patzilla.app.main');
 console.info('Load application components');
 
 // Essential application components
-require('patzilla.app.core');
 require('patzilla.app.ui');
 
 // Semi-essential application components

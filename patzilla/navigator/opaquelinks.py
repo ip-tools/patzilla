@@ -9,6 +9,8 @@ from cornice.service import Service
 from pyramid.httpexceptions import HTTPBadRequest
 from patzilla.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
 from patzilla.util.date import datetime_iso, unixtime_to_datetime
+from patzilla.util.python import exception_traceback
+
 try:
     from patzilla.util.web.uwsgi.uwsgidecorators import postfork
 except ImportError:
@@ -86,11 +88,13 @@ def create_request_interceptor(event):
         log.error('Opaque parameter token expired: expiry=%s, message=%s', expiry_iso, ex.message)
         request.opaque_meta.update({'status': 'error', 'errors': [ex.message]})
         # TODO: log/send full stacktrace
+        log.error(exception_traceback())
 
     except JwtVerifyError as ex:
         log.error('Error while decoding opaque parameter token: %s', ex.message)
         request.opaque_meta.update({'status': 'error', 'errors': [ex.message]})
         # TODO: log/send full stacktrace
+        log.error(exception_traceback())
 
 
 # ------------------------------------------

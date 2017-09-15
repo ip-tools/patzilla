@@ -40,6 +40,7 @@ module.exports = {
 
     module: {
         rules: [
+            // Do these to expose their symbols to the template namespace
             {
                 test: require.resolve('jquery'),
                 use: [
@@ -80,14 +81,6 @@ module.exports = {
                 use: [
                     'file-loader'
                 ]
-            },
-            {
-                test: /js\/app\/lib\/util2\.js$/,
-                use: [ 'script-loader' ]
-            },
-            {
-                test: /js\/app\/core\.js$/,
-                use: [ 'script-loader' ]
             },
             /*
              {
@@ -132,7 +125,6 @@ module.exports = {
 
         alias: {
             'patzilla.app.main':                    path.resolve(__contextpath, 'js', 'app', 'main.js'),
-            'patzilla.app.core':                    path.resolve(__contextpath, 'js', 'app', 'core.js'),
             'patzilla.app.ui':                      path.resolve(__contextpath, 'js', 'app', 'ui.js'),
             'patzilla.backend.fields':              path.resolve(__contextpath, 'js', 'app', 'ops-sdk.js'),
             'patzilla.app.config':                  path.resolve(__contextpath, 'js', 'config.js'),

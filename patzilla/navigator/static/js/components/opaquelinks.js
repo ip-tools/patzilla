@@ -58,4 +58,35 @@ function opaque_param(params, options) {
 
 }
 
+function propagate_opaque_errors() {
+
+    // TODO: Decouple from "opsChooserApp" instance
+
+    var status = opsChooserApp.config.get('opaque.meta.status');
+    if (status == 'error') {
+        var errors = opsChooserApp.config.get('opaque.meta.errors');
+        _.each(errors, function(error) {
+
+            if (error.location == 'JSON Web Token' && error.description == 'expired') {
+                error.description =
+                    'We are sorry, it looks like the validity time of this link has expired at ' + error.jwt_expiry_iso + '.' +
+                        '<br/><br/>' +
+                        'Please contact us at <a href="mailto:purchase@elmyra.de">purchase@elmyra.de</a> for any commercial plans.';
+            }
+            if (error.location == 'JSON Web Signature') {
+                error.description = 'It looks like the token used to encode this request is invalid.' + ' (' + error.description + ')'
+            }
+
+            // TODO: Streamline error forwarding
+            var response = {
+                'status': 'error',
+                'errors': [error]
+            }
+            opsChooserApp.ui.propagate_cornice_errors(response);
+
+        });
+    }
+}
+
 exports.opaque_param = opaque_param;
+exports.propagate_opaque_errors = propagate_opaque_errors;

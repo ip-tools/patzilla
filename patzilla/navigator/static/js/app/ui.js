@@ -211,12 +211,25 @@ UiController = Marionette.Controller.extend({
                         error.description = error.description || {};
                         _(error.description).defaults({headers: {}});
 
+                        // Beautifier
+                        if (error.description.content) {
+                            error.description.content = _.string.dedent(_.string.strip(_.string.stripTags(error.description.content)))
+                        }
+
                     // Flavor 2: Handle objects with error.description.details
                     // Unwrap rich description
                     } else {
                         var tpl = _.template($('#cornice-error-template').html(), {variable: 'error'});
                         error.details = error.description.details;
                         error.description = error.description.user;
+
+                        // Beautifier
+                        if (error.details) {
+                            error.details = _.string.dedent(_.string.strip(_.string.stripTags(error.details)));
+                        }
+                        if (error.description) {
+                            error.description = _.string.dedent(_.string.strip(_.string.stripTags(error.description)));
+                        }
 
                     }
 

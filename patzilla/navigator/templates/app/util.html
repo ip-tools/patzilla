@@ -72,7 +72,7 @@
                     data-report-kind="not-available"
                     data-report-item="<%= name %> (<%= location %>)"
                     data-report-html=".error-panel"
-                    data-dialog-remark="<%= htmlentities(_.string.dedent(_.string.strip(_.string.stripTags(description['content'])))) %>"
+                    data-dialog-remark="<%= htmlentities(description.content) %>"
                     >
                 Report problem
             </button>
@@ -138,9 +138,9 @@
                     data-report-html=".error-panel"
                     data-dialog-remark-orig="<%= htmlentities(error.description) %>"
                     data-dialog-remark="<%=
-                        htmlentities(_.string.dedent(_.string.strip(_.string.stripTags(error.description))))
+                        htmlentities(error.description)
                         + '\n' +
-                        htmlentities(_.string.dedent(_.string.strip(_.string.stripTags(error.details))))
+                        htmlentities(error.details)
                     %>"
                     >
                 Report problem

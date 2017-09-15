@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Fix opaquelinks subsystem
 
 2017-09-15 0.136.0
 ==================

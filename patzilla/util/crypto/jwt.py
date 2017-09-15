@@ -65,7 +65,7 @@ class JwtSigner(object):
         token = str(token)
         try:
             header_future, payload_future = jwt.process_jwt(token)
-            header, payload = jwt.verify_jwt(token, pub_key=self.key, allowed_algs=['HS256', 'RS256', 'ES256'])
+            header, payload = jwt.verify_jwt(token, pub_key=self.key, allowed_algs=['HS256', 'RS256', 'ES256', 'PS256'])
 
             if not payload.has_key('data'):
                 error_payload = {

@@ -94,22 +94,6 @@ _.mixin({
 });
 
 
-/*
- "Strip leading whitespace from each line in a string" by Sindre Sorhus
- https://github.com/sindresorhus/strip-indent/blob/master/index.js
- */
-_.string.dedent = function(str) {
-    const match = str.match(/^[ \t]*(?=\S)/gm);
-
-    if (!match) {
-        return str;
-    }
-
-    // Amendment: Dedent everything
-    const re = new RegExp('^[ \\t]+', 'gm');
-    return str.replace(re, '');
-};
-
 // Underscore mixins with common iterator functions adapted to work with objects and maintain key/val pairs
 // https://gist.github.com/eethann/3430971
 _.mixin({

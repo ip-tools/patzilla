@@ -60,6 +60,7 @@ require('patzilla.views.common');
 require('patzilla.views.results');
 require('patzilla.views.ops');
 require('patzilla.views.pagination');
+var propagate_opaque_errors = require('patzilla.components.opaquelinks').propagate_opaque_errors;
 
 // CSS files
 require('../../css/app.css');
