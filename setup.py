@@ -134,8 +134,9 @@ setup(name='PatZilla',
       extras_require={
           'test': test_requires,
           'deployment': [
-              'Fabric==1.8.0',
-              'cuisine',
+              'bumpversion==0.5.3',
+              'Fabric==1.8.5',
+              'cuisine==0.7.13',
           ],
       },
 
