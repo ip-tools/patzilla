@@ -39,6 +39,7 @@ development
 - Use vendor information from application settings
 - Refactor development mode flag
 - Release packaging wrt webpack
+- Improve vendor information handling
 
 2017-09-08 0.135.0
 ==================

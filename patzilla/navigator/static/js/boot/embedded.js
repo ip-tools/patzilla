@@ -50,6 +50,7 @@ EmbeddingController = Marionette.Controller.extend({
 
     run: function() {
         this.hide_regions();
+        this.hide_umbrella();
         if (this.pubnumber) {
             opsChooserApp.perform_listsearch({}, undefined, [this.pubnumber], 1, 'pn', 'OR');
         } else {

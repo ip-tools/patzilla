@@ -77,12 +77,13 @@ class Bootstrapper(object):
 
         vendor = registry.application_settings.vendor
         data = {
-            'ui.vendor.name': vendor.organization,
-            'ui.vendor.copyright': vendor.copyright_html,
-            'ui.productname': vendor.productname,
-            'ui.productname.rich': vendor.productname_html,
-            'ui.email.purchase': vendor.email_purchase,
-            'ui.email.support': vendor.email_support,
+            'ui.vendor.name': vendor.organization.decode('utf-8'),
+            'ui.vendor.copyright': vendor.copyright_html.decode('utf-8'),
+            'ui.productname': vendor.productname.decode('utf-8'),
+            'ui.productname.rich': vendor.productname_html.decode('utf-8'),
+            'ui.productname.html': vendor.productname_html.decode('utf-8'),
+            'ui.email.purchase': vendor.email_purchase.decode('utf-8'),
+            'ui.email.support': vendor.email_support.decode('utf-8'),
 
             'ui.version': software_version_link,
             'ui.page.title': 'Patent search', # + ' &nbsp; ' + self.beta_badge,
