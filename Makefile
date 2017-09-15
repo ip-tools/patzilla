@@ -134,7 +134,7 @@ mongodb-ftpro-import:
 
 sloccount:
 	sloccount patzilla
-	sloccount --addlang js patzilla/navigator/static/js/{app,boot,components,config.js,issue-reporter.js}
+	sloccount --addlang js patzilla/navigator/static/js/{app,boot,components,config.js,boot.js,issue-reporter.js}
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
