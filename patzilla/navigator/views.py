@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2016 Andreas Motl, Elmyra UG
-import json
 import re
 import os
+import json
 import logging
 from pkg_resources import resource_filename
 from mongoengine.errors import NotUniqueError
@@ -54,9 +54,6 @@ def includeme(config):
     config.add_route('patentsearch-quick2', '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
     config.add_route('jump-office',                     '/office/{office}/{service}/{document_type}/{document_number}')
     config.add_route('jump-office-local',   '/ops/browser/office/{office}/{service}/{document_type}/{document_number}')
-
-    # demo stuff
-    #config.add_route('angry-cats', '/angry-cats')
 
     # Remark:
     # At route "patentsearch-quick2", exclude access to javascript .map files. Otherwise, these would match.
@@ -418,6 +415,3 @@ def ops_chooser(request):
 def portfolio(request):
     return {'project': 'PatZilla'}
 
-@view_config(name='angry-cats', renderer='patzilla.navigator:templates/angry-cats.mako')
-def angry_cats(request):
-    return {}
