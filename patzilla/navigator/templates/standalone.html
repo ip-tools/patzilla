@@ -9,8 +9,10 @@
 </script>
 
 <!-- Application bundle -->
-% if request.registry.settings.get('ipsuite.production') == 'true':
-<script type="text/javascript" src="/static/js/o-standalone.min.js"></script>
-% else:
+% if h.development_mode():
+<script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
 <script type="text/javascript" src="/static/assets/app-standalone.bundle.js"></script>
+% else:
+<script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
+<script type="text/javascript" src="/static/assets/app-standalone.bundle.min.js"></script>
 % endif

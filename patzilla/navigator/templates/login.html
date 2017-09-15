@@ -21,7 +21,15 @@
         support_email: '${theme['ui.email.support']}',
     };
 </script>
+
+<!-- Application bundle -->
+% if h.development_mode():
+<script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
 <script type="text/javascript" src="/static/assets/app-login.bundle.js"></script>
+% else:
+<script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
+<script type="text/javascript" src="/static/assets/app-login.bundle.min.js"></script>
+% endif
 
 
 <div class="login-modal">

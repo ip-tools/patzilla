@@ -37,6 +37,7 @@ development
 - Fix redirect on failed logins
 - Protect sensible configuration settings from leaking into javascript environment
 - Use vendor information from application settings
+- Refactor development mode flag
 
 2017-09-08 0.135.0
 ==================

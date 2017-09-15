@@ -22,10 +22,10 @@
 
     <script type="application/javascript">
 ## this must be rendered inline to get rid of monster url parameters as early as possible
-% if request.registry.settings.get('ipsuite.production') == 'true':
-<%include file="urlcleaner.min.js"/>
-% else:
+% if h.development_mode():
 <%include file="urlcleaner.js"/>
+% else:
+<%include file="urlcleaner.min.js"/>
 % endif
     </script>
 

@@ -12,10 +12,15 @@ email_support       = support@example.org
 
 
 [ip_navigator]
+
+# Which datasources are configured
 datasources = ops, depatisconnect, ificlaims, depatech
 
 # Fields to protect from being leaked into Javascript environment
 datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, api_username, api_password
+
+# Whether to run the instance in development mode
+development_mode    = true
 
 
 [datasource_ops]
@@ -194,8 +199,6 @@ cache.static.expire = 2592000
 # database configuration
 mongodb.ipsuite.uri = mongodb://localhost:27017/ipsuite_development
 
-# app settings
-ipsuite.production = false
 
 
 ###

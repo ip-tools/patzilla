@@ -3,7 +3,7 @@
 import json
 import logging
 from pyramid.settings import asbool         # Keep this for h.asbool()
-from pyramid.threadlocal import get_current_request
+from pyramid.threadlocal import get_current_request, get_current_registry
 from patzilla.navigator.util import dict_prefix_key, dict_merge
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
@@ -494,4 +494,13 @@ class BackboneModelParameterFiddler(object):
         payload = '\n'.join([javascript_config, javascript_theme])
         return payload
 
+
 fiddler = BackboneModelParameterFiddler('navigatorConfiguration')
+
+
+def development_mode():
+    registry = get_current_registry()
+    try:
+        return asbool(registry.application_settings.ip_navigator.development_mode)
+    except:
+        return False
