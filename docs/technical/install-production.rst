@@ -4,7 +4,8 @@
 Install IP Navigator on production
 ##################################
 
-YMMV.
+This is a work in progress. YMMV.
+
 
 ***********
 Application
