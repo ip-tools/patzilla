@@ -26,15 +26,18 @@ Features:
   even across the boundaries of in-house systems.
 
 
-Demo
-====
-The demo_ will run the fixed query::
+Demos
+=====
+- The `search demo`_ will run the fixed query::
 
-    Bi=((Greife? OR Grip?) and (rohr or tube or circular)) and pc=(DE or EP) and IC=(B26D? or B23D?)
+      Bi=((Greife? OR Grip?) and (rohr or tube or circular)) and pc=(DE or EP) and IC=(B26D? or B23D?)
 
-... against DEPATISnet and display the results.
-You will be able to step through result pages and display fulltext- and family-information,
-but running custom queries will be disabled.
+  ... against DEPATISnet and display the results.
+  You will be able to step through result pages and display fulltext- and family-information,
+  but running custom queries will be disabled.
+
+- The `document view demo`_ will display the single document EP0666666A2 without any control elements.
+
 
 
 Data sources
@@ -68,9 +71,17 @@ suggestions and problem reports from the community are always welcome!
 Please use the `issues`_ system for communicating them.
 
 
+License
+=======
+This software is licensed under the `GNU Affero General Public License <GNU-AGPL-3.0_>`_
+and the `European Union Public License <EUPL-1.2_>`_.
+Please also have a look at the `notices about licenses of third-party components`_.
+
+
 Support
 =======
-`Elmyra UG`_ offers commercial support for development and operation services around this software.
+`Elmyra UG`_ offers commercial support, consulting, development and operation
+services around this software.
 
 
 Setup
@@ -78,9 +89,14 @@ Setup
 See `install docs`_ about how to run an instance in a development sandbox.
 
 
+.. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
+.. _EUPL-1.2: EUPL-1.2.txt
+.. _notices about licenses of third-party components: THIRD-PARTY-NOTICES.rst
 .. _install docs: docs/technical/install-development.rst
+
 .. _Elmyra UG: https://elmyra.de/
-.. _demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiUmlnSGlLRm91N0daUlVseDdTTTBYRkNXdWlqOUlLNnFoaS1lUnowMUdVOEVqVzFUb1lrWHRGLXdFekJqbTA5WjA3bndmN0JtZmJfcnFfeC1xcUd4Qm5qRl9CN0Zkb1NCOTJoZ25DNXg2aDA2OVBiZGtwRjlKdUhRUzVoZ0RLY212M2VPenFQOVlVTlBqTmdpaGM0Rmo3U25OMHJiS3ExRTByN2EweVk3N19rPSIsICJkYXRhIjogeyJwcm9qZWN0IjogInF1ZXJ5LXBlcm1hbGluayIsICJxdWVyeSI6ICJCaT0oKEdyZWlmZT8gT1IgR3JpcD8pIGFuZCAocm9ociBvciB0dWJlIG9yIGNpcmN1bGFyKSkgYW5kIHBjPShERSBvciBFUCkgYW5kIElDPShCMjZEPyBvciBCMjNEPykiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogImRlcGF0aXNuZXQifSwgIm5iZiI6IDE0MDU1MjcwMjMsICJleHAiOiAxNTYxMDQ3MDIzLCAiaWF0IjogMTQwNTUyNzAyM30.Ec0CjI2lLPLAoVxADDrkZlIRgbELqfUAP-0kKtrnWZ6YIm9iUc-KhekqWigyLQ-cSVWCDymLorON-KN79xojgzCvV8D-FZTwXVjMOwREGUJ6osm-7NiCNhXIjDCh1H2X
+.. _search demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiUmlnSGlLRm91N0daUlVseDdTTTBYRkNXdWlqOUlLNnFoaS1lUnowMUdVOEVqVzFUb1lrWHRGLXdFekJqbTA5WjA3bndmN0JtZmJfcnFfeC1xcUd4Qm5qRl9CN0Zkb1NCOTJoZ25DNXg2aDA2OVBiZGtwRjlKdUhRUzVoZ0RLY212M2VPenFQOVlVTlBqTmdpaGM0Rmo3U25OMHJiS3ExRTByN2EweVk3N19rPSIsICJkYXRhIjogeyJwcm9qZWN0IjogInF1ZXJ5LXBlcm1hbGluayIsICJxdWVyeSI6ICJCaT0oKEdyZWlmZT8gT1IgR3JpcD8pIGFuZCAocm9ociBvciB0dWJlIG9yIGNpcmN1bGFyKSkgYW5kIHBjPShERSBvciBFUCkgYW5kIElDPShCMjZEPyBvciBCMjNEPykiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogImRlcGF0aXNuZXQifSwgIm5iZiI6IDE0MDU1MjcwMjMsICJleHAiOiAxNTYxMDQ3MDIzLCAiaWF0IjogMTQwNTUyNzAyM30.Ec0CjI2lLPLAoVxADDrkZlIRgbELqfUAP-0kKtrnWZ6YIm9iUc-KhekqWigyLQ-cSVWCDymLorON-KN79xojgzCvV8D-FZTwXVjMOwREGUJ6osm-7NiCNhXIjDCh1H2X
+.. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
 .. _issues: https://github.com/ip-tools/ip-navigator/issues
 
 .. _EPO/OPS: https://ops.epo.org/

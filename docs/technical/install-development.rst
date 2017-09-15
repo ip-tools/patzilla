@@ -69,7 +69,7 @@ Use a configuration template::
 
     cp patzilla/config/development.ini.tpl patzilla/config/development-local.ini
 
-Then, edit `patzilla/config/development-local.ini` according to your needs.
+Then, edit ``patzilla/config/development-local.ini`` according to your needs.
 
 
 Run instance
