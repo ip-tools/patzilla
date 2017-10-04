@@ -7,6 +7,7 @@ development
 - Fix opaquelinks subsystem
 - Fix exception when crawling without criteria
 - Vendor MTC: Update product name to “depa.tech navigator"
+- Use jquery.redirect from npmjs.org
 
 2017-09-15 0.136.0
 ==================
