@@ -12,15 +12,18 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 See the GNU Affero General Public License Version 3 for more details.
 
 You should have received a copy of the GNU Affero General Public License
-along with this program, see file "GNU-AGPL-3.0.txt"
+along with this program, see file "`<GNU-AGPL-3.0_>`_"
 or <http://www.gnu.org/licenses/agpl-3.0.en.html>.
 
 ----
 
 Additional remarks:
 
-- The program is also licensed under the terms of the European Union Public Licence.
-  The terms of the upcoming EUPL 1.2 apply, see file "EUPL-1.2.txt".
+- The program is also licensed under the terms of the European Union Public Licence,
+  see file "`<EUPL-1.2_>`_".
 - The program includes third-party components from different authors,
-  see "LICENSE-THIRD-PARTY.rst" for more information on that.
+  see "THIRD-PARTY-NOTICES.rst" for more information on that.
 
+
+.. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
+.. _EUPL-1.2: EUPL-1.2.txt

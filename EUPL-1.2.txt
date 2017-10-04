@@ -2,7 +2,7 @@
 European Union Public Licence V. 1.2
 ************************************
 
-EUPL © the European Union 2007, 2013
+EUPL © the European Union 2007, 2017
 
 This European Union Public Licence (the “EUPL”) applies to the Work (as defined
 below) which is provided under the terms of this Licence. Any use of the Work, other
@@ -284,12 +284,12 @@ Appendix
 - GNU Affero General Public License (AGPL) v. 3
 - Open Software License (OSL) v. 2.1, v. 3.0
 - Eclipse Public License (EPL) v. 1.0
-- Cecill v. 2.0, v. 2.1
+- CeCILL v. 2.0, v. 2.1
 - Mozilla Public Licence (MPL) v. 2
 - GNU Lesser General Public Licence (LGPL) v. 2.1, v. 3
-- Creative Commons Attribution-ShareAlike v. 3.0 Unported
-  (CC BY-SA 3.0) for works other than software
-- European Union Public Licence (EUPL)v. 1.1, v. 1.2
+- Creative Commons Attribution-ShareAlike v. 3.0 Unported (CC BY-SA 3.0) for works other than software
+- European Union Public Licence (EUPL) v. 1.1, v. 1.2
+- Québec Free and Open-Source Licence — Reciprocity (LiLiQ-R) or Strong Reciprocity (LiLiQ-R+)
 
 - The European Commission may update this Appendix to later versions of
   the above licences without producing a new version of the EUPL, as long
@@ -304,4 +304,4 @@ Appendix
 
 
 See also: https://en.wikipedia.org/wiki/European_Union_Public_Licence
-Upstream source for this file: https://joinup.ec.europa.eu/sites/default/files/ckeditor_files/files/EUPL%20v1_2%20-%20Draft%20EN%20v16-1.pdf
+Upstream source for this file: https://joinup.ec.europa.eu/sites/default/files/ckeditor_files/files/EUPL%20v1_2%20EN.txt
