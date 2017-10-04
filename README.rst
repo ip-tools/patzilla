@@ -5,7 +5,8 @@ IP Navigator
 
 About
 =====
-The IP Navigator is a powerful patent information research platform and toolkit with a modern user interface.
+The IP Navigator is a modular patent information research platform and toolkit
+with a modern user interface and access to multiple data sources.
 
 Features:
 
@@ -66,22 +67,22 @@ Screenshot
 
 Contributing
 ============
-While this project is primarily maintained by `Elmyra UG`_, contributions, ideas,
-suggestions and problem reports from the community are always welcome!
+We are always happy to receive contributions, ideas, suggestions
+and problem reports from the community!
 Please use the `issues`_ system for communicating them.
 
 
 License
 =======
-This software is licensed under the `GNU Affero General Public License <GNU-AGPL-3.0_>`_
+The IP Navigator is and will always be free and open source software.
+It is licensed under the `GNU Affero General Public License <GNU-AGPL-3.0_>`_
 and the `European Union Public License <EUPL-1.2_>`_.
 Please also have a look at the `notices about licenses of third-party components`_.
 
 
 Support
 =======
-`Elmyra UG`_ offers commercial support, consulting, development and operation
-services around this software.
+For enterprises, dedicated commercial support is also available through `Elmyra UG`_.
 
 
 Setup
