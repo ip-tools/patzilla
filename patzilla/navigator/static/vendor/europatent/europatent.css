@@ -1,0 +1,27 @@
+.header-container {
+
+    border-bottom: 1px solid #aaaaaa;
+    padding-bottom: 10px;
+    margin-bottom: 0px;
+
+    /* http://www.cssmatic.com/box-shadow */
+    /*
+    -webkit-box-shadow: 0px 10px 7px 3px #123456;
+    -moz-box-shadow: 0px 10px 7px 3px #123456;
+    box-shadow: 0px 10px 7px 3px #123456;
+    */
+
+}
+
+.header-inner-left {
+    margin-top: 35px;
+}
+
+.header-logo {
+    font-size: 3em;
+    font-weight: 500;
+    /* font-variant: small-caps; */
+    letter-spacing: 0.05em;
+    color: #333;
+    margin-right: 0.6em;
+}

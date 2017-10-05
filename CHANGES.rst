@@ -12,6 +12,7 @@ development
 - IFI Claims: Improve description fulltext display re.
   section “advantageous effects” (missing), embedded lists and embedded drawings
 - Improve handling of global- and runtime configuration settings
+- Add vendor branding assets
 
 2017-09-15 0.136.0
 ==================

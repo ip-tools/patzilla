@@ -1,0 +1,38 @@
+.header-container {
+
+    color: #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+
+    background-color: #f3f3f3;
+    background-image: linear-gradient(transparent 50%, rgba(255,255,255,.2) 50%);
+    background-size: 6px 6px;
+
+    /* http://www.cssmatic.com/box-shadow */
+    /*
+    -webkit-box-shadow: 0px 10px 7px 3px #ddd;
+    -moz-box-shadow: 0px 10px 7px 3px #ddd;
+    box-shadow: 0px 10px 7px 3px #ddd;
+    */
+
+}
+
+.header-inner-left {
+    margin-top: 15px;
+}
+
+.header-inner-right {
+    margin-top: 15px;
+}
+
+.header-logo {
+    color: #6c0439;
+    font-family: Ubuntu,Helvetica,Arial,Verdana,sans-serif;
+    font-size: 3em;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 500;
+    font-stretch: condensed;
+    letter-spacing: 3px;
+    margin-right: 0.6em;
+}
