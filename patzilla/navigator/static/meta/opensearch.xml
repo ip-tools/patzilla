@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
     <ShortName>IP Navigator</ShortName>
-    <Description>The IP Navigator is a powerful patent information research platform and toolkit with a modern user interface</Description>
-    <Tags>patent trademark design search research information management</Tags>
+    <Description>The IP Navigator is a modular patent information research platform and toolkit with a modern user interface and access to multiple data sources.</Description>
+    <Tags>patent information research management trademark design search fulltext</Tags>
     <Contact>info@elmyra.de</Contact>
     <Developer>Elmyra UG</Developer>
     <InputEncoding>UTF-8</InputEncoding>

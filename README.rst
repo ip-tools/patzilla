@@ -67,16 +67,17 @@ Screenshot
 
 Contributing
 ============
-We are always happy to receive contributions, ideas, suggestions
+We are always happy to receive code contributions, ideas, suggestions
 and problem reports from the community!
 Please use the `issues`_ system for communicating them.
 
 
 License
 =======
-The IP Navigator is and will always be free and open source software.
-It is licensed under the `GNU Affero General Public License <GNU-AGPL-3.0_>`_
-and the `European Union Public License <EUPL-1.2_>`_.
+The IP Navigator is and will always be **free and open source software**.
+Use of the source code included here is governed by the
+`GNU Affero General Public License <GNU-AGPL-3.0_>`_ and the
+`European Union Public License <EUPL-1.2_>`_.
 Please also have a look at the `notices about licenses of third-party components`_.
 
 

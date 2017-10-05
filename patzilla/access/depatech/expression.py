@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl, Elmyra UG
-import re
 import types
 import logging
 import pyparsing
@@ -66,8 +65,9 @@ class DepaTechExpression(object):
     """
     Translate discrete comfort form field values to Elasticsearch Query Syntax, as convenient as possible.
 
-    https://confluence.mtc.berlin/display/DPS/es+-+search+API
-    https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html
+    - https://depa.tech/api/depa-index/
+    - https://confluence.mtc.berlin/display/DPS/es+-+search+API
+    - https://www.elastic.co/guide/en/elasticsearch/reference/current/search-uri-request.html
     """
 
     # TODO:

@@ -1,12 +1,15 @@
 {
   "name": "patzilla-ui",
-  "description": "PatZilla is a powerful patent information research platform and toolkit with a modern user interface.",
+  "description": "PatZilla is a modular patent information research platform and toolkit with a modern user interface and access to multiple data sources.",
   "version": "0.136.0",
   "licence": "AGPL 3, EUPL 1.2",
   "author": {
     "name": "Andreas Motl",
     "email": "andreas.motl@elmyra.de"
   },
+  "keywords": [
+    "patent", "information", "research", "management", "trademark", "design", "search", "fulltext"
+  ],
   "homepage": "https://github.com/ip-tools/ip-navigator",
   "repository": {
     "type": "git",

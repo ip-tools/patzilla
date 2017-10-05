@@ -2,6 +2,7 @@
 # (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 #
 # Lowlevel adapter to search provider "MTC depa.tech"
+# https://depa.tech/api/depa-index/
 #
 import json
 import timeit
