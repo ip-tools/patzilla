@@ -15,14 +15,14 @@ js:
 		--message='release: minify javascript resources'
 
 js-release: js
-	@echo Bundling Javascript/CSS resources for release=$(VERSION)
+	@echo Bundling Javascript/CSS resources
 	yarn run release
 
 sdist:
 	python setup.py sdist
 
 upload:
-	rsync -auv */dist/PatZilla-* root@almera.elmyra.de:/root/install/PatZilla/
+	rsync -auv ./dist/PatZilla-* root@almera.elmyra.de:/root/install/PatZilla/
 
 setup-test:
 	source .venv27/bin/activate; pip install -e .[test]
