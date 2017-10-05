@@ -2,18 +2,16 @@
 # General application configuration
 ###
 
-[vendor]
-organization        = PatZilla
-productname         = IP Navigator
-productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
-copyright_html      = &copy; 2013-2017, <a href="https://www.example.org/" class="incognito pointer" target="_blank">ACME Inc.</a> — All rights reserved.
-email_purchase      = purchase@example.org
-email_support       = support@example.org
-
-
 [ip_navigator]
 
-# Which datasources are configured
+# Which vendors are enabled?
+# The selection process will use the first configured vendor as default,
+# after that it will search through the other configured vendors and will
+# select the one which matches the "hostname_matches" pattern
+# on a first come, first serve basis.
+vendors     = default
+
+# Which datasources are configured?
 datasources = ops, depatisconnect, ificlaims, depatech
 
 # Fields to protect from being leaked into Javascript environment
@@ -21,6 +19,16 @@ datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, a
 
 # Whether to run the instance in development mode
 development_mode    = false
+
+
+[vendor_default]
+organization        = PatZilla
+productname         = IP Navigator
+productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
+page_title          = Patent search
+copyright_html      = &copy; 2013-2017, <a href="https://www.example.org/" class="incognito pointer" target="_blank">Example Inc.</a> — All rights reserved.
+email_purchase      = purchase@example.org
+email_support       = support@example.org
 
 
 [datasource_ops]

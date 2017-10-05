@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Update configuration file templates re. vendoring
 
 2017-10-06 0.137.0
 ==================
