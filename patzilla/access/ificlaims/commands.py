@@ -56,9 +56,13 @@ if __name__ == '__main__':
     #results = client.text_fetch('CA-167637-S')
     #results = json.loads(client.text_fetch('CA-2886702-A1', 'json'))
     #results = json.loads(client.text_fetch('CA-2895852-A1', 'json'))
-    results = json.loads(client.text_fetch('CA-108104-S', 'json'))
+    #results = json.loads(client.text_fetch('CA-108104-S', 'json'))
 
+    results = json.loads(client.text_fetch('KR-20160114950-A', 'json'))
     print json.dumps(results)
+
+    #results = client.text_fetch('KR-20160114950-A', 'xml')
+    #print results
 
     #results = client.attachment_list('CN-1055497-A')
     #pprint(results)
