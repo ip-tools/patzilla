@@ -500,6 +500,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
             {key: 'background-art', original_label: 'Background technology', label: 'Background technology'},
             {key: 'summary-of-invention.tech-problem', label: 'Summary of invention » Technological problem' },
             {key: 'summary-of-invention.tech-solution', label: 'Summary of invention » Technological solution' },
+            {key: 'summary-of-invention.advantageous-effects', label: 'Summary of invention » Advantageous effects' },
             {key: 'description-of-embodiments', label: 'Description of embodiments' },
             {key: 'disclosure', original_label: 'The content of invention', label: 'Content of invention' },
             {key: 'description-of-drawings', original_label: 'Specification attached drawing', label: 'Description of drawings' },
@@ -671,6 +672,8 @@ IFIClaimsFulltext = Marionette.Controller.extend({
 
         var description_parts = [];
 
+        //log('parse_description_container:', description_container);
+
         // "p" node is a list of entries
         if (description_container.p) {
             description_parts = this.parse_description_list(description_container.p);
@@ -682,7 +685,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                 var fragment_name = fragment_spec['key'];
                 try {
                     var value = dotted_reference(description_container, fragment_name);
-                    //log(fragment_name, value);
+                    //log('Description fragment:', fragment_name, value);
                     if (!value) {
                         return;
                     }
@@ -725,8 +728,24 @@ IFIClaimsFulltext = Marionette.Controller.extend({
 
     parse_description_text: function(part, fragment_spec, index) {
 
+        var _this = this;
+
         var heading = '';
         var text = part['$t'];
+
+        // Handle lists
+        if (!part['$t'] && part['u']) {
+            text = '';
+            _.each(to_list(part['u']), function(u_part) {
+                var u_text = _this.parse_description_text(u_part);
+                text += u_text + ' ';
+            });
+        }
+
+        // Handle drawing references
+        if (!part['$t'] && part['img']) {
+            text = 'Reference to drawing "' + part['img']['@id'] + '".';
+        }
 
         // When first index carries caption, perform rewording and emphasis
         if (fragment_spec && index == 0) {

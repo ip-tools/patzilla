@@ -9,6 +9,8 @@ development
 - Vendor MTC: Update product name to “depa.tech navigator"
 - Use jquery.redirect from npmjs.com
 - Use jquery.viewport from npmjs.com
+- IFI Claims: Improve description fulltext display re.
+  section “advantageous effects” (missing), embedded lists and embedded drawings
 
 2017-09-15 0.136.0
 ==================
