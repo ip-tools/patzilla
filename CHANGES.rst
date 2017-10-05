@@ -4,6 +4,9 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-06 0.137.0
+==================
 - Fix opaquelinks subsystem
 - Fix exception when crawling without criteria
 - Vendor MTC: Update product name to “depa.tech navigator"
