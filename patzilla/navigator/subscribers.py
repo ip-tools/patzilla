@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
-# (c) 2013,2014 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import logging
-from patzilla.util.config import read_config, read_list, asbool
-from patzilla.util.data.container import SmartBunch
 from pyramid.threadlocal import get_current_request
 from pyramid.url import route_url
 from akhet.urlgenerator import URLGenerator as ApplicationURLGenerator
-
-from . import helpers
-
-site_version = '0.0.0'
+from patzilla.navigator.settings import GlobalSettings, RuntimeSettings
+from patzilla.navigator import helpers
 
 log = logging.getLogger(__name__)
 
@@ -17,45 +13,30 @@ log = logging.getLogger(__name__)
 def includeme(config):
     """Configure all application-specific subscribers."""
     config.add_subscriber(global_config, "pyramid.events.ApplicationCreated")
+    config.add_subscriber(runtime_config, "pyramid.events.ContextFound")
     config.add_subscriber(create_url_generators, "pyramid.events.ContextFound")
-    config.add_subscriber(create_tools, "pyramid.events.ContextFound")
+    #config.add_subscriber(create_tools, "pyramid.events.ContextFound")
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
 
 def global_config(event):
+    """
+    A subscriber for ``pyramid.events.ApplicationCreated`` events.
+    I create the global configuration objects and attach it to the registry.
+    """
     registry = event.app.registry
-    pyramid_settings = registry.settings
 
-    # Read configuration file to get global settings
-    # TODO: Optimize: Only read once, not on each request!
-    application_settings = read_config(pyramid_settings['CONFIG_FILE'], kind=SmartBunch)
+    # Provide Paste configuration via registry objects
+    global_settings = GlobalSettings()
+    registry.application_settings = global_settings.application_settings
+    registry.datasource_settings  = global_settings.datasource_settings
+    registry.vendor_settings      = global_settings.vendor_settings
 
-    # Provide Paste configuration via registry object
-    registry.application_settings = application_settings
-
-
-    # Compute datasource settings
-    datasource_settings = SmartBunch({
-        'datasources': [],
-        'datasource': SmartBunch(),
-        'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
-        })
-
-    # Read system settings from configuration
-    datasource_settings.datasources = read_list(application_settings.get('ip_navigator', {}).get('datasources'))
-    datasource_settings.protected_fields = read_list(application_settings.get('ip_navigator', {}).get('datasources_protected_fields'))
-    for datasource in datasource_settings.datasources:
-        application_settings_key = 'datasource_{name}'.format(name=datasource)
-        datasource_info = application_settings.get(application_settings_key, {})
-        datasource_info['fulltext_enabled'] = asbool(datasource_info.get('fulltext_enabled', False))
-        datasource_info['fulltext_countries'] = read_list(datasource_info.get('fulltext_countries', ''))
-        datasource_info['details_enabled'] = asbool(datasource_info.get('details_enabled', False))
-        datasource_info['details_countries'] = read_list(datasource_info.get('details_countries', ''))
-        datasource_settings.datasource[datasource] = SmartBunch.bunchify(datasource_info)
-
-        # Aggregate data for all countries
-        datasource_settings.total.fulltext_countries += datasource_info['fulltext_countries']
-
-    registry.datasource_settings = datasource_settings
+def runtime_config(event):
+    """
+    A subscriber for ``pyramid.events.ContextFound`` events.
+    I create the runtime configuration object and attach it to the request.
+    """
+    event.request.runtime_settings = RuntimeSettings()
 
 def create_url_generators(event):
     """A subscriber for ``pyramid.events.ContextFound`` events. I create various
@@ -111,6 +92,6 @@ def add_renderer_globals(event):
     #    pass
     #renderer_globals["c"] = request.tmpl_context
 
-    # Page title
-    renderer_globals['theme'] = helpers.Bootstrapper().theme_parameters()
+    # Propagate theme settings
+    renderer_globals['theme'] = request.runtime_settings.theme
     renderer_globals['page_title'] = None

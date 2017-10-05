@@ -28,17 +28,17 @@ def main(global_config, **settings):
 
     config.scan('patzilla.util.web.pyramid.cornice')
     config.include('cornice')
-
-    # Register generic components: URL generator, renderer globals
-    config.include(".subscribers")
-    config.include(".views")
     #config.include("akhet.static")
 
     # Register subsystem components
     config.include("patzilla.util.web.identity")
     config.include("patzilla.util.database.beaker_mongodb_gridfs")
     config.include("patzilla.util.web.pyramid")
+
+    # Register application components: URL generator, renderer globals
     config.include("patzilla.navigator.opaquelinks")
+    config.include("patzilla.navigator.subscribers")
+    config.include("patzilla.navigator.views")
 
     if 'ops' in datasources:
         config.include("patzilla.access.epo.ops.client")

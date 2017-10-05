@@ -5,7 +5,7 @@
 
 <!-- Application configuration -->
 <script type="application/javascript">
-    ${ h.fiddler.render() | n }
+    ${ h.configuration_fiddler().render() | n }
 </script>
 
 <!-- Application bundle -->
@@ -15,4 +15,8 @@
 % else:
 <script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
 <script type="text/javascript" src="/static/assets/app-standalone.bundle.min.js"></script>
+% endif
+
+% if 'ui.stylesheet' in theme:
+<link rel="stylesheet" href="${ theme['ui.stylesheet'] }">
 % endif

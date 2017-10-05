@@ -4,12 +4,12 @@
 <%include file="app.html"/>
 
 <script type="text/javascript">
-    var embed_options = ${ embed_options or '{}' | n};
+    var embed_options = ${ embed_options or '{}' | n };
 </script>
 
 <!-- application configuration -->
 <script type="application/javascript">
-    ${ h.fiddler.render() | n }
+    ${ h.configuration_fiddler().render() | n }
 </script>
 
 <!-- Application bundle -->
@@ -19,4 +19,8 @@
 % else:
 <script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
 <script type="text/javascript" src="/static/assets/app-embedded.bundle.min.js"></script>
+% endif
+
+% if 'ui.stylesheet' in theme:
+<link rel="stylesheet" href="${ theme['ui.stylesheet'] }">
 % endif

@@ -26,6 +26,8 @@ Features:
 - Sharing. Well-designed collaboration features allow efficient sharing of information with your colleagues,
   even across the boundaries of in-house systems.
 
+- Multitenancy. The software can operate on behalf of different vendors. It's easy to apply custom branding.
+
 
 Demos
 =====
@@ -37,7 +39,9 @@ Demos
   You will be able to step through result pages and display fulltext- and family-information,
   but running custom queries will be disabled.
 
-- The `document view demo`_ will display the single document EP0666666A2 without any control elements.
+- The `document view demo`_ will display the patent document EP0666666A2 without any control elements.
+  This is a showcase about how to embed the document view into own applications or
+  how to directly link to single documents.
 
 
 

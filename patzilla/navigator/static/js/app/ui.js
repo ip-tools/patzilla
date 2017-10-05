@@ -21,19 +21,6 @@ UiController = Marionette.Controller.extend({
 
         var _this = this;
 
-        // -----
-        // Theme
-        // -----
-
-        // Apply styles from individual vendors at runtime when not being in embedded mode
-        if (!opsChooserApp.config.get('embedded')) {
-
-            _.each(opsChooserApp.theme.get('ui.css'), function(styles, selector) {
-                $(selector).css(styles);
-            });
-
-        }
-
         // ------------------------------------------
         //   generic
         // ------------------------------------------

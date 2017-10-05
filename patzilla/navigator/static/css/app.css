@@ -1,3 +1,19 @@
+/* header */
+.header-inner-left {
+    margin-top: 8px;
+}
+
+.header-inner-right {
+    margin-top: 10px;
+}
+
+.header-logo {
+    font-size: 24.5px;
+    line-height: 40px;
+    font-weight: bold;
+}
+
+
 /* general */
 
 .monospace {
