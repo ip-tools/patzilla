@@ -8,7 +8,14 @@
     "email": "andreas.motl@elmyra.de"
   },
   "keywords": [
-    "patent", "information", "research", "management", "trademark", "design", "search", "fulltext"
+    "patent",
+    "information",
+    "research",
+    "management",
+    "trademark",
+    "design",
+    "search",
+    "fulltext"
   ],
   "homepage": "https://github.com/ip-tools/ip-navigator",
   "repository": {

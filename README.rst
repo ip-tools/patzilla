@@ -8,7 +8,13 @@ About
 The IP Navigator is a modular patent information research platform and toolkit
 with a modern user interface and access to multiple data sources.
 
-Features:
+Its goal is to provide the community with a contemporary user interface to the
+OPS service from EPO and other professional patent search APIs.
+It is also used as a building block for integrated vendor solutions.
+
+
+Features
+========
 
 - Multiple data source APIs.
 
@@ -69,16 +75,29 @@ Screenshot
     :target: https://github.com/ip-tools/ip-navigator
 
 
+Getting started
+===============
+Getting started with the software or deploying it yourself is quite easy if you are familiar with Python.
+We will only cover development here and the following documentation is for Debian 9 (Stretch) Linux.
+The software should work on any other Linux distribution, but this is beyond the scope of the README.
+See `install docs`_ about how to run an instance in a development sandbox.
+
+
 Contributing
 ============
 We are always happy to receive code contributions, ideas, suggestions
 and problem reports from the community!
-Please use the `issues`_ system for communicating them.
+Spend some time taking a look around, locate a bug, design issue or
+spelling mistake and then send us a pull request or create an `issue`_.
+
+Thanks in advance for your efforts, we really appreciate any help.
 
 
 License
 =======
-The IP Navigator is and will always be **free and open source software**.
+This software is copyright © 2013-2017 The PatZilla Authors. All rights reserved.
+It is and will always be **free and open source software**.
+
 Use of the source code included here is governed by the
 `GNU Affero General Public License <GNU-AGPL-3.0_>`_ and the
 `European Union Public License <EUPL-1.2_>`_.
@@ -90,11 +109,6 @@ Support
 For enterprises, dedicated commercial support is also available through `Elmyra UG`_.
 
 
-Setup
-=====
-See `install docs`_ about how to run an instance in a development sandbox.
-
-
 .. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
 .. _EUPL-1.2: EUPL-1.2.txt
 .. _notices about licenses of third-party components: THIRD-PARTY-NOTICES.rst
@@ -103,7 +117,7 @@ See `install docs`_ about how to run an instance in a development sandbox.
 .. _Elmyra UG: https://elmyra.de/
 .. _search demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiUmlnSGlLRm91N0daUlVseDdTTTBYRkNXdWlqOUlLNnFoaS1lUnowMUdVOEVqVzFUb1lrWHRGLXdFekJqbTA5WjA3bndmN0JtZmJfcnFfeC1xcUd4Qm5qRl9CN0Zkb1NCOTJoZ25DNXg2aDA2OVBiZGtwRjlKdUhRUzVoZ0RLY212M2VPenFQOVlVTlBqTmdpaGM0Rmo3U25OMHJiS3ExRTByN2EweVk3N19rPSIsICJkYXRhIjogeyJwcm9qZWN0IjogInF1ZXJ5LXBlcm1hbGluayIsICJxdWVyeSI6ICJCaT0oKEdyZWlmZT8gT1IgR3JpcD8pIGFuZCAocm9ociBvciB0dWJlIG9yIGNpcmN1bGFyKSkgYW5kIHBjPShERSBvciBFUCkgYW5kIElDPShCMjZEPyBvciBCMjNEPykiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogImRlcGF0aXNuZXQifSwgIm5iZiI6IDE0MDU1MjcwMjMsICJleHAiOiAxNTYxMDQ3MDIzLCAiaWF0IjogMTQwNTUyNzAyM30.Ec0CjI2lLPLAoVxADDrkZlIRgbELqfUAP-0kKtrnWZ6YIm9iUc-KhekqWigyLQ-cSVWCDymLorON-KN79xojgzCvV8D-FZTwXVjMOwREGUJ6osm-7NiCNhXIjDCh1H2X
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
-.. _issues: https://github.com/ip-tools/ip-navigator/issues
+.. _issue: https://github.com/ip-tools/ip-navigator/issues
 
 .. _EPO/OPS: https://ops.epo.org/
 .. _DPMA/DEPATISnet: https://depatisnet.dpma.de
