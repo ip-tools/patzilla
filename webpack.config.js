@@ -128,17 +128,12 @@ module.exports = {
         alias: {
 
             'patzilla.app.main':                             path.resolve(__contextpath, 'js', 'app', 'main.js'),
-            'patzilla.app.ui':                               path.resolve(__contextpath, 'js', 'app', 'ui.js'),
             'patzilla.app.config':                           path.resolve(__contextpath, 'js', 'config.js'),
             'patzilla.app.application':                      path.resolve(__contextpath, 'js', 'app', 'application.js'),
             'patzilla.views.ops':                            path.resolve(__contextpath, 'js', 'app', 'views', 'ops.js'),
 
-            'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
-            'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
-            'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
-            'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
-
             'patzilla.navigator.app.layout':                 path.resolve(__ui, 'navigator', 'app', 'layout'),
+            'patzilla.navigator.app.ui':                     path.resolve(__ui, 'navigator', 'app', 'ui'),
             'patzilla.navigator.style':                      path.resolve(__ui, 'navigator', 'style'),
             'patzilla.navigator.util.linkmaker':             path.resolve(__ui, 'navigator', 'util', 'linkmaker'),
             'patzilla.navigator.util.patentnumbers':         path.resolve(__ui, 'navigator', 'util', 'patentnumbers'),
@@ -162,6 +157,11 @@ module.exports = {
             'patzilla.navigator.components.storage':         path.resolve(__ui, 'navigator', 'components', 'storage'),
             'patzilla.navigator.components.viewport':        path.resolve(__ui, 'navigator', 'components', 'viewport'),
             'patzilla.navigator.components.waypoints':       path.resolve(__ui, 'navigator', 'components', 'waypoints'),
+
+            'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
+            'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
+            'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
+            'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
 
             'patzilla.util.common':                          path.resolve(__ui, 'util', 'common'),
             'patzilla.util.jquery':                          path.resolve(__ui, 'util', 'jquery'),

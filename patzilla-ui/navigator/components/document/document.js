@@ -34,7 +34,7 @@ DocumentBaseController = Marionette.Controller.extend({
         $(".cql-query").shorten({showChars: 125, moreText: 'more', lessText: 'less'});
 
         // apply autonumeric formatting
-        $('#result-count-total').autoNumeric('init', {mDec: 0});
+        $.isNumeric($('#result-count-total').text()) && $('#result-count-total').autoNumeric('init', {mDec: 0});
 
 
         // ------------------------------------------

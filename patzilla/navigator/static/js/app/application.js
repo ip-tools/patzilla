@@ -832,7 +832,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
             // Use a generic placeholder for display as last resort
             if (!placeholder) {
-                log('Add GenericExchangeDocument');
+                log('Add placeholder GenericExchangeDocument for:', patent);
                 placeholder = new GenericExchangeDocument({
                     '__type__': 'ops-placeholder',
                     '@country': patent.country,

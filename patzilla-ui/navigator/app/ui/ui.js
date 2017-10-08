@@ -60,11 +60,6 @@ UiController = Marionette.Controller.extend({
         // Open help in modal dialog
         $('.action-help-shortcuts').unbind('click');
         $('.action-help-shortcuts').on('click', function() {
-
-            // v1: modal dialog
-            //$('#help-modal').modal('show');
-
-            // v2: different page
             var baseurl = opsChooserApp.config.get('baseurl');
             var url = baseurl + '/help/shortcuts';
             $(this).attr('href', url);
@@ -72,11 +67,6 @@ UiController = Marionette.Controller.extend({
 
         $('.action-help-ificlaims').unbind('click');
         $('.action-help-ificlaims').on('click', function() {
-
-            // v1: modal dialog
-            //$('#help-modal').modal('show');
-
-            // v2: different page
             var baseurl = opsChooserApp.config.get('baseurl');
             var url = baseurl + '/help/ificlaims';
             $(this).attr('href', url);
@@ -186,7 +176,7 @@ UiController = Marionette.Controller.extend({
                 console.error('Backend error:', error);
 
                 if (_.isString(error.description)) {
-                    var tpl = _.template($('#cornice-error-template').html(), {variable: 'error'});
+                    var tpl = require('./error-cornice.html');
                     //error.description = {content: error.description};
 
                 } else if (_.isObject(error.description)) {
@@ -194,7 +184,7 @@ UiController = Marionette.Controller.extend({
                     // Flavor 1: Handle objects with error.description.content
                     // Convert simple error format to detailed error format
                     if (error.description.content) {
-                        var tpl = _.template($('#backend-error-template').html());
+                        var tpl = require('./error-backend.html');
                         error.description = error.description || {};
                         _(error.description).defaults({headers: {}});
 
@@ -206,7 +196,7 @@ UiController = Marionette.Controller.extend({
                     // Flavor 2: Handle objects with error.description.details
                     // Unwrap rich description
                     } else {
-                        var tpl = _.template($('#cornice-error-template').html(), {variable: 'error'});
+                        var tpl = require('./error-cornice.html');
                         error.details = error.description.details;
                         error.description = error.description.user;
 
@@ -223,7 +213,7 @@ UiController = Marionette.Controller.extend({
                 }
 
                 // Build error content and display in alert box
-                var alert_html = tpl(error);
+                var alert_html = tpl({error: error});
                 $('#alert-area').append(alert_html);
 
                 // Display text/html error responses from OPS inside iframe
@@ -330,7 +320,7 @@ UiController = Marionette.Controller.extend({
 
         }
 
-        var tpl = _.template($('#alert-template').html());
+        var tpl = require('./user-alert.html');
         var error = {
             'title': label,
             'description': message,

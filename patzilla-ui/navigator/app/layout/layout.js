@@ -3,7 +3,7 @@
 
 LayoutView = Backbone.Marionette.Layout.extend({
 
-    template: "#app-layout-template",
+    template: require('./root.html'),
     regions: {
         header: "#header-region",
         content: "#content-region",
@@ -29,14 +29,16 @@ LayoutView = Backbone.Marionette.Layout.extend({
 });
 
 ContentView = Backbone.Marionette.ItemView.extend({
-    template: "#app-content-template",
+    template: require('./content.html'),
     initialize: function() {
         console.log('ContentView.initialize');
+        this.templateHelpers.config = opsChooserApp.config;
     },
+    templateHelpers: {},
 });
 
 MenuView = Backbone.Marionette.ItemView.extend({
-    template: "#app-menu-template",
+    template: require('./menu.html'),
     tagName: 'span',
     initialize: function() {
         console.log('MenuView.initialize');
@@ -50,7 +52,7 @@ MenuView = Backbone.Marionette.ItemView.extend({
 
 HeaderView = Backbone.Marionette.Layout.extend({
 
-    template: '#app-header-template',
+    template: require('./header.html'),
     regions: {
         menu: "#menu-region",
     },
@@ -84,7 +86,7 @@ HeaderView = Backbone.Marionette.Layout.extend({
 
 FooterView = Backbone.Marionette.ItemView.extend({
 
-    template: "#app-footer-template",
+    template: require('./footer.html'),
 
     initialize: function() {
         console.log('FooterView.initialize');

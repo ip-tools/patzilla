@@ -10,7 +10,10 @@ development
   modularization contexts for all auxiliary application components
 - Add stylesheet to default vendor (patzilla)
 - Harmonize conditional datasource enablement
-- Refactor frontend data source adapters to new directory layout
+- Refactor frontend components to new directory layout
+
+    - Data source adapters
+    - Application layout- and error templates
 
 2017-10-06 0.137.0
 ==================

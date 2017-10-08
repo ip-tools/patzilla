@@ -201,6 +201,8 @@ _.extend(GenericExchangeDocument.prototype,  {
         return this.get_document_id();
     },
 
+    get_citations_environment_button: function(options) {
+    },
     get_patent_citation_list: function(links, id_type) {
         return [];
     },

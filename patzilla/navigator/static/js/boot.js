@@ -18,7 +18,7 @@ Marionette.$ = window.jQuery;
 // Application core
 console.info('Load application');
 require('patzilla.app.main');
-require('patzilla.app.ui');
+require('patzilla.navigator.app.ui');
 
 
 // Application components
