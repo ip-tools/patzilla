@@ -9,6 +9,7 @@ development
 - Large Javascript refactoring, improve directory layout and
   modularization contexts for all auxiliary application components
 - Add stylesheet to default vendor (patzilla)
+- Harmonize conditional datasource enablement
 
 2017-10-06 0.137.0
 ==================

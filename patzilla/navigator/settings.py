@@ -111,6 +111,8 @@ class RuntimeSettings(object):
         self.request = get_current_request()
         self.registry = get_current_registry()
 
+        self.hostname = self.request.host.split(':')[0]
+
         self.config = self.config_parameters()
         self.theme = self.theme_parameters()
         self.beta_badge = '<div class="label label-success label-large do-not-print">BETA</div>'
@@ -122,8 +124,8 @@ class RuntimeSettings(object):
         """create default environment"""
 
         data = {
+            'host_name': self.hostname,
             'host': self.request.host,
-            'host_name': self.request.host.split(':')[0],
             'host_port': self.request.host_port,
             'host_url': self.request.host_url,
             'path': self.request.path,
@@ -299,32 +301,15 @@ class RuntimeSettings(object):
 
         # D. special customizations
 
-        # 1. on patentview.elmyra.de, only run liveview
+        # 1. On patentview.elmyra.de, restrict to liveview only
         params['isviewer'] = isviewer
         if isviewer:
             params['mode'] = 'liveview'
 
-        # 2.a compute whether datasource "FulltextPRO" is enabled
-        user_modules = params.get('user.modules', [])
-        self.hostname = params.get('request.host_name')
-
-        params['ftpro_enabled'] =\
-            self.hostname in self.development_hosts or \
-            'ftpro' in user_modules
-
-        # 2.b compute whether datasource "IFI Claims" is enabled
-        params['ifi_enabled'] =\
-            self.hostname in self.development_hosts or \
-            'ifi' in user_modules
-
-        # 2.c compute whether datasource "MTC depa.tech" is enabled
-        params['depatech_enabled'] =\
-            self.hostname in self.development_hosts or\
-            'depatech' in user_modules
-
-        # 2.d compute whether Google datasource is allowed
-        #params['google_enabled'] = hostname in self.staging_hosts
-        params['google_enabled'] = False
+        # 2. Compute whether data sources are enabled
+        params['google_enabled']    = self.is_datasource_enabled('google')
+        params['ifi_enabled']       = self.is_datasource_enabled('ificlaims')
+        params['depatech_enabled']  = self.is_datasource_enabled('depatech')
 
 
         # E. backward-compat amendments
@@ -336,6 +321,19 @@ class RuntimeSettings(object):
 
         return params
 
+    def is_datasource_enabled(self, datasource):
+
+        # Compatibility aliasing
+        datasource_user_module = datasource
+        if datasource == 'ificlaims':
+            datasource_user_module = 'ifi'
+
+        # Matching
+        enabled = \
+            datasource in self.registry.datasource_settings.datasources and \
+            (self.hostname in self.development_hosts or datasource_user_module in self.request.user.modules)
+
+        return enabled
 
     def theme_parameters(self):
         request = get_current_request()
