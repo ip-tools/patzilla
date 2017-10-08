@@ -9,7 +9,7 @@
 # after that it will search through the other configured vendors and will
 # select the one which matches the "hostname_matches" pattern
 # on a first come, first serve basis.
-vendors     = default
+vendors     = patzilla
 
 # Which datasources are configured?
 datasources = ops, depatisconnect, ificlaims, depatech
@@ -21,12 +21,13 @@ datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, a
 development_mode    = true
 
 
-[vendor_default]
+[vendor_patzilla]
 organization        = PatZilla
 productname         = IP Navigator
 productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
 page_title          = Patent search
 copyright_html      = &copy; 2013-2017, <a href="https://www.example.org/" class="incognito pointer" target="_blank">Example Inc.</a> — All rights reserved.
+stylesheet_uri      = /static/vendor/patzilla/patzilla.css
 email_purchase      = purchase@example.org
 email_support       = support@example.org
 
