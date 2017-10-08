@@ -51,11 +51,16 @@ _(window).extend(require('patzilla.navigator.util.linkmaker'));
 _(window).extend(require('patzilla.navigator.util.patentnumbers'));
 require('patzilla.util.issuereporter');
 
+// Datasource adapters
+require('patzilla.access.depatech');
+require('patzilla.access.depatisnet');
+require('patzilla.access.epo.ops');
+require('patzilla.access.ificlaims');
+
 // Application
 require('patzilla.app.config');
 require('patzilla.app.application');
 require('patzilla.navigator.app.layout');
-require('patzilla.models.ops');
 require('patzilla.views.ops');
 require('patzilla.navigator.components.pagination');
 require('patzilla.navigator.components.results-tabular');

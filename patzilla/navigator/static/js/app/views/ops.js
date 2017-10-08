@@ -359,6 +359,7 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
                 // aggregate list of publication numbers of all family members
                 var members = [];
                 _.each(this.items, function(item) {
+                    // TODO: Review the reference to OpsBaseModel. Could this be refactored somehow?
                     var publication_number = OpsBaseModel.prototype.get_publication_number(item, id_type);
                     members.push(publication_number);
                 });
@@ -382,7 +383,8 @@ OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
     templateHelpers: function() {
 
         var funcs = {};
-        funcs = _.extend(funcs, OpsBaseModel.prototype, OpsHelpers.prototype);
+        // TODO: Review the reference to OpsBaseModel. Could this be refactored somehow?
+        funcs = _.extend(funcs, OpsBaseModel.prototype, QueryLinkMixin.prototype);
         funcs = _.extend(funcs, {
             get_patent_citation_list: function(enrich) {
                 if (this['exchange-document']) {

@@ -6,7 +6,7 @@ require('purl/purl');
 require('bootstrap-2.3.2/css/bootstrap.css');
 require('bootstrap-2.3.2/css/bootstrap-responsive.css');
 require('fontawesome-3.2.1/css/font-awesome.css');
-require('../../css/app.css');
+require('patzilla.navigator.style');
 
 $(document).ready(function() {
     console.log("document.ready");

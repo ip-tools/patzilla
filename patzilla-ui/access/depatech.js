@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2017 Andreas Motl, Elmyra UG
+require('./base.js');
 
 DepaTechSearch = DatasourceSearch.extend({
     url: '/api/depatech/published-data/search',

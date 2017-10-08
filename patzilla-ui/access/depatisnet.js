@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2014 Andreas Motl, Elmyra UG
+require('./base.js');
 
 DepatisnetSearch = DatasourceSearch.extend({
     url: '/api/depatisnet/published-data/search',

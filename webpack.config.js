@@ -131,13 +131,12 @@ module.exports = {
             'patzilla.app.ui':                               path.resolve(__contextpath, 'js', 'app', 'ui.js'),
             'patzilla.app.config':                           path.resolve(__contextpath, 'js', 'config.js'),
             'patzilla.app.application':                      path.resolve(__contextpath, 'js', 'app', 'application.js'),
-            'patzilla.models.generic':                       path.resolve(__contextpath, 'js', 'app', 'models', 'generic.js'),
-            'patzilla.models.search':                        path.resolve(__contextpath, 'js', 'app', 'models', '01-search.js'),
-            'patzilla.models.ops':                           path.resolve(__contextpath, 'js', 'app', 'models', 'ops.js'),
-            'patzilla.models.depatisnet':                    path.resolve(__contextpath, 'js', 'app', 'models', 'depatisnet.js'),
-            'patzilla.models.ificlaims':                     path.resolve(__contextpath, 'js', 'app', 'models', 'ifi.js'),
-            'patzilla.models.depatech':                      path.resolve(__contextpath, 'js', 'app', 'models', 'depatech.js'),
             'patzilla.views.ops':                            path.resolve(__contextpath, 'js', 'app', 'views', 'ops.js'),
+
+            'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
+            'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
+            'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
+            'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
 
             'patzilla.navigator.app.layout':                 path.resolve(__ui, 'navigator', 'app', 'layout'),
             'patzilla.navigator.style':                      path.resolve(__ui, 'navigator', 'style'),

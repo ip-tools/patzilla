@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2015-2017 Andreas Motl, Elmyra UG
+require('./base.js');
+require('./util.js');
 
 IFIClaimsSearch = DatasourceSearch.extend({
     url: '/api/ifi/published-data/search',
@@ -25,7 +27,7 @@ IFIClaimsCrawler = DatasourceCrawler.extend({
 
 IFIClaimsDocument = Backbone.Model.extend({});
 
-_.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototype, {
+_.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLinkMixin.prototype, {
 
     initialize: function(options) {
         log('IFIClaimsDocument.initialize');
@@ -465,7 +467,7 @@ _.extend(IFIClaimsDocument.prototype, OpsHelpers.prototype, OpsBaseModel.prototy
     },
 
 
-    // Identical to OpsHelper....
+    // Override methods from OpsBaseModel
     get_citing_query: function() {
         var query = 'ct=' + this.get_publication_number('epodoc');
         return query;

@@ -1,10 +1,5 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
-require('patzilla.models.generic');
-require('patzilla.models.search');
-require('patzilla.models.depatisnet');
-require('patzilla.models.ificlaims');
-require('patzilla.models.depatech');
 
 /**
  * ------------------------------------------

@@ -1,8 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
 require('patzilla.util.common');
-require('./01-search.js');
-require('./10-ops-base.js');
+require('./base.js');
+require('./util.js');
+require('./epo-ops-base.js');
 
 OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
@@ -325,7 +326,9 @@ OpsPublishedDataCrawler = DatasourceCrawler.extend({
 });
 
 
-OpsExchangeDocument = OpsBaseModel.extend({
+OpsExchangeDocument = Backbone.Model.extend({});
+
+_.extend(OpsExchangeDocument.prototype, OpsBaseModel.prototype, QueryLinkMixin.prototype, {
 
         defaults: {},
 
@@ -394,7 +397,7 @@ OpsExchangeDocument = OpsBaseModel.extend({
 
 });
 
-_.extend(OpsExchangeDocument.prototype, OpsHelpers.prototype, {
+_.extend(OpsExchangeDocument.prototype, {
 
         selected: false,
 
@@ -892,7 +895,7 @@ OpsFulltext = Marionette.Controller.extend({
 
 
 
-OpsFamilyMember = OpsBaseModel.extend(OpsHelpers.prototype, {
+OpsFamilyMember = OpsBaseModel.extend(QueryLinkMixin.prototype, {
     parse: function(response) {
         response['priority-claim'] = to_list(response['priority-claim']);
         return response;
