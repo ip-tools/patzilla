@@ -649,19 +649,6 @@
 
 <%text>
 
-<script id="document-fulltext-template" type="text/x-underscore-template">
-    <strong><%= data.title %></strong> <%= data.language ? '[' + data.language + ']' : '' %>
-    <br/><br/>
-    <span class="keyword"><%= data.content %></span>
-    <br/><br/><br/>
-    <% if (data.datasource) { %>
-    <span class="pull-right text-small text-muted">
-        Data source: <span class="datasource-label"><%= data.datasource %></span>
-    </span>
-    <% } %>
-    <span class="clearfix"></span>
-</script>
-
 <script id="ops-entry-error-template" type="text/x-underscore-template">
 
     <%

@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
 require('jquery.highlight.bartaz');
-require('patzilla.util.linkmaker');
+require('patzilla.navigator.util.linkmaker');
 
 OpsBaseViewMixin = {
 

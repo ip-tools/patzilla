@@ -14,38 +14,37 @@ console.info('Load foundation');
 Backbone.$   = window.jQuery;
 Marionette.$ = window.jQuery;
 
+
 // Application core
 console.info('Load application');
 require('patzilla.app.main');
+require('patzilla.app.ui');
 
 
 // Application components
 console.info('Load application components');
 
-// Essential application components
-require('patzilla.app.ui');
-
 // Semi-essential application components
-require('patzilla.components.document');
+require('patzilla.navigator.components.document');
 // TODO: Currently, quite some core machinery relies on the querybuilder. Improve that!
-require('patzilla.components.querybuilder');
+require('patzilla.navigator.components.querybuilder');
 
 // Keywords, comments and rating
-require('patzilla.components.storage');
-require('patzilla.components.project');
-require('patzilla.components.keywords');
-require('patzilla.components.basket');
-require('patzilla.components.comment');
+require('patzilla.navigator.components.storage');
+require('patzilla.navigator.components.project');
+require('patzilla.navigator.components.keywords');
+require('patzilla.navigator.components.basket');
+require('patzilla.navigator.components.comment');
 
 // Optional application components
-require('patzilla.components.analytics');
-require('patzilla.components.crawler');
-require('patzilla.components.export');
-require('patzilla.components.hotkeys');
-require('patzilla.components.permalink');
-require('patzilla.components.reading');
-require('patzilla.components.viewport');
-require('patzilla.components.waypoints');
+require('patzilla.navigator.components.analytics');
+require('patzilla.navigator.components.crawler');
+require('patzilla.navigator.components.export');
+require('patzilla.navigator.components.hotkeys');
+require('patzilla.navigator.components.permalink');
+require('patzilla.navigator.components.reading');
+require('patzilla.navigator.components.viewport');
+require('patzilla.navigator.components.waypoints');
 
 
 // Bootstrap the application after registering all components

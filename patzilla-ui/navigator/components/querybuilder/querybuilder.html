@@ -1,0 +1,596 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2014-2017 Andreas Motl, Elmyra UG
+%>
+
+<div id="querybuilder-area">
+
+    <div class="row-fluid">
+
+        <!-- choose ui flavor -->
+        <div class="span5">
+
+            <div id="querybuilder-flavor-chooser" class="btn-group tabs">
+
+                <button class="btn active" data-toggle="tab"
+                        href="#querybuilder-comfort-tab"
+                        data-value="comfort">
+                    <i class="icon-list"></i> Comfort
+                </button>
+                <!--
+                <button class="btn" data-toggle="tab"
+                        href="#querybuilder-expert-tab"
+                        data-value="expert">
+                    Expert
+                </button>
+                -->
+                <button class="btn" data-toggle="tab"
+                        href="#querybuilder-cql-tab"
+                        data-value="cql">
+                    <i class="icon-edit"></i> Expert
+                </button>
+                <button class="btn" data-toggle="tab"
+                        href="#querybuilder-numberlist-tab"
+                        data-value="numberlist">
+                    <i class="icon-align-justify"></i> Numberlist
+                </button>
+
+                <!-- history -->
+                <div id="cql-history-chooser" class="hide" style="display: inline">
+
+                    <button
+                            id="btn-query-history"
+                            class="btn dropdown-toggle" data-toggle="dropdown"
+                            >
+                        <i class="icon-time btn-popover"
+                           data-toggle="popover" data-trigger="hover" data-placement="top"
+                           data-content="Query history"
+                                ></i>
+                    </button>
+
+                    <div id="cql-history-chooser-container" class="dropdown-menu">
+                        <div id="cql-history-chooser-select2" class="span12"></div>
+                    </div>
+
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle" id="querybuilder-comfort-actions" data-toggle="dropdown">
+                        <i class="icon-wrench btn-popover"
+                           data-toggle="popover" data-trigger="hover" data-placement="top"
+                           data-content="Tools"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        <li>
+
+                            <!-- display values -->
+                            <a id="btn-comfort-display-values">
+                                <i class="icon-list"></i> &nbsp; Display form values
+                            </a>
+
+                            <!-- clear -->
+                            <a id="btn-comfort-clear">
+                                <i class="icon-trash"></i> &nbsp; Clear form values
+                            </a>
+
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle hide" id="querybuilder-cql-actions" data-toggle="dropdown">
+                        <i class="icon-wrench btn-popover"
+                           data-toggle="popover" data-trigger="hover" data-placement="top"
+                           data-content="Tools"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        <li>
+
+                            <!-- permalink -->
+                            <a id="btn-query-permalink" href="#" target="_blank">
+                                <i class="icon-external-link"></i> &nbsp; Query permalink, with expiration time
+                            </a>
+
+                            <!-- content transformation -->
+                            <a id="btn-query-transform">
+                                <i class="icon-exchange"></i> &nbsp; Transform query
+                            </a>
+
+                            <!-- clear -->
+                            <a id="btn-query-clear">
+                                <i class="icon-trash"></i> &nbsp; Clear query
+                            </a>
+
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn dropdown-toggle hide" id="querybuilder-numberlist-actions" data-toggle="dropdown">
+                        <i class="icon-wrench btn-popover"
+                           data-toggle="popover" data-trigger="hover" data-placement="top"
+                           data-content="Tools"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <!-- normalize -->
+                            <a id="btn-numberlist-normalize">
+                                <i class="icon-exchange"></i> &nbsp; Normalize numbers
+                            </a>
+                        </li>
+                        <li>
+                            <!-- strip kindcode -->
+                            <a id="btn-numberlist-strip-kindcodes">
+                                <i class="icon-eraser"></i> &nbsp; Strip kindcodes
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- data source chooser -->
+        <div class="span5">
+            <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
+                <button class="btn active" data-value="ops">
+                    <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
+                    EPO
+                </button>
+                <button class="btn" data-value="depatisnet">
+                    <img src="/static/img/icons/dpma-logo-small.svg" class="wider"/>
+                    DPMA
+                </button>
+                <button class="btn hide" data-value="google">
+                    <img src="/static/img/icons/google-g.svg" class="square"/>
+                    Google
+                </button>
+                <button class="btn hide" data-value="ftpro">
+                    <img src="/static/img/icons/pro.svg" class="square"/>
+                  "FulltextPRO "
+                </button>
+                <!--
+                <button class="btn hide" data-value="ifi" style="height: 31px;" >
+                    <div class="icon icon-globe icon-large" style="color: #3781b7;"/>
+                    IFI
+                </button>
+                -->
+                <button class="btn hide" data-value="ifi">
+                    <img src="/static/vendor/europatent/europatent_icon.png" style="height: 20px" />
+                    WPS Fulltext
+                </button>
+                <button class="btn hide" data-value="depatech">
+                    <img src="/static/vendor/mtc/depatech_icon.jpg" style="height: 20px" />
+                    depa.tech
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row-fluid">
+
+        <div class="span10 tab-content">
+
+            <!-- trimmed-down user interface -->
+            <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
+
+                <form id="querybuilder-comfort-form" target="querybuilder-comfort-form-iframe" action="/api/void">
+                    <fieldset>
+
+                        <div class="span6 field-regular">
+
+                            <!-- patent number -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Number</span>
+                                        <input id="patentnumber" name="patentnumber" class="input-xlarge" data-placeholder-multi="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-depatech="DE102011078918A1" type="text" autofocus="autofocus">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- full text -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend input-append">
+                                        <span class="add-on add-on-label">Full text</span>
+                                        <input name="fulltext" style="width: 245px" placeholder="rohr or tube or circular" type="text"></input>
+                                        <span class="add-on add-on-zoom"><i class="icon-resize-full"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- applicant -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Applicant</span>
+                                        <input name="applicant" class="input-xlarge" placeholder="Siemens and Bosch" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- inventor -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Inventor</span>
+                                        <input name="inventor" class="input-xlarge" data-placeholder-default="&quot;Edison Thomas&quot;" data-placeholder-depatech="&quot;Robert Bosch&quot;" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="span6 field-regular">
+
+                            <div class="pull-right">
+
+                            <!-- class -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Class</span>
+                                        <input name="class" class="input-xlarge" data-placeholder-multi="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- country -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Country</span>
+                                        <input name="country" class="input-xlarge" placeholder="DE or EP or US; DE, EP" data-demo="DE or EP or US" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- publication date -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Publication</span>
+                                        <input name="pubdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="within 1978,1986" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- citation -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Citations</span>
+                                        <input name="citation" class="input-xlarge" placeholder="US5155725 or EP0352041" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+
+                        </div>
+
+                        <div id="fulltext-zoomed" class="field-zoomed hide">
+                            <div class="span11" id="fulltext-textarea-container">
+                                <div class="input-prepend" style="vertical-align: top">
+                                    <span class="add-on">Full text</span>
+                                </div>
+                                <textarea data-name="fulltext" class="span10" style="height: 143px;"></textarea>
+                            </div>
+                            <div class="span1" id="fulltext-modifier-chooser">
+                                <span class="pull-right">
+                                    Search&nbsp;in:
+                                </span>
+                                <br/>
+                                <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
+                                <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
+                                <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
+                                <button type="button" class="btn active pull-right" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn hide">Submit</button>
+                    </fieldset>
+                </form>
+
+                <!-- https://stackoverflow.com/questions/15462991/trigger-autocomplete-without-submitting-a-form/15634249#15634249 -->
+                <!-- https://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-dynamically-generated-forms-handled-with-ajax/8449290#8449290 -->
+                <iframe id="querybuilder-comfort-form-iframe" name="querybuilder-comfort-form-iframe" src="javascript:false" class="hide"></iframe>
+
+            </div>
+
+            <!-- jQuery QueryBuilder -->
+            <div class="tab-pane fade" id="querybuilder-expert-tab">
+                Expert query builder on top of jQuery QueryBuilder
+            </div>
+
+            <!-- raw cql query string -->
+            <div class="tab-pane fade" id="querybuilder-cql-tab">
+                <textarea class="span12" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
+                <span id="cql-filter-container" class="hide">
+                    Filter: <input name="cql-filter" id="cql-filter" style="width: 94%" placeholder="Query filter"/>
+                    <br/><br/>
+                </span>
+                <input id="keywords" hidden="true" />
+            </div>
+
+            <!-- numberlist -->
+            <div class="tab-pane fade" id="querybuilder-numberlist-tab">
+                <textarea class="span12" id="numberlist" name="numberlist" placeholder="Numberlist" rows="7"></textarea>
+            </div>
+
+        </div>
+
+
+        <!-- quick builder -->
+        <!--
+        <div class="span1">
+
+            <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
+                <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
+                <button class="btn-cql-boolean btn btn-mini"        type="button" data-value="AND">AND</button>
+            </div>
+
+            <a class="btn-cql-field label label-success" data-value="num=">num=</a>
+            <a class="btn-cql-field label label-info" data-value="txt=">txt=</a>
+            <a class="btn-cql-field label label-important" data-value="cl=">cl=</a>
+
+        </div>
+        -->
+
+    </div>
+
+    <div class="row-fluid">
+
+        <!-- cql field symbol chooser -->
+        <div class="span10">
+
+            <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
+
+            <!-- analytics actions -->
+            <div id="analytics-actions" class="btn-group btn-popover pull-right hidden"
+                 data-toggle="popover" data-trigger="hover" data-placement="top"
+                 data-content="Run analytic queries"
+                    >
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-cog"></i>
+                    &nbsp;
+                    Analytics (beta)
+                </button>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+
+                    <li>
+                        <a id="analytics-family-overview-button">
+                            <i class="icon-group"></i>
+                            &nbsp;
+                            Family members with register data and basic text statistics
+                        </a>
+                        <a class="analytics-daterange-button" data-kind="newest">
+                            <i class="icon-time"></i>
+                            &nbsp;
+                            Most recent documents
+                        </a>
+                        <a class="analytics-daterange-button" data-kind="oldest">
+                            <i class="icon-time"></i>
+                            &nbsp;
+                            Least recent documents
+                        </a>
+                        <a class="analytics-applicants-distinct-button">
+                            <i class="icon-user"></i>
+                            &nbsp;
+                            Unique applicants
+                        </a>
+
+                    </li>
+
+                </ul>
+            </div>
+
+
+        </div>
+
+    </div>
+
+    <div class="row-fluid">
+
+        <div class="span12 light-panel" style="width: 152%; min-height: 6.5em; margin-top: 2em">
+
+            <div class="span2">
+
+                <!-- send query to database -->
+                <div
+                        class="btn-group btn-popover"
+                        data-toggle="popover" data-trigger="hover" data-placement="right"
+                        data-content="Send query to database"
+                        >
+
+                    <!-- activity indicator -->
+                    <button type="submit" role="button" class="btn btn-query-perform">
+                        <i class="idler icon-search"></i>
+                        <i class="spinner icon-refresh icon-spin" style="display: none"></i>
+                    </button>
+
+                    <button type="submit" role="button" class="btn btn-query-perform">
+                        Start search
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="span10">
+
+            <!-- First row -->
+            <div>
+
+                <!-- toggle mode: full-cycle -->
+                <button role="button"
+                        class="btn btn-popover btn-full-cycle"
+                        data-name="full-cycle"
+                        data-toggle="buttons-checkbox"
+                        data-trigger="hover" data-placement="bottom" data-content="Display entire publication cycle for each document"
+                        >
+                    <i class="icon-repeat"></i>
+                    Full cycle
+                </button>
+
+                <div class="btn-group" data-toggle="buttons-radio" id="mode-order-buttons">
+
+                    <!-- toggle mode: first-pub -->
+                    <button role="button"
+                            class="btn btn-popover btn-mode-order"
+                            data-name="first-pub"
+                            data-toggle="buttons-checkbox"
+                            data-active-target="#mode-order-label"
+                            data-active-text="First pub."
+                            data-trigger="hover" data-placement="bottom" data-content="Select first publication as representative document"
+                            >
+                        <i class="icon-sort-by-order"></i>
+                    </button>
+
+                    <!-- toggle mode: recent-pub -->
+                    <button role="button"
+                            class="btn btn-popover btn-mode-order"
+                            data-name="recent-pub"
+                            data-toggle="buttons-checkbox"
+                            data-active-target="#mode-order-label"
+                            data-active-text="Recent pub."
+                            data-trigger="hover" data-placement="bottom" data-content="Select most recent publication as representative document"
+                            >
+                        <i class="icon-sort-by-order-alt"></i>
+                    </button>
+
+                    <!-- label -->
+                    <button id="btn-mode-order-label"
+                            class="btn btn-popover disabled"
+                            >
+                        <span id="mode-order-label"
+                            data-original-text="Default">
+                            Default
+                        </span>
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- Second row -->
+            <div style="margin-top: 0.5em">
+
+                <!-- toggle mode: swap family members -->
+                <button role="button"
+                        class="btn btn-popover btn-family-swap-ger"
+                        data-name="family-swap-ger"
+                        data-toggle="buttons-checkbox"
+                        data-trigger="hover" data-placement="bottom" data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
+                        >
+                    <i class="icon-exchange"></i>
+                    Family member by priority
+                </button>
+
+                <div class="btn-group" data-toggle="buttons-radio" id="family-remove-buttons">
+
+                    <!-- toggle mode: remove family members -->
+                    <button type="button" role="button"
+                            id="btn-family-remove"
+                            class="btn btn-popover btn-family-remove"
+                            data-name="family-remove"
+                            data-toggle="buttons-checkbox"
+                            data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by removing family members"
+                            >
+                        <i class="icon-remove"></i>
+                        Remove family members
+                    </button>
+
+                    <!-- toggle mode: replace family members -->
+                    <button type="button" role="button"
+                            id="btn-family-replace"
+                            class="btn btn-popover btn-family-replace"
+                            data-name="family-replace"
+                            data-toggle="buttons-checkbox"
+                            data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by replacing family members"
+                            >
+                        <i class="icon-exchange"></i>
+                        Replace family members
+                    </button>
+
+                </div>
+
+                <!-- toggle mode: all family members -->
+                <button role="button" id="btn-family-full"
+                        class="btn btn-popover btn-family-full"
+                        data-name="family-full"
+                        data-toggle="buttons-checkbox"
+                        data-trigger="hover" data-placement="bottom" data-content="Expand each hit to all family members"
+                        >
+                    <i class="icon-group"></i>
+                    Expand family
+                </button>
+
+                <div id="sorting-chooser" class="pull-right2" style="display: inline-block">
+
+                    <!-- sorting field -->
+                    <div id="sort-field-chooser" name="sort-field" style="width: 175px" size="1"></div>
+
+                    <!-- sorting direction -->
+                    <button role="button" id="sort-order-chooser"
+                            class="btn btn-popover"
+                            data-trigger="hover" data-placement="bottom" data-content="Define sort order"
+                            >
+                        <i class="icon-sort"></i>
+                    </button>
+                </div>
+
+            </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- modal dialog for choosing clipboard content modifier -->
+<div id="query-transform-dialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="query-transform-dialog-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="query-transform-dialog-label">Query transformation</h3>
+    </div>
+    <div class="modal-body">
+        Transform newline-separated data to syntactically correct query.
+        <br/><br/>
+        <div class="btn-group btn-group-vertical">
+            <button class="btn btn-large btn-success btn-clipboard-modifier" data-modifier="num">
+                <strong>Number: Publication-, application- or priority number</strong>
+                <br/><br/>
+                <small>e.g. "num=DE102012220639A1 OR num=EP0666666A2 OR num=..."</small>
+            </button>
+            <button class="btn btn-large btn-warning btn-clipboard-modifier" data-modifier="txt">
+                <strong>Text: Title, abstract, inventor-, or applicant name</strong>
+                <br/><br/>
+                <small>e.g. "txt=siemens OR txt=alstom OR txt=..."</small>
+            </button>
+            <button class="btn btn-large btn-danger btn-clipboard-modifier" data-modifier="cl">
+                <strong>Class: CPC or IPC8 class</strong>
+                <br/><br/>
+                <small>e.g. "cl=H04L12/24 OR cl=H04L12/26 OR cl=..."</small>
+            </button>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons-radio">
+            <button class="btn active" type="button" data-value="OR">OR</button>
+            <button class="btn"        type="button" data-value="AND">AND</button>
+        </div>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>

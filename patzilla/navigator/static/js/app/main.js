@@ -42,28 +42,28 @@ require('fontawesome-3.2.1/css/font-awesome.css');
 
 // Global utilities
 require('purl/purl');
+require('patzilla.util.jquery');
+require('patzilla.util.underscore');
 _(window).extend(require('patzilla.util.common'));
-_(window).extend(require('patzilla.util.linkmaker'));
-_(window).extend(require('patzilla.util.patentnumbers'));
 
-// Utilities
-require('patzilla.util.jplugins');
+// Application utilities
+_(window).extend(require('patzilla.navigator.util.linkmaker'));
+_(window).extend(require('patzilla.navigator.util.patentnumbers'));
 require('patzilla.util.issuereporter');
-require('patzilla.util.radioplus');
 
 // Application
 require('patzilla.app.config');
 require('patzilla.app.application');
+require('patzilla.navigator.app.layout');
 require('patzilla.models.ops');
-require('patzilla.models.results');
-require('patzilla.views.common');
-require('patzilla.views.results');
 require('patzilla.views.ops');
-require('patzilla.views.pagination');
-var propagate_opaque_errors = require('patzilla.components.opaquelinks').propagate_opaque_errors;
+require('patzilla.navigator.components.pagination');
+require('patzilla.navigator.components.results-tabular');
+require('patzilla.navigator.components.results-dialog');
+var propagate_opaque_errors = require('patzilla.navigator.components.opaquelinks').propagate_opaque_errors;
 
-// CSS files
-require('../../css/app.css');
+// CSS Stylesheets
+require('patzilla.navigator.style');
 
 
 /**

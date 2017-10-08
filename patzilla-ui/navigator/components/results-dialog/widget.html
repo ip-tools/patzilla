@@ -1,0 +1,29 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2014,2015 Andreas Motl, Elmyra UG
+//
+// ---------------------------------------------
+// Modal dialog for displaying arbitrary results
+// ---------------------------------------------
+%>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="result-label">Results</h3>
+</div>
+<div class="modal-body">
+    <div id="result-info">
+    </div>
+    <br/>
+    <textarea id="result-content" rows="13" cols="80" style="width: 97%"></textarea>
+
+</div>
+<div class="modal-footer">
+    <a id="result-to-basket-button" role="button" class="btn pull-left">
+        <i class="icon-plus" id="result-to-basket-indicator"></i> &nbsp; Add to document collection
+    </a>
+    <a id="result-to-clipboard-button" role="button" class="btn pull-left">
+        <i class="icon-copy"></i> &nbsp; Copy to clipboard
+    </a>
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+</div>
