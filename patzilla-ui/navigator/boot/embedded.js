@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2016 Andreas Motl, Elmyra UG
-require('../boot.js');
+require('./loader.js');
 
 EmbeddingController = Marionette.Controller.extend({
 

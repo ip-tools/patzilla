@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
-require('../boot.js');
+require('./loader.js');
 
 $(document).ready(function() {
 

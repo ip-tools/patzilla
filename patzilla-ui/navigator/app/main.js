@@ -47,9 +47,9 @@ require('patzilla.util.underscore');
 _(window).extend(require('patzilla.util.common'));
 
 // Application utilities
+require('patzilla.common.issuereporter');
 _(window).extend(require('patzilla.navigator.util.linkmaker'));
 _(window).extend(require('patzilla.navigator.util.patentnumbers'));
-require('patzilla.util.issuereporter');
 
 // Datasource adapters
 require('patzilla.access.depatech');
@@ -58,8 +58,8 @@ require('patzilla.access.epo.ops');
 require('patzilla.access.ificlaims');
 
 // Application
-require('patzilla.app.config');
-require('patzilla.app.application');
+require('patzilla.navigator.app.config');
+require('patzilla.navigator.app.application');
 require('patzilla.navigator.app.layout');
 require('patzilla.navigator.app.results');
 require('patzilla.navigator.components.pagination');

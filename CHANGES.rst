@@ -16,6 +16,8 @@ development
     - Application layout- and error templates
     - Result list and document details
     - Family details
+    - 3rd-party libraries and widgets
+    - Application core
 
 2017-10-06 0.137.0
 ==================

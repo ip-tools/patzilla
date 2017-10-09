@@ -17,10 +17,10 @@ module.exports = {
     context: __contextpath,
 
     entry: {
-        'app-standalone': ['./js/boot/standalone.js'],
-        'app-embedded':   ['./js/boot/embedded.js'],
-        'app-login':      ['./js/app/login.js'],
+        'app-standalone': [path.resolve(__ui, 'navigator', 'boot', 'standalone')],
+        'app-embedded':   [path.resolve(__ui, 'navigator', 'boot', 'embedded')],
         'app-help':       [path.resolve(__ui, 'navigator', 'app', 'help')],
+        'app-login':      [path.resolve(__ui, 'common', 'login')],
     },
 
     amd: {
@@ -119,17 +119,17 @@ module.exports = {
         // Directories where to look for modules
         modules: [
             "node_modules",
-            path.resolve(__contextpath, 'js', 'lib'),
-            path.resolve(__contextpath, 'widget'),
+            path.resolve(__ui, 'vendor', 'lib'),
+            path.resolve(__ui, 'vendor', 'widget'),
         ],
 
         extensions: [".js", ".jsx", ".min.js", ".json", ".css"],
 
         alias: {
 
-            'patzilla.app.main':                             path.resolve(__contextpath, 'js', 'app', 'main.js'),
-            'patzilla.app.config':                           path.resolve(__contextpath, 'js', 'config.js'),
-            'patzilla.app.application':                      path.resolve(__contextpath, 'js', 'app', 'application.js'),
+            'patzilla.navigator.app.main':                   path.resolve(__ui, 'navigator', 'app', 'main'),
+            'patzilla.navigator.app.config':                 path.resolve(__ui, 'navigator', 'app', 'config'),
+            'patzilla.navigator.app.application':            path.resolve(__ui, 'navigator', 'app', 'application'),
 
             'patzilla.navigator.app.layout':                 path.resolve(__ui, 'navigator', 'app', 'layout'),
             'patzilla.navigator.app.ui':                     path.resolve(__ui, 'navigator', 'app', 'ui'),
@@ -166,7 +166,7 @@ module.exports = {
             'patzilla.util.common':                          path.resolve(__ui, 'util', 'common'),
             'patzilla.util.jquery':                          path.resolve(__ui, 'util', 'jquery'),
             'patzilla.util.underscore':                      path.resolve(__ui, 'util', 'underscore'),
-            'patzilla.util.issuereporter':                   path.resolve(__ui, 'util', 'issuereporter'),
+            'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
             'patzilla.lib.bs3_list_group':                   path.resolve(__ui, 'lib', 'bs3-list-group'),
             'patzilla.lib.marionette-modalregion':           path.resolve(__ui, 'lib', 'marionette-modalregion'),
