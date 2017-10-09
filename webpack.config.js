@@ -6,6 +6,7 @@ const webpack = require('webpack');
 // Concepts - Using Third Party Libraries that Are not CJS/AMD/ES6 Modules
 // https://github.com/webpack/webpack.js.org/issues/63
 
+const __ui = path.resolve(__dirname, 'patzilla-ui');
 const __contextpath = path.resolve(__dirname, 'patzilla', 'navigator', 'static');
 
 module.exports = {
@@ -16,10 +17,10 @@ module.exports = {
     context: __contextpath,
 
     entry: {
-        'app-standalone': ['./js/boot/standalone.js'],
-        'app-embedded':   ['./js/boot/embedded.js'],
-        'app-login':      ['./js/app/login.js'],
-        'app-help':       ['./widget/help/help.js'],
+        'app-standalone': [path.resolve(__ui, 'navigator', 'boot', 'standalone')],
+        'app-embedded':   [path.resolve(__ui, 'navigator', 'boot', 'embedded')],
+        'app-help':       [path.resolve(__ui, 'navigator', 'app', 'help')],
+        'app-login':      [path.resolve(__ui, 'common', 'login')],
     },
 
     amd: {
@@ -82,6 +83,11 @@ module.exports = {
                     'file-loader'
                 ]
             },
+            {
+                test: /\.html$/,
+                loader: 'underscore-template-loader',
+            },
+
             /*
              {
                  test: /\.js$/,
@@ -91,10 +97,6 @@ module.exports = {
                      { loader: 'babel-loader', options: { presets: ['env'] } },
                  ]
              },
-              {
-                  test: /\.html$/,
-                  loader: 'underscore-template-loader'
-              },
             {
                 test: /\.(csv|tsv)$/,
                 use: [
@@ -117,52 +119,59 @@ module.exports = {
         // Directories where to look for modules
         modules: [
             "node_modules",
-            path.resolve(__contextpath, 'js', 'lib'),
-            path.resolve(__contextpath, 'widget'),
+            path.resolve(__ui, 'vendor', 'lib'),
+            path.resolve(__ui, 'vendor', 'widget'),
         ],
 
         extensions: [".js", ".jsx", ".min.js", ".json", ".css"],
 
         alias: {
-            'patzilla.app.main':                    path.resolve(__contextpath, 'js', 'app', 'main.js'),
-            'patzilla.app.ui':                      path.resolve(__contextpath, 'js', 'app', 'ui.js'),
-            'patzilla.backend.fields':              path.resolve(__contextpath, 'js', 'app', 'ops-sdk.js'),
-            'patzilla.app.config':                  path.resolve(__contextpath, 'js', 'config.js'),
-            'patzilla.app.application':             path.resolve(__contextpath, 'js', 'app', 'application.js'),
-            'patzilla.util.issuereporter':          path.resolve(__contextpath, 'js', 'issue-reporter.js'),
-            'patzilla.util.radioplus':              path.resolve(__contextpath, 'js', 'app', 'lib', 'radio-plus.js'),
-            'patzilla.util.jplugins':               path.resolve(__contextpath, 'js', 'app', 'lib', 'foundation-plugins.js'),
-            'patzilla.util.common':                 path.resolve(__contextpath, 'js', 'app', 'lib', 'util.js'),
-            'patzilla.util.linkmaker':              path.resolve(__contextpath, 'js', 'app', 'lib', 'linkmaker.js'),
-            'patzilla.util.patentnumbers':          path.resolve(__contextpath, 'js', 'app', 'lib', 'patents.js'),
-            'patzilla.models.generic':              path.resolve(__contextpath, 'js', 'app', 'models', 'generic.js'),
-            'patzilla.models.search':               path.resolve(__contextpath, 'js', 'app', 'models', '01-search.js'),
-            'patzilla.models.results':              path.resolve(__contextpath, 'js', 'app', 'models', '01-results.js'),
-            'patzilla.models.ops':                  path.resolve(__contextpath, 'js', 'app', 'models', 'ops.js'),
-            'patzilla.models.depatisnet':           path.resolve(__contextpath, 'js', 'app', 'models', 'depatisnet.js'),
-            'patzilla.models.ificlaims':            path.resolve(__contextpath, 'js', 'app', 'models', 'ifi.js'),
-            'patzilla.models.depatech':             path.resolve(__contextpath, 'js', 'app', 'models', 'depatech.js'),
-            'patzilla.views.common':                path.resolve(__contextpath, 'js', 'app', 'views', 'common.js'),
-            'patzilla.views.results':               path.resolve(__contextpath, 'js', 'app', 'views', '01-results.js'),
-            'patzilla.views.ops':                   path.resolve(__contextpath, 'js', 'app', 'views', 'ops.js'),
-            'patzilla.views.pagination':            path.resolve(__contextpath, 'js', 'app', 'views', 'pagination.js'),
-            'patzilla.components.analytics':        path.resolve(__contextpath, 'js', 'components', 'analytics.js'),
-            'patzilla.components.basket':           path.resolve(__contextpath, 'js', 'components', 'basket.js'),
-            'patzilla.components.comment':          path.resolve(__contextpath, 'js', 'components', 'comment.js'),
-            'patzilla.components.crawler':          path.resolve(__contextpath, 'js', 'components', 'crawler.js'),
-            'patzilla.components.document':         path.resolve(__contextpath, 'js', 'components', 'document.js'),
-            'patzilla.components.export':           path.resolve(__contextpath, 'js', 'components', 'export.js'),
-            'patzilla.components.hotkeys':          path.resolve(__contextpath, 'js', 'components', 'hotkeys.js'),
-            'patzilla.components.keywords':         path.resolve(__contextpath, 'js', 'components', 'keywords.js'),
-            'patzilla.components.opaquelinks':      path.resolve(__contextpath, 'js', 'components', 'opaquelinks.js'),
-            'patzilla.components.permalink':        path.resolve(__contextpath, 'js', 'components', 'permalink.js'),
-            'patzilla.components.project':          path.resolve(__contextpath, 'js', 'components', 'project.js'),
-            'patzilla.components.querybuilder':     path.resolve(__contextpath, 'js', 'components', 'querybuilder.js'),
-            'patzilla.components.reading':          path.resolve(__contextpath, 'js', 'components', 'reading.js'),
-            'patzilla.components.storage':          path.resolve(__contextpath, 'js', 'components', 'storage.js'),
-            'patzilla.components.viewport':         path.resolve(__contextpath, 'js', 'components', 'viewport.js'),
-            'patzilla.components.waypoints':        path.resolve(__contextpath, 'js', 'components', 'waypoints.js'),
-            //Templates: path.resolve(__dirname, 'src/templates/')
+
+            'patzilla.navigator.app.main':                   path.resolve(__ui, 'navigator', 'app', 'main'),
+            'patzilla.navigator.app.config':                 path.resolve(__ui, 'navigator', 'app', 'config'),
+            'patzilla.navigator.app.application':            path.resolve(__ui, 'navigator', 'app', 'application'),
+
+            'patzilla.navigator.app.layout':                 path.resolve(__ui, 'navigator', 'app', 'layout'),
+            'patzilla.navigator.app.ui':                     path.resolve(__ui, 'navigator', 'app', 'ui'),
+            'patzilla.navigator.app.results':                path.resolve(__ui, 'navigator', 'app', 'results'),
+            'patzilla.navigator.app.document':               path.resolve(__ui, 'navigator', 'app', 'document'),
+            'patzilla.navigator.style':                      path.resolve(__ui, 'navigator', 'style'),
+            'patzilla.navigator.util.linkmaker':             path.resolve(__ui, 'navigator', 'util', 'linkmaker'),
+            'patzilla.navigator.util.patentnumbers':         path.resolve(__ui, 'navigator', 'util', 'patentnumbers'),
+
+            'patzilla.navigator.components.analytics':       path.resolve(__ui, 'navigator', 'components', 'analytics'),
+            'patzilla.navigator.components.basket':          path.resolve(__ui, 'navigator', 'components', 'basket'),
+            'patzilla.navigator.components.comment':         path.resolve(__ui, 'navigator', 'components', 'comment'),
+            'patzilla.navigator.components.crawler':         path.resolve(__ui, 'navigator', 'components', 'crawler'),
+            'patzilla.navigator.components.export':          path.resolve(__ui, 'navigator', 'components', 'export'),
+            'patzilla.navigator.components.hotkeys':         path.resolve(__ui, 'navigator', 'components', 'hotkeys'),
+            'patzilla.navigator.components.keywords':        path.resolve(__ui, 'navigator', 'components', 'keywords'),
+            'patzilla.navigator.components.opaquelinks':     path.resolve(__ui, 'navigator', 'components', 'opaquelinks'),
+            'patzilla.navigator.components.pagination':      path.resolve(__ui, 'navigator', 'components', 'pagination'),
+            'patzilla.navigator.components.permalink':       path.resolve(__ui, 'navigator', 'components', 'permalink'),
+            'patzilla.navigator.components.project':         path.resolve(__ui, 'navigator', 'components', 'project'),
+            'patzilla.navigator.components.querybuilder':    path.resolve(__ui, 'navigator', 'components', 'querybuilder'),
+            'patzilla.navigator.components.reading':         path.resolve(__ui, 'navigator', 'components', 'reading'),
+            'patzilla.navigator.components.results-dialog':  path.resolve(__ui, 'navigator', 'components', 'results-dialog'),
+            'patzilla.navigator.components.results-tabular': path.resolve(__ui, 'navigator', 'components', 'results-tabular'),
+            'patzilla.navigator.components.storage':         path.resolve(__ui, 'navigator', 'components', 'storage'),
+            'patzilla.navigator.components.viewport':        path.resolve(__ui, 'navigator', 'components', 'viewport'),
+            'patzilla.navigator.components.waypoints':       path.resolve(__ui, 'navigator', 'components', 'waypoints'),
+
+            'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
+            'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
+            'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
+            'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
+
+            'patzilla.util.common':                          path.resolve(__ui, 'util', 'common'),
+            'patzilla.util.jquery':                          path.resolve(__ui, 'util', 'jquery'),
+            'patzilla.util.underscore':                      path.resolve(__ui, 'util', 'underscore'),
+            'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
+
+            'patzilla.lib.bs3_list_group':                   path.resolve(__ui, 'lib', 'bs3-list-group'),
+            'patzilla.lib.marionette-modalregion':           path.resolve(__ui, 'lib', 'marionette-modalregion'),
+            'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
+
         }
     },
 

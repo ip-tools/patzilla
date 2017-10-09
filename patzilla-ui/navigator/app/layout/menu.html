@@ -1,0 +1,96 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2016 Andreas Motl, Elmyra UG
+%>
+
+<!-- Menu -->
+<span class="btn-group btn-popover do-not-print">
+
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <i class="fa-icon icon-bars icon-3x"></i>
+    </button>
+    <ul class="dropdown-menu">
+
+        <li>
+
+            <!-- Actions -->
+            <div class="dropdown-section-header">Actions</div>
+
+            <a href="/logout">
+                <i class="icon-signout"></i>
+                &nbsp;
+                Sign out
+            </a>
+
+            <% if (opsChooserApp.component_enabled('keywords')) { %>
+            <a class="action-keyword-editor">
+                <i class="icon-edit"></i>
+                &nbsp;
+                Edit keywords for highlighting
+            </a>
+            <% } %>
+
+            <a class="action-fullscreen" target="_blank">
+                <i class="icon-fullscreen"></i>
+                &nbsp;
+                Enable fullscreen mode
+            </a>
+
+            <hr class="divider"/>
+
+
+            <% if (opsChooserApp.component_enabled('storage')) { %>
+            <!-- Database -->
+            <div class="dropdown-section-header">Database</div>
+
+            <!-- import database -->
+            <a id="data-import-button">
+                <i class="icon-folder-open-alt"></i> &nbsp; Import
+            </a>
+            <input type="file" id="data-import-file" class="hide"/>
+
+            <!-- save/export database -->
+            <a id="data-export-button">
+                <i class="icon-save"></i> &nbsp; Export
+            </a>
+
+            <!-- wipe database -->
+            <a id="database-wipe-button">
+                <i class="icon-trash"></i> &nbsp; Wipe
+            </a>
+
+            <hr class="divider"/>
+            <% } %>
+
+
+            <!-- Online help -->
+            <div class="dropdown-section-header">Online help and feedback</div>
+
+            <a class="action-help-shortcuts" target="_blank">
+                <i class="icon-question-sign"></i>
+                &nbsp;
+                How to navigate using hotkeys
+            </a>
+
+            <a class="action-help-ificlaims" target="_blank">
+                <i class="icon-question-sign"></i>
+                &nbsp;
+                How to search at IFI Claims
+            </a>
+
+            <a class="report-issue-feature" target="_blank">
+                <i class="icon-thumbs-up-alt"></i>
+                &nbsp;
+                Request feature
+            </a>
+            <a class="report-issue-problem" target="_blank">
+                <i class="icon-thumbs-down-alt"></i>
+                &nbsp;
+                Report problem
+            </a>
+
+        </li>
+
+    </ul>
+
+</span>

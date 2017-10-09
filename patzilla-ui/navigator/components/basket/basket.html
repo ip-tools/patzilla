@@ -1,0 +1,126 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<form id="basket-form" name="basket-form" method="post" action="<%= config.get('ship-url') %>" target="<%= config.get('ship-frame') %>">
+
+    <!-- basket content -->
+    <div class="row-fluid2">
+        <div class="span12">
+            <textarea id="basket" class="span12 monospace" name="<%= config.get('ship-param') %>" rows="7" placeholder="collection of documents"><%= numbers_display %></textarea>
+        </div>
+    </div>
+
+    <!-- basket controls -->
+    <div class="row-fluid">
+
+        <div class="span6">
+
+            <!--
+            <button id="basket-import-button"
+                    role="button" class="btn btn-popover do-not-print"
+                    data-toggle="popover" data-trigger="hover" data-placement="right"
+                    data-content="Import numberlist from clipboard, url or filesystem"
+                    >
+                Import
+            </button>
+            -->
+
+            <div class="btn-group do-not-print">
+                <button id="basket-review-button"
+                        class="btn btn-popover" data-value="review"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Review documents"
+                        >
+                    <i class="icon-indent-left icon-large"></i>
+                    Review
+                </button>
+                <button id="basket-entry-count-button"
+                        class="btn btn-popover disabled"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Number of rated documents"
+                        >
+                    <i class="fa-icon icon-pushpin"></i>
+                    <span class="basket-entry-count"></span>
+                </button>
+                <button id="basket-seen-count-button"
+                        class="btn btn-popover disabled"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Number of seen but unrated documents"
+                        >
+                    <i class="fa-icon icon-eye-open"></i>
+                    <span class="basket-seen-count"></span>
+                </button>
+            </div>
+
+        </div>
+
+        <div class="span6">
+
+            <!-- basket actions -->
+            <div class="btn-group pull-right do-not-print">
+
+                <button
+                        id="basket-submit-button"
+                        type="submit" role="button" class="btn btn-popover"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Submit to 3rd-party system"
+                        >
+                    <i class="icon-random icon-large"></i>
+                    Submit
+                </button>
+
+                <a id="dossier-export-button" class="btn btn-popover" role="button"
+                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                   data-content="Export project in multiple formats"
+                        >
+                    <i class="icon-save icon-large"></i>
+                    &nbsp;
+                    Export
+                </a>
+
+                <!--
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <i class="icon-save icon-large"></i>
+                    &nbsp;
+                    Share
+                </button>
+                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+
+                    <li>
+
+                        <div class="dropdown-section-header">
+                            <i class="icon-archive icon-large"></i>
+                            &nbsp;
+                            Database
+                        </div>
+
+                        <a class="permalink-review-liveview">
+                            <i class="icon-external-link"></i>
+                            &nbsp;
+                            Review project, permalink
+                        </a>
+                        <a class="permalink-review-liveview-ttl">
+                            <i class="icon-external-link"></i>
+                            &nbsp;
+                            Review project, with expiration time
+                            <i class="icon-time"></i>
+                        </a>
+
+                        <hr class="divider"/>
+
+                    </li>
+
+                </ul>
+                -->
+
+            </div>
+
+        </div>
+    </div>
+
+</form>

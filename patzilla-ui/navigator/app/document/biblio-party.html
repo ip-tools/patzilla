@@ -1,0 +1,25 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<%
+var content_parts = [];
+if (original && canonical != original) {
+content_parts.push(_.escape(_.escape('original: ' + original)));
+}
+if (epodoc && canonical != epodoc) {
+content_parts.push(_.escape(_.escape('epodoc: ' + epodoc)));
+}
+var content = content_parts.join('<br/>');
+%>
+
+<%= display %>
+
+<% if (content) { %>
+&nbsp;
+<a href="#" class="incognito do-not-print" onclick="javascript: $(this).popover({
+        html: true,
+        content: '<%= content %>',
+        trigger: 'manual'}); $(this).popover('toggle'); return false;">...</a>
+<% } %>

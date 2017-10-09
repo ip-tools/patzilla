@@ -1,0 +1,71 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2014-2017 Andreas Motl, Elmyra UG
+%>
+
+<div class="pull-right">
+
+    <div style="display: inline">
+        <sup>｢</sup>
+        <a id="project-chooser-name" href="#" data-type="text" data-pk="1" data-title="Project name"></a>
+        <sub>｣</sub>
+    </div>
+
+    <span id="project-chooser-actions" class="do-not-print">
+        <div id="project-chooser-list" class="btn-group">
+            <button class="btn dropdown-toggle hidden" data-toggle="dropdown">
+                <!-- dummy, makes caret narrower -->
+            </button>
+            <a class="btn btn-small dropdown-toggle" data-toggle="dropdown">
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu pull-right">
+            </ul>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-wrench"></i>
+            </button>
+            <ul class="dropdown-menu pull-right">
+
+                <li>
+
+                    <!-- A. project -->
+                    <div class="dropdown-section-header">Project</div>
+
+                    <!-- new project -->
+                    <a id="project-create-button">
+                        <i class="icon-plus icon-large"></i> &nbsp; Create
+                    </a>
+
+                    <!-- delete project -->
+                    <a id="project-delete-button">
+                        <i class="icon-trash icon-large"></i> &nbsp; Delete
+                    </a>
+
+                    <hr class="divider"/>
+
+
+                    <!-- B. mode -->
+                    <div class="dropdown-section-header">
+                        Display mode
+                    </div>
+
+                    <!-- fade "seen" mode -->
+                    <a id="mode-seen-fade-button">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" id="mode-seen-fade"> Fade »seen« documents
+                            </label>
+                        </div>
+                    </a>
+
+                </li>
+            </ul>
+
+        </div>
+
+    </span>
+
+</div>

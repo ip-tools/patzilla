@@ -1,0 +1,22 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+//
+// Modal dialog for viewing PDF documents.
+%>
+
+<div id="ops-pdf-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="ops-pdf-modal-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="ops-pdf-modal-label"></h3>
+    </div>
+    <div class="modal-body" id="pdf">
+    </div>
+    <div class="modal-footer">
+        <div class="btn-group pull-left">
+            <button class="btn btn-primary" id="pdf-previous">Previous</button>
+            <button class="btn btn-primary" id="pdf-next">Next</button>
+        </div>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>

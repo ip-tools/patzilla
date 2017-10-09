@@ -1,0 +1,66 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2016 Andreas Motl, Elmyra UG
+%>
+
+<div class="alert alert-error alert-block alert-inline error-panel">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <h4>ERROR</h4>
+
+    <dl class="dl-horizontal dl-horizontal-biblio2">
+
+        <dt>
+            Description
+        </dt>
+        <dd>
+            <h4><%= error.description %></h4>
+        </dd>
+
+        <br/>
+
+        <dt>
+            Location
+        </dt>
+        <dd>
+            <%= error.location %>
+        </dd>
+
+        <dt>
+            Name
+        </dt>
+        <dd>
+            <%= error.name %>
+        </dd>
+
+        <% if (error.details) { %>
+        <dt>
+            Details
+        </dt>
+        <dd>
+            <%= error.details %>
+        </dd>
+        <% } %>
+
+    </dl>
+
+        <span class="pull-right">
+            <button
+                    class="btn btn-danger report-issue-problem"
+                    data-report-origin="document"
+                    data-report-kind="not-available"
+                    data-report-item="<%= error.name %> (<%= error.location %>)"
+                    data-report-html=".error-panel"
+                    data-dialog-remark-orig="<%= htmlentities(error.description) %>"
+                    data-dialog-remark="<%=
+                        htmlentities(error.description)
+                        + '\n' +
+                        htmlentities(error.details)
+                    %>"
+                    >
+                Report problem
+            </button>
+        </span>
+
+    <span class="clearfix"/>
+
+</div>

@@ -1,0 +1,53 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<%
+//log('family member:', data);
+var pubref = data.get_publication_reference(null, 'docdb');
+var appref = data.get_application_reference(null, 'docdb');
+var linkmaker = new Ipsuite.LinkMaker();
+%>
+
+<td>
+    <!-- pdf document -->
+    <a href="<%= linkmaker.universal_pdf_url(pubref.fullnumber) %>" target="ipsuite-pdf"
+       class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
+       data-toggle="popover" data-trigger="hover" data-placement="top"
+       data-content="PDF document">
+        <%= opsChooserApp.ui.pdf_icon() %>
+    </a>
+</td>
+<td>
+    <%= data.enrich_link(pubref.fullnumber, 'pn') %>
+    <br/>
+    <%= pubref.isodate %>
+</td>
+<td>
+    <%= appref.fullnumber %>
+    <br/>
+    <%= appref.isodate %>
+    <%
+    if (data['application-reference']['@is-representative'] == 'YES') {
+        print('<br/>');
+        print('representative: yes');
+    }
+    %>
+</td>
+<td>
+    <%
+    _(to_list(data['priority-claim'])).each(function(priority) {
+        //log('priority:', priority);
+        var document_id = data.get_document_id(priority, null, 'docdb');
+        print(document_id.fullnumber);
+        print('<br/>');
+        print(document_id.isodate);
+        print('<br/>');
+        if (priority['priority-active-indicator'] && priority['priority-active-indicator']['$'] == 'YES') {
+            print('active: yes');
+            print('<br/>');
+        }
+    });
+    %>
+</td>

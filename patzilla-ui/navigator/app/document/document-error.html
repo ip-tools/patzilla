@@ -1,0 +1,45 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<%
+var patent_number = get_patent_number();
+var subject = 'Problem when displaying document ' + patent_number;
+var body = 'We experienced an error when displaying the document ' + patent_number + ', which is important to us. Please have a look at this problem.';
+%>
+
+<div class="container-fluid ops-collection-entry page-break-after" data-document-number="<%= patent_number %>">
+
+    <div class="ops-collection-entry-heading row-fluid">
+
+        <!-- patent number -->
+        <div class="span3 container-fluid">
+            <div class="header-compact">
+                <%= patent_number %>
+            </div>
+        </div>
+
+        <!-- actions -->
+        <div class="span7 container-fluid document-actions">
+            <div class="alert alert-error alert-block">
+                An error occurred when displaying the document '<%= patent_number %>', please report this problem to us.
+                <br/>
+                Error message: <%= data.error_message %>
+                <br/><br/><br/>
+                <button
+                        class="btn btn-danger report-issue-problem pull-right"
+                        data-report-origin="result"
+                        data-report-kind="not-available"
+                        data-report-item="<%= patent_number %>"
+                        data-dialog-remark="An error occurred when displaying the document '<%= patent_number %>': <%= data.error_message %>."
+                        >
+                    Report problem
+                </button>
+                <br/><br/>
+            </div>
+        </div>
+
+    </div>
+
+</div>

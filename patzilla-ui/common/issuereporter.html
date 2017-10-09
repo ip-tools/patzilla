@@ -1,0 +1,60 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2016 Andreas Motl, Elmyra UG
+%>
+
+<div id="issue-reporter-dialog" class="modal hide fade modal-not-rounded modal-warning" tabindex="-1" role="dialog" aria-labelledby="issue-reporter-label" aria-hidden="true">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="issue-reporter-label">Feedback</h3>
+    </div>
+
+    <div class="modal-body">
+
+        <p>
+        Reporting issues is important to us for getting feedback about real world problems.
+        Even minor reports help to improve the platform gradually, thanks for taking the time!
+        </p>
+
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span4">
+                    <h4>What's up?</h4>
+                </div>
+                <div class="span8">
+                    <select id="issue-reporter-what" class="full-width">
+                        <option value="problem">Report problem</option>
+                        <option value="feature">Request feature</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span4">
+                    <h4>Remark</h4>
+                    <span class="text-small">
+                        Optionally, add some comments describing the issue.
+                    </span>
+                </div>
+                <div class="span8">
+                    <textarea id="issue-reporter-remark"  class="full-width" rows="7"></textarea>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <div id="issue-reporter-status"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <i id="issue-reporter-spinner" class="spinner icon-refresh icon-spin" style="display: none"></i>
+        &nbsp;&nbsp;
+        <button class="btn btn-primary" id="issue-reporter-send-button" type="button">Submit report</button>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+
+</div>

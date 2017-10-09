@@ -1,0 +1,516 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2014 Andreas Motl, Elmyra UG
+%>
+
+<div class="container-fluid">
+    <div class="span9">
+        <h4>Hotkey overview</h4>
+    </div>
+</div>
+
+<div class="container-fluid">
+
+    <div class="span9">
+
+        <div class="list-group">
+
+            <!-- Global actions -->
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Global actions</h4>
+                <p class="list-group-item-text">
+                <table class="table content">
+
+                    <tbody>
+                    <tr>
+                        <td class="span4">
+                            <kbd class="kbKey">META</kbd><b class="kbConcat">+</b><kbd class="kbKey">RETURN</kbd>
+                            <br/>
+                            CTRL+RETURN
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Submit search
+                            </p>
+                            <p>
+                                Submits search query to active data source. Only enabled in query input field.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + C
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to comfort search user interface
+                            </p>
+                            <p>
+                                Use a field-based form for specifying search criteria.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + X
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to expert search user interface
+                            </p>
+                            <p>
+                                Use a text area for submitting a CQL query expression.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + N
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to numberlist interface
+                            </p>
+                            <p>
+                                Use a numberlist as query expression.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + E
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to datasource EPO
+                            </p>
+                            <p>
+                                Search results and bibliographic information come from
+                                <a href="https://ops.epo.org/">EPO's OPS</a> web service.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + D
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to datasource DPMA
+                            </p>
+                            <p>
+                                Search results come from
+                                <a href="https://www.dpma.de/english/service/e-services/depatisnet/">DPMA's DEPATISnet</a>,
+                                while bibliographic information comes from OPS.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + I
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to datasource IFI Claims
+                            </p>
+                            <p>
+                                Search results originate from the commercial patent search database
+                                <a href="https://www.ificlaims.com/">IFI Claims</a>,
+                                while bibliographic information comes from OPS.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + T
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to datasource depa.tech
+                            </p>
+                            <p>
+                                Search results originate from the commercial patent search database
+                                <a href="https://depa.tech/">depa.tech</a>,
+                                while bibliographic information comes from OPS.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            CTRL + SHIFT + R
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Switch to review mode
+                            </p>
+                            <p>
+                                Present all documents collected in basket for review.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <kbd class="kbKey">H</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open online help
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                </p>
+            </a>
+
+            <!-- Form actions -->
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Form actions</h4>
+                <p class="list-group-item-text">
+                <table class="table content">
+
+                    <tbody>
+                    <tr>
+                        <td class="span4">
+                            SHIFT + RETURN
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Toggle form field zoom (in Comfort form)
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="span4">
+                            CTRL + ALT + F
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open CQL field chooser (in Expert form)
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                </p>
+            </a>
+
+            <!-- List navigation -->
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">List navigation</h4>
+                <p class="list-group-item-text">
+                <table class="table content">
+
+                    <tbody>
+                    <tr>
+                        <td class="span4">
+                            <kbd class="kbKey">SPACE</kbd>
+                            <br/>
+                            <kbd class="kbKey">PAGEDOWN</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Scroll down to next result item
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + SPACE
+                            <br/>
+                            <kbd class="kbKey">PAGEUP</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Scroll up to previous result item
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                </p>
+            </a>
+
+            <!-- Document navigation -->
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Document navigation</h4>
+                <p class="list-group-item-text">
+                <table class="table content">
+
+                    <tbody>
+                    <tr>
+                        <td class="span4">
+                            <kbd class="kbKey">LEFT</kbd>
+                            <kbd class="kbKey">RIGHT</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                "Biblio, Claims, Description": Previous/next tab
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + LEFT
+                            &nbsp;
+                            SHIFT + RIGHT
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Drawings: Previous/next image
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + UP
+                            &nbsp;
+                            SHIFT + DOWN
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Drawings: Rotate image
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + P
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open PDF
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + E
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open Espacenet
+                            </p>
+                            <blockquote class="expandable">
+                                <p>
+                                    Espacenet offers free access to more than 80 million patent documents worldwide,
+                                    containing information about inventions and technical developments from 1836 to today.
+                                </p>
+                                <small>
+                                    <a target="_blank" href="https://www.epo.org/searching/free/espacenet.html">
+                                        https://www.epo.org/searching/free/espacenet.html
+                                    </a>
+                                </small>
+                                <small>
+                                    <a target="_blank" href="http://documents.epo.org/projects/babylon/eponet.nsf/0/4E8744EB66E8F944C12577D600598EEF/$File/espacenet_brochure_en.pdf">
+                                        Espacenet brochure
+                                    </a>
+                                </small>
+                            </blockquote>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + D
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open DEPATISnet
+                            </p>
+                            <blockquote class="expandable">
+                                <p>
+                                    DEPATISnet provides fast and comfortable access to the electronic DEPATIS document
+                                    archive (German patent information system) of the German Patent and Trade Mark Office (DPMA).
+                                    <br/><br/>
+
+                                    DEPATISnet covers all German patent documents since 1877 and also documents of many
+                                    other patent offices and organisations worldwide.
+                                    <br/><br/>
+
+                                    The document archive consists of approximately 88 million data records
+                                    from about 100 countries. Almost 60% million of these data records are
+                                    available in PDF format.
+                                    <br/><br/>
+                                </p>
+                                <small>
+                                    <a target="_blank" href="http://www.dpma.de/english/service/e-services/depatisnet/">
+                                        http://www.dpma.de/english/service/e-services/depatisnet/
+                                    </a>
+                                </small>
+                                <small>
+                                    <a target="_blank" href="http://www.dpma.de/docs/service/veroeffentlichungen/flyer_en/depatisnet_engl.pdf">
+                                        DEPATISnet brochure
+                                    </a>
+                                </small>
+                            </blockquote>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + ALT + E
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open European Patent Register
+                            </p>
+                            <blockquote class="expandable">
+                                <p>
+                                    The European Patent Register contains all the publicly available information on
+                                    European patent applications as they pass through the grant procedure, including
+                                    oppositions, patent attorney/EPO correspondence and more.
+                                    The service also provides for public file inspection.
+                                </p>
+                                <small>
+                                    <a target="_blank" href="https://www.epo.org/searching/free/register.html">
+                                        https://www.epo.org/searching/free/register.html
+                                    </a>
+                                </small>
+                            </blockquote>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + ALT + D
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open DPMAregister
+                            </p>
+                            <blockquote class="expandable">
+                                <p>
+                                    The DPMAregister service provides access to the german publications of patents,
+                                    trade marks, utility models and designs as well as the register data.
+                                    The service comprises the search for legal/procedural status information as well as
+                                    the corresponding publication data.
+                                </p>
+                                <small>
+                                    <a target="_blank" href="https://register.dpma.de/?lang=en">
+                                        https://register.dpma.de/?lang=en
+                                    </a>
+                                </small>
+                            </blockquote>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            SHIFT + C
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Open CCD Viewer
+                            </p>
+                            <blockquote class="expandable">
+                                <p>
+                                    The Common Citation Document (CCD) application aims to provide single point access
+                                    to up-to-date citation data relating to the patent applications of the IP5 Offices.
+                                    It consolidates the prior art cited by all participating offices for the family
+                                    members of a patent application, thus enabling the search results for the same
+                                    invention produced by several offices to be visualised on a single page.
+                                </p>
+                                <small>
+                                    <a target="_blank" href="http://www.fiveipoffices.org/material/ccd.html">
+                                        https://www.fiveipoffices.org/material/ccd.html
+                                    </a>
+                                </small>
+                            </blockquote>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                </p>
+            </a>
+
+            <!-- Document actions -->
+            <a href="#" class="list-group-item">
+                <h4 class="list-group-item-heading">Document actions</h4>
+                <p class="list-group-item-text">
+                <table class="table content">
+
+                    <tbody>
+                    <tr>
+                        <td class="span4">
+                            <kbd class="kbKey">1</kbd>
+                            <br/>
+                            <kbd class="kbKey">INSERT</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Rate the document with score "1"
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <kbd class="kbKey">2</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Rate the document with score "2"
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <kbd class="kbKey">3</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Rate the document with score "3"
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <kbd class="kbKey">0</kbd>
+                            <br/>
+                            <kbd class="kbKey">D</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Rate the document with "dismiss"
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <kbd class="kbKey">+</kbd>
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Add the document to basket
+                            </p>
+                            <p>
+                                No rating value will be assigned.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <kbd class="kbKey">-</kbd>
+                            <br/>
+                            <kbd class="kbKey">R</kbd>
+                            <br/>
+                            <kbd class="kbKey">DEL</kbd>
+                            <br/>
+                            CTRL+D
+                        </td>
+                        <td>
+                            <p class="lead">
+                                Remove the document from basket
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+                </p>
+            </a>
+
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<strong><%= title %></strong> <%= language ? '[' + language + ']' : '' %>
+<br/><br/>
+<span class="keyword"><%= content %></span>
+<br/><br/><br/>
+<% if (datasource) { %>
+<span class="pull-right text-small text-muted">
+    Data source: <span class="datasource-label"><%= datasource %></span>
+</span>
+<% } %>
+<span class="clearfix"></span>
