@@ -1023,7 +1023,6 @@ RatingController = Marionette.Controller.extend({
             cancel: true,
             cancelHint: 'not relevant',
             dismissible: true,
-            path: '/static/widget/raty/img',
             action: function(data, evt) {
                 var score = data.score;
                 var dismiss = data.dismiss;
