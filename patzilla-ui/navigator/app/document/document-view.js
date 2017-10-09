@@ -2,6 +2,7 @@
 // (c) 2013-2015 Andreas Motl, Elmyra UG
 require('jquery.highlight.bartaz');
 require('patzilla.navigator.util.linkmaker');
+require('./util.js');
 
 OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     template: require('./document-view.html'),
@@ -118,39 +119,6 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
 });
 
-TemplateHelperMixin = {
-
-    templateHelpers: function() {
-        var _this = this;
-        var funcs = {
-
-            // Propagate configuration object to template
-            config: opsChooserApp.config,
-
-            get_linkmaker: function() {
-                return new Ipsuite.LinkMaker(_this.model);
-            },
-
-            get_citations_environment_button: function(options) {
-                return citations_environment_button(_this.model, options);
-            },
-
-        };
-
-        // Propagate whole model object to template
-        _.extend(funcs, this.model);
-
-        return funcs;
-    },
-
-};
-
 _.extend(OpsExchangeDocumentView.prototype, TemplateHelperMixin);
 
 
-citations_environment_button = function(model, options) {
-    //log('OpsBaseModel.get_citations_environment_button');
-    options = options || {};
-    var tpl = require('./biblio-citations-environment.html');
-    return tpl({data: model, options: options});
-};

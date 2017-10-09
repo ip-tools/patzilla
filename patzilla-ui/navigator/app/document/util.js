@@ -69,3 +69,61 @@ OpsBaseViewMixin = {
     },
 
 };
+
+
+TemplateHelperMixin = {
+
+    templateHelpers: function() {
+        var _this = this;
+        var funcs = {
+
+            // Propagate configuration object to template
+            config: opsChooserApp.config,
+
+            get_linkmaker: function() {
+                return new Ipsuite.LinkMaker(_this.model);
+            },
+
+            get_citations_environment_button: function(options) {
+                return citations_environment_button(_this.model, options);
+            },
+
+        };
+
+        // Propagate whole model object to template
+        _.extend(funcs, this.model);
+
+        return funcs;
+    },
+
+};
+
+TemplateDataContextMixin = {
+
+    // Namespace template variables to "data", also accounting for "templateHelpers".
+    serializeData: function() {
+
+        var data;
+        if (this.collection) {
+            data = this.collection;
+        } else if (this.model) {
+            data = this.model.attributes;
+        } else {
+            data = {};
+        }
+
+        var helpers = this.templateHelpers();
+        _.extend(data, helpers);
+
+        var tpldata = {data: data};
+        return tpldata;
+    },
+
+};
+
+citations_environment_button = function(model, options) {
+    //log('OpsBaseModel.get_citations_environment_button');
+    options = options || {};
+    var tpl = require('./biblio-citations-environment.html');
+    return tpl({data: model, options: options});
+};

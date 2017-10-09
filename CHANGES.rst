@@ -15,6 +15,7 @@ development
     - Data source adapters
     - Application layout- and error templates
     - Result list and document details
+    - Family details
 
 2017-10-06 0.137.0
 ==================

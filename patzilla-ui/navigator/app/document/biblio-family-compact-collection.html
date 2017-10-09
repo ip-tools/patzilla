@@ -1,0 +1,29 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<table class="table table-condensed span6">
+    <thead>
+    <tr>
+        <th class="span1">PDF</th>
+        <th class="span2">Publication</th>
+        <th class="span2">Date</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <%
+        var family_members = data.get_patent_family_member_list('epodoc');
+        var family_members_comma = family_members.join(',');
+        %>
+        <td>
+        </td>
+        <td colspan="2">
+            <a href="?numberlist=<%= encodeURIComponent(family_members_comma) %>" class="query-link" target="_blank">
+                All family members (#<%= family_members.length %>)
+            </a>
+        </td>
+    </tr>
+    </tbody>
+</table>

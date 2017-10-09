@@ -1,0 +1,29 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<%
+//log('family member:', data);
+var pubref = data.get_publication_reference(null, 'docdb');
+var linkmaker = new Ipsuite.LinkMaker();
+%>
+
+<td>
+    <!-- pdf document -->
+    <a href="<%= linkmaker.universal_pdf_url(pubref.fullnumber) %>" target="ipsuite-pdf"
+       class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
+       data-toggle="popover" data-trigger="hover" data-placement="top"
+       data-content="PDF document"
+            >
+        <%= opsChooserApp.ui.pdf_icon() %>
+    </a>
+</td>
+
+<td>
+    <%= data.enrich_link(pubref.fullnumber, 'pn', null, null, {'no_modifiers': true}) %>
+</td>
+
+<td>
+    <%= pubref.isodate %>
+</td>

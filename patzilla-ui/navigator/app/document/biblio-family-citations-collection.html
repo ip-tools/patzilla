@@ -1,0 +1,26 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th class="span1">Explore</th>
+        <th class="span2">Publication</th>
+        <th class="span7">References cited</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><%= data.get_citations_environment_button() %></td>
+        <td></td>
+        <td>Citation references from all family members (#<%= data.get_patent_citation_list(false, 'epodoc').length %>)</td>
+    </tr>
+    <tr>
+        <td><%= data.get_citations_environment_button({members_no_us: true}) %></td>
+        <td></td>
+        <td>Citation references from non-US family members</td>
+    </tr>
+    </tbody>
+</table>

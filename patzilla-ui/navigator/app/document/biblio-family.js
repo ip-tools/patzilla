@@ -4,18 +4,18 @@ require('./util.js');
 
 OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
 
-    template: _.template($('#ops-family-verbose-member-template').html(), this.model, {variable: 'data'}),
+    template: require('./biblio-family-verbose-member.html'),
     tagName: 'tr',
     //className: 'row-fluid',
     //style: 'margin-bottom: 10px',
 
 });
-_.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin);
+_.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
 OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
-    template: "#ops-family-verbose-collection-template",
+    template: require('./biblio-family-verbose-collection.html'),
     itemView: OpsFamilyVerboseMemberView,
 
     id: "ops-family-verbose-verbose-collection",
@@ -32,20 +32,19 @@ _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
 
 OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
 
-    template: _.template($('#ops-family-compact-member-template').html(), this.model, {variable: 'data'}),
+    template: require('./biblio-family-compact-member.html'),
     tagName: 'tr',
     //tagName: 'div',
     //className: 'row-fluid',
     //style: 'margin-bottom: 10px',
 
 });
-_.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin);
+_.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
 OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
-    //template: "#ops-family-compact-collection-template",
-    template: _.template($('#ops-family-compact-collection-template').html(), this.collection, {variable: 'data'}),
+    template: require('./biblio-family-compact-collection.html'),
     itemView: OpsFamilyCompactMemberView,
 
     id: "ops-family-compact-collection",
@@ -95,11 +94,12 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
     },
 
 });
+_.extend(OpsFamilyCompactCollectionView.prototype, TemplateDataContextMixin);
 
 
 OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
 
-    template: _.template($('#ops-family-citations-member-template').html(), this.model, {variable: 'data'}),
+    template: require('./biblio-family-citations-member.html'),
     tagName: 'tr',
 
     templateHelpers: function() {
@@ -130,12 +130,13 @@ OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
     },
 
 });
+_.extend(OpsFamilyCitationsMemberView.prototype, TemplateDataContextMixin);
+
 
 OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
     id: "ops-family-citations-collection",
-    //template: "#ops-family-citations-collection-template",
-    template: _.template($('#ops-family-citations-collection-template').html(), this.collection, {variable: 'data'}),
+    template: require('./biblio-family-citations-collection.html'),
     itemView: OpsFamilyCitationsMemberView,
 
     appendHtml: function(collectionView, itemView) {
@@ -303,3 +304,4 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
     },
 
 });
+_.extend(OpsFamilyCitationsCollectionView.prototype, TemplateDataContextMixin);
