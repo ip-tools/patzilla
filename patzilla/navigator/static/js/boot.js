@@ -19,13 +19,13 @@ Marionette.$ = window.jQuery;
 console.info('Load application');
 require('patzilla.app.main');
 require('patzilla.navigator.app.ui');
+require('patzilla.navigator.app.document');
 
 
 // Application components
 console.info('Load application components');
 
 // Semi-essential application components
-require('patzilla.navigator.components.document');
 // TODO: Currently, quite some core machinery relies on the querybuilder. Improve that!
 require('patzilla.navigator.components.querybuilder');
 

@@ -251,7 +251,8 @@ UiController = Marionette.Controller.extend({
             query_display = JSON.stringify(search_info.query_data.criteria);
         }
         search_info.query_display = query_display;
-        var msg = _.template($('#no-results').html(), {variable: 'data'})(search_info);
+        var tpl = require('../results/no-results.html');
+        var msg = tpl(search_info);
         this.user_alert(msg, 'warning');
     },
 

@@ -61,7 +61,7 @@ require('patzilla.access.ificlaims');
 require('patzilla.app.config');
 require('patzilla.app.application');
 require('patzilla.navigator.app.layout');
-require('patzilla.views.ops');
+require('patzilla.navigator.app.results');
 require('patzilla.navigator.components.pagination');
 require('patzilla.navigator.components.results-tabular');
 require('patzilla.navigator.components.results-dialog');

@@ -80,13 +80,6 @@ OpsBaseModel = Backbone.Model.extend({
             return newdict;
         },
 
-        get_citations_environment_button: function(options) {
-            //log('OpsBaseModel.get_citations_environment_button');
-            options = options || {};
-            var tpl = _.template($('#ops-citations-environment-button-template').html());
-            return tpl({data: this, options: options});
-        },
-
         get_patent_citation_list: function(node, links, id_type) {
 
             node = node || this;

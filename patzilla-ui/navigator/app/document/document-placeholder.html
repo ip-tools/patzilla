@@ -1,0 +1,156 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2016 Andreas Motl, Elmyra UG
+%>
+
+<%
+var accordion_id = _.uniqueId('ops-placeholder-accordion-');
+var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
+var document_number = model.get_document_number();
+var metadata = opsChooserApp.metadata;
+var has_alternatives = !_.isEmpty(model.get('alternatives_local'));
+var button_not_available_style = has_alternatives ? 'btn-default' : 'btn-danger';
+
+var linkmaker = model.linkmaker;
+%>
+<div class="ops-collection-entry-inner container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="hero-unit">
+
+                <% if (!has_alternatives) { %>
+                <h4>Document "<%= document_number %>" not available</h4>
+                <p>
+                    Sometimes a data source delivers search results of brand new patent applications or grants,
+                    whose bibliographic data is not yet available from OPS.
+
+                    For some offices, it is just due to lack of coverage.
+
+                    Make sure to check the full document as PDF
+
+                    <!-- pdf document -->
+                    <a href="<%= linkmaker.universal_pdf_url() %>" target="ipsuite-pdf"
+                       class="btn btn-small btn-popover anchor-pdf" role="button"
+                       data-toggle="popover" data-trigger="hover" data-placement="top"
+                       data-content="PDF: <%= document_number %>"
+                            >
+                        <%= opsChooserApp.ui.pdf_icon() %>
+                    </a>
+
+                    as well as the collection of links to external
+                    data sources
+                    <button class="btn btn-small">
+                        <i class="icon-globe icon-large"></i>
+                    </button>.
+                </p>
+                <p class="hero-smaller">
+                    If the document is not available in any form which satisfies your needs,
+                    do not hesitate to report this problem to us!
+                </p>
+
+                <% } else { %>
+                <h4>Document representation "<%= document_number %>" not in result list</h4>
+                <p>
+                    Please check alternative representations or enable the
+                    <button class="btn btn-small">
+                        <i class="icon-repeat"></i>
+                        Full cycle
+                    </button>
+                    mode to display all available kindcode variants.
+                    <ul class="text-larger">
+                        <%
+                        _.each(model.get('alternatives_local'), function(alternative) {
+                        %>
+                        <li>
+                            <a href="javascript: opsChooserApp.ui.scroll_to_document('<%= alternative %>');">
+                                <%= alternative %>
+                            </a>
+                        </li>
+                        <%
+                        });
+                        %>
+                    </ul>
+                </p>
+                <% } %>
+
+                <div id="<%= accordion_id %>">
+
+                <p>
+                    <button class="btn btn-default" data-toggle="collapse" data-target="#<%= learn_more_id %>" data-parent="#<%= accordion_id %>">
+                        Learn more
+                    </button>
+                    <button
+                            class="btn <%= button_not_available_style %> report-issue-problem"
+                            data-report-origin="document"
+                            data-report-kind="not-available"
+                            data-report-item="<%= document_number %>"
+                            data-dialog-remark="Document <%= document_number %> is not available."
+                            >
+                        Report problem
+                    </button>
+                </p>
+
+                <div class="accordion-group noborder">
+                <div id="<%= learn_more_id %>" class="collapse">
+                    A document was delivered from an upstream datasource but is missing in the result list.
+                    Please help to improve the system by reporting this issue to us.
+                    <br/><br/>
+
+                    Some background information about possible reasons why this might happen:
+                    <ul class="breathe">
+                        <li>
+                            <h4 class="inline-head">Search mode</h4>
+                            <br/>
+                            The specific kindcode <strong>"<%= model.get('@kind') %>"</strong> for the requested
+                            document <strong>"<%= model.get('@country') %><%= model.get('@doc-number') %>"</strong> is not listed,
+                            because another representative document was selected for display,
+                            maybe by using specific search mode or modifiers.
+                            <br/>
+                            Try using a different search mode or use the
+                            <button class="btn btn-small">
+                                <i class="icon-repeat"></i>
+                                Full cycle
+                            </button>
+                            mode to display
+                            <strong>all</strong> kindcode variants available from OPS.
+                        </li>
+                        <li>
+                            <h4 class="inline-head">Comparison mismatch</h4>
+                            <br/>
+                            Depending on the format of the publication number, the comparison whether results are
+                            actually listed or not might fail and lead to mismatches.
+                            In this case, this placeholder can be considered a "false alarm".
+                            <br/>
+                            Often, another representation of the same document having a different kindcode can be
+                            found in the result list next to this placeholder.
+                            If we can identify viable alternatives in the same result page, they are displayed above.
+                            <p class="hero-smaller">
+                                We apply publication number normalization and sophisticated decision rules to achieve
+                                the best placeholder behavior.
+                                Your report can have a real impact on improving these rules.
+                            </p>
+                        </li>
+                        <li>
+                            <h4 class="inline-head">Document not available from OPS</h4>
+                            <br/>
+                            The requested document <strong>"<%= document_number %>"</strong> is not available
+                            from EPO's Open Patent Services (OPS).
+                            <br/>
+                            The publication number might actually be an application or domestic filing number
+                            or may contain an uncommon patent kind code, so trying different variants or even
+                            searching without kindcode might help.
+                            <p class="hero-smaller">
+                                If the document is not available in any form which satisfies your needs,
+                                do not hesitate to report this problem to us!
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

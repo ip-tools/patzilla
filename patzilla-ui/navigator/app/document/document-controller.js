@@ -2,6 +2,7 @@
 // (c) 2014-2015 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
 require('autonumeric');
+require('./util.js');
 
 DocumentBaseController = Marionette.Controller.extend({
 
@@ -33,7 +34,8 @@ DocumentBaseController = Marionette.Controller.extend({
         // shorten cql query string
         $(".cql-query").shorten({showChars: 125, moreText: 'more', lessText: 'less'});
 
-        // apply autonumeric formatting
+        // TODO: Refactor to "results" context
+        // Apply autonumeric formatting
         $.isNumeric($('#result-count-total').text()) && $('#result-count-total').autoNumeric('init', {mDec: 0});
 
 
@@ -328,6 +330,7 @@ DocumentDetailsController = Marionette.Controller.extend({
 
     },
 
+    // TODO: Move to family.js
     display_family: function(document, container, view_type) {
 
         var document_number = document.get_publication_number('epodoc');
@@ -399,6 +402,10 @@ DocumentDetailsController = Marionette.Controller.extend({
         } else {
             spinner.hide();
         }
+    },
+
+    get_citations_environment_button: function(model, options) {
+        return citations_environment_button(model, options);
     },
 
 });

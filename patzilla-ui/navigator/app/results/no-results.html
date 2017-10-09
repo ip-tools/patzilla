@@ -1,0 +1,23 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<%
+var query_display_html = htmlentities(query_display);
+%>
+Searching for <pre class="inline"><%= query_display %></pre> at data source
+<strong><%= datasource || 'n/a' %></strong> did not match any documents.
+Please try refining search criteria or expression.
+<br/>
+If you think this is a system failure, don't hesitate to report this issue to us.
+<button
+        class="btn btn-warning report-issue-problem pull-right"
+        data-report-origin="result"
+        data-report-kind="not-available"
+        data-report-item="<%= query_display_html %>"
+        data-dialog-remark="Search did not match any documents at &quot;<%= datasource %>&quot;.&#13;Criteria:&#13;<%= query_display_html %>"
+        >
+    Report problem
+</button>
+<div class="clearfix"/>
