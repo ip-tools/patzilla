@@ -8,9 +8,20 @@ About
 The IP Navigator is a modular patent information research platform and toolkit
 with a modern user interface and access to multiple data sources.
 
-Its goal is to provide the community with a contemporary user interface to the
+Its goal is to provide the community with convenient access to the
 OPS service from EPO and other professional patent search APIs.
 It is also used as a building block for integrated vendor solutions.
+
+
+History
+=======
+The software got some applause from professional researchers for its unique user
+interface and rich feature set when it was released to the first audience in 2014.
+We hear from our users they are still having a great pleasure working with it on a daily basis.
+
+After four years of development, the source code finally gets released under an
+open source license in 2017. We are looking forward to opening up the development
+process as well, every kind of participation and support is very much welcome.
 
 
 Features
@@ -22,7 +33,8 @@ Features
   - Connect to multiple services for pdf-, image-, bibliographic data and fulltext acquisition.
 
 - User interface. Based on contemporary web technologies and responsive design, it works on multiple devices.
-  Use it on PCs, tablets, smartphone devices or as a multi-screen solution.
+  Use it on PCs, tablets, smartphone devices or as a multi-screen solution. The clear and well-arranged
+  design and layout permits efficient screening of large numbers of patent documents.
 
 - Dossier management. Manage different collections of patent documents and apply ratings and comments.
 
@@ -33,6 +45,15 @@ Features
   even across the boundaries of in-house systems.
 
 - Multitenancy. The software can operate on behalf of different vendors. It's easy to apply custom branding.
+
+
+Screenshot
+==========
+A picture says a thousand words.
+
+.. image:: docs/ip-navigator.png
+    :alt: IP Navigator
+    :target: https://github.com/ip-tools/ip-navigator
 
 
 Demos
@@ -68,13 +89,6 @@ Auxiliary data sources:
 - `CIPO`_
 
 
-Screenshot
-==========
-.. image:: docs/ip-navigator.png
-    :alt: IP Navigator
-    :target: https://github.com/ip-tools/ip-navigator
-
-
 Getting started
 ===============
 Getting started with the software or deploying it yourself is quite easy if you are familiar with Python.
@@ -86,7 +100,7 @@ See `install docs`_ about how to run an instance in a development sandbox.
 Contributing
 ============
 We are always happy to receive code contributions, ideas, suggestions
-and problem reports from the community!
+and problem reports from the community.
 Spend some time taking a look around, locate a bug, design issue or
 spelling mistake and then send us a pull request or create an `issue`_.
 
@@ -96,6 +110,7 @@ Thanks in advance for your efforts, we really appreciate any help.
 License
 =======
 This software is copyright © 2013-2017 The PatZilla Authors. All rights reserved.
+
 It is and will always be **free and open source software**.
 
 Use of the source code included here is governed by the
@@ -106,7 +121,12 @@ Please also have a look at the `notices about licenses of third-party components
 
 Support
 =======
-For enterprises, dedicated commercial support is also available through `Elmyra UG`_.
+For enterprises, dedicated commercial support is also available through Elmyra UG.
+`Elmyra UG`_ is the Germany based software development company that’s spearheading the
+ongoing development of this software and as such will ensure continuity for the project.
+
+If you’re using the IP Navigator in your company and you need commercial support, feel free
+to get in touch with us. We are happy to receive respective inquiries at support@elmyra.de.
 
 
 .. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
