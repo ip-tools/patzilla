@@ -4,6 +4,9 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-09 0.138.0
+==================
 - Update configuration file templates re. vendoring
 - Load HTML templates using webpack's "underscore-template-loader"
 - Large Javascript refactoring, improve directory layout and
