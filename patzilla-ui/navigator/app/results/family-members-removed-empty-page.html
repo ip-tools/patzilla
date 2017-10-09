@@ -1,0 +1,29 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<div class="row" id="family-members-removed-empty-page">
+    <div class="span6">
+        An empty result page was reached while having "Remove family members" enabled.
+        This indicates some family members have actually been removed from the current
+        result page.
+        <br/><br/>
+        Background: We're fetching results from upstream data sources in chunks of
+        <%= data.chunksize %> items, so the removal of family members leads to gaps
+        at the end of each result chunk.
+    </div>
+    <div class="span5 text-align-right">
+        <% if (data.recommended_next_page_local) { %>
+        You might want to just skip to the next page containing valid result items:
+        <br/><br/>
+        <button id="next-page-with-results-button" data-next-page="<%= data.recommended_next_page_local %>" class="btn btn-large btn-default pull-right" role="button">
+            Go to result page #<%= data.recommended_next_page_local %>
+        </button>
+        <% } else { %>
+        <div class="pull-right text-large text-align-right">
+            <strong>The end of the result list was reached.</strong>
+        </div>
+        <% } %>
+    </div>
+</div>

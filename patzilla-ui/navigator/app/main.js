@@ -103,7 +103,7 @@ console.info('Load application core');
 opsChooserApp = new OpsChooserApp({config: navigatorConfiguration, theme: navigatorTheme});
 
 opsChooserApp.addRegions({
-    mainRegion: "#main-region",
+    mainRegion: "#root-region",
     queryBuilderRegion: "#querybuilder-region",
     basketRegion: "#basket-region",
     metadataRegion: "#ops-metadata-region",

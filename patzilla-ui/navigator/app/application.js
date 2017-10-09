@@ -972,9 +972,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             };
 
             if (count_removed > 0) {
-                var info_body = _.template($('#family-members-removed-some-template').html(), {variable: 'data'})(tpldata);
+                var info_body = require('./results/family-members-removed-some.html')({data: tpldata});
             } else {
-                var info_body = _.template($('#family-members-removed-none-template').html(), {variable: 'data'})(tpldata);
+                var info_body = require('./results/family-members-removed-none.html')({data: tpldata});
             }
             this.ui.user_alert(info_body, 'info');
 
@@ -992,7 +992,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                     tpldata.recommended_next_page_local = recommended_next_page_local;
                 }
 
-                var info_body = _.template($('#family-members-removed-empty-page-template').html(), {variable: 'data'})(tpldata);
+                var info_body = require('./results/family-members-removed-empty-page.html')({data: tpldata});
                 this.ui.user_alert(info_body, 'info');
 
                 // Go to page containing next results after the gap of removed items

@@ -1,22 +1,27 @@
 ## -*- coding: utf-8 -*-
-## (c) 2013-2015 Andreas Motl, Elmyra UG
+## (c) 2013-2017 Andreas Motl, Elmyra UG
 
-<%include file="app.html"/>
+<%inherit file="site.mako" />
 
-<!-- Application configuration -->
-<script type="application/javascript">
-    ${ h.configuration_fiddler().render() | n }
-</script>
+<%block name="application">
 
-<!-- Application bundle -->
-% if h.development_mode():
-<script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
-<script type="text/javascript" src="/static/assets/app-standalone.bundle.js"></script>
-% else:
-<script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
-<script type="text/javascript" src="/static/assets/app-standalone.bundle.min.js"></script>
-% endif
+    <!-- Application configuration -->
+    <script type="application/javascript">
+        ${ h.configuration_fiddler().render() | n }
+    </script>
 
-% if 'ui.stylesheet' in theme:
-<link rel="stylesheet" href="${ theme['ui.stylesheet'] }">
-% endif
+    <!-- Application bundle -->
+    % if h.development_mode():
+    <script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
+    <script type="text/javascript" src="/static/assets/app-standalone.bundle.js"></script>
+    % else:
+    <script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
+    <script type="text/javascript" src="/static/assets/app-standalone.bundle.min.js"></script>
+    % endif
+
+    <!-- Vendor stylesheet -->
+    % if 'ui.stylesheet' in theme:
+    <link rel="stylesheet" href="${ theme['ui.stylesheet'] }">
+    % endif
+
+</%block>

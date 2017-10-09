@@ -406,7 +406,7 @@ def favicon_view(request):
     else:
         return HTTPNotFound()
 
-@view_config(name='patentsearch-old', renderer='patzilla.navigator:templates/app.html')
+@view_config(name='patentsearch-old')
 def ops_chooser(request):
     url = route_path('patentsearch', request, _query=request.params)
     return HTTPFound(location=url)

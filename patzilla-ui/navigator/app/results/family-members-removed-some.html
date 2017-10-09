@@ -1,0 +1,28 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2013-2017 Andreas Motl, Elmyra UG
+%>
+
+<div class="row">
+    <div class="span6">
+        <strong>Removed <%= Humanize.intComma(data.count_removed) %> family members</strong>
+        from results range <%= data.start %>-<%= data.end %>.
+        <br/><br/>
+        This gives an estimation of <strong><%= Humanize.intComma(data.count_total_estimated) %></strong> results
+        when grossed up against the total result count and will
+        save on reviewing about <strong><%= Humanize.intComma(data.count_saved_estimated) %></strong> documents.
+    </div>
+    <div class="span5">
+        <div class="pull-right">
+            <button class="btn btn-default btn-large" role="button" data-toggle="collapse" data-target="#family-members-removed">
+                Display <%= Humanize.intComma(data.count_removed) %> removed family
+                <br/>
+                members between <%= data.start %>-<%= data.end %>
+            </button>
+            <br/><br/>
+            <div id="family-members-removed" class="collapse">
+                <textarea rows="20" class="monospace text-small"><%= _.pluck(data.family_members_removed, 'publication_number').join('\n') %></textarea>
+            </div>
+        </div>
+    </div>
+</div>
