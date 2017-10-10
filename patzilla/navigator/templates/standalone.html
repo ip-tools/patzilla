@@ -4,7 +4,6 @@
 <%inherit file="site.mako" />
 
 <%block name="application">
-
     <!-- Application configuration -->
     <script type="application/javascript">
         ${ h.configuration_fiddler().render() | n }
@@ -23,5 +22,4 @@
     % if 'ui.stylesheet' in theme:
     <link rel="stylesheet" href="${ theme['ui.stylesheet'] }">
     % endif
-
 </%block>

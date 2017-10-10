@@ -35,6 +35,7 @@
 </head>
 
 <body>
+
     <!-- Application container element -->
     <div id="root-region"></div>
     ${self.application()}

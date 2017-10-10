@@ -1,7 +1,11 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2016 Andreas Motl, Elmyra UG
-
-// urlcleaner. Must be rendered inline to get rid of monster url parameters as early as possible.
+//
+// urlcleaner
+//
+// Should be rendered inline to get rid of large url parameters
+// from "opaquelinks" subsystem before starting the application.
+//
 
 function uc_param_regex(name) {
     // https://stackoverflow.com/questions/1842681/regular-expression-to-remove-one-parameter-from-query-string
@@ -25,9 +29,10 @@ if (database) {
 }
 
 // Clear "op=" query parameter when too long to remove it from "Referer:" header.
-// Otherwise, this would clutter the access.log way too much.
+// Otherwise, this would clutter the access.log way too much when accessing child resources.
 // TODO: Make this obsolete by moving to short-url sharing.
-// TODO: Or just turn off Referer logging on patentview-xyz domains or maybe strip "op" parameter with Nginx.
+// TODO: Or just turn off Referer logging on patentview-xyz domains.
+// TODO: Or maybe strip "op" parameter with Nginx and forward as HTTP header.
 var op = uc_get_param(url, 'op');
 if (op && op.length > 1400) {
     url_clean = uc_strip_param(url_clean, 'op');

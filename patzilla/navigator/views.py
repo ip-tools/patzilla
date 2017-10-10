@@ -67,18 +67,12 @@ def includeme(config):
 
 @view_config(route_name='patentsearch', renderer='patzilla.navigator:templates/standalone.html')
 def navigator_standalone(request):
-    payload = {
-        'project': 'PatZilla',
-    }
-    return payload
+    return {}
 
 @view_config(route_name='embedded-item', renderer='patzilla.navigator:templates/embedded.html')
 @view_config(route_name='embedded-list', renderer='patzilla.navigator:templates/embedded.html')
 def navigator_embedded(request):
-    payload = {
-        'project': 'PatZilla',
-    }
-    return payload
+    return {}
 
 @view_config(route_name='patentview', renderer='patzilla.navigator:templates/embedded.html')
 def patentview(request):
@@ -90,7 +84,6 @@ def patentview(request):
     params['context'] = 'viewer'
 
     payload = {
-        'project': 'PatZilla',
         'embed_options': json.dumps({
             'matchdict': dict(matchdict),
             'params': dict(params),
@@ -155,6 +148,8 @@ def opsbrowser_quick(request):
     return get_redirect_query(request, expression)
 
 def compute_expression(field, value, value2=None, **kwargs):
+
+    # TODO: Refactor to "util" namespace
 
     if field == 'country':
         field = 'pn'
@@ -270,6 +265,8 @@ def jump_office(request):
     document_type   = request.matchdict.get('document_type')
     document_number = request.matchdict.get('document_number')
     redirect        = request.params.get('redirect')
+
+    # TODO: Refactor to "util" namespace
     if document_number:
 
         url = None
@@ -408,5 +405,5 @@ def ops_chooser(request):
 
 @view_config(name='portfolio-demo', renderer='patzilla.navigator:templates/portfolio-demo.mako')
 def portfolio(request):
-    return {'project': 'PatZilla'}
+    return {}
 
