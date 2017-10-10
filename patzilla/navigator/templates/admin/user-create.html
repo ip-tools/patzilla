@@ -3,9 +3,20 @@
 
 <%inherit file="../site.mako" />
 
-<%block name="body">
+<%block name="application">
+<!-- Application configuration -->
+<script type="application/javascript">
+    ${ h.configuration_fiddler().render() | n }
+</script>
 
-<link rel="stylesheet" type="text/css" href="/static/css/app.css" />
+<!-- Application bundle -->
+% if h.development_mode():
+<script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
+<script type="text/javascript" src="/static/assets/app-admin.bundle.js"></script>
+% else:
+<script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
+<script type="text/javascript" src="/static/assets/app-admin.bundle.min.js"></script>
+% endif
 
 <div class="login-modal">
 
@@ -17,7 +28,7 @@
             <div class="row-fluid">
 
                 <div class="span12">
-                    <h3 class="form-signin-heading-logo text-right">elmyra <i class="circle-icon">IP</i> suite</h3>
+                    <h3 class="form-signin-heading-logo text-center">${theme['ui.productname.rich'] | n}</h3>
                     <h2 class="form-signin-heading">Create User</h2>
                     <input name="fullname" type="text" class="input-block-level" placeholder="Full name" value="${fullname}">
                     <input name="username" type="text" class="input-block-level" placeholder="Email address / Username" value="${username}">
@@ -69,7 +80,7 @@
                 <div class="span12">
                     <hr class="clear-margin" style="margin-top: 10px"/>
                     <div class="page-footer pull-left">
-                        &copy; 2013-2014, <a href="https://www.elmyra.de/" class="incognito" target="_blank">Elmyra UG</a> — All rights reserved.
+                        ${theme['ui.vendor.copyright'] | n}
                     </div>
                 </div>
             </div>
@@ -81,17 +92,5 @@
 </div>
 
 <div class="modal-backdrop fade in"></div>
-
-
-<script type="application/javascript">
-
-    $(document).ready(function() {
-        console.log("document.ready");
-
-        var url = $.url(window.location.href);
-
-    });
-
-</script>
 
 </%block>

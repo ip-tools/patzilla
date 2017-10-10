@@ -21,6 +21,7 @@ module.exports = {
         'app-embedded':   [path.resolve(__ui, 'navigator', 'boot', 'embedded')],
         'app-help':       [path.resolve(__ui, 'navigator', 'app', 'help')],
         'app-login':      [path.resolve(__ui, 'common', 'login')],
+        'app-admin':      [path.resolve(__ui, 'common', 'admin')],
     },
 
     amd: {

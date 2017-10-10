@@ -8,6 +8,7 @@ development
 - Fix image loading for jQuery Raty
 - Harmonize help subsystem
 - Reconfigure navigator url and main application entrypoints
+- Fix “user create” widget
 
 2017-10-09 0.138.0
 ==================
