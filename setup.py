@@ -159,10 +159,10 @@ setup(name='PatZilla',
 
       entry_points={
         'paste.app_factory': [
-            'main = patzilla.navigator:main',
+            'main = patzilla:main',
         ],
 
-        # Now a Beaker builtin as per "ext:mongodb"
+        # This is now a Beaker builtin as per "ext:mongodb"
         #'beaker.backends': [
         #    'mongodb = patzilla.util.database.beaker_mongodb:MongoDBNamespaceManager',
         #    ],

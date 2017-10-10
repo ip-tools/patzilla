@@ -113,12 +113,12 @@
             // TODO: use only for DE- and WO-documents
 
             // DE19630877.1 / DE19630877A1 / DE000019630877C2
-            // http://localhost:6543/ops/browser?query=pn=DE19630877A1
+            // http://localhost:6543/navigator/?query=pn=DE19630877A1
             // http://localhost:6543/jump/dpma/register?pn=DE19630877
             // https://register.dpma.de/DPMAregister/pat/register?AKZ=196308771
 
             // DE102012009645.3 / DE102012009645A1
-            // http://localhost:6543/ops/browser?query=pn=DE102012009645
+            // http://localhost:6543/navigator/?query=pn=DE102012009645
             // http://localhost:6543/jump/dpma/register?pn=DE102012009645
             // https://register.dpma.de/DPMAregister/pat/register?AKZ=1020120096453
 

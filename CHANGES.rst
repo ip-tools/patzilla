@@ -7,6 +7,7 @@ development
 - Get rid of more static html templates and refactor to javascript application
 - Fix image loading for jQuery Raty
 - Harmonize help subsystem
+- Reconfigure navigator url and main application entrypoints
 
 2017-10-09 0.138.0
 ==================

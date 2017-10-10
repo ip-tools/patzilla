@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import re
 import os
 import json
 import logging
 from pkg_resources import resource_filename
 from mongoengine.errors import NotUniqueError
-from patzilla.access.dpma.dpmaregister import DpmaRegisterAccess
-from patzilla.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
-from patzilla.util.numbers.normalize import normalize_patent
-from patzilla.util.render.phantomjs import render_pdf
-from patzilla.util.text.format import slugify
 from pyramid.encode import urlencode
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.response import Response, FileResponse
+from pyramid.response import FileResponse
 from pyramid.settings import asbool
-from pyramid.url import route_path
 from pyramid.view import view_config
+from patzilla.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
+from patzilla.util.render.phantomjs import render_pdf
+from patzilla.util.text.format import slugify
 from patzilla.util.web.identity.store import User
 
 log = logging.getLogger(__name__)
@@ -25,42 +22,40 @@ def includeme(config):
 
     # serve favicon.ico
     # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
-    config.add_route('favicon', '/ops/browser/favicon.ico')
+    config.add_route('favicon', '/favicon.ico')
     config.add_view('patzilla.navigator.views.favicon_view', route_name='favicon')
 
     # serve admin page
-    config.add_route('admin-user-create', '/ops/browser/admin/user/create')
+    config.add_route('admin-user-create', '/admin/user/create')
 
     # serve login page
-    config.add_route('login', '/ops/browser/login')
+    config.add_route('login', '/login')
 
     # serve help pages
-    config.add_route('help', '/ops/browser/help')
+    config.add_route('help', '/help')
 
     # serve application
-    config.add_route('patentsearch', '/ops/browser')
+    config.add_route('patentsearch', '/')
 
     # serve web components
-    config.add_route('embedded-item', '/ops/browser/embed/item')
-    config.add_route('embedded-list', '/ops/browser/embed/list')
+    config.add_route('embedded-item', '/embed/item')
+    config.add_route('embedded-list', '/embed/list')
 
     # public
-    config.add_route('patentview',          '/ops/browser/view/{field}/{value}')
+    config.add_route('patentview',          '/view/{field}/{value}')
 
     # vanity-/shortcut urls
-    config.add_route('patentsearch-vanity', '/ops/browser/{label}')
-    config.add_route('patentsearch-quick',  '/ops/browser/{field}/{value}')
-    config.add_route('patentsearch-quick2', '/ops/browser/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
-    config.add_route('jump-office',                     '/office/{office}/{service}/{document_type}/{document_number}')
-    config.add_route('jump-office-local',   '/ops/browser/office/{office}/{service}/{document_type}/{document_number}')
+    config.add_route('patentsearch-vanity', '/{label}')
+    config.add_route('patentsearch-quick',  '/{field}/{value}')
+    config.add_route('patentsearch-quick2', '/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
 
     # Remark:
     # At route "patentsearch-quick2", exclude access to javascript .map files. Otherwise, these would match.
     #
     # Example::
     #
-    #   $ curl --silent -i http://localhost:6543/ops/browser/static/jquery/jquery.min.map | grep Location
-    #   Location: http://localhost:6543/ops/browser?query=static%3Djquery
+    #   $ curl --silent -i http://localhost:6543/static/jquery/jquery.min.map | grep Location
+    #   Location: http://localhost:6543?query=static%3Djquery
     #
     # Negative lookahead to the rescue:
     # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
@@ -93,7 +88,7 @@ def patentview(request):
 
 @view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
 def opspdf(request):
-    name = 'ip-navigator-' + request.params.get('query')
+    name = 'ip-navigator-' + (request.params.get('query') or 'default')
     filename = slugify(name, strip_equals=False, lowercase=False)
     suffix = '.pdf'
     request.response.headers['Content-Disposition'] = 'inline; filename={filename}{suffix}'.format(**locals())
@@ -103,7 +98,7 @@ def opspdf(request):
     return render_pdf(print_url)
 
 @view_config(route_name='patentsearch-vanity')
-def opsbrowser_vanity(request):
+def navigator_vanity(request):
     label = request.matchdict.get('label')
 
     field = None
@@ -135,7 +130,7 @@ def opsbrowser_vanity(request):
 
 @view_config(route_name='patentsearch-quick')
 @view_config(route_name='patentsearch-quick2')
-def opsbrowser_quick(request):
+def navigator_quick(request):
     field = request.matchdict.get('field')
     value = request.matchdict.get('value')
     value2 = request.matchdict.get('value2')
@@ -245,7 +240,7 @@ def get_redirect_query(request, expression=None, query_args=None):
 
     # TODO: at least look this up in development.ini
     if 'localhost:6543' in host:
-        path = '/ops/browser'
+        path = ''
 
     redirect_url = path
     if expression:
@@ -255,71 +250,6 @@ def get_redirect_query(request, expression=None, query_args=None):
         redirect_url += '?' + urlencode(query_args)
 
     return HTTPFound(redirect_url)
-
-
-@view_config(route_name='jump-office')
-@view_config(route_name='jump-office-local')
-def jump_office(request):
-    office          = request.matchdict.get('office')
-    service         = request.matchdict.get('service')
-    document_type   = request.matchdict.get('document_type')
-    document_number = request.matchdict.get('document_number')
-    redirect        = request.params.get('redirect')
-
-    # TODO: Refactor to "util" namespace
-    if document_number:
-
-        url = None
-        if office == 'dpma' and service == 'register':
-            dra = DpmaRegisterAccess()
-            url = dra.get_document_url(document_number)
-
-        elif office == 'uspto' and service == 'biblio':
-
-            if document_type == 'publication':
-                # http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=9317610
-                document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://patft.uspto.gov/netacgi/nph-Parser' \
-                      '?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1={number}.PN.'.format(**document)
-
-            elif document_type == 'application':
-                # http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=20160105912
-                document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://appft.uspto.gov/netacgi/nph-Parser' \
-                      '?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1={number}'.format(**document)
-
-        elif office == 'uspto' and service == 'images':
-
-            if document_type == 'publication':
-                # http://pdfpiw.uspto.gov/.piw?docid=9317610
-                document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://pdfpiw.uspto.gov/.piw?docid={number}'.format(**document)
-
-            elif document_type == 'application':
-                # http://pdfaiw.uspto.gov/.aiw?docid=20160105912
-                document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://pdfaiw.uspto.gov/.aiw?docid={number}'.format(**document)
-
-        elif office == 'uspto' and service == 'global-dossier':
-            # https://globaldossier.uspto.gov/#/result/publication/DE/112015004959/1
-            normalized = normalize_patent(document_number, as_dict=True, for_ops=False)
-            url = 'https://globaldossier.uspto.gov/#/result/{document_type}/{country}/{number}/1'.format(
-                document_type=document_type, **normalized)
-
-        elif office == 'google' and service == 'patents':
-            # https://www.google.com/patents/EP0666666B1
-            # https://patents.google.com/patent/EP0666666B1
-            normalized = normalize_patent(document_number, for_ops=False)
-            url = 'https://patents.google.com/patent/{}'.format(normalized)
-
-        if url:
-            if redirect:
-                return HTTPFound(location=url)
-            else:
-                return url
-
-    return HTTPNotFound(u'Could not locate document "{document_number}" at {office}/{service}.'.format(
-        document_number=document_number, office=office, service=service))
 
 
 @view_config(route_name='admin-user-create', renderer='patzilla.navigator:templates/admin/user-create.html')
@@ -397,11 +327,6 @@ def favicon_view(request):
         return FileResponse(icon, request=request)
     else:
         return HTTPNotFound()
-
-@view_config(name='patentsearch-old')
-def ops_chooser(request):
-    url = route_path('patentsearch', request, _query=request.params)
-    return HTTPFound(location=url)
 
 @view_config(name='portfolio-demo', renderer='patzilla.navigator:templates/portfolio-demo.mako')
 def portfolio(request):

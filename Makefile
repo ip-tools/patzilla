@@ -103,7 +103,7 @@ pdf-EP666666:
 		--no-stop-slow-scripts --debug-javascript \
 		--print-media-type \
 		--page-size A4 --orientation portrait --viewport-size 1024 \
-		'http://localhost:6543/ops/browser?query=pn%3DEP666666&mode=print' var/tmp/ipsuite-EP666666.pdf
+		'http://localhost:6543/navigator?query=pn%3DEP666666&mode=print' var/tmp/ipsuite-EP666666.pdf
 	# --zoom 0.8
 
 pdf-mammut:
@@ -111,6 +111,6 @@ pdf-mammut:
 		--no-stop-slow-scripts \
 		--print-media-type \
 		--page-size A4 --orientation portrait --viewport-size 1024 \
-		'http://localhost:6543/ops/browser?query=pa=mammut&mode=print' var/tmp/ipsuite-mammut.pdf
+		'http://localhost:6543/navigator?query=pa=mammut&mode=print' var/tmp/ipsuite-mammut.pdf
 
 	#	--debug-javascript \
