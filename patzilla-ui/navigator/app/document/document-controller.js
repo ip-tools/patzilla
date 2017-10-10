@@ -15,13 +15,13 @@ DocumentBaseController = Marionette.Controller.extend({
         // ------------------------------------------
         //   element visibility
         // ------------------------------------------
-        opsChooserApp.ui.do_element_visibility();
+        navigatorApp.ui.do_element_visibility();
 
 
         // ------------------------------------------
         //   print mode
         // ------------------------------------------
-        var MODE_PRINT = opsChooserApp.config.get('mode') == 'print';
+        var MODE_PRINT = navigatorApp.config.get('mode') == 'print';
         if (MODE_PRINT) {
             return;
         }
@@ -42,13 +42,13 @@ DocumentBaseController = Marionette.Controller.extend({
         // ------------------------------------------
         //   second pagination at bottom
         // ------------------------------------------
-        //$(opsChooserApp.paginationViewBottom.el).show();
+        //$(navigatorApp.paginationViewBottom.el).show();
 
 
         // ------------------------------------------
         //   result list
         // ------------------------------------------
-        opsChooserApp.basket_bind_actions();
+        navigatorApp.basket_bind_actions();
 
         // use jquery.shorten on "abstract" text
         $(".abstract").shorten({showChars: 2000, moreText: 'more', lessText: 'less'});
@@ -67,11 +67,11 @@ DocumentBaseController = Marionette.Controller.extend({
             event.preventDefault();
             var lang = $(this).data('lang');
 
-            var document = opsChooserApp.document_base.get_document_by_element(this);
+            var document = navigatorApp.document_base.get_document_by_element(this);
 
             $(this).after('<span class="abstract-acquire-spinner">&nbsp;&nbsp;<i class="icon-refresh icon-spin"></i></span>');
 
-            var ft = opsChooserApp.document_details.get_fulltext(document);
+            var ft = navigatorApp.document_details.get_fulltext(document);
             var _this = this;
             ft.get_abstract(lang).then(function(data) {
                     $(_this).replaceWith(data['html']);
@@ -108,7 +108,7 @@ DocumentBaseController = Marionette.Controller.extend({
         //   "family citations" module
         // ------------------------------------------
         var module_name = 'family-citations';
-        var module_available = opsChooserApp.user_has_module(module_name);
+        var module_available = navigatorApp.user_has_module(module_name);
 
         // Shortcut button for jumping to Family » Citations
         $('.family-citations-shortcut-button').unbind('click');
@@ -118,7 +118,7 @@ DocumentBaseController = Marionette.Controller.extend({
                 container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
                 container.find('.family-chooser > button[data-toggle="tab"][data-view-type="citations"]').tab('show');
             } else {
-                opsChooserApp.ui.notify_module_locked(module_name);
+                navigatorApp.ui.notify_module_locked(module_name);
             }
         });
 
@@ -180,7 +180,7 @@ DocumentDetailsController = Marionette.Controller.extend({
             var details_type = $(this).data('details-type');
             var details_title = $(this).data('details-title');
 
-            var document = opsChooserApp.document_base.get_document_by_element(this);
+            var document = navigatorApp.document_base.get_document_by_element(this);
 
             if (document) {
                 if (_(['claims', 'description']).contains(details_type)) {
@@ -197,11 +197,11 @@ DocumentDetailsController = Marionette.Controller.extend({
                         var view_type = $(this).data('view-type');
                         if (view_type == 'citations') {
                             var module_name = 'family-citations';
-                            var module_available = opsChooserApp.user_has_module(module_name);
+                            var module_available = navigatorApp.user_has_module(module_name);
                             if (module_available) {
                                 _this.display_family(document, container, view_type);
                             } else {
-                                opsChooserApp.ui.notify_module_locked(module_name);
+                                navigatorApp.ui.notify_module_locked(module_name);
                             }
 
                         } else {
@@ -228,7 +228,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         // Resolve datasource by country
         var datasource_name;
         var country = document.get('@country');
-        _.each(opsChooserApp.config.get('system').datasource, function(datasource_info, key) {
+        _.each(navigatorApp.config.get('system').datasource, function(datasource_info, key) {
             if (_.contains(datasource_info.fulltext_countries, country)) {
                 datasource_name = key;
                 return;
@@ -251,7 +251,7 @@ DocumentDetailsController = Marionette.Controller.extend({
             document_number = document.get_publication_number('docdb');
 
         } else {
-            opsChooserApp.ui.notify(
+            navigatorApp.ui.notify(
                 'Fulltext of document from country "' + country + '" not available. No appropriate datasource configured.',
                 {type: 'warning', icon: 'icon-file-text-alt'});
             return;
@@ -313,8 +313,8 @@ DocumentDetailsController = Marionette.Controller.extend({
                         };
                         content_element.html(parts.join('<hr/>'));
                     }
-                    if (opsChooserApp.keywords) {
-                        opsChooserApp.keywords.highlight($(content_element).find('*'));
+                    if (navigatorApp.keywords) {
+                        navigatorApp.keywords.highlight($(content_element).find('*'));
                     } else {
                         console.warn('Keywords subsystem not started. Keyword highlighting not available.')
                     }
@@ -644,7 +644,7 @@ PdfPanelController = Marionette.Controller.extend({
 
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.document_base = new DocumentBaseController();
     this.document_details = new DocumentDetailsController();
     this.document_carousel = new DocumentCarouselController();

@@ -48,7 +48,7 @@ require('patzilla.navigator.components.waypoints');
 
 
 // Bootstrap the application after registering all components
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.listenToOnce(this, 'application:init', function() {
         this.trigger('application:boot');
     });

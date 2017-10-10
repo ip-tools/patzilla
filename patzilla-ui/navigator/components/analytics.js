@@ -10,7 +10,7 @@ AbstractResultFetcher = Marionette.Controller.extend({
     start: function() {
         var deferred = $.Deferred();
 
-        var data = opsChooserApp.queryBuilderView.get_comfort_form_data();
+        var data = navigatorApp.queryBuilderView.get_comfort_form_data();
         if (!data || !data.criteria) {
             deferred.reject('Empty form data');
             return deferred;
@@ -152,13 +152,13 @@ ResultAnalyticsDistinctApplicantView = AbstractResultView.extend({
 });
 
 
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.listenTo(this, 'application:ready', function() {
         var _this = this;
 
         var module_name = 'analytics';
-        var module_available = opsChooserApp.user_has_module(module_name);
+        var module_available = navigatorApp.user_has_module(module_name);
 
         // wire fetch-results buttons
         $('#analytics-family-overview-button').unbind('click');

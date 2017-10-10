@@ -60,7 +60,7 @@ ViewportPlugin = Marionette.Controller.extend({
             if (family_members_removed_empty_page.exists()) {
                 var next_page = $('#next-page-with-results-button').data('next-page');
                 if (next_page) {
-                    opsChooserApp.paginationViewBottom.set_page(next_page);
+                    navigatorApp.paginationViewBottom.set_page(next_page);
                     return;
                 }
             }
@@ -88,7 +88,7 @@ ViewportPlugin = Marionette.Controller.extend({
 
         if (bottom_overdraw && options.paging) {
             try {
-                opsChooserApp.paginationViewBottom.set_page('next');
+                navigatorApp.paginationViewBottom.set_page('next');
                 return;
             } catch(err) {
                 // FIXME: properly log error
@@ -114,7 +114,7 @@ ViewportPlugin = Marionette.Controller.extend({
                     var top_overdraw = !target.exists();
                     if (top_overdraw && options.paging) {
                         try {
-                            opsChooserApp.paginationViewBottom.set_page('previous');
+                            navigatorApp.paginationViewBottom.set_page('previous');
                         } catch(err) {
                             // FIXME: properly log error
 
@@ -132,7 +132,7 @@ ViewportPlugin = Marionette.Controller.extend({
             // end of a remote result page.
             var family_members_removed_empty_page = $('#family-members-removed-empty-page');
             if (family_members_removed_empty_page.exists()) {
-                opsChooserApp.paginationViewBottom.set_page('previous');
+                navigatorApp.paginationViewBottom.set_page('previous');
                 return;
             }
 
@@ -143,6 +143,6 @@ ViewportPlugin = Marionette.Controller.extend({
 });
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.viewport = new ViewportPlugin({app: this});
 });

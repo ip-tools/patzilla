@@ -141,9 +141,9 @@ IssueReport = Backbone.Model.extend({
         //   - TODO: Request object
         this.get('meta').id              = this.uuid4();
 
-        // TODO: Decouple from opsChooserApp
-        this.get('application').config   = opsChooserApp.config && opsChooserApp.config.toJSON() || {};
-        this.get('application').metadata = opsChooserApp.metadata && opsChooserApp.metadata.toJSON() || {};
+        // TODO: Decouple from navigatorApp
+        this.get('application').config   = navigatorApp.config && navigatorApp.config.toJSON() || {};
+        this.get('application').metadata = navigatorApp.metadata && navigatorApp.metadata.toJSON() || {};
 
     },
 
@@ -276,15 +276,15 @@ IssueReporterGui = Backbone.Model.extend({
         var status_text = $(options.element_status);
         spinner.show();
 
-        // TODO: Decouple from opsChooserApp
+        // TODO: Decouple from navigatorApp
         return this.reporter.send(issue, {targets: options.targets}).then(function() {
             spinner.hide();
-            opsChooserApp.ui.user_alert(
+            navigatorApp.ui.user_alert(
                 'Report sent successfully. Thank you for giving feedback, ' +
                 'we will get back to you on this issue.', 'success', status_text);
         }).fail(function() {
             spinner.hide();
-            opsChooserApp.ui.user_alert(
+            navigatorApp.ui.user_alert(
                 'Automatic system report failed. Please get back to us via vendor contact address.', 'error', status_text);
         });
     },
@@ -292,5 +292,5 @@ IssueReporterGui = Backbone.Model.extend({
 });
 
 var issueReporter = new IssueReporter();
-//issueReporter.setup_stacktrace_interceptor({targets: 'log'});
-issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});
+issueReporter.setup_stacktrace_interceptor({targets: 'log'});
+//issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});

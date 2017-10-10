@@ -52,11 +52,11 @@ function normalize_numberlist(payload) {
             if (response) {
                 deferred.resolve(response);
             } else {
-                opsChooserApp.ui.notify('Number normalization failed (empty response)', {type: 'warning', icon: 'icon-exchange', right: true});
+                navigatorApp.ui.notify('Number normalization failed (empty response)', {type: 'warning', icon: 'icon-exchange', right: true});
                 deferred.reject();
             }
         }).error(function(xhr, settings) {
-            opsChooserApp.ui.propagate_backend_errors(xhr);
+            navigatorApp.ui.propagate_backend_errors(xhr);
             deferred.reject();
         });
     return deferred.promise();

@@ -16,7 +16,7 @@ PermalinkPlugin = Marionette.Controller.extend({
     dataurl: function() {
         // produce "data" url representation like "data:application/json;base64,ewogICAgImRhdGF..."
         var deferred = $.Deferred();
-        opsChooserApp.storage.dump().then(function(backup) {
+        navigatorApp.storage.dump().then(function(backup) {
             var payload = JSON.stringify(backup);
             var content = dataurl.format({data: payload, mimetype: 'application/json+lz-string', charset: 'utf-8'});
             return deferred.resolve(content);
@@ -54,7 +54,7 @@ PermalinkPlugin = Marionette.Controller.extend({
 
         // Aggregate parameters comprising viewer state, currently a 4-tuple
         // See also config.js:history_pushstate
-        var config = opsChooserApp.config;
+        var config = navigatorApp.config;
         var state = {
             mode: config.get('mode'),
             context: config.get('context'),
@@ -84,7 +84,7 @@ PermalinkPlugin = Marionette.Controller.extend({
     // build an url to self
     // TODO: refactor this elsewhere, e.g. some UrlBuilder?
     make_uri: function(params) {
-        var baseurl = opsChooserApp.config.get('baseurl');
+        var baseurl = navigatorApp.config.get('baseurl');
         var permalink = baseurl + '?' + jQuery.param(this.query_parameters(params));
         return permalink;
     },
@@ -108,12 +108,12 @@ PermalinkPlugin = Marionette.Controller.extend({
 
     // TODO: Refactor to LinkMaker
     get_baseurl_patentview: function() {
-        //log('config:', opsChooserApp.config);
-        var baseurl = opsChooserApp.config.get('baseurl');
+        //log('config:', navigatorApp.config);
+        var baseurl = navigatorApp.config.get('baseurl');
 
         // when generating review-in-liveview-with-ttl links on patentsearch,
         // let's view them on a pinned domain like "patentview.elmyra.de"
-        var host = opsChooserApp.config.get('request.host');
+        var host = navigatorApp.config.get('request.host');
         if (_.string.contains(host, 'patentsearch')) {
             baseurl = baseurl.replace('patentsearch', 'patentview');
         } else if (_.string.contains(host, 'ip-tools.io')) {
@@ -181,14 +181,14 @@ PermalinkPlugin = Marionette.Controller.extend({
 
                 // copy permalink to clipboard
                 var copy_button = $(tip).find('#permalink-copy');
-                opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', uri, {
+                navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', uri, {
                     element: copy_button[0],
                     wrapper: this.el,
                     callback: function() { $(element).popover('toggle'); },
                 });
 
                 // apply more generic augmentations
-                opsChooserApp.ui.setup_text_tools();
+                navigatorApp.ui.setup_text_tools();
 
             }
 
@@ -221,8 +221,8 @@ PermalinkPlugin = Marionette.Controller.extend({
         var deferred = $.Deferred();
 
         // TODO: what about propagating the "context"?
-        var projectname = opsChooserApp.project.get('name');
-        // TODO: use in future: var projectname = opsChooserApp.config.get('project');
+        var projectname = navigatorApp.project.get('name');
+        // TODO: use in future: var projectname = navigatorApp.config.get('project');
 
         var params = {
             mode: 'liveview',
@@ -260,7 +260,7 @@ PermalinkPlugin = Marionette.Controller.extend({
 
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     // offer this throughout the whole application
     this.permalink = new PermalinkPlugin();

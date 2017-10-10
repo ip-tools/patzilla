@@ -32,7 +32,7 @@ ContentView = Backbone.Marionette.ItemView.extend({
     template: require('./content.html'),
     initialize: function() {
         console.log('ContentView.initialize');
-        this.templateHelpers.config = opsChooserApp.config;
+        this.templateHelpers.config = navigatorApp.config;
     },
     templateHelpers: {},
 });
@@ -45,7 +45,7 @@ MenuView = Backbone.Marionette.ItemView.extend({
     },
     /*
     templateHelpers: {
-        component_enabled: opsChooserApp.component_enabled;
+        component_enabled: navigatorApp.component_enabled;
     },
     */
 });
@@ -68,8 +68,8 @@ HeaderView = Backbone.Marionette.Layout.extend({
 
     templateHelpers: function() {
         return {
-            config: opsChooserApp.config.attributes,
-            theme: opsChooserApp.theme.attributes,
+            config: navigatorApp.config.attributes,
+            theme: navigatorApp.theme.attributes,
         };
     },
 
@@ -90,13 +90,13 @@ FooterView = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         console.log('FooterView.initialize');
-        this.config = this.templateHelpers.config = opsChooserApp.config;
+        this.config = this.templateHelpers.config = navigatorApp.config;
     },
 
     templateHelpers: function() {
         return {
-            config: opsChooserApp.config.attributes,
-            theme: opsChooserApp.theme.attributes,
+            config: navigatorApp.config.attributes,
+            theme: navigatorApp.theme.attributes,
         };
     },
 

@@ -7,7 +7,7 @@
 var accordion_id = _.uniqueId('ops-placeholder-accordion-');
 var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
 var document_number = model.get_document_number();
-var metadata = opsChooserApp.metadata;
+var metadata = navigatorApp.metadata;
 var has_alternatives = !_.isEmpty(model.get('alternatives_local'));
 var button_not_available_style = has_alternatives ? 'btn-default' : 'btn-danger';
 
@@ -34,7 +34,7 @@ var linkmaker = model.linkmaker;
                        data-toggle="popover" data-trigger="hover" data-placement="top"
                        data-content="PDF: <%= document_number %>"
                             >
-                        <%= opsChooserApp.ui.pdf_icon() %>
+                        <%= navigatorApp.ui.pdf_icon() %>
                     </a>
 
                     as well as the collection of links to external
@@ -62,7 +62,7 @@ var linkmaker = model.linkmaker;
                         _.each(model.get('alternatives_local'), function(alternative) {
                         %>
                         <li>
-                            <a href="javascript: opsChooserApp.ui.scroll_to_document('<%= alternative %>');">
+                            <a href="javascript: navigatorApp.ui.scroll_to_document('<%= alternative %>');">
                                 <%= alternative %>
                             </a>
                         </li>

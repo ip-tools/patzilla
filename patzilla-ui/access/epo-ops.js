@@ -14,11 +14,11 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
         more_options = more_options || {};
 
-        opsChooserApp.ui.indicate_activity(true);
+        navigatorApp.ui.indicate_activity(true);
         //$('.pager-area').hide();
 
         // TODO: enhance this as soon as we're in AMD land
-        //$(opsChooserApp.paginationViewBottom.el).hide();
+        //$(navigatorApp.paginationViewBottom.el).hide();
 
         // Propagate family member swapping
         var query_data = metadata.get('query_data');
@@ -40,12 +40,12 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                     }
                 }
 
-                opsChooserApp.ui.indicate_activity(false);
-                opsChooserApp.ui.reset_content();
+                navigatorApp.ui.indicate_activity(false);
+                navigatorApp.ui.reset_content();
 
                 console.log("response data:", response);
                 // TODO: Get rid of this!? This should be handled by the error path if backend responds with proper HTTP status.
-                if (_.isEmpty(response) || opsChooserApp.ui.propagate_cornice_errors(response)) {
+                if (_.isEmpty(response) || navigatorApp.ui.propagate_cornice_errors(response)) {
                     documents.reset();
                     return;
                 }
@@ -158,15 +158,15 @@ OpsPublishedDataSearch = Backbone.Model.extend({
             },
             error: function(model, xhr) {
 
-                opsChooserApp.ui.indicate_activity(false);
-                opsChooserApp.ui.reset_content({documents: true});
+                navigatorApp.ui.indicate_activity(false);
+                navigatorApp.ui.reset_content({documents: true});
 
                 if (xhr.status == 404) {
                     return;
 
                 } else {
                     console.error('OPS search failed:', xhr);
-                    opsChooserApp.ui.propagate_backend_errors(xhr);
+                    navigatorApp.ui.propagate_backend_errors(xhr);
                 }
 
             }
@@ -335,7 +335,7 @@ _.extend(OpsExchangeDocument.prototype, OpsBaseModel.prototype, QueryLinkMixin.p
         initialize: function(options) {
             this.set('datasource', 'ops');
             // TODO: enhance this as soon as we're in AMD land
-            this.printmode = opsChooserApp.config.get('mode') == 'print';
+            this.printmode = navigatorApp.config.get('mode') == 'print';
         },
 
         select: function() {
@@ -720,7 +720,7 @@ _.extend(OpsExchangeDocument.prototype, {
         },
 
         _add_crossref: function(text) {
-            var printmode = opsChooserApp.config.get('mode') == 'print';
+            var printmode = navigatorApp.config.get('mode') == 'print';
             if (printmode) {
                 return text;
             } else {
@@ -747,7 +747,7 @@ _.extend(OpsExchangeDocument.prototype, {
 
         has_fulltext: function() {
             // Compute whether fulltexts are available for this document
-            var countries_allowed = opsChooserApp.config.get('system').total.fulltext_countries;
+            var countries_allowed = navigatorApp.config.get('system').total.fulltext_countries;
             return _(countries_allowed).contains(this['@country']);
         },
 

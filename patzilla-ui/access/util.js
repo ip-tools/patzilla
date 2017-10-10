@@ -37,7 +37,7 @@ QueryLinkMixin = Backbone.Model.extend({
 
         // skip enriching links when in print mode
         // due to phantomjs screwing them up when rendering to pdf
-        var printmode = opsChooserApp.config.get('mode') == 'print';
+        var printmode = navigatorApp.config.get('mode') == 'print';
         if (printmode) {
             return value;
         }

@@ -14,7 +14,7 @@ OpsBaseViewMixin = {
             // add important parameters which reflect current gui state (e.g. selected project)
             var href = $(this).attr('href');
             var no_modifiers = $(this).data('no-modifiers');
-            var params = opsChooserApp.permalink.query_parameters_viewstate(href, {'no_modifiers': no_modifiers});
+            var params = navigatorApp.permalink.query_parameters_viewstate(href, {'no_modifiers': no_modifiers});
 
             // TODO: Improve! Don't set "ops" here
             // regardless where the query originates from (e.g. datasource=review),
@@ -22,10 +22,10 @@ OpsBaseViewMixin = {
             params['datasource'] = 'ops';
 
             // debugging
-            //opsChooserApp.config.set('isviewer', true);
+            //navigatorApp.config.set('isviewer', true);
 
             // When in liveview, scrumble database query and viewstate parameters into opaque parameter token
-            if (opsChooserApp.config.get('isviewer')) {
+            if (navigatorApp.config.get('isviewer')) {
 
                 event.preventDefault();
                 event.stopPropagation();
@@ -34,14 +34,14 @@ OpsBaseViewMixin = {
                 params['mode'] = 'liveview';
 
                 // Compute opaque link parameter and open url
-                opsChooserApp.permalink.make_uri_opaque(params).then(function(url) {
+                navigatorApp.permalink.make_uri_opaque(params).then(function(url) {
                     open(url);
                 });
 
 
                 // Otherwise, serialize state into regular query parameters
             } else {
-                $(this).attr('href', '?' + opsChooserApp.permalink.serialize_params(params));
+                $(this).attr('href', '?' + navigatorApp.permalink.serialize_params(params));
             }
 
         });
@@ -57,7 +57,7 @@ OpsBaseViewMixin = {
             if (citations_length > 10) {
                 event.preventDefault();
                 event.stopPropagation();
-                opsChooserApp.ui.notify(
+                navigatorApp.ui.notify(
                     'List is capped to the first 10 cited references. Sorry for this limitation.',
                     {type: 'warning', icon: 'icon-cut'});
                 var _this = this;
@@ -78,7 +78,7 @@ TemplateHelperMixin = {
         var funcs = {
 
             // Propagate configuration object to template
-            config: opsChooserApp.config,
+            config: navigatorApp.config,
 
             get_linkmaker: function() {
                 return new Ipsuite.LinkMaker(_this.model);

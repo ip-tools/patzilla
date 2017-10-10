@@ -44,7 +44,7 @@ StoragePlugin = Marionette.Controller.extend({
                     metadata: {
                         type: 'patzilla.navigator.database',
                         description: 'IP Navigator database dump',
-                        software_version: opsChooserApp.config.get('setting.app.software.version'),
+                        software_version: navigatorApp.config.get('setting.app.software.version'),
                         database_version: _this.database_version,
                         database_name: localforage.config('name'),
                         created: timestamp(),
@@ -75,7 +75,7 @@ StoragePlugin = Marionette.Controller.extend({
 
             // write file
             if (!payload) {
-                opsChooserApp.ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
+                navigatorApp.ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
                 return;
             }
 
@@ -84,7 +84,7 @@ StoragePlugin = Marionette.Controller.extend({
 
             // notify user
             var size_kb = Math.round(blob.size / 1000);
-            opsChooserApp.ui.notify(
+            navigatorApp.ui.notify(
                 'Database exported successfully, size is ' + size_kb + 'kB.',
                 {type: 'success', icon: 'icon-save'});
 
@@ -108,7 +108,7 @@ StoragePlugin = Marionette.Controller.extend({
                 if (!payload_dataurl || !payload) {
                     var message = 'ERROR: Data URL format is invalid';
                     console.error(message + '; payload=' + payload);
-                    opsChooserApp.ui.notify(message, {type: 'error'});
+                    navigatorApp.ui.notify(message, {type: 'error'});
                     return;
                 }
             }
@@ -120,7 +120,7 @@ StoragePlugin = Marionette.Controller.extend({
                 var msg = error.message;
                 var message = 'ERROR: JSON format is invalid, ' + msg;
                 console.error(message + '; payload=' + payload);
-                opsChooserApp.ui.notify(message, {type: 'error'});
+                navigatorApp.ui.notify(message, {type: 'error'});
                 return;
             }
         }
@@ -133,14 +133,14 @@ StoragePlugin = Marionette.Controller.extend({
         if (filetype != 'patzilla.navigator.database' && filetype != 'elmyra.ipsuite.navigator.database') {
             var message = 'ERROR: Database dump format "' + filetype + '" is invalid.';
             console.error(message);
-            opsChooserApp.ui.notify(message, {type: 'error'});
+            navigatorApp.ui.notify(message, {type: 'error'});
             return;
         }
 
         if (!database) {
             var message = 'ERROR: Database is empty.';
             console.error(message);
-            opsChooserApp.ui.notify(message, {type: 'error'});
+            navigatorApp.ui.notify(message, {type: 'error'});
             return;
         }
 
@@ -179,9 +179,9 @@ StoragePlugin = Marionette.Controller.extend({
             Backbone.Relational.store.reset();
 
             // activate project
-            opsChooserApp.trigger('projects:initialize');
+            navigatorApp.trigger('projects:initialize');
 
-            opsChooserApp.ui.notify(
+            navigatorApp.ui.notify(
                 'Database imported successfully',
                 {type: 'success', icon: 'icon-folder-open-alt'});
 
@@ -197,7 +197,7 @@ StoragePlugin = Marionette.Controller.extend({
 
         // make all data control widgets empty
         if (options.shutdown_gui) {
-            opsChooserApp.shutdown_gui();
+            navigatorApp.shutdown_gui();
         }
 
         // reset state of orm
@@ -234,7 +234,7 @@ StoragePlugin = Marionette.Controller.extend({
 
             // deactivate project / windows.onfocus
             // otherwise, the default project (e.g. "ad-hoc") would be recreated almost instantly
-            opsChooserApp.project_deactivate();
+            navigatorApp.project_deactivate();
 
             var file = this.files[0];
             if (!file) { return; }
@@ -251,7 +251,7 @@ StoragePlugin = Marionette.Controller.extend({
             if (file_type != 'application/json') {
                 var message = 'ERROR: File type is ' + (file_type ? file_type : 'unknown') + ', but should be application/json';
                 //log('import message:', message);
-                opsChooserApp.ui.notify(message, {type: 'error'});
+                navigatorApp.ui.notify(message, {type: 'error'});
                 return;
             }
 
@@ -265,7 +265,7 @@ StoragePlugin = Marionette.Controller.extend({
             reader.onerror = function(e) {
                 var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
                 //log('import message:', message);
-                opsChooserApp.ui.notify(message, {type: 'error'});
+                navigatorApp.ui.notify(message, {type: 'error'});
             }
             reader.readAsText(file);
 
@@ -273,7 +273,7 @@ StoragePlugin = Marionette.Controller.extend({
 
         $('#data-import-button').unbind('click');
         $('#data-import-button').on('click', function(e) {
-            opsChooserApp.project_deactivate();
+            navigatorApp.project_deactivate();
             $('#data-import-file').click();
         });
 
@@ -282,13 +282,13 @@ StoragePlugin = Marionette.Controller.extend({
         $('#database-wipe-button').unbind();
         $('#database-wipe-button').click(function(e) {
 
-            opsChooserApp.ui.confirm('This will wipe the whole local database including custom keywords. Are you sure?').then(function() {
+            navigatorApp.ui.confirm('This will wipe the whole local database including custom keywords. Are you sure?').then(function() {
 
                 // wipe the database
                 _this.dbreset({shutdown_gui: true});
 
                 // notify user about the completed action
-                opsChooserApp.ui.notify(
+                navigatorApp.ui.notify(
                     'Database wiped successfully. You should create a new project before starting over.',
                     {type: 'success', icon: 'icon-trash'});
 
@@ -302,7 +302,7 @@ StoragePlugin = Marionette.Controller.extend({
 
 
 // Data storage components
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     var _this = this;
 
@@ -341,7 +341,7 @@ opsChooserApp.addInitializer(function(options) {
 
 });
 
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.storage = new StoragePlugin();
 

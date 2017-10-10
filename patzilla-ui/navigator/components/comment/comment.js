@@ -261,7 +261,7 @@ CommentsPlugin = Marionette.Controller.extend({
         this.itemviews = [];
 
         // Setup the data store
-        this.listenTo(opsChooserApp, 'localforage:ready', function() {
+        this.listenTo(navigatorApp, 'localforage:ready', function() {
             log('localforage:ready-comment');
             _this.setup_component(options);
         });
@@ -298,7 +298,7 @@ CommentsPlugin = Marionette.Controller.extend({
 
         // handle switching projects
         // renew all CommentManagers in remembered itemviews when new project gets ready
-        this.listenTo(opsChooserApp, 'project:changed', function(project) {
+        this.listenTo(navigatorApp, 'project:changed', function(project) {
             var _this = this;
             _(this.itemviews).each(function(itemview) {
                 itemview.comment_manager = _this.comment_factory(itemview);
@@ -311,7 +311,7 @@ CommentsPlugin = Marionette.Controller.extend({
     },
 
     comment_factory: function(itemview) {
-        var project = opsChooserApp.project;
+        var project = navigatorApp.project;
         //log('comment_factory using project:', project);
         return new CommentManager({
             collection: this.store,
@@ -344,7 +344,7 @@ CommentsPlugin = Marionette.Controller.extend({
 
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 

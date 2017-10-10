@@ -22,7 +22,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
     user_message: function(message, kind) {
         $('#result-info').empty();
-        return opsChooserApp.ui.user_alert(message, kind, '#result-info');
+        return navigatorApp.ui.user_alert(message, kind, '#result-info');
     },
 
     templateHelpers: {
@@ -38,7 +38,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
         // setup copy-to-clipboard button
         var clipboard_button = this.$el.find('#result-to-clipboard-button');
-        opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', numberlist_string, {element: clipboard_button[0], wrapper: this.el});
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', numberlist_string, {element: clipboard_button[0], wrapper: this.el});
 
         // setup insert-to-basket button
         var basket_button = this.$el.find('#result-to-basket-button');
@@ -46,10 +46,10 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
         basket_button.on('click', function(event) {
             $('#result-to-basket-indicator').removeClass('icon-plus').addClass('icon-spinner icon-spin');
             setTimeout(function() {
-                $.when(opsChooserApp.basketModel.add_multi(numberlist, {reset_seen: true})).then(function() {
+                $.when(navigatorApp.basketModel.add_multi(numberlist, {reset_seen: true})).then(function() {
                     $('#result-to-basket-indicator').removeClass('icon-spinner icon-spin').addClass('icon-plus');
                     var message = 'Added ' + numberlist.length + ' patent numbers to document collection.';
-                    opsChooserApp.ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
+                    navigatorApp.ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
                 });
             }, 50);
         });

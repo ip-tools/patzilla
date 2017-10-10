@@ -6,7 +6,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
     template: require('./results-header.html'),
 
     initialize: function() {
-        this.templateHelpers.config = opsChooserApp.config;
+        this.templateHelpers.config = navigatorApp.config;
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "render", this.setup_ui);
     },
@@ -29,15 +29,15 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 
             var list_type = $(this).data('list-type');
             if (list_type == 'ops') {
-                opsChooserApp.listRegion.show(opsChooserApp.collectionView);
+                navigatorApp.listRegion.show(navigatorApp.collectionView);
 
             } else if (list_type == 'upstream') {
-                opsChooserApp.listRegion.show(opsChooserApp.resultView);
+                navigatorApp.listRegion.show(navigatorApp.resultView);
             }
 
         });
 
-        opsChooserApp.trigger('metadataview:setup_ui');
+        navigatorApp.trigger('metadataview:setup_ui');
 
     },
 

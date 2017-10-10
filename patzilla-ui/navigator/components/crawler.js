@@ -79,7 +79,7 @@ ResultNumbersView = GenericResultView.extend({
 });
 
 
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.listenTo(this, 'metadataview:setup_ui', function() {
         var _this = this;
@@ -94,7 +94,7 @@ opsChooserApp.addInitializer(function(options) {
 
             // Sanity checks
             if (!result_numbers_view.has_criteria()) {
-                opsChooserApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
+                navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
                 return;
             }
 
@@ -113,7 +113,7 @@ opsChooserApp.addInitializer(function(options) {
 
             // Sanity checks
             if (!result_numbers_view.has_criteria()) {
-                opsChooserApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
+                navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
                 return;
             }
 

@@ -244,7 +244,7 @@ HotkeysPlugin = Marionette.Controller.extend({
             $('#datasource button[data-value="depatisnet"]').button('toggle');
             _this.app.set_datasource('depatisnet');
         });
-        if (opsChooserApp.config.get('google_enabled')) {
+        if (navigatorApp.config.get('google_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
                 var google_button = $('#datasource button[data-value="google"]');
                 google_button.show();
@@ -252,19 +252,19 @@ HotkeysPlugin = Marionette.Controller.extend({
                 _this.app.set_datasource('google');
             });
         }
-        if (opsChooserApp.config.get('ftpro_enabled')) {
+        if (navigatorApp.config.get('ftpro_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
                 $('#datasource button[data-value="ftpro"]').button('toggle');
                 _this.app.set_datasource('ftpro');
             });
         }
-        if (opsChooserApp.config.get('ifi_enabled')) {
+        if (navigatorApp.config.get('ifi_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+i', function(event) {
                 $('#datasource button[data-value="ifi"]').button('toggle');
                 _this.app.set_datasource('ifi');
             });
         }
-        if (opsChooserApp.config.get('depatech_enabled')) {
+        if (navigatorApp.config.get('depatech_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+t', function(event) {
                 $('#datasource button[data-value="depatech"]').button('toggle');
                 _this.app.set_datasource('depatech');
@@ -288,15 +288,15 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
         $(selector).on('keydown', null, 'shift+return', function(event) {
             event.preventDefault();
-            opsChooserApp.queryBuilderView.comfort_form_zoomed_to_regular_data();
-            opsChooserApp.queryBuilderView.comfort_form_zoomed_to_regular_ui(regular_element);
+            navigatorApp.queryBuilderView.comfort_form_zoomed_to_regular_data();
+            navigatorApp.queryBuilderView.comfort_form_zoomed_to_regular_ui(regular_element);
         });
     },
 
 });
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.hotkeys = new HotkeysPlugin({app: this});
 
     this.listenTo(this, 'application:ready', function() {

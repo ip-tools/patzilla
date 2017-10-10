@@ -79,7 +79,7 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
             _.each(response.models, function(model) {
                 var class_name = 'highlight-strong-' + model.get('name');
                 var style = model.get('style');
-                style = _(style).extend(opsChooserApp.keywords.styles_strong);
+                style = _(style).extend(navigatorApp.keywords.styles_strong);
 
                 // apply style
                 $('.' + class_name).css(style);
@@ -101,9 +101,9 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
         $('#keyword-editor-save-button').unbind('click');
         $('#keyword-editor-save-button').click(function() {
             $.when(_this.save_models()).then(function() {
-                opsChooserApp.keywords.keyword_modal.close();
-                opsChooserApp.keywords.unhighlight();
-                opsChooserApp.keywords.highlight();
+                navigatorApp.keywords.keyword_modal.close();
+                navigatorApp.keywords.unhighlight();
+                navigatorApp.keywords.highlight();
             });
         });
     },
@@ -155,7 +155,7 @@ KeywordsController = Marionette.Controller.extend({
         this.keywordmaps = new KeywordMapCollection();
         this.setup_fixtures();
         this.module_name = 'keywords-user';
-        this.module_available = opsChooserApp.user_has_module(this.module_name);
+        this.module_available = navigatorApp.user_has_module(this.module_name);
     },
 
     // http://hslpicker.com/
@@ -220,7 +220,7 @@ KeywordsController = Marionette.Controller.extend({
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);
             } else {
-                opsChooserApp.ui.notify_module_locked(_this.module_name);
+                navigatorApp.ui.notify_module_locked(_this.module_name);
             }
         });
 
@@ -245,7 +245,7 @@ KeywordsController = Marionette.Controller.extend({
         var style_queue = _(this.colors_light).keys();
         var style_queue_work;
         var _this = this;
-        var keywords = opsChooserApp.metadata.get('keywords');
+        var keywords = navigatorApp.metadata.get('keywords');
         log('metadata.keywords:', keywords);
         _.each(keywords, function(keyword) {
             if (keyword) {
@@ -296,7 +296,7 @@ KeywordsController = Marionette.Controller.extend({
 
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.keywords = new KeywordsController();
     this.listenTo(this, 'application:ready', function() {
         this.keywords.setup_ui();

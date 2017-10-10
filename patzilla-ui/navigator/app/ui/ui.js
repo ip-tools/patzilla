@@ -31,18 +31,18 @@ UiController = Marionette.Controller.extend({
         this.setup_text_tools();
 
         // logout button
-        if (opsChooserApp.config.get('mode') == 'liveview') {
+        if (navigatorApp.config.get('mode') == 'liveview') {
             $('.logout-button').hide();
         }
 
         // Switch query interface flavor to expert mode when receiving query via url
-        if (opsChooserApp.config.get('query')) {
-            opsChooserApp.queryBuilderView.set_flavor('cql');
+        if (navigatorApp.config.get('query')) {
+            navigatorApp.queryBuilderView.set_flavor('cql');
         }
 
         // Switch query interface flavor to expert mode when signalled through url parameter
-        if (opsChooserApp.config.get('mode') == 'expert') {
-            opsChooserApp.queryBuilderView.set_flavor('cql');
+        if (navigatorApp.config.get('mode') == 'expert') {
+            navigatorApp.queryBuilderView.set_flavor('cql');
         }
 
         // ------------------------------------------
@@ -60,14 +60,14 @@ UiController = Marionette.Controller.extend({
         // Open help in modal dialog
         $('.action-help-shortcuts').unbind('click');
         $('.action-help-shortcuts').on('click', function() {
-            var baseurl = opsChooserApp.config.get('baseurl');
+            var baseurl = navigatorApp.config.get('baseurl');
             var url = baseurl + '/help#hotkeys';
             $(this).attr('href', url);
         });
 
         $('.action-help-ificlaims').unbind('click');
         $('.action-help-ificlaims').on('click', function() {
-            var baseurl = opsChooserApp.config.get('baseurl');
+            var baseurl = navigatorApp.config.get('baseurl');
             var url = baseurl + '/help#ificlaims';
             $(this).attr('href', url);
         });
@@ -83,7 +83,7 @@ UiController = Marionette.Controller.extend({
 
         $('.report-issue-feature').unbind('click');
         $('.report-issue-feature').click(function(event) {
-            opsChooserApp.issues.dialog({
+            navigatorApp.issues.dialog({
                 element: this,
                 event: event,
                 what: 'feature',
@@ -113,7 +113,7 @@ UiController = Marionette.Controller.extend({
             //$('.pager-area').hide();
         }
         if (options.documents) {
-            opsChooserApp.documents.reset();
+            navigatorApp.documents.reset();
         }
     },
 
@@ -229,7 +229,7 @@ UiController = Marionette.Controller.extend({
             });
             $('.very-short').shorten({showChars: 0, moreText: 'more', lessText: 'less'});
 
-            opsChooserApp.issues.setup_ui();
+            navigatorApp.issues.setup_ui();
 
             return true;
         }
@@ -258,23 +258,23 @@ UiController = Marionette.Controller.extend({
 
     do_element_visibility: function() {
 
-        //log('do_element_visibility', opsChooserApp.config);
+        //log('do_element_visibility', navigatorApp.config);
 
         // hide all navigational- and action-elements when in print mode
-        var MODE_PRINT = opsChooserApp.config.get('mode') == 'print';
+        var MODE_PRINT = navigatorApp.config.get('mode') == 'print';
         if (MODE_PRINT) {
             $('.do-not-print').hide();
         }
 
         // hide all navigational- and action-elements when in view-only mode
-        var MODE_LIVEVIEW = opsChooserApp.config.get('mode') == 'liveview';
+        var MODE_LIVEVIEW = navigatorApp.config.get('mode') == 'liveview';
         if (MODE_LIVEVIEW) {
             $('.non-liveview').hide();
         }
     },
 
     do_elements_focus: function() {
-        if (opsChooserApp.documents.length) {
+        if (navigatorApp.documents.length) {
             $('#patentnumber').blur();
             $('#query').blur();
         }
@@ -403,7 +403,7 @@ UiController = Marionette.Controller.extend({
                 var message =
                     'Copying data to clipboard not possible, Adobe Flash Player plugin is required.<br/>' +
                     '<a href="https://get.adobe.com/flashplayer/" target="_blank">Install Adobe Flash Player</a>.';
-                opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
             });
             return;
         }
@@ -427,7 +427,7 @@ UiController = Marionette.Controller.extend({
                 //event.target.style.display = "none";
                 if (_.isEmpty(event.data)) {
                     var message = "Empty content, nothing copied to clipboard.";
-                    opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                    navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
                     return;
                 }
                 var size_value = event.data[mimetype].length;
@@ -437,7 +437,7 @@ UiController = Marionette.Controller.extend({
                     var size_label = 'kB';
                 }
                 var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
-                opsChooserApp.ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
+                navigatorApp.ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
                 if (options.callback) {
                     options.callback();
                 }
@@ -481,7 +481,7 @@ UiController = Marionette.Controller.extend({
 
 
 // setup controller
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.ui = new UiController();
 

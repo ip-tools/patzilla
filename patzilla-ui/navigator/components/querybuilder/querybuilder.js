@@ -16,7 +16,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         console.log('QueryBuilderView.initialize');
         //this.listenTo(this.model, "change", this.render);
         //this.listenTo(this, "item:rendered", this.setup_ui);
-        this.config = this.templateHelpers.config = opsChooserApp.config;
+        this.config = this.templateHelpers.config = navigatorApp.config;
         //this.setup_ui();
         this.radios = new RadioPlus();
     },
@@ -44,7 +44,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // TODO: do it properly on the configuration data model
         $('#datasource').on('click', '.btn', function(event) {
             var datasource = $(this).data('value');
-            opsChooserApp.set_datasource(datasource);
+            navigatorApp.set_datasource(datasource);
 
             // hide query textarea for ftpro, if not in debug mode
             _this.setup_ui_query_textarea();
@@ -110,7 +110,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#cql-history-chooser').show();
 
                 // show filter field
-                if (opsChooserApp.get_datasource() == 'ifi') {
+                if (navigatorApp.get_datasource() == 'ifi') {
                     $('#cql-filter-container').show();
                 } else {
                     $('#cql-filter-container').hide();
@@ -122,8 +122,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // perform cql expression search
                 $('.btn-query-perform').click(function() {
                     var query_data = _this.get_common_form_data();
-                    opsChooserApp.disable_reviewmode();
-                    opsChooserApp.perform_search({reviewmode: false, clear: true, flavor: flavor, query_data: query_data});
+                    navigatorApp.disable_reviewmode();
+                    navigatorApp.perform_search({reviewmode: false, clear: true, flavor: flavor, query_data: query_data});
                 });
 
                 // hide query textarea for ftpro, if not in debug mode
@@ -144,16 +144,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#cql-history-chooser').hide();
 
                 // switch datasource to epo
-                opsChooserApp.set_datasource('ops');
+                navigatorApp.set_datasource('ops');
 
                 // hide other search backends, only display OPS
                 _this.display_datasource_buttons(['ops']);
 
                 // perform numberlist search
                 $('.btn-query-perform').click(function() {
-                    opsChooserApp.disable_reviewmode();
-                    opsChooserApp.populate_metadata();
-                    opsChooserApp.perform_numberlistsearch({reviewmode: false, clear: true});
+                    navigatorApp.disable_reviewmode();
+                    navigatorApp.populate_metadata();
+                    navigatorApp.perform_numberlistsearch({reviewmode: false, clear: true});
                 });
 
             }
@@ -182,7 +182,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // when clicking a mode button which augments search behavior, recompute upstream query expression
             // for search backends where query_data modifiers already influence the expression building
             // with "ftpro", we inject the attribute 'fullfamily="true"' into the xml nodes
-            if (opsChooserApp.get_datasource() == 'ftpro') {
+            if (navigatorApp.get_datasource() == 'ftpro') {
                 _this.compute_comfort_query();
             }
         });
@@ -204,8 +204,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             _this.compute_comfort_query().then(function() {
 
                 //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
-                opsChooserApp.disable_reviewmode();
-                opsChooserApp.perform_search({reviewmode: false, clear: true, flavor: _this.get_flavor(), query_data: query_data});
+                navigatorApp.disable_reviewmode();
+                navigatorApp.perform_search({reviewmode: false, clear: true, flavor: _this.get_flavor(), query_data: query_data});
 
             });
 
@@ -244,16 +244,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Then, compute data sources the user is allowed to see
         if (_.isEmpty(whitelist)) {
             whitelist = ['ops', 'depatisnet'];
-            if (opsChooserApp.config.get('google_enabled')) {
+            if (navigatorApp.config.get('google_enabled')) {
                 whitelist.push('google');
             }
-            if (opsChooserApp.config.get('ftpro_enabled')) {
+            if (navigatorApp.config.get('ftpro_enabled')) {
                 //whitelist.push('ftpro');
             }
-            if (opsChooserApp.config.get('ifi_enabled')) {
+            if (navigatorApp.config.get('ifi_enabled')) {
                 whitelist.push('ifi');
             }
-            if (opsChooserApp.config.get('depatech_enabled')) {
+            if (navigatorApp.config.get('depatech_enabled')) {
                 whitelist.push('depatech');
             }
         }
@@ -268,11 +268,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     // hide query textarea for ftpro, if not in debug mode
     setup_ui_query_textarea: function() {
 
-        if (opsChooserApp.config.get('debug')) {
+        if (navigatorApp.config.get('debug')) {
             return;
         }
 
-        if (opsChooserApp.get_datasource() == 'ftpro') {
+        if (navigatorApp.get_datasource() == 'ftpro') {
             $('#query').hide();
             $('#query').parent().find('#query-alert').remove();
             $('#query').parent().append('<div id="query-alert" class="alert alert-default span10" style="margin-left: 0px;">Expert mode not available for datasource "FulltextPRO".</div>');
@@ -291,7 +291,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
     check_query_empty: function(options) {
         if (this.query_empty()) {
-            opsChooserApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
+            navigatorApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -302,7 +302,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
     check_numberlist_empty: function(options) {
         if (this.numberlist_empty()) {
-            opsChooserApp.ui.notify('Numberlist is empty', {type: 'warning', icon: options.icon});
+            navigatorApp.ui.notify('Numberlist is empty', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -350,7 +350,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // bind clipboard copy button
             var copy_button = box.find('#comfort-form-copy-button');
-            opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: box[0]});
+            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: box[0]});
 
         });
 
@@ -421,17 +421,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 mode: 'liveview',
                 context: 'viewer',
                 project: 'query-permalink',
-                query: opsChooserApp.get_query().expression,
-                datasource: opsChooserApp.get_datasource(),
+                query: navigatorApp.get_query().expression,
+                datasource: navigatorApp.get_datasource(),
             };
 
-            opsChooserApp.permalink.make_uri_opaque(query_state).then(function(url) {
+            navigatorApp.permalink.make_uri_opaque(query_state).then(function(url) {
 
                 // v1: open url
                 //$(anchor).attr('href', url);
 
                 // v2: open permalink popover
-                opsChooserApp.permalink.popover_show(anchor, url, {
+                navigatorApp.permalink.popover_show(anchor, url, {
                     title: 'External query review',
                     intro:
                         '<small>' +
@@ -486,12 +486,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // display invalid patent numbers
                 if (_.isEmpty(numbers_invalid)) {
-                    opsChooserApp.ui.notify(
+                    navigatorApp.ui.notify(
                         'Patent numbers normalized successfully',
                         {type: 'success', icon: 'icon-exchange', right: true});
                 } else {
                     var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
-                    opsChooserApp.ui.user_alert(message, 'warning');
+                    navigatorApp.ui.user_alert(message, 'warning');
 
                 }
             });
@@ -508,7 +508,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             numbers = _(numbers).map(patent_number_strip_kindcode);
             $('#numberlist').val(numbers.join('\n'));
 
-            opsChooserApp.ui.notify(
+            navigatorApp.ui.notify(
                 'Stripped patent kind codes',
                 {type: 'success', icon: 'icon-eraser', right: true});
 
@@ -578,8 +578,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_cql_field_chooser: function(hide) {
 
-        var datasource = opsChooserApp.get_datasource();
-        var queryflavor = opsChooserApp.queryBuilderView.get_flavor();
+        var datasource = navigatorApp.get_datasource();
+        var queryflavor = navigatorApp.queryBuilderView.get_flavor();
 
         var analytics_actions = $('#analytics-actions')[0]; //.previousSibling;
         if (queryflavor == 'comfort') {
@@ -639,7 +639,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         log('setup_sorting_chooser');
 
-        var datasource = opsChooserApp.get_datasource();
+        var datasource = navigatorApp.get_datasource();
 
         var fields_knowledge = FIELDS_KNOWLEDGE[datasource] || {};
 
@@ -727,10 +727,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var deferred = $.Deferred();
 
-        if (!opsChooserApp.project) {
+        if (!navigatorApp.project) {
             var message = 'Project subsystem not started. Query history not available.';
             console.warn(message);
-            opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-time'});
+            navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-time'});
             deferred.reject();
             return deferred.promise();
         }
@@ -739,8 +739,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // fetch query objects and sort descending by creation date
         var _this = this;
-        $.when(opsChooserApp.project.fetch_queries()).then(function() {
-            var query_collection = opsChooserApp.project.get('queries');
+        $.when(navigatorApp.project.fetch_queries()).then(function() {
+            var query_collection = navigatorApp.project.get('queries');
             query_collection = sortCollectionByField(query_collection, 'created', 'desc');
             var deferreds = [];
             var chooser_data = query_collection.map(function(query) {
@@ -755,7 +755,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         return deferred.promise();
 
 
-        var queries = opsChooserApp.project.get('queries');
+        var queries = navigatorApp.project.get('queries');
         var chooser_data = _(queries).unique().map(function(query) {
             return { id: query, text: query };
         });
@@ -977,7 +977,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 }
                 _this.set_flavor(flavor);
 
-                opsChooserApp.set_datasource(query_object.get('datasource'));
+                navigatorApp.set_datasource(query_object.get('datasource'));
 
                 if (flavor == 'comfort') {
                     _this.clear_comfort_form();
@@ -1043,7 +1043,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_common_form: function() {
         var container = $('#querybuilder-area');
-        var datasource = opsChooserApp.get_datasource();
+        var datasource = navigatorApp.get_datasource();
 
         var _this = this;
 
@@ -1086,7 +1086,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_comfort_form: function() {
         var form = $('#querybuilder-comfort-form');
-        var datasource = opsChooserApp.get_datasource();
+        var datasource = navigatorApp.get_datasource();
 
         var _this = this;
 
@@ -1191,8 +1191,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         textarea.val(value);
         textarea.focus();
 
-        opsChooserApp.hotkeys.querybuilder_zoomed_hotkeys(textarea, input_element);
-        opsChooserApp.hotkeys.querybuilder_hotkeys(textarea);
+        navigatorApp.hotkeys.querybuilder_zoomed_hotkeys(textarea, input_element);
+        navigatorApp.hotkeys.querybuilder_hotkeys(textarea);
 
     },
 
@@ -1216,7 +1216,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     get_form_modifier_elements: function() {
 
-        var datasource = opsChooserApp.get_datasource();
+        var datasource = navigatorApp.get_datasource();
         var modifier_buttons_selector = 'button[data-name="full-cycle"],[data-name="family-swap-ger"]';
         modifier_buttons_selector += ',[data-name="first-pub"]';
         modifier_buttons_selector += ',[data-name="recent-pub"]';
@@ -1238,7 +1238,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     get_common_form_data: function() {
         var flavor = this.get_flavor();
-        var datasource = opsChooserApp.get_datasource();
+        var datasource = navigatorApp.get_datasource();
 
         var modifier_elements = this.get_form_modifier_elements();
         var modifiers = this.radios.get_state(modifier_elements);
@@ -1248,7 +1248,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             format: flavor,
             datasource: datasource,
             modifiers: modifiers,
-            //query: opsChooserApp.config.get('query'),
+            //query: navigatorApp.config.get('query'),
         };
 
         if (sorting) {
@@ -1367,7 +1367,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     collect_sorting_state_from_ui: function() {
         var sort_state;
 
-        var datasource = opsChooserApp.get_datasource();
+        var datasource = navigatorApp.get_datasource();
 
         if (_(['depatisnet']).contains(datasource)) {
             var field_chooser = $('#querybuilder-area').find('#sort-field-chooser');
@@ -1418,7 +1418,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }).fail(function() {
             $("#query").val('');
             $("#keywords").val('');
-            opsChooserApp.ui.reset_content({documents: true, keep_notifications: true});
+            navigatorApp.ui.reset_content({documents: true, keep_notifications: true});
         });
     },
 
@@ -1440,7 +1440,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 deferred.resolve({}, '[]');
             }
         }).error(function(xhr, settings) {
-            opsChooserApp.ui.propagate_backend_errors(xhr);
+            navigatorApp.ui.propagate_backend_errors(xhr);
             deferred.reject();
         });
         return deferred.promise();
@@ -1463,7 +1463,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             //$('#numberlist').html(numberlist);
             $('#numberlist').val(numberlist);
 
-            opsChooserApp.perform_numberlistsearch();
+            navigatorApp.perform_numberlistsearch();
         }
     },
 
@@ -1471,7 +1471,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
 
 // setup component
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, 'application:init', function() {
         this.queryBuilderView = new QueryBuilderView({});

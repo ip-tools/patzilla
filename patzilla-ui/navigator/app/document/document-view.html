@@ -104,7 +104,7 @@ var abstract_list = data.get_abstract_list();
                        data-toggle="popover" data-trigger="hover" data-placement="top"
                        data-content="PDF document"
                             >
-                        <%= opsChooserApp.ui.pdf_icon() %>
+                        <%= navigatorApp.ui.pdf_icon() %>
                     </a>
 
                     <!-- external links -->
@@ -240,7 +240,7 @@ var abstract_list = data.get_abstract_list();
 
                             <!-- PDF -->
                             <li><div style="padding-left: 10px">
-                                <h5><%= opsChooserApp.ui.pdf_icon() %> &nbsp; PDF and Images</h5>
+                                <h5><%= navigatorApp.ui.pdf_icon() %> &nbsp; PDF and Images</h5>
                             </div>
                             </li>
                             <li>
@@ -282,7 +282,7 @@ var abstract_list = data.get_abstract_list();
 
         <!-- add/remove -->
         <div class="span3" style="line-height: 200%">
-            <% if (opsChooserApp.component_enabled('basket')) { %>
+            <% if (navigatorApp.component_enabled('basket')) { %>
                 <span class="pull-right">
                     <a id="remove-patent-number-<%= patent_number %>" role="button"
                        class="btn-popover incognito remove-patent-number pointer"
@@ -530,7 +530,7 @@ var abstract_list = data.get_abstract_list();
                                data-toggle="popover" data-trigger="hover" data-placement="top"
                                data-content="PDF document"
                                     >
-                                <%= opsChooserApp.ui.pdf_icon() %>
+                                <%= navigatorApp.ui.pdf_icon() %>
                             </a>
 
                             <br/>
@@ -588,7 +588,7 @@ var abstract_list = data.get_abstract_list();
                         <button class="btn btn-small" data-toggle="tab" data-view-type="verbose">
                             Verbose
                         </button>
-                        <% if (opsChooserApp.user_has_module('family-citations')) { %>
+                        <% if (navigatorApp.user_has_module('family-citations')) { %>
                         <button class="btn btn-small" data-toggle="tab" data-view-type="citations">
                             Citations
                         </button>

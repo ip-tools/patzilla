@@ -43,28 +43,28 @@ EmbeddingController = Marionette.Controller.extend({
     },
 
     hide_regions: function() {
-        opsChooserApp.queryBuilderRegion.close();
-        opsChooserApp.basketRegion.close();
-        opsChooserApp.metadataRegion.close();
+        navigatorApp.queryBuilderRegion.close();
+        navigatorApp.basketRegion.close();
+        navigatorApp.metadataRegion.close();
     },
 
     run: function() {
         this.hide_regions();
         this.hide_umbrella();
         if (this.pubnumber) {
-            opsChooserApp.perform_listsearch({}, undefined, [this.pubnumber], 1, 'pn', 'OR');
+            navigatorApp.perform_listsearch({}, undefined, [this.pubnumber], 1, 'pn', 'OR');
         } else {
-            opsChooserApp.ui.user_alert('404 Not Found', 'warning');
+            navigatorApp.ui.user_alert('404 Not Found', 'warning');
         }
     },
 
     process_results: function() {
-        opsChooserApp.basketRegion.close();
+        navigatorApp.basketRegion.close();
 
         /*
-        log('results:', opsChooserApp.metadata.get('result_count_received'));
-        if (!opsChooserApp.metadata.get('result_count_received')) {
-            opsChooserApp.ui.user_alert('No results for given criteria.', 'warning');
+        log('results:', navigatorApp.metadata.get('result_count_received'));
+        if (!navigatorApp.metadata.get('result_count_received')) {
+            navigatorApp.ui.user_alert('No results for given criteria.', 'warning');
             return;
         }
         */
@@ -90,15 +90,15 @@ EmbeddingController = Marionette.Controller.extend({
 
                 $('body').html(carousel);
 
-                opsChooserApp.document_carousel.setup_ui();
+                navigatorApp.document_carousel.setup_ui();
 
             } else {
-                opsChooserApp.ui.user_alert('Unknown mode "' + this.mode + '" for type "drawings".', 'error');
+                navigatorApp.ui.user_alert('Unknown mode "' + this.mode + '" for type "drawings".', 'error');
                 $('#ops-collection-region').hide();
             }
 
         } else {
-            //opsChooserApp.ui.user_alert('Unknown embed type.', 'error');
+            //navigatorApp.ui.user_alert('Unknown embed type.', 'error');
             $('#ops-collection-region').hide();
         }
 
@@ -109,9 +109,9 @@ EmbeddingController = Marionette.Controller.extend({
 $(document).ready(function() {
 
     console.info("Start application [embedded]");
-    opsChooserApp.config.set('embedded', true);
+    navigatorApp.config.set('embedded', true);
 
-    opsChooserApp.addInitializer(function(options) {
+    navigatorApp.addInitializer(function(options) {
 
         this.embeddingController = new EmbeddingController(options=embed_options);
 
@@ -128,21 +128,21 @@ $(document).ready(function() {
     // Transfer some options to application before booting
     if (embed_options && embed_options.params) {
         if (embed_options.params.context) {
-            opsChooserApp.config.set('context', embed_options.params.context);
+            navigatorApp.config.set('context', embed_options.params.context);
         }
         if (embed_options.params.mode) {
-            opsChooserApp.config.set('mode', embed_options.params.mode);
+            navigatorApp.config.set('mode', embed_options.params.mode);
         }
     }
 
-    opsChooserApp.start();
-    opsChooserApp.trigger('application:init');
+    navigatorApp.start();
+    navigatorApp.trigger('application:init');
 
     // Automatically run search after bootstrapping application.
     // However, from now on [2014-05-21] this gets triggered by "project:ready" events.
     // We keep this here in case we want to switch gears / provide a non-persistency
     // version of the tool for which the chance is likely, i.e. for a website embedding
     // component.
-    //opsChooserApp.perform_search();
+    //navigatorApp.perform_search();
 
 });

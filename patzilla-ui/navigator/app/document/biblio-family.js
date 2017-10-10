@@ -120,7 +120,7 @@ OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
             get_citations_environment_button: function() {
                 //log('OpsFamilyCitationsMemberView.get_citations_environment_button');
                 var exchange_document = new OpsExchangeDocument(this['exchange-document']);
-                var citations_environment_button = opsChooserApp.document_details.get_citations_environment_button(exchange_document);
+                var citations_environment_button = navigatorApp.document_details.get_citations_environment_button(exchange_document);
                 return citations_environment_button;
             },
         });
@@ -174,7 +174,7 @@ OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
             items: this.collection.toJSON(),
 
             get_citations_environment_button: function(options) {
-                return opsChooserApp.document_details.get_citations_environment_button(this, options);
+                return navigatorApp.document_details.get_citations_environment_button(this, options);
             },
 
             has_citations: function() {

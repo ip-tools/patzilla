@@ -12,7 +12,7 @@ DatasourceSearch = Backbone.Model.extend({
         log('DatasourceSearch.query_parameters:', query_parameters);
         //log('params:', $.param(query_parameters));
 
-        opsChooserApp.ui.indicate_activity(true);
+        navigatorApp.ui.indicate_activity(true);
 
         var self = this;
         var _options = options;
@@ -22,8 +22,8 @@ DatasourceSearch = Backbone.Model.extend({
             method: 'post',
             data: $.param(query_parameters),
             success: function (payload, response, options) {
-                opsChooserApp.ui.indicate_activity(false);
-                //opsChooserApp.ui.reset_content();
+                navigatorApp.ui.indicate_activity(false);
+                //navigatorApp.ui.reset_content();
 
                 // Clear current keywords
                 self.keywords = [];
@@ -49,10 +49,10 @@ DatasourceSearch = Backbone.Model.extend({
 
                 console.error("DatasourceSearch error:", e, xhr);
 
-                opsChooserApp.ui.indicate_activity(false);
-                opsChooserApp.ui.reset_content({documents: true});
+                navigatorApp.ui.indicate_activity(false);
+                navigatorApp.ui.reset_content({documents: true});
 
-                opsChooserApp.ui.propagate_backend_errors(xhr, {url: self.url});
+                navigatorApp.ui.propagate_backend_errors(xhr, {url: self.url});
             }
         });
 

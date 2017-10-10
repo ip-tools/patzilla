@@ -238,7 +238,7 @@ ProjectModel = Backbone.RelationalModel.extend({
     },
 
     get_comments: function() {
-        return opsChooserApp.comments.store.get_by_project(this);
+        return navigatorApp.comments.store.get_by_project(this);
     },
 
 });
@@ -453,7 +453,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         project_links.unbind('click');
         project_links.click(function() {
             var projectname = $(this).data('value');
-            opsChooserApp.trigger('project:load', projectname);
+            navigatorApp.trigger('project:load', projectname);
         });
 
 
@@ -488,7 +488,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
             _this.model.save();
 
             if (!mode_seen_ui) {
-                opsChooserApp.document_base.bright('.ops-collection-entry');
+                navigatorApp.document_base.bright('.ops-collection-entry');
             }
 
         });
@@ -499,12 +499,12 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         delete_button.unbind('click');
         delete_button.click(function(e) {
 
-            var projectname = opsChooserApp.config.get('project');
-            opsChooserApp.ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
+            var projectname = navigatorApp.config.get('project');
+            navigatorApp.ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
 
                 _this.model.destroy({success: function() {
 
-                    opsChooserApp.ui.notify(
+                    navigatorApp.ui.notify(
                         'Project "' + _this.model.get('name') + '" deleted.',
                         {type: 'success', icon: 'icon-trash'});
 
@@ -512,22 +512,22 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                     var selected = _this.collection.sortByField('modified', 'desc').first();
                     if (selected) {
                         var projectname = selected.get('name');
-                        opsChooserApp.trigger('project:load', projectname);
+                        navigatorApp.trigger('project:load', projectname);
 
                     // if no project is left, autocreate the canonical one (named by current date) again
                     } else {
 
                         // HACK: aid in destroying a freshly created BasketModel
-                        opsChooserApp.basketModel.destroy();
-                        delete opsChooserApp.basketModel;
+                        navigatorApp.basketModel.destroy();
+                        delete navigatorApp.basketModel;
 
-                        var projectname = opsChooserApp.config._originalAttributes.project;
-                        opsChooserApp.config.set('project', projectname);
+                        var projectname = navigatorApp.config._originalAttributes.project;
+                        navigatorApp.config.set('project', projectname);
 
-                        opsChooserApp.trigger('projects:initialize');
+                        navigatorApp.trigger('projects:initialize');
 
                         // notify user about the completed action
-                        opsChooserApp.ui.notify(
+                        navigatorApp.ui.notify(
                             'Project "' + _this.model.get('name') + '" deleted.<br/>Recreated default project.',
                             {type: 'success', icon: 'icon-trash'});
 
@@ -555,8 +555,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                 toggle: 'manual',
                 placeholder: 'Enter project name',
                 success: function(response, projectname) {
-                    opsChooserApp.trigger('project:load', projectname);
-                    opsChooserApp.ui.notify(
+                    navigatorApp.trigger('project:load', projectname);
+                    navigatorApp.ui.notify(
                         'Project "' + projectname + '" created.',
                         {type: 'success', icon: 'icon-plus'});
                 },
@@ -596,7 +596,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 });
 
 
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     var _this = this;
 
@@ -650,7 +650,7 @@ opsChooserApp.addInitializer(function(options) {
         }
         */
 
-        this.listenTo(opsChooserApp, 'localforage:ready', function() {
+        this.listenTo(navigatorApp, 'localforage:ready', function() {
             log('localforage:ready-project');
             _this.projects = new ProjectCollection();
             _this.projects.fetch({

@@ -122,18 +122,18 @@ ExportPlugin = Backbone.Model.extend({
         var notification_wrapper = dialog[0];
 
         // Copy/paste links on "link-embed" screen
-        opsChooserApp.ui.copy_to_clipboard('text/plain', function() {
+        navigatorApp.ui.copy_to_clipboard('text/plain', function() {
             return dialog.find('#share-link-numberlist').val();
         }, {element: dialog.find('#share-link-numberlist-copy'), wrapper: notification_wrapper});
-        opsChooserApp.ui.copy_to_clipboard('text/plain', function() {
+        navigatorApp.ui.copy_to_clipboard('text/plain', function() {
             return dialog.find('#share-link-external').val();
         }, {element: dialog.find('#share-link-external-copy'), wrapper: notification_wrapper});
 
         // Copy/paste document numbers on "display" screen
-        opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
             return dialog.find('#result-content-rated').val();
         }, {element: dialog.find('#result-content-rated-copy'), wrapper: notification_wrapper});
-        opsChooserApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
             return dialog.find('#result-content-seen').val();
         }, {element: dialog.find('#result-content-seen-copy'), wrapper: notification_wrapper});
 
@@ -159,14 +159,14 @@ ExportPlugin = Backbone.Model.extend({
 
         var _this = this;
         var dialog = this.dialog;
-        var basket = opsChooserApp.project.get('basket');
+        var basket = navigatorApp.project.get('basket');
 
 
         // ------------------------------------------
         // Setup dialog metadata
         // ------------------------------------------
         // Add project name to dialog header
-        dialog.find('#export_title').html(opsChooserApp.project.get('name'));
+        dialog.find('#export_title').html(navigatorApp.project.get('name'));
 
 
         // ------------------------------------------
@@ -275,7 +275,7 @@ ExportPlugin = Backbone.Model.extend({
         var expiration = parseInt(this.get_expiration_time().diff(moment()) / 1000);
         //log('expiration:', expiration);
 
-        var basket = opsChooserApp.project.get('basket');
+        var basket = navigatorApp.project.get('basket');
         var _this = this;
         basket.get_numberlist_url_liveview(expiration).then(function(url) {
             if (url) {
@@ -346,8 +346,8 @@ ExportPlugin = Backbone.Model.extend({
 
         var deferred = $.Deferred();
 
-        var user = opsChooserApp.config.get('user');
-        var project = opsChooserApp.project;
+        var user = navigatorApp.config.get('user');
+        var project = navigatorApp.project;
         var basket = project.get('basket');
 
         var seen = basket.get_records({seen: true});
@@ -378,7 +378,7 @@ ExportPlugin = Backbone.Model.extend({
 
 });
 
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.exporter = new ExportPlugin();
     this.register_component('export');

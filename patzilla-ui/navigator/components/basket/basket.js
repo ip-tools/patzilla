@@ -74,8 +74,8 @@ BasketModel = Backbone.RelationalModel.extend({
 
         var _this = this;
 
-        var numberlist = opsChooserApp.config.get('numberlist');
-        var context = opsChooserApp.config.get('context');
+        var numberlist = navigatorApp.config.get('numberlist');
+        var context = navigatorApp.config.get('context');
 
         // Debugging
         //log('numberlist:', numberlist);
@@ -196,7 +196,7 @@ BasketModel = Backbone.RelationalModel.extend({
         //             our first user seems to have hit this limit!
         /*
         // TODO: maybe prebuild/maintain an index in collection
-        var document = _.find(opsChooserApp.documents.models, function(doc) {
+        var document = _.find(navigatorApp.documents.models, function(doc) {
             var document_number = doc.get_document_number();
             return number == document_number;
         });
@@ -382,7 +382,7 @@ BasketModel = Backbone.RelationalModel.extend({
 
     get_records: function(options) {
         var entries = this.get_entries(options);
-        var baseurl = opsChooserApp.permalink.get_baseurl_patentview();
+        var baseurl = navigatorApp.permalink.get_baseurl_patentview();
         return entries.map(function(entry) {
             var newentry = entry.toJSON();
             newentry['url'] = baseurl + '/view/pn/' + newentry['number'];
@@ -423,13 +423,13 @@ BasketModel = Backbone.RelationalModel.extend({
 
         var hits = publication_numbers.length;
 
-        opsChooserApp.metadata.resetSomeDefaults({'clear': true});
+        navigatorApp.metadata.resetSomeDefaults({'clear': true});
 
         // TODO: decouple from referencing the main application object e.g. by using events!?
-        opsChooserApp.set_datasource('review');
-        opsChooserApp.metadata.set('reviewmode', true);
-        opsChooserApp.populate_metadata();
-        opsChooserApp.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
+        navigatorApp.set_datasource('review');
+        navigatorApp.metadata.set('reviewmode', true);
+        navigatorApp.populate_metadata();
+        navigatorApp.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
     },
 
     // fetch all basket entries from datastore, one by one; this is nasty
@@ -481,7 +481,7 @@ BasketModel = Backbone.RelationalModel.extend({
 
         more = more || {};
 
-        var projectname = opsChooserApp.project.get('name');
+        var projectname = navigatorApp.project.get('name');
         var numbers = this.get_numbers();
         var numbers_string = numbers.join(',');
 
@@ -502,8 +502,8 @@ BasketModel = Backbone.RelationalModel.extend({
 
     share_email_params: function() {
 
-        var projectname = opsChooserApp.project.get('name');
-        var url = opsChooserApp.permalink.make_uri(this.get_view_state({project: 'via-email'}));
+        var projectname = navigatorApp.project.get('name');
+        var url = navigatorApp.permalink.make_uri(this.get_view_state({project: 'via-email'}));
 
         var numbers = this.get_numbers();
         var numbers_count = numbers.length;
@@ -538,7 +538,7 @@ BasketModel = Backbone.RelationalModel.extend({
         if (this.empty()) {
             return;
         }
-        var url = opsChooserApp.permalink.make_uri(this.get_view_state());
+        var url = navigatorApp.permalink.make_uri(this.get_view_state());
         return url;
     },
 
@@ -546,7 +546,7 @@ BasketModel = Backbone.RelationalModel.extend({
         if (this.empty()) {
             return;
         }
-        return opsChooserApp.permalink.make_uri_opaque(this.get_view_state({mode: 'liveview', datasource: 'review'}), {ttl: ttl});
+        return navigatorApp.permalink.make_uri_opaque(this.get_view_state({mode: 'liveview', datasource: 'review'}), {ttl: ttl});
     },
 
 });
@@ -584,7 +584,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         //console.log('BasketView.initialize');
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
-        this.templateHelpers.config = opsChooserApp.config;
+        this.templateHelpers.config = navigatorApp.config;
     },
 
     templateHelpers: {},
@@ -619,7 +619,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
 
         // only enable submit button, if ship url is given
-        var ship_url = opsChooserApp.config.get('ship-url');
+        var ship_url = navigatorApp.config.get('ship-url');
         if (ship_url) {
             $('#basket-submit-button').removeClass('hide');
         } else {
@@ -665,10 +665,10 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // Export Dossier
         $('#dossier-export-button').unbind('click').bind('click', function(event) {
 
-            if (!opsChooserApp.component_enabled('export')) {
+            if (!navigatorApp.component_enabled('export')) {
                 var message = 'Export feature not enabled.';
                 console.warn(message);
-                opsChooserApp.ui.notify(message, {type: 'warning', icon: 'icon-save'});
+                navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-save'});
                 return;
             }
 
@@ -678,7 +678,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
             }
 
             // Open shiny export dialog
-            opsChooserApp.exporter.open_dialog({
+            navigatorApp.exporter.open_dialog({
                 element: this,
                 event: event,
             });
@@ -715,7 +715,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // share via clipboard
-         opsChooserApp.ui.copy_to_clipboard('text/plain', function() {
+         navigatorApp.ui.copy_to_clipboard('text/plain', function() {
             if (_this.check_empty()) { return; }
             var numbers = _this.model.get_numbers();
             return numbers.join('\n');
@@ -725,7 +725,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         $('#share-numberlist-url').unbind('click');
         $('#share-numberlist-url').click(function() {
             if (_this.check_empty()) { return; }
-            var url = opsChooserApp.permalink.make_uri(_this.model.get_view_state());
+            var url = navigatorApp.permalink.make_uri(_this.model.get_view_state());
             $(this).attr('target', '_blank');
             $(this).attr('href', url);
         });
@@ -740,14 +740,14 @@ BasketView = Backbone.Marionette.ItemView.extend({
             if (_this.check_empty()) { return; }
 
             var anchor = this;
-            opsChooserApp.permalink.make_uri_opaque(_this.model.get_view_state({mode: 'liveview'})).then(function(url) {
+            navigatorApp.permalink.make_uri_opaque(_this.model.get_view_state({mode: 'liveview'})).then(function(url) {
 
                 // v1: open url
                 //$(anchor).attr('href', url);
 
                 // v2: open permalink popover
 
-                opsChooserApp.permalink.popover_show(anchor, url, {
+                navigatorApp.permalink.popover_show(anchor, url, {
                     title: 'External document review',
                     intro:
                         '<small>' +
@@ -764,7 +764,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         $('#download-documents-pdf-archive').unbind('click');
         $('#download-documents-pdf-archive').click(function() {
             if (_this.check_empty()) { return; }
-            var numberlist = opsChooserApp.basketModel.get_numbers();
+            var numberlist = navigatorApp.basketModel.get_numbers();
             //log('numberlist:', numberlist);
             $(this).attr('target', '_blank');
             $(this).attr('href', '/api/pdf/' + numberlist.join(','));
@@ -788,13 +788,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
             // generate permalink uri and toggle popover
             var _button = this;
-            opsChooserApp.permalink.liveview_with_database_params().then(function(params) {
+            navigatorApp.permalink.liveview_with_database_params().then(function(params) {
 
                 // compute permalink
-                var url = opsChooserApp.permalink.make_uri(params);
+                var url = navigatorApp.permalink.make_uri(params);
 
                 // show permalink overlay
-                opsChooserApp.permalink.popover_show(_button, url, {
+                navigatorApp.permalink.popover_show(_button, url, {
                     intro:
                         '<small>' +
                             'This offers a persistent link to review the current project. ' +
@@ -814,13 +814,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
             // generate permalink uri and toggle popover
             var _button = this;
-            opsChooserApp.permalink.liveview_with_database_params().then(function(params) {
+            navigatorApp.permalink.liveview_with_database_params().then(function(params) {
 
                 // compute permalink
-                opsChooserApp.permalink.make_uri_opaque(params).then(function(url) {
+                navigatorApp.permalink.make_uri_opaque(params).then(function(url) {
 
                     // show permalink overlay
-                    opsChooserApp.permalink.popover_show(_button, url, {
+                    navigatorApp.permalink.popover_show(_button, url, {
                         intro:
                             '<small>' +
                                 'This offers a link for external/anonymous users to review the current project. ' +
@@ -848,7 +848,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
             options.icon = 'icon-external-link';
         }
         if (this.model.empty(options)) {
-            opsChooserApp.ui.notify(
+            navigatorApp.ui.notify(
                 "An empty collection can't be " + verb + ", please add some documents.",
                 {type: 'warning', icon: options.icon + ' icon-large'});
             return true;
@@ -893,7 +893,7 @@ BasketController = Marionette.Controller.extend({
 
         // why do we have to access the global object here?
         // maybe because of the event machinery which dispatches to us?
-        var numbers = opsChooserApp.basketModel ? opsChooserApp.basketModel.get_numbers() : [];
+        var numbers = navigatorApp.basketModel ? navigatorApp.basketModel.get_numbers() : [];
         //log('link_document numbers:', numbers);
 
         var checkbox_element = $('#chk-patent-number-' + number);
@@ -946,7 +946,7 @@ BasketController = Marionette.Controller.extend({
         // display document with full opacity if not marked as "seen"
         if (entry) {
             if (!entry.get('seen')) {
-                opsChooserApp.document_base.bright(rating_widget);
+                navigatorApp.document_base.bright(rating_widget);
             }
         }
 
@@ -982,7 +982,7 @@ BasketListView = GenericResultView.extend({
         this.indicate_activity(true);
         this.user_message('Computing results, please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
 
-        var response = opsChooserApp.basketModel.get_numbers(this.options);
+        var response = navigatorApp.basketModel.get_numbers(this.options);
 
         // transfer data
         this.setup_data(response);
@@ -1037,7 +1037,7 @@ RatingController = Marionette.Controller.extend({
 });
 
 // setup component
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.basketController = new BasketController();
     this.rating = new RatingController();

@@ -13,7 +13,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         console.log('PaginationView.initialize');
         this.listenTo(this.model, "commit", this.render);
         this.listenTo(this, "item:rendered", this.setup_ui);
-        this.templateHelpers.config = opsChooserApp.config;
+        this.templateHelpers.config = navigatorApp.config;
         this.bottom_pager = options.bottom_pager;
     },
 
@@ -28,7 +28,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         return '#ops-pagination-template';
 
         // v1: use specific pager component
-        if (opsChooserApp.config.get('mode') == 'liveview') {
+        if (navigatorApp.config.get('mode') == 'liveview') {
             return '#ops-pagination-template-liveview';
         } else if (this.model.get('searchmode') == 'subsearch') {
             return '#ops-pagination-template';
@@ -96,7 +96,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
 
                     // scroll to first result entry
                     //var scroll_target = $('.ops-collection-entry').first();
-                    //opsChooserApp.ui.scroll_smooth(scroll_target);
+                    //navigatorApp.ui.scroll_smooth(scroll_target);
 
                     // scroll to window top
                     if (_this.bottom_pager) {
@@ -104,17 +104,17 @@ PaginationView = Backbone.Marionette.ItemView.extend({
                         });
                     }
 
-                    // TODO: untangle this by doing opsChooserApp.perform_listsearch right here!?
+                    // TODO: untangle this by doing navigatorApp.perform_listsearch right here!?
                     var search_options = _this.get_search_options();
                     $.extend(search_options, _this.get_range(page));
                     //log('search_options:', search_options);
 
-                    var flavor = opsChooserApp.queryBuilderView.get_flavor();
-                    var reviewmode = opsChooserApp.metadata.get('reviewmode');
+                    var flavor = navigatorApp.queryBuilderView.get_flavor();
+                    var reviewmode = navigatorApp.metadata.get('reviewmode');
                     if (flavor == 'numberlist' && reviewmode != true) {
-                        opsChooserApp.perform_numberlistsearch(search_options);
+                        navigatorApp.perform_numberlistsearch(search_options);
                     } else {
-                        opsChooserApp.perform_search(search_options);
+                        navigatorApp.perform_search(search_options);
                     }
 
                 },
@@ -146,7 +146,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
             event.preventDefault();
             var value = $(this).data('value');
             _this.model.set('page_size', value);
-            opsChooserApp.perform_search({clear: true});
+            navigatorApp.perform_search({clear: true});
             return false;
         });
 
@@ -174,7 +174,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         $(this.el).find('.pagination a').click(function() {
             //var action = $(this).attr('action');
             var range = $(this).attr('range');
-            opsChooserApp.perform_search({range: range});
+            navigatorApp.perform_search({range: range});
             return false;
         });
 
@@ -223,7 +223,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     get_search_options: function() {
-        var query_data = opsChooserApp.queryBuilderView.get_common_form_data();
+        var query_data = navigatorApp.queryBuilderView.get_common_form_data();
         //log('query_data:', query_data);
         var options = {
             'query_data': query_data,

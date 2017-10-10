@@ -89,7 +89,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
                     'If the document is not available in any form which satisfies your needs, ' +
                     'do not hesitate to report this problem to us!';
 
-            opsChooserApp.ui.user_alert(message_not_available, 'info', info);
+            navigatorApp.ui.user_alert(message_not_available, 'info', info);
         }
     },
 

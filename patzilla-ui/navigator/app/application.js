@@ -114,7 +114,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             search_info.range = range;
             this.trigger('search:before', search_info);
 
-            var engine = opsChooserApp.search;
+            var engine = navigatorApp.search;
             engine.perform(this.documents, this.metadata, query, range).then(function() {
 
                 _this.trigger('search:success', search_info);
@@ -314,7 +314,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
     send_query: function(query, options) {
         if (query) {
             $('#query').val(query);
-            opsChooserApp.perform_search(options);
+            navigatorApp.perform_search(options);
             $(window).scrollTop(0);
         }
     },
@@ -803,7 +803,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
             var placeholder;
 
             // Fall back to IFI Claims for bibliographic data
-            var ificlaims_settings = opsChooserApp.config.get('system').datasource.ificlaims;
+            var ificlaims_settings = navigatorApp.config.get('system').datasource.ificlaims;
             var ifi_allowed =
                 ificlaims_settings.details_enabled &&
                 _.contains(ificlaims_settings.details_countries, patent.country);
@@ -985,7 +985,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 var recommended_next_page_local =
                     Math.floor(recommended_next_page_remote / options.local_limit) + 1;
 
-                var max_page_local = opsChooserApp.paginationViewBottom.get_max_page();
+                var max_page_local = navigatorApp.paginationViewBottom.get_max_page();
                 var has_more_results = recommended_next_page_local <= max_page_local;
 
                 if (has_more_results) {
@@ -998,7 +998,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
                 // Go to page containing next results after the gap of removed items
                 if (has_more_results) {
                     $('#next-page-with-results-button').on('click', function() {
-                        opsChooserApp.paginationViewBottom.set_page(recommended_next_page_local);
+                        navigatorApp.paginationViewBottom.set_page(recommended_next_page_local);
                     });
                 }
 
@@ -1118,8 +1118,8 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
 
     project_reload: function() {
         // reload project
-        var projectname = opsChooserApp.project.get('name');
-        opsChooserApp.trigger('project:load', projectname);
+        var projectname = navigatorApp.project.get('name');
+        navigatorApp.trigger('project:load', projectname);
     },
 
     // TODO: move to basket.js

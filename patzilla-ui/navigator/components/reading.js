@@ -15,7 +15,7 @@ ReadingController = Marionette.Controller.extend({
         }
 
         this.progressbar = new ToProgress(progressbar_options);
-        this.listenTo(opsChooserApp, 'document:entered', this.enter_document);
+        this.listenTo(navigatorApp, 'document:entered', this.enter_document);
     },
 
     setup_ui: function() {
@@ -30,7 +30,7 @@ ReadingController = Marionette.Controller.extend({
 
     update_progress: function(item_page_index) {
 
-        var metadata = opsChooserApp.metadata;
+        var metadata = navigatorApp.metadata;
         //log('metadata:', metadata);
 
         var result_count = metadata.get('result_count');
@@ -41,7 +41,7 @@ ReadingController = Marionette.Controller.extend({
         var element_index = item_page_index;
 
         // v2: more sophisticated - didn't work out!
-        //var element_in_viewport = opsChooserApp.viewport.get_document();
+        //var element_in_viewport = navigatorApp.viewport.get_document();
         //var element_index = element_in_viewport.parent('.row-fluid').index();
 
         //log('element_index:', element_index);
@@ -68,7 +68,7 @@ ReadingController = Marionette.Controller.extend({
 });
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.reading = new ReadingController();
     this.listenTo(this, 'results:ready', function() {
         this.reading.setup_ui();

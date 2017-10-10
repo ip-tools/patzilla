@@ -60,11 +60,11 @@ function opaque_param(params, options) {
 
 function propagate_opaque_errors() {
 
-    // TODO: Decouple from "opsChooserApp" instance
+    // TODO: Decouple from "navigatorApp" instance
 
-    var status = opsChooserApp.config.get('opaque.meta.status');
+    var status = navigatorApp.config.get('opaque.meta.status');
     if (status == 'error') {
-        var errors = opsChooserApp.config.get('opaque.meta.errors');
+        var errors = navigatorApp.config.get('opaque.meta.errors');
         _.each(errors, function(error) {
 
             if (error.location == 'JSON Web Token' && error.description == 'expired') {
@@ -82,7 +82,7 @@ function propagate_opaque_errors() {
                 'status': 'error',
                 'errors': [error]
             }
-            opsChooserApp.ui.propagate_cornice_errors(response);
+            navigatorApp.ui.propagate_cornice_errors(response);
 
         });
     }

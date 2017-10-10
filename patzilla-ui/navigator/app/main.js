@@ -100,9 +100,9 @@ var navigatorTheme = new NavigatorTheme(theme_settings);
 
 console.info('Load application core');
 
-opsChooserApp = new OpsChooserApp({config: navigatorConfiguration, theme: navigatorTheme});
+navigatorApp = new OpsChooserApp({config: navigatorConfiguration, theme: navigatorTheme});
 
-opsChooserApp.addRegions({
+navigatorApp.addRegions({
     mainRegion: "#root-region",
     queryBuilderRegion: "#querybuilder-region",
     basketRegion: "#basket-region",
@@ -114,7 +114,7 @@ opsChooserApp.addRegions({
 
 
 // Main application user interface
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 
@@ -129,7 +129,7 @@ opsChooserApp.addInitializer(function(options) {
 });
 
 // Universal helpers
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.issues = new IssueReporterGui();
     this.listenTo(this, 'application:ready', function() {
         this.issues.setup_ui();
@@ -141,7 +141,7 @@ opsChooserApp.addInitializer(function(options) {
 
 
 // initialize models
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     // application domain model objects
     this.search = new OpsPublishedDataSearch();
@@ -152,7 +152,7 @@ opsChooserApp.addInitializer(function(options) {
 });
 
 // initialize views
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 
@@ -185,7 +185,7 @@ opsChooserApp.addInitializer(function(options) {
 });
 
 // activate anonymous basket (non-persistent/project-associated)
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     // remark: the model instance created here will get overwritten later
     //         by a project-specific basket when activating a project
     // reason: we still do it here for the case we decide to deactivate the project
@@ -196,7 +196,7 @@ opsChooserApp.addInitializer(function(options) {
 
 
 // Main component event wiring
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     // Application core, first stage boot process
     this.listenToOnce(this, 'application:boot', function() {
@@ -250,7 +250,7 @@ opsChooserApp.addInitializer(function(options) {
 });
 
 // Kick off the search process triggered from query parameters
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
 
     // V1: Kick off search after basket machinery has been loaded
     // V2: Kick off search regardless to make it work without storage et al.

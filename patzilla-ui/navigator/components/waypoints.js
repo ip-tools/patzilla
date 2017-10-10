@@ -63,13 +63,13 @@ WaypointController = Marionette.Controller.extend({
                         // - decrease opacity of documents marked as "seen"
                         // - mark current document as "seen" if there's no rating yet
                         try {
-                            var mode_seen_fade = opsChooserApp.project.get('mode_fade_seen');
-                            if (opsChooserApp.document_seen_twice(event.document_number)) {
+                            var mode_seen_fade = navigatorApp.project.get('mode_fade_seen');
+                            if (navigatorApp.document_seen_twice(event.document_number)) {
                                 if (mode_seen_fade) {
-                                    opsChooserApp.document_base.dim(this.element);
+                                    navigatorApp.document_base.dim(this.element);
                                 }
                             } else {
-                                opsChooserApp.document_mark_seen(event.document_number);
+                                navigatorApp.document_mark_seen(event.document_number);
                             }
 
                         } catch (e) {
@@ -139,7 +139,7 @@ WaypointController = Marionette.Controller.extend({
 
     build_event: function(source) {
 
-        var document = opsChooserApp.document_base.get_document_by_element(source.element);
+        var document = navigatorApp.document_base.get_document_by_element(source.element);
         if (!document) return;
 
         var document_number = document.get_document_number();
@@ -157,7 +157,7 @@ WaypointController = Marionette.Controller.extend({
         //     The current ones are more user interface centric.
         //     ... but don't tell anybody (FIXME)
         var element_index = 0;
-        opsChooserApp.documents.every(function(item) {
+        navigatorApp.documents.every(function(item) {
             //log('item:', item);
             if (item.attributes['__type__'] != 'ops-placeholder') {
                 element_index++;
@@ -181,14 +181,14 @@ WaypointController = Marionette.Controller.extend({
 
     emit_event: function(name, event) {
         if (event) {
-            opsChooserApp.trigger(name, event);
+            navigatorApp.trigger(name, event);
         }
     },
 
 });
 
 // setup plugin
-opsChooserApp.addInitializer(function(options) {
+navigatorApp.addInitializer(function(options) {
     this.waypoints = new WaypointController();
     this.listenTo(this, 'results:ready', function() {
         this.waypoints.setup_ui();

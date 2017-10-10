@@ -121,7 +121,7 @@
             <% if (data.config.get('mode') != 'liveview') { %>
             <div class="span6 pull-right">
 
-                <% if (opsChooserApp.component_enabled('basket')) { %>
+                <% if (navigatorApp.component_enabled('basket')) { %>
                 <a id="basket-add-all-documents" role="button" class="btn btn-popover"
                    data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add all documents of current result page to collection"
                         >
@@ -129,7 +129,7 @@
                 </a>
                 <% } %>
 
-                <% if (opsChooserApp.component_enabled('crawler')) { %>
+                <% if (navigatorApp.component_enabled('crawler')) { %>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-wrench"></i>
