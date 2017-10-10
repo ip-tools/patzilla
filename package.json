@@ -57,6 +57,7 @@
     "jquery.redirect": "1.0.7",
     "jquery.viewport": "1.0.0",
     "jrumble": "1.3.0",
+    "keyboarder": "https://github.com/ip-tools/KeyBoarder#1.0.2",
     "localforage": "1.5.0",
     "localforage-backbone": "https://github.com/ip-tools/localForage-backbone#0.6.3-alpha.1",
     "modernizr": "3.5.0",

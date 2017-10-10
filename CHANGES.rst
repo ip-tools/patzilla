@@ -10,6 +10,7 @@ development
 - Reconfigure navigator url and main application entrypoints
 - Fix “user create” widget
 - Use vanilla jqPagination widget from upstream
+- Use slightly patched KeyBoarder component from upstream
 
 2017-10-09 0.138.0
 ==================
