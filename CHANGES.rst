@@ -9,6 +9,7 @@ development
 - Harmonize help subsystem
 - Reconfigure navigator url and main application entrypoints
 - Fix “user create” widget
+- Use vanilla jqPagination widget from upstream
 
 2017-10-09 0.138.0
 ==================

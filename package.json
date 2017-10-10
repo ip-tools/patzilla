@@ -50,6 +50,7 @@
     "fontawesome-3.2.1": "https://github.com/ip-tools/fontawesome-3.2.1",
     "humanize-plus": "1.8.2",
     "imports-loader": "^0.7.1",
+    "jq-pagination": "https://github.com/ip-tools/jqPagination#1.4.2-alpha.1",
     "jquery": "1.12.4",
     "jquery-caret-plugin": "1.5.3",
     "jquery-hotkeys": "0.2.2",

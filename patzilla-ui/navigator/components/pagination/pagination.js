@@ -2,7 +2,8 @@
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 
 // jqPagination, a jQuery pagination plugin
-require('jqpagination');
+require('jq-pagination/js/jquery.jqpagination.js');
+require('jq-pagination/css/jqpagination.css');
 
 PaginationView = Backbone.Marionette.ItemView.extend({
     tagName: 'div',
@@ -80,7 +81,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         // workaround: create object, then destroy to detach event handlers
         // since setup_ui will get called multiple times
 
-        $(this.el).find('.jqpagination').each(function(i, jqpagination) {
+        $(this.el).find('.pagination').each(function(i, jqpagination) {
 
             $(this).jqPagination();
             $(this).jqPagination('destroy');
@@ -191,12 +192,12 @@ PaginationView = Backbone.Marionette.ItemView.extend({
     },
 
     set_page: function(page) {
-        var paginator = $(this.el).find('.jqpagination').last();
+        var paginator = $(this.el).find('.pagination').last();
         return $(paginator).jqPagination('option', 'current_page', page);
     },
 
     get_max_page: function(page) {
-        var paginator = $(this.el).find('.jqpagination').last();
+        var paginator = $(this.el).find('.pagination').last();
         return $(paginator).jqPagination('option', 'max_page');
     },
 

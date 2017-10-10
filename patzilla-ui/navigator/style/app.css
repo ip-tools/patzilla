@@ -348,24 +348,18 @@ ul.breathe li {
     margin-top: 10px;
     margin-bottom: 20px;
 }
-.pagination {
-    margin: 0px;
-}
-.pagination a {
-    color: black;
-}
 
 /* medium class for production purposes */
-.medium.jqpagination {
-    /* margin: 10px 0; */
+.medium.pagination {
+    margin: 0px;
 }
-.medium.jqpagination a {
+.medium.pagination a {
     height: 30px;
     width: 30px;
     font-size: 25px;
     line-height: 25px;
 }
-.medium.jqpagination input {
+.medium.pagination input {
     width: 300px;
     height: 30px;
     font-size: 15px;
