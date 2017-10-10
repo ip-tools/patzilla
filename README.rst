@@ -122,8 +122,8 @@ Please also have a look at the `notices about licenses of third-party components
 Support
 =======
 For enterprises, dedicated commercial support is also available through Elmyra UG.
-`Elmyra UG`_ is the Germany based software development company that’s spearheading the
-ongoing development of this software and as such will ensure continuity for the project.
+`Elmyra UG`_ is the software development company that’s spearheading the ongoing
+development and as such will ensure continuity for the project.
 
 If you’re using the IP Navigator in your company and you need commercial support, feel free
 to get in touch with us. We are happy to receive respective inquiries at support@elmyra.de.
