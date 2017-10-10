@@ -61,14 +61,14 @@ UiController = Marionette.Controller.extend({
         $('.action-help-shortcuts').unbind('click');
         $('.action-help-shortcuts').on('click', function() {
             var baseurl = opsChooserApp.config.get('baseurl');
-            var url = baseurl + '/help/shortcuts';
+            var url = baseurl + '/help#hotkeys';
             $(this).attr('href', url);
         });
 
         $('.action-help-ificlaims').unbind('click');
         $('.action-help-ificlaims').on('click', function() {
             var baseurl = opsChooserApp.config.get('baseurl');
-            var url = baseurl + '/help/ificlaims';
+            var url = baseurl + '/help#ificlaims';
             $(this).attr('href', url);
         });
 

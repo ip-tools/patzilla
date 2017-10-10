@@ -72,11 +72,13 @@
                 How to navigate using hotkeys
             </a>
 
+            <% if (_.contains(opsChooserApp.config.get('system').datasources, 'ificlaims')) { %>
             <a class="action-help-ificlaims" target="_blank">
                 <i class="icon-question-sign"></i>
                 &nbsp;
                 How to search at IFI Claims
             </a>
+            <% } %>
 
             <a class="report-issue-feature" target="_blank">
                 <i class="icon-thumbs-up-alt"></i>

@@ -168,7 +168,6 @@ module.exports = {
             'patzilla.util.underscore':                      path.resolve(__ui, 'util', 'underscore'),
             'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
-            'patzilla.lib.bs3_list_group':                   path.resolve(__ui, 'lib', 'bs3-list-group'),
             'patzilla.lib.marionette-modalregion':           path.resolve(__ui, 'lib', 'marionette-modalregion'),
             'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
 

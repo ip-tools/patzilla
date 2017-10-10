@@ -1,33 +1,7 @@
-## -*- coding: utf-8 -*-
-## (c) 2017 Andreas Motl, Elmyra UG
-
-<%inherit file="../site.mako" />
-
-<%block name="body">
-
-<!-- Application bundle -->
-% if h.development_mode():
-<script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
-<script type="text/javascript" src="/static/assets/app-help.bundle.js"></script>
-% else:
-<script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
-<script type="text/javascript" src="/static/assets/app-help.bundle.min.js"></script>
-% endif
-
-## title / headline
-<div class="container-fluid">
-    <div class="span6">
-        <div class="pull-left">
-            <h3 id="ui-title" style="display: inline-block">Benutzerhandbuch für die Suche bei IFI Claims</h3>
-        </div>
-    </div>
-    <div class="span3">
-        <div class="pull-right">
-            <h3 id="ui-productname">${theme['ui.productname.html'] | n}</h3>
-        </div>
-    </div>
-</div>
-
+<%
+// -*- coding: utf-8 -*-
+// (c) 2017 Andreas Motl, Elmyra UG
+%>
 
 <div class="container-fluid">
     <div class="span9">
@@ -319,5 +293,3 @@ Class:     H04L12/433 or H04L12/24
         </div>
     </div>
 </div>
-
-</%block>

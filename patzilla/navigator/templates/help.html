@@ -3,7 +3,7 @@
 
 <%inherit file="site.mako" />
 
-<%block name="body">
+<%block name="application">
 
 <!-- Application bundle -->
 % if h.development_mode():
@@ -18,7 +18,7 @@
 <div class="container-fluid">
     <div class="span6">
         <div class="pull-left">
-            <h3 id="ui-title" style="display: inline-block">Patent search help</h3>
+            <h3 id="ui-title" style="display: inline-block"><span id="title-container"></span></h3>
         </div>
     </div>
     <div class="span3">
@@ -30,6 +30,6 @@
 
 
 ## help
-<div id="help-hotkeys-region"></div>
+<div id="content-region"></div>
 
 </%block>

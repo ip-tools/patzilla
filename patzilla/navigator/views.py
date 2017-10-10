@@ -35,8 +35,7 @@ def includeme(config):
     config.add_route('login', '/ops/browser/login')
 
     # serve help pages
-    config.add_route('help-shortcuts', '/ops/browser/help/shortcuts')
-    config.add_route('help-ificlaims', '/ops/browser/help/ificlaims')
+    config.add_route('help', '/ops/browser/help')
 
     # serve application
     config.add_route('patentsearch', '/ops/browser')
@@ -390,12 +389,8 @@ def login_page(request):
     }
     return tplvars
 
-@view_config(route_name='help-shortcuts', renderer='patzilla.navigator:templates/help.html')
-def help_shortcuts(request):
-    return {}
-
-@view_config(route_name='help-ificlaims', renderer='patzilla.navigator:templates/help/ificlaims.html')
-def help_ificlaims(request):
+@view_config(route_name='help', renderer='patzilla.navigator:templates/help.html')
+def help(request):
     return {}
 
 def favicon_view(request):
