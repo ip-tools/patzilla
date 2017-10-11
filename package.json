@@ -61,6 +61,7 @@
     "keyboarder": "https://github.com/ip-tools/KeyBoarder#1.0.2",
     "localforage": "1.5.0",
     "localforage-backbone": "https://github.com/ip-tools/localForage-backbone#0.6.3-alpha.1",
+    "lz-string": "1.4.4",
     "modernizr": "3.5.0",
     "modernizr-loader": "^1.0.1",
     "moment": "2.6.0",

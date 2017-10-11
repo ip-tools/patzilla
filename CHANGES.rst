@@ -10,7 +10,7 @@ development
 - Reconfigure navigator url and main application entrypoints
 - Fix “user create” widget
 - Use vanilla or slightly patched components from upstream:
-  jqPagination, KeyBoarder, notificationFx, jquery-hotkeys
+  jqPagination, KeyBoarder, notificationFx, jquery-hotkeys, lz-string
 
 2017-10-09 0.138.0
 ==================

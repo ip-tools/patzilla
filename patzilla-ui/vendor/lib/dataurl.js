@@ -14,7 +14,7 @@
  * 2014-06-15 Add lz-string compression
  *
  */
-var LZString = require('lz-string-1.3.3');
+var LZString = require('lz-string');
 
 const REGEX = {
   dataurl: /data:(.*?)(?:;charset=(.*?))?(;base64)?,(.+)/i,
