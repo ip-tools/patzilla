@@ -4,6 +4,8 @@ IP Navigator CHANGES
 
 development
 ===========
+- Fix typo in setup.py
+- Improve texts re. whitelabeling
 
 2017-10-11 0.139.2
 ==================

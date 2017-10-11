@@ -68,11 +68,17 @@ function propagate_opaque_errors() {
         _.each(errors, function(error) {
 
             if (error.location == 'JSON Web Token' && error.description == 'expired') {
-                error.description =
-                    'We are sorry, it looks like the validity time of this link has expired at ' + error.jwt_expiry_iso + '.' +
-                        '<br/><br/>' +
-                        'Please contact us at <a href="mailto:purchase@elmyra.de">purchase@elmyra.de</a> for any commercial plans.';
+
+                var tpl = _.template(
+                    'We are sorry, it looks like the validity time of this link has expired at <%= expiration_date %>.' +
+                    '<br/><br/>' +
+                    'Please contact us at <a href="mailto:<%= purchase_email %>"><%= purchase_email %></a> for getting an account.');
+
+                error.description = tpl({
+                    expiration_date: error.jwt_expiry_iso,
+                    purchase_email: navigatorApp.theme.get('ui.email.purchase')});
             }
+
             if (error.location == 'JSON Web Signature') {
                 error.description = 'It looks like the token used to encode this request is invalid.' + ' (' + error.description + ')'
             }
