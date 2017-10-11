@@ -12,25 +12,26 @@ requires = [
     # ----------------------------------------------
     #   Environment
     # ----------------------------------------------
-    'setuptools>=36.4.0',
+    'setuptools>=36.4.0',       # 36.5.0
     'six>=1.10.0',
 
 
     # ----------------------------------------------
     #   Backend
     # ----------------------------------------------
-    # pyramid core
+
+    # Pyramid core
     'pyramid==1.9.1',
-    'pyramid_debugtoolbar',
+    'pyramid_debugtoolbar==4.3',
     'Pygments==2.2.0',
-    'pyramid_mako',
+    'pyramid_mako==1.2.0',
     'Jinja2==2.9.6',
     #'Akhet==2.0',
-    'waitress',
+    'waitress==1.1.0',
     'Paste==2.0.3',
     'PasteScript==2.0.2',
 
-    # caching
+    # Caching
     'Beaker==1.9.0',
     'pyramid_beaker==0.8',
 
@@ -63,7 +64,7 @@ requires = [
     # SNI support
     'pyOpenSSL>=16.0.0',
     'cryptography>=1.3',
-    'pyasn1==0.3.4',
+    'pyasn1==0.3.7',
     'ndg-httpsclient==0.4.3',
 
 
@@ -76,10 +77,10 @@ requires = [
     'mongoengine==0.13.0',      # 0.14.3
     'blinker==1.4',
     'python-dateutil==2.6.1',
-    'lxml==3.8.0',
-    'openpyxl==2.1.0',
-    'xlrd==0.9.3',
-    'XlsxWriter==0.9.3',
+    'lxml==3.8.0',              # 4.0.0
+    'openpyxl==2.1.0',          # 2.5.0a3
+    'xlrd==0.9.3',              # 1.1.0
+    'XlsxWriter==0.9.3',        # 1.0.0
     'jsonpointer==1.10',        # 1.12
     'arrow==0.10.0',
     'transitions==0.2.4',       # 0.6.1
@@ -138,9 +139,8 @@ setup(name='PatZilla',
           'patzilla.navigator': [
               'resources/*.*',
               'templates/*.mako', 'templates/*.html',
-              'static/js/**/*.js', 'static/js/**/*.map', 'static/js/**/*.swf', '**/**/*.css',
-              '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg', '**/**/**/*.svg',
-              'static/widget/**/**/*.*',
+              'static/js/**/*.min.js', 'static/js/**/*.min.js.map', '**/**/*.css',
+              '**/**/*.png', '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg',
           ],
           'patzilla.util': ['*.js'],
       },
@@ -152,7 +152,7 @@ setup(name='PatZilla',
           'test': test_requires,
           'deployment': [
               'bumpversion==0.5.3',
-              'Fabric==1.8.5',
+              'Fabric==1.8.5',          # 1.14.0
               'cuisine==0.7.13',
           ],
       },
