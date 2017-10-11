@@ -6,6 +6,7 @@ development
 ===========
 - Fix typo in setup.py
 - Improve texts re. whitelabeling
+- Fix daterange "within" query which stopped working after upgrade to OPS 3.2
 
 2017-10-11 0.139.2
 ==================

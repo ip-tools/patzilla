@@ -90,8 +90,11 @@ def pair_to_cql(datasource, key, value):
                 if not within_dates['startdate'] or not within_dates['enddate']:
                     return {'error': True, 'message': 'OPS only accepts full date ranges in "within" expressions'}
 
-                format = '{0} {1}'
+                value = 'within "{startdate},{enddate}"'.format(
+                    startdate=within_dates['startdate'],
+                    enddate=within_dates['enddate'])
 
+                format = '{0} {1}'
 
     if not cql_part:
         cql_part = format.format(fieldname, value)

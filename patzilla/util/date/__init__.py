@@ -108,7 +108,7 @@ def parse_date_within(value):
     """
     parses a date range expression like "within 2014-01-01,2014-01-31"
     """
-    value = value.replace('within', '').strip()
+    value = value.replace('within', '').strip().strip('"')
     parts = value.split(',')
     parts = map(unicode.strip, parts)
     result = {
