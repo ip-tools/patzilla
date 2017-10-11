@@ -73,7 +73,7 @@ def pdf_serve_multi(request):
     patents = [patent.strip() for patent in patents]
 
     data = pdf_universal_multi_zip(patents)
-    zipfilename = 'ipsuite-collection-pdf_{0}.zip'.format(datetime_iso_filename(now()))
+    zipfilename = 'ip-navigator-collection-pdf_{0}.zip'.format(datetime_iso_filename(now()))
 
     # http://tools.ietf.org/html/rfc6266#section-4.2
     request.response.content_type = 'application/zip'

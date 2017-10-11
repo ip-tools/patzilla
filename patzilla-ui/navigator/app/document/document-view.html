@@ -99,7 +99,7 @@ var abstract_list = data.get_abstract_list();
                     <span id="region-comment-button"/>
 
                     <!-- pdf document -->
-                    <a href="<%= linkmaker.universal_pdf_url() %>" target="ipsuite-pdf"
+                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf"
                        class="btn btn-popover anchor-pdf" role="button"
                        data-toggle="popover" data-trigger="hover" data-placement="top"
                        data-content="PDF document"
@@ -244,17 +244,17 @@ var abstract_list = data.get_abstract_list();
                             </div>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.ops_pdf_url() %>" target="ipsuite-pdf" class="anchor-pdf-ops">
+                                <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf-ops">
                                     [PDF] <%= patent_number %> @ OPS
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.espacenet_pdf_url() %>" target="ipsuite-pdf">
+                                <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf">
                                     [PDF] <%= patent_number %> @ Espacenet
                                 </a>
                             </li>
                             <li>
-                                <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="ipsuite-pdf">
+                                <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf">
                                     [PDF] <%= patent_number %> @ DEPATISnet
                                 </a>
                             </li>
@@ -525,7 +525,7 @@ var abstract_list = data.get_abstract_list();
                             &nbsp;&nbsp;
 
                             <!-- pdf document -->
-                            <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="ipsuite-pdf"
+                            <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="patzilla-pdf"
                                class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
                                data-toggle="popover" data-trigger="hover" data-placement="top"
                                data-content="PDF document"

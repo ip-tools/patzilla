@@ -33,7 +33,7 @@ def includeme(config):
 # ------------------------------------------
 def setup_mongoengine(event):
     registry = event.app.registry
-    mongodb_uri = registry.settings.get('mongodb.ipsuite.uri')
+    mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
     mongodb_database = parse_uri(mongodb_uri)['database']
     try:
         mongoengine_connect(mongodb_database, host=mongodb_uri)
@@ -43,7 +43,7 @@ def setup_mongoengine(event):
 # provide lowlevel access to the pymongo connection via ``request.db``
 def setup_pymongo(event):
     registry = event.request.registry
-    mongodb_uri = registry.settings.get('mongodb.ipsuite.uri')
+    mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
     mongodb_database = parse_uri(mongodb_uri)['database']
     mongodb_connection = MongoClient(mongodb_uri)
     event.request.db = mongodb_connection[mongodb_database]

@@ -206,7 +206,7 @@ cache.static.expire = 2592000
 
 
 # database configuration
-mongodb.ipsuite.uri = mongodb://localhost:27017/ipsuite_development
+mongodb.patzilla.uri = mongodb://localhost:27017/patzilla_development
 
 
 
