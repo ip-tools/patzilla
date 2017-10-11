@@ -88,6 +88,14 @@ module.exports = {
                 test: /\.html$/,
                 loader: 'underscore-template-loader',
             },
+            {
+                test: /\.modernizrrc.js$/,
+                loader: "modernizr-loader"
+            },
+            {
+                test: /\.modernizrrc(\.json)?$/,
+                loader: "modernizr-loader!json-loader"
+            }
 
             /*
              {
@@ -171,6 +179,8 @@ module.exports = {
 
             'patzilla.lib.marionette-modalregion':           path.resolve(__ui, 'lib', 'marionette-modalregion'),
             'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
+
+            modernizr$:                                      path.resolve(__ui, 'vendor', '.modernizrrc'),
 
         }
     },

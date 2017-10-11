@@ -1,0 +1,15 @@
+{
+  "minify": true,
+  "options": [
+    "domPrefixes",
+    "html5shiv",
+    "load",
+    "prefixed",
+    "setClasses",
+    "testAllProps",
+    "testProp"
+  ],
+  "feature-detects": [
+    "css/animations"
+  ]
+}

@@ -8,7 +8,9 @@ var ZeroClipboard = require('zeroclipboard/dist/ZeroClipboard.js');
 ZeroClipboard.config({ swfPath: require('zeroclipboard/dist/ZeroClipboard.swf') });
 
 // NotificationFx
-require('notificator');
+require('notificationfx/css/ns-default');
+require('notificationfx/css/ns-style-attached');
+require('notificationfx/js/notificationFx');
 
 
 UiController = Marionette.Controller.extend({
