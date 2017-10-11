@@ -1,41 +1,33 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-# patzilla.access.ificlaims.cli: Adapter to search provider "IFI Claims Direct"
+# (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import sys
 import json
 import logging
 from pprint import pprint
-from patzilla.access.ificlaims.clientpool import IFIClaimsClientFactory
+from patzilla.access.ificlaims.clientpool import IIFIClaimsClientPool
+from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
 
-if __name__ == '__main__':
-    """
-    Synopsis::
+"""
+About
+=====
+Run requests to search provider "IFI Claims Direct" from the command line.
 
-        python patzilla/access/ificlaims/commands.py | jq .
-        python patzilla/access/ificlaims/commands.py | xmllint --format -
+Synopsis
+========
+::
 
-    Todo:
-        - Pass output type (json/xml) via parameter
+    python patzilla/access/ificlaims/commands.py patzilla/config/development-local.ini
+    python patzilla/access/ificlaims/commands.py patzilla/config/development-local.ini | jq .
+    python patzilla/access/ificlaims/commands.py patzilla/config/development-local.ini | xmllint --format -
 
-    """
+Todo
+====
+- Pass output type (json/xml) via parameter
 
-    logging.basicConfig(level='INFO')
+"""
 
-    # configure cache manager
-    from beaker.cache import CacheManager
-    from beaker.util import parse_cache_config_options
-    cache_opts = {
-        'cache.type': 'memory',
-        'cache.regions': 'static,search',
-        }
-    cache = CacheManager(**parse_cache_config_options(cache_opts))
 
-    api_uri  = sys.argv[1]
-    username = sys.argv[2]
-    password = sys.argv[3]
-
-    client = IFIClaimsClientFactory(api_uri, credentials={'username': username, 'password': password}).client_create()
-    client.login()
+def make_request(client):
 
     #results = client.search('*:*')
     #pprint(results)
@@ -89,3 +81,18 @@ if __name__ == '__main__':
     #blob = client.pdf_fetch('EP-0666666-A2')
     #blob = client.tif_fetch('EP-0666666-A2')
     #print blob
+
+
+if __name__ == '__main__':
+
+    configfile = sys.argv[1]
+
+    env = setup_commandline_pyramid(configfile)
+    logger = logging.getLogger(__name__)
+
+    # Get hold of data source client utility
+    registry = env['registry']
+    pool = registry.getUtility(IIFIClaimsClientPool)
+    client = pool.get('system')
+
+    make_request(client)
