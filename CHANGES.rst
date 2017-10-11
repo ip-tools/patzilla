@@ -4,6 +4,9 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-11 0.139.0
+==================
 - Get rid of more static html templates and refactor to javascript application
 - Fix image loading for jQuery Raty
 - Harmonize help subsystem
