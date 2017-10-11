@@ -4,8 +4,12 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-11 0.139.1
+==================
 - Add utility routine for purging seen numbers to database tool
 - Fix database wipe confirm dialog
+- Project delete should account for child BasketEntry entities
 
 2017-10-11 0.139.0
 ==================

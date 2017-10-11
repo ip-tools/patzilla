@@ -166,16 +166,20 @@ ProjectModel = Backbone.RelationalModel.extend({
         var basket = this.get('basket');
         if (basket) {
 
-            // remove basket entries
+            // Remove all basket entries
+            var entries = [];
             basket.get('entries').each(function(entry) {
-                if (entry) {
-                    entry.destroy();
-                }
+                entries.push(entry);
+            });
+            _.each(entries, function(entry) {
+                entry.destroy();
             });
 
-            // remove basket
+            // Remove basket
             basket.destroy();
         }
+
+        // Remove project
         return Backbone.Model.prototype.destroy.call(this, options);
     },
 
