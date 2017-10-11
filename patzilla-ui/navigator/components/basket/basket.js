@@ -424,8 +424,6 @@ BasketModel = Backbone.RelationalModel.extend({
 
         var hits = publication_numbers.length;
 
-        navigatorApp.metadata.resetSomeDefaults({'clear': true});
-
         // TODO: decouple from referencing the main application object e.g. by using events!?
         navigatorApp.set_datasource('review');
         navigatorApp.metadata.set('reviewmode', true);
@@ -647,6 +645,9 @@ BasketView = Backbone.Marionette.ItemView.extend({
         $('#basket-review-button').unbind('click').bind('click', function(event) {
             event.preventDefault();
             if (_this.check_empty({kind: 'review', icon: 'icon-indent-left', seen: false})) { return; }
+
+            // Start review mode
+            navigatorApp.metadata.resetSomeDefaults({'clear': true});
             _this.model.review();
         });
         // disable counter buttons, required to retain popover

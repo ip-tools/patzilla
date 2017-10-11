@@ -4,9 +4,13 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-11 0.139.3
+==================
 - Fix typo in setup.py
 - Improve texts re. whitelabeling
-- Fix daterange "within" query which stopped working after upgrade to OPS 3.2
+- Fix: Daterange "within" query stopped working after upgrade to OPS 3.2
+- Fix: Paging stopped working in review mode
 
 2017-10-11 0.139.2
 ==================
