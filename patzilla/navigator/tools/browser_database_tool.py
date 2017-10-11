@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# (c) 2015 Andreas Motl, Elmyra UG
+# (c) 2015-2017 Andreas Motl, Elmyra UG
 import sys
 import json
 """
