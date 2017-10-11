@@ -4,7 +4,11 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-11 0.139.2
+==================
 - Fix citations display problem for document US9674560B1
+- Slightly improve NPL citations display
 
 2017-10-11 0.139.1
 ==================

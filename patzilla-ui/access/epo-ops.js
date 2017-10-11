@@ -719,11 +719,12 @@ _.extend(OpsExchangeDocument.prototype, {
         },
 
         _add_crossref: function(text) {
+            text = text.replace(/^- /, '');
             var printmode = navigatorApp.config.get('mode') == 'print';
             if (printmode) {
                 return text;
             } else {
-                text += '&nbsp;&nbsp;<a href="http://search.crossref.org/?q=' + encodeURIComponent(text.replace(/^- /, '')) + '" target="_blank" class="incognito"><i class="icon-external-link"></i></a>';
+                text += '&nbsp;&nbsp;<a href="http://search.crossref.org/?q=' + encodeURIComponent(text) + '" target="_blank" class="incognito"><i class="icon-external-link"></i></a>';
                 return text;
             }
         },
