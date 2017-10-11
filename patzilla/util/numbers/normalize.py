@@ -46,8 +46,8 @@ def patch_patent(patent, for_ops=True):
     # "Veröffentlichung der europäischen Patentanmeldung"
     elif patched['country'] == 'DE':
         patched['number'] = trim_leading_zeros(patched['number'])
-        if patched.get('kind') == 'T1':
-            patched['number'] = pad_left(patched['number'], '0', 7)
+        #if patched.get('kind') == 'T1':
+        #    patched['number'] = pad_left(patched['number'], '0', 7)
 
     # The Eurasian Patent Organization (EAPO)
     # Pad to 6 characters with leading zeros

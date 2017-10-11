@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Fix: Number normalization for DE..T1 documents didn't match expectations of OPS 3.2
 
 2017-10-11 0.139.3
 ==================
