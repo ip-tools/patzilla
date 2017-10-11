@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Add utility routine for purging seen numbers to database tool
+- Fix database wipe confirm dialog
 
 2017-10-11 0.139.0
 ==================

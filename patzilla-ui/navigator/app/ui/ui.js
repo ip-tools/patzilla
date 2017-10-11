@@ -2,6 +2,7 @@
 // (c) 2014-2017 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
 var urljoin = require('url-join');
+var bootbox = require('bootbox');
 var screenfull = require('screenfull');
 
 // ZeroClipboard
