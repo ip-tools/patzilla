@@ -1,6 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2017 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
+var urljoin = require('url-join');
 var screenfull = require('screenfull');
 
 // ZeroClipboard
@@ -63,14 +64,14 @@ UiController = Marionette.Controller.extend({
         $('.action-help-shortcuts').unbind('click');
         $('.action-help-shortcuts').on('click', function() {
             var baseurl = navigatorApp.config.get('baseurl');
-            var url = baseurl + '/help#hotkeys';
+            var url = urljoin(baseurl, '/help#hotkeys');
             $(this).attr('href', url);
         });
 
         $('.action-help-ificlaims').unbind('click');
         $('.action-help-ificlaims').on('click', function() {
             var baseurl = navigatorApp.config.get('baseurl');
-            var url = baseurl + '/help#ificlaims';
+            var url = urljoin(baseurl, '/help#ificlaims');
             $(this).attr('href', url);
         });
 

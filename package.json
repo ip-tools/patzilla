@@ -78,6 +78,7 @@
     "underscore": "1.8.3",
     "underscore-template-loader": "^0.8.0",
     "underscore.string": "3.3.4",
+    "url-join": "2.0.2",
     "waypoints": "3.1.1",
     "webpack": "^3.5.6",
     "webpack-dev-server": "^2.7.1",

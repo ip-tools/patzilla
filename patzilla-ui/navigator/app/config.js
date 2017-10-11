@@ -51,9 +51,6 @@ NavigatorConfiguration = Backbone.Model.extend({
             baseurl += path;
         }
 
-        // Strip trailing slashes
-        baseurl = _.string.rtrim(baseurl, '/');
-
         this.set('baseurl', baseurl);
 
     },

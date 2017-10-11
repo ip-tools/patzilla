@@ -1,8 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
 require('patzilla.navigator.components.storage');
-var memoize = require('memoize');
 require('raty');
+var memoize = require('memoize');
+var urljoin = require('url-join');
 
 
 function BasketError(message) {
@@ -385,7 +386,7 @@ BasketModel = Backbone.RelationalModel.extend({
         var baseurl = navigatorApp.permalink.get_baseurl_patentview();
         return entries.map(function(entry) {
             var newentry = entry.toJSON();
-            newentry['url'] = baseurl + '/view/pn/' + newentry['number'];
+            newentry['url'] = urljoin(baseurl, '/view/pn/', newentry['number']);
             return newentry;
         });
     },

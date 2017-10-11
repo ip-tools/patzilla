@@ -1,6 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2014 Andreas Motl, Elmyra UG
 require('jquery-hotkeys');
+var urljoin = require('url-join');
 
 HotkeysPlugin = Marionette.Controller.extend({
 
@@ -214,7 +215,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
             var baseurl = _this.app.config.get('baseurl');
-            var url = baseurl + '/help/shortcuts';
+            var url = urljoin(baseurl, '/help#hotkeys');
             window.open(url);
         });
 
