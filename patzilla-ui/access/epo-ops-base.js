@@ -73,6 +73,8 @@ OpsBaseModel = Backbone.Model.extend({
                     var realvalue = value['$'];
                     if (realvalue) {
                         value = realvalue;
+                    } else {
+                        value = '';
                     }
                 }
                 newdict[key] = value;
@@ -85,7 +87,7 @@ OpsBaseModel = Backbone.Model.extend({
             node = node || this;
 
             id_type = id_type || 'docdb';
-            var self = this;
+            var _this = this;
             var results = [];
 
             if (!node || !node['references-cited']) {
@@ -98,13 +100,11 @@ OpsBaseModel = Backbone.Model.extend({
                 results = container
                     .filter(function(item) { return item['patcit'] && item['patcit']['document-id']; })
                     .map(function(item) {
-                        var document_id = self.get_document_id(item['patcit'], null, id_type);
-                        var fullnumber = self.flatten_document_id(document_id).fullnumber;
+                        var fullnumber = _this.get_document_id(item['patcit'], null, id_type).fullnumber;
 
-                        // fall back to epodoc format, if ops format yields empty number
+                        // Fall back to epodoc format, if requested format (docdb) yields empty number
                         if (_.isEmpty(fullnumber)) {
-                            document_id = self.get_document_id(item['patcit'], null, 'epodoc');
-                            fullnumber = self.flatten_document_id(document_id).fullnumber;
+                            fullnumber = _this.get_document_id(item['patcit'], null, 'epodoc').fullnumber;
                         }
                         return fullnumber;
                     })

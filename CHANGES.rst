@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Fix citations display problem for document US9674560B1
 
 2017-10-11 0.139.1
 ==================
