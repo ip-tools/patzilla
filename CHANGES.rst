@@ -9,9 +9,8 @@ development
 - Harmonize help subsystem
 - Reconfigure navigator url and main application entrypoints
 - Fix “user create” widget
-- Use vanilla jqPagination widget from upstream
-- Use slightly patched KeyBoarder component from upstream
-- Use slightly patched notificationFx component from upstream
+- Use vanilla or slightly patched components from upstream:
+  jqPagination, KeyBoarder, notificationFx, jquery-hotkeys
 
 2017-10-09 0.138.0
 ==================
