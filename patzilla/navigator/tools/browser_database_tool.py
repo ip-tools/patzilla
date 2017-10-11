@@ -6,17 +6,29 @@ import json
 """
 Synopsis::
 
-    ./bin/browser_database_tool.py var/tmp/cdb/01-original.json | jq . > var/tmp/cdb/02-notitles.json
+    python patzilla/navigator/tools/browser_database_tool.py var/tmp/cdb/01-original.json | jq . > var/tmp/cdb/02-notitles.json
 
 """
 
-def strip_titles(data):
+def purge_titles(data):
+    # Purge "title" attributes from BasketEntry objects
     for name, entity in data['database'].iteritems():
         if name.startswith('BasketEntry'):
             if 'title' in entity:
                 del entity['title']
             if 'number' in entity:
                 entity['number'] = entity['number'].strip(u'★ ')
+
+def purge_numbers_seen(data):
+    # Purge all BasketEntry objects with "seen==true"
+    keys = []
+    for name, item in data['database'].iteritems():
+        if name.startswith('BasketEntry/'):
+            if 'seen' in item and item['seen'] == True:
+                keys.append(name)
+
+    for key in keys:
+        del data['database'][key]
 
 def purge_projects(data):
     # Purge "project" attributes from all "Query/..." objects
@@ -26,7 +38,6 @@ def purge_projects(data):
                 del item['project']
             #pprint(item)
 
-
 def main():
 
     # Read database file name from commandline
@@ -35,7 +46,8 @@ def main():
     # Load database file
     data = json.load(file(jsonfile))
 
-    strip_titles(data)
+    #purge_titles(data)
+    purge_numbers_seen(data)
     #purge_projects(data)
 
     # Save database file

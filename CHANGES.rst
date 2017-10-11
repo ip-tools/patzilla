@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Add utility routine for purging seen numbers to database tool
 
 2017-10-11 0.139.0
 ==================
