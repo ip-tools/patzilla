@@ -172,13 +172,12 @@ module.exports = {
             'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
             'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
 
-            'patzilla.util.common':                          path.resolve(__ui, 'util', 'common'),
-            'patzilla.util.jquery':                          path.resolve(__ui, 'util', 'jquery'),
-            'patzilla.util.underscore':                      path.resolve(__ui, 'util', 'underscore'),
-            'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
-
+            'patzilla.lib.util':                             path.resolve(__ui, 'lib', 'util'),
+            'patzilla.lib.jquery':                           path.resolve(__ui, 'lib', 'jquery'),
+            'patzilla.lib.underscore':                       path.resolve(__ui, 'lib', 'underscore'),
             'patzilla.lib.marionette-modalregion':           path.resolve(__ui, 'lib', 'marionette-modalregion'),
             'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
+            'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
             modernizr$:                                      path.resolve(__ui, 'vendor', '.modernizrrc'),
 

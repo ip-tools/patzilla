@@ -42,9 +42,9 @@ require('fontawesome-3.2.1/css/font-awesome.css');
 
 // Global utilities
 require('purl/purl');
-require('patzilla.util.jquery');
-require('patzilla.util.underscore');
-_(window).extend(require('patzilla.util.common'));
+require('patzilla.lib.jquery');
+require('patzilla.lib.underscore');
+_(window).extend(require('patzilla.lib.util'));
 
 // Application utilities
 require('patzilla.common.issuereporter');
