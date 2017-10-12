@@ -48,28 +48,6 @@ def gif_to_tiff(payload):
         log.error('GIF to TIFF conversion failed. returncode={returncode}, command="{command_string}", stdout={stdout}, stderr={stderr}'.format(returncode=proc.returncode, **locals()))
         raise Exception('GIF to TIFF conversion failed')
 
-@memoize
-def find_convert():
-    #
-    # Debian: aptitude install imagemagick
-    # /usr/bin/convert
-    #
-    # Mac OS X
-    # /opt/local/bin/convert
-    #
-    # Self-compiled
-    # /opt/imagemagick-7.0.2/bin/convert
-
-    # TODO: Make "convert" configurable via ini file
-    programs = [
-        '/opt/imagemagick-7.0.2/bin/convert',
-        '/opt/local/bin/convert',
-        '/usr/bin/convert',
-    ]
-    for program in programs:
-        if os.path.isfile(program):
-            return program
-
 def to_png(tiff_payload, format='tif'):
 
     # unfortunately, PIL can not handle G4 compression ...
@@ -186,7 +164,7 @@ def pdf_join(pages):
     # pdftk in.pdf attach_files table1.html table2.html to_page 6 output out.pdf
 
     command = [
-        get_pdftk_path(),
+        find_pdftk(),
     ]
     tmpfiles = []
     for page in pages:
@@ -241,7 +219,7 @@ def pdf_set_metadata(pdf_payload, metadata):
     tmpfile.flush()
 
     """
-    command = [get_pdftk_path(), '-', 'dump_data', 'output', '-']
+    command = [find_pdftk(), '-', 'dump_data', 'output', '-']
     proc = subprocess.Popen(
         command,
         shell = (os.name == 'nt'),
@@ -256,7 +234,7 @@ def pdf_set_metadata(pdf_payload, metadata):
     """
 
 
-    command = [get_pdftk_path(), '-', 'update_info', tmpfile.name, 'output', '-']
+    command = [find_pdftk(), '-', 'update_info', tmpfile.name, 'output', '-']
 
     #log.info('command={0}'.format(' '.join(command)))
 
@@ -342,5 +320,48 @@ def pdf_now():
     return now
 
 
-def get_pdftk_path():
-    return '/usr/local/bin/pdftk'
+@memoize
+def find_convert():
+    """
+    Debian: aptitude install imagemagick
+    /usr/bin/convert
+
+    Mac OS X
+    /opt/local/bin/convert
+
+    Self-compiled
+    /opt/imagemagick-7.0.2/bin/convert
+    """
+
+    candidates = [
+        '/opt/imagemagick-7.0.2/bin/convert',
+        '/opt/imagemagick/bin/convert',
+        '/opt/local/bin/convert',
+        '/usr/bin/convert',
+        ]
+    return find_program_candidate(candidates)
+
+@memoize
+def find_pdftk():
+    """
+    Debian: aptitude install pdftk
+    /usr/bin/pdftk
+
+    Mac OS X
+    /opt/pdflabs/pdftk/bin/pdftk
+
+    Self-compiled
+    /usr/local/bin/pdftk
+    """
+
+    candidates = [
+        '/opt/pdflabs/pdftk/bin/pdftk',
+        '/usr/local/bin/pdftk',
+        '/usr/bin/pdftk',
+    ]
+    return find_program_candidate(candidates)
+
+def find_program_candidate(candidates):
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return candidate

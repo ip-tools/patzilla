@@ -6,6 +6,7 @@ development
 ===========
 - Improve command line access to data sources
 - Fix multivendor “hostname_matches” selection
+- Improve auxiliary tools selection for “convert” and “pdftk”
 
 2017-10-12 0.139.7
 ==================
