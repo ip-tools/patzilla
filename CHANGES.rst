@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Enable display of "CPCNO" classifications
 
 2017-10-12 0.140.2
 ==================
