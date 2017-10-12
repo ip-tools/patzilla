@@ -64,7 +64,7 @@ PermalinkPlugin = Marionette.Controller.extend({
 
         // Add search modifiers and more to viewstate
         if (!options.no_modifiers) {
-            var metadata_params = this.metadata_to_parameters();
+            var metadata_params = navigatorApp.metadata.to_parameters();
             _.extend(state, metadata_params);
         }
 
