@@ -150,18 +150,20 @@ class RuntimeSettings(object):
         select the one which matches the "hostname_matches" pattern
         on a first come, first serve basis.
         """
-        selected_vendor_name = self.registry.vendor_settings.vendors[0]
-        selected_vendor_info = self.registry.vendor_settings.vendor[selected_vendor_name]
+
+        # Select vendor by matching hostnames
         vendor_names = self.registry.vendor_settings.vendors
         for vendor_name in vendor_names:
             vendor_info = self.registry.vendor_settings.vendor[vendor_name]
             if 'hostname_matches' in vendor_info:
                 for hostname_candidate in vendor_info.hostname_matches:
-                    if self.hostname in hostname_candidate:
-                        selected_vendor_info = vendor_info
-                        break
+                    if hostname_candidate in self.hostname:
+                        return vendor_info
 
-        return selected_vendor_info
+        # Use first configured vendor as fallback
+        vendor_name = self.registry.vendor_settings.vendors[0]
+        vendor_info = self.registry.vendor_settings.vendor[vendor_name]
+        return vendor_info
 
     def theme_settings(self):
         """define default settings"""

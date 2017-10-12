@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Improve command line access to data sources
+- Fix multivendor “hostname_matches” selection
 
 2017-10-12 0.139.7
 ==================
