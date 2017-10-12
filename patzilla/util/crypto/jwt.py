@@ -58,7 +58,7 @@ class JwtSigner(object):
         # TODO: maybe croak if self.key is None
         ttl = ttl or self.ttl
         payload = {'data': data}
-        token = jwt.generate_jwt(payload, priv_key=self.key, algorithm='HS256', lifetime=ttl)
+        token = jwt.generate_jwt(payload, priv_key=self.key, algorithm='RS256', lifetime=ttl)
         return token
 
     def unsign(self, token):

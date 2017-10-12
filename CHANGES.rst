@@ -4,7 +4,11 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-12 0.140.1
+==================
 - Improve patentview domain handling
+- Update demo query just before expiration
 
 2017-10-12 0.140.0
 ==================
