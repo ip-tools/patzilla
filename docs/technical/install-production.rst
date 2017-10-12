@@ -9,7 +9,7 @@ Infrastructure
 **************
 ::
 
-    apt install nginx-extras mongodb-clients mongodb-server python2.7 python2.7-dev python-virtualenv
+    apt install nginx-extras uwsgi python2.7 python2.7-dev python-virtualenv mongodb-clients mongodb-server
 
 
 ***********
@@ -32,7 +32,6 @@ From inside repository, with virtualenv activated.
 
 Deploy application
 ==================
-From inside repository, with virtualenv activated.
 ::
 
     # Define target host
@@ -251,14 +250,12 @@ SSL certificates
 External utilities
 ******************
 
-gif2tiff
-========
-
-    apt-get install libtiff-tools
-
-
 PhantomJS
 =========
+PhantomJS_ is a headless WebKit scriptable with a JavaScript API. It has fast and native support
+for various web standards: DOM handling, CSS selector, JSON, Canvas, and SVG.
+
+It is used for rendering PDF documents from HTML.
 ::
 
     wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2
@@ -266,7 +263,8 @@ PhantomJS
 
 
 Fonts
-=====
+-----
+Tweak PhantomJS for better rendering quality.
 https://gist.github.com/madrobby/5489174
 
 ::
@@ -275,4 +273,117 @@ https://gist.github.com/madrobby/5489174
 
     wget --no-check-certificate https://gist.github.com/madrobby/5265845/raw/edd7ba1f133067afd2bd60ba7d40e684bb852c6c/localfonts.conf
     mv localfonts.conf /etc/fonts/local.conf
+
+
+ImageMagick
+===========
+
+Introduction
+------------
+We found ImageMagick >= 7 yields images with better quality (contrast, etc.).
+The software will search for appropriate candidates in this order::
+
+    candidates = [
+        '/opt/imagemagick-7.0.2/bin/convert',
+        '/opt/imagemagick/bin/convert',
+        '/opt/local/bin/convert',
+        '/usr/bin/convert',
+    ]
+
+Setup
+-----
+::
+
+    wget http://www.imagemagick.org/download/ImageMagick.tar.gz
+    ./configure --prefix=/opt/imagemagick
+
+::
+
+    /opt/imagemagick/bin/convert --version
+    Version: ImageMagick 7.0.2-6 Q16 x86_64 2016-08-06 http://www.imagemagick.org
+
+
+PDFtk
+=====
+
+Introduction
+------------
+We definitively want PDFtk_ >= 2 for joining PDF documents.
+The software will search for appropriate candidates in this order::
+
+    candidates = [
+        '/opt/pdflabs/pdftk/bin/pdftk',
+        '/usr/local/bin/pdftk',
+        '/usr/bin/pdftk',
+    ]
+
+Setup
+-----
+::
+
+    wget http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-src.zip
+    make -f Makefile.Debian
+    make -f Makefile.Debian install
+
+::
+
+    pdftk --version
+    pdftk 2.02 a Handy Tool for Manipulating PDF Documents
+
+
+unoconv
+=======
+unoconv_ is used to convert Excel workbooks to PDF documents.
+::
+
+    aptitude install unoconv libreoffice
+
+
+gif2tiff
+========
+Convert drawings in GIF format from CIPO. Currently not used.
+::
+
+    apt-get install libtiff-tools
+
+
+backupninja-mongodb
+===================
+backupninja_ is a good choice for making daily backups.
+`backupninja-mongodb`_ helps with MongoDB_.
+YMMV.
+
+::
+
+    wget --no-ch https://raw.githubusercontent.com/osinka/backupninja-mongodb/master/mongodb
+    wget --no-ch https://raw.githubusercontent.com/osinka/backupninja-mongodb/master/mongodb.helper
+
+
+Genghis
+=======
+You might want to have a look at Genghis_ for a user interface to MongoDB_.
+YMMV.
+::
+
+    #rvm --default 2.1.3
+
+    su - genghis
+    rvm gemset create genghis
+
+    rvm use ruby-1.9.3-p429@genghis
+    rvm gemset use genghis
+    gem install genghisapp
+    gem install bson_ext
+    genghisapp --host localhost --port 4444
+
+    genghisapp --kill
+
+
+.. _PhantomJS: http://phantomjs.org/
+.. _PDFtk: https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
+.. _unoconv: http://dag.wiee.rs/home-made/unoconv/
+.. _backupninja: https://0xacab.org/riseuplabs/backupninja
+.. _backupninja-mongodb: https://github.com/osinka/backupninja-mongodb
+.. _MongoDB: https://github.com/mongodb/mongo
+.. _Ghengis: http://genghisapp.com/
 

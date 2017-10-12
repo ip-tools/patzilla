@@ -4,11 +4,15 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-12 0.140.0
+==================
 - Improve command line access to data sources
 - Improve auxiliary tools selection for “convert” and “pdftk”
 - Fix multivendor “hostname_matches” selection
 - Fix User data model
 - Fix segfaults with lxml on Debian Wheezy (7.11)
+- Update production setup documentation
 
 2017-10-12 0.139.7
 ==================
