@@ -22,7 +22,7 @@
             <div class="span3">
                 Total:
                 <br/>
-                <span style="font-size: x-large" id="result-count-total"><%= data.result_count != null ? data.result_count : '--' %></span>
+                <span style="font-size: x-large" id="result-count-total"><%= $.isNumeric(data.result_count) ? data.result_count : '--' %></span>
 
                 <% if (asbool(data.config.get('debug')) && data.searchmode == 'subsearch') { %>
                 <br/>
