@@ -40,8 +40,6 @@ Create a virtual environment holding the sandbox installation::
 Install/upgrade some prerequisites::
 
     pip install --upgrade pip
-    #pip install cryptography
-    #pip install --allow-all-external 'https://github.com/trentm/which/tarball/master#egg=which'
 
 Fetch module dependencies and install application::
 

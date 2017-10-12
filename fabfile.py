@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2017 Andreas Motl, Elmyra UG
 import os
 from distutils.core import run_setup
 from fabric.contrib.project import rsync_project
@@ -7,17 +7,20 @@ from fabric.decorators import task, hosts
 from fabric.colors import yellow, red
 from fabric.utils import abort
 from fabric.state import env
-from cuisine import run, file_exists, file_is_dir, file_is_file, file_upload
+from cuisine import run, file_exists, file_is_dir, file_is_file, file_upload, dir_ensure
 from pip.utils import ask
 
 env.colorize_errors = True
 env.confirm = False
 
+INSTALLATION_HOST = os.environ['PATZILLA_HOST']
+INSTALLATION_PATH = '/opt/patzilla'
+
 # TODO: Task for uploading package file
 # TODO: Task for uploading configuration file
 
 @task
-@hosts('root@almera.elmyra.de')
+@hosts(INSTALLATION_HOST)
 def install(version, target):
 
     if not target:
@@ -42,7 +45,9 @@ def install(version, target):
         source_package = '/root/install/PatZilla/PatZilla-{version}.tar.gz'.format(version=version)
         source_config = './patzilla/config/production.ini.tpl'
 
-        target_path = '/opt/elmyra/patentsearch/sites/' + target
+        target_path = os.path.join(INSTALLATION_PATH, 'sites', target)
+        dir_ensure(target_path, recursive=True)
+
         venv_path = target_path + '/.venv27'
 
         if not file_is_file(source_package):
@@ -70,8 +75,10 @@ def setup_package(package, virtualenv, options=''):
     #--index-url=http://c.pypi.python.org/simple
     pip_cmd_template = """
         source {virtualenv}/bin/activate;
-        sh -c "pip install --download-cache=/var/cache/pip --allow-all-external --allow-unverified=which --verbose {options} {package}"
+        sh -c "pip install --upgrade pip";
+        sh -c "export TEMP=/var/tmp; pip install --cache-dir=/var/cache/pip --verbose {options} {package}"
         """
+    #sh -c "pip install --download-cache=/var/cache/pip --allow-all-external --allow-unverified=which --verbose {options} {package}"
     run(pip_cmd_template.format(**locals()))
 
 def upload_config(config_path, target_path):
@@ -92,9 +99,9 @@ def restart_service(target):
         print(red('WARNING: Could not restart service "%s"' % target))
 
 @task
-@hosts('root@almera.elmyra.de')
+@hosts(INSTALLATION_HOST)
 def upload_nginx_auth():
-    rsync_project('/opt/elmyra/patentsearch', './nginx-auth')
+    rsync_project(INSTALLATION_PATH, local_dir='nginx-auth')
 
 def setuptools_get_version(project_path):
     setup_script = os.path.join(project_path, 'setup.py')

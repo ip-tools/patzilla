@@ -4,7 +4,12 @@
 Install IP Navigator on production
 ##################################
 
-This is a work in progress. YMMV.
+**************
+Infrastructure
+**************
+::
+
+    apt install nginx-extras mongodb-clients mongodb-server python2.7 python2.7-dev python-virtualenv
 
 
 ***********
@@ -12,90 +17,233 @@ Application
 ***********
 
 Prerequisites
--------------
+=============
 Run once to prepare the sandbox environment for deployment tasks::
 
     make setup-maintenance
 
 Cut a new release
------------------
+=================
+From inside repository, with virtualenv activated.
 ::
 
     # Possible increments: patch,minor,major
     make release bump=minor
 
 Deploy application
-------------------
+==================
 From inside repository, with virtualenv activated.
 ::
 
-    # Possible targets: develop,staging,prod
-    make install target=develop
+    # Define target host
+    export PATZILLA_HOST=root@appserver.example.org
 
-    # Optionally pin to a specific version
-    make install target=develop version=0.30.0
+    # Possible targets: develop,staging,prod
+    make install target=patzilla-develop
+
+    # Optionally nail to a specific version
+    make install target=patzilla-develop version=0.30.0
 
 Upload nginx-auth lua code::
 
-    fab upload_nginx_auth
+    make install-nginx-auth
 
 
 *********************
 Application container
 *********************
 
-uWSGI configuration
--------------------
+Application configuration
+=========================
 ::
 
-    mkdir /opt/elmyra/patentsearch/sites/patoffice
+    cp /opt/patzilla/sites/patzilla-develop/production.ini.tpl /opt/patzilla/sites/patzilla-develop/production.ini
 
-    cp /etc/uwsgi/apps-available/patentsearch-staging.ini /etc/uwsgi/apps-available/patentsearch.patoffice.ini
-    # edit new file to match new site
+Edit ``production.ini`` according to your needs.
+
+
+uWSGI configuration
+===================
+/etc/uwsgi/apps-available/patzilla-develop.ini::
+
     [uwsgi]
     uid = www-data
     gid = www-data
-    virtualenv = /opt/elmyra/patentsearch/sites/patoffice/.venv27
-    paste = config:/opt/elmyra/patentsearch/sites/patoffice/production.ini
+    processes = 8
+    listen = 2048
+    buffer-size = 32768
 
-    ln -s /etc/uwsgi/apps-available/patentsearch.patoffice.ini /etc/uwsgi/apps-enabled/
+    virtualenv = /opt/patzilla/sites/patzilla-develop/.venv27
+    paste = config:/opt/patzilla/sites/patzilla-develop/production.ini
 
-    service uwsgi restart patentsearch.patoffice
+    paste-logger = true
+    #sync-log = true
+
+Activate::
+
+    ln -s /etc/uwsgi/apps-available/patzilla-develop.ini /etc/uwsgi/apps-enabled/
+
+Start::
+
+    service uwsgi restart patzilla-develop
+
+Watch::
+
+    tail -F /var/log/uwsgi/app/patzilla-develop.log
 
 
 **********
 Web server
 **********
 
-SSL certificates
-----------------
-::
-
-    cd /etc/pki/tls/certs
-    make patentsearch-staging.elmyra.de.csr
-    cat patentsearch-staging.elmyra.de.csr
-
-    https://www.startssl.com/
-
-    echo {output} > patentsearch-staging.elmyra.de.crt
-
-    make bundle CRT=patentsearch-staging.elmyra.de.crt
-    make ocsp CRT=patentsearch-staging.elmyra.de.bundle.crt
-
-    ln -s /etc/pki/tls/certs/patentsearch.patoffice.elmyra.de.bundle.crt /etc/nginx/ssl/
-    ln -s /etc/pki/tls/certs/patentsearch.patoffice.elmyra.de.key /etc/nginx/ssl/
-
-
 Nginx configuration
--------------------
+===================
+/etc/nginx/snippets/ssl-best-practice.conf::
+
+    # Contemporary SSL security settings
+    # https://juliansimioni.com/blog/https-on-nginx-from-zero-to-a-plus-part-2-configuration-ciphersuites-and-performance/
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    #ssl_protocols TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers 'kEECDH+ECDSA+AES128 kEECDH+ECDSA+AES256 kEECDH+AES128 kEECDH+AES256 kEDH+AES128 kEDH+AES256 DES-CBC3-SHA +SHA !aNULL !eNULL !LOW !kECDH !DSS !MD5 !EXP !PSK$
+
+    # Diffie-Hellman parameter for DHE ciphersuites, recommended 2048 bits
+    #ssl_dhparam /etc/nginx/ssl/dhparam.pem;
+    ssl_dhparam /etc/nginx/ssl/dhparam-4096.pem;
+
+    add_header Strict-Transport-Security 'max-age=31536000';
+    ssl_stapling on;
+
+    # enable session resumption to improve https performance
+    # http://vincent.bernat.im/en/blog/2011-ssl-session-reuse-rfc5077.html
+    ssl_session_cache builtin:1000 shared:SSL:20m;
+    ssl_session_timeout 5m;
+
+    location /.well-known {
+        alias /srv/www/default/htdocs/.well-known;
+    }
+
+/etc/nginx/snippets/patzilla/container.conf::
+
+    set $luadir "/opt/patzilla/nginx-auth/lua";
+
+    listen 80;
+    listen 443 ssl;
+    #listen 443 ssl spdy;
+
+    include snippets/ssl-best-practice.conf;
+
+    # individual nginx logs for this vhost
+    access_log  /var/log/nginx/$host-access.log;
+
+    root /srv/www/null;
+
+    # http://stackoverflow.com/questions/389456/cookie-blocked-not-saved-in-iframe-in-internet-explorer
+    more_set_headers 'P3P: CP="This site does not have a p3p policy."';
+
+    location = "/auth" {
+        lua_need_request_body on;
+        content_by_lua_file "$luadir/authentication.lua";
+    }
+
+/etc/nginx/snippets/patzilla/application.conf::
+
+    # webapp via uwsgi
+    uwsgi_read_timeout 1500;
+
+
+    # userid gets set by access.lua
+    set $user_id "";
+
+    access_by_lua_file "$luadir/access.lua";
+
+    include       uwsgi_params;
+    uwsgi_param   SCRIPT_NAME                 '';
+    uwsgi_param   REQUEST_METHOD              $echo_request_method;
+
+    # propagate userid to upstream service via http request headers
+    uwsgi_param   HTTP_X_USER_ID              $user_id;
+
+    # http://docs.pylonsproject.org/projects/waitress/en/latest/#using-behind-a-reverse-proxy
+    # https://wiki.apache.org/couchdb/Nginx_As_a_Reverse_Proxy
+    uwsgi_param   HTTP_X_REAL_IP              $remote_addr;
+    uwsgi_param   HTTP_X_FORWARDED_PROTO      $scheme;
+    uwsgi_param   HTTP_X_FORWARDED_FOR        $proxy_add_x_forwarded_for;
+
+
+    #add_header    Content-Security-Policy  "default-src https:; script-src https: 'unsafe-inline' 'unsafe-eval'; style-src https: 'unsafe-inline'";
+    #add_header    Content-Security-Policy  "script-src 'unsafe-inline' 'unsafe-eval'; style-src https: 'unsafe-inline'";
+    # config to enable HSTS(HTTP Strict Transport Security) https://developer.mozilla.org/en-US/docs/Security/HTTP_Strict_Transport_Security
+    # to avoid ssl stripping https://en.wikipedia.org/wiki/SSL_stripping#SSL_stripping
+    add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+
+    if ($server_port = 80) {
+        #rewrite ^ https://$host$request_uri;
+        rewrite (.*) https://$http_host$1;
+    }
+
+    # pass-through static and api urls
+    rewrite ^/static/(.*)$ /static/$1 break;
+    rewrite ^/api/(.*) /api/$1 break;
+
+    # rewrite urls to match application
+    rewrite ^/(.+)$ /navigator/$1 break;
+    rewrite ^/?(.*)$ /navigator/$1 break;
+
+
+/etc/nginx/sites-available/patzilla-develop.example.org::
+
+    # webapp via uwsgi
+    upstream patzilla-develop {
+        server unix:/run/uwsgi/app/patzilla-develop/socket;
+    }
+
+    server {
+
+      server_name patzilla-develop.example.org;
+
+      include snippets/patzilla/container.conf;
+
+      # SSL: Self-signed
+      include snippets/snakeoil.conf;
+
+      # SSL: Let's Encrypt
+      #ssl_certificate /etc/letsencrypt/live/patzilla-develop.example.org/fullchain.pem;
+      #ssl_certificate_key /etc/letsencrypt/live/patzilla-develop.example.org/privkey.pem;
+
+      error_log   /var/log/nginx/patzilla-develop.example.org-error.log info;
+
+      location / {
+
+        # webapp via uwsgi
+        uwsgi_pass        patzilla-develop;
+
+        include snippets/patzilla/application.conf;
+
+      }
+
+    }
+
+
+Activate::
+
+    ln -s /etc/nginx/sites-available/patzilla-develop.example.org /etc/nginx/sites-enabled/patzilla-develop.example.org
+
+Test and reload::
+
+    nginx -t
+    service nginx reload
+
+Watch::
+
+    tail -F /var/log/nginx/patzilla-develop.example.org-*.log
+
+
+SSL certificates
+================
 ::
 
-    cp /etc/nginx/sites-available/patentsearch-staging.elmyra.de /etc/nginx/sites-available/patentsearch.patoffice.elmyra.de
-    # edit new file to match new site
-
-    ln -s /etc/nginx/sites-available/patentsearch.patoffice.elmyra.de /etc/nginx/sites-enabled/patentsearch.patoffice.elmyra.de
-
-    service nginx reload
+    certbot certonly --webroot-path /srv/www/default/htdocs --domains patzilla-develop.example.org --expand
 
 
 
@@ -104,13 +252,13 @@ External utilities
 ******************
 
 gif2tiff
---------
+========
 
     apt-get install libtiff-tools
 
 
 PhantomJS
----------
+=========
 ::
 
     wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2
@@ -118,7 +266,7 @@ PhantomJS
 
 
 Fonts
------
+=====
 https://gist.github.com/madrobby/5489174
 
 ::

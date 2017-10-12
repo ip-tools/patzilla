@@ -48,8 +48,7 @@ push:
 release: js-release bumpversion push sdist upload
 
 install-nginx-auth:
-	rsync -azuv nginx-auth/* root@almera.elmyra.de:/opt/elmyra/patentsearch/nginx-auth/
-	# TODO: fab upload_nginx_auth
+	fab upload_nginx_auth
 
 test:
 	@python runtests.py          \

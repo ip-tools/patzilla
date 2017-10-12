@@ -4,7 +4,11 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-12 0.139.5
+==================
 - Attempt to fix “result-count-total” display
+- Bring tooling for production setup up to speed
 
 2017-10-11 0.139.4
 ==================
