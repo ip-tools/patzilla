@@ -57,11 +57,16 @@ class User(Document):
     username = StringField(unique=True)
     password = StringField()
     fullname = StringField()
+    phone = StringField()
+    company = StringField()
+    homepage = StringField()
     created = DateTimeField()
     modified = DateTimeField(default=datetime.datetime.now)
     tags = ListField(StringField(max_length=30))
     modules = ListField(StringField(max_length=30))
     upstream_credentials = DictField()
+    billing = DictField()
+    parent = StringField()
 
     @classmethod
     def assign_userid(cls, sender, document, **kwargs):
