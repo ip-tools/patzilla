@@ -4,8 +4,12 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-12 0.140.2
+==================
 - Fix drilldown capabilities in liveview mode
 - Fix liveview mode when running on localhost
+- Fix pagesize chooser reset behavior
 
 2017-10-12 0.140.1
 ==================

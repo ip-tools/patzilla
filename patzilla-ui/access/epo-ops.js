@@ -248,11 +248,12 @@ OpsExchangeMetadata = Backbone.Model.extend({
     resetSomeDefaults: function(options) {
         this.set(_(this.defaults).pick(
             'searchmode', 'result_count', 'result_range', 'result_count_received',
-            'query_origin', 'query_real', 'keywords', 'page_size', 'maximum_results'
+            'query_origin', 'query_real', 'keywords', 'maximum_results'
         ));
         if (options && options.clear) {
             this.set(_(this.defaults).pick(
-                'pagination_current_page'
+                'pagination_current_page',
+                'page_size'
             ));
         }
     },
