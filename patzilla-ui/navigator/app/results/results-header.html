@@ -14,10 +14,10 @@
 
 <%
 // Apply autonumeric formatting. Example: 16,384
-var AutoNumeric = require('autonumeric');
+var AutoNumeric = require('autonumeric/dist/autoNumeric.min.js').default;
 var result_count = '--';
 if ($.isNumeric(data.result_count)) {
-    result_count = AutoNumeric.format(data.result_count, {decimalPlaces: 0, digitGroupSeparator: ','});
+    result_count = AutoNumeric.format(data.result_count, {decimalPlacesOverride: 0, digitGroupSeparator: ','});
 }
 %>
 

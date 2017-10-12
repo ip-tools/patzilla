@@ -5,6 +5,10 @@ IP Navigator CHANGES
 development
 ===========
 
+2017-10-12 0.139.7
+==================
+- Fix “result-count-total” formatting - once more
+
 2017-10-12 0.139.6
 ==================
 - Fix “result-count-total” formatting

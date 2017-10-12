@@ -31,7 +31,7 @@
     "release": "webpack --config=webpack.release.config.js --display detailed --display-error-details"
   },
   "devDependencies": {
-    "autonumeric": "4.1.0-beta.9",
+    "autonumeric": "2.0.13",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
