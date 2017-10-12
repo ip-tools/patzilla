@@ -4,7 +4,9 @@ import sys
 import json
 import logging
 from pprint import pprint
+from bunch import Bunch
 from patzilla.access.ificlaims.clientpool import IIFIClaimsClientPool
+from patzilla.util.data.container import SmartBunch
 from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
 
 """
@@ -39,7 +41,8 @@ def make_request(client):
     #results = client.search('text:solar energy', 0, 10)
     #results = client.search(u'text:抑血管生成素的药物用途', 0, 10)
     #results = client.search(u'text:放射線を照射する放射線源と', 0, 10)
-    #pprint(results)
+    results = client.search(SmartBunch({'expression': 'pnctry:(de OR ep OR wo OR cn OR jp OR tw) AND pa:"taiwan paiho" AND pd:[20170101 TO 20170731]'}), SmartBunch({'offset': 0, 'limit': 50}))
+    print json.dumps(results)
 
     #results = client.text_fetch('US-20100077592-A1')
     #results = client.text_fetch('CN-1055497-A')
@@ -50,8 +53,8 @@ def make_request(client):
     #results = json.loads(client.text_fetch('CA-2895852-A1', 'json'))
     #results = json.loads(client.text_fetch('CA-108104-S', 'json'))
 
-    results = json.loads(client.text_fetch('KR-20160114950-A', 'json'))
-    print json.dumps(results)
+    #results = json.loads(client.text_fetch('KR-20160114950-A', 'json'))
+    #print json.dumps(results)
 
     #results = client.text_fetch('KR-20160114950-A', 'xml')
     #print results

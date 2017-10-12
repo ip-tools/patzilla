@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Improve command line access to data sources
 
 2017-10-12 0.139.7
 ==================
@@ -336,7 +337,7 @@ development
 
 2016-08-06 0.119.4
 ==================
-- Fix ZeroClipboard by adding missing *.swf files to python package
+- Fix ZeroClipboard by adding missing ``*.swf`` files to python package
 
 2016-08-06 0.119.3
 ==================
@@ -1331,9 +1332,11 @@ Bug fixes and minor updates
 - middleware: fix neighborhood operator problems in value shortcut notations
 - middleware/tests: add more complex, unrefurbished cql queries from the wild to depatisnet doctests
 - ui: overhaul highlighting component
+
     - don't crash html
     - option to expand highlighting to whole words (wholeWords - false by default)
     - option to restrict highlighting to words with minimum length (minLength - undefined by default)
+
 - middleware/tests: infrastructure for reading utf-8 encoded doctest files (from NLTK)
 - middleware/tests: fix utf-8 encoding problem for doctests
 - middleware: minor tweaks to cql parser
@@ -1928,10 +1931,12 @@ tech:
 - rest endpoint for querying EPO OPS REST service (ops-published-data-search)
 - top-notch frontend ui foundation based on jquery, bootstrap, backbone marionette, fontawesome
 - packaged some fanstatic javascript libraries:
+
     - js.marionette
     - js.underscore_string
     - js.jquery_shorten
     - js.purl
+
 - textarea for cql query input
 - shipping subsystem via basket textarea
 - use "query" url parameter

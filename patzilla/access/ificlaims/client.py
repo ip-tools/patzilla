@@ -66,8 +66,9 @@ class IFIClaimsClient(GenericSearchClient):
     @cache_region('search')
     def search(self, query, options=None):
 
-        options = options or SmartBunch()
+        query.setdefault('filter', '')
 
+        options = options or SmartBunch()
         options.setdefault('offset', 0)
         options.setdefault('limit', self.pagesize)
 

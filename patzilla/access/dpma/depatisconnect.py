@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2017 Andreas Motl, Elmyra UG
+import sys
+import json
 import logging
 import requests
 import xmlrpclib
@@ -246,23 +248,43 @@ def depatisconnect_abstracts(document_number, language=None, invalidate=False):
 
 if __name__ == '__main__':
 
-    # configure cache manager
-    from beaker.cache import CacheManager
-    from beaker.util import parse_cache_config_options
-    cache_opts = {
-        'cache.type': 'memory',
-        'cache.regions': 'static',
-    }
-    cache = CacheManager(**parse_cache_config_options(cache_opts))
+    """
+    About
+    =====
+    Run requests to data provider "DEPATISconnect" from the command line.
 
-    #print depatisconnect_abstracts('DE19653398A1', 'DE')
-    #print depatisconnect_description('DE19653398A1')
+    Synopsis
+    ========
+    ::
 
-    #print depatisconnect_abstracts('DE0001301607B', 'DE')
-    #print depatisconnect_description('DE1301607B')
-    #print depatisconnect_description('DE7909160U1')
-    #print depatisconnect_abstracts('DE7909160U1', 'DE')
+        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini
+        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini | jq --raw-output '.xml'
+        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini | jq .
+        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini | jq --raw-output '.xml' | xmllint --format -
+    """
+
+    from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
+    configfile = sys.argv[1]
+
+    env = setup_commandline_pyramid(configfile)
+    logger = logging.getLogger(__name__)
+
+    # Populate archive_service_baseurl again because "includeme" runs in a different thread
+    registry = env['registry']
+    archive_service_baseurl = registry.application_settings.datasource_depatisconnect.api_uri
+    if archive_service_baseurl.startswith('https'):
+        use_https = True
+
+    #response = depatisconnect_abstracts('DE19653398A1', 'DE')
+    #response = depatisconnect_description('DE19653398A1')
+
+    #response = depatisconnect_abstracts('DE0001301607B', 'DE')
+    #response = depatisconnect_description('DE1301607B')
+    #response = depatisconnect_description('DE7909160U1')
+    #response = depatisconnect_abstracts('DE7909160U1', 'DE')
 
     #print depatisconnect_claims('US2014250599A1')
-    print depatisconnect_claims('US2014339530A1')
-    #print depatisconnect_claims('DE102006019883A1')
+    response = depatisconnect_claims('US2014339530A1')
+    #response = depatisconnect_claims('DE102006019883A1')
+
+    print json.dumps(response)
