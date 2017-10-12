@@ -22,7 +22,8 @@ Synopsis
 
 """
 
-def make_request(client, url, parameters, **kwargs):
+def json_request(client, url, parameters, **kwargs):
+
     response = client.get(url, headers={'Accept': 'application/json'}, params=parameters, **kwargs)
 
     logger.info('Response information')
@@ -35,6 +36,10 @@ def make_request(client, url, parameters, **kwargs):
     logger.info('response body:')
     print json.dumps(response.json(), indent=4)
 
+def tiff_request(client, url, parameters, **kwargs):
+    response = client.get(url, params=parameters, **kwargs)
+    #print response
+    print response.content
 
 if __name__ == '__main__':
 
@@ -50,6 +55,8 @@ if __name__ == '__main__':
 
     url = '{baseuri}/published-data/search/biblio'.format(baseuri=OPS_API_URI)
 
-    #make_request(ops_session, url, {'q': 'pn=EP666666', 'Range': '1-10'})
-    make_request(client, url, {'q': 'pn=DE142829T1', 'Range': '1-10'})
-    #make_request(ops_session, url, {'q': 'pn=EP666666', 'Range': '1-10'}, provoke_failure=True)
+    #json_request(ops_session, url, {'q': 'pn=EP666666', 'Range': '1-10'})
+    #json_request(client, url, {'q': 'pn=DE142829T1', 'Range': '1-10'})
+    #json_request(ops_session, url, {'q': 'pn=EP666666', 'Range': '1-10'}, provoke_failure=True)
+
+    tiff_request(client, '{baseuri}/published-data/images/TW/201721043/A/fullimage.pdf'.format(baseuri=OPS_API_URI), {'Range': '19'})
