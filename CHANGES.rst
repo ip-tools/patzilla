@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Add Sphinx documentation infrastructure and skeleton
 
 2017-10-13 0.141.0
 ==================

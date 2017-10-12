@@ -156,6 +156,10 @@ setup(name='PatZilla',
               'Fabric==1.8.5',          # 1.14.0
               'cuisine==0.7.13',
           ],
+          'documentation': [
+              'Sphinx==1.6.4',
+              'sphinx_rtd_theme==0.2.5b1',
+          ],
       },
 
       entry_points={

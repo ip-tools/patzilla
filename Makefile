@@ -97,6 +97,10 @@ sloccount:
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
 
+docs-html:
+	touch docs/index.rst
+	cd docs; make html
+
 pdf-EP666666:
 	/usr/local/bin/wkhtmltopdf \
 		--no-stop-slow-scripts --debug-javascript \
