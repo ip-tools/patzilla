@@ -6,6 +6,7 @@ development
 ===========
 - Enable display of "CPCNO" classifications
 - Fix/improve fulltext display for e.g. KR20170103976A
+- IFI Claims fulltext sections “industrial-applicability” and “reference-signs-list” were missing
 
 2017-10-12 0.140.2
 ==================

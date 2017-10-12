@@ -503,9 +503,11 @@ IFIClaimsFulltext = Marionette.Controller.extend({
             {key: 'summary-of-invention.tech-problem', label: 'Summary of invention » Technological problem' },
             {key: 'summary-of-invention.tech-solution', label: 'Summary of invention » Technological solution' },
             {key: 'summary-of-invention.advantageous-effects', label: 'Summary of invention » Advantageous effects' },
-            {key: 'description-of-embodiments', label: 'Description of embodiments' },
-            {key: 'disclosure', original_label: 'The content of invention', label: 'Content of invention' },
             {key: 'description-of-drawings', original_label: 'Specification attached drawing', label: 'Description of drawings' },
+            {key: 'description-of-embodiments', label: 'Description of embodiments' },
+            {key: 'industrial-applicability', label: 'Industrial applicability' },
+            {key: 'reference-signs-list', label: 'Reference signs' },
+            {key: 'disclosure', original_label: 'The content of invention', label: 'Content of invention' },
             {key: 'mode-for-invention', label: 'Specific implementing manner' },
         ];
 
