@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Improve patentview domain handling
 
 2017-10-12 0.140.0
 ==================

@@ -200,12 +200,6 @@ class RuntimeSettings(object):
         if 'stylesheet_uri' in vendor and vendor.stylesheet_uri:
             data['ui.stylesheet'] = vendor.stylesheet_uri
 
-        if self.hostname == 'patentview.ip-tools.io':
-            dict_merge(data, {
-                'ui.productname': 'Patent View',
-                'ui.productname.rich': '',
-            })
-
         return data
 
     def datasource_settings(self):
@@ -269,7 +263,7 @@ class RuntimeSettings(object):
 
         # determine if we're in view-only mode by matching against the hostname
         host = request.headers.get('Host')
-        isviewer = 'patentview' in host
+        isviewer = 'patentview' in host or 'viewer' in host
 
         # 1. don't allow "query" from outside on view-only domains
         if request_params.has_key('query') and isviewer:
@@ -303,7 +297,7 @@ class RuntimeSettings(object):
 
         # D. special customizations
 
-        # 1. On patentview.elmyra.de, restrict to liveview only
+        # 1. On patentview domains, limit access to liveview mode only
         params['isviewer'] = isviewer
         if isviewer:
             params['mode'] = 'liveview'

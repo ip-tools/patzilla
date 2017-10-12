@@ -111,12 +111,17 @@ PermalinkPlugin = Marionette.Controller.extend({
         //log('config:', navigatorApp.config);
         var baseurl = navigatorApp.config.get('baseurl');
 
-        // when generating review-in-liveview-with-ttl links on patentsearch,
-        // let's view them on a pinned domain like "patentview.elmyra.de"
+        // When generating review-in-liveview-with-ttl links on the main patentsearch
+        // domain like "patentsearch.example.org" or "navigator.example.org",
+        // let's view them on another view-only domain like
+        // "patentview.example.org" or "viewer.example.org".
+        // Otherwise, fall back to "patentview.ip-tools.io".
         var host = navigatorApp.config.get('request.host');
         if (_.string.contains(host, 'patentsearch')) {
             baseurl = baseurl.replace('patentsearch', 'patentview');
-        } else if (_.string.contains(host, 'ip-tools.io')) {
+        } else if (_.string.contains(host, 'navigator')) {
+            baseurl = baseurl.replace('navigator', 'viewer');
+        } else {
             baseurl = baseurl.replace(host, 'patentview.ip-tools.io');
         }
 

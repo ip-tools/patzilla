@@ -54,7 +54,9 @@ $(document).ready(function() {
         if (url.attr('port')) demourl += ':' + url.attr('port');
         if (_.string.contains(demourl, 'patentsearch')) {
             demourl = demourl.replace('patentsearch', 'patentview');
-        } else if (_.string.contains(demourl, 'ip-tools.io')) {
+        } else if (_.string.contains(demourl, 'navigator')) {
+            demourl = demourl.replace('navigator', 'viewer');
+        } else {
             demourl = demourl.replace(url.attr('host'), 'patentview.ip-tools.io');
         }
         demourl += '?op=eyJhbGciOiAiUFMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiUmlnSGlLRm91N0daUlVseDdTTTBYRkNXdWlqOUlLNnFoaS1lUnowMUdVOEVqVzFUb1lrWHRGLXdFekJqbTA5WjA3bndmN0JtZmJfcnFfeC1xcUd4Qm5qRl9CN0Zkb1NCOTJoZ25DNXg2aDA2OVBiZGtwRjlKdUhRUzVoZ0RLY212M2VPenFQOVlVTlBqTmdpaGM0Rmo3U25OMHJiS3ExRTByN2EweVk3N19rPSIsICJkYXRhIjogeyJwcm9qZWN0IjogInF1ZXJ5LXBlcm1hbGluayIsICJxdWVyeSI6ICJCaT0oKEdyZWlmZT8gT1IgR3JpcD8pIGFuZCAocm9ociBvciB0dWJlIG9yIGNpcmN1bGFyKSkgYW5kIHBjPShERSBvciBFUCkgYW5kIElDPShCMjZEPyBvciBCMjNEPykiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogImRlcGF0aXNuZXQifSwgIm5iZiI6IDE0MDU1MjcwMjMsICJleHAiOiAxNTYxMDQ3MDIzLCAiaWF0IjogMTQwNTUyNzAyM30.Ec0CjI2lLPLAoVxADDrkZlIRgbELqfUAP-0kKtrnWZ6YIm9iUc-KhekqWigyLQ-cSVWCDymLorON-KN79xojgzCvV8D-FZTwXVjMOwREGUJ6osm-7NiCNhXIjDCh1H2X';
