@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Enable display of "CPCNO" classifications
+- Fix/improve fulltext display for e.g. KR20170103976A
 
 2017-10-12 0.140.2
 ==================

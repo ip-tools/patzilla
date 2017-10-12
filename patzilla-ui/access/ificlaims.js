@@ -781,6 +781,11 @@ IFIClaimsFulltext = Marionette.Controller.extend({
             text = text.replace(/(< \d+ >)/g, '<br/><br/>$1<br/>');
         }
 
+        // KR20170103976A
+        // <A 내지 A>
+        // "1 유리 기판 2 투명 애노드 3 정공 주입층 4 정공 수송층 5 발광층 6 정공 차단층 7 전자 수송층 8 전자 주입층 9 캐소드"
+        text = _(text).escape().replace(/\n/g, '<br/>');
+
         return heading + text;
     },
 

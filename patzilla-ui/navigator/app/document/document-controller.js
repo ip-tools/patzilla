@@ -318,7 +318,12 @@ DocumentDetailsController = Marionette.Controller.extend({
                 log('Fetching fulltext for document failed:', data);
                 _this.indicate_activity(container, false);
                 if (data && data.html) {
-                    content_element.html(template({title: title, content: data.html}));
+                    content_element.html(template({
+                        title: title,
+                        content: data.html,
+                        language: undefined,
+                        datasource: undefined,
+                    }));
                 }
             });
         }
