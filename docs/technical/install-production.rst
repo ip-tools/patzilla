@@ -258,8 +258,11 @@ for various web standards: DOM handling, CSS selector, JSON, Canvas, and SVG.
 It is used for rendering PDF documents from HTML.
 ::
 
-    wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2
-    cp phantomjs-1.9.7-linux-x86_64/bin/phantomjs /usr/local/bin/
+    apt install phantomjs
+
+    # Deprecated
+    #wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2
+    #cp phantomjs-1.9.7-linux-x86_64/bin/phantomjs /usr/local/bin/
 
 
 Fonts
@@ -269,7 +272,7 @@ https://gist.github.com/madrobby/5489174
 
 ::
 
-    apt-get install fontconfig libfontconfig libfreetype6 ttf-xfree86-nonfree ttf-mscorefonts-installer
+    apt install fontconfig libfontconfig libfreetype6 ttf-xfree86-nonfree ttf-mscorefonts-installer
 
     wget --no-check-certificate https://gist.github.com/madrobby/5265845/raw/edd7ba1f133067afd2bd60ba7d40e684bb852c6c/localfonts.conf
     mv localfonts.conf /etc/fonts/local.conf
@@ -296,6 +299,7 @@ Setup
 
     wget http://www.imagemagick.org/download/ImageMagick.tar.gz
     ./configure --prefix=/opt/imagemagick
+    make && make install
 
 ::
 
@@ -333,10 +337,10 @@ Setup
 
 unoconv
 =======
-unoconv_ is used to convert Excel workbooks to PDF documents.
+unoconv_ is used to convert spreadsheet worksheets to PDF documents.
 ::
 
-    aptitude install unoconv libreoffice
+    apt install unoconv libreoffice
 
 
 gif2tiff
@@ -344,7 +348,7 @@ gif2tiff
 Convert drawings in GIF format from CIPO. Currently not used.
 ::
 
-    apt-get install libtiff-tools
+    apt install libtiff-tools
 
 
 backupninja-mongodb

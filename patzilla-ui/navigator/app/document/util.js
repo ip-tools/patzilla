@@ -16,9 +16,10 @@ OpsBaseViewMixin = {
             var no_modifiers = $(this).data('no-modifiers');
             var params = navigatorApp.permalink.query_parameters_viewstate(href, {'no_modifiers': no_modifiers});
 
-            // TODO: Improve! Don't set "ops" here
-            // regardless where the query originates from (e.g. datasource=review),
-            // requests for query-links need switching to ops
+            // Regardless where the query originates from (e.g. datasource=review),
+            // requests for query-links need switching to ops.
+            // TODO: Improve! Don't set "ops" *here*.
+            // TODO: Can this feature be expanded to other data sources?
             params['datasource'] = 'ops';
 
             // debugging

@@ -194,6 +194,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         // these carry state, so switching the navigator into a special mode, currently
         reviewmode: false,
 
+        // TODO: Don't have this fixed to OPS
         datasource: 'ops',
         searchmode: null,
         page_size: 25,
@@ -206,6 +207,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
         pagination_pagesize_choices: [25, 50, 75, 100],
         pagination_current_page: 1,
         keywords: [],
+        // TODO: This is also OPS-specific
         maximum_results: 2000,
 
         get_url: function() {
