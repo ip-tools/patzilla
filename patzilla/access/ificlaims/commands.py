@@ -79,7 +79,8 @@ def make_request(client):
 
     # 2017-10-12
     #results = client.text_fetch('JP-2017173854-A')
-    results = client.text_fetch('KR-20170103976-A', 'json')
+    #results = client.text_fetch('KR-20170103976-A', 'json')
+    results = client.text_fetch('JP-2017128728-A', 'json')
     print json.dumps(json.loads(results))
 
     #blob = client.pdf_fetch('SE-9400081-D0')

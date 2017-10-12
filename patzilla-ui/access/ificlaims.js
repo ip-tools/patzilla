@@ -505,6 +505,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
             {key: 'summary-of-invention.advantageous-effects', label: 'Summary of invention » Advantageous effects' },
             {key: 'description-of-drawings', original_label: 'Specification attached drawing', label: 'Description of drawings' },
             {key: 'description-of-embodiments', label: 'Description of embodiments' },
+            {key: 'description-of-embodiments.embodiments-example', label: 'Examples of embodiments' },
             {key: 'industrial-applicability', label: 'Industrial applicability' },
             {key: 'reference-signs-list', label: 'Reference signs' },
             {key: 'disclosure', original_label: 'The content of invention', label: 'Content of invention' },
@@ -586,7 +587,11 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         } else if (_.isObject(container['claim-text'])) {
             // e.g. CN104154791B
             number = _.string.ltrim(container['@num'], '0');
-            text = _.string.ltrim(container['claim-text']['$t']);
+            text = container['claim-text']['$t'];
+            if (!text && container['claim-text']['u']) {
+                text = container['claim-text']['u']['$t'];
+            }
+            text = _.string.ltrim(text);
         } else {
             // e.g. WO2017016928A1
             text = container['$t'];
@@ -693,7 +698,12 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     if (!value) {
                         return;
                     }
-                    description_parts = description_parts.concat(_this.parse_description_list(value.p, fragment_spec));
+                    if (value.p.figref) {
+                        // TODO: This misses part number [0016] due to structural impedance mismatch, e.g. JP2017128728A
+                        description_parts = description_parts.concat(_this.parse_description_list(value.p.figref, fragment_spec));
+                    } else {
+                        description_parts = description_parts.concat(_this.parse_description_list(value.p, fragment_spec));
+                    }
                 } catch(ex) {
                     // pass
                 }
@@ -747,8 +757,14 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         }
 
         // Handle drawing references
-        if (!part['$t'] && part['img']) {
-            text = 'Reference to drawing "' + part['img']['@id'] + '".';
+        if (!part['$t']) {
+            if (part.img) {
+                text = 'Reference to drawing "' + part.img['@id'] + '".';
+            } else if (part.chemistry && part.chemistry.img) {
+                text = 'Reference to drawing "' + part.chemistry.img['@id'] + '".';
+            } else {
+                text = 'Empty';
+            }
         }
 
         // When first index carries caption, perform rewording and emphasis
