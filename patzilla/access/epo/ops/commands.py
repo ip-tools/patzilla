@@ -56,7 +56,9 @@ if __name__ == '__main__':
     url = '{baseuri}/published-data/search/biblio'.format(baseuri=OPS_API_URI)
 
     #json_request(ops_session, url, {'q': 'pn=EP666666', 'Range': '1-10'})
-    #json_request(client, url, {'q': 'pn=DE142829T1', 'Range': '1-10'})
     #json_request(ops_session, url, {'q': 'pn=EP666666', 'Range': '1-10'}, provoke_failure=True)
 
-    tiff_request(client, '{baseuri}/published-data/images/TW/201721043/A/fullimage.pdf'.format(baseuri=OPS_API_URI), {'Range': '19'})
+    #json_request(client, url, {'q': 'pn=DE142829T1', 'Range': '1-10'})
+    json_request(client, url, {'q': 'pn=KR20000069056A', 'Range': '1-10'})
+
+    #tiff_request(client, '{baseuri}/published-data/images/TW/201721043/A/fullimage.pdf'.format(baseuri=OPS_API_URI), {'Range': '19'})
