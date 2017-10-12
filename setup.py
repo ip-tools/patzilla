@@ -26,7 +26,7 @@ requires = [
     'Pygments==2.2.0',
     'pyramid_mako==1.0.2',
     'Jinja2==2.9.6',
-    #'Akhet==2.0',
+    'Akhet==2.0',
     'waitress==1.1.0',
     'Paste==2.0.3',
     'PasteScript==2.0.2',
