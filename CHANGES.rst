@@ -8,6 +8,7 @@ development
 - Improve auxiliary tools selection for “convert” and “pdftk”
 - Fix multivendor “hostname_matches” selection
 - Fix User data model
+- Fix segfaults with lxml on Debian Wheezy (7.11)
 
 2017-10-12 0.139.7
 ==================

@@ -77,7 +77,8 @@ requires = [
     'mongoengine==0.13.0',      # 0.14.3
     'blinker==1.4',
     'python-dateutil==2.6.1',
-    'lxml==3.8.0',              # 4.0.0
+    # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
+    'lxml==3.4.1',              # 4.0.0
     'openpyxl==2.1.0',          # 2.5.0a3
     'xlrd==0.9.3',              # 1.1.0
     'XlsxWriter==0.9.3',        # 1.0.0
