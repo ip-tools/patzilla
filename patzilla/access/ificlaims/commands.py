@@ -41,8 +41,8 @@ def make_request(client):
     #results = client.search('text:solar energy', 0, 10)
     #results = client.search(u'text:抑血管生成素的药物用途', 0, 10)
     #results = client.search(u'text:放射線を照射する放射線源と', 0, 10)
-    results = client.search(SmartBunch({'expression': 'pnctry:(de OR ep OR wo OR cn OR jp OR tw) AND pa:"taiwan paiho" AND pd:[20170101 TO 20170731]'}), SmartBunch({'offset': 0, 'limit': 50}))
-    print json.dumps(results)
+    #results = client.search(SmartBunch({'expression': 'pnctry:(de OR ep OR wo OR cn OR jp OR tw) AND pa:"taiwan paiho" AND pd:[20170101 TO 20170731]'}), SmartBunch({'offset': 0, 'limit': 50}))
+    #print json.dumps(results)
 
     #results = client.text_fetch('US-20100077592-A1')
     #results = client.text_fetch('CN-1055497-A')
@@ -76,6 +76,11 @@ def make_request(client):
 
     #results = client.text_fetch('SE-9400081-L', format='json')
     #pprint(json.loads(results))
+
+    # 2017-10-12
+    #results = client.text_fetch('JP-2017173854-A')
+    results = client.text_fetch('KR-20170103976-A', 'json')
+    print json.dumps(json.loads(results))
 
     #blob = client.pdf_fetch('SE-9400081-D0')
     #blob = client.pdf_fetch('SE-9400081-A')
