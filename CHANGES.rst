@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Fix drilldown capabilities in liveview mode
+- Fix liveview mode when running on localhost
 
 2017-10-12 0.140.1
 ==================

@@ -121,7 +121,7 @@ PermalinkPlugin = Marionette.Controller.extend({
             baseurl = baseurl.replace('patentsearch', 'patentview');
         } else if (_.string.contains(host, 'navigator')) {
             baseurl = baseurl.replace('navigator', 'viewer');
-        } else {
+        } else if (!_.string.contains(host, 'localhost')) {
             baseurl = baseurl.replace(host, 'patentview.ip-tools.io');
         }
 
