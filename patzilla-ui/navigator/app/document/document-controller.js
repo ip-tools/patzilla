@@ -1,7 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2015 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
-require('autonumeric');
 require('./util.js');
 
 DocumentBaseController = Marionette.Controller.extend({
@@ -33,10 +32,6 @@ DocumentBaseController = Marionette.Controller.extend({
 
         // shorten cql query string
         $(".cql-query").shorten({showChars: 125, moreText: 'more', lessText: 'less'});
-
-        // TODO: Refactor to "results" context
-        // Apply autonumeric formatting
-        $.isNumeric($('#result-count-total').text()) && $('#result-count-total').autoNumeric('init', {mDec: 0});
 
 
         // ------------------------------------------

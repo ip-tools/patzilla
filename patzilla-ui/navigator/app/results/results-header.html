@@ -12,6 +12,15 @@
 </div>
 -->
 
+<%
+// Apply autonumeric formatting. Example: 16,384
+var AutoNumeric = require('autonumeric');
+var result_count = '--';
+if ($.isNumeric(data.result_count)) {
+    result_count = AutoNumeric.format(data.result_count, {decimalPlaces: 0, digitGroupSeparator: ','});
+}
+%>
+
 <div class="container-fluid ops-collection-meta" id="pagination-info">
 
     <div class="row-fluid">
@@ -22,7 +31,7 @@
             <div class="span3">
                 Total:
                 <br/>
-                <span style="font-size: x-large" id="result-count-total"><%= $.isNumeric(data.result_count) ? data.result_count : '--' %></span>
+                <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
 
                 <% if (asbool(data.config.get('debug')) && data.searchmode == 'subsearch') { %>
                 <br/>
