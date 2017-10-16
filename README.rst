@@ -51,7 +51,7 @@ Screenshot
 ==========
 A picture says a thousand words.
 
-.. image:: docs/ip-navigator.png
+.. image:: patzilla-screenshot.png
     :alt: IP Navigator
     :target: https://github.com/ip-tools/ip-navigator
 
@@ -68,6 +68,9 @@ Demos
   ... against EPO/OPS and display the results.
   You will be able to step through result pages and display fulltext- and family-information,
   but running custom queries will be disabled.
+
+- The `numberlist demo`_ will display the patent documents DE102011075997A1, DE102011076020A1, DE102011076022A1 and DE102011076035A1.
+  This is a showcase about how to integrate a link to a list of patent documents into own applications.
 
 - The `document view demo`_ will display the patent document EP0666666A2 without any control elements.
   This is a showcase about how to embed the document view into own applications or
@@ -112,7 +115,7 @@ Thanks in advance for your efforts, we really appreciate any help.
 
 License
 =======
-This software is copyright © 2013-2017 The PatZilla Authors. All rights reserved.
+This software is copyright © 2013-2017 The PatZilla authors. All rights reserved.
 
 It is and will always be **free and open source software**.
 
@@ -139,6 +142,7 @@ to get in touch with us. We are happy to receive respective inquiries at support
 
 .. _Elmyra UG: https://elmyra.de/
 .. _search demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiZDZUT3Ewc3NkRDB6TTVCSGdhOEJrQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAicXVlcnktcGVybWFsaW5rIiwgInF1ZXJ5IjogInR4dD0oU1M3IG9yICh0ZWxlY29tbXVuaWNhdGlvbiBvciBjb21tdW5pY2F0aW9uIG9yIGNvbXVuaWNhY2lcdTAwZjNuKSBvciAobW9iaWxlIG9yIE1vYmlsZnVua25ldHopIG9yIChuZXR3b3JrIG9yIChzZWN1cml0eSBvciBTaWNoZXJ1bmcpKSkgYW5kIHBhPShtb2JpbCBvciBrb21tdW5pa2F0aW9uKSBhbmQgY2w9KEgwNFcxMi8xMiBvciBIMDRMNjMvMDI4MSBvciBIMDRMNjMvMDQxNCkgbm90IHBuPShDTiBvciBDQSBvciBKUCkiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogIm9wcyJ9LCAibmJmIjogMTUwNzgyNjYxNywgImV4cCI6IDE2NjMzNDY2MTcsICJpYXQiOiAxNTA3ODI2NjE3fQ.fCl7I5wPd0r48O48UkVQxzw9QOy5PjFaFecmAoYisbM-Her9Z6R0E2hxc82TSdH68gz379jQe5v9eF6g620aG4odTOXtdhyoDrWcb-GJcfR-0BfpiqPRwzLng53ape69
+.. _numberlist demo: https://patentview.ip-tools.io/?numberlist=DE102011075997A1%2CDE102011076020A1%2CDE102011076022A1%2CDE102011076035A1&mode=liveview
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
 .. _issue: https://github.com/ip-tools/ip-navigator/issues
 

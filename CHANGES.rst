@@ -9,7 +9,7 @@ development
 2017-10-13 0.141.0
 ==================
 - Enable display of "CPCNO" classifications
-- IFI Claims fulltext
+- IFI Claims fulltext fixes and improvements
 
     - Add proper escaping and newline replacement for description, e.g. KR20170103976A
     - Description sections “industrial-applicability” and “reference-signs-list” were missing, e.g. KR20170103976A
