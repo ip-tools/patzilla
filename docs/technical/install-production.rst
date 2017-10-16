@@ -27,6 +27,9 @@ Cut a new release
 From inside repository, with virtualenv activated.
 ::
 
+    # Define target host for uploading package
+    export PATZILLA_HOST=root@appserver.example.org
+
     # Possible increments: patch,minor,major
     make release bump=minor
 
@@ -34,7 +37,7 @@ Deploy application
 ==================
 ::
 
-    # Define target host
+    # Define target host for installing package
     export PATZILLA_HOST=root@appserver.example.org
 
     # Possible targets: develop,staging,prod
