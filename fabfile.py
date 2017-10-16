@@ -42,7 +42,7 @@ def install(version, target):
 
     if response == 'y':
 
-        source_package = '/root/install/PatZilla/PatZilla-{version}.tar.gz'.format(version=version)
+        source_package = '~/install/PatZilla/PatZilla-{version}.tar.gz'.format(version=version)
         source_config = './patzilla/config/production.ini.tpl'
 
         target_path = os.path.join(INSTALLATION_PATH, 'sites', target)

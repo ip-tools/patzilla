@@ -22,7 +22,7 @@ sdist:
 	python setup.py sdist
 
 upload:
-	rsync -auv ./dist/PatZilla-* ${PATZILLA_HOST}:/root/install/PatZilla/
+	rsync -auv ./dist/PatZilla-* ${PATZILLA_HOST}:~/install/PatZilla/
 
 setup-test:
 	source .venv27/bin/activate; pip install -e .[test]
