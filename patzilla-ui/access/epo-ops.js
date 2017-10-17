@@ -245,17 +245,15 @@ OpsExchangeMetadata = Backbone.Model.extend({
         this.set(this.defaults);
     },
 
-    resetSomeDefaults: function(options) {
-        this.set(_(this.defaults).pick(
+    resetSomeDefaults: function(reset_fields_more) {
+        var reset_fields = [
             'searchmode', 'result_count', 'result_range', 'result_count_received',
-            'query_origin', 'query_real', 'keywords', 'maximum_results'
-        ));
-        if (options && options.clear) {
-            this.set(_(this.defaults).pick(
-                'pagination_current_page',
-                'page_size'
-            ));
+            'query_origin', 'query_real', 'keywords', 'maximum_results',
+        ];
+        if (reset_fields_more) {
+            reset_fields = reset_fields.concat(reset_fields_more);
         }
+        this.set(_(this.defaults).pick(reset_fields));
     },
 
     to_parameters: function() {

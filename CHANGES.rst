@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Add Sphinx documentation infrastructure and skeleton
+- Fix search metadata reset behavior
 
 2017-10-13 0.141.0
 ==================

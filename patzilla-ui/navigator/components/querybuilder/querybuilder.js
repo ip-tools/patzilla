@@ -123,7 +123,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('.btn-query-perform').click(function() {
                     var query_data = _this.get_common_form_data();
                     navigatorApp.disable_reviewmode();
-                    navigatorApp.perform_search({reviewmode: false, clear: true, flavor: flavor, query_data: query_data});
+                    navigatorApp.perform_search({
+                        reviewmode: false,
+                        flavor: flavor,
+                        query_data: query_data,
+                        reset: ['pagination_current_page', 'page_size'],
+                    });
                 });
 
                 // hide query textarea for ftpro, if not in debug mode
@@ -153,7 +158,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('.btn-query-perform').click(function() {
                     navigatorApp.disable_reviewmode();
                     navigatorApp.populate_metadata();
-                    navigatorApp.perform_numberlistsearch({reviewmode: false, clear: true});
+                    navigatorApp.perform_numberlistsearch({reviewmode: false, reset: ['pagination_current_page', 'page_size']});
                 });
 
             }
@@ -205,7 +210,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
                 navigatorApp.disable_reviewmode();
-                navigatorApp.perform_search({reviewmode: false, clear: true, flavor: _this.get_flavor(), query_data: query_data});
+                navigatorApp.perform_search({
+                    reviewmode: false,
+                    flavor: _this.get_flavor(),
+                    query_data: query_data,
+                    reset: ['pagination_current_page', 'page_size'],
+                });
 
             });
 

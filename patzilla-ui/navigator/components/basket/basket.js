@@ -647,7 +647,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
             if (_this.check_empty({kind: 'review', icon: 'icon-indent-left', seen: false})) { return; }
 
             // Start review mode
-            navigatorApp.metadata.resetSomeDefaults({'clear': true});
+            navigatorApp.metadata.resetSomeDefaults(['pagination_current_page', 'page_size']);
             _this.model.review();
         });
         // disable counter buttons, required to retain popover

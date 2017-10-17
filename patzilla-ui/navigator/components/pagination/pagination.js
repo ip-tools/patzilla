@@ -147,7 +147,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
             event.preventDefault();
             var value = $(this).data('value');
             _this.model.set('page_size', value);
-            navigatorApp.perform_search({clear: true});
+            navigatorApp.perform_search({reset: ['pagination_current_page']});
             return false;
         });
 

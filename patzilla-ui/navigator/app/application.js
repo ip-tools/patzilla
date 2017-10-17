@@ -62,9 +62,9 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         var datasource = this.get_datasource();
         this.metadata.set('datasource', datasource);
 
-        // it's probably important to reset e.g. "result_range",
+        // It's probably important to reset e.g. "result_range",
         // because we have to fetch 1-10 for each single result page from OPS
-        this.metadata.resetSomeDefaults(options);
+        this.metadata.resetSomeDefaults(options.reset);
 
 
         // 2. handle review mode
@@ -884,7 +884,7 @@ OpsChooserApp = Backbone.Marionette.Application.extend({
         if (numberlist) {
 
             // Reset pager and more before kicking off numberlist search
-            this.metadata.resetSomeDefaults(options);
+            this.metadata.resetSomeDefaults(options.reset);
 
             var _this = this;
             normalize_numberlist(numberlist.data.join(',')).then(function(normalized) {
