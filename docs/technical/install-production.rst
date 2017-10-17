@@ -407,8 +407,8 @@ Setup the application in the context of user "genghis"::
 
     gem install genghisapp bson_ext
 
-Run
----
+Run Genghis
+-----------
 ::
 
     su - genghis
