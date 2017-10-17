@@ -292,5 +292,5 @@ IssueReporterGui = Backbone.Model.extend({
 });
 
 var issueReporter = new IssueReporter();
-issueReporter.setup_stacktrace_interceptor({targets: 'log'});
-//issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});
+//issueReporter.setup_stacktrace_interceptor({targets: 'log'});
+issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});
