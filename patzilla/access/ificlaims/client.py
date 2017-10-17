@@ -2,6 +2,7 @@
 # (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 #
 # Lowlevel adapter to search provider "IFI Claims Direct"
+# http://docs.ificlaims.com/
 #
 import re
 import json
