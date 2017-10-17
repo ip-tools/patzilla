@@ -98,9 +98,8 @@ Auxiliary data sources:
 Getting started
 ===============
 Getting started with the software or deploying it yourself is quite easy if you are familiar with Python.
-We will only cover development here and the following documentation is for Debian 9 (Stretch) Linux.
-The software should work on any other Linux distribution, but this is beyond the scope of the README.
-See `install docs`_ about how to run an instance in a development sandbox.
+We will only cover development here, see `install docs`_ about how to run a sandbox instance.
+The software should work on any other Linux or BSD distribution, but this is beyond the scope of the README.
 
 
 Contributing

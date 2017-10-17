@@ -3,13 +3,25 @@
 ##################################
 Install IP Navigator on production
 ##################################
+The following documentation is for Debian GNU/Linux 8 (jessie).
+
 
 **************
 Infrastructure
 **************
-::
+Foundation infrastructure::
 
-    apt install nginx-extras uwsgi python2.7 python2.7-dev python-virtualenv mongodb-clients mongodb-server
+    apt install nginx-extras lua-cjson uwsgi uwsgi-plugin-python mongodb-clients mongodb-server pdftk imagemagick
+
+Python stack::
+
+    apt install python2.7 python2.7-dev python-virtualenv build-essential libxml2-dev libxslt1-dev zlib1g-dev
+
+.. note::
+
+    As PatZilla is currently being shipped as Python sdist package only, we need to have
+    some build tools and header files installed on the system. This will change in the
+    future as soon as Debian or other distribution packages will be ready.
 
 
 ***********
@@ -55,6 +67,21 @@ Upload nginx-auth lua code::
 Application container
 *********************
 
+Prerequisites
+=============
+
+System configuration
+====================
+/etc/sysctl.conf::
+
+    # The maximum number of "backlogged sockets".  Default is 128.
+    net.core.somaxconn = 2048
+
+Reload configuration::
+
+    sysctl -p
+
+
 Application configuration
 =========================
 ::
@@ -75,6 +102,7 @@ uWSGI configuration
     listen = 2048
     buffer-size = 32768
 
+    plugins = python
     virtualenv = /opt/patzilla/sites/patzilla-develop/.venv27
     paste = config:/opt/patzilla/sites/patzilla-develop/production.ini
 
@@ -124,6 +152,14 @@ Nginx configuration
     location /.well-known {
         alias /srv/www/default/htdocs/.well-known;
     }
+
+/etc/nginx/conf.d/nginx-auth.conf::
+
+    # Configure Lua package search path
+    lua_package_path ";;/opt/patzilla/nginx-auth/lua/?.lua;";
+
+    # Uncomment this for working on the Lua code
+    #lua_code_cache off;
 
 /etc/nginx/snippets/patzilla/container.conf::
 
@@ -253,40 +289,13 @@ SSL certificates
 External utilities
 ******************
 
-PhantomJS
-=========
-PhantomJS_ is a headless WebKit scriptable with a JavaScript API. It has fast and native support
-for various web standards: DOM handling, CSS selector, JSON, Canvas, and SVG.
-
-It is used for rendering PDF documents from HTML.
-::
-
-    apt install phantomjs
-
-    # Deprecated
-    #wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2
-    #cp phantomjs-1.9.7-linux-x86_64/bin/phantomjs /usr/local/bin/
-
-
-Fonts
------
-Tweak PhantomJS for better rendering quality.
-https://gist.github.com/madrobby/5489174
-
-::
-
-    apt install fontconfig libfontconfig libfreetype6 ttf-xfree86-nonfree ttf-mscorefonts-installer
-
-    wget --no-check-certificate https://gist.github.com/madrobby/5265845/raw/edd7ba1f133067afd2bd60ba7d40e684bb852c6c/localfonts.conf
-    mv localfonts.conf /etc/fonts/local.conf
-
-
 ImageMagick
 ===========
 
 Introduction
 ------------
-We found ImageMagick >= 7 yields images with better quality (contrast, etc.).
+We found on some systems the ``convert`` tool from ImageMagick 6 yields drawings with
+low quality (contrast, etc.), so you might want to consider installing ImageMagick >= 7.
 The software will search for appropriate candidates in this order::
 
     candidates = [
@@ -328,15 +337,18 @@ Setup
 -----
 ::
 
-    wget http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-src.zip
-    make -f Makefile.Debian
-    make -f Makefile.Debian install
+    apt install pdftk
 
 ::
 
     pdftk --version
     pdftk 2.02 a Handy Tool for Manipulating PDF Documents
 
+On systems with older PDFtk releases::
+
+    wget http://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk-2.02-src.zip
+    make -f Makefile.Debian
+    make -f Makefile.Debian install
 
 unoconv
 =======
@@ -344,14 +356,6 @@ unoconv_ is used to convert spreadsheet worksheets to PDF documents.
 ::
 
     apt install unoconv libreoffice
-
-
-gif2tiff
-========
-Convert drawings in GIF format from CIPO. Currently not used.
-::
-
-    apt install libtiff-tools
 
 
 backupninja-mongodb
@@ -370,20 +374,148 @@ Genghis
 =======
 You might want to have a look at Genghis_ for a user interface to MongoDB_.
 YMMV.
+
+Setup
+-----
+Let's use the `Ruby Version Manager (RVM)`_ for setting up Genghis_ isolated from the system Ruby.
 ::
 
-    #rvm --default 2.1.3
+    gpg2 --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    curl -L https://get.rvm.io | bash -s stable
+
+Create separate user for running Genghis::
+
+    useradd --groups rvm --home-dir /opt/genghis --create-home --shell /bin/bash genghis
+
+Satisfy system dependencies::
+
+    apt install apache2-utils libgmp-dev
+
+Setup the application in the context of user "genghis"::
 
     su - genghis
-    rvm gemset create genghis
 
-    rvm use ruby-1.9.3-p429@genghis
+    # https://stackoverflow.com/questions/16563115/how-to-install-rvm-system-requirements-without-giving-sudo-access-for-rvm-user/17219765#17219765
+    rvm autolibs disable
+    rvm list remote
+
+    rvm install 2.3.3
+    rvm use 2.3.3
+
+    rvm gemset create genghis
     rvm gemset use genghis
-    gem install genghisapp
-    gem install bson_ext
-    genghisapp --host localhost --port 4444
+
+    gem install genghisapp bson_ext
+
+Run
+---
+::
+
+    su - genghis
+    rvm gemset use genghis
+    genghisapp --host 127.0.0.1 --port 4444
 
     genghisapp --kill
+
+
+Nginx mount
+-----------
+/etc/nginx/sites-available/mongodb-patzilla.example.org.conf::
+
+    upstream genghis {
+      server localhost:4444;
+    }
+
+    server {
+        listen 80;
+        listen 443;
+        server_name mongodb-patzilla.example.org;
+
+        root /srv/www/null;
+
+        if ($server_port = 80) {
+            rewrite (.*) https://$http_host$1;
+        }
+
+        ssl on;
+        include snippets/ssl-best-practice.conf;
+
+        # SSL: Self-signed
+        include snippets/snakeoil.conf;
+
+        # Let's Encrypt
+        #ssl_certificate /etc/letsencrypt/live/mongodb-patzilla.example.org/fullchain.pem;
+        #ssl_certificate_key /etc/letsencrypt/live/mongodb-patzilla.example.org/privkey.pem;
+
+        location / {
+
+            auth_basic            "Restricted";
+            auth_basic_user_file  /opt/genghis/credentials;
+
+            proxy_set_header   Host              $http_host;
+            proxy_set_header   X-Real-IP         $remote_addr;
+            proxy_set_header   X-Forwarded-Proto $scheme;
+            add_header         Front-End-Https   on;
+
+            proxy_pass http://genghis;
+
+        }
+
+    }
+
+Create credentials::
+
+    htpasswd -c /opt/genghis/credentials acme
+
+Activate configuration::
+
+    /etc/nginx/sites-available/mongodb-patzilla.example.org.conf /etc/nginx/sites-enabled/
+    nginx -t
+    systemctl reload nginx
+
+
+***************************************
+External utilities - currently not used
+***************************************
+These tools are currently not used, but references are kept for future reactivation.
+
+
+PhantomJS
+=========
+PhantomJS_ is a headless WebKit scriptable with a JavaScript API. It has fast and native support
+for various web standards: DOM handling, CSS selector, JSON, Canvas, and SVG.
+
+It is used for rendering PDF documents from HTML.
+::
+
+    apt install phantomjs
+
+    # Deprecated
+    #wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2
+    #cp phantomjs-1.9.7-linux-x86_64/bin/phantomjs /usr/local/bin/
+
+
+Fonts
+-----
+Tweak PhantomJS for better rendering quality.
+https://gist.github.com/madrobby/5489174
+
+::
+
+    apt install fontconfig libfontconfig libfreetype6 ttf-xfree86-nonfree ttf-mscorefonts-installer
+
+    wget --no-check-certificate https://gist.github.com/madrobby/5265845/raw/edd7ba1f133067afd2bd60ba7d40e684bb852c6c/localfonts.conf
+    mv localfonts.conf /etc/fonts/local.conf
+
+
+gif2tiff
+========
+Convert drawings in GIF format from CIPO.
+::
+
+    apt install libtiff-tools
+
+
 
 
 .. _PhantomJS: http://phantomjs.org/
@@ -392,5 +524,6 @@ YMMV.
 .. _backupninja: https://0xacab.org/riseuplabs/backupninja
 .. _backupninja-mongodb: https://github.com/osinka/backupninja-mongodb
 .. _MongoDB: https://github.com/mongodb/mongo
+.. _Ruby Version Manager (RVM): https://rvm.io/
 .. _Ghengis: http://genghisapp.com/
 

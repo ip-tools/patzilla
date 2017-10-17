@@ -29,6 +29,12 @@ Get the source code::
     git clone https://github.com/ip-tools/ip-navigator.git
     cd ip-navigator
 
+Prerequisites
+-------------
+::
+
+    apt install libxml2-dev libxslt1-dev zlib1g-dev
+
 
 Python sandbox
 --------------
