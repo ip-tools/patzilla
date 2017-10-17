@@ -364,10 +364,46 @@ backupninja_ is a good choice for making daily backups.
 `backupninja-mongodb`_ helps with MongoDB_.
 YMMV.
 
+Setup backupninja
+-----------------
 ::
 
-    wget --no-ch https://raw.githubusercontent.com/osinka/backupninja-mongodb/master/mongodb
-    wget --no-ch https://raw.githubusercontent.com/osinka/backupninja-mongodb/master/mongodb.helper
+    apt install backupninja
+
+Edit configuration file /etc/backupninja.conf.
+
+
+Setup backup handler for MongoDB
+--------------------------------
+::
+
+    mkdir ~/install
+    cd ~/install
+    wget --no-check-certificate https://raw.githubusercontent.com/osinka/backupninja-mongodb/master/mongodb
+    wget --no-check-certificate https://raw.githubusercontent.com/osinka/backupninja-mongodb/master/mongodb.helper
+
+    mv mongodb* /usr/share/backupninja/
+
+Configure /etc/backup.d/30.mongodb::
+
+    dbhost = localhost
+    dbport = 27017
+
+    # mongouser = <username>
+    # mongopass = <password>
+    # mongodb = <db to backup>
+    # mongocollection = <collection to backup>
+
+Care for appropriate permissions::
+
+    chmod go-rwx /etc/backup.d/30.mongodb
+
+Test
+----
+::
+
+    backupninja --test --now
+    backupninja --debug --now
 
 
 Genghis
@@ -415,6 +451,13 @@ Run Genghis
     rvm gemset use genghis
     genghisapp --host 127.0.0.1 --port 4444
 
+
+Stop Genghis
+------------
+::
+
+    su - genghis
+    rvm gemset use genghis
     genghisapp --kill
 
 
