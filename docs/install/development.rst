@@ -1,8 +1,8 @@
 .. _install-development:
 
-############################
-Install IP Navigator sandbox
-############################
+#############
+Sandbox setup
+#############
 
 
 .. _run-ip-navigator-from-source:

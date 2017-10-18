@@ -8,8 +8,9 @@ the people who contributed to this software:
 * Alexander Wagner <https://ip7.tech/>
 * Andreas Motl <andreas.motl@elmyra.de>
 * Andreas Sykora <http://www.q-ip.de/sykora-lang.php>
-* Arne Krüger <https://mtc.berlin/>
+* Arne Krüger <https://depa.tech/>
 * Benjamin Walter <b.walter@europatent.net>
+* David Santamauro <https://www.ificlaims.com/>
 * Erik Zscherpe <http://blumpatentrecherchen.de/>
 * Ernst Fischer <http://www.pateris.de/dr-ernst-fischer/>
 * Gaby Strauß <http://www.patentberichterstatter-muenchen.de/>
@@ -17,7 +18,7 @@ the people who contributed to this software:
 * Klaus Hager <http://www.patentberichterstatter-muenchen.de/>
 * Lars Witte <https://www.patentfamily.com/>
 * Luca Martinuzzi <http://www.patentberichterstatter-muenchen.de/>
-* Marc Haus <https://mtc.berlin/>
+* Marc Haus <https://depa.tech/>
 * Martin Bock <http://www.serviva.com/>
 * Martin Glatzer <https://www.guentner.com/>
 * Michael Behl <m.behl@europatent.net>
