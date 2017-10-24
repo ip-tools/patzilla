@@ -109,7 +109,7 @@ and problem reports from the community.
 Spend some time taking a look around, locate a bug, design issue or
 spelling mistake and then send us a pull request or create an `issue`_.
 
-Thanks in advance for your efforts, we really appreciate any help.
+Thanks in advance for your efforts, we really appreciate any help or feedback.
 
 
 License
@@ -137,7 +137,7 @@ to get in touch with us. We are happy to receive respective inquiries at support
 .. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
 .. _EUPL-1.2: EUPL-1.2.txt
 .. _notices about licenses of third-party components: THIRD-PARTY-NOTICES.rst
-.. _install docs: docs/technical/install-development.rst
+.. _install docs: docs/install/index.rst
 
 .. _Elmyra UG: https://elmyra.de/
 .. _search demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiZDZUT3Ewc3NkRDB6TTVCSGdhOEJrQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAicXVlcnktcGVybWFsaW5rIiwgInF1ZXJ5IjogInR4dD0oU1M3IG9yICh0ZWxlY29tbXVuaWNhdGlvbiBvciBjb21tdW5pY2F0aW9uIG9yIGNvbXVuaWNhY2lcdTAwZjNuKSBvciAobW9iaWxlIG9yIE1vYmlsZnVua25ldHopIG9yIChuZXR3b3JrIG9yIChzZWN1cml0eSBvciBTaWNoZXJ1bmcpKSkgYW5kIHBhPShtb2JpbCBvciBrb21tdW5pa2F0aW9uKSBhbmQgY2w9KEgwNFcxMi8xMiBvciBIMDRMNjMvMDI4MSBvciBIMDRMNjMvMDQxNCkgbm90IHBuPShDTiBvciBDQSBvciBKUCkiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogIm9wcyJ9LCAibmJmIjogMTUwNzgyNjYxNywgImV4cCI6IDE2NjMzNDY2MTcsICJpYXQiOiAxNTA3ODI2NjE3fQ.fCl7I5wPd0r48O48UkVQxzw9QOy5PjFaFecmAoYisbM-Her9Z6R0E2hxc82TSdH68gz379jQe5v9eF6g620aG4odTOXtdhyoDrWcb-GJcfR-0BfpiqPRwzLng53ape69

@@ -40,7 +40,7 @@ requires = [
     'mongodb_gridfs_beaker==0.5.4',
 
     # web services
-    'cornice==2.4.0',
+    'cornice==2.4.0',           # 2.4.1
 
     # authorization
     'pycrypto==2.6.1',
