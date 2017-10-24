@@ -327,7 +327,9 @@ class RuntimeSettings(object):
         # Matching
         enabled = \
             datasource in self.registry.datasource_settings.datasources and \
-            (self.hostname in self.development_hosts or datasource_user_module in self.request.user.modules)
+            (self.hostname in self.development_hosts or \
+             datasource in self.request.user.modules or \
+             datasource_user_module in self.request.user.modules)
 
         return enabled
 

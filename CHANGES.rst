@@ -9,6 +9,7 @@ development
 - Activate IssueReporter email target again
 - Update IFI Claims documentation
 - Fix dependencies in setup.py for compatibility between Mac OSX and Debian GNU/Linux
+- Backward compatibility for datasource identifier in user enablement settings
 
 2017-10-13 0.141.0
 ==================
