@@ -48,9 +48,10 @@ to get authentication credentials for accessing the API. The steps for registrat
 
     For more information, please have a look at the respective resources provided by the EPO:
 
+    - `New OPS terms of use and Fair use charter from 2018 on <https://forums.epo.org/new-ops-terms-of-use-and-fair-use-charter-from-2018-on-7248>`_
     - `Terms and conditions for use of the EPO's Open Patent Services (OPS) <http://www.epo.org/service-support/ordering/ops-terms-and-conditions.html>`_
     - `Fair use charter for the EPO's online patent information products <http://www.epo.org/searching-for-patents/helpful-resources/fair-use.html>`_
-    - `EPO Patent Information Products and Services - Price list <http://documents.epo.org/projects/babylon/eponet.nsf/0/0B52985F1EFEBCBBC12574EC00263E07/$File/epo_patent_information_price-list_01-2018.pdf>`_ on page 15.
+    - `EPO Patent Information Products and Services - Price list <http://documents.epo.org/projects/babylon/eponet.nsf/0/0B52985F1EFEBCBBC12574EC00263E07/$File/epo_patent_information_price-list_01-2018.pdf>`_ on page 15
 
 .. _EPO Developer Portal: https://developers.epo.org/
 
