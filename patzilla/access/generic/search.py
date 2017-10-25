@@ -170,7 +170,8 @@ class GenericSearchResponse(object):
             normalize_fix_kindcode = 'normalize_fix_kindcode' in self.options and self.options.normalize_fix_kindcode
 
             # Apply number normalization
-            number_normalized = normalize_patent(number, fix_kindcode=normalize_fix_kindcode)
+            # TODO: Check how we can decouple from "for_ops=True" here
+            number_normalized = normalize_patent(number, fix_kindcode=normalize_fix_kindcode, for_ops=True)
 
             # Be graceful if this didn't work
             if number_normalized:

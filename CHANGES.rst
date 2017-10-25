@@ -11,6 +11,8 @@ development
 - Fix dependencies in setup.py for compatibility between Mac OSX and Debian GNU/Linux
 - Backward compatibility for datasource identifier in user enablement settings
 - Fix error when opening export dialog after creating new project. Thanks, Benjamin!
+- Account for DEPATISnet responding with US application publication numbers
+  with leading zeros after country code, e.g. US020170285092A1
 
 2017-10-13 0.141.0
 ==================

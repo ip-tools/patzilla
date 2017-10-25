@@ -177,8 +177,8 @@ t['DE10002000A1']        = 'DE10002000A1'
 t['DE102004002000A1']    = 'DE102004002000A1'
 t['DE00700001A']         = 'DE700001C'          # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
 t['DE000060018002T2']    = 'DE60018002T2'
-t['DE00694003T1']        = 'DE0694003T1'
-t['DE00935004T1']        = 'DE0935004T1'
+t['DE00694003T1']        = 'DE694003T1'
+t['DE00935004T1']        = 'DE935004T1'
 t['DE00650009A']         = 'DE650009C'          # 2015-01-13: behavior changed, now favoring OPS => kindcode A translates to C
 t['DE000019958011A1']    = 'DE19958011A1'
 t['DE09422010U1']        = 'DE9422010U1'
@@ -499,6 +499,11 @@ t['JP08007001AA']           = 'JPH087001A'
 # 2015-09-01: mogrify kindcodes for patents from sweden, here: SE9503964A => SE9503964L
 t['SE9503964A']             = 'SE9503964L'
 
+# 2017-10-25
+# DEPATISnet started delivering application publication numbers in 5+7 format
+# with a leading zero after the country, e.g. US000006166174A, US020170285092A1
+# around October 2017. Account for that.
+t['US020170285092A1']       = 'US2017285092A1'
 
 
 test_numbers_normalized_ok = t
@@ -508,7 +513,7 @@ class TestNumberNormalization:
 
     def examples_ok(self):
         for number, number_normalized_expect in test_numbers_normalized_ok.iteritems():
-            number_normalized_computed = normalize_patent(number, fix_kindcode=True)
+            number_normalized_computed = normalize_patent(number, fix_kindcode=True, for_ops=True)
             yield number, number_normalized_expect, number_normalized_computed
 
     def testDecodeOK(self):

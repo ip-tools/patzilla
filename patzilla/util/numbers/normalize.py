@@ -414,17 +414,24 @@ def normalize_patent_us(patent, for_ops=True):
 
     if for_ops:
 
-        # OPS uses US patent applications/publications in 4+6=10 format
-        # Examples: US2015322651A1, US2017250417A1
+        # OPS accepts US patent application publication numbers in 4+6=10 format
+        # Examples: US2015322651A1, US2017250417A1, US2017285092A1
 
-        # US applications: Convert from 4+5=9 to 4+6=10
+        # 2017-10-25
+        # DEPATISnet started delivering application publication numbers in 5+7 format
+        # with a leading zero after the country, e.g. US000006166174A, US020170285092A1
+        # around October 2017. Account for that.
+        if length == 12:
+            patched['number'] = patched['number'].lstrip('0')
+            length = len(patched['number'])
+
+        # US application publication numbers: Convert from 4+5=9 to 4+6=10
         if length == 9:
             padding = '0' * (10 - length)
             patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
 
-        # US applications: Convert from 4+7=11 to 4+6=10
-        # 2015-12-20: normalize"FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
-        # this might be OPS-specific
+        # US application publication numbers: Convert from 4+7=11 to 4+6=10
+        # 2015-12-20: Normalize "FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
         elif length == 11:
             if patched['number'][4] == '0':
                 patched['number'] = patched['number'][0:4] + patched['number'][5:]
@@ -437,10 +444,9 @@ def normalize_patent_us(patent, for_ops=True):
             if subtype in subtype_prefixes:
                 patched['number'] = subtype + trim_leading_zeros(seqnumber)
 
-        # US patents: Trim to seven digits
+        # US patents: Strip leading zeros
         else:
-            patched['number'] = trim_leading_zeros(patched['number'])
-            #patched['number'] = pad_left(patched['number'], '0', 7)
+            patched['number'] = patched['number'].lstrip('0')
 
     else:
 
