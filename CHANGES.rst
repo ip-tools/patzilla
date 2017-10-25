@@ -4,6 +4,9 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2017-10-25 0.142.0
+==================
 - Add Sphinx documentation infrastructure and skeleton
 - Fix search metadata reset behavior
 - Activate IssueReporter email target again
