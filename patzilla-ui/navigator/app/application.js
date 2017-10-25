@@ -6,7 +6,7 @@
  *          main application object
  * ------------------------------------------
  */
-OpsChooserApp = Backbone.Marionette.Application.extend({
+NavigatorApp = Backbone.Marionette.Application.extend({
 
     setup_ui: function() {
 

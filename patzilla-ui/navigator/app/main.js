@@ -100,7 +100,7 @@ var navigatorTheme = new NavigatorTheme(theme_settings);
 
 console.info('Load application core');
 
-navigatorApp = new OpsChooserApp({config: navigatorConfiguration, theme: navigatorTheme});
+navigatorApp = new NavigatorApp({config: navigatorConfiguration, theme: navigatorTheme});
 
 navigatorApp.addRegions({
     mainRegion: "#root-region",
