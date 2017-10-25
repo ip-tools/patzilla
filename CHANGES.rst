@@ -10,6 +10,7 @@ development
 - Update IFI Claims documentation
 - Fix dependencies in setup.py for compatibility between Mac OSX and Debian GNU/Linux
 - Backward compatibility for datasource identifier in user enablement settings
+- Fix error when opening export dialog after creating new project. Thanks, Benjamin!
 
 2017-10-13 0.141.0
 ==================

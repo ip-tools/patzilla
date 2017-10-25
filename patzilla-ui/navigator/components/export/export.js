@@ -159,7 +159,17 @@ ExportPlugin = Backbone.Model.extend({
 
         var _this = this;
         var dialog = this.dialog;
-        var basket = navigatorApp.project.get('basket');
+
+
+        // Why is this happening to me?
+        // TODO: Refactor to server-based storage and upgrade to latest Backbone, Marionette and auxiliaries.
+
+        // When taking the basket model from the project - where there should be a valid
+        // reference, actually - it will be "null" after creating a new project. BÄM.
+        //var basket = navigatorApp.project.get('basket');
+
+        // At least, there seems to be a valid reference here, so let's use that one.
+        var basket = navigatorApp.basketModel;
 
 
         // ------------------------------------------

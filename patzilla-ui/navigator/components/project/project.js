@@ -311,7 +311,7 @@ ProjectCollection = Backbone.Collection.extend({
             // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
             project.fetch({success: function() {
                 $.when(project.fetchRelated('basket')).then(succeed);
-            }})
+            }});
 
         // create new project
         } else {
