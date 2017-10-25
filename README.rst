@@ -1,3 +1,9 @@
+.. image:: https://img.shields.io/badge/Python-2.7-green.svg
+    :target: https://github.com/ip-tools/ip-navigator
+
+.. image:: https://img.shields.io/github/tag/ip-tools/ip-navigator.svg
+    :target: https://github.com/ip-tools/ip-navigator
+
 ############
 IP Navigator
 ############
