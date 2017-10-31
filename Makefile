@@ -1,6 +1,12 @@
 #VERSION := $(shell cat patzilla/version.py | awk '{ print $$3 }' | tr -d "'")
 #$(error VERSION=$(VERSION))
 
+$(eval venvpath     := .venv27)
+$(eval pip          := $(venvpath)/bin/pip)
+$(eval twine        := $(venvpath)/bin/twine)
+$(eval twine        := $(venvpath)/bin/python)
+$(eval bumpversion  := $(venvpath)/bin/bumpversion)
+
 js:
 	# url cleaner
 	node_modules/.bin/uglifyjs \
@@ -19,16 +25,25 @@ js-release: js
 	yarn run release
 
 sdist:
-	python setup.py sdist
+	$(python) setup.py sdist
 
-upload:
-	rsync -auv ./dist/PatZilla-* ${PATZILLA_HOST}:~/install/PatZilla/
+upload-legacy:
+	rsync -auv ./dist/PatZilla-* ${PATZILLA_HOST}:~/install/patzilla/
+
+upload-pypi:
+	$(eval version  := $(shell cat setup.py | grep "version='" | sed -rn "s/.*version='(.+?)'.*/\1/p"))
+	$(eval filename := "dist/patzilla-$(version).tar.gz")
+	@echo Uploading '$(filename)' to PyPI
+	$(twine) upload $(filename)
 
 setup-test:
-	source .venv27/bin/activate; pip install -e .[test]
+	$(pip) install -e .[test]
 
 setup-maintenance:
-	source .venv27/bin/activate; pip install -e .[deployment]
+	$(pip) install -e .[deployment]
+
+setup-release:
+	$(pip) install --requirement requirements-release.txt
 
 install:
 	@# make install target=patoffice version=0.29.0
@@ -37,7 +52,7 @@ install:
 #package-and-install: sdist upload install
 
 bumpversion:
-	bumpversion $(bump)
+	$(bumpversion) $(bump)
 
 push:
 	git push && git push --tags
@@ -45,7 +60,7 @@ push:
 #release:
 #	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
 
-release: js-release bumpversion push sdist upload
+release: js-release bumpversion push sdist upload-pypi
 
 install-nginx-auth:
 	fab upload_nginx_auth

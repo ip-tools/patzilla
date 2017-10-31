@@ -5,6 +5,10 @@ IP Navigator CHANGES
 development
 ===========
 
+2017-10-31 0.142.2
+==================
+- Improve release process, upload to PyPI
+
 2017-10-31 0.142.1
 ==================
 - Update documentation and infrastructure
