@@ -5,9 +5,12 @@ IP Navigator CHANGES
 development
 ===========
 
+2017-10-31 0.142.3
+==================
 - Fix numberlist search in opaque parameter mode for patentview domains
 - Fix Makefile
 - Naming things
+- Add NASA public domain demo to README
 
 2017-10-31 0.142.2
 ==================

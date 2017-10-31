@@ -76,14 +76,15 @@ Demos
   ... against EPO/OPS and display the results.
   You will be able to step through result pages and display fulltext- and family-information,
   but running custom queries will be disabled.
-
+|
 - The `numberlist demo`_ will display the patent documents DE102011075997A1, DE102011076020A1, DE102011076022A1 and DE102011076035A1.
   This is a showcase about how to integrate a link to a list of patent documents into own applications.
-
+|
 - The `document view demo`_ will display the patent document EP0666666A2 without any control elements.
   This is a showcase about how to embed the document view into own applications or
   how to directly link to single documents.
-
+|
+- The `nasa-public-domain demo`_ displays the latest `NASA patents put under the public domain <NASA public domain_>`_.
 
 
 Data sources
@@ -161,6 +162,9 @@ to get in touch with us. We are happy to receive respective inquiries at support
 .. _numberlist demo: https://patentview.ip-tools.io/?numberlist=DE102011075997A1%2CDE102011076020A1%2CDE102011076022A1%2CDE102011076035A1&mode=liveview
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
 .. _issue: https://github.com/ip-tools/ip-navigator/issues
+
+.. _NASA public domain: https://technology.nasa.gov/latest/public_domain
+.. _nasa-public-domain demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAieWJtZDRWeEtlcDlvcW1YaFM0a2NwQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAibmFzYS1wdWJsaWMtZG9tYWluLXJlY2VudCIsICJkYXRhc291cmNlIjogInJldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJ0dGwiOiAiMTU2MzQ4MDAiLCAibW9kZSI6ICJsaXZldmlldyIsICJudW1iZXJsaXN0IjogIlVTNTY4OTAwNCxVUzcwMDg2MDUsVVM3MDIzMTE4LFVTNzQzODAzMCxVUzc3NzMzNjIsVVM3NzkwMTI4LFVTNzgwODM1MyxVUzc5MDA0MzYsVVM3OTMzMDI3LFVTODIxMjEzOCxVUzgyNTkxMDQsVVM4NDA3OTc5LFVTODc2MzM2MixVUzg5Mzg5NzQsVVM5MDE2NjMyLFVTOTAyMTc4MixVUzkwOTE0OTAsVVM5MTk0MzM0In0sICJuYmYiOiAxNTA5NDI4NjI2LCAiZXhwIjogMTUyNTA2MzQyNiwgImlhdCI6IDE1MDk0Mjg2MjZ9.hFx5wWhi-n4w8ZJTVGC7liQeMfqpH8VTpRfmT6twfM4As23MBTwlsmg0u2frfYs0zV6qCsQngwwvQ2Tn6VCju8yf5GBIG5erB3VFyOr_EtZejFJOqTO6A5esEcUtyeXZ
 
 .. _EPO/OPS: https://ops.epo.org/
 .. _DPMA/DEPATISnet: https://depatisnet.dpma.de
