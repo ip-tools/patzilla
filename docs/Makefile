@@ -3,7 +3,7 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = python -msphinx
+#SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = PatZilla
 SOURCEDIR     = .
 BUILDDIR      = _build

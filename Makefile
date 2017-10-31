@@ -97,9 +97,15 @@ sloccount:
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
 
-docs-html:
+docs-virtualenv:
+	$(eval venvpath := ".venv_sphinx")
+	@test -e $(venvpath)/bin/python || `command -v virtualenv` --python=`command -v python` --no-site-packages $(venvpath)
+	@$(venvpath)/bin/pip --quiet install --requirement requirements-docs.txt
+
+docs-html: docs-virtualenv
+	$(eval venvpath := ".venv_sphinx")
 	touch docs/index.rst
-	cd docs; make html
+	export SPHINXBUILD="`pwd`/$(venvpath)/bin/sphinx-build"; cd docs; make html
 
 pdf-EP666666:
 	/usr/local/bin/wkhtmltopdf \

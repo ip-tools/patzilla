@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'PatZilla'
+project = u'PatZilla IP Navigator'
 copyright = u'2013-2017, The PatZilla authors'
 author = u'The PatZilla authors'
 

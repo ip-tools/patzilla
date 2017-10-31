@@ -3,6 +3,14 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. image:: https://img.shields.io/badge/Python-2.7-green.svg
+    :target: https://github.com/ip-tools/ip-navigator
+
+.. image:: https://img.shields.io/github/tag/ip-tools/ip-navigator.svg
+    :target: https://github.com/ip-tools/ip-navigator
+
+|
+
 PatZilla: Patent information research for humans
 ================================================
 
@@ -27,6 +35,12 @@ integrated vendor solutions.
 
     install/index
     configure/index
+
+.. toctree::
+    :maxdepth: 2
+    :caption: Features
+
+    datasource/index
 
 .. toctree::
     :maxdepth: 1

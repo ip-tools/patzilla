@@ -4,6 +4,8 @@
 .. image:: https://img.shields.io/github/tag/ip-tools/ip-navigator.svg
     :target: https://github.com/ip-tools/ip-navigator
 
+|
+
 ############
 IP Navigator
 ############
