@@ -6,14 +6,14 @@
 
 |
 
-############
-IP Navigator
-############
+################################################
+PatZilla: Patent information research for humans
+################################################
 
 
 About
 =====
-The IP Navigator is a modular patent information research platform and toolkit
+PatZilla is a modular patent information research platform and toolkit
 with a modern user interface and access to multiple data sources.
 
 Its goal is to provide the community with convenient access to the
