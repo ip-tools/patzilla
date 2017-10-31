@@ -110,6 +110,15 @@ We will only cover development here, see `install docs`_ about how to run a sand
 The software should work on any other Linux or BSD distribution, but this is beyond the scope of the README.
 
 
+Project information
+===================
+The source code lives on `GitHub <https://github.com/ip-tools/ip-navigator>`_ and
+the Python package is published to `PyPI <https://pypi.org/project/patzilla/>`_.
+You might also want to have a look at the `documentation <https://docs.ip-tools.org/ip-navigator/>`_.
+
+The software has been tested on Python 2.7 and Python 3.6.
+
+
 Contributing
 ============
 We are always happy to receive code contributions, ideas, suggestions
