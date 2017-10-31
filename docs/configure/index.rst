@@ -42,6 +42,7 @@ Data sources
 ************
 Configure the data source web services PatZilla should use for accessing patent information.
 Some primary data sources are obligatory, some are optional.
+You will definitively require an OPS 3.2 account, though.
 
 Please refer to the documentation section :ref:`data-sources` for an overview
 about the data sources PatZilla can handle.

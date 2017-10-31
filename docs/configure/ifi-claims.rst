@@ -3,7 +3,7 @@
 .. _ifi-claims-setup:
 
 ####################
-CLAIMS® Direct setup
+Setup CLAIMS® Direct
 ####################
 
 .. contents::

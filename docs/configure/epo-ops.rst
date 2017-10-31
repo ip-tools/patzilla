@@ -1,7 +1,7 @@
 .. _epo-ops-setup:
 
 ##############################
-EPO Open Patent Services setup
+Setup EPO Open Patent Services
 ##############################
 
 .. contents::

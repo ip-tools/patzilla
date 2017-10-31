@@ -3,7 +3,7 @@
 .. _mtc-depatech-setup:
 
 ###################
-depa.tech api setup
+Setup depa.tech api
 ###################
 
 .. contents::

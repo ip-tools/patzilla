@@ -1,8 +1,8 @@
 .. _datasource-epo-ops:
 
-########################
-EPO Open Patent Services
-########################
+##############################
+About EPO Open Patent Services
+##############################
 PatZilla uses the Open Patent Services (OPS) provided by the European Patent Office (EPO)
 to display bibliographic data of patent documents. See also https://ops.epo.org/ for more
 information about this service.

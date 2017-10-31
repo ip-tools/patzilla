@@ -2,9 +2,9 @@
 
 .. _datasource-ifi-claims:
 
-##############
-CLAIMS® Direct
-##############
+####################
+About CLAIMS® Direct
+####################
 PatZilla uses the CLAIMS® Direct data source by `IFI CLAIMS Patent Services`_
 to provide professional access to patent information and worldwide fulltext search.
 

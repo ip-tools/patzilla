@@ -2,9 +2,9 @@
 
 .. _datasource-mtc-depatech:
 
-#########
-depa.tech
-#########
+###############
+About depa.tech
+###############
 PatZilla uses the `depa.tech api`_ data source to provide professional access to
 patent information and fulltext search across DE, EP, WO, US, JP and KR.
 
