@@ -19,7 +19,9 @@ def run():
       {program} (-h | --help)
 
     Configuration file options:
-      <config-kind>             development or production
+      make-config               Will dump configuration file content to STDOUT,
+                                suitable for piping into a configuration file
+      <config-kind>             One of "development" or "production"
 
     Miscellaneous options:
       --debug                   Enable debug messages
