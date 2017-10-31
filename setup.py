@@ -159,15 +159,6 @@ setup(name='patzilla',
       tests_require=test_requires,
       extras_require={
           'test': test_requires,
-          'deployment': [
-              'bumpversion==0.5.3',
-              'Fabric==1.8.5',          # 1.14.0
-              'cuisine==0.7.13',
-          ],
-          'documentation': [
-              'Sphinx==1.6.4',
-              'sphinx_rtd_theme==0.2.5b1',
-          ],
       },
 
       entry_points={

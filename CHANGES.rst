@@ -4,7 +4,10 @@ IP Navigator CHANGES
 
 development
 ===========
-- Documentation: Add “support.rst”
+
+2017-10-31 0.143.1
+==================
+- Documentation: Overall improvements and polishing
 
 2017-10-31 0.143.0
 ==================

@@ -25,6 +25,7 @@ and other professional patent search APIs in its standalone version.
 You can also use its modules as software components for building
 integrated vendor solutions.
 
+.. highlight:: bash
 
 .. toctree::
     :maxdepth: 1
@@ -33,7 +34,16 @@ integrated vendor solutions.
     README <README>
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
+    :caption: Features
+
+    datasource/index
+
+
+----
+
+.. toctree::
+    :maxdepth: 1
     :caption: Basic setup
 
     install/index
@@ -44,19 +54,22 @@ integrated vendor solutions.
     :maxdepth: 1
     :caption: Advanced setup
 
+    install/sandbox
     install/production
-
-.. toctree::
-    :maxdepth: 2
-    :caption: Features
-
-    datasource/index
 
 .. toctree::
     :maxdepth: 1
     :caption: Development
 
-    Contributors <CONTRIBUTORS>
-    Changelog <CHANGES>
-    support
+    development/release
+    Changelog <development/CHANGES>
+    development/contribute
+    Contributors <development/CONTRIBUTORS>
+
+.. toctree::
+    :maxdepth: 1
+    :caption: License and support
+
+    license/index
+    development/support
 

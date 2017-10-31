@@ -46,8 +46,8 @@ upload-pypi:
 setup-test:
 	$(pip) install -e .[test]
 
-setup-maintenance:
-	$(pip) install -e .[deployment]
+setup-deployment:
+	$(pip) install --requirement requirements-deploy.txt
 
 setup-release:
 	$(pip) install --requirement requirements-release.txt

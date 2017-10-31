@@ -111,10 +111,11 @@ Auxiliary data sources:
 Getting started
 ===============
 Getting started with the software or deploying it yourself is quite easy if you are familiar with Python.
-We will only cover development here, see `install docs`_ about how to run a sandbox instance.
+We will only cover development here, see the `install documentation`_ page about how to install, configure
+and run an instance.
 The software should work on any other Linux or BSD distribution, but this is beyond the scope of the README.
 
-The software has been tested on Python 2.7 and Python 3.6.
+The software has been tested on Python 2.7, it is not ready for Python 3.6 yet.
 
 
 Project information
@@ -159,10 +160,10 @@ If you’re using the IP Navigator in your company and you need support or custo
 feel free to get in touch with us. We are happy to receive respective inquiries at support@elmyra.de.
 
 
-.. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
-.. _EUPL-1.2: EUPL-1.2.txt
-.. _notices about licenses of third-party components: THIRD-PARTY-NOTICES.rst
-.. _install docs: docs/install/index.rst
+.. _GNU-AGPL-3.0: https://docs.ip-tools.org/ip-navigator/_static/license/GNU-AGPL-3.0.txt
+.. _EUPL-1.2: https://docs.ip-tools.org/ip-navigator/_static/license/EUPL-1.2.txt
+.. _notices about licenses of third-party components: https://docs.ip-tools.org/ip-navigator/license/THIRD-PARTY-NOTICES.html
+.. _install documentation: https://docs.ip-tools.org/ip-navigator/install/
 
 .. _Elmyra UG: https://elmyra.de/
 .. _search demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiZDZUT3Ewc3NkRDB6TTVCSGdhOEJrQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAicXVlcnktcGVybWFsaW5rIiwgInF1ZXJ5IjogInR4dD0oU1M3IG9yICh0ZWxlY29tbXVuaWNhdGlvbiBvciBjb21tdW5pY2F0aW9uIG9yIGNvbXVuaWNhY2lcdTAwZjNuKSBvciAobW9iaWxlIG9yIE1vYmlsZnVua25ldHopIG9yIChuZXR3b3JrIG9yIChzZWN1cml0eSBvciBTaWNoZXJ1bmcpKSkgYW5kIHBhPShtb2JpbCBvciBrb21tdW5pa2F0aW9uKSBhbmQgY2w9KEgwNFcxMi8xMiBvciBIMDRMNjMvMDI4MSBvciBIMDRMNjMvMDQxNCkgbm90IHBuPShDTiBvciBDQSBvciBKUCkiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogIm9wcyJ9LCAibmJmIjogMTUwNzgyNjYxNywgImV4cCI6IDE2NjMzNDY2MTcsICJpYXQiOiAxNTA3ODI2NjE3fQ.fCl7I5wPd0r48O48UkVQxzw9QOy5PjFaFecmAoYisbM-Her9Z6R0E2hxc82TSdH68gz379jQe5v9eF6g620aG4odTOXtdhyoDrWcb-GJcfR-0BfpiqPRwzLng53ape69

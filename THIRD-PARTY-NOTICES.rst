@@ -1,3 +1,5 @@
+.. _third-party-notices:
+
 ################################################
 Notices about licenses of third-party components
 ################################################
@@ -12,6 +14,12 @@ please bring it to our attention through any of the ways detailed here:
 
 The attached notices are provided for information only.
 
+
+.. contents::
+   :local:
+   :depth: 1
+
+----
 
 
 License notice for Pyramid
@@ -49,7 +57,7 @@ The majority of the code in Pyramid is supplied under this license:
 
   Disclaimer
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS'' AND
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS "AS IS" AND
     ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
     TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
     PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
@@ -67,7 +75,6 @@ within individiual files indicate that these portions are licensed
 under the ZPL):
 
   Zope Public License (ZPL) Version 2.1
-  -------------------------------------
 
   A copyright notice accompanies this license document that
   identifies the copyright holders.
@@ -106,7 +113,7 @@ under the ZPL):
 
   Disclaimer
 
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS ``AS IS''
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS "AS IS"
     AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT
     NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
     AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN
@@ -147,7 +154,7 @@ following license:
        products derived from this software without specific prior
        written permission.
 
-   THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS
    OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
    WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
    ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY

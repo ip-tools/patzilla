@@ -1,4 +1,7 @@
+.. include:: ../resources.rst
+
 .. _install-development:
+.. _install-sandbox:
 
 #############
 Sandbox setup
@@ -18,23 +21,49 @@ run a sandbox instance, run the tests,
 build the documentation, build the packages, etc.
 
 
-Setup
-=====
+Satisfy prerequisites
+=====================
+Setting up PatZilla from source has the same requirements as with the basic setup,
+so please follow :ref:`install-minimum-requirements` for satisfying these.
+
+Additionally, PatZilla requires the Yarn_ package manager for setting up the
+environment used for bundling the Javascript packages. Please read how to :ref:`setup-yarn`.
 
 
-Repository
-----------
+Get the Source
+==============
+
+Using git
+---------
 Get the source code::
 
     git clone https://github.com/ip-tools/ip-navigator.git
     cd ip-navigator
 
-Prerequisites
--------------
-::
 
-    apt install libxml2-dev libxslt1-dev zlib1g-dev
+Using download
+--------------
+You can also install PatZilla from source. The latest release (|version|) is available from GitHub.
 
+* tarball_
+* zipball_
+
+Once you have a copy of the source, you can embed it in your Python package, or install it into your site-packages easily::
+
+    $ python setup.py install
+
+.. _tarball: https://github.com/ip-tools/ip-navigator/tarball/master
+.. _zipball: https://github.com/ip-tools/ip-navigator/zipball/master
+
+.. note::
+
+    Please note that both variants do **not** contain the bundled Javascript packages,
+    so the user interface will not work out of the box before running webpack on it.
+    See also :ref:`build-javascript-bundles` for building the Javascript bundles.
+
+
+Setup
+=====
 
 Python sandbox
 --------------
@@ -51,6 +80,8 @@ Fetch module dependencies and install application::
 
     pip install -e .
 
+
+.. _build-javascript-bundles:
 
 Javascript foundation
 ---------------------

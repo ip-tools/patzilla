@@ -1,3 +1,5 @@
+.. include:: ../resources.rst
+
 .. _install:
 
 ############
@@ -16,6 +18,29 @@ follow up with its :ref:`configuration`.
 *******************
 Installing PatZilla
 *******************
+The following documentation is for Debian GNU/Linux or derivates.
+We appreciate contributions in form of walkthroughs about how to
+install PatZilla on other distributions and platforms.
+
+
+.. _install-minimum-requirements:
+
+Minimum prerequisites
+=====================
+Foundation: MongoDB_, PDFtk_ and ImageMagick_::
+
+    apt install mongodb-clients mongodb-server pdftk imagemagick
+
+Python stack::
+
+    apt install python2.7 python2.7-dev python-virtualenv build-essential libxml2-dev libxslt1-dev zlib1g-dev
+
+.. note::
+
+    As PatZilla is currently being shipped as Python sdist package only, we need to have
+    some build tools and header files installed on the system before running the installation.
+    This will change as soon as Debian or other distribution packages will be available.
+
 
 Distribute & Pip
 ================
@@ -28,36 +53,17 @@ You might want to verify the installation actually worked::
     patzilla --version
     patzilla 0.142.5
 
-
-*******************
-Download the Source
-*******************
-
-You can also install PatZilla from source. The latest release (|version|) is available from GitHub.
-
-* tarball_
-* zipball_
-
-Once you have a copy of the source, you can embed it in your Python package, or install it into your site-packages easily::
-
-    $ python setup.py install
-
-.. _tarball: https://github.com/ip-tools/ip-navigator/tarball/master
-.. _zipball: https://github.com/ip-tools/ip-navigator/zipball/master
-
-.. note::
-
-    Please note that the sources do not contain the bundled Javascript packages,
-    so the user interface will not work out of the box before running webpack on it.
-    See also :ref:`install-development` for building the Javascript bundles.
+If you need an older version, please visit
+the `release history <https://pypi.org/project/patzilla/#history>`_
+of `PatZilla on PyPI <https://pypi.org/project/patzilla/>`_.
 
 
-**********
-Contribute
-**********
-For contributing to PatZilla, you might want to consider cloning the git repository
-and prepare the software for being run in a sandbox environment::
+.. tip::
 
-    git clone https://github.com/ip-tools/ip-navigator.git
+    As PatZilla pulls in a significant amount of Python package dependencies,
+    you might want to consider installing the software isolated from the system Python
+    by using "virtualenv" before proceeding with ``pip install patzilla``::
 
-See also :ref:`install-development`.
+        virtualenv-2.7 --no-site-packages .venv27
+        source .venv27/bin/activate
+

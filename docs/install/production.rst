@@ -15,17 +15,7 @@ Infrastructure
 **************
 Foundation infrastructure::
 
-    apt install nginx-extras lua-cjson uwsgi uwsgi-plugin-python mongodb-clients mongodb-server pdftk imagemagick
-
-Python stack::
-
-    apt install python2.7 python2.7-dev python-virtualenv build-essential libxml2-dev libxslt1-dev zlib1g-dev
-
-.. note::
-
-    As PatZilla is currently being shipped as Python sdist package only, we need to have
-    some build tools and header files installed on the system. This will change in the
-    future as soon as Debian or other distribution packages will be ready.
+    apt install nginx-extras lua-cjson uwsgi uwsgi-plugin-python
 
 
 ***********
@@ -36,18 +26,7 @@ Prerequisites
 =============
 Run once to prepare the sandbox environment for deployment tasks::
 
-    make setup-maintenance
-
-Cut a new release
-=================
-From inside repository, with virtualenv activated.
-::
-
-    # Define target host for uploading package
-    export PATZILLA_HOST=root@appserver.example.org
-
-    # Possible increments: patch,minor,major
-    make release bump=minor
+    pip install --requirement requirements-deploy.txt
 
 Deploy application
 ==================
