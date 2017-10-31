@@ -1,6 +1,9 @@
 .. image:: https://img.shields.io/badge/Python-2.7-green.svg
     :target: https://github.com/ip-tools/ip-navigator
 
+.. image:: https://img.shields.io/pypi/v/patzilla.svg
+    :target: https://pypi.org/project/patzilla/
+
 .. image:: https://img.shields.io/github/tag/ip-tools/ip-navigator.svg
     :target: https://github.com/ip-tools/ip-navigator
 
@@ -16,9 +19,10 @@ About
 PatZilla is a modular patent information research platform and toolkit
 with a modern user interface and access to multiple data sources.
 
-Its goal is to provide the community with convenient access to the
-OPS service from EPO and other professional patent search APIs.
-It is also used as a building block for integrated vendor solutions.
+It allows you to conveniently access and use the OPS service from EPO
+and other professional patent search APIs in its standalone version.
+You can also use its modules as software components for building
+integrated vendor solutions.
 
 
 History
@@ -59,7 +63,7 @@ Screenshot
 ==========
 A picture says a thousand words.
 
-.. image:: patzilla-screenshot.png
+.. image:: https://raw.githubusercontent.com/ip-tools/ip-navigator/master/patzilla-screenshot.png
     :alt: IP Navigator
     :target: https://github.com/ip-tools/ip-navigator
 
@@ -148,8 +152,8 @@ For enterprises, dedicated commercial support is also available through Elmyra U
 `Elmyra UG`_ is the software development company that’s spearheading the ongoing
 development and as such will ensure continuity for the project.
 
-If you’re using the IP Navigator in your company and you need commercial support, feel free
-to get in touch with us. We are happy to receive respective inquiries at support@elmyra.de.
+If you’re using the IP Navigator in your company and you need support or custom development,
+feel free to get in touch with us. We are happy to receive respective inquiries at support@elmyra.de.
 
 
 .. _GNU-AGPL-3.0: GNU-AGPL-3.0.txt
