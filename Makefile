@@ -6,6 +6,7 @@ $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
+$(eval fab          := $(venvpath)/bin/fab)
 
 js:
 	# url cleaner
@@ -21,7 +22,8 @@ js:
 
 js-release: js
 	@echo ------------------------------------------
-	@echo Bundling Javascript/CSS resources. This might take a while, please stay patient...
+	@echo Bundling Javascript/CSS resources.
+	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
 	yarn run release
 
@@ -32,6 +34,10 @@ upload-legacy:
 	rsync -auv ./dist/PatZilla-* ${PATZILLA_HOST}:~/install/patzilla/
 
 upload-pypi:
+	@echo ------------------------------------------
+	@echo Uploading Python package to PyPI.
+	@echo This might take a while, please stay patient...
+	@echo ------------------------------------------
 	$(eval version  := $(shell cat setup.py | grep "version='" | sed -rn "s/.*version='(.+?)'.*/\1/p"))
 	$(eval filename := "dist/patzilla-$(version).tar.gz")
 	@echo Uploading '$(filename)' to PyPI
@@ -48,7 +54,7 @@ setup-release:
 
 install:
 	@# make install target=patoffice version=0.29.0
-	source .venv27/bin/activate; fab install:target=$(target),version=$(version)
+	$(fab) install:target=$(target),version=$(version)
 
 #package-and-install: sdist upload install
 

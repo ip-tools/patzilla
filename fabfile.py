@@ -42,7 +42,11 @@ def install(version, target):
 
     if response == 'y':
 
-        source_package = '~/install/PatZilla/PatZilla-{version}.tar.gz'.format(version=version)
+        # From filesystem
+        #source_package = '~/install/PatZilla/PatZilla-{version}.tar.gz'.format(version=version)
+
+        # From PyPI
+        source_package = 'patzilla=={version}'.format(version=version)
         source_config = './patzilla/config/production.ini.tpl'
 
         target_path = os.path.join(INSTALLATION_PATH, 'sites', target)
@@ -50,8 +54,8 @@ def install(version, target):
 
         venv_path = target_path + '/.venv27'
 
-        if not file_is_file(source_package):
-            abort('Source package does not exist: ' + source_package)
+        #if not file_is_file(source_package):
+        #    abort('Source package does not exist: ' + source_package)
 
         if not file_is_dir(target_path):
             abort('Target path does not exist: ' + target_path)
@@ -61,7 +65,6 @@ def install(version, target):
             #setup_package('which', venv_path)
             # TODO: put these packages to a more convenient location
 
-        #setup_package('/root/install/PatZilla/which*', venv_path)
         setup_package(source_package, venv_path)
 
         upload_config(source_config, target_path)
