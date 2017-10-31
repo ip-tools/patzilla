@@ -34,11 +34,17 @@ integrated vendor solutions.
 
 .. toctree::
     :maxdepth: 2
-    :caption: Setup
+    :caption: Basic setup
 
     install/index
     configure/index
     running/index
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Advanced setup
+
+    install/production
 
 .. toctree::
     :maxdepth: 2
@@ -52,4 +58,5 @@ integrated vendor solutions.
 
     Contributors <CONTRIBUTORS>
     Changelog <CHANGES>
+    support
 

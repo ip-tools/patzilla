@@ -6,10 +6,6 @@ Running
 This part of the documentation covers the ways to run PatZilla.
 Please read this section carefully.
 
-***********
-Basic setup
-***********
-
 Running MongoDB
 ===============
 If the MongoDB database already is running on your machine, you can skip this step.
@@ -33,11 +29,3 @@ Start the web server using the :ref:`configuration` file created before::
 Then, open http://localhost:6543/navigator/
 
 Have fun!
-
-
-****************
-Production setup
-****************
-For getting an idea about how to install PatZilla in a production environment,
-please refer to :ref:`install-production`.
-

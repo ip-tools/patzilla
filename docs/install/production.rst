@@ -5,6 +5,7 @@
 ################
 Production setup
 ################
+For getting an idea about how to install PatZilla in a production environment.
 The following documentation is for Debian GNU/Linux 8 (jessie).
 The designated target directory is ``/opt/patzilla``.
 

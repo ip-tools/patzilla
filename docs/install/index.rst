@@ -61,10 +61,3 @@ and prepare the software for being run in a sandbox environment::
     git clone https://github.com/ip-tools/ip-navigator.git
 
 See also :ref:`install-development`.
-
-
-****************
-Production setup
-****************
-For getting an idea about how to install PatZilla in a production environment,
-please refer to :ref:`install-production`.
