@@ -1,11 +1,9 @@
 import os
-
 from setuptools import setup, find_packages
-#from distutils.core import setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
+#CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 requires = [
 
@@ -101,7 +99,7 @@ test_requires = [
     'nose2-cov==1.0a4',
 ]
 
-setup(name='PatZilla',
+setup(name='patzilla',
       version='0.142.1',
       description='PatZilla is a modular patent information research platform and toolkit ' \
                   'with a modern user interface and access to multiple data sources.',
