@@ -21,7 +21,8 @@ js:
 		--message='release: minify javascript resources'
 
 js-release: js
-	@echo Bundling Javascript/CSS resources
+	@echo Bundling Javascript/CSS resources. This might take a while, please stay patient...
+	@echo
 	yarn run release
 
 sdist:
