@@ -6,6 +6,7 @@ development
 ===========
 
 - Fix numberlist search in opaque parameter mode for patentview domains
+- Fix Makefile
 
 2017-10-31 0.142.2
 ==================

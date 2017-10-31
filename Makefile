@@ -4,7 +4,7 @@
 $(eval venvpath     := .venv27)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
-$(eval twine        := $(venvpath)/bin/python)
+$(eval python       := $(venvpath)/bin/python)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 
 js:
