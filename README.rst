@@ -19,7 +19,7 @@ About
 PatZilla is a modular patent information research platform and toolkit
 with a modern user interface and access to multiple data sources.
 
-It allows you to conveniently access and use the OPS service from EPO
+It provides convenient access to the OPS service from EPO
 and other professional patent search APIs in its standalone version.
 You can also use its modules as software components for building
 integrated vendor solutions.

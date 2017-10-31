@@ -7,33 +7,28 @@ PatZilla relies on a number of third-party services for accessing patent informa
 Some primary data sources are obligatory, some are optional.
 
 
-************************
-EPO Open Patent Services
-************************
-The most important primary data source are the Open Patent Services (OPS)
-from the European Patent Office (EPO), so they are obligatory to configure.
-For general information about the EPO OPS service,
-please refer to :ref:`datasource-epo-ops`.
+.. list-table:: Data sources
+   :header-rows: 1
+   :widths: 7 7 7 7
+   :stub-columns: 1
 
-You will have to apply for an account and configure it appropriately,
-please refer to :ref:`epo-ops-setup` for doing so.
+   *  -  Name
+      -  About
+      -  Setup
+      -  Requirement
 
+   *  -  EPO Open Patent Services (OPS)
+      -  :ref:`datasource-epo-ops`
+      -  :ref:`epo-ops-setup`
+      -  Obligatory
 
-**************************
-IFI CLAIMS Patent Services
-**************************
-CLAIMS® Direct is a professional data source service providing full text searches.
-For general information about this service, please refer to :ref:`datasource-ifi-claims`.
+   *  -  IFI CLAIMS Patent Services
+      -  :ref:`datasource-ifi-claims`
+      -  :ref:`ifi-claims-setup`
+      -  Optional
 
-You will have to apply for an account and configure it appropriately,
-please refer to :ref:`ifi-claims-setup` for doing so.
+   *  -  MTC depa.tech api
+      -  :ref:`datasource-mtc-depatech`
+      -  :ref:`mtc-depatech-setup`
+      -  Optional
 
-
-*****************
-MTC depa.tech API
-*****************
-The MTC depa.tech API is a professional data source service providing full text searches.
-For general information about this service, please refer to :ref:`datasource-mtc-depatech`.
-
-You will have to apply for an account and configure it appropriately,
-please refer to :ref:`mtc-depatech-setup` for doing so.
