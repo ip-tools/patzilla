@@ -10,8 +10,8 @@ requires = [
     # ----------------------------------------------
     #   Environment
     # ----------------------------------------------
-    'setuptools>=36.4.0',       # 36.5.0
-    'six>=1.10.0',
+    'setuptools>=36.4.0',       # 36.6.0
+    'six>=1.10.0',              # 1.11.0
 
 
     # ----------------------------------------------
@@ -43,7 +43,7 @@ requires = [
     # authorization
     'pycrypto==2.6.1',
     'jws==0.1.3',
-    'python_jwt==2.0.2',
+    'python_jwt==2.0.2',        # 3.0.0
     'pbkdf2==1.3',
 
 
@@ -54,16 +54,22 @@ requires = [
     # HTTP
     'requests==2.18.4',
     'requests-oauthlib==0.8.0',
-    'mechanize==0.3.5',
+    'mechanize==0.3.5',         # 0.3.6
 
     # HTML
-    'BeautifulSoup==3.2.1',
+    'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0
 
     # SNI support
     'pyOpenSSL==17.3.0',
-    'cryptography==2.0.3',
+    'cryptography==2.0.3',      # 2.1.2
     'pyasn1==0.3.7',
     'ndg-httpsclient==0.4.3',
+
+
+    # ----------------------------------------------
+    #   Console interface
+    # ----------------------------------------------
+    'docopt==0.6.2',
 
 
     # ----------------------------------------------
@@ -131,7 +137,11 @@ setup(name='patzilla',
       author='Andreas Motl',
       author_email='andreas.motl@ip-tools.org',
       url='https://github.com/ip-tools/ip-navigator',
-      keywords='patent information research management trademark design search fulltext',
+      keywords='patent information research management trademark design search fulltext '
+               'patent patents patent-search patent-data information information-retrieval intellectual-property '
+               'research researcher researchers research-data research-tool research-and-development '
+               'epo-ops dpma uspto open-data opendata '
+      ,
       packages=find_packages(),
       include_package_data=True,
       package_data={

@@ -12,7 +12,7 @@
 vendors     = patzilla
 
 # Which datasources are configured?
-datasources = ops, depatisconnect, ificlaims, depatech
+datasources = ops, ificlaims, depatech
 
 # Fields to protect from being leaked into Javascript environment
 datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, api_username, api_password
@@ -164,9 +164,14 @@ pyramid.debug_routematch = false
 pyramid.default_locale_name = en
 pyramid.includes =
 
-# cache settings
-cache.regions = search, medium, longer, static
+
+# Database configuration
+mongodb.patzilla.uri = mongodb://localhost:27017/patzilla
+
+
+# Cache settings
 cache.url = mongodb://localhost:27017/beaker.cache
+cache.regions = search, medium, longer, static
 cache.key_length = 512
 
 cache.search.type = ext:mongodb
@@ -196,10 +201,10 @@ cache.longer.expire = 604800
 cache.static.expire = 2592000
 
 
-# database configuration
-mongodb.patzilla.uri = mongodb://localhost:27017/patzilla
 
-
+###
+# wsgi server configuration
+###
 
 [server:main]
 use = egg:waitress#main
