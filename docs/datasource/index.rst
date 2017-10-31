@@ -11,8 +11,9 @@ Some primary data sources are obligatory, some are optional.
 EPO Open Patent Services
 ************************
 The most important primary data source are the Open Patent Services (OPS)
-from the European Patent Office (EPO). For general information about the
-EPO OPS service, please refer to :ref:`datasource-epo-ops`.
+from the European Patent Office (EPO), so they are obligatory to configure.
+For general information about the EPO OPS service,
+please refer to :ref:`datasource-epo-ops`.
 
 You will have to apply for an account and configure it appropriately,
 please refer to :ref:`epo-ops-setup` for doing so.
