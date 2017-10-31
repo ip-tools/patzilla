@@ -1,0 +1,13 @@
+.width-800 {
+    width: 800px;
+}
+
+.wy-nav-content {
+    max-width: 75%;
+}
+
+.wy-side-nav-search > a img.logo {
+    display: inline-block;
+    margin: inherit;
+    vertical-align: middle;
+}
