@@ -114,14 +114,17 @@ Getting started with the software or deploying it yourself is quite easy if you 
 We will only cover development here, see `install docs`_ about how to run a sandbox instance.
 The software should work on any other Linux or BSD distribution, but this is beyond the scope of the README.
 
+The software has been tested on Python 2.7 and Python 3.6.
+
 
 Project information
 ===================
-The source code lives on `GitHub <https://github.com/ip-tools/ip-navigator>`_ and
-the Python package is published to `PyPI <https://pypi.org/project/patzilla/>`_.
-You might also want to have a look at the `documentation <https://docs.ip-tools.org/ip-navigator/>`_.
+The source code of the »IP Navigator« is available under an open source license using the brand name »PatZilla«.
+For further details, please visit:
 
-The software has been tested on Python 2.7 and Python 3.6.
+- `PatZilla on GitHub <https://github.com/ip-tools/ip-navigator>`_
+- `PatZilla documentation <https://docs.ip-tools.org/ip-navigator/>`_
+- `PatZilla on the Python Package Index (PyPI) <https://pypi.org/project/patzilla/>`_
 
 
 Contributing
