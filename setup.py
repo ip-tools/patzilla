@@ -171,6 +171,7 @@ setup(name='patzilla',
         #    ],
 
         'console_scripts': [
+            'patzilla  = patzilla.commands:run',
         ],
 
       },

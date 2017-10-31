@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Add console interface program ``patzilla``
 
 2017-10-31 0.142.5
 ==================

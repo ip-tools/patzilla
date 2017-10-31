@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 from pyramid.config import Configurator
-from patzilla.version import __VERSION__
+from patzilla.version import __version__
 from patzilla.util.config import read_config
 from patzilla.util.data.container import SmartBunch
 from patzilla.util.web.pyramid.renderer import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
@@ -10,7 +10,7 @@ def main(global_config, **settings):
     """This function returns a Pyramid WSGI application."""
 
     settings.setdefault('CONFIG_FILE', global_config.get('__file__'))
-    settings.setdefault('SOFTWARE_VERSION', __VERSION__)
+    settings.setdefault('SOFTWARE_VERSION', __version__)
 
     config = Configurator(settings=settings)
 
