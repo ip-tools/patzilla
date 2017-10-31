@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - Add console interface program ``patzilla``
+- Add command ``patzilla make-config {development,production}`` for generating configuration file
 
 2017-10-31 0.142.5
 ==================

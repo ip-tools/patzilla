@@ -11,10 +11,16 @@ Please read this section carefully.
 ******************************
 Application configuration file
 ******************************
-You can find blueprints of configuration files for running PatZilla
-in development and production mode in the source tree.
-Please have a look at https://github.com/ip-tools/ip-navigator/tree/master/patzilla/config
-for getting a rough idea about how this looks like.
+Blueprints of configuration files for running PatZilla
+in development and production mode are shipped with the
+Python package.
+
+In order to copy the *production* PatZilla configuration
+blueprint to the designated location, issue::
+
+    patzilla make-config production > /path/to/patzilla.ini
+
+
 
 
 ********************
