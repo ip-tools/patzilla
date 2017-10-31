@@ -6,6 +6,7 @@ development
 ===========
 - Add console interface program ``patzilla``
 - Add command ``patzilla make-config {development,production}`` for generating configuration file
+- Improve documentation
 
 2017-10-31 0.142.5
 ==================

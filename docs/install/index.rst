@@ -21,7 +21,12 @@ Distribute & Pip
 ================
 The recommended way to install PatZilla is with `pip <http://www.pip-installer.org/>`_::
 
-    $ pip install patzilla
+    pip install patzilla
+
+You might want to verify the installation actually worked::
+
+    patzilla --version
+    patzilla 0.142.5
 
 
 *******************

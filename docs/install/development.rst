@@ -90,7 +90,7 @@ Start web server::
     source .venv27/bin/activate
     pserve patzilla/config/development-local.ini --reload
 
-Go to http://localhost:6543/navigator/
+Then, open http://localhost:6543/navigator/
 
 
 Nginx

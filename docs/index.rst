@@ -38,6 +38,7 @@ integrated vendor solutions.
 
     install/index
     configure/index
+    running/index
 
 .. toctree::
     :maxdepth: 2
