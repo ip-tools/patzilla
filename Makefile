@@ -15,7 +15,6 @@ js:
 		> patzilla/navigator/templates/urlcleaner.min.js
 
 	-git diff --quiet --exit-code || git commit \
-		Makefile \
 		patzilla/navigator/templates/urlcleaner.min.js \
 		-uno --untracked-files=no \
 		--message='release: minify javascript resources'
