@@ -879,6 +879,9 @@ NavigatorApp = Backbone.Marionette.Application.extend({
     },
 
     perform_numberlistsearch: function(options) {
+
+        options = options || {};
+
         //log('perform_numberlistsearch');
         var numberlist = this.parse_numberlist($('#numberlist').val());
         if (numberlist) {
