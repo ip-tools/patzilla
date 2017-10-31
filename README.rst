@@ -80,14 +80,14 @@ Demos
   ... against EPO/OPS and display the results.
   You will be able to step through result pages and display fulltext- and family-information,
   but running custom queries will be disabled.
-|
+
 - The `numberlist demo`_ will display the patent documents DE102011075997A1, DE102011076020A1, DE102011076022A1 and DE102011076035A1.
   This is a showcase about how to integrate a link to a list of patent documents into own applications.
-|
+
 - The `document view demo`_ will display the patent document EP0666666A2 without any control elements.
   This is a showcase about how to embed the document view into own applications or
   how to directly link to single documents.
-|
+
 - The `nasa-public-domain demo`_ displays the latest `NASA patents put under the public domain <NASA public domain_>`_.
 
 
