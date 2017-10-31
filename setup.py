@@ -137,7 +137,7 @@ setup(name='patzilla',
       package_data={
           'patzilla.navigator': [
               'resources/*.*',
-              'templates/*.mako', 'templates/*.html',
+              'templates/*.mako', 'templates/*.html', 'templates/*.min.js',
               'static/js/**/*.min.js', 'static/js/**/*.min.js.map', '**/**/*.css',
               '**/**/*.png', '**/**/*.jpg', '**/**/*.gif', '**/**/*.svg',
           ],

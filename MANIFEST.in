@@ -1,7 +1,7 @@
 include setup.cfg *.txt *.rst
 exclude .bumpversion.cfg
 recursive-include patzilla *.pt *.mak *.mako *.html *.xml *.pem *.ini.tpl *.rst
-exclude patzilla/navigator/templates/urlcleaner.js
+include patzilla/navigator/templates/urlcleaner.min.js
 prune patzilla/navigator/static
 recursive-include patzilla/navigator/static/img *.*
 recursive-include patzilla/navigator/static/meta *.*

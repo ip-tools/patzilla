@@ -7,6 +7,8 @@ development
 
 2017-10-31 0.142.4
 ==================
+- Fix MANIFEST.in
+
 - Attempt to fix README
 - Make Makefile not commit itself when minifying urlcleaner.js
 
