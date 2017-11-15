@@ -24,8 +24,7 @@ Setup
 ::
 
     # Add Node.js package repository
-    curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-    apt update
+    curl -sL https://deb.nodesource.com/setup_6.x | bash -
 
     # Install Node.js
     apt install --yes nodejs

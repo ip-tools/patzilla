@@ -2,7 +2,7 @@
   "name": "patzilla-ui",
   "description": "PatZilla is a modular patent information research platform and toolkit with a modern user interface and access to multiple data sources.",
   "version": "0.143.1",
-  "licence": "AGPL 3, EUPL 1.2",
+  "license": "AGPL 3, EUPL 1.2",
   "author": {
     "name": "Andreas Motl",
     "email": "andreas.motl@elmyra.de"
@@ -27,8 +27,8 @@
   },
   "scripts": {
     "watch": "webpack --config=webpack.develop.config.js --watch --hot",
-    "build": "webpack --config=webpack.develop.config.js --display detailed --display-error-details",
-    "release": "webpack --config=webpack.release.config.js --display detailed --display-error-details"
+    "build": "webpack --config=webpack.develop.config.js --display detailed --display-error-details --progress",
+    "release": "webpack --config=webpack.release.config.js --display detailed --display-error-details --progress"
   },
   "devDependencies": {
     "autonumeric": "2.0.13",

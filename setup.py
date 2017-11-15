@@ -123,6 +123,7 @@ setup(name='patzilla',
         "Intended Audience :: Legal Industry",
         "Intended Audience :: Manufacturing",
         "Intended Audience :: Science/Research",
+        # EUPL 1.2 isn't approved by OSI yet
         "License :: OSI Approved :: European Union Public Licence 1.1 (EUPL 1.1)",
         "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
         "Natural Language :: English",

@@ -304,4 +304,4 @@ Appendix
 
 
 See also: https://en.wikipedia.org/wiki/European_Union_Public_Licence
-Upstream source for this file: https://joinup.ec.europa.eu/sites/default/files/ckeditor_files/files/EUPL%20v1_2%20EN.txt
+Upstream source for this file: https://joinup.ec.europa.eu/sites/default/files/inline-files/EUPL%20v1_2%20EN(1).txt

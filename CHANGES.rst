@@ -12,7 +12,7 @@ development
 2017-10-31 0.143.0
 ==================
 - Add console interface program ``patzilla``
-- Add command ``patzilla make-config {development,production}`` for generating configuration file
+- Add command ``patzilla make-config {development,production}`` for generating a configuration file template
 - Improve documentation
 
 2017-10-31 0.142.5
@@ -648,7 +648,7 @@ Bug fixes and minor updates
 
 2015-12-14 0.103.0
 ==================
--"FulltextPRO "adapter: Feature "Full family"
+- FulltextPRO adapter: Feature "Full family"
 
 2015-12-14 0.102.1
 ==================

@@ -6,7 +6,7 @@ License
 
 This software is copyright © 2013-2017 The PatZilla authors. All rights reserved.
 
-It is and will always be **free and open source software**.
+PatZilla is and will always be **free and open source software**.
 
 Use of the source code included here is governed by the
 `GNU Affero General Public License <GNU-AGPL-3.0_>`_ and the
