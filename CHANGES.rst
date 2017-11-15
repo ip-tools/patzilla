@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Fix leaking of templateHelpers variables into model attributes
 
 2017-10-31 0.143.1
 ==================

@@ -106,9 +106,9 @@ TemplateDataContextMixin = {
 
         var data;
         if (this.collection) {
-            data = this.collection;
+            data = _.clone(this.collection);
         } else if (this.model) {
-            data = this.model.attributes;
+            data = _.clone(this.model.attributes);
         } else {
             data = {};
         }

@@ -15,7 +15,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 
     // Namespace template variables to "data", also accounting for "templateHelpers".
     serializeData: function() {
-        var data = this.model.attributes;
+        var data = _.clone(this.model.attributes);
         _.extend(data, this.templateHelpers);
         return {data: data};
     },
