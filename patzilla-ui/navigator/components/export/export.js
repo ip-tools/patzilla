@@ -285,7 +285,7 @@ ExportPlugin = Backbone.Model.extend({
         var expiration = parseInt(this.get_expiration_time().diff(moment()) / 1000);
         //log('expiration:', expiration);
 
-        var basket = navigatorApp.project.get('basket');
+        var basket = navigatorApp.basketModel;
         var _this = this;
         basket.get_numberlist_url_liveview(expiration).then(function(url) {
             if (url) {
