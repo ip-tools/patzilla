@@ -34,9 +34,27 @@ Add user with more details::
     patzilla-user add \
         --fullname "Max Mustermann" --username "max@example.org" --password "max987" \
         --tags "demo" --modules "keywords-user, family-citations" \
-        --company "Example Inc." --homepage "https://example.org/" --phone "+49-1234-1234567"
+        --organization "Example Inc." --homepage "https://example.org/" --phone "+49-1234-1234567"
 
 .. note:: For possible values of ``--tags`` and ``--modules``, please refer to the next section.
+
+
+
+.. _user-import:
+
+************
+Import users
+************
+You can also import multiple users from a CSV file in batch mode::
+
+    patzilla-user import /path/to/accounts.csv
+
+An example ``accounts.csv`` could look like::
+
+    "fullname","username","password","tags","modules","organization","homepage"
+    "John Doe","john.doe@example.org","demo","trial, demo","keywords-user, family-citations","Example Inc.","https://example.org/"
+    "Max Mustermann","max.mustermann@example.org","demo",,,,
+
 
 
 *******
@@ -77,7 +95,6 @@ This is an example document for a regular user. All credentials are randomly gen
         username: "john.doe@example.org",
         password: "$p5k2$1f4$h/9ChodR$BeshyidM.evabNaibeamyoogUkKept42",
         fullname: "John Doe",
-        phone: "+49-1234-1234567",
         created: ISODate("2016-09-08T11:58:19.397Z"),
         modified: ISODate("2016-09-08T11:58:19.397Z"),
         tags: [

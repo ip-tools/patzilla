@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl <andreas@ip-tools.org>
 import os
+import sys
+import csv
 import logging
-from pprint import pformat, pprint
 from docopt import docopt
+from pprint import pformat, pprint
 from patzilla.config import get_configuration
 from patzilla.util.config import read_list, normalize_docopt_options
 from patzilla.util.logging import boot_logging
@@ -59,19 +61,20 @@ def usercmd():
     """
     Usage:
       {program} add [options]
+      {program} import <csv-file>
 
       {program} --version
       {program} (-h | --help)
 
     User add options:
-      --fullname=<fullname>     Full user name, e.g. "Max M. Mustermann"
-      --username=<username>     Username / Email address, e.g. test@example.org
-      --password=<password>     Password
-      --tags=<tags>             Tags to apply to this user. e.g. "trial"
-      --modules=<modules>       Modules to enable for this user. e.g. "keywords-user, family-citations"
-      --company=<company>       Company name
-      --homepage=<homepage>     Homepage URL
-      --phone=<phone>           Phone number
+      --fullname=<fullname>             Full user name, e.g. "Max M. Mustermann"
+      --username=<username>             Username / Email address, e.g. test@example.org
+      --password=<password>             Password
+      --tags=<tags>                     Tags to apply to this user. e.g. "trial"
+      --modules=<modules>               Modules to enable for this user. e.g. "keywords-user, family-citations"
+      --organization=<organization>     Organization name
+      --homepage=<homepage>             Homepage URL
+      --phone=<phone>                   Phone number
 
     Miscellaneous options:
       --debug                   Enable debug messages
@@ -102,27 +105,52 @@ def usercmd():
     # Start logging subsystem
     boot_logging(options)
 
+
     # Boot Pyramid to access the database
-    # TODO: Currently, this is a full bootstrap. It can be trimmed down to database setup only.
     configfile = os.environ['PATZILLA_CONFIG']
+
+    # TODO: Currently, this is a full bootstrap. It can be trimmed down to database setup only.
     env = setup_commandline_pyramid(configfile)
     #logger = logging.getLogger(__name__)
 
-    # Debugging
-    #print('options: {}'.format(options))
-
+    # Clean option names
     options = normalize_docopt_options(options)
 
-    if options['add']:
-
-        # Read options with comma-separated lists
-        for name in ['tags', 'modules']:
-            options[name] = read_list(options[name])
-
-        user = UserManager.add_user(**options)
-        if user:
-            msg = 'Successfully created user "{}".\n{}'.format(options['username'], user.to_json(indent=4))
-            logger.info(msg)
-
     # Debugging
-    #print('options:\n{}'.format(pformat(options)))
+    #print('Options:\n{}'.format(pformat(options)))
+
+    if options['add']:
+        user = create_user(options)
+        if not user:
+            sys.exit(1)
+
+    elif options['import']:
+
+        csvfile_path = options['csv-file']
+        field_blacklist = ['phone']
+
+        with open(csvfile_path) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+
+                # Remove blacklisted fields
+                for blackfield in field_blacklist:
+                    if blackfield in row:
+                        del row[blackfield]
+
+                create_user(row)
+
+
+def create_user(data):
+
+    # Decode values with comma-separated lists
+    for name in ['tags', 'modules']:
+        data[name] = read_list(data[name])
+
+    # Create user object
+    user = UserManager.add_user(**data)
+    if user:
+        msg = 'Successfully created user "{}".\n{}'.format(data['username'], user.to_json(indent=4))
+        logger.info(msg)
+
+    return user

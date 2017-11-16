@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # (c) 2014,2017 Andreas Motl, Elmyra UG
-import sys
 import uuid
 import arrow
 import logging
@@ -71,8 +70,9 @@ class User(Document):
     parent = StringField(required=False)
 
     phone = StringField(required=False)
-    company = StringField(required=False)
     homepage = StringField(required=False)
+    company = StringField(required=False)
+    organization = StringField(required=False)
 
 
     @classmethod
@@ -210,7 +210,7 @@ class UserManager:
             username: "test@example.org",
             password: "$p5k2$1f4$8ViZsq5E$XF9C2/0Qoalds2PytzhCWC1wbw.V5x1c",
             fullname: "Max Mustermann",
-            company: "Example Inc.",
+            organization: "Example Inc.",
             homepage: "https://example.org/",
             created: ISODate("2014-11-06T13:41:37.934Z"),
             modified: ISODate("2014-11-06T13:41:37.933Z"),
@@ -238,7 +238,7 @@ class UserManager:
         for required_field in required_fields:
             if required_field not in data:
                 log.error('Option "--{}" required.'.format(required_field))
-                sys.exit(1)
+                return
 
         # Create user object and store into database
         user = User(**data)
@@ -247,4 +247,3 @@ class UserManager:
             return user
         except NotUniqueError:
             log.error('User with username "{}" already exists.'.format(data['username']))
-            sys.exit(1)

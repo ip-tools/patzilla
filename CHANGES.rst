@@ -5,9 +5,13 @@ IP Navigator CHANGES
 development
 ===========
 
+2017-11-16 0.145.0
+==================
+- [cmd] Add ``patzilla-user import`` command for importing users from csv file, see also :ref:`user-import`.
+
 2017-11-16 0.144.0
 ==================
-- [cmd] Add ``patzilla-user`` command for adding users to the database, see also :ref:`user-add`.
+- [cmd] Add ``patzilla-user add`` command for adding users to the database, see also :ref:`user-add`.
 
 2017-11-15 0.143.2
 ==================
