@@ -173,7 +173,8 @@ setup(name='patzilla',
         #    ],
 
         'console_scripts': [
-            'patzilla  = patzilla.commands:run',
+            'patzilla      = patzilla.commands:run',
+            'patzilla-user = patzilla.commands:usercmd',
         ],
 
       },

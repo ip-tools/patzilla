@@ -7,15 +7,47 @@
 User model
 ##########
 
-*****
-About
-*****
+
+.. _user-add:
+
+********
+Add user
+********
+After PatZilla is installed, there is the ``patzilla-user`` command line program for adding users.
+
+Configure path to application configuration::
+
+    export PATZILLA_CONFIG=/path/to/patzilla.ini
+
+Simple add::
+
+    patzilla-user add --fullname "John Doe" --username "john.doe@example.org" --password "john123"
+
+Add user, also enabling some modules::
+
+    patzilla-user add \
+        --fullname "Max Mustermann" --username "max@example.org" --password "max987" \
+        --tags "demo" --modules "keywords-user, family-citations"
+
+Add user with more details::
+
+    patzilla-user add \
+        --fullname "Max Mustermann" --username "max@example.org" --password "max987" \
+        --tags "demo" --modules "keywords-user, family-citations" \
+        --company "Example Inc." --homepage "https://example.org/" --phone "+49-1234-1234567"
+
+.. note:: For possible values of ``--tags`` and ``--modules``, please refer to the next section.
+
+
+*******
+Details
+*******
 The current user model is a simple flat list of JSON documents stored in MongoDB_, one for each user.
 It contains all information required to control the application behavior and additional fields
 used for information only:
 
 - Login credentials: ``username`` and ``password``.
-- Group information: ``tags`` is a list of tag labels.
+- Tag information: ``tags`` is a list of arbitrary tag labels.
   Add the ``staff`` label for accessing resources which require administrator permissions.
 - Module activation: ``modules`` is a list of enabled modules. Choose one or more from:
 
@@ -36,7 +68,7 @@ used for information only:
 *******
 Example
 *******
-This is an example document for a user. All credentials are randomly generated for demonstration purposes.
+This is an example document for a regular user. All credentials are randomly generated for demonstration purposes.
 ::
 
     {
@@ -49,8 +81,7 @@ This is an example document for a user. All credentials are randomly generated f
         created: ISODate("2016-09-08T11:58:19.397Z"),
         modified: ISODate("2016-09-08T11:58:19.397Z"),
         tags: [
-            "custom-group",
-            "staff"
+            "custom-group"
         ],
         modules: [
             "keywords-user",

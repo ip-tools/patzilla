@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2014 Andreas Motl, Elmyra UG
-import logging
+# (c) 2014,2017 Andreas Motl, Elmyra UG
+import sys
 import uuid
-import datetime
 import arrow
+import logging
+import datetime
 from pbkdf2 import crypt
 from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
@@ -53,20 +54,26 @@ def setup_pymongo(event):
 #   data model
 # ------------------------------------------
 class User(Document):
+
     userid = StringField(unique=True)
+
     username = StringField(unique=True)
     password = StringField()
     fullname = StringField()
-    phone = StringField()
-    company = StringField()
-    homepage = StringField()
+
     created = DateTimeField()
     modified = DateTimeField(default=datetime.datetime.now)
     tags = ListField(StringField(max_length=30))
     modules = ListField(StringField(max_length=30))
-    upstream_credentials = DictField()
-    billing = DictField()
-    parent = StringField()
+
+    upstream_credentials = DictField(required=False)
+    billing = DictField(required=False)
+    parent = StringField(required=False)
+
+    phone = StringField(required=False)
+    company = StringField(required=False)
+    homepage = StringField(required=False)
+
 
     @classmethod
     def assign_userid(cls, sender, document, **kwargs):
@@ -93,7 +100,7 @@ class User(Document):
 
     @classmethod
     def hash_password(cls, sender, document, **kwargs):
-        if sender is User and not document.password.startswith('$p5k2$'):
+        if sender is User and document.password and not document.password.startswith('$p5k2$'):
             document.password = cls.crypt500(document.password)
 
     def check_password(self, password):
@@ -189,3 +196,55 @@ def provision_users(event):
                 user.save()
         except NotUniqueError as ex:
             pass
+
+
+class UserManager:
+
+    @classmethod
+    def add_user(cls, **kwargs):
+        """
+        MongoDB blueprint:
+        {
+            _id: ObjectId("545b6c81a42dde3b4f2c8524"),
+            userid: "9cff5461-1104-43e7-b23d-9261dabf5ced",
+            username: "test@example.org",
+            password: "$p5k2$1f4$8ViZsq5E$XF9C2/0Qoalds2PytzhCWC1wbw.V5x1c",
+            fullname: "Max Mustermann",
+            company: "Example Inc.",
+            homepage: "https://example.org/",
+            created: ISODate("2014-11-06T13:41:37.934Z"),
+            modified: ISODate("2014-11-06T13:41:37.933Z"),
+            tags: [
+                "trial"
+            ],
+            modules: [
+                "keywords-user",
+                "family-citations",
+                "analytics"
+            ]
+        }
+        """
+
+
+        # Build dictionary of proper object attributes from kwargs
+        data = {}
+        for field in User._fields:
+            if field == 'id': continue
+            if field in kwargs and kwargs[field] is not None:
+                data[field] = kwargs[field]
+
+        # Sanity checks
+        required_fields = ['username', 'password', 'fullname']
+        for required_field in required_fields:
+            if required_field not in data:
+                log.error('Option "--{}" required.'.format(required_field))
+                sys.exit(1)
+
+        # Create user object and store into database
+        user = User(**data)
+        try:
+            user.save()
+            return user
+        except NotUniqueError:
+            log.error('User with username "{}" already exists.'.format(data['username']))
+            sys.exit(1)

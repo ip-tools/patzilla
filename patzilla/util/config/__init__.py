@@ -52,7 +52,18 @@ def asbool(s):
     return s.lower() in truthy
 
 def read_list(string, separator=u','):
+    if string is None:
+        return []
+    elif isinstance(string, list):
+        return string
     result = map(unicode.strip, string.split(separator))
     if len(result) == 1 and not result[0]:
         result = []
     return result
+
+def normalize_docopt_options(options):
+    normalized = {}
+    for key, value in options.items():
+        key = key.strip('--<>')
+        normalized[key] = value
+    return normalized
