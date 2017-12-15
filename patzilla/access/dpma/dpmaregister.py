@@ -80,6 +80,21 @@ class DpmaRegisterAccess:
 
 
     def get_document_url(self, patent):
+        
+        # Shortcut for DE applications
+        if patent.startswith('DE'):
+            checksum = 0
+            patent_number = patent[2:]
+            for i, n in enumerate(reversed(patent_number)):
+                checksum += int(n, 10) * (i + 2)
+            checksum = checksum%11
+            if checksum:
+                checksum = 11 - checksum
+            akz = patent + str(checksum)
+            url = self.accessurl % akz
+            logger.info('document url: {0}'.format(url))
+            return url
+        
         results = self.search_patent_smart(patent)
         # TODO: review this logic
         if results:
