@@ -41,7 +41,7 @@ class DpmaRegisterAccess:
         # alternative direct link
         # https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=AKZ%3D2020131020184
 
-        self.baseurl = 'http://register.dpma.de/DPMAregister/pat/'
+        self.baseurl = 'https://register.dpma.de/DPMAregister/pat/'
         self.searchurl = self.baseurl + 'einsteiger'
         self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ=%s'
         self.reference_pattern = re.compile('.*\?AKZ=(.+?)&.*')
