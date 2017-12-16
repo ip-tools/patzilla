@@ -90,7 +90,7 @@ class DpmaRegisterAccess:
             checksum = checksum%11
             if checksum:
                 checksum = 11 - checksum
-            akz = patent + str(checksum)
+            akz = patent_number + str(checksum)
             url = self.accessurl % akz
             logger.info('document url: {0}'.format(url))
             return url
