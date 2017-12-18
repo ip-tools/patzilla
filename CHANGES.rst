@@ -10,6 +10,9 @@ development
     - Remove country code for DE Aktenzeichen inquiry
     - Change baseurl to use https
 
+- More updates to the DPMAregister access library.
+
+    - Refactor and improve library API and inline documentation
 - Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
 
 

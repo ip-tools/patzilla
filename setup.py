@@ -54,7 +54,7 @@ requires = [
     # HTTP
     'requests==2.18.4',
     'requests-oauthlib==0.8.0',
-    'mechanize==0.3.5',         # 0.3.6
+    'mechanize==0.3.6',
 
     # HTML
     'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0

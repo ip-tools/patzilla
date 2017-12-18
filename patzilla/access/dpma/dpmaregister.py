@@ -1,24 +1,39 @@
 # -*- coding: utf-8 -*-
-# (c) 2011,2014,2015 Andreas Motl <andreas.motl@elmyra.de>
-import sys
+# (c) 2011,2014,2015,2017 Andreas Motl <andreas.motl@elmyra.de>
 import re
+import sys
+import json
+import time
 import logging
-from pprint import pformat
-from collections import namedtuple
 import mechanize
-import cookielib
+from pprint import pformat
+from collections import namedtuple, OrderedDict
 from BeautifulSoup import BeautifulSoup
-
-
-"""
-Screenscraper for DPMAregister
-http://register.dpma.de/
-"""
+from patzilla.access.dpma.util import dpma_file_number
 
 
 logger = logging.getLogger(__name__)
 
+
 class DpmaRegisterAccess:
+    """
+    Screen scraper for DPMAregister "beginner's search" web interface
+    https://register.dpma.de/DPMAregister/pat/einsteiger?lang=en
+
+    Alternative direct link, e.g.
+    https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=AKZ%3D2020131020184
+    https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=EPN%3D666666
+    https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=PN%3DWO2008034638
+
+    Todo:
+    - Provide command line interface
+    - Maybe switch to MechanicalSoup, see https://mechanicalsoup.readthedocs.io/
+    - Improve response data chain
+    - Decode ST.36 XML document
+    - Introduce caching
+    """
+
+    baseurl = 'https://register.dpma.de/DPMAregister/pat/'
 
     ResultEntry = namedtuple('ResultEntry', ['label', 'reference'])
     Document = namedtuple('Document', ['result', 'url', 'html'])
@@ -33,74 +48,90 @@ class DpmaRegisterAccess:
 
         # http://wwwsearch.sourceforge.net/mechanize/
         self.browser = mechanize.Browser()
-        self.browser.set_cookiejar(cookielib.LWPCookieJar())
-        self.browser.addheaders = [('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.0.5) Gecko/2008120122 Firefox/3.0.5')]
-        # ignore robots.txt
+        self.http_session_valid = False
+
+        # Enable debug logging for "mechanize" module
+        #self.browser.set_debug_http(True)
+
+        # Set cookie jar
+        #self.browser.set_cookiejar(cookielib.LWPCookieJar())
+
+        # Set custom user agent header
+        self.browser.set_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')
+
+        # Ignore robots.txt, sorry for being rude.
         self.browser.set_handle_robots(False)
 
-        # alternative direct link
-        # https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=AKZ%3D2020131020184
+        self.language = 'en'
+        self.searchurl = self.baseurl + 'einsteiger?lang={}'.format(self.language)
+        self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ=%s&lang={}'.format(self.language)
 
-        self.baseurl = 'https://register.dpma.de/DPMAregister/pat/'
-        self.searchurl = self.baseurl + 'einsteiger'
-        self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ=%s'
         self.reference_pattern = re.compile('.*\?AKZ=(.+?)&.*')
-        self.link_css = './assets/dpmabasis_d.css'
 
+    def start_http_session(self):
+        if not self.http_session_valid:
+            # 1. Open search url to initialize HTTP session
+            response = self.browser.open(self.searchurl)
+            self.http_session_valid = True
 
-    def fetch(self, patent, html_raw=False, html_stripped=True, data=False):
+    def fetch(self, patent):
+        document_intermediary = self.search_and_fetch(patent)
+        if document_intermediary:
+            document = DpmaRegisterDocument.from_result_document(document_intermediary)
+            return document
 
-        document = self.fetch_html(patent)
+    def search_first(self, patent):
 
-        result = {
-            'html_raw': None,
-            'html_stripped': None,
-            'data': None,
-            }
+        # 1. Search patent reference
+        results = self.search_patent_smart(patent)
 
-        if html_raw:
-            result['html_raw'] = document.html
+        # 2. Acquire page with register information
+        # Remark: This just uses the first search result
+        # TODO: Review this logic
+        if results:
+            return results[0]
 
-        if html_stripped:
-            result['html_stripped'] = self.document_strip_html(document)
+    def search_and_fetch(self, patent):
+        """
+        search_entry = self.search_first(patent)
+        if search_entry:
+            return self.fetch_reference(search_entry)
+        """
+        file_reference = self.resolve_file_reference(patent)
+        if file_reference:
+            return self.fetch_reference(file_reference)
 
-        if data:
-            result['data'] = self.document_parse_html(document.html)
+    def resolve_file_reference(self, patent):
+
+        # Compute DPMA file number (Aktenzeichen) from DE publication/application number
+        # by calculating the checksum of the document number.
+        # This is a shortcut because we won't have to go through the search step.
+        # It only works for DE applications, though.
+        if patent.startswith('DE'):
+            file_number = dpma_file_number(patent)
+            result = self.ResultEntry(reference = file_number, label = patent)
+
+        # For all other numbers, we have to kick off
+        # a search request and scrape the response.
+        else:
+            result = self.search_first(patent)
+
+        if result:
+            logger.info('DPMA file number for {} is {}'.format(patent, result.reference))
+        else:
+            logger.warning('Could not resolve DPMA file number for {}'.format(patent))
 
         return result
 
-    def fetch_html(self, patent):
-
-        # 1. search patent reference for direct download
-        results = self.search_patent_smart(patent)
-
-        # 2. download patent information by direct reference
-        search_entry = results[0]
-        return self.fetch_reference(search_entry)
-
-
     def get_document_url(self, patent):
-        
-        # Shortcut for DE applications
-        if patent.startswith('DE'):
-            checksum = 0
-            patent_number = patent[2:]
-            for i, n in enumerate(reversed(patent_number)):
-                checksum += int(n, 10) * (i + 2)
-            checksum = checksum%11
-            if checksum:
-                checksum = 11 - checksum
-            akz = patent_number + str(checksum)
-            url = self.accessurl % akz
-            logger.info('document url: {0}'.format(url))
-            return url
-        
-        results = self.search_patent_smart(patent)
-        # TODO: review this logic
-        if results:
-            url = self.accessurl % results[0].reference
-            logger.info('document url: {0}'.format(url))
-            return url
+
+        file_reference = self.resolve_file_reference(patent)
+        url = self.accessurl % file_reference.reference
+        logger.info('Document URL for {} is {}'.format(patent, url))
+        return url
+
+
+
 
 
     def search_patent_smart(self, patent):
@@ -121,9 +152,9 @@ class DpmaRegisterAccess:
 
         errmsg = None
         if not results:
-            errmsg = "search result for '%s' is empty" % (patent)
+            errmsg = "Search result for '%s' is empty" % (patent)
         elif len(results) >= 2:
-            errmsg = "search result for '%s' is ambiguous: count=%s, results=%s" % (patent, len(results), results)
+            errmsg = "Search result for '%s' is ambiguous: count=%s, results=%s" % (patent, len(results), results)
 
         if errmsg:
             logger.warning(errmsg)
@@ -131,36 +162,47 @@ class DpmaRegisterAccess:
 
         return results
 
-
     def search_patent(self, patent):
 
-        logger.info("searching document(s), patent='%s'" % patent)
+        logger.info("Searching document(s), patent='%s'" % patent)
 
-        patent_country = patent[:2].upper()
-        patent_number = patent[2:]
-
-        #if patent_country != 'DE':
-        #    msg = "country '%s' not valid, must be 'DE'" % patent_country
-        #    logger.fatal(msg)
-        #    raise Exception(msg)
+        # 1. Open search url to initialize HTTP session
+        self.start_http_session()
 
 
-        # 1. open search url
-        response_searchform = self.browser.open(self.searchurl)
+        # Debugging
+        #self.dump_response(response, dump_metadata=True)
+        #sys.exit()
 
 
-        # 2. submit form
+        # 2. Send inquiry
+
+        # Fill form fields
         # http://wwwsearch.sourceforge.net/ClientForm/
-        self.browser.select_form(nr=0)
         #self.browser.select_form(name='form')
-        self.browser['akzPn'] = patent_number
+        self.browser.select_form(nr=0)
+
+        # Aktenzeichen or publication number
+        self.browser.form['akzPn'] = patent
+
+        # Simulate another form field set by Tapestry in Javascript
+        self.browser.form.new_control('text', 't:submit', {})
+        self.browser.form['t:submit'] = '["rechercheStarten","rechercheStarten"]'
+
+        # Submit form
         response = self.browser.submit()
 
-        # 2013-05-11: DPMA changed the interface
-        # searching now jumps directly to the result detail page
-        # if there's just a single result
-        # => so let's parse the reference (AKZ) from the response html
-        #    and make up a single result from that
+        # Debugging
+        #self.dump_response(response, dump_metadata=True)
+        #sys.exit()
+
+
+        # 3. Evaluate response
+
+        # 2013-05-11: The DPMA changed the HTTP interface: Searching now jumps
+        # directly to the result detail page if there's just a single result.
+        # Honor this by parsing the file number (Aktenzeichen) from the
+        # response HTML and making up a single result from that.
         url = self.browser.geturl()
         if '/pat/register' in url:
             soup = BeautifulSoup(response)
@@ -169,20 +211,15 @@ class DpmaRegisterAccess:
             entry = self.ResultEntry(reference = reference, label = None)
             return [entry]
 
-        # debugging
-        #dump_response(response_searchresult)
-        #sys.exit()
-
         html_searchresult = response.read() #.decode('utf-8')
-        #print html_searchresult
 
-        # sanity check
+        # Sanity checks
         if 'div class="error"' in html_searchresult:
-            logger.warn("no search results for '%s'" % patent)
-            return
+            logger.warning("No search results for '%s'" % patent)
+            return []
 
 
-        # 3. parse result table
+        # 4. Parse result table
         results = []
 
         soup = BeautifulSoup(html_searchresult)
@@ -198,7 +235,7 @@ class DpmaRegisterAccess:
             entry = self.ResultEntry(reference = reference, label = label)
             results.append(entry)
 
-        logger.info("success for '%s': %s unfiltered results" % (patent, len(results)))
+        logger.info("Searching for %s yielded %s results" % (patent, len(results)))
 
         return results
 
@@ -207,7 +244,7 @@ class DpmaRegisterAccess:
         if m:
             reference = m.group(1)
         else:
-            msg = "could not parse document reference from link '%s' (patent='%s')" % (link, patent)
+            msg = "Could not parse document reference from link '%s' (patent='%s')" % (link, patent)
             logger.error(msg)
             raise Exception(msg)
         label = link.find(text=True)
@@ -215,18 +252,60 @@ class DpmaRegisterAccess:
 
     def fetch_reference(self, result):
         """open document url and return html"""
+
+        # 1. Open search url to initialize HTTP session
+        self.start_http_session()
+
         url = self.accessurl % result.reference
+        logger.info('Accessing URL {}'.format(url))
         html_document = self.browser.open(url).read() #.decode('utf-8')
         return self.Document(result = result, url = url, html = html_document)
 
-
-    def document_strip_html(self, document):
+    def dump_response(self, response, dump_metadata = False):
         """
+        Dump response from "mechanize". Metadata and body.
+        """
+        #print dir(response)
+        #print br.title()
+        if dump_metadata:
+            print response.geturl()
+            print response.info()  # headers
+        print response.read()  # body
+
+
+class DpmaRegisterDocument(object):
+    """
+    Decode information from DPMAregister HTML response.
+    """
+
+    def __init__(self, identifier, html=None, url=None):
+
+        self.identifier = identifier
+        self.html = html
+        self.url = url
+
+        self.biblio = None
+        self.events = None
+
+        # Link to local CSS file
+        self.link_css = './assets/dpmabasis_d.css'
+
+    @classmethod
+    def from_result_document(cls, doc):
+        return cls(doc.result.reference, html=doc.html, url=doc.url)
+
+    def __str__(self):
+        return str(self.identifier) + ':\n' + pformat(self.events)
+
+    def html_compact(self):
+        """
+        Strip all HTML information just leaving the tables containing register information.
+
         TODO: insert link to original document, insert link to pdf
         <a shape="rect" class="button" target="_blank" href="register?AKZ=100068189&amp;VIEW=pdf">PDF-Download</a>
         """
 
-        soup = BeautifulSoup(document.html)
+        soup = BeautifulSoup(self.html)
 
         # propagate Content-Type
         soup_content_type = soup.find('meta', {'http-equiv': 'Content-Type'})
@@ -256,7 +335,7 @@ class DpmaRegisterAccess:
 
         # manipulate some links
         for link in soup.findAll('a', {'href': re.compile('^./PatSchrifteneinsicht.*')}):
-            link['href'] = self.baseurl + link['href']
+            link['href'] = DpmaRegisterAccess.baseurl + link['href']
             if link.img:
                 link.img.extract()
 
@@ -264,7 +343,7 @@ class DpmaRegisterAccess:
             if link.contents:
                 link.replaceWith(link.contents[0])
 
-        document_source_link = str(document.url)
+        document_source_link = str(self.url)
         css_local_link = self.link_css
 
         tpl = """
@@ -293,31 +372,15 @@ class DpmaRegisterAccess:
 
         return html_stripped
 
-
-    def dump_response(response, dump_metadata = False):
-        #print dir(response)
-        #print br.title()
-        if dump_metadata:
-            print response.geturl()
-            print response.info()  # headers
-        print response.read()  # body
-
-
-
-class DpmaRegisterDocument(object):
-
-    def __init__(self, identifier, html=None):
-        self.identifier = identifier
-        self.html = html
-        self.table_basicdata = None
-        self.table_legaldata = None
-        self.events = []
-
+    def asdict(self):
         self.parse_html()
-        self.events = self.table_legaldata
+        payload = OrderedDict()
+        payload['biblio'] = self.biblio
+        payload['events'] = self.events
+        return payload
 
-    def __str__(self):
-        return str(self.identifier) + ':\n' + pformat(self.events)
+    def asjson(self):
+        return json.dumps(self.asdict(), indent=4)
 
     def parse_html(self):
         """
@@ -328,8 +391,8 @@ class DpmaRegisterDocument(object):
         soup_table_basicdata = soup.find("table")
         soup_table_legaldata = soup_table_basicdata.findNextSibling("table")
 
-        self.table_basicdata = self.soup_parse_table(soup_table_basicdata, header_row_index = 1)
-        self.table_legaldata = self.soup_parse_table(soup_table_legaldata, header_row_index = 1)
+        self.biblio = self.soup_parse_table(soup_table_basicdata, header_row_index = 1)
+        self.events = self.soup_parse_table(soup_table_legaldata, header_row_index = 1)
 
     def soup_parse_table(self, soup_table, contains_header = True, header_row_index = 0, header_tag = 'th'):
 
@@ -362,30 +425,35 @@ class DpmaRegisterDocument(object):
         return table
 
 
-
 if __name__ == '__main__':
 
-    logging.basicConfig()
+    logging.basicConfig(level=logging.INFO)
 
     register = DpmaRegisterAccess()
+
+    document = None
     if len(sys.argv) > 1:
-        data = register.fetch(sys.argv[1])
+        document = register.fetch(sys.argv[1])
 
     else:
-        #data = register.fetch('DE10001499.2')   # leads to two results, take the non-"E" one
-        #data = register.fetch('DE3831719')      # search and follow to 3831719.2
-        #data = register.fetch('WO2007037298')   # worked with DPINFO only
-        #data = register.fetch('WO2008034638')   # leads to two results, take the non-"E" one
-        #data = register.fetch('DE102006006014') # just one result, directly redirects to detail page
+        #document = register.fetch('10001499.2')     # leads to two results, take the non-"E" one
+        document = register.fetch('DE3831719')      # search and follow to 3831719.2
+        #document = register.fetch('WO2007037298')   # worked with DPINFO only
+        #document = register.fetch('WO2008034638')   # leads to two results, take the non-"E" one
+        #document = register.fetch('DE102006006014') # just one result, directly redirects to detail page
 
-        #data = register.fetch('DE19630877')
-        data = register.fetch('DE102012009645')
+        #document = register.fetch('DE19630877')
+        #document = register.fetch('DE102012009645')
+        #document = register.fetch('EP666666')
+
+        #print register.get_document_url('10001499.2')
+        #print register.get_document_url('DE10001499.2')
+        #print register.get_document_url('DE10001499')
         #print register.get_document_url('DE102012009645')
 
-    print data['html_stripped']
 
-    #f = file('./tmp/out.html', 'w')
-    #f.write(data['html_stripped'])
-    #f.close()
 
-    #print dictify_data(data)
+    if document:
+        print document.html_compact()
+        #print document.asdict()
+        #print document.asjson()
