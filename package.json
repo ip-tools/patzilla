@@ -64,7 +64,7 @@
     "lz-string": "1.4.4",
     "modernizr": "3.5.0",
     "modernizr-loader": "^1.0.1",
-    "moment": "2.6.0",
+    "moment": "2.20.0",
     "ng-annotate-loader": "^0.6.1",
     "notificationfx": "https://github.com/ip-tools/notificationFx#0.0.1",
     "promise": "8.0.1",

@@ -10,6 +10,8 @@ development
     - Remove country code for DE Aktenzeichen inquiry
     - Change baseurl to use https
 
+- Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
+
 
 2017-11-16 0.145.0
 ==================
