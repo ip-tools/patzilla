@@ -13,6 +13,7 @@ the people who contributed to this software:
 * David Santamauro <https://www.ificlaims.com/>
 * Erik Zscherpe <http://blumpatentrecherchen.de/>
 * Ernst Fischer <http://www.pateris.de/dr-ernst-fischer/>
+* Felix Berkemeier <http://www.patente.de/en/dr-felix-berkemeier.html>
 * Gaby Strauß <http://www.patentberichterstatter-muenchen.de/>
 * Johannes Steimel <https://www.festool.com/>
 * Klaus Hager <http://www.patentberichterstatter-muenchen.de/>

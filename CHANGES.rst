@@ -4,6 +4,12 @@ IP Navigator CHANGES
 
 development
 ===========
+- Some updates to the DPMAregister access library. Thanks, Felix!
+
+    - Get DPMA register URL for DE documents by calculating the checksum of the document number
+    - Remove country code for DE Aktenzeichen inquiry
+    - Change baseurl to use https
+
 
 2017-11-16 0.145.0
 ==================
