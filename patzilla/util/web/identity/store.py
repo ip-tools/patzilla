@@ -62,18 +62,17 @@ class User(Document):
 
     created = DateTimeField()
     modified = DateTimeField(default=datetime.datetime.now)
-    tags = ListField(StringField(max_length=30))
-    modules = ListField(StringField(max_length=30))
-
-    upstream_credentials = DictField(required=False)
-    billing = DictField(required=False)
-    parent = StringField(required=False)
 
     phone = StringField(required=False)
     homepage = StringField(required=False)
     company = StringField(required=False)
     organization = StringField(required=False)
 
+    tags = ListField(StringField(max_length=30))
+    modules = ListField(StringField(max_length=30))
+    upstream_credentials = DictField(required=False)
+    billing = DictField(required=False)
+    parent = StringField(required=False)
 
     @classmethod
     def assign_userid(cls, sender, document, **kwargs):

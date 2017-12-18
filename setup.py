@@ -123,7 +123,10 @@ setup(name='patzilla',
         "Intended Audience :: Legal Industry",
         "Intended Audience :: Manufacturing",
         "Intended Audience :: Science/Research",
-        # EUPL 1.2 isn't approved by OSI yet
+        # The software actually is co-licensed under the EUPL 1.2,
+        # but the updated version isn't approved by the OSI yet,
+        # see also https://github.com/pypa/pypi-legacy/issues/722.
+        # In the meanwhile, we will use EUPL 1.1 here.
         "License :: OSI Approved :: European Union Public Licence 1.1 (EUPL 1.1)",
         "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
         "Natural Language :: English",

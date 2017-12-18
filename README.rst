@@ -16,24 +16,14 @@ PatZilla: Patent information research for humans
 
 About
 =====
-PatZilla is a modular patent information research platform and toolkit
-with a modern user interface and access to multiple data sources.
+PatZilla is a modular patent information research platform and
+data integration toolkit. It features a modern user interface
+and access to multiple data sources.
 
-It provides convenient access to the OPS service from EPO
-and other professional patent search APIs in its standalone version.
-You can also use its modules as software components for building
-integrated vendor solutions.
-
-
-History
-=======
-The software got some applause from professional researchers for its unique user
-interface and rich feature set when it was released to the first audience in 2014.
-We hear from our users they are still having a great pleasure working with it on a daily basis.
-
-After four years of development, the source code finally gets released under an
-open source license in 2017. We are looking forward to opening up the development
-process as well, every kind of participation and support is very much welcome.
+The system provides convenient access to the OPS service from EPO and
+other professional fulltext patent databases in its standalone version.
+You can also use its software components and interfaces for
+building arbitrary vendor solutions.
 
 
 Features
@@ -115,7 +105,7 @@ We will only cover development here, see the `install documentation`_ page about
 and run an instance.
 The software should work on any other Linux or BSD distribution, but this is beyond the scope of the README.
 
-The software has been tested on Python 2.7, it is not ready for Python 3.6 yet.
+It runs on Python 2.7, but is not ready for Python 3.6 yet. Contributions are welcome!
 
 
 Project information
@@ -126,6 +116,17 @@ For further details, please visit:
 - `PatZilla on GitHub <https://github.com/ip-tools/ip-navigator>`_
 - `PatZilla documentation <https://docs.ip-tools.org/ip-navigator/>`_
 - `PatZilla on the Python Package Index (PyPI) <https://pypi.org/project/patzilla/>`_
+
+
+History
+=======
+The software got some applause from professional researchers for its unique user
+interface and rich feature set when it was released to the first audience in 2014.
+We hear from our users they are still having a great pleasure working with it on a daily basis.
+
+After four years of development, the source code finally gets released under an
+open source license in 2017. We are looking forward to opening up the development
+process as well, every kind of participation and support is very much welcome.
 
 
 Contributing

@@ -15,7 +15,7 @@ development
 
 2017-11-16 0.145.0
 ==================
-- [cmd] Add ``patzilla-user import`` command for importing users from csv file, see also :ref:`user-import`.
+- [cmd] Add ``patzilla-user import`` command for importing users from CSV file, see also :ref:`user-import`.
 
 2017-11-16 0.144.0
 ==================

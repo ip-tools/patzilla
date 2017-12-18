@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 # https://github.com/nltk/nltk/blob/develop/nltk/test/runtests.py
 import sys
-import logging
 import nose
+import logging
 from nose.plugins.manager import PluginManager
 from nose.plugins.doctests import Doctest
 from nose.plugins import builtin
@@ -30,4 +30,4 @@ if __name__ == '__main__':
     manager.loadPlugins()
 
     args = sys.argv[1:]
-    nose.main(argv=args, plugins=manager.plugins)
+    nose.run(argv=args, plugins=manager.plugins)
