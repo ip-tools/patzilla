@@ -12,6 +12,7 @@ development
 
 - More updates to the DPMAregister access library.
 
+    - Fix access by honoring throttling employed by DPMA
     - Refactor and improve library API and inline documentation
 - Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
 

@@ -169,6 +169,11 @@ class DpmaRegisterAccess:
         # 1. Open search url to initialize HTTP session
         self.start_http_session()
 
+        # 2017-12-18: The DPMA seems to have put a throttling machinery in place by
+        # means of the "reg.check" cookie, e.g. "reg.check1239723693=-853246121".
+        # Let's honor this by also throttling the client. Otherwise, the response
+        # might contain a valid result list but containing zero results.
+        time.sleep(0.75)
 
         # Debugging
         #self.dump_response(response, dump_metadata=True)
