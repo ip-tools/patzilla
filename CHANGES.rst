@@ -14,6 +14,8 @@ development
 
     - Fix access by honoring throttling employed by DPMA
     - Refactor and improve library API and inline documentation
+    - Provide new access methods ``fetch_st36xml`` and ``fetch_pdf``
+
 - Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
 
 

@@ -130,9 +130,37 @@ class DpmaRegisterAccess:
         logger.info('Document URL for {} is {}'.format(patent, url))
         return url
 
+    def fetch_st36xml(self, patent):
 
+        # Fetch main HTML resource of document
+        result = self.search_and_fetch(patent)
 
+        if not result:
+            logger.warning('Could not find document {}'.format(patent))
+            return
 
+        # Parse link to ST.36 XML document from HTML
+        soup = BeautifulSoup(result.html)
+        st36xml_anchor = soup.find("a", {'name': 'st36xml'})
+        st36xml_href = st36xml_anchor['href']
+
+        # Download ST.36 XML document and return response body
+        return self.browser.open(st36xml_href).read()
+
+    def fetch_pdf(self, patent):
+
+        # Fetch main HTML resource of document
+        result = self.search_and_fetch(patent)
+
+        if not result:
+            logger.warning('Could not find document {}'.format(patent))
+            return
+
+        # Derive mechanize request from link to ST.36 XML document from HTML
+        request = self.browser.click_link(url_regex='register/PAT_.*VIEW=pdf')
+
+        # Download ST.36 XML document and return response body
+        return self.browser.open(request).read()
 
     def search_patent_smart(self, patent):
 
@@ -456,7 +484,12 @@ if __name__ == '__main__':
         #print register.get_document_url('DE10001499')
         #print register.get_document_url('DE102012009645')
 
+        #print register.fetch_st36xml('DE10001499')
+        #print register.fetch_st36xml('EP666666')
+        #print register.fetch_st36xml('10001499.2')
 
+        #print register.fetch_pdf('10001499.2')
+        #print register.fetch_pdf('DE10001499')
 
     if document:
         print document.html_compact()
