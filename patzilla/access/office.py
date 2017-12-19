@@ -21,7 +21,14 @@ def jump_office(request):
         url = None
         if office == 'dpma' and service == 'register':
             dra = DpmaRegisterAccess()
-            url = dra.get_document_url(document_number)
+            try:
+                url = dra.get_document_url(document_number)
+            except:
+                return HTTPNotFound('Document number {} not found.'.format(document_number))
+
+            # TODO: application number vs. file number, e.g.
+            # - EP666666   vs. E95480005.8
+            # - DE19630877 vs. 196308771
 
         elif office == 'uspto' and service == 'biblio':
 

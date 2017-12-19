@@ -33,6 +33,9 @@ cache = dogpile.cache.make_region().configure(
     }
 )
 
+class NoResults(Exception):
+    pass
+
 class DpmaRegisterAccess:
     """
     Screen scraper for DPMAregister "beginner's search" web interface
@@ -257,8 +260,9 @@ class DpmaRegisterAccess:
 
         # Sanity checks
         if 'div class="error"' in response.content:
-            logger.warning("No search results for '%s'" % patent)
-            return []
+            msg = 'No search results for "{}"'.format(patent)
+            logger.warning(msg)
+            raise NoResults(msg)
 
 
         # 4. Parse result table
@@ -698,43 +702,53 @@ def run():
 
     if options['fetch']:
         document_number = options['<document-number>']
-
-        register = DpmaRegisterAccess()
-
         output_format = options['--format']
-        if output_format == 'xml':
-            response = register.fetch_st36xml(document_number)
-            payload = response.content
+        try:
+            payload = access_register(document_number, output_format)
+            print(payload)
+        except NoResults as ex:
+            sys.exit(1)
 
-        elif output_format == 'json-raw':
-            response = register.fetch_st36xml(document_number)
-            document = DpmaRegisterXmlDocument(response.content).decode_badgerfish()
-            payload = json.dumps(document._data, indent=4)
 
-        elif output_format == 'json':
-            response = register.fetch_st36xml(document_number)
-            document = DpmaRegisterXmlDocument(response.content).decode()
-            payload = json.dumps(document.asdict(), indent=4)
+def access_register(document_number, output_format):
 
-        elif output_format == 'html':
-            document = register.fetch(document_number)
-            payload = document.html
+    register = DpmaRegisterAccess()
 
-        elif output_format == 'html-compact':
-            document = register.fetch(document_number)
-            payload = document.html_compact()
+    if output_format == 'xml':
+        response = register.fetch_st36xml(document_number)
+        payload = response.content
 
-        elif output_format == 'pdf':
-            response = register.fetch_pdf(document_number)
-            payload = response.content
+    elif output_format == 'json-raw':
+        response = register.fetch_st36xml(document_number)
+        document = DpmaRegisterXmlDocument(response.content).decode_badgerfish()
+        payload = json.dumps(document._data, indent=4)
 
-        elif output_format == 'url':
-            payload = register.get_document_url(document_number)
+    elif output_format == 'json':
+        response = register.fetch_st36xml(document_number)
+        document = DpmaRegisterXmlDocument(response.content).decode()
+        payload = json.dumps(document.asdict(), indent=4)
 
-        else:
-            raise ValueError('Unknown value for --format parameter: {}'.format(output_format))
+    elif output_format == 'html':
+        document = register.fetch(document_number)
+        payload = document.html
 
-        print(payload)
+    elif output_format == 'html-compact':
+        document = register.fetch(document_number)
+        if not document:
+            sys.exit(1)
+        payload = document.html_compact()
+
+    elif output_format == 'pdf':
+        response = register.fetch_pdf(document_number)
+        payload = response.content
+
+    elif output_format == 'url':
+        payload = register.get_document_url(document_number)
+
+    else:
+        raise ValueError('Unknown value for --format parameter: {}'.format(output_format))
+
+    return payload
 
 
 if __name__ == '__main__':

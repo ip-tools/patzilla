@@ -134,8 +134,8 @@
 
             // 3. PCT/US2011/044199 does not work yet, why/how?
 
-            var document_id = this.document.get_application_reference('docdb');
-            var url_tpl = _.template('/office/dpma/register/application/<%= country %><%= docnumber %>?redirect=true');
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('/office/dpma/register/publication/<%= country %><%= docnumber %>?redirect=true');
             var url = url_tpl(document_id);
             return url;
         },
