@@ -5,7 +5,7 @@ import sys
 import json
 import time
 import logging
-import mechanize
+import mechanicalsoup
 from pprint import pformat
 from collections import namedtuple, OrderedDict
 from BeautifulSoup import BeautifulSoup
@@ -36,9 +36,12 @@ class DpmaRegisterAccess:
     baseurl = 'https://register.dpma.de/DPMAregister/pat/'
 
     ResultEntry = namedtuple('ResultEntry', ['label', 'reference'])
-    Document = namedtuple('Document', ['result', 'url', 'html'])
+    Document = namedtuple('Document', ['meta', 'url', 'response'])
 
     def __init__(self):
+
+        # Whether we already have a valid HTTP session with the remote server
+        self.http_session_valid = False
 
         # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
         # https://bugs.python.org/issue22417
@@ -46,21 +49,11 @@ class DpmaRegisterAccess:
             import ssl
             ssl._create_default_https_context = ssl._create_unverified_context
 
-        # http://wwwsearch.sourceforge.net/mechanize/
-        self.browser = mechanize.Browser()
-        self.http_session_valid = False
-
-        # Enable debug logging for "mechanize" module
-        #self.browser.set_debug_http(True)
-
-        # Set cookie jar
-        #self.browser.set_cookiejar(cookielib.LWPCookieJar())
+        # https://mechanicalsoup.readthedocs.io/
+        self.browser = mechanicalsoup.StatefulBrowser()
 
         # Set custom user agent header
-        self.browser.set_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')
-
-        # Ignore robots.txt, sorry for being rude.
-        self.browser.set_handle_robots(False)
+        self.browser.set_user_agent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')
 
         self.language = 'en'
         self.searchurl = self.baseurl + 'einsteiger?lang={}'.format(self.language)
@@ -140,12 +133,12 @@ class DpmaRegisterAccess:
             return
 
         # Parse link to ST.36 XML document from HTML
-        soup = BeautifulSoup(result.html)
+        soup = result.response.soup
         st36xml_anchor = soup.find("a", {'name': 'st36xml'})
         st36xml_href = st36xml_anchor['href']
 
         # Download ST.36 XML document and return response body
-        return self.browser.open(st36xml_href).read()
+        return self.browser.open(st36xml_href).content
 
     def fetch_pdf(self, patent):
 
@@ -156,11 +149,15 @@ class DpmaRegisterAccess:
             logger.warning('Could not find document {}'.format(patent))
             return
 
-        # Derive mechanize request from link to ST.36 XML document from HTML
-        request = self.browser.click_link(url_regex='register/PAT_.*VIEW=pdf')
+        # Follow link to ST.36 XML document and return response body
 
-        # Download ST.36 XML document and return response body
-        return self.browser.open(request).read()
+        # [FIXME] TypeError: links() got multiple values for keyword argument 'url_regex'
+        #response = self.browser.follow_link(url_regex='register/PAT_.*VIEW=pdf', headers={'Referer': result.url})
+
+        # Works for now
+        link = self.browser.find_link(url_regex='register/PAT_.*VIEW=pdf')
+        response = self.browser.open_relative(link['href'], headers={'Referer': result.url})
+        return response.content
 
     def search_patent_smart(self, patent):
 
@@ -212,18 +209,17 @@ class DpmaRegisterAccess:
 
         # Fill form fields
         # http://wwwsearch.sourceforge.net/ClientForm/
-        #self.browser.select_form(name='form')
-        self.browser.select_form(nr=0)
+        self.browser.select_form(selector='form')
 
         # Aktenzeichen or publication number
-        self.browser.form['akzPn'] = patent
+        self.browser['akzPn'] = patent
 
         # Simulate another form field set by Tapestry in Javascript
-        self.browser.form.new_control('text', 't:submit', {})
-        self.browser.form['t:submit'] = '["rechercheStarten","rechercheStarten"]'
+        self.browser.new_control('text', 't:submit', {})
+        self.browser['t:submit'] = '["rechercheStarten","rechercheStarten"]'
 
         # Submit form
-        response = self.browser.submit()
+        response = self.browser.submit_selected()
 
         # Debugging
         #self.dump_response(response, dump_metadata=True)
@@ -236,18 +232,14 @@ class DpmaRegisterAccess:
         # directly to the result detail page if there's just a single result.
         # Honor this by parsing the file number (Aktenzeichen) from the
         # response HTML and making up a single result from that.
-        url = self.browser.geturl()
-        if '/pat/register' in url:
-            soup = BeautifulSoup(response)
-            reference_link = soup.find('a', {'href': self.reference_pattern})
+        if '/pat/register' in self.browser.get_url():
+            reference_link = response.soup.find('a', {'href': self.reference_pattern})
             reference, label = self.parse_reference_link(reference_link, patent)
             entry = self.ResultEntry(reference = reference, label = None)
             return [entry]
 
-        html_searchresult = response.read() #.decode('utf-8')
-
         # Sanity checks
-        if 'div class="error"' in html_searchresult:
+        if 'div class="error"' in response.content:
             logger.warning("No search results for '%s'" % patent)
             return []
 
@@ -255,8 +247,7 @@ class DpmaRegisterAccess:
         # 4. Parse result table
         results = []
 
-        soup = BeautifulSoup(html_searchresult)
-        result_table = soup.find("table")
+        result_table = response.soup.find("table")
         for row in result_table.findAll('tr'):
             columns = row.findAll('td')
             if not columns: continue
@@ -291,19 +282,17 @@ class DpmaRegisterAccess:
 
         url = self.accessurl % result.reference
         logger.info('Accessing URL {}'.format(url))
-        html_document = self.browser.open(url).read() #.decode('utf-8')
-        return self.Document(result = result, url = url, html = html_document)
+        response = self.browser.open(url)
+        return self.Document(meta=result, url=url, response=response)
 
     def dump_response(self, response, dump_metadata = False):
         """
-        Dump response from "mechanize". Metadata and body.
+        Dump response information: Body and optionally metadata (url and headers).
         """
-        #print dir(response)
-        #print br.title()
         if dump_metadata:
-            print response.geturl()
-            print response.info()  # headers
-        print response.read()  # body
+            print response.url
+            print response.headers
+        print response.content
 
 
 class DpmaRegisterDocument(object):
@@ -325,7 +314,7 @@ class DpmaRegisterDocument(object):
 
     @classmethod
     def from_result_document(cls, doc):
-        return cls(doc.result.reference, html=doc.html, url=doc.url)
+        return cls(doc.meta.reference, html=doc.response.content, url=doc.url)
 
     def __str__(self):
         return str(self.identifier) + ':\n' + pformat(self.events)
@@ -469,8 +458,8 @@ if __name__ == '__main__':
         document = register.fetch(sys.argv[1])
 
     else:
-        #document = register.fetch('10001499.2')     # leads to two results, take the non-"E" one
-        document = register.fetch('DE3831719')      # search and follow to 3831719.2
+        document = register.fetch('10001499.2')     # leads to two results, take the non-"E" one
+        #document = register.fetch('DE3831719')      # search and follow to 3831719.2
         #document = register.fetch('WO2007037298')   # worked with DPINFO only
         #document = register.fetch('WO2008034638')   # leads to two results, take the non-"E" one
         #document = register.fetch('DE102006006014') # just one result, directly redirects to detail page
@@ -483,6 +472,7 @@ if __name__ == '__main__':
         #print register.get_document_url('DE10001499.2')
         #print register.get_document_url('DE10001499')
         #print register.get_document_url('DE102012009645')
+        #print register.get_document_url('EP666666')
 
         #print register.fetch_st36xml('DE10001499')
         #print register.fetch_st36xml('EP666666')
