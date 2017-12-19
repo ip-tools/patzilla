@@ -125,7 +125,7 @@ test_requires = [
 ]
 
 setup(name='patzilla',
-      version='0.145.0',
+      version='0.146.0',
       description='PatZilla is a modular patent information research platform and toolkit ' \
                   'with a modern user interface and access to multiple data sources.',
       long_description=README,
