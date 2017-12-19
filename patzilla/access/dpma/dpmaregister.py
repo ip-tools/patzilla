@@ -2,17 +2,24 @@
 # (c) 2011,2014,2015,2017 Andreas Motl <andreas.motl@elmyra.de>
 import re
 import sys
+import attr
 import json
 import time
 import logging
+import operator
 import dogpile.cache
 import mechanicalsoup
+from bunch import bunchify
 from docopt import docopt
 from pprint import pformat
-from collections import namedtuple, OrderedDict
+from jsonpointer import JsonPointer, JsonPointerException
+from xml.etree.ElementTree import fromstring
 from BeautifulSoup import BeautifulSoup
+from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
+from patzilla.util.config import to_list
 from patzilla.util.logging import boot_logging
+from patzilla.util.xml.format import BadgerFishNoNamespace
 from patzilla.version import __version__
 
 logger = logging.getLogger(__name__)
@@ -38,7 +45,6 @@ class DpmaRegisterAccess:
 
     Todo:
     - Improve response data chain
-    - Decode ST.36 XML document
     - Enable searching for arbitrary expressions/fields, not just for document number
     """
 
@@ -87,7 +93,7 @@ class DpmaRegisterAccess:
     def fetch(self, patent):
         document_intermediary = self.search_and_fetch(patent)
         if document_intermediary:
-            document = DpmaRegisterDocument.from_result_document(document_intermediary)
+            document = DpmaRegisterHtmlDocument.from_result_document(document_intermediary)
             return document
 
     @cache.cache_on_arguments()
@@ -306,7 +312,7 @@ class DpmaRegisterAccess:
         print response.content
 
 
-class DpmaRegisterDocument(object):
+class DpmaRegisterHtmlDocument(object):
     """
     Decode information from DPMAregister HTML response.
     """
@@ -458,6 +464,192 @@ class DpmaRegisterDocument(object):
         return table
 
 
+@attr.s
+class DpmaRegisterXmlDocument(object):
+    """
+    Decode information from DPMAregister ST.36 XML document.
+    """
+
+    _xml = attr.ib()
+    _data = attr.ib(default=None)
+
+    application_reference = attr.ib(default=attr.Factory(list))
+    publication_reference = attr.ib(default=attr.Factory(list))
+    title = attr.ib(default=attr.Factory(dict))
+    classifications = attr.ib(default=attr.Factory(dict))
+    pct_or_regional_data = attr.ib(default=attr.Factory(dict))
+
+    applicants = attr.ib(default=attr.Factory(list))
+    inventors = attr.ib(default=attr.Factory(list))
+    agents = attr.ib(default=attr.Factory(list))
+    correspondents = attr.ib(default=attr.Factory(list))
+
+    priority_claims = attr.ib(default=attr.Factory(list))
+    designated_states = attr.ib(default=attr.Factory(list))
+    references_cited = attr.ib(default=attr.Factory(list))
+    office_specific_bibdata = attr.ib(default=attr.Factory(dict))
+    events = attr.ib(default=attr.Factory(list))
+
+    pointer_publication_reference = JsonPointer('/dpma-patent-document/bibliographic-data/publication-references/publication-reference')
+    pointer_application_reference = JsonPointer('/dpma-patent-document/bibliographic-data/application-reference')
+    pointer_title = JsonPointer('/dpma-patent-document/bibliographic-data/invention-title')
+    pointer_classifications_ipcr = JsonPointer('/dpma-patent-document/bibliographic-data/classifications-ipcr/classification-ipcr')
+    pointer_pct_or_regional_publishing_data = JsonPointer('/dpma-patent-document/bibliographic-data/pct-or-regional-publishing-data')
+    pointer_pct_or_regional_filing_data = JsonPointer('/dpma-patent-document/bibliographic-data/pct-or-regional-filing-data')
+
+    pointer_applicants = JsonPointer('/dpma-patent-document/bibliographic-data/parties/applicants/applicant')
+    pointer_inventors = JsonPointer('/dpma-patent-document/bibliographic-data/parties/inventors/inventor')
+    pointer_agents = JsonPointer('/dpma-patent-document/bibliographic-data/parties/agents/agent')
+    pointer_correspondents = JsonPointer('/dpma-patent-document/bibliographic-data/parties/correspondence-address')
+
+    pointer_priority_claims = JsonPointer('/dpma-patent-document/bibliographic-data/priority-claims/priority-claim')
+    pointer_designated_states = JsonPointer('/dpma-patent-document/bibliographic-data/designation-of-states/designation-pct/regional/country')
+    pointer_references_cited = JsonPointer('/dpma-patent-document/bibliographic-data/references-cited/citation/patcit')
+    pointer_office_specific_bibdata = JsonPointer('/dpma-patent-document/bibliographic-data/office-specific-bib-data')
+    pointer_events = JsonPointer('/dpma-patent-document/events/event-data')
+
+    def decode_badgerfish(self):
+        self._data = BadgerFishNoNamespace(xml_fromstring=False, dict_type=OrderedDict).data(fromstring(self._xml))
+        return self
+
+    def decode(self):
+
+        # Convert from XML to data structure using the Badgerfish convention
+        self.decode_badgerfish()
+
+        # Document numbers
+        self.application_reference = map(
+            operator.itemgetter('document_id'),
+            self.convert_list(self.query_data(self.pointer_application_reference)))
+
+        self.publication_reference = map(
+            operator.itemgetter('document_id'),
+            self.convert_list(self.query_data(self.pointer_publication_reference)))
+
+        # Classifications
+        self.classifications['ipcr'] = self.convert_list(self.query_data(self.pointer_classifications_ipcr))
+
+        # pct-or-regional-{publishing,filing}-data
+        self.pct_or_regional_data = {
+            'filing': self.convert_dict(self.query_data(self.pointer_pct_or_regional_filing_data)).get('document_id'),
+            'publishing': self.convert_dict(self.query_data(self.pointer_pct_or_regional_publishing_data)).get('document_id'),
+        }
+
+        # Decode title
+        title = self.pointer_title.resolve(self._data)
+        self.title = {
+            'lang': title['@lang'].lower(),
+            'text': title['$'],
+        }
+
+        # Parties: Applicants, inventors, agents and correspondence address
+        self.applicants = self.decode_parties(self.pointer_applicants)
+        self.inventors = self.decode_parties(self.pointer_inventors)
+        self.agents = self.decode_parties(self.pointer_agents)
+        self.correspondents = self.decode_parties(self.pointer_correspondents)
+
+        # Priority claims
+        self.priority_claims = self.convert_list(self.query_data(self.pointer_priority_claims))
+
+        # Designated states
+        self.designated_states = self.convert_list(self.query_data(self.pointer_designated_states))
+
+        # Citations
+        self.references_cited = map(
+            operator.attrgetter('document_id.doc_number'),
+            bunchify(self.convert_list(self.query_data(self.pointer_references_cited))))
+
+        # office-specific-bib-data
+        self.office_specific_bibdata = self.convert_dict(self.query_data(self.pointer_office_specific_bibdata))
+
+        # Decode list of events
+        events = self.convert_list(self.query_data(self.pointer_events))
+        self.events = sorted(events, key=operator.itemgetter('date_of_procedural_status'))
+
+        return self
+
+    def query_data(self, pointer):
+        try:
+            return pointer.resolve(self._data)
+        except JsonPointerException:
+            return
+
+    @classmethod
+    def convert_list(cls, things_raw):
+        """Decode list of things"""
+        things = []
+        for thing in to_list(things_raw):
+            if not thing: continue
+            if '$' in thing and len(thing.keys()) == 1:
+                thing = thing['$']
+            else:
+                thing = cls.convert_dict(thing)
+            things.append(thing)
+        return things
+
+    @classmethod
+    def convert_dict(cls, data):
+        """Decode data thing"""
+        if not data:
+            return {}
+        newdata = OrderedDict()
+        for key, value in data.items():
+
+            # Decode nested text or recurse
+            if '$' in value:
+                value = value['$']
+            elif isinstance(value, dict):
+                value = cls.convert_dict(value)
+
+            # We want to have keys which are conveniently accessible as object attributes
+            key = key.replace('-', '_')
+
+            # Assign value
+            newdata[key] = value
+
+        return newdata
+
+    def asdict(self):
+        """Return dictionary of public instance attributes"""
+        return attr.asdict(self,
+            dict_factory=OrderedDict,
+            filter=lambda attr, value: not attr.name.startswith('_'))
+
+    def decode_parties(self, pointer):
+        """
+        ST.36: Decode list of applicants, inventors or agents.
+        See also https://github.com/Patent2net/P2N/blob/develop/p2n/ops/decoder.py#L535
+        """
+
+        try:
+            nodes = to_list(pointer.resolve(self._data))
+        except JsonPointerException:
+            return []
+
+        entries = []
+        for party in nodes:
+
+            addressbook = party['addressbook']
+
+            entry = OrderedDict()
+            entry['name'] = addressbook['name']['$']
+            entry['text'] = addressbook['text']['$']
+            entry['country'] = addressbook['address']['country']['$']
+            address = []
+            for index in range(1, 7):
+                fieldname = 'address-{}'.format(index)
+                try:
+                    value = addressbook['address'][fieldname]['$']
+                    address.append(value)
+                except KeyError:
+                    pass
+
+            entry['address'] = address
+
+            entries.append(entry)
+
+        return entries
+
 
 APP_NAME = 'dpmaregister'
 
@@ -471,7 +663,7 @@ def run():
     Options:
       <document-number>         Document number to access
       --format=<format>         Format for acquisition and output [default: xml]
-                                Use one of xml, html, html-compact, pdf, url
+                                Use one of xml, json, json-raw, html, html-compact, pdf, url
 
     Miscellaneous options:
       --debug                   Enable debug messages
@@ -482,6 +674,9 @@ def run():
 
       # Fetch register information for WO2007037298 and output in ST.36 XML format
       dpmaregister fetch WO2007037298
+
+      # Fetch register information for DE19630877 and output in JSON format
+      dpmaregister fetch WO2007037298 --format=json
 
       # Fetch register information for WO2007037298 and output in compact HTML format
       dpmaregister fetch WO2007037298 --format=html-compact
@@ -510,6 +705,16 @@ def run():
         if output_format == 'xml':
             response = register.fetch_st36xml(document_number)
             payload = response.content
+
+        elif output_format == 'json-raw':
+            response = register.fetch_st36xml(document_number)
+            document = DpmaRegisterXmlDocument(response.content).decode_badgerfish()
+            payload = json.dumps(document._data, indent=4)
+
+        elif output_format == 'json':
+            response = register.fetch_st36xml(document_number)
+            document = DpmaRegisterXmlDocument(response.content).decode()
+            payload = json.dumps(document.asdict(), indent=4)
 
         elif output_format == 'html':
             document = register.fetch(document_number)

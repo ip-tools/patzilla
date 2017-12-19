@@ -18,6 +18,7 @@ development
     - Switch scraper from "mechanize" to "MechanicalSoup"
     - Provide command line interface program ``dpmaregister``
     - Introduce response caching with a TTL of 24 hours
+    - Decode ST.36 XML document to JSON
 
 - Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
 

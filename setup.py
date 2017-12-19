@@ -74,6 +74,7 @@ requires = [
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
     'lxml==3.4.1',              # 4.0.0
+    'xmljson==0.1.9',
 
     # JSON
     'jsonpointer==1.14',
@@ -84,7 +85,8 @@ requires = [
     # ----------------------------------------------
 
     # Data handling
-    'Bunch==1.0.1',
+    'attrs==17.3.0',
+    'Bunch==1.0.1',             # Maybe switch to "Munch"
     'pyparsing==2.0.2',         # 2.2.0
     'python-dateutil==2.6.1',
     'ago==0.0.9',

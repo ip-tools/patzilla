@@ -9,10 +9,11 @@ def dpma_file_number(document_number):
     See also section 4 in https://www.dpma.de/docs/dpma/veroeffentlichungen/dpmainformativ_nr05.pdf
 
 
-    # Just apply checksum for document numbers starting with "DE"
+    # Just append checksum for document numbers starting with "DE"
     >>> dpma_file_number('DE10001499')
     '100014992'
 
+    # If there's probably already a checksum, use it
     >>> dpma_file_number('DE10001499.2')
     '100014992'
 
@@ -37,9 +38,8 @@ def dpma_file_number(document_number):
         if '.' in docno_numeric:
             file_number = docno_numeric.replace('.', '')
 
+        # Compute and append checksum digit according to specification (see PDF link above).
         else:
-
-            # Compute and append checksum digit according to specification (see PDF link above).
             checksum = 0
             for i, n in enumerate(reversed(docno_numeric)):
                 checksum += int(n, 10) * (i + 2)

@@ -3,6 +3,9 @@
 from lxml import etree
 
 # https://stackoverflow.com/questions/749796/pretty-printing-xml-in-python/12940014#12940014
+import re
+from xmljson import BadgerFish
+
 def etree_indent(elem, level=0, more_sibs=False):
     i = "\n"
     spacing = '    '
@@ -49,3 +52,22 @@ def compact_print(xml):
     xml = etree.tostring(root)
     xml = xml.strip()
     return xml
+
+
+class BadgerFishNoNamespace(BadgerFish):
+
+    def data(self, root):
+        """Convert etree.Element into a dictionary while completely ignoring xml namespaces"""
+
+        # Clean tag name of root element
+        self.clean_tag(root)
+
+        # Clean tag name of all child elements
+        for node in root:
+            self.clean_tag(node)
+
+        return super(BadgerFishNoNamespace, self).data(root)
+
+    def clean_tag(self, node):
+        if isinstance(node.tag, basestring):
+            node.tag = re.sub('{.*}', '', node.tag)
