@@ -4,6 +4,10 @@ IP Navigator CHANGES
 
 development
 ===========
+
+
+2017-12-19 0.146.0
+==================
 - Some updates to the DPMAregister access library. Thanks, Felix!
 
     - Get DPMA register URL for DE documents by calculating the checksum of the document number
@@ -22,7 +26,6 @@ development
     - [ui] Fix direct link to DPMA register
 
 - Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
-
 
 2017-11-16 0.145.0
 ==================
