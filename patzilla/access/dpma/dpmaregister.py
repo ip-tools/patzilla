@@ -6,10 +6,13 @@ import json
 import time
 import logging
 import mechanicalsoup
+from docopt import docopt
 from pprint import pformat
 from collections import namedtuple, OrderedDict
 from BeautifulSoup import BeautifulSoup
 from patzilla.access.dpma.util import dpma_file_number
+from patzilla.util.logging import boot_logging
+from patzilla.version import __version__
 
 
 logger = logging.getLogger(__name__)
@@ -26,11 +29,10 @@ class DpmaRegisterAccess:
     https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=PN%3DWO2008034638
 
     Todo:
-    - Provide command line interface
-    - Maybe switch to MechanicalSoup, see https://mechanicalsoup.readthedocs.io/
     - Improve response data chain
     - Decode ST.36 XML document
     - Introduce caching
+    - Enable searching for arbitrary expressions/fields, not just for document number
     """
 
     baseurl = 'https://register.dpma.de/DPMAregister/pat/'
@@ -138,7 +140,7 @@ class DpmaRegisterAccess:
         st36xml_href = st36xml_anchor['href']
 
         # Download ST.36 XML document and return response body
-        return self.browser.open(st36xml_href).content
+        return self.browser.open(st36xml_href)
 
     def fetch_pdf(self, patent):
 
@@ -149,15 +151,14 @@ class DpmaRegisterAccess:
             logger.warning('Could not find document {}'.format(patent))
             return
 
-        # Follow link to ST.36 XML document and return response body
+        # Follow link to PDF document and return response body
 
         # [FIXME] TypeError: links() got multiple values for keyword argument 'url_regex'
-        #response = self.browser.follow_link(url_regex='register/PAT_.*VIEW=pdf', headers={'Referer': result.url})
+        #return self.browser.follow_link(url_regex='register/PAT_.*VIEW=pdf', headers={'Referer': result.url})
 
         # Works for now
         link = self.browser.find_link(url_regex='register/PAT_.*VIEW=pdf')
-        response = self.browser.open_relative(link['href'], headers={'Referer': result.url})
-        return response.content
+        return self.browser.open_relative(link['href'], headers={'Referer': result.url})
 
     def search_patent_smart(self, patent):
 
@@ -445,6 +446,80 @@ class DpmaRegisterDocument(object):
             table.append(data_row)
 
         return table
+
+
+
+APP_NAME = 'dpmaregister'
+
+def run():
+    """
+    Usage:
+      {program} fetch <document-number> [--format=<format>]
+      {program} --version
+      {program} (-h | --help)
+
+    Options:
+      <document-number>         Document number to access
+      --format=<format>         Format for acquisition and output [default: xml]
+                                Use one of xml, html, html-compact, pdf, url
+
+    Miscellaneous options:
+      --debug                   Enable debug messages
+      --version                 Show version information
+      -h --help                 Show this screen
+
+    Examples:
+
+      # Fetch register information for WO2007037298 and output in ST.36 XML format
+      dpmaregister fetch WO2007037298
+
+      # Fetch register information for WO2007037298 and output in compact HTML format
+      dpmaregister fetch WO2007037298 --format=html-compact
+
+    """
+
+    # Use generic commandline options schema and amend with current program name
+    commandline_schema = run.__doc__.format(program=APP_NAME)
+
+    # Read commandline options
+    options = docopt(commandline_schema, version=APP_NAME + ' ' + __version__)
+
+    # Start logging subsystem
+    boot_logging(options)
+
+    # Debugging
+    #print('options: {}'.format(options))
+
+
+    if options['fetch']:
+        document_number = options['<document-number>']
+
+        register = DpmaRegisterAccess()
+
+        output_format = options['--format']
+        if output_format == 'xml':
+            response = register.fetch_st36xml(document_number)
+            payload = response.content
+
+        elif output_format == 'html':
+            document = register.fetch(document_number)
+            payload = document.html
+
+        elif output_format == 'html-compact':
+            document = register.fetch(document_number)
+            payload = document.html_compact()
+
+        elif output_format == 'pdf':
+            response = register.fetch_pdf(document_number)
+            payload = response.content
+
+        elif output_format == 'url':
+            payload = register.get_document_url(document_number)
+
+        else:
+            raise ValueError('Unknown value for --format parameter: {}'.format(output_format))
+
+        print(payload)
 
 
 if __name__ == '__main__':

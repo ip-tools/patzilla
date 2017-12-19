@@ -55,7 +55,7 @@ requires = [
     'requests==2.18.4',
     'requests-oauthlib==0.8.0',
     'mechanize==0.3.6',
-    'MechanicalSoup==0.9.0.post4',
+    'MechanicalSoup>=0.9.0.post4,<=1.1.0',
 
     # HTML
     'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0
@@ -179,6 +179,7 @@ setup(name='patzilla',
         'console_scripts': [
             'patzilla      = patzilla.commands:run',
             'patzilla-user = patzilla.commands:usercmd',
+            'dpmaregister  = patzilla.access.dpma.dpmaregister:run',
         ],
 
       },
