@@ -61,6 +61,8 @@ def jump_office(request):
             normalized = normalize_patent(document_number, for_ops=False)
             url = 'https://patents.google.com/patent/{}'.format(normalized)
 
+        # Add Google Prior Art search again. See "priorArtKeywords" and "priorArtDate" in HTML response.
+
         if url:
             if redirect:
                 return HTTPFound(location=url)
