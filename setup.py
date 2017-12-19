@@ -56,6 +56,7 @@ requires = [
     'requests-oauthlib==0.8.0',
     'mechanize==0.3.6',
     'MechanicalSoup>=0.9.0.post4,<=1.1.0',
+    'dogpile.cache==0.6.4',
 
     # HTML
     'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0

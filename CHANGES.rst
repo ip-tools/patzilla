@@ -17,6 +17,7 @@ development
     - Provide new access methods ``fetch_st36xml`` and ``fetch_pdf``
     - Switch scraper from "mechanize" to "MechanicalSoup"
     - Provide command line interface program ``dpmaregister``
+    - Introduce response caching with a TTL of 24 hours
 
 - Upgrade to Moment.js 2.20.0 re. CVE-2016-4055
 

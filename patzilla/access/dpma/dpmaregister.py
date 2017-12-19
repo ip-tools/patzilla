@@ -5,6 +5,7 @@ import sys
 import json
 import time
 import logging
+import dogpile.cache
 import mechanicalsoup
 from docopt import docopt
 from pprint import pformat
@@ -14,9 +15,16 @@ from patzilla.access.dpma.util import dpma_file_number
 from patzilla.util.logging import boot_logging
 from patzilla.version import __version__
 
-
 logger = logging.getLogger(__name__)
 
+# Cache responses for 24 hours
+cache = dogpile.cache.make_region().configure(
+    "dogpile.cache.dbm",
+    expiration_time=3600 * 24,
+    arguments={
+        "filename":"/var/tmp/dpmaregister-cache.dbm"
+    }
+)
 
 class DpmaRegisterAccess:
     """
@@ -31,7 +39,6 @@ class DpmaRegisterAccess:
     Todo:
     - Improve response data chain
     - Decode ST.36 XML document
-    - Introduce caching
     - Enable searching for arbitrary expressions/fields, not just for document number
     """
 
@@ -69,11 +76,56 @@ class DpmaRegisterAccess:
             response = self.browser.open(self.searchurl)
             self.http_session_valid = True
 
+    @cache.cache_on_arguments()
+    def get_document_url(self, patent):
+        file_reference = self.resolve_file_reference(patent)
+        url = self.accessurl % file_reference.reference
+        logger.info('Document URL for {} is {}'.format(patent, url))
+        return url
+
+    @cache.cache_on_arguments()
     def fetch(self, patent):
         document_intermediary = self.search_and_fetch(patent)
         if document_intermediary:
             document = DpmaRegisterDocument.from_result_document(document_intermediary)
             return document
+
+    @cache.cache_on_arguments()
+    def fetch_st36xml(self, patent):
+
+        # Fetch main HTML resource of document
+        result = self.search_and_fetch(patent)
+
+        if not result:
+            logger.warning('Could not find document {}'.format(patent))
+            return
+
+        # Parse link to ST.36 XML document from HTML
+        soup = result.response.soup
+        st36xml_anchor = soup.find("a", {'name': 'st36xml'})
+        st36xml_href = st36xml_anchor['href']
+
+        # Download ST.36 XML document and return response body
+        return self.browser.open(st36xml_href)
+
+    @cache.cache_on_arguments()
+    def fetch_pdf(self, patent):
+
+        # Fetch main HTML resource of document
+        result = self.search_and_fetch(patent)
+
+        if not result:
+            logger.warning('Could not find document {}'.format(patent))
+            return
+
+        # Follow link to PDF document and return response body
+
+        # [FIXME] TypeError: links() got multiple values for keyword argument 'url_regex'
+        #return self.browser.follow_link(url_regex='register/PAT_.*VIEW=pdf', headers={'Referer': result.url})
+
+        # Works for now
+        link = self.browser.find_link(url_regex='register/PAT_.*VIEW=pdf')
+        return self.browser.open_relative(link['href'], headers={'Referer': result.url})
 
     def search_first(self, patent):
 
@@ -117,48 +169,6 @@ class DpmaRegisterAccess:
             logger.warning('Could not resolve DPMA file number for {}'.format(patent))
 
         return result
-
-    def get_document_url(self, patent):
-
-        file_reference = self.resolve_file_reference(patent)
-        url = self.accessurl % file_reference.reference
-        logger.info('Document URL for {} is {}'.format(patent, url))
-        return url
-
-    def fetch_st36xml(self, patent):
-
-        # Fetch main HTML resource of document
-        result = self.search_and_fetch(patent)
-
-        if not result:
-            logger.warning('Could not find document {}'.format(patent))
-            return
-
-        # Parse link to ST.36 XML document from HTML
-        soup = result.response.soup
-        st36xml_anchor = soup.find("a", {'name': 'st36xml'})
-        st36xml_href = st36xml_anchor['href']
-
-        # Download ST.36 XML document and return response body
-        return self.browser.open(st36xml_href)
-
-    def fetch_pdf(self, patent):
-
-        # Fetch main HTML resource of document
-        result = self.search_and_fetch(patent)
-
-        if not result:
-            logger.warning('Could not find document {}'.format(patent))
-            return
-
-        # Follow link to PDF document and return response body
-
-        # [FIXME] TypeError: links() got multiple values for keyword argument 'url_regex'
-        #return self.browser.follow_link(url_regex='register/PAT_.*VIEW=pdf', headers={'Referer': result.url})
-
-        # Works for now
-        link = self.browser.find_link(url_regex='register/PAT_.*VIEW=pdf')
-        return self.browser.open_relative(link['href'], headers={'Referer': result.url})
 
     def search_patent_smart(self, patent):
 
@@ -291,8 +301,8 @@ class DpmaRegisterAccess:
         Dump response information: Body and optionally metadata (url and headers).
         """
         if dump_metadata:
-            print response.url
-            print response.headers
+            print('url:', response.url)
+            print('headers:', response.headers)
         print response.content
 
 
