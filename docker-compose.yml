@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  patzilla:
+    build: .
+    image: alpine-patzilla
+    ports:
+      - 9999:9999
+      - 6543:6543
+    networks:
+      - patzilla_net
+    container_name: patzilla
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mvertes/alpine-mongo
+    ports:
+      - 27017:27017
+    networks:
+      - patzilla_net
+    container_name: mongodb
+
+networks:
+  patzilla_net:
