@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl, Elmyra UG
 import logging
 from pprint import pprint
 from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region, region_invalidate
+from patzilla.access.dpma import dpmaregister
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
@@ -29,16 +30,19 @@ depatisconnect_description_service = Service(
     name='depatisconnect-description',
     path='/api/depatisconnect/{patent}/description',
     description="DEPATISconnect description interface")
-
 depatisconnect_claims_service = Service(
     name='depatisconnect-claims',
     path='/api/depatisconnect/{patent}/claims',
     description="DEPATISconnect claims interface")
-
 depatisconnect_abstract_service = Service(
     name='depatisconnect-abstract',
     path='/api/depatisconnect/{patent}/abstract',
     description="DEPATISconnect abstract interface")
+
+dpma_register_service = Service(
+    name='dpma-register',
+    path='/api/dpma/register/{type}/{document}',
+    description="DPMAregister interface")
 
 
 # TODO: implement as JSON POST
@@ -264,3 +268,39 @@ def depatisconnect_abstract_handler(request):
         raise HTTPBadRequest(ex)
 
     return abstract
+
+
+@dpma_register_service.get(renderer='null')
+def dpma_register_handler(request):
+
+    type = request.matchdict['type']
+    document = request.matchdict['document']
+    format = request.params.get('format')
+
+    try:
+        if type == 'patent':
+            payload = dpmaregister.access_register(document, format)
+        else:
+            raise HTTPBadRequest('IP right type "{}" not implemented yet.'.format(type))
+
+    except dpmaregister.NoResults as ex:
+        raise HTTPNotFound(ex)
+
+    except dpmaregister.UnknownFormat as ex:
+        raise HTTPBadRequest(ex)
+
+    except ValueError as ex:
+        raise HTTPBadRequest(ex)
+
+    if format == 'xml':
+        request.response.content_type = 'application/xml'
+    elif format.startswith('json'):
+        request.response.content_type = 'application/json'
+    elif format.startswith('html'):
+        request.response.content_type = 'text/html'
+    elif format == 'pdf':
+        request.response.content_type = 'application/pdf'
+    elif format == 'url':
+        request.response.content_type = 'text/uri-list'
+
+    return payload

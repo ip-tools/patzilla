@@ -6,6 +6,10 @@ development
 ===========
 
 
+2018-01-02 0.147.0
+==================
+- Add HTTP interface to DPMAregister data
+
 2017-12-19 0.146.0
 ==================
 - Some updates to the DPMAregister access library. Thanks, Felix!

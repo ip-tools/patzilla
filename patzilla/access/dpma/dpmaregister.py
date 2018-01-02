@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2011,2014,2015,2017 Andreas Motl <andreas.motl@elmyra.de>
+# (c) 2011,2014,2015,2017,2018 Andreas Motl <andreas.motl@elmyra.de>
 import re
 import sys
 import attr
@@ -36,6 +36,9 @@ cache = dogpile.cache.make_region().configure(
 class NoResults(Exception):
     pass
 
+class UnknownFormat(Exception):
+    pass
+
 class DpmaRegisterAccess:
     """
     Screen scraper for DPMAregister "beginner's search" web interface
@@ -49,6 +52,7 @@ class DpmaRegisterAccess:
     Todo:
     - Improve response data chain
     - Enable searching for arbitrary expressions/fields, not just for document number
+    - Use MongoDB database cache
     """
 
     baseurl = 'https://register.dpma.de/DPMAregister/pat/'
@@ -746,7 +750,7 @@ def access_register(document_number, output_format):
         payload = register.get_document_url(document_number)
 
     else:
-        raise ValueError('Unknown value for --format parameter: {}'.format(output_format))
+        raise UnknownFormat('Unknown value for "format" parameter: {}'.format(output_format))
 
     return payload
 
