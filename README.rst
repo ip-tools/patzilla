@@ -43,8 +43,8 @@ Features
 - REST API. Through the extensive REST API, all functionality is available to 3rd-party systems.
   Deep integration has no limits.
 
-- Sharing. Well-designed collaboration features allow efficient sharing of information with your colleagues,
-  even across the boundaries of in-house systems.
+- Sharing. Well-designed collaboration features allow efficient sharing of information with your
+  colleagues and partners, even across the boundaries of in-house systems.
 
 - Multitenancy. The software can operate on behalf of different vendors. It's easy to apply custom branding.
 
