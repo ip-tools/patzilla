@@ -539,8 +539,8 @@ class DpmaRegisterXmlDocument(object):
 
         # pct-or-regional-{publishing,filing}-data
         self.pct_or_regional_data = {
-            'filing': self.convert_dict(self.query_data(self.pointer_pct_or_regional_filing_data)).get('document_id'),
-            'publishing': self.convert_dict(self.query_data(self.pointer_pct_or_regional_publishing_data)).get('document_id'),
+            'filing': self.convert_list(self.query_data(self.pointer_pct_or_regional_filing_data), 'document-id'),
+            'publishing': self.convert_list(self.query_data(self.pointer_pct_or_regional_publishing_data), 'document-id'),
         }
 
         # Decode title
@@ -583,14 +583,14 @@ class DpmaRegisterXmlDocument(object):
             return
 
     @classmethod
-    def convert_list(cls, things_raw):
+    def convert_list(cls, things_raw, nested_element='$'):
         """Decode list of things"""
         things = []
         for thing in to_list(things_raw):
             if not thing: continue
-            if '$' in thing and len(thing.keys()) == 1:
-                thing = thing['$']
-            else:
+            if nested_element in thing and len(thing.keys()) == 1:
+                thing = thing[nested_element]
+            if isinstance(thing, dict):
                 thing = cls.convert_dict(thing)
             things.append(thing)
         return things
@@ -598,8 +598,11 @@ class DpmaRegisterXmlDocument(object):
     @classmethod
     def convert_dict(cls, data):
         """Decode data thing"""
+
+        # Sanity checks
         if not data:
             return {}
+
         newdata = OrderedDict()
         for key, value in data.items():
 

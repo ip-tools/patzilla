@@ -6,6 +6,10 @@ development
 ===========
 
 
+2018-01-02 0.147.1
+==================
+- Fix decoding of DPMAregister "pct-or-regional-{publishing,filing}-data" for list representations
+
 2018-01-02 0.147.0
 ==================
 - Add HTTP interface to DPMAregister data
