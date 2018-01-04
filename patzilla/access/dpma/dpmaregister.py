@@ -131,14 +131,8 @@ class DpmaRegisterAccess:
             logger.warning('Could not find document {}'.format(patent))
             return
 
-        # Follow link to PDF document and return response body
-
-        # [FIXME] TypeError: links() got multiple values for keyword argument 'url_regex'
-        #return self.browser.follow_link(url_regex='register/PAT_.*VIEW=pdf', headers={'Referer': result.url})
-
-        # Works for now
-        link = self.browser.find_link(url_regex='register/PAT_.*VIEW=pdf')
-        return self.browser.open_relative(link['href'], headers={'Referer': result.url})
+        # Follow link to PDF document and return response
+        return self.browser.download_link('register/PAT_.*VIEW=pdf')
 
     def search_first(self, patent):
 
