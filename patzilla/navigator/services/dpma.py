@@ -276,10 +276,11 @@ def dpma_register_handler(request):
     type = request.matchdict['type']
     document = request.matchdict['document']
     format = request.params.get('format')
+    language = request.params.get('lang', 'en')
 
     try:
         if type == 'patent':
-            payload = dpmaregister.access_register(document, format)
+            payload = dpmaregister.access_register(document, format, language)
         else:
             raise HTTPBadRequest('IP right type "{}" not implemented yet.'.format(type))
 

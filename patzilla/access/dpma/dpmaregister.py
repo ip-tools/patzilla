@@ -39,6 +39,20 @@ class NoResults(Exception):
 class UnknownFormat(Exception):
     pass
 
+
+@attr.s
+class Document(object):
+    """An intermediary object holding information from accessing DPMAregister on the container level"""
+    meta = attr.ib(default=None)
+    url = attr.ib(default=None)
+    response = attr.ib(default=None)
+
+@attr.s
+class ResultEntry(object):
+    """An intermediary object holding information from accessing DPMAregister on the result level"""
+    label = attr.ib(default=None)
+    reference = attr.ib(default=None)
+
 class DpmaRegisterAccess:
     """
     Screen scraper for DPMAregister "beginner's search" web interface
@@ -57,9 +71,6 @@ class DpmaRegisterAccess:
 
     baseurl = 'https://register.dpma.de/DPMAregister/pat/'
 
-    ResultEntry = namedtuple('ResultEntry', ['label', 'reference'])
-    Document = namedtuple('Document', ['meta', 'url', 'response'])
-
     def __init__(self):
 
         # Whether we already have a valid HTTP session with the remote server
@@ -77,9 +88,8 @@ class DpmaRegisterAccess:
         # Set custom user agent header
         self.browser.set_user_agent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')
 
-        self.language = 'en'
-        self.searchurl = self.baseurl + 'einsteiger?lang={}'.format(self.language)
-        self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ=%s&lang={}'.format(self.language)
+        self.searchurl = self.baseurl + 'einsteiger' #?lang={language}'
+        self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ={number}&lang={language}'
 
         self.reference_pattern = re.compile('.*\?AKZ=(.+?)&.*')
 
@@ -90,15 +100,15 @@ class DpmaRegisterAccess:
             self.http_session_valid = True
 
     @cache.cache_on_arguments()
-    def get_document_url(self, patent):
+    def get_document_url(self, patent, language):
         file_reference = self.resolve_file_reference(patent)
-        url = self.accessurl % file_reference.reference
+        url = self.accessurl.format(number=file_reference.reference, language=language)
         logger.info('Document URL for {} is {}'.format(patent, url))
         return url
 
     @cache.cache_on_arguments()
-    def fetch(self, patent):
-        document_intermediary = self.search_and_fetch(patent)
+    def fetch(self, patent, language):
+        document_intermediary = self.search_and_fetch(patent, language)
         if document_intermediary:
             document = DpmaRegisterHtmlDocument.from_result_document(document_intermediary)
             return document
@@ -145,7 +155,7 @@ class DpmaRegisterAccess:
         if results:
             return results[0]
 
-    def search_and_fetch(self, patent):
+    def search_and_fetch(self, patent, language):
         """
         search_entry = self.search_first(patent)
         if search_entry:
@@ -153,7 +163,7 @@ class DpmaRegisterAccess:
         """
         file_reference = self.resolve_file_reference(patent)
         if file_reference:
-            return self.fetch_reference(file_reference)
+            return self.fetch_reference(file_reference, language)
 
     def resolve_file_reference(self, patent):
 
@@ -163,7 +173,7 @@ class DpmaRegisterAccess:
         # It only works for DE applications, though.
         if patent.startswith('DE'):
             file_number = dpma_file_number(patent)
-            result = self.ResultEntry(reference = file_number, label = patent)
+            result = ResultEntry(reference = file_number, label = patent)
 
         # For all other numbers, we have to kick off
         # a search request and scrape the response.
@@ -253,7 +263,7 @@ class DpmaRegisterAccess:
         if '/pat/register' in self.browser.get_url():
             reference_link = response.soup.find('a', {'href': self.reference_pattern})
             reference, label = self.parse_reference_link(reference_link, patent)
-            entry = self.ResultEntry(reference = reference, label = None)
+            entry = ResultEntry(reference = reference, label = None)
             return [entry]
 
         # Sanity checks
@@ -275,7 +285,7 @@ class DpmaRegisterAccess:
             link = link_column.find('a')
 
             reference, label = self.parse_reference_link(link, patent)
-            entry = self.ResultEntry(reference = reference, label = label)
+            entry = ResultEntry(reference = reference, label = label)
             results.append(entry)
 
         logger.info("Searching for %s yielded %s results" % (patent, len(results)))
@@ -293,16 +303,16 @@ class DpmaRegisterAccess:
         label = link.find(text=True)
         return reference, label
 
-    def fetch_reference(self, result):
+    def fetch_reference(self, result, language):
         """open document url and return html"""
 
         # 1. Open search url to initialize HTTP session
         self.start_http_session()
 
-        url = self.accessurl % result.reference
+        url = self.accessurl.format(number=result.reference, language=language)
         logger.info('Accessing URL {}'.format(url))
         response = self.browser.open(url)
-        return self.Document(meta=result, url=url, response=response)
+        return Document(meta=result, url=url, response=response)
 
     def dump_response(self, response, dump_metadata = False):
         """
@@ -711,7 +721,7 @@ def run():
             sys.exit(1)
 
 
-def access_register(document_number, output_format):
+def access_register(document_number, output_format, language='en'):
 
     register = DpmaRegisterAccess()
 
@@ -730,11 +740,11 @@ def access_register(document_number, output_format):
         payload = json.dumps(document.asdict(), indent=4)
 
     elif output_format == 'html':
-        document = register.fetch(document_number)
+        document = register.fetch(document_number, language)
         payload = document.html
 
     elif output_format == 'html-compact':
-        document = register.fetch(document_number)
+        document = register.fetch(document_number, language)
         if not document:
             sys.exit(1)
         payload = document.html_compact()
@@ -744,7 +754,7 @@ def access_register(document_number, output_format):
         payload = response.content
 
     elif output_format == 'url':
-        payload = register.get_document_url(document_number)
+        payload = register.get_document_url(document_number, language)
 
     else:
         raise UnknownFormat('Unknown value for "format" parameter: {}'.format(output_format))

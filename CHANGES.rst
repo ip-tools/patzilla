@@ -4,8 +4,11 @@ IP Navigator CHANGES
 
 development
 ===========
-- DPMAregister crawler: Use improvements from MechanicalSoup==1.0.0-dev. Thanks, Matthieu!
 
+2018-01-19 0.148.0
+==================
+- DPMAregister crawler: Use improvements from MechanicalSoup==1.0.0-dev. Thanks, Matthieu!
+- DPMAregister crawler: Acquisition of localized artefacts (language en vs. de)
 
 2018-01-02 0.147.1
 ==================
