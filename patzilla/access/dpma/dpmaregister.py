@@ -155,7 +155,7 @@ class DpmaRegisterAccess:
         if results:
             return results[0]
 
-    def search_and_fetch(self, patent, language):
+    def search_and_fetch(self, patent, language='en'):
         """
         search_entry = self.search_first(patent)
         if search_entry:

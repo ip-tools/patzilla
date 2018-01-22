@@ -49,6 +49,12 @@ if request_uri:find("^/api/ops/.+/kindcodes$") then
     return
 end
 
+-- temporarily allow DPMAregister access
+-- e.g. /api/dpma/register/patent/ES2023846
+if request_uri:find("^/api/dpma/register/.+$") then
+    return
+end
+
 -- temporarily allow free embedding
 --if request_uri:find("^/embed/.*$") then
 --    return

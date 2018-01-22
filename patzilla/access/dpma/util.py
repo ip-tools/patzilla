@@ -32,8 +32,6 @@ def dpma_file_number(document_number):
     if document_number.startswith('DE'):
 
         docno_numeric = document_number[2:]
-        if not docno_numeric.isdigit():
-            raise ValueError('Document number "{}" is not numeric'.format(docno_numeric))
 
         # If document number contains a dot, assume it's
         # the checksum digit following it and we're finished.
@@ -42,6 +40,10 @@ def dpma_file_number(document_number):
 
         # Compute and append checksum digit according to specification (see PDF link above).
         else:
+
+            if not docno_numeric.isdigit():
+                raise ValueError('Document number "{}" is not numeric'.format(docno_numeric))
+
             checksum = 0
             for i, n in enumerate(reversed(docno_numeric)):
                 checksum += int(n, 10) * (i + 2)

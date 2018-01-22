@@ -5,6 +5,10 @@ IP Navigator CHANGES
 development
 ===========
 
+2018-01-22 0.148.1
+==================
+- Fix DPMAregister crawler
+
 2018-01-19 0.148.0
 ==================
 - DPMAregister crawler: Use improvements from MechanicalSoup==1.0.0-dev. Thanks, Matthieu!
