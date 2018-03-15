@@ -59,7 +59,7 @@ requires = [
     'requests==2.18.4',
     'requests-oauthlib==0.8.0',
     'mechanize==0.3.6',
-    'MechanicalSoup==1.0.0-dev',
+    'MechanicalSoup==0.10.0',
 
     # HTTP SNI support
     'pyOpenSSL==17.3.0',
@@ -184,7 +184,7 @@ setup(name='patzilla',
           'test': test_requires,
       },
       dependency_links=[
-          'https://github.com/MechanicalSoup/MechanicalSoup/archive/master.tar.gz#egg=MechanicalSoup-1.0.0-dev',
+          #'https://github.com/MechanicalSoup/MechanicalSoup/archive/master.tar.gz#egg=MechanicalSoup-1.0.0-dev',
       ],
 
       entry_points={
