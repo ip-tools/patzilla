@@ -8,6 +8,7 @@ development
 - Improve whitelabel capabilities
 - Improve error response handling for IFI Claims
 - Set default language for "dpmaregister" crawler to English
+- Improve confirm dialogs for database "wipe" and "import" actions
 
 2018-01-22 0.148.1
 ==================

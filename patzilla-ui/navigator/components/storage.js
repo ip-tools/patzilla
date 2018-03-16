@@ -273,8 +273,20 @@ StoragePlugin = Marionette.Controller.extend({
 
         $('#data-import-button').unbind('click');
         $('#data-import-button').on('click', function(e) {
-            navigatorApp.project_deactivate();
-            $('#data-import-file').click();
+
+            navigatorApp.ui.confirm(
+                'Please make sure you performed a backup using the "export" feature.' +
+                '<br/><br/>' +
+                'You requested to load data from an import file which might render existing data inaccessible. ' +
+                'The application will reload itself after the import task has finished. ' +
+                '<br/><br/>' +
+                'Continue?').then(function() {
+
+                navigatorApp.project_deactivate();
+                $('#data-import-file').click();
+
+            });
+
         });
 
 
@@ -282,7 +294,13 @@ StoragePlugin = Marionette.Controller.extend({
         $('#database-wipe-button').unbind();
         $('#database-wipe-button').click(function(e) {
 
-            navigatorApp.ui.confirm('This will wipe the whole local database including custom keywords. Are you sure?').then(function() {
+            navigatorApp.ui.confirm(
+                'Please make sure you performed a backup using the "export" feature. ' +
+                '<br/><br/>' +
+                'You requested to wipe the whole local database including custom keywords. ' +
+                'All data will be lost.' +
+                '<br/><br/>' +
+                'Are you sure?').then(function() {
 
                 // wipe the database
                 _this.dbreset({shutdown_gui: true});
