@@ -6,6 +6,7 @@ development
 ===========
 - Upgrade to MechanicalSoup 0.10.0
 - Improve whitelabel capabilities
+- Improve error response handling for IFI Claims
 
 2018-01-22 0.148.1
 ==================

@@ -118,6 +118,8 @@ class IFIClaimsClient(GenericSearchClient):
                 meta={'username': self.username, 'uri': uri})
         duration = timeit.default_timer() - starttime
 
+        #print "response:", response.content        # debugging
+
         # Process search response
         if response.status_code == 200:
             #print "response:", response.content        # debugging
@@ -145,7 +147,11 @@ class IFIClaimsClient(GenericSearchClient):
                             response=response)
 
                     # Enrich "no servers hosting shard" message
-                    elif upstream_error["code"] == 503 and u'no servers hosting shard' in upstream_error["msg"]:
+                    elif upstream_error["code"] == 503 and \
+                        (
+                            u'no servers hosting shard' in upstream_error["msg"] or \
+                            u'No server is available' in upstream_error["msg"]
+                        ):
                         raise self.search_failed(
                             user_info=u'Error while connecting to upstream database. Database might be offline.',
                             message=message,
@@ -182,7 +188,7 @@ class IFIClaimsClient(GenericSearchClient):
                 result = sr.render()
                 duration = round(duration, 1)
 
-                # TODO: Unify between"FulltextPRO "and IFI
+                # TODO: Unify between FulltextPRO and IFI
                 log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
                     duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
@@ -193,13 +199,45 @@ class IFIClaimsClient(GenericSearchClient):
                 return result
 
             elif response_data['status'] == 'error':
-                raise self.search_failed(response_data['message'], response=response)
+
+                user_info = None
+                if response_data['message'] == 'JSON error: failed to read response object':
+                    user_info = u'Error while connecting to upstream database. Database might be offline.'
+
+                raise self.search_failed(
+                    user_info=user_info,
+                    message=response_data['message'],
+                    response=response)
 
             else:
                 raise self.search_failed('Search response could not be parsed', response=response)
 
-        raise self.search_failed(response=response)
+        else:
+            # print "response:", response.content        # debugging
 
+            self.logout()
+
+            # Strip HTML from response body
+            response_content = response.content
+            if response.headers['Content-Type'].startswith('text/html'):
+                response_content = re.sub('<[^<]+?>', '', response_content).strip().replace('\r\n', ', ')
+
+            # Build alternative basic error structure
+            upstream_error = {
+                'code': response.status_code,
+                'reason': response.reason,
+                'content': response_content,
+            }
+
+            message = json.dumps(upstream_error)
+
+            raise self.search_failed(
+                user_info=u'Error while connecting to upstream database. Database might be offline.',
+                message=message,
+                response=response)
+
+
+        raise self.search_failed(response=response)
 
 
     @cache_region('search')
