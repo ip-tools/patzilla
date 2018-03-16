@@ -4,15 +4,16 @@ IP Navigator CHANGES
 
 development
 ===========
+- Honor tag "email:invalid" for "list emails" endpoint
 
 2018-03-16 0.149.0
 ==================
-- Upgrade to MechanicalSoup 0.10.0
+- Upgrade to MechanicalSoup 0.10.0. Thanks, Matthieu and Dan!
 - Improve whitelabel capabilities
 - Improve error response handling for IFI Claims
 - Set default language for "dpmaregister" crawler to English
 - Improve confirm dialogs for database "wipe" and "import" actions
-- Improve whitespace handling at query expression translation time
+- Improve whitespace handling at query expression translation time. Thanks, Luca!
 
 2018-01-22 0.148.1
 ==================
