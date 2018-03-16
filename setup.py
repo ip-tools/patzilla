@@ -10,7 +10,7 @@ requires = [
     # ----------------------------------------------
     #   Environment
     # ----------------------------------------------
-    'setuptools>=36.4.0',       # 36.6.0
+    'setuptools>=36.4.0',       # 38.5.2
     'six>=1.10.0',              # 1.11.0
 
 
@@ -20,7 +20,7 @@ requires = [
 
     # Pyramid core
     'pyramid==1.9.1',
-    'pyramid_debugtoolbar==4.3',
+    'pyramid_debugtoolbar==4.3',    # 4.4
     'Pygments==2.2.0',
     'pyramid_mako==1.0.2',
     'Jinja2==2.10',
@@ -37,12 +37,12 @@ requires = [
     # Database
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
-    'pymongo==2.9.5',           # 3.6.0
+    'pymongo==2.9.5',           # 3.6.1
     'mongodb_gridfs_beaker==0.5.4',
     'mongoengine==0.13.0',      # 0.15.0
 
     # Web services
-    'cornice==2.4.1',
+    'cornice==2.4.1',           # 3.1.0
 
     # Authorization
     'pycrypto==2.6.1',
@@ -62,22 +62,22 @@ requires = [
     'MechanicalSoup==0.10.0',
 
     # HTTP SNI support
-    'pyOpenSSL==17.3.0',
-    'cryptography==2.0.3',      # 2.1.2
-    'pyasn1==0.3.7',
-    'ndg-httpsclient==0.4.3',
+    'pyOpenSSL==17.3.0',        # 17.5.0
+    'cryptography==2.0.3',      # 2.1.4
+    'pyasn1==0.3.7',            # 0.4.2
+    'ndg-httpsclient==0.4.3',   # 0.4.4
 
     # HTML
     'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0
-    'html2text==2016.9.19',     # 2017.10.4
+    'html2text==2016.9.19',     # 2018.1.9
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
-    'lxml==3.4.1',              # 4.0.0
+    'lxml==3.4.1',              # 4.2.0
     'xmljson==0.1.9',
 
     # JSON
-    'jsonpointer==1.14',
+    'jsonpointer==1.14',        # 2.0
 
 
     # ----------------------------------------------
@@ -85,26 +85,26 @@ requires = [
     # ----------------------------------------------
 
     # Data handling
-    'attrs==17.3.0',
+    'attrs==17.3.0',            # 17.4.0
     'Bunch==1.0.1',             # Maybe switch to "Munch"
     'pyparsing==2.0.2',         # 2.2.0
-    'python-dateutil==2.6.1',
-    'ago==0.0.9',
-    'arrow==0.10.0',
+    'python-dateutil==2.6.1',   # 2.7.0
+    'ago==0.0.9',               # 0.0.92
+    'arrow==0.10.0',            # 0.12.1
     'validate_email==1.3',
-    'pandas==0.18.1',           # 0.20.3
+    'pandas==0.18.1',           # 0.22.0
 
     # Data formatting
-    'openpyxl==2.1.0',          # 2.5.0a3
+    'openpyxl==2.1.0',          # 2.5.1
     'xlrd==0.9.3',              # 1.1.0
-    'XlsxWriter==0.9.3',        # 1.0.0
+    'XlsxWriter==0.9.3',        # 1.0.2
 
 
     # ----------------------------------------------
     #   Program flow
     # ----------------------------------------------
     'blinker==1.4',
-    'transitions==0.2.4',       # 0.6.1
+    'transitions==0.2.4',       # 0.6.4
 
 
     # ----------------------------------------------
