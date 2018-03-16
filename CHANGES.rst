@@ -9,6 +9,7 @@ development
 - Improve error response handling for IFI Claims
 - Set default language for "dpmaregister" crawler to English
 - Improve confirm dialogs for database "wipe" and "import" actions
+- Improve whitespace handling at query expression translation time
 
 2018-01-22 0.148.1
 ==================

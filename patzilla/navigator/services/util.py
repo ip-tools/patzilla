@@ -99,12 +99,16 @@ def make_expression_filter(data):
 
             for key in keys:
 
+                # Acquire humanized expression
                 value = criteria.get(key)
+
+                # Sanitize value
+                value = value.strip()
 
                 if not value:
                     continue
 
-                # allow notations like "DE or EP or US" and "DE,EP"
+                # Allow notations like "DE or EP or US" and "DE,EP"
                 if key == 'country':
                     entries = re.split('(?: or |,)', value, flags=re.IGNORECASE)
                     entries = [entry.strip() for entry in entries]
