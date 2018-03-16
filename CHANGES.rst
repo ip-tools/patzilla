@@ -4,6 +4,9 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2018-03-16 0.149.0
+==================
 - Upgrade to MechanicalSoup 0.10.0
 - Improve whitelabel capabilities
 - Improve error response handling for IFI Claims
