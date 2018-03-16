@@ -29,7 +29,7 @@ cache = dogpile.cache.make_region().configure(
     "dogpile.cache.dbm",
     expiration_time=3600 * 24,
     arguments={
-        "filename":"/var/tmp/dpmaregister-cache.dbm"
+        "filename": "/var/tmp/dpmaregister-cache.dbm"
     }
 )
 
@@ -100,14 +100,14 @@ class DpmaRegisterAccess:
             self.http_session_valid = True
 
     @cache.cache_on_arguments()
-    def get_document_url(self, patent, language):
+    def get_document_url(self, patent, language='en'):
         file_reference = self.resolve_file_reference(patent)
         url = self.accessurl.format(number=file_reference.reference, language=language)
         logger.info('Document URL for {} is {}'.format(patent, url))
         return url
 
     @cache.cache_on_arguments()
-    def fetch(self, patent, language):
+    def fetch(self, patent, language='en'):
         document_intermediary = self.search_and_fetch(patent, language)
         if document_intermediary:
             document = DpmaRegisterHtmlDocument.from_result_document(document_intermediary)
