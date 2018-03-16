@@ -1,0 +1,24 @@
+.header-container {
+
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+
+    background-color: #7ec622;
+    /* background-image: linear-gradient(transparent 50%, rgba(255,255,255,.2) 50%); */
+    background-size: 6px 6px;
+
+    /* http://www.cssmatic.com/box-shadow */
+    -webkit-box-shadow: 0px 10px 7px 3px #7ec622;
+    -moz-box-shadow: 0px 10px 7px 3px #7ec622;
+    box-shadow: 0px 10px 7px 3px #7ec622;
+
+}
+
+.header-inner-left {
+    margin-top: 25px;
+}
+
+.header-inner-right {
+    padding-top: 15px;
+    padding-right: 15px;
+}
