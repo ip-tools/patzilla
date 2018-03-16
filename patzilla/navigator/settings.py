@@ -188,6 +188,7 @@ class RuntimeSettings(object):
             'ui.productname': vendor.productname,
             'ui.productname.rich': vendor.productname_html,
             'ui.productname.html': vendor.productname_html,
+            'ui.productname.login': 'productname_login' in vendor and vendor.productname_login or vendor.productname_html,
             'ui.email.purchase': vendor.email_purchase,
             'ui.email.support': vendor.email_support,
 
