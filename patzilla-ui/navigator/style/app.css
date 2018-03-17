@@ -678,7 +678,13 @@ dl.dl-horizontal-inline {
 }
 
 
-/* notification box on the right side */
+/* Notification box slightly shifted to the right */
+.ns-attached-custom {
+    left: 110px;
+    max-width: 300px;
+}
+
+/* Notification box on the right side */
 .ns-attached-right {
     right: 30px;
     max-width: 300px;

@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2017 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl, Elmyra UG
 require('jquery.shorten.1.0');
 var urljoin = require('url-join');
 var bootbox = require('bootbox');
@@ -358,7 +358,7 @@ UiController = Marionette.Controller.extend({
             // create the notification
             this.notification = new NotificationFx({
                 message : message,
-                layout : 'attached',
+                layout : 'attached-custom',
                 effect : 'bouncyflip',
                 //layout : 'box',
                 //effect : 'flip',
