@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014,2017 Andreas Motl, Elmyra UG
+// (c) 2014,2017,2018 Andreas Motl, Elmyra UG
 require('blobjs');
 var dataurl = require('dataurl').dataurl;
 var saveAs = require('file-saver').saveAs;
@@ -95,6 +95,7 @@ StoragePlugin = Marionette.Controller.extend({
     dbimport: function(payload) {
 
         log('StoragePlugin.dbimport');
+        var final_deferred = $.Deferred();
 
         var backup = payload;
 
@@ -109,7 +110,8 @@ StoragePlugin = Marionette.Controller.extend({
                     var message = 'ERROR: Data URL format is invalid';
                     console.error(message + '; payload=' + payload);
                     navigatorApp.ui.notify(message, {type: 'error'});
-                    return;
+                    final_deferred.reject(message);
+                    return final_deferred;
                 }
             }
 
@@ -121,11 +123,12 @@ StoragePlugin = Marionette.Controller.extend({
                 var message = 'ERROR: JSON format is invalid, ' + msg;
                 console.error(message + '; payload=' + payload);
                 navigatorApp.ui.notify(message, {type: 'error'});
-                return;
+                final_deferred.reject(message);
+                return final_deferred;
             }
         }
 
-        // more sanity checks
+        // Sanity checks
         //var filetype = backup && backup['metadata'] && backup['metadata']['type'];
         var filetype = dotresolve(backup, 'metadata.type');
         var database = dotresolve(backup, 'database');
@@ -134,14 +137,16 @@ StoragePlugin = Marionette.Controller.extend({
             var message = 'ERROR: Database dump format "' + filetype + '" is invalid.';
             console.error(message);
             navigatorApp.ui.notify(message, {type: 'error'});
-            return;
+            final_deferred.reject(message);
+            return final_deferred;
         }
 
         if (!database) {
             var message = 'ERROR: Database is empty.';
             console.error(message);
             navigatorApp.ui.notify(message, {type: 'error'});
-            return;
+            final_deferred.reject(message);
+            return final_deferred;
         }
 
         var deferreds = [];
@@ -150,8 +155,8 @@ StoragePlugin = Marionette.Controller.extend({
             deferreds.push(deferred.promise());
             var value = database[key];
 
-            // datamodel-specific restore behavior
-            // merge project lists to get a union of (original, imported)
+            // Datamodel-specific restore behavior.
+            // Merge project lists to get a union of (original, imported).
             // TODO: resolve project name collisions!
             if (key == 'Project') {
                 localforage.getItem(key).then(function(original) {
@@ -178,14 +183,18 @@ StoragePlugin = Marionette.Controller.extend({
 
             Backbone.Relational.store.reset();
 
-            // activate project
+            // Activate project
             navigatorApp.trigger('projects:initialize');
 
             navigatorApp.ui.notify(
                 'Database imported successfully',
                 {type: 'success', icon: 'icon-folder-open-alt'});
 
+            final_deferred.resolve();
+
         });
+
+        return final_deferred;
 
     },
 
@@ -219,23 +228,24 @@ StoragePlugin = Marionette.Controller.extend({
 
         var _this = this;
 
-        // export database
+        // Export database
         $('#data-export-button').unbind('click');
         $('#data-export-button').on('click', function(e) {
             _this.dbexport($(this).parent());
         });
 
-        // import database
+        // Import database
         // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
         $('#data-import-file').unbind('change');
         $('#data-import-file').on('change', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
-            // deactivate project / windows.onfocus
-            // otherwise, the default project (e.g. "ad-hoc") would be recreated almost instantly
+            // Deactivate project / windows.onfocus.
+            // Otherwise, the default project (e.g. "ad-hoc") would be recreated almost instantly.
             navigatorApp.project_deactivate();
 
+            // Read value of file element
             var file = this.files[0];
             if (!file) { return; }
             $(this).val(undefined);
@@ -247,7 +257,7 @@ StoragePlugin = Marionette.Controller.extend({
                 file_type = 'application/json';
             }
 
-            // sanity checks
+            // Sanity checks
             if (file_type != 'application/json') {
                 var message = 'ERROR: File type is ' + (file_type ? file_type : 'unknown') + ', but should be application/json';
                 //log('import message:', message);
@@ -255,12 +265,14 @@ StoragePlugin = Marionette.Controller.extend({
                 return;
             }
 
-
+            // Import file content to database
+            var element = this;
             var reader = new FileReader();
             reader.onload = function(e) {
                 var payload = e.target.result;
-                _this.dbimport(payload);
-
+                $.when(_this.dbimport(payload)).then(function() {
+                    $(element).trigger('import:ready');
+                });
             };
             reader.onerror = function(e) {
                 var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
@@ -275,13 +287,22 @@ StoragePlugin = Marionette.Controller.extend({
         $('#data-import-button').on('click', function(e) {
 
             navigatorApp.ui.confirm(
-                'Please make sure you performed a backup using the "export" feature.' +
-                '<br/><br/>' +
                 'You requested to load data from an import file which might render existing data inaccessible. ' +
                 'The application will reload itself after the import task has finished. ' +
                 '<br/><br/>' +
-                'Continue?').then(function() {
+                'Please make sure you performed a backup using the "export" feature.' +
+                '<br/><br/>' +
+                'Continue import operation?').then(function() {
 
+                // Event handler for "import ready"
+                $('#data-import-file').unbind('import:ready');
+                $('#data-import-file').on('import:ready', function(e) {
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 750);
+                });
+
+                // Start import by displaying file dialog
                 navigatorApp.project_deactivate();
                 $('#data-import-file').click();
 
@@ -290,17 +311,17 @@ StoragePlugin = Marionette.Controller.extend({
         });
 
 
-        // reset database
+        // Drop database
         $('#database-wipe-button').unbind();
         $('#database-wipe-button').click(function(e) {
 
             navigatorApp.ui.confirm(
-                'Please make sure you performed a backup using the "export" feature. ' +
-                '<br/><br/>' +
                 'You requested to wipe the whole local database including custom keywords. ' +
                 'All data will be lost.' +
                 '<br/><br/>' +
-                'Are you sure?').then(function() {
+                'Please make sure you performed a backup using the "export" feature. ' +
+                '<br/><br/>' +
+                'Are you sure to continue?').then(function() {
 
                 // wipe the database
                 _this.dbreset({shutdown_gui: true});

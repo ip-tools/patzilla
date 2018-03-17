@@ -4,8 +4,12 @@ IP Navigator CHANGES
 
 development
 ===========
+
+2018-03-17 0.150.0
+==================
 - Honor tag "email:invalid" for "list emails" endpoint
 - Improve location of general notification box
+- Improve user experience for "import database"
 
 2018-03-16 0.149.0
 ==================
