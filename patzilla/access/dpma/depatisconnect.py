@@ -27,10 +27,10 @@ archive_service_baseurl = None
 def includeme(config):
     global use_https
     global archive_service_baseurl
-    application_settings = config.registry.application_settings
+    datasource_settings = config.registry.datasource_settings
 
     try:
-        archive_service_baseurl = application_settings.datasource_depatisconnect.api_uri
+        archive_service_baseurl = datasource_settings.datasource.depatisconnect.api_uri
     except:
         raise NoOptionError('api_uri', 'datasource_depatisconnect')
 

@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2007-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2007-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import time
 import json
+import jinja2
 import logging
 import textwrap
-import jinja2
 from copy import deepcopy
 from core import build_email, send_email
 from patzilla.util.config import read_config, to_list
@@ -14,17 +14,19 @@ log = logging.getLogger(__name__)
 class EmailMessage(object):
 
     def __init__(self, smtp_settings, email_settings, options=None):
-        self.smtp_settings  = deepcopy(smtp_settings)
-        self.email_settings = deepcopy(email_settings)
-        self.options = options or {}
+        self.smtp_settings  = dict(smtp_settings)
+        self.email_settings = dict(email_settings)
+        self.email_settings.setdefault('addressbook', {})
+        self.email_settings.setdefault('content', {})
+        self.options = options and dict(options) or {}
         self.recipients = []
         self.reply_to = []
 
         # Merge some settings from options into regular ones
-        if 'subject-prefix' in self.options:
-            self.email_settings['subject-prefix'] = self.options['subject-prefix']
+        if 'subject_prefix' in self.options:
+            self.email_settings['content']['subject_prefix'] = self.options['subject_prefix']
         if 'signature' in self.options:
-            self.email_settings['signature'] = self.options['signature']
+            self.email_settings['content']['signature'] = self.options['signature']
 
     def add_recipient(self, address):
         for address in to_list(address):
@@ -42,7 +44,7 @@ class EmailMessage(object):
 
         # get smtp addressing information from settings
         smtp_host = self.smtp_settings.get('hostname', u'localhost')
-        mail_from = self.email_settings.get('from', u'test@example.org')
+        mail_from = self.email_settings['addressbook'].get('from', u'test@example.org')
 
         # log smtp settings
         smtp_settings_log = deepcopy(self.smtp_settings)
@@ -55,8 +57,8 @@ class EmailMessage(object):
         event_date = time.strftime('%Y-%m-%d')
         event_time = time.strftime('%H:%M:%S')
         subject_real = u''
-        if 'subject-prefix' in self.email_settings:
-            prefix = self.email_settings['subject-prefix']
+        if 'subject_prefix' in self.email_settings['content']:
+            prefix = self.email_settings['content'].get('subject_prefix')
             if not prefix.endswith(' '):
                 prefix += ' '
             subject_real += prefix
@@ -66,10 +68,10 @@ class EmailMessage(object):
 
         filenames = u'\n'.join([u'- ' + entry for entry in files.keys()])
 
-        body_template = textwrap.dedent(self.email_settings['body-template']).strip().decode('utf-8')
+        body_template = textwrap.dedent(self.email_settings['content'].get('body', '')).strip()
 
-        if 'signature' in self.email_settings:
-            body_template += u'\n\n--\n' + textwrap.dedent(self.email_settings['signature']).strip() #.decode('utf-8')
+        if 'signature' in self.email_settings['content']:
+            body_template += u'\n\n--\n' + textwrap.dedent(self.email_settings['content']['signature']).strip()
 
         body_template = body_template.replace('\\n', '\r')
 

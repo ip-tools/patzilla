@@ -65,9 +65,9 @@ For configuring PatZilla with system-wide OPS authentication credentials,
 please put the "Consumer Key" and "Consumer Secret" values
 obtained from the steps above into the PatZilla configuration file.
 
-You will find the right place at section ``[datasource_ops]``::
+You will find the right place at section ``[datasource:ops]``::
 
-    [datasource_ops]
+    [datasource:ops]
 
     # Application-wide authentication credentials
     api_consumer_key    = ScirfedyifJiashwOckNoupNecpainLo

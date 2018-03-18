@@ -1,18 +1,22 @@
-###
+# =================================
 # General application configuration
-###
+# =================================
+
+[main]
+include     = vendors.ini
+
 
 [ip_navigator]
 
 # Which vendors are enabled?
-# The selection process will use the first configured vendor as default,
-# after that it will search through the other configured vendors and will
-# select the one which matches the "hostname_matches" pattern
-# on a first come, first serve basis.
+# The selection process will use the first configured vendor as default, after that it
+# will search through the other configured vendors and will select the one which matches
+# the "hostname_matches" pattern on a first come, first serve basis.
 vendors     = patzilla
 
 # Which datasources are configured?
-datasources = ops, ificlaims, depatech
+# Choose one or more of ops, depatisconnect, ificlaims, depatech.
+datasources = ops
 
 # Fields to protect from being leaked into Javascript environment
 datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, api_username, api_password
@@ -21,18 +25,24 @@ datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, a
 development_mode    = true
 
 
-[vendor_patzilla]
+# ====================
+# Vendor configuration
+# ====================
+
+[vendor:patzilla]
 organization        = PatZilla
 productname         = IP Navigator
 productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
 page_title          = Patent search
 copyright_html      = &copy; 2013-2018, <a href="https://www.example.org/" class="incognito pointer" target="_blank">Example Inc.</a> — All rights reserved.
 stylesheet_uri      = /static/vendor/patzilla/patzilla.css
-email_purchase      = purchase@example.org
-email_support       = support@example.org
 
 
-[datasource_ops]
+# ========================
+# Datasource configuration
+# ========================
+
+[datasource:ops]
 
 # Application-wide authentication credentials
 api_consumer_key    = {ops_api_consumer_key}
@@ -46,7 +56,7 @@ fulltext_enabled = true
 fulltext_countries = EP, WO, AT, CH
 
 
-[datasource_depatisconnect]
+[datasource:depatisconnect]
 
 # Local development
 #api_uri = http://localhost:20300
@@ -59,7 +69,7 @@ fulltext_enabled = true
 fulltext_countries = DE, US
 
 
-[datasource_ificlaims]
+[datasource:ificlaims]
 
 # API connection settings
 api_uri      = {ificlaims_api_uri}
@@ -75,7 +85,7 @@ details_enabled = true
 details_countries = CN, IN, KR
 
 
-[datasource_depatech]
+[datasource:depatech]
 
 # API connection settings
 api_uri      = {depatech_api_uri}
@@ -83,6 +93,10 @@ api_username = {depatech_api_username}
 api_password = {depatech_api_password}
 
 
+
+# ========================
+# Email/SMTP configuration
+# ========================
 
 [smtp]
 # smtp host information
@@ -92,14 +106,23 @@ tls      = true             ; use TLS, default: true
 username = {smtp_username}
 password = {smtp_password}
 
-[email]
+[email_addressbook]
+
 # Sender addresses "From" and "Reply-To"
-from      = IP Navigator <navigator-system@example.org>
-reply     = IP Navigator Support <navigator-support@example.org>
+from        = IP Navigator <navigator-system@example.org>
+reply       = IP Navigator Support <navigator-support@example.org>
+
+# Recipient addresses "To:"
+support     = IP Navigator Support <navigator-support@example.org>
+system      = IP Navigator System <navigator-system@example.org>
+purchase    = IP Navigator Sales <navigator-sales@example.org>
+
+
+[email_content]
 
 # Email content defaults
-subject-prefix = [ip-navigator]
-body-template =
+subject_prefix = [ip-navigator]
+body =
     Sehr geehrter Kunde,
     \n
     vielen Dank für Ihre Nachricht!
@@ -137,11 +160,6 @@ signature =
     Email: info@example.org
     Web: https://example.org
 
-[email-recipients]
-
-# Recipient addresses "To:"
-support = IP Navigator Support <navigator-support@example.org>
-system  = IP Navigator System <navigator-system@example.org>
 
 
 ###

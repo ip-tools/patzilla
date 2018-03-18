@@ -16,19 +16,21 @@ def message_factory(**kwargs):
     request = get_current_request()
     application_settings = request.registry.application_settings
 
-    # EmailMessage builder
-    message = EmailMessage(application_settings['smtp'], application_settings['email'])
+    settings = request.runtime_settings
 
-    if 'reply' in application_settings['email']:
-        message.add_reply(read_list(application_settings['email']['reply']))
+    # EmailMessage builder
+    message = EmailMessage(application_settings.smtp, settings.vendor.email)
+
+    if 'reply' in settings.vendor.email.addressbook:
+        message.add_reply(read_list(settings.vendor.email.addressbook.reply))
 
     is_support_email = False
     if 'recipients' in kwargs:
         for recipient in kwargs['recipients']:
             if recipient == 'support':
                 is_support_email = True
-            if recipient in application_settings['email-recipients']:
-                message.add_recipient(read_list(application_settings['email-recipients'][recipient]))
+            if recipient in settings.vendor.email.addressbook:
+                message.add_recipient(read_list(settings.vendor.email.addressbook[recipient]))
             else:
                 log.warning('Could not add recipient {}'.format(recipient))
 
@@ -51,7 +53,7 @@ def message_factory(**kwargs):
             # Add user email as "Reply-To" address
             message.add_reply(user_email)
 
-            # If it's a support email, also add user as recipient
+            # If it's a support email, also add user herself as a recipient
             if is_support_email:
                 message.add_recipient(user_email)
 

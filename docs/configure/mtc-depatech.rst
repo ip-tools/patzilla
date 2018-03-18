@@ -40,9 +40,9 @@ For configuring PatZilla with system-wide `depa.tech api`_ authentication creden
 please configure the "api_uri", "api_username" and "api_password" settings
 in the PatZilla configuration file.
 
-You will find the right place at section ``[datasource_depatech]``::
+You will find the right place at section ``[datasource:depatech]``::
 
-    [datasource_depatech]
+    [datasource:depatech]
 
     # API connection settings
     api_uri      = {depatech_api_uri}

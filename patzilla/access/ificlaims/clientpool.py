@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 #   bootstrapping
 # ------------------------------------------
 def includeme(config):
-    application_settings = config.registry.application_settings
+    datasource_settings = config.registry.datasource_settings
     try:
-        api_uri = application_settings.datasource_ificlaims.api_uri
+        api_uri = datasource_settings.datasource.ificlaims.api_uri
     except:
         raise NoOptionError('api_uri', 'datasource_ificlaims')
 

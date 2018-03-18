@@ -1,26 +1,50 @@
 # -*- coding: utf-8 -*-
-# (c) 2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2016-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+import os
+import logging
+from glob import glob
 from ConfigParser import ConfigParser
 
-def read_config(configfiles, kind=None):
-    configfiles = to_list(configfiles)
-    config = ConfigParser()
-    config.read(configfiles)
-    if kind is not None:
-        settings = convert_config(config, kind=kind)
+logger = logging.getLogger(__name__)
+
+def get_configuration(*args, **kwargs):
+    config_files = []
+    config_files += list(args)
+    logger.info('Requested configuration files: {}'.format(make_list(config_files)))
+    config, used = read_config(config_files, kind=kwargs.get('kind'))
+    if config:
+        if 'main' in config and 'include' in config.main:
+            includes = read_list(config.main.include)
+            for include in includes:
+                if include != os.path.abspath(include):
+                    # FIXME: Use base paths of *all* requested configuration files
+                    include = os.path.join(os.path.dirname(config_files[0]), include)
+                if '*' in include or '?' in include:
+                    config_files += glob(include)
+                else:
+                    config_files.append(include)
+            logger.info('Expanded configuration files:  {}'.format(make_list(config_files)))
+            config, used = read_config(config_files, kind=kwargs.get('kind'))
+        logger.info('Used configuration files:      {}'.format(make_list(used)))
+        return config
     else:
-        settings = convert_config(config)
+        msg = u'Could not read settings from configuration files: {}'.format(config_files)
+        logger.critical(msg)
+        raise ValueError(msg)
 
-    # Amend settings: Make real Booleans from strings
-    settings['smtp']['tls'] = asbool(settings['smtp'].get('tls', True))
-    # Amend settings: Properly decode specific settings using appropriate charset
-    settings['email']['signature'] = settings['email']['signature'].decode('utf-8')
+def read_config(configfiles, kind=None):
+    configfiles_requested = to_list(configfiles)
+    config = ConfigParser()
+    configfiles_used = config.read(configfiles_requested)
+    settings = convert_config(config, kind=kind)
+    return settings, configfiles_used
 
-    return settings
-
-def convert_config(config, kind=dict):
-    # serialize section-based ConfigParser contents into
-    # nested dict or other dict-like thing
+def convert_config(config, kind=None):
+    """
+    Serialize section-based ConfigParser contents
+    into nested dict or other dict-like thing.
+    """
+    kind = kind or dict
     if isinstance(config, ConfigParser):
         config_dict = kind()
         for section in config.sections():
@@ -60,6 +84,9 @@ def read_list(string, separator=u','):
     if len(result) == 1 and not result[0]:
         result = []
     return result
+
+def make_list(items, separator=u', '):
+    return separator.join(items)
 
 def normalize_docopt_options(options):
     normalized = {}

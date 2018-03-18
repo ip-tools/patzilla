@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 from pyramid.config import Configurator
-from patzilla.version import __version__
-from patzilla.util.config import read_config
-from patzilla.util.data.container import SmartBunch
+from patzilla.navigator.settings import GlobalSettings
 from patzilla.util.web.pyramid.renderer import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
 
 def main(global_config, **settings):
     """This function returns a Pyramid WSGI application."""
 
-    settings.setdefault('CONFIG_FILE', global_config.get('__file__'))
-    settings.setdefault('SOFTWARE_VERSION', __version__)
-
     config = Configurator(settings=settings)
+    registry = config.registry
 
-    application_settings = read_config(settings['CONFIG_FILE'], kind=SmartBunch)
-    config.registry.application_settings = application_settings
+    global_settings = GlobalSettings(global_config.get('__file__'))
+
+    # Propagate global settings to application registry
+    registry.global_settings      = global_settings
+
+    # Propagate some configuration topics to application registry
+    registry.application_settings = global_settings.application_settings
+    registry.datasource_settings  = global_settings.datasource_settings
+    registry.vendor_settings      = global_settings.vendor_settings
+
 
     # Add renderers
     config.include('pyramid_mako')

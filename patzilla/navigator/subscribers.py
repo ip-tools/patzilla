@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 def includeme(config):
     """Configure all application-specific subscribers."""
-    config.add_subscriber(global_config, "pyramid.events.ApplicationCreated")
+    #config.add_subscriber(global_config, "pyramid.events.ApplicationCreated")
     config.add_subscriber(runtime_config, "pyramid.events.ContextFound")
     config.add_subscriber(create_url_generators, "pyramid.events.ContextFound")
     #config.add_subscriber(create_tools, "pyramid.events.ContextFound")
@@ -21,15 +21,8 @@ def includeme(config):
 def global_config(event):
     """
     A subscriber for ``pyramid.events.ApplicationCreated`` events.
-    I create the global configuration objects and attach it to the registry.
     """
     registry = event.app.registry
-
-    # Provide Paste configuration via registry objects
-    global_settings = GlobalSettings()
-    registry.application_settings = global_settings.application_settings
-    registry.datasource_settings  = global_settings.datasource_settings
-    registry.vendor_settings      = global_settings.vendor_settings
 
 def runtime_config(event):
     """

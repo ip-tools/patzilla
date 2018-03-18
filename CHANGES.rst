@@ -6,6 +6,7 @@ development
 ===========
 - Add status endpoints for monitoring upstream services
 - Honor tag "login:disabled" on authentication
+- Add multi-tenant email address and content configuration
 
 2018-03-17 0.150.0
 ==================

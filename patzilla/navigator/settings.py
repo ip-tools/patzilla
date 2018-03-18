@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2017 Andreas Motl, Elmyra UG
+# (c) 2014-2018 Andreas Motl, Elmyra UG
+import os
 import json
 import logging
+from copy import deepcopy
+from email.utils import parseaddr
 from pyramid.exceptions import ConfigurationError
 from pyramid.threadlocal import get_current_request, get_current_registry
-from patzilla.navigator.util import dict_prefix_key, dict_merge
-from patzilla.util.config import read_config, read_list, asbool
+from patzilla.version import __version__
+from patzilla.navigator.util import dict_prefix_key
+from patzilla.util.config import read_list, asbool, get_configuration
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
 from patzilla.util.data.container import SmartBunch
@@ -15,17 +19,44 @@ log = logging.getLogger(__name__)
 
 class GlobalSettings(object):
 
-    def __init__(self):
-        self.registry = get_current_registry()
-        self.configfile = self.registry.settings['CONFIG_FILE']
+    def __init__(self, configfile):
+        self.configfile = self.get_configuration_file(configfile)
         self.application_settings = self.get_application_settings()
         self.datasource_settings  = self.get_datasource_settings()
         self.vendor_settings      = self.get_vendor_settings()
 
+        # Debugging
+        #print self.datasource_settings.prettify()
+        #print self.vendor_settings.prettify()
+
+    @classmethod
+    def get_configuration_file(cls, configfile=None):
+
+        # Compute configuration file
+        if not configfile:
+            configfile = os.environ.get('PATZILLA_CONFIG')
+
+        if not configfile:
+            raise ValueError('No configuration file, either use --config=/path/to/patzilla.ini or set PATZILLA_CONFIG environment variable')
+
+        log.info('Root configuration file is {}'.format(configfile))
+        return configfile
+
     def get_application_settings(self):
-        # Read configuration file to get global settings
+        """
+        Read configuration file to get global settings
+        """
+
         # TODO: Optimize: Only read once, not on each request!
-        return read_config(self.configfile, kind=SmartBunch)
+        settings = get_configuration(self.configfile, kind=SmartBunch)
+
+        # Add some global settings
+        settings['software_version'] = __version__
+
+        # Amend settings: Make real Booleans from strings
+        settings['smtp']['tls'] = asbool(settings['smtp'].get('tls', True))
+
+        return settings
 
     def get_datasource_settings(self):
 
@@ -34,13 +65,13 @@ class GlobalSettings(object):
             'datasources': [],
             'datasource': SmartBunch(),
             'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
-            })
+        })
 
         # Read datasource settings from configuration
         datasource_settings.datasources = read_list(self.application_settings.get('ip_navigator', {}).get('datasources'))
         datasource_settings.protected_fields = read_list(self.application_settings.get('ip_navigator', {}).get('datasources_protected_fields'))
         for datasource in datasource_settings.datasources:
-            settings_key = 'datasource_{name}'.format(name=datasource)
+            settings_key = 'datasource:{name}'.format(name=datasource)
             datasource_info = self.application_settings.get(settings_key, {})
             datasource_info['fulltext_enabled'] = asbool(datasource_info.get('fulltext_enabled', False))
             datasource_info['fulltext_countries'] = read_list(datasource_info.get('fulltext_countries', ''))
@@ -70,7 +101,7 @@ class GlobalSettings(object):
 
         for vendor in vendor_settings.vendors:
 
-            settings_key = 'vendor_{name}'.format(name=vendor)
+            settings_key = 'vendor:{name}'.format(name=vendor)
             if settings_key not in self.application_settings:
                 raise ConfigurationError('Vendor "{vendor}" not configured in "{configfile}"'.format(
                     vendor=vendor, configfile=self.configfile))
@@ -82,9 +113,39 @@ class GlobalSettings(object):
             if 'hostname_matches' in vendor_info:
                 vendor_info.hostname_matches = read_list(vendor_info.hostname_matches)
 
+            vendor_info.email = self.get_email_settings(vendor)
+
             vendor_settings.vendor[vendor] = SmartBunch.bunchify(vendor_info)
 
         return vendor_settings
+
+    def get_email_settings(self, vendor):
+        """
+        Read default/global email settings and
+        update with per-vendor email settings.
+        """
+
+        # Container for email settings
+        email_settings = SmartBunch({
+            'addressbook': [],
+            'content': SmartBunch(),
+        })
+
+        for setting_name in ['addressbook', 'content']:
+            setting_key = 'email_{}'.format(setting_name)
+            defaults = self.application_settings.get(setting_key)
+            specific = self.application_settings.get(setting_key + ':' + vendor)
+
+            thing = deepcopy(defaults)
+            if defaults and specific:
+                thing.update(deepcopy(specific))
+
+            for key, value in thing.items():
+                thing[key] = value.decode('utf-8')
+
+            email_settings[setting_name] = thing
+
+        return email_settings
 
 
 class RuntimeSettings(object):
@@ -113,6 +174,7 @@ class RuntimeSettings(object):
 
         self.hostname = self.request.host.split(':')[0]
 
+        self.vendor = self.effective_vendor()
         self.config = self.config_parameters()
         self.theme = self.theme_parameters()
         self.beta_badge = '<div class="label label-success label-large do-not-print">BETA</div>'
@@ -138,12 +200,12 @@ class RuntimeSettings(object):
         """define default settings"""
 
         data = {
-            'app.software.version': self.registry.settings.get('SOFTWARE_VERSION', ''),
+            'app.software.version': self.registry.application_settings.software_version,
         }
 
         return data
 
-    def resolve_vendor_settings(self):
+    def effective_vendor(self):
         """
         The selection process will use the first configured vendor as default,
         after that it will search through the other configured vendors and will
@@ -160,9 +222,10 @@ class RuntimeSettings(object):
                     if hostname_candidate in self.hostname:
                         return vendor_info
 
-        # Use first configured vendor as fallback
+        # If now vendor can be resolved, use first configured vendor as fallback
         vendor_name = self.registry.vendor_settings.vendors[0]
         vendor_info = self.registry.vendor_settings.vendor[vendor_name]
+
         return vendor_info
 
     def theme_settings(self):
@@ -177,11 +240,16 @@ class RuntimeSettings(object):
             '<a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
         ]
 
-        software_version_label = 'Software release: ' + self.registry.settings.get('SOFTWARE_VERSION', '')
+        software_version_label = 'PatZilla release: ' + self.registry.application_settings.software_version
         software_version_link  = '<a href="https://github.com/ip-tools/ip-navigator" target="_blank" ' \
                                  'class="incognito pointer">{label}</a>'.format(label=software_version_label)
 
-        vendor = self.resolve_vendor_settings()
+        vendor = self.vendor
+
+        # Format email addresses
+        email_support = parseaddr(vendor.email.addressbook.support)[1]
+        email_purchase = parseaddr(vendor.email.addressbook.purchase)[1]
+
         data = {
             'ui.vendor.name': vendor.organization,
             'ui.vendor.copyright': vendor.copyright_html,
@@ -189,8 +257,8 @@ class RuntimeSettings(object):
             'ui.productname.rich': vendor.productname_html,
             'ui.productname.html': vendor.productname_html,
             'ui.productname.login': 'productname_login' in vendor and vendor.productname_login or vendor.productname_html,
-            'ui.email.purchase': vendor.email_purchase,
-            'ui.email.support': vendor.email_support,
+            'ui.email.support': email_support,
+            'ui.email.purchase': email_purchase,
 
             'ui.version': software_version_link,
             'ui.page.title': vendor.get('page_title', ''), # + ' &nbsp; ' + self.beta_badge,

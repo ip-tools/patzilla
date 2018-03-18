@@ -42,9 +42,9 @@ For configuring PatZilla with system-wide CLAIMS® Direct authentication credent
 please configure the "api_uri", "api_username" and "api_password" settings
 in the PatZilla configuration file.
 
-You will find the right place at section ``[datasource_ificlaims]``::
+You will find the right place at section ``[datasource:ificlaims]``::
 
-    [datasource_ificlaims]
+    [datasource:ificlaims]
 
     # API connection settings
     api_uri      = {ificlaims_api_uri}
