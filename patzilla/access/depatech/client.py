@@ -51,7 +51,9 @@ class DepaTechClient(GenericSearchClient):
 
     @cache_region('search')
     def search(self, query, options=None):
+        return self.search_real(query, options=options)
 
+    def search_real(self, query, options=None):
         options = options or SmartBunch()
 
         options.setdefault('offset', 0)

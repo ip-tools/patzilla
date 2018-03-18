@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- Add status endpoints for monitoring upstream services
 
 2018-03-17 0.150.0
 ==================

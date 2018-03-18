@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015,2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
@@ -18,20 +18,18 @@ def espacenet_fetch(document_number, section, element_id):
 
     patent = normalize_patent(document_number, as_dict=True)
 
-    # 2014
-    #url_tpl = u'https://worldwide.espacenet.com/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
-
-    # 2016-11-13
-    #url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}{kind}&DB=worldwide.espacenet.com&FT=D'
-
-    # 2017-09-08
-    url_tpl = u'https://worldwide.espacenet.com/publicationDetails/description?CC={country}&NR={number}{kind}'
+    # Blueprint: https://worldwide.espacenet.com/publicationDetails/biblio?CC=EP&NR=0666666&KC=A3
+    url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}'
+    if 'kind' in patent and patent['kind']:
+        url_tpl += '&KC={kind}'
 
     url = url_tpl.format(section=section, **patent)
 
     logger.info('Accessing Espacenet: {}'.format(url))
     response = requests.get(url, headers={'User-Agent': regular_user_agent})
-    #print 'response.content:', response.content
+
+    # Debugging
+    print 'response.content:\n', response.content
 
     message_404 = 'No section "{section}" at Espacenet for "{document_number}"'.format(**locals())
     message_fail = 'Fetching section "{section}" from Espacenet for "{document_number}" failed'.format(**locals())

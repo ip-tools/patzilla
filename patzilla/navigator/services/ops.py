@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl, Elmyra UG
 import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.settings import asbool
 from patzilla.access.epo.ops.api import inquire_images, get_ops_image, ops_family_inpadoc, \
     pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_family_publication_docdb_xml, \
-    ops_published_data_search, ops_published_data_crawl, ops_published_data_search_swap_family, \
-    ops_published_data_search_invalidate
+    ops_published_data_search, ops_published_data_search_real, ops_published_data_search_swap_family, \
+    ops_published_data_crawl
 from patzilla.navigator.services import propagate_keywords, cql_prepare_query, handle_generic_exception
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.python import _exception_traceback
@@ -62,7 +62,17 @@ ops_kindcode_service = Service(
     path='/api/ops/{patent}/kindcodes',
     description="OPS kindcodes interface")
 
+status_upstream_ops = Service(
+    name='status_ops',
+    path='/api/status/upstream/epo/ops',
+    description="Checks EPO OPS upstream for valid response")
 
+
+@status_upstream_ops.get()
+def status_upstream_ops_handler(request):
+    data = ops_published_data_search_real('full-cycle', 'pn=EP666666', '1-10')
+    assert data, 'Empty response from OPS'
+    return "OK"
 
 @ops_published_data_search_service.get(accept="application/json")
 def ops_published_data_search_handler(request):
@@ -85,11 +95,6 @@ def ops_published_data_search_handler(request):
 
     # Search options
     family_swap_default = asbool(request.params.get('family_swap_default'))
-
-    # invalidate cache
-    invalidate = asbool(request.params.get('invalidate', 'false'))
-    if invalidate:
-        ops_published_data_search_invalidate(constituents, query, range)
 
     try:
         if family_swap_default:

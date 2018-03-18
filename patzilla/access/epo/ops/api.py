@@ -4,7 +4,7 @@ import time
 import logging
 from pprint import  pformat
 from cornice.util import json_error, to_list
-from beaker.cache import cache_region, region_invalidate
+from beaker.cache import cache_region
 from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
 from pyramid.threadlocal import get_current_request
@@ -205,6 +205,9 @@ def results_swap_family_members(response):
 
 @cache_region('search', 'ops_search')
 def ops_published_data_search(constituents, query, range):
+    return ops_published_data_search_real(constituents, query, range)
+
+def ops_published_data_search_real(constituents, query, range):
 
     # query EPO OPS REST service
     url_tpl = "{baseuri}/published-data/search/{constituents}"
@@ -242,9 +245,6 @@ def ops_published_data_search(constituents, query, range):
             raise NoResultsException('No results', data=payload)
 
         return payload
-
-def ops_published_data_search_invalidate(constituents, query, range):
-    region_invalidate(ops_published_data_search, None, 'ops_search', constituents, query, range)
 
 @cache_region('search')
 def ops_published_data_crawl(constituents, query, chunksize):

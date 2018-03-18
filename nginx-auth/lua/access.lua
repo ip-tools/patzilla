@@ -65,6 +65,11 @@ if ngx.var.host:find("^patentview.*$") or ngx.var.host:find("^viewer.*$") then
     return
 end
 
+-- allow /api/status endpoints
+if request_uri:find("^/api/status.*$") then
+    return
+end
+
 
 -- ------------------------------------------
 --  handle logout

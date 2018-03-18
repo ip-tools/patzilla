@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2017 Andreas Motl, Elmyra UG
+# (c) 2017-2018 Andreas Motl, Elmyra UG
 #
 # Cornice services for search provider "MTC depa.tech"
 #
@@ -7,6 +7,7 @@ import logging
 from cornice.service import Service
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from patzilla.access.depatech import get_depatech_client
 from patzilla.access.depatech.client import depatech_search, LoginException, depatech_crawl
 from patzilla.access.depatech.expression import DepaTechParser, should_be_quoted
 from patzilla.navigator.services import propagate_keywords, handle_generic_exception
@@ -25,6 +26,22 @@ depatech_published_data_crawl_service = Service(
     name='depatech-published-data-crawl',
     path='/api/depatech/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="MTC depa.tech crawler interface")
+
+status_upstream_depatech = Service(
+    name='status_depatech',
+    path='/api/status/upstream/mtc/depatech',
+    description="Checks MTC depa-tech upstream for valid response")
+
+
+@status_upstream_depatech.get()
+def status_upstream_depatech_handler(request):
+    client = get_depatech_client()
+    query = SmartBunch({
+        'expression': '(PC:DE AND DE:212016000074 AND KI:U1) OR AN:DE212016000074U1 OR NP:DE212016000074U1',
+    })
+    data = client.search_real(query)
+    assert data, 'Empty response from MTC depa.tech'
+    return "OK"
 
 # TODO: implement as JSON POST
 @depatech_published_data_search_service.get(accept="application/json")

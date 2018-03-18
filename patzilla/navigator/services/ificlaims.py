@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl, Elmyra UG
+# (c) 2015-2018 Andreas Motl, Elmyra UG
 #
 # Cornice services for search provider "IFI Claims Direct"
 #
@@ -15,7 +15,7 @@ from patzilla.navigator.services import propagate_keywords, handle_generic_excep
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
-from patzilla.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl
+from patzilla.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl, ificlaims_client
 from patzilla.access.ificlaims.expression import should_be_quoted, IFIClaimsParser
 from patzilla.util.data.container import SmartBunch
 from patzilla.util.data.zip import zip_multi
@@ -41,6 +41,21 @@ ificlaims_deliver_service = Service(
     path='/api/ifi/deliver/{kind}',
     description="IFI Claims deliver interface")
 
+status_upstream_ificlaims = Service(
+    name='status_ificlaims',
+    path='/api/status/upstream/ificlaims/direct',
+    description="Checks IFI CLAIMS upstream for valid response")
+
+
+@status_upstream_ificlaims.get()
+def status_upstream_ificlaims_handler(request):
+    client = ificlaims_client()
+    query = SmartBunch({
+        'expression': 'pn:EP0666666',
+    })
+    data = client.search_real(query)
+    assert data, 'Empty response from IFI CLAIMS'
+    return "OK"
 
 @ificlaims_download_service.get(renderer='null')
 def ificlaims_download_handler(request):

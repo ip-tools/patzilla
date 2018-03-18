@@ -66,6 +66,9 @@ class IFIClaimsClient(GenericSearchClient):
 
     @cache_region('search')
     def search(self, query, options=None):
+        return self.search_real(query, options=options)
+
+    def search_real(self, query, options=None):
 
         query.setdefault('filter', '')
 

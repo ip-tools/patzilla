@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2018 Andreas Motl, Elmyra UG
 import logging
-from pprint import pprint
 from cornice.service import Service
-from pyramid.settings import asbool
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from beaker.cache import cache_region, region_invalidate
+from beaker.cache import cache_region
 from patzilla.access.dpma import dpmaregister
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
-from patzilla.access.epo.espacenet import espacenet_claims, espacenet_description
+from patzilla.access.epo.espacenet.pyramid import espacenet_claims_handler, espacenet_description_handler
 from patzilla.navigator.services import cql_prepare_query, propagate_keywords, handle_generic_exception
 from patzilla.navigator.services.util import request_to_options
 
@@ -43,6 +41,38 @@ dpma_register_service = Service(
     name='dpma-register',
     path='/api/dpma/register/{type}/{document}',
     description="DPMAregister interface")
+
+
+status_upstream_depatisnet = Service(
+    name='status_depatisnet',
+    path='/api/status/upstream/dpma/depatisnet',
+    description="Checks DPMA depatisnet upstream for valid response")
+status_upstream_depatisconnect = Service(
+    name='status_depatisconnect',
+    path='/api/status/upstream/dpma/depatisconnect',
+    description="Checks DPMA depatisconnect upstream for valid response")
+status_upstream_dpmaregister = Service(
+    name='status_dpmaregister',
+    path='/api/status/upstream/dpma/dpmaregister',
+    description="Checks DPMA dpmaregister upstream for valid response")
+
+@status_upstream_depatisnet.get()
+def status_upstream_depatisnet_handler(request):
+    data = dpma_published_data_search_real('pn=EP666666', None)
+    assert data, 'Empty response from depatisnet'
+    return "OK"
+
+@status_upstream_depatisconnect.get()
+def status_upstream_depatisconnect_handler(request):
+    data = depatisconnect_claims_handler_real('DE212016000074U1')
+    assert data['xml'], 'Empty response from depatisconnect'
+    return "OK"
+
+@status_upstream_dpmaregister.get()
+def status_upstream_dpmaregister_handler(request):
+    data = dpmaregister.access_register('DE212016000074', 'json')
+    assert data, 'Empty response from dpmaregister'
+    return "OK"
 
 
 # TODO: implement as JSON POST
@@ -79,11 +109,6 @@ def depatisnet_published_data_search_handler(request):
 
     # propagate keywords to highlighting component
     propagate_keywords(request, query_object)
-
-    # invalidate cache
-    invalidate = asbool(request.params.get('invalidate', 'false'))
-    if invalidate:
-        dpma_published_data_search_invalidate(query, options)
 
     try:
         return dpma_published_data_search(query, options)
@@ -148,6 +173,9 @@ def depatisnet_published_data_crawl_handler(request):
 
 @cache_region('search', 'dpma_search')
 def dpma_published_data_search(query, options):
+    return dpma_published_data_search_real(query, options)
+
+def dpma_published_data_search_real(query, options):
     options = options or {}
     depatisnet = DpmaDepatisnetAccess()
     data = depatisnet.search_patents(query, options)
@@ -159,22 +187,18 @@ def dpma_published_data_search(query, options):
 
     return data
 
-def dpma_published_data_search_invalidate(*args):
-    region_invalidate(dpma_published_data_search, None, 'dpma_search', *args)
-
 @depatisconnect_claims_service.get()
 def depatisconnect_claims_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
-    invalidate = asbool(request.params.get('invalidate', 'false'))
     try:
-        return depatisconnect_claims_handler_real(patent, invalidate)
+        return depatisconnect_claims_handler_real(patent)
     except:
-        return espacenet_claims_handler_real(patent)
+        return espacenet_claims_handler(patent)
 
-def depatisconnect_claims_handler_real(patent, invalidate=False):
+def depatisconnect_claims_handler_real(patent):
     try:
-        claims = depatisconnect_claims(patent, invalidate)
+        claims = depatisconnect_claims(patent)
 
     except KeyError as ex:
         log.error('No details at DEPATISconnect: %s %s', type(ex), ex)
@@ -191,34 +215,6 @@ def depatisconnect_claims_handler_real(patent, invalidate=False):
 
     return claims
 
-def espacenet_claims_handler_real(patent):
-    try:
-        claims = espacenet_claims(patent)
-
-    except KeyError as ex:
-        log.error('No details at Espacenet: %s %s', type(ex), ex)
-        raise HTTPNotFound(ex)
-
-    except ValueError as ex:
-        log.error('Fetching details from Espacenet failed: %s %s', type(ex), ex)
-        raise HTTPBadRequest(ex)
-
-    return claims
-
-def espacenet_description_handler_real(patent):
-    try:
-        description = espacenet_description(patent)
-
-    except KeyError as ex:
-        log.error('No details at Espacenet: %s %s', type(ex), ex)
-        raise HTTPNotFound(ex)
-
-    except ValueError as ex:
-        log.error('Fetching details from Espacenet failed: %s %s', type(ex), ex)
-        raise HTTPBadRequest(ex)
-
-    return description
-
 @depatisconnect_description_service.get()
 def depatisconnect_description_handler(request):
     # TODO: use jsonified error responses
@@ -226,7 +222,7 @@ def depatisconnect_description_handler(request):
     try:
         return depatisconnect_description_handler_real(patent)
     except:
-        return espacenet_description_handler_real(patent)
+        return espacenet_description_handler(patent)
 
 def depatisconnect_description_handler_real(patent):
     try:
@@ -255,9 +251,8 @@ def depatisconnect_abstract_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
     language = request.params.get('language')
-    invalidate = asbool(request.params.get('invalidate', 'false'))
     try:
-        abstract = depatisconnect_abstracts(patent, language, invalidate)
+        abstract = depatisconnect_abstracts(patent, language)
 
     except KeyError as ex:
         log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
