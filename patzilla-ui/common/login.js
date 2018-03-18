@@ -17,7 +17,7 @@ $(document).ready(function() {
     $.extend(login_settings, {domain: domain});
 
     if (url.param('error') == 'true') {
-        console.warn('Login failed. Please check your credentials or contact us for support at ' + login_settings.support_email + '.');
+        console.warn('Login failed (reason=' + url.param('reason') + '). Please check your credentials or contact us for support at ' + login_settings.support_email + '.');
         window.setTimeout(function() {
             $('.login-box').jrumble();
             $('.login-box').trigger('startRumble');

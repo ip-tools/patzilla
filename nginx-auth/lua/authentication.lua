@@ -24,7 +24,7 @@ headers = ngx.req.get_headers()
 if config.auth.mode == 'basic-auth' then
 
     local username, password = util.get_basic_credentials()
-    local user = isis.authenticate_user(config.auth.mode, username, password)
+    local user, reason = isis.authenticate_user(config.auth.mode, username, password)
 
     if user then
         isis.set_cookie(user)
@@ -57,7 +57,7 @@ elseif config.auth.mode == 'login-form' then
     elseif http_method == 'POST' then
         local args, err = ngx.req.get_post_args()
 
-        local user = isis.authenticate_user(config.auth.mode, args.username, args.password)
+        local user, reason = isis.authenticate_user(config.auth.mode, args.username, args.password)
 
         if user then
             isis.set_cookie(user)
@@ -74,8 +74,7 @@ elseif config.auth.mode == 'login-form' then
 
         else
             local referer_path, referer_args = util.decode_referer()
-            -- local redirect_uri = util.get_uri(referer_path .. '/login', referer_args, {username=args.username, error='true'})
-            local redirect_uri = util.get_uri('/login', referer_args, {username=args.username, error='true'})
+            local redirect_uri = util.get_uri('/login', referer_args, {username=args.username, error='true', reason=reason})
             ngx.log(ngx.WARN, 'Redirecting back to ' .. redirect_uri)
             ngx.redirect(redirect_uri)
         end

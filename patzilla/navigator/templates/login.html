@@ -7,7 +7,7 @@
 
 <style type="text/css">
     body {
-        background-image: url(/static/img/login-background.jpg);
+        background-image: url("/static/img/login-background.jpg");
         background-repeat: no-repeat;
         background-position: top;
     }
@@ -68,12 +68,26 @@
         <div class="row-fluid">
             <div class="span12">
                 % if error == True:
+
+                <%
+                kind = 'error'
+                if reason == 'login-failed':
+                    message = 'Please check your credentials or '
+
+                elif reason == 'login-disabled':
+                    message = 'Your account is disabled or not approved yet. If you think this is wrong, please '
+                    kind = 'warning'
+
+                else:
+                    message = 'We could not determine why your login failed. Please '
+                %>
+
                 <br/>
-                <div class="alert alert-error alert-block">
+                <div class="alert alert-${kind} alert-block">
                     <button type="button" class="close" data-dismiss="alert">&times;</button>
                     <h4>Login failed</h4>
                     <br/>
-                    Please check your credentials or
+                    ${message}
                     <a id="mail-login-failed" href="mailto:${theme['ui.email.support'] | n}">contact us for support</a>.
                 </div>
                 % endif

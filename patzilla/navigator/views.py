@@ -313,6 +313,7 @@ def login_page(request):
         'username': request.params.get('username', ''),
         'came_from': request.params.get('came_from', ''),
         'error': asbool(request.params.get('error')),
+        'reason': request.params.get('reason', ''),
     }
     return tplvars
 

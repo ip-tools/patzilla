@@ -21,7 +21,6 @@ def run():
     """
     Usage:
       {program} make-config <config-kind>
-      {program} user add [options]
       {program} info
       {program} --version
       {program} (-h | --help)

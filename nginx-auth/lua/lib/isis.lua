@@ -23,17 +23,25 @@ function authenticate_user(mode, username, password)
     )
 
     if response.status == 200 then
-        log_auth_outcome(mode, true, username)
-        return cjson.decode(response.body)
-    else
-        log_auth_outcome(mode, false, username)
+        user = cjson.decode(response.body)
+        if user.tags and util.table_contains(user.tags, 'login:disabled') then
+            log_auth_outcome(mode, false, username, 'login-disabled')
+            return nil, 'login-disabled'
+        else
+            log_auth_outcome(mode, true, username)
+            return user, 'ok'
+        end
     end
+
+    log_auth_outcome(mode, false, username, 'login-failed')
+    return nil, 'login-failed'
 
 end
 
-function log_auth_outcome(mode, success, username)
+function log_auth_outcome(mode, success, username, reason)
     local success_string = success and 'succeeded' or 'failed'
-    ngx.log(ngx.INFO, 'Authentication of user "' .. username .. '" ' .. success_string .. ' (mode=' .. mode .. ')')
+    local reason_string = reason and reason or ''
+    ngx.log(ngx.INFO, 'Authentication of user "' .. username .. '" ' .. success_string .. '. Reason: ' .. reason_string .. '. (mode=' .. mode .. ')')
 end
 
 function get_basic_credentials()
