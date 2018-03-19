@@ -7,6 +7,8 @@ development
 - Add status endpoints for monitoring upstream services
 - Honor tag "login:disabled" on authentication
 - Add multi-tenant email address and content configuration
+- Upgrade to webpack v4
+- Fix Javascript source maps
 
 2018-03-17 0.150.0
 ==================

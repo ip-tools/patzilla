@@ -15,7 +15,6 @@ local isis = require('lib/isis')
 local util = require('lib/util')
 
 local request_uri = ngx.var.request_uri
-local static_resource = request_uri:find("^/static.*$")
 
 
 -- ------------------------------------------
@@ -35,7 +34,7 @@ if request_uri:find("^/login.*$") then
 end
 
 -- all static resources
-if static_resource and not request_uri:find("^/static/js/app.*$") then
+if request_uri:find("^/static.*$") then
     return
 end
 
@@ -100,12 +99,12 @@ end
 --  send proper '401 Unauthorized' response
 -- ------------------------------------------
 
-if static_resource then
-    ngx.header.content_type = 'text/plain'
-    ngx.status = ngx.HTTP_UNAUTHORIZED
-    ngx.say('401 Unauthorized')
-    ngx.exit(ngx.status)
-end
+-- if request_uri:find("^/static.*$") then
+--     ngx.header.content_type = 'text/plain'
+--     ngx.status = ngx.HTTP_UNAUTHORIZED
+--     ngx.say('401 Unauthorized')
+--     ngx.exit(ngx.status)
+-- end
 
 -- On API requests, respond with proper error json if cookie could not be verified
 if ngx.var.request_uri:find("^/api/.*$") then

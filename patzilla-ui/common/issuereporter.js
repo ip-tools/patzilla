@@ -20,6 +20,8 @@ IssueReporter = Backbone.Model.extend({
         // Register global error handler
         window.onerror = function(msg, file, line, col, error) {
 
+            //console.log('msg, file, line, col, error:', msg, file, line, col, error);
+
             // Build report object
             var report = new IssueReport({
                 origin: 'javascript',
@@ -54,7 +56,7 @@ IssueReporter = Backbone.Model.extend({
             // Fallback stacktrace.js error handler
             var stacktrace_errback = function(err) {
 
-                console.warn('Collecting stacktrace failed');
+                console.warn('Collecting stacktrace failed: ', err);
 
                 // Send error to Javascript console
                 console.error(error);

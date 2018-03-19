@@ -4,16 +4,29 @@ const config = require('./webpack.config');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 
+// https://www.npmjs.com/package/sourcemapped-stacktrace
+config.devtool = "source-map";
+
+config.optimization.splitChunks = {
+    cacheGroups: {
+        commons: {
+            //test: /[\\/]node_modules[\\/]/,
+            name: "commons",
+            filename: "commons.bundle.js",
+            chunks: "initial",
+            minChunks: 3,
+            reuseExistingChunk: true,
+        }
+    }
+
+};
+
+config.optimization.minimizer = [];
+
 config.plugins.push(
 
     // https://www.npmjs.com/package/webpack-notifier
-    new WebpackNotifierPlugin(),
-
-    // https://webpack.js.org/plugins/commons-chunk-plugin/
-    new webpack.optimize.CommonsChunkPlugin({
-        name: "commons",
-        filename: "commons.bundle.js",
-    })
+    new WebpackNotifierPlugin()
 
 );
 

@@ -9,10 +9,15 @@ const webpack = require('webpack');
 const __ui = path.resolve(__dirname, 'patzilla-ui');
 const __contextpath = path.resolve(__dirname, 'patzilla', 'navigator', 'static');
 
-module.exports = {
+const config = {
 
     cache: true,
-    devtool: "cheap-source-map",
+
+    //devtool: "source-map",
+    //devtool: "cheap-source-map",
+    //devtool: 'cheap-module-eval-source-map',
+    //devtool: 'eval-cheap-module-source-map',
+    //devtool: 'cheap-module-inline-source-map',
 
     context: __contextpath,
 
@@ -202,4 +207,8 @@ module.exports = {
 
     ],
 
+    optimization: {},
+
 };
+
+module.exports = config;
