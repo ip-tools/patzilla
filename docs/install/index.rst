@@ -29,7 +29,14 @@ Minimum prerequisites
 =====================
 Foundation: MongoDB_, PDFtk_ and ImageMagick_::
 
-    apt install mongodb-clients mongodb-server pdftk imagemagick
+    # Debian Linux
+    apt install mongodb-clients mongodb-server pdftk imagemagick unoconv
+
+    # Mac OS X
+    # https://github.com/turforlag/homebrew-cervezas
+    # https://github.com/spl/homebrew-pdftk (deprecated)
+    brew tap turforlag/homebrew-cervezas
+    brew install mongodb pdftk imagemagick unoconv
 
 Python stack::
 

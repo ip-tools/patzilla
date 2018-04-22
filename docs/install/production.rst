@@ -338,6 +338,7 @@ unoconv
 unoconv_ is used to convert spreadsheet worksheets to PDF documents.
 ::
 
+    # Debian Linux
     apt install unoconv libreoffice
 
 
