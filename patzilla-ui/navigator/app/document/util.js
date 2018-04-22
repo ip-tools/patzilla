@@ -8,7 +8,7 @@ OpsBaseViewMixin = {
         var _this = this;
 
         // run search actions when clicking query-links
-        container.find(".query-link").unbind('click');
+        container.find(".query-link").off('click');
         container.find(".query-link").on('click', function(event) {
 
             // add important parameters which reflect current gui state (e.g. selected project)
@@ -52,8 +52,8 @@ OpsBaseViewMixin = {
 
     bind_same_citations_links: function(container) {
         // bind user notification to all same citations links of "explore citation environment" fame
-        //container.find('.same-citations-link').unbind('click');
-        container.find('.same-citations-link').bind('click', function(event) {
+        //container.find('.same-citations-link').off('click');
+        container.find('.same-citations-link').on('click', function(event) {
             var citations_length = $(this).data('length');
             if (citations_length > 10) {
                 event.preventDefault();

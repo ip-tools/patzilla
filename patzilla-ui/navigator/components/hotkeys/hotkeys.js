@@ -35,10 +35,10 @@ HotkeysPlugin = Marionette.Controller.extend({
         $('#query').on('keydown', null, 'alt+ctrl+f', function(event) {
             event.preventDefault();
             $('#cql-field-chooser').select2('open');
-            $('#cql-field-chooser').unbind('select2-close');
+            $('#cql-field-chooser').off('select2-close');
             $('#cql-field-chooser').on('select2-close', function(event) {
                 window.setTimeout(function() {
-                    $('#query').focus();
+                    $('#query').trigger('focus');
                 }, 100);
             });
         });
@@ -46,7 +46,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         // zoom input field
         $('input').on('keydown', null, 'shift+return', function(event) {
             event.preventDefault();
-            $(this).parent().find('.add-on.add-on-zoom').click();
+            $(this).parent().find('.add-on.add-on-zoom').trigger('click');
         });
 
         _([document, '#query', '#numberlist', 'input']).each(function (selector) {
@@ -174,7 +174,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         $(document).on('keydown', null, 'shift+p', function(event) {
             event.preventDefault();
             var anchor = _this.app.viewport.get_document().find('a.anchor-pdf');
-            anchor[0].click();
+            anchor[0].trigger('click');
         });
 
 
@@ -183,31 +183,31 @@ HotkeysPlugin = Marionette.Controller.extend({
         $(document).on('keydown', null, 'shift+e', function(event) {
             event.preventDefault();
             var anchor = _this.app.viewport.get_document().find('a.anchor-biblio-espacenet');
-            anchor[0].click();
+            anchor[0].trigger('click');
         });
         // open DEPATISnet on "shift+d"
         $(document).on('keydown', null, 'shift+d', function(event) {
             event.preventDefault();
             var anchor = _this.app.viewport.get_document().find('a.anchor-biblio-depatisnet');
-            anchor[0].click();
+            anchor[0].trigger('click');
         });
         // open epo register information on "shift+alt+e"
         $(document).on('keydown', null, 'alt+shift+e', function(event) {
             event.preventDefault();
             var element = _this.app.viewport.get_document().find('a.anchor-register-epo')[0];
-            element && element.click();
+            element && element.trigger('click');
         });
         // open dpma register information on "shift+alt+d"
         $(document).on('keydown', null, 'alt+shift+d', function(event) {
             event.preventDefault();
             var element = _this.app.viewport.get_document().find('a.anchor-register-dpma')[0];
-            element && element.click();
+            element && element.trigger('click');
         });
         // open ccd on "shift+c"
         $(document).on('keydown', null, 'shift+c', function(event) {
             event.preventDefault();
             var element = _this.app.viewport.get_document().find('a.anchor-ccd')[0]
-            element && element.click();
+            element && element.trigger('click');
         });
 
 
@@ -280,7 +280,7 @@ HotkeysPlugin = Marionette.Controller.extend({
 
     querybuilder_zoomed_hotkeys: function(selector, regular_element) {
         // submit on meta+enter
-        $(selector).unbind('keydown');
+        $(selector).off('keydown');
         $(selector).on('keydown', null, 'meta+return', function() {
             $("#querybuilder-comfort-form").submit();
         });

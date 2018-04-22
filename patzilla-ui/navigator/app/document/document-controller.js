@@ -106,8 +106,8 @@ DocumentBaseController = Marionette.Controller.extend({
         var module_available = navigatorApp.user_has_module(module_name);
 
         // Shortcut button for jumping to Family » Citations
-        $('.family-citations-shortcut-button').unbind('click');
-        $('.family-citations-shortcut-button').bind('click', function(event) {
+        $('.family-citations-shortcut-button').off('click');
+        $('.family-citations-shortcut-button').on('click', function(event) {
             if (module_available) {
                 var container = $(this).closest('.ops-collection-entry');
                 container.find('.document-details-chooser > button[data-toggle="tab"][data-details-type="family"]').tab('show');
@@ -167,6 +167,8 @@ DocumentDetailsController = Marionette.Controller.extend({
         // --------------------------------------------
         // TODO: refactor to ops.js
         $('.document-details-chooser > button[data-toggle="tab"]').on('show', function (e) {
+
+            //log('ONSHOW ONSHOW: .document-details-chooser');
 
             // e.target // activated tab
             // e.relatedTarget // previous tab
@@ -430,20 +432,20 @@ DocumentCarouselController = Marionette.Controller.extend({
         });
 
         // update page numbers after sliding
-        $('.drawings-carousel').bind('slid', function(event) {
+        $('.drawings-carousel').on('slid', function(event) {
             _this.update_carousel_metadata(this);
         });
 
         // fetch more drawings when triggering right navigation button
         var carousel_button_more = $('.drawings-carousel .carousel-control.right');
-        carousel_button_more.click(function(event) {
+        carousel_button_more.on('click', function(event) {
             // dynamically load more drawings into the carousel, until maximum is reached
             var carousel = $(this).closest('.ops-collection-entry').find('.drawings-carousel');
             _this.carousel_fetch_next(carousel);
         });
 
         // Rotate drawings clockwise in steps of 90 degrees
-        $('.carousel-control.rotate').click(function(event, direction) {
+        $('.carousel-control.rotate').on('click', function(event, direction) {
             event.preventDefault();
             event.stopPropagation();
 
@@ -485,14 +487,19 @@ DocumentCarouselController = Marionette.Controller.extend({
                 var image_info_url = _.template('/api/ops/<%= patent %>/image/info')({ patent: document_number });
                 //log('image_info_url:', image_info_url);
 
-                $.ajax({url: image_info_url, async: true}).success(function(payload) {
+                $.ajax({
+                    url: image_info_url,
+                    async: true,
+
+                }).then(function(payload) {
                     if (payload) {
                         totalcount = payload['META']['drawing-total-count'];
                         //console.log('drawing count: ' + totalcount);
                         carousel.data('totalcount', totalcount);
                         _this.update_carousel_metadata(carousel);
                     }
-                }).error(function(error) {
+
+                }).catch(function(error) {
                     console.warn('Error while fetching total count of drawings', error);
                 });
                 carousel.data('totalcount', totalcount);
@@ -504,7 +511,8 @@ DocumentCarouselController = Marionette.Controller.extend({
 
         // hide broken drawing images
         var images = $('.drawings-carousel').find('img');
-        images.error(function() {
+        images.off('error');
+        images.on('error', function() {
             $(this).hide();
             var image_placeholder = '<br/><blockquote class="text-center" style="min-height: 300px"><br/><br/><br/><br/><br/><br/>No image</blockquote>';
             $(this).closest('.carousel').hide().parent().find('.drawing-info').html(image_placeholder);
@@ -590,7 +598,7 @@ PdfPanelController = Marionette.Controller.extend({
         var _this = this;
 
         // pdf action button
-        $(".pdf-open").click(function() {
+        $(".pdf-open").on('click', function() {
 
             var patent_number = $(this).data('patent-number');
             var pdf_url = $(this).data('pdf-url');
@@ -600,15 +608,15 @@ PdfPanelController = Marionette.Controller.extend({
             _this.pdf_display('pdf', pdf_url, pdf_page);
 
             // pdf paging actions
-            $("#pdf-previous").unbind();
-            $("#pdf-previous").click(function() {
+            $("#pdf-previous").off();
+            $("#pdf-previous").on('click', function() {
                 if (pdf_page == 1) return;
                 pdf_page -= 1;
                 _this.pdf_set_headline(patent_number, pdf_page);
                 _this.pdf_display('pdf', pdf_url, pdf_page);
             });
-            $("#pdf-next").unbind();
-            $("#pdf-next").click(function() {
+            $("#pdf-next").off();
+            $("#pdf-next").on('click', function() {
                 pdf_page += 1;
                 _this.pdf_set_headline(patent_number, pdf_page);
                 _this.pdf_display('pdf', pdf_url, pdf_page);

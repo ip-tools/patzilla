@@ -42,7 +42,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
         // setup insert-to-basket button
         var basket_button = this.$el.find('#result-to-basket-button');
-        basket_button.unbind('click');
+        basket_button.off('click');
         basket_button.on('click', function(event) {
             $('#result-to-basket-indicator').removeClass('icon-plus').addClass('icon-spinner icon-spin');
             setTimeout(function() {
@@ -114,7 +114,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
                 try {
 
                     // Try to decode main response from JSON
-                    var data = $.parseJSON(response);
+                    var data = JSON.parse(response);
                     var responseText = '';
                     if (data['responseText']) {
                         responseText = data['responseText'];
@@ -123,7 +123,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
                     // Try to decode responseText from JSON
                     try {
-                        var responseTextData = $.parseJSON(responseText);
+                        var responseTextData = JSON.parse(responseText);
                         responseText = '<pre>' + JSON.stringify(responseTextData, null, 2) + '</pre>';
                     } catch (ex) {
                         console.warn('Data source crawler could not parse "responseText":', ex);

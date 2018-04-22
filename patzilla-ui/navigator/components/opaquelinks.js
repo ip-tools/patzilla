@@ -13,11 +13,11 @@ function opaquetoken(params, options) {
         url: url,
         data: JSON.stringify(params),
         contentType: "application/json; charset=utf-8",
-    }).success(function(payload) {
+    }).then(function(payload) {
         if (payload) {
             deferred.resolve(payload);
         }
-    }).error(function(error) {
+    }).catch(function(error) {
         console.warn('Error while signing opaque parameters', error);
         deferred.reject(error);
     });

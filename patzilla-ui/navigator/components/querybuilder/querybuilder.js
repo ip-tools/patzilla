@@ -75,13 +75,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // application action: perform search
             // properly wire "send query" button
-            $('.btn-query-perform').unbind('click');
+            $('.btn-query-perform').off('click');
             if (flavor == 'comfort') {
 
                 _this.comfort_form_zoomed_to_regular_ui();
 
                 // focus first field
-                $('#patentnumber').focus();
+                $('#patentnumber').trigger('focus');
 
                 // hide action tools
                 $('#querybuilder-comfort-actions').show();
@@ -92,14 +92,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 $('#cql-history-chooser').show();
 
                 // perform field-based search
-                $('.btn-query-perform').click(function() {
+                $('.btn-query-perform').on('click', function() {
                     $( "#querybuilder-comfort-form" ).submit();
                 });
 
             } else if (flavor == 'cql') {
 
                 // focus textarea
-                $('#query').focus();
+                $('#query').trigger('focus');
 
                 // show action tools
                 $('#querybuilder-comfort-actions').hide();
@@ -120,7 +120,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 _this.compute_comfort_query();
 
                 // perform cql expression search
-                $('.btn-query-perform').click(function() {
+                $('.btn-query-perform').on('click', function() {
                     var query_data = _this.get_common_form_data();
                     navigatorApp.disable_reviewmode();
                     navigatorApp.perform_search({
@@ -138,7 +138,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             } else if (flavor == 'numberlist') {
 
                 // focus textarea
-                $('#numberlist').focus();
+                $('#numberlist').trigger('focus');
 
                 // hide action tools
                 $('#querybuilder-comfort-actions').hide();
@@ -155,7 +155,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 _this.display_datasource_buttons(['ops']);
 
                 // perform numberlist search
-                $('.btn-query-perform').click(function() {
+                $('.btn-query-perform').on('click', function() {
                     navigatorApp.disable_reviewmode();
                     navigatorApp.populate_metadata();
                     navigatorApp.perform_numberlistsearch({reviewmode: false, reset: ['pagination_current_page', 'page_size']});
@@ -175,7 +175,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
         var common_buttons = $('.btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
-        common_buttons.unbind('click');
+        common_buttons.off('click');
         common_buttons.on('click', function(e) {
 
             var already_active = $(this).hasClass('active');
@@ -197,8 +197,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //   comfort form search
         // ------------------------------------------
 
-        $( "#querybuilder-comfort-form" ).unbind();
-        $( "#querybuilder-comfort-form" ).submit(function( event ) {
+        $( "#querybuilder-comfort-form" ).off();
+        $( "#querybuilder-comfort-form" ).on('submit', function( event ) {
 
             // transfer values from zoomed fields
             _this.comfort_form_zoomed_to_regular_data();
@@ -222,8 +222,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         // define default search action when using "Start search" button
-        $('.btn-query-perform').unbind('click');
-        $('.btn-query-perform').click(function() {
+        $('.btn-query-perform').off('click');
+        $('.btn-query-perform').on('click', function() {
             $( "#querybuilder-comfort-form" ).submit();
         });
 
@@ -344,8 +344,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // ------------------------------------------
 
         // display all comfort form values
-        $('#btn-comfort-display-values').unbind('click');
-        $('#btn-comfort-display-values').click(function() {
+        $('#btn-comfort-display-values').off('click');
+        $('#btn-comfort-display-values').on('click', function() {
 
             var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn"><i class="icon-copy"></i> &nbsp; Copy to clipboard</a>';
 
@@ -365,21 +365,21 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         // clear all comfort form values
-        $('#btn-comfort-clear').unbind('click');
-        $('#btn-comfort-clear').click(function() {
+        $('#btn-comfort-clear').off('click');
+        $('#btn-comfort-clear').on('click', function() {
             _this.clear_comfort_form();
         });
 
         // clear the whole expression (expert form)
-        $('#btn-query-clear').unbind('click');
-        $('#btn-query-clear').click(function() {
-            $('#query').val('').focus();
+        $('#btn-query-clear').off('click');
+        $('#btn-query-clear').on('click', function() {
+            $('#query').val('').trigger('focus');
             $('#cql-filter').val('');
         });
 
         // transform query: open modal dialog to choose transformation kind
-        $('#btn-query-transform').unbind('click');
-        $('#btn-query-transform').click(function() {
+        $('#btn-query-transform').off('click');
+        $('#btn-query-transform').on('click', function() {
             if (_this.check_query_empty({'icon': 'icon-exchange'})) { return; }
 
             var dialog = $('#query-transform-dialog');
@@ -391,8 +391,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         // open query chooser
-        $('#btn-query-history').unbind('click');
-        $('#btn-query-history').click(function(e) {
+        $('#btn-query-history').off('click');
+        $('#btn-query-history').on('click', function(e) {
 
             // setup select2 widget
             _this.cql_history_chooser_setup().then(function() {
@@ -417,8 +417,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         // share via url, with ttl
-        $('#btn-query-permalink').unbind('click');
-        $('#btn-query-permalink').click(function(e) {
+        $('#btn-query-permalink').off('click');
+        $('#btn-query-permalink').on('click', function(e) {
 
             e.preventDefault();
             e.stopPropagation();
@@ -455,7 +455,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
 
         // transform query: modifier kind selected in dialog
-        $('.btn-clipboard-modifier').click(function() {
+        $('.btn-clipboard-modifier').on('click', function() {
 
             // get field name and operator from dialog
             var modifier = $(this).data('modifier');
@@ -476,14 +476,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // set query content and focus element
             $('#query').val(query);
-            $('#query').focus();
+            $('#query').trigger('focus');
 
         });
 
 
         // normalize numberlist
-        $('#btn-numberlist-normalize').unbind('click');
-        $('#btn-numberlist-normalize').click(function(e) {
+        $('#btn-numberlist-normalize').off('click');
+        $('#btn-numberlist-normalize').on('click', function(e) {
             e.preventDefault();
             if (_this.check_numberlist_empty({'icon': 'icon-exchange'})) { return; }
 
@@ -508,8 +508,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         // strip kindcodes from numbers in numberlist
-        $('#btn-numberlist-strip-kindcodes').unbind('click');
-        $('#btn-numberlist-strip-kindcodes').click(function(e) {
+        $('#btn-numberlist-strip-kindcodes').off('click');
+        $('#btn-numberlist-strip-kindcodes').on('click', function(e) {
             e.preventDefault();
             if (_this.check_numberlist_empty({'icon': 'icon-eraser'})) { return; }
 
@@ -537,10 +537,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         //   NOTE: currently defunct
         // ------------------------------------------
         $('.btn-cql-boolean').button();
-        $('#cql-quick-operator').find('.btn-cql-boolean').click(function() {
-            $('#query').focus();
+        $('#cql-quick-operator').find('.btn-cql-boolean').on('click', function() {
+            $('#query').trigger('focus');
         });
-        $('.btn-cql-field').click(function() {
+        $('.btn-cql-field').on('click', function() {
 
             var query = $('#query').val();
             var operator = $('#cql-quick-operator').find('.btn-cql-boolean.active').data('value');
@@ -581,7 +581,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (do_att)
                 $('#query').caret((do_op ? ' ' : leftspace) + attribute);
 
-            $('#query').focus();
+            $('#query').trigger('focus');
         });
 
     },
@@ -617,7 +617,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             escapeMarkup: function(text) { return text; },
             width: '100%',
         });
-        $('#cql-field-chooser').unbind('change');
+        $('#cql-field-chooser').off('change');
         $('#cql-field-chooser').on('change', function(event) {
 
             var value = $(this).val();
@@ -631,7 +631,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // skip insert if we're right behind a "="
             if (leftchar == fields_knowledge.meta.separator) {
-                $('#query').focus();
+                $('#query').trigger('focus');
                 return;
             }
 
@@ -669,7 +669,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             escapeMarkup: function(text) { return text; },
         });
 
-        element_field_chooser.unbind('change');
+        element_field_chooser.off('change');
         element_field_chooser.on('change', function(event) {
 
             var value = $(this).val();
@@ -677,7 +677,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             var sort_order = element_order_chooser.data('value');
             if (!sort_order) {
-                element_order_chooser.click();
+                element_order_chooser.trigger('click');
             }
 
         });
@@ -705,7 +705,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
         sort_order_refresh();
 
-        element_order_chooser.unbind('click');
+        element_order_chooser.off('click');
         element_order_chooser.on('click', function(event) {
 
             // read from "data-value" attribute
@@ -764,12 +764,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         return deferred.promise();
 
-
+        /*
         var queries = navigatorApp.project.get('queries');
         var chooser_data = _(queries).unique().map(function(query) {
             return { id: query, text: query };
         });
         return chooser_data;
+        */
     },
 
     query_model_repr: function(query) {
@@ -970,10 +971,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // when query was selected, put it into cql query input field
         var _this = this;
-        chooser_widget.unbind('change');
+        chooser_widget.off('change');
         chooser_widget.on('change', function(event) {
 
-            $(this).unbind('change');
+            $(this).off('change');
 
             // this gets the "id" attribute of an entry in select2 `data`
             var query_object = $(this).val();
@@ -1199,7 +1200,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var textarea = zoomed_element.find('textarea');
         textarea.val(value);
-        textarea.focus();
+        textarea.trigger('focus');
 
         navigatorApp.hotkeys.querybuilder_zoomed_hotkeys(textarea, input_element);
         navigatorApp.hotkeys.querybuilder_hotkeys(textarea);
@@ -1221,7 +1222,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var fieldset = $('#querybuilder-comfort-form > fieldset');
         fieldset.children('.field-zoomed').hide();
         fieldset.children('.field-regular').fadeIn();
-        input_element && input_element.focus();
+        input_element && input_element.trigger('focus');
     },
 
     get_form_modifier_elements: function() {
@@ -1442,14 +1443,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             },
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
-        }).success(function(data, status, options) {
+        }).then(function(data, status, options) {
             if (data) {
                 var keywords = options.getResponseHeader('X-PatZilla-Query-Keywords');
                 deferred.resolve(data, keywords);
             } else {
                 deferred.resolve({}, '[]');
             }
-        }).error(function(xhr, settings) {
+        }).catch(function(xhr, reason, status) {
+            console.error({location: 'compute_query_expression', xhr: xhr, reason: reason, status: status});
             navigatorApp.ui.propagate_backend_errors(xhr);
             deferred.reject();
         });

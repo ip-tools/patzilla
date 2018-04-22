@@ -66,7 +66,7 @@ DatasourceSearch = Backbone.Model.extend({
         if (raw) {
             // wrap in yet another list
             raw = '[' + raw + ']';
-            var data = jQuery.parseJSON(raw);
+            var data = JSON.parse(raw);
             if (!_.isEmpty(data)) {
                 return data[0];
             }
@@ -105,7 +105,7 @@ DatasourceCrawler = Marionette.Controller.extend({
 
         var _this = this;
         $.ajax({url: url, async: true})
-            .success(function(payload) {
+            .then(function(payload) {
                 if (payload) {
                     if (_this.constituents == 'pub-number') {
 
@@ -122,7 +122,8 @@ DatasourceCrawler = Marionette.Controller.extend({
                 } else {
                     deferred.reject('Empty response');
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
+                console.warn('Error with DatasourceCrawler:', error);
                 deferred.reject(JSON.stringify(error));
             });
         return deferred;

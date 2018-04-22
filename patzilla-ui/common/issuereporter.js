@@ -96,11 +96,11 @@ IssueReporter = Backbone.Model.extend({
             data: JSON.stringify(report.toJSON()),
             contentType: "application/json; charset=utf-8",
 
-        }).success(function(response, status, options) {
+        }).then(function(response, status, options) {
             console.log('Successfully submitted issue report to backend');
             deferred.resolve(response, status, options);
 
-        }).error(function(xhr, settings) {
+        }).catch(function(xhr, settings) {
             console.warn('Error submitting issue report to backend');
             deferred.reject(xhr, settings);
         });
@@ -161,8 +161,8 @@ IssueReporterGui = Backbone.Model.extend({
 
     setup_ui: function() {
         var _this = this;
-        $('.report-issue-problem').unbind('click');
-        $('.report-issue-problem').click(function(event) {
+        $('.report-issue-problem').off('click');
+        $('.report-issue-problem').on('click', function(event) {
             _this.problem({
                 element: this,
                 event: event,
@@ -233,14 +233,14 @@ IssueReporterGui = Backbone.Model.extend({
         };
         setup_header();
 
-        dialog.find('#issue-reporter-what').unbind('change');
+        dialog.find('#issue-reporter-what').off('change');
         dialog.find('#issue-reporter-what').on('change', function() {
             setup_header();
         });
 
         var _this = this;
-        dialog.find('#issue-reporter-send-button').unbind('click');
-        dialog.find('#issue-reporter-send-button').bind('click', function(event) {
+        dialog.find('#issue-reporter-send-button').off('click');
+        dialog.find('#issue-reporter-send-button').on('click', function(event) {
 
             options.element_spinner = dialog.find('#issue-reporter-spinner');
             options.element_status  = dialog.find('#issue-reporter-status');

@@ -35,7 +35,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
                     if (keywords) {
                         // workaround for weird Chrome bug: "X-PatZilla-Query-Keywords" headers are recieved duplicated
                         keywords = keywords.replace(/(.+), \[.+\]/, '$1');
-                        self.keywords = jQuery.parseJSON(keywords);
+                        self.keywords = JSON.parse(keywords);
                     }
                 }
 
@@ -831,7 +831,7 @@ OpsFulltext = Marionette.Controller.extend({
 
         var url = _.template('/api/ops/<%= document_number %>/claims')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
-            .success(function(payload) {
+            .then(function(payload) {
                 if (payload) {
                     var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
                     //console.log('claims', claims);
@@ -851,7 +851,7 @@ OpsFulltext = Marionette.Controller.extend({
 
                     deferred.resolve(response, _this.get_datasource_label());
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
                 console.warn('Error while fetching claims from OPS for', _this.document_number, error);
                 deferred.resolve({html: 'No data available'});
             });
@@ -867,7 +867,7 @@ OpsFulltext = Marionette.Controller.extend({
 
         var url = _.template('/api/ops/<%= document_number %>/description')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
-            .success(function(payload) {
+            .then(function(payload) {
                 if (payload) {
                     var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
                     //console.log('description', document_number, description);
@@ -883,7 +883,7 @@ OpsFulltext = Marionette.Controller.extend({
                     };
                     deferred.resolve(response, _this.get_datasource_label());
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
                 console.warn('Error while fetching description from OPS for', _this.document_number, error);
                 deferred.resolve({html: 'No data available'});
             });

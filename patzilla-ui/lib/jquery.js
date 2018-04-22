@@ -1,6 +1,12 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl, Elmyra UG
+
+// jQuery fame
 require('jquery');
+
+// Helper for transitioning to jQuery 3.x
+// https://www.npmjs.com/package/jquery-migrate
+require('jquery-migrate');
 
 
 // ------------------------------------------
@@ -49,7 +55,7 @@ jQuery.fn.handle_enter_keypress = function() {
             if (e.which == '13') {
                 $(this).closest('form')
                     .find('button[type=submit],input[type=submit]')
-                    .filter(':first').click();
+                    .filter(':first').trigger('click');
             }
         });
     }

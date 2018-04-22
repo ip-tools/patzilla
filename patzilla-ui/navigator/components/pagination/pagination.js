@@ -143,7 +143,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         });
 
         // 2.b make links from page size chooser entries
-        $(this.el).find('.page-size-chooser a').click(function(event) {
+        $(this.el).find('.page-size-chooser a').on('click', function(event) {
             event.preventDefault();
             var value = $(this).data('value');
             _this.model.set('page_size', value);
@@ -172,7 +172,7 @@ PaginationView = Backbone.Marionette.ItemView.extend({
         });
 
         // 3.b make links from pagination entries
-        $(this.el).find('.pagination a').click(function() {
+        $(this.el).find('.pagination a').on('click', function() {
             //var action = $(this).attr('action');
             var range = $(this).attr('range');
             navigatorApp.perform_search({range: range});

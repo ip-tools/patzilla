@@ -21,7 +21,13 @@ require('backbone');
     // Create a custom selector to search for the presence of a 'backboneView' data entry:
     // This avoids a dependency on a data selector plugin...
 
-    $.expr[':'].backboneView = function(element, intStackIndex, arrProperties, arrNodeStack) {
+    // jQuery.expr[":"] is now jQuery.expr.pseudos
+    // https://github.com/jquery/jquery-migrate/issues/204
+
+    // Standardize custom pseudo object
+    // https://github.com/jquery/jquery/issues/2073
+
+    $.expr.pseudos.backboneView = function(element, intStackIndex, arrProperties, arrNodeStack) {
         return $(element).data('backboneView') !== undefined;
     };
 

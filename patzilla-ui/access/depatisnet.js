@@ -34,18 +34,19 @@ DepatisConnectFulltext = Marionette.Controller.extend({
         var deferred = $.Deferred();
 
         var url = _.template('/api/depatisconnect/<%= document_number %>/claims')({ document_number: this.document_number});
-        $.ajax({url: url, async: true}).success(function(payload) {
-            if (payload) {
-                var response = {
-                    html: payload['xml'],
-                    lang: payload['lang'],
-                };
-                deferred.resolve(response, _this.get_datasource_label());
-            }
-        }).error(function(error) {
-            console.warn('Error while fetching claims from DEPATISconnect for', _this.document_number, error);
-            deferred.resolve({html: 'No data available'});
-        });
+        $.ajax({url: url, async: true})
+            .then(function(payload) {
+                if (payload) {
+                    var response = {
+                        html: payload['xml'],
+                        lang: payload['lang'],
+                    };
+                    deferred.resolve(response, _this.get_datasource_label());
+                }
+            }).catch(function(error) {
+                console.warn('Error while fetching claims from DEPATISconnect for', _this.document_number, error);
+                deferred.resolve({html: 'No data available'});
+            });
 
         return deferred.promise();
 
@@ -58,7 +59,7 @@ DepatisConnectFulltext = Marionette.Controller.extend({
 
         var url = _.template('/api/depatisconnect/<%= document_number %>/description')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
-            .success(function(payload) {
+            .then(function(payload) {
                 if (payload) {
                     var response = {
                         html: payload['xml'],
@@ -66,7 +67,7 @@ DepatisConnectFulltext = Marionette.Controller.extend({
                     };
                     deferred.resolve(response, _this.get_datasource_label());
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
                 console.warn('Error while fetching description from DEPATISconnect for', _this.document_number, error);
                 deferred.resolve({html: 'No data available'});
             });
@@ -86,7 +87,7 @@ DepatisConnectFulltext = Marionette.Controller.extend({
         }
         var url = _.template(url_tpl)({ document_number: this.document_number, language: language});
         $.ajax({url: url, async: true})
-            .success(function(payload) {
+            .then(function(payload) {
                 if (payload && payload['xml']) {
                     var response = {
                         html: payload['xml'],
@@ -98,7 +99,7 @@ DepatisConnectFulltext = Marionette.Controller.extend({
                     console.warn('DEPATISconnect: Empty abstract for', _this.document_number);
                     deferred.reject({html: 'Abstract for this document is empty, see original data source'});
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
                 console.warn('DEPATISconnect: Error while fetching abstract for', _this.document_number, error);
                 deferred.reject({html: 'No data available', error: error});
             });

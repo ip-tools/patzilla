@@ -55,13 +55,13 @@ ExportPlugin = Backbone.Model.extend({
         var form_elements = this.radios.get('elements');
 
         // Update tooltip text in dialog footer when hovering over buttons
-        form_elements.unbind('mouseover').bind('mouseover', function(e) {
+        form_elements.off('mouseover').on('mouseover', function(e) {
             _this.update_hover_text($(this));
         });
 
 
         // Handler for button selection
-        form_elements.unbind('click').bind('click', function(event) {
+        form_elements.off('click').on('click', function(event) {
 
             // Handle radio button behavior
             _this.radios.button_behaviour(this, event);
@@ -76,7 +76,7 @@ ExportPlugin = Backbone.Model.extend({
 
 
         // Select "All" buttons
-        dialog.find('[data-toggle="select-all"]').unbind('click').bind('click', function(event) {
+        dialog.find('[data-toggle="select-all"]').off('click').on('click', function(event) {
 
             // Stop event from triggering other machinery
             event.stopPropagation();
@@ -97,7 +97,7 @@ ExportPlugin = Backbone.Model.extend({
 
         // Setup content: Public/anonymous url
         //var ttl_element = dialog.find('#expiration-time-slider');
-        _this.ttl_element.unbind('change').bind('change', function(slideEvt) {
+        _this.ttl_element.off('change').on('change', function(slideEvt) {
             //var oldValue = slideEvt.value.oldValue;
             //var newValue = slideEvt.value.newValue;
             //var value = $(this).data('slider').getValue();
@@ -108,14 +108,14 @@ ExportPlugin = Backbone.Model.extend({
         });
 
         // Update expiration time stuff after widget was displayed
-        $('#link-embed-content').unbind('shown').bind('shown', function() {
+        $('#link-embed-content').off('shown').on('shown', function() {
             _this.update_expiration_time();
         });
 
 
         // Setup input fields: Autoselect on focus
-        dialog.find('#share-link-numberlist,#share-link-external').unbind('focus').bind('focus', function(event) {
-            $(this).select();
+        dialog.find('#share-link-numberlist,#share-link-external').off('focus').on('focus', function(event) {
+            $(this).trigger('select');
         });
 
         // Setup "copy/paste" buttons
@@ -139,13 +139,13 @@ ExportPlugin = Backbone.Model.extend({
 
 
         // Setup "open link" buttons
-        dialog.find('#share-link-numberlist-open').unbind('click').bind('click', function() {
+        dialog.find('#share-link-numberlist-open').off('click').on('click', function() {
             var url = dialog.find('#share-link-numberlist').val();
             if (url) {
                 open(url);
             }
         });
-        dialog.find('#share-link-external-open').unbind('click').bind('click', function() {
+        dialog.find('#share-link-external-open').off('click').on('click', function() {
             var url = dialog.find('#share-link-external').val();
             if (url) {
                 open(url);
@@ -205,8 +205,8 @@ ExportPlugin = Backbone.Model.extend({
         // Setup submit button
         // ------------------------------------------
         dialog.find('#export-dialog-send-button').show();
-        dialog.find('#export-dialog-send-button').unbind('click');
-        dialog.find('#export-dialog-send-button').bind('click', function(event) {
+        dialog.find('#export-dialog-send-button').off('click');
+        dialog.find('#export-dialog-send-button').on('click', function(event) {
 
             options.element_spinner = dialog.find('#export-dialog-spinner');
             options.element_status  = dialog.find('#export-dialog-status');

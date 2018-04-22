@@ -62,14 +62,14 @@ UiController = Marionette.Controller.extend({
         // ------------------------------------------
 
         // Open help in modal dialog
-        $('.action-help-shortcuts').unbind('click');
+        $('.action-help-shortcuts').off('click');
         $('.action-help-shortcuts').on('click', function() {
             var baseurl = navigatorApp.config.get('baseurl');
             var url = urljoin(baseurl, '/help#hotkeys');
             $(this).attr('href', url);
         });
 
-        $('.action-help-ificlaims').unbind('click');
+        $('.action-help-ificlaims').off('click');
         $('.action-help-ificlaims').on('click', function() {
             var baseurl = navigatorApp.config.get('baseurl');
             var url = urljoin(baseurl, '/help#ificlaims');
@@ -77,16 +77,16 @@ UiController = Marionette.Controller.extend({
         });
 
 
-        $('.action-fullscreen').unbind('click');
-        $('.action-fullscreen').click(function() {
+        $('.action-fullscreen').off('click');
+        $('.action-fullscreen').on('click', function() {
             if (screenfull.enabled) {
                 screenfull.request();
             }
         });
 
 
-        $('.report-issue-feature').unbind('click');
-        $('.report-issue-feature').click(function(event) {
+        $('.report-issue-feature').off('click');
+        $('.report-issue-feature').on('click', function(event) {
             navigatorApp.issues.dialog({
                 element: this,
                 event: event,
@@ -140,7 +140,7 @@ UiController = Marionette.Controller.extend({
 
         $('#alert-area').empty();
         try {
-            var response = jQuery.parseJSON(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
 
         // Display detailed data from XHR response
         } catch (err) {
@@ -279,12 +279,13 @@ UiController = Marionette.Controller.extend({
 
     do_elements_focus: function() {
         if (navigatorApp.documents.length) {
-            $('#patentnumber').blur();
-            $('#query').blur();
+            $('#patentnumber').trigger('blur');
+            $('#query').trigger('blur');
         }
     },
 
     confirm: function(message) {
+
         var deferred = $.Deferred();
 
         var dialog = bootbox.confirm('<h4>' + message + '</h4>', function(ack) {
@@ -384,7 +385,11 @@ UiController = Marionette.Controller.extend({
 
     // perform animated scrolling
     scroll_smooth: function(target) {
+
+        // Sanity checks
         if (!target) return;
+        if (!$(target).exists()) return;
+
         if ($(target).offset()) {
             $('html, body').animate({
                 scrollTop: $(target).offset().top
@@ -402,8 +407,8 @@ UiController = Marionette.Controller.extend({
         var deferred = $.Deferred();
 
         if (ZeroClipboard.isFlashUnusable()) {
-            $(options.element).unbind('click');
-            $(options.element).bind('click', function() {
+            $(options.element).off('click');
+            $(options.element).on('click', function() {
                 var message =
                     'Copying data to clipboard not possible, Adobe Flash Player plugin is required.<br/>' +
                     '<a href="https://get.adobe.com/flashplayer/" target="_blank">Install Adobe Flash Player</a>.';
@@ -456,7 +461,7 @@ UiController = Marionette.Controller.extend({
     copy_to_clipboard_bind_button: function(mimetype, payload, options) {
 
         // prevent default action on copy button
-        $(options.element).unbind('click').bind('click', function(e) {
+        $(options.element).off('click').on('click', function(e) {
             e.preventDefault();
         });
 

@@ -46,6 +46,7 @@ ProjectModel = Backbone.RelationalModel.extend({
             type: Backbone.HasOne,
             key: 'basket',
             relatedModel: 'BasketModel',
+            //autoFetch: true,
 
             includeInJSON: Backbone.Model.prototype.idAttribute,
 
@@ -88,7 +89,7 @@ ProjectModel = Backbone.RelationalModel.extend({
 
     // initialize model
     initialize: function() {
-        console.log('ProjectModel.initialize');
+        console.log('ProjectModel.initialize', this);
         // backbone-relational backward-compat
         if (!this.fetchRelated) this.fetchRelated = this.getAsync;
     },
@@ -287,6 +288,7 @@ ProjectCollection = Backbone.Collection.extend({
         var _this = this;
 
         var records = this.where({name: name});
+        log('ProjectCollection.get_or_create records:', records);
 
         // FIXME: should raise an exception in this case, right?
         if (!records) return;
@@ -454,8 +456,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
         // make project entry links switch to the selected project
         var project_links = container.find('a');
-        project_links.unbind('click');
-        project_links.click(function() {
+        project_links.off('click');
+        project_links.on('click', function() {
             var projectname = $(this).data('value');
             navigatorApp.trigger('project:load', projectname);
         });
@@ -472,8 +474,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         }
 
         // bind click event
-        mode_seen_button.unbind('click');
-        mode_seen_button.click(function(e) {
+        mode_seen_button.off('click');
+        mode_seen_button.on('click', function(e) {
 
             //log('CLICK SEEN');
 
@@ -500,8 +502,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
         // 5. bind project action buttons
         var delete_button = $(this.el).find('#project-delete-button');
-        delete_button.unbind('click');
-        delete_button.click(function(e) {
+        delete_button.off('click');
+        delete_button.on('click', function(e) {
 
             var projectname = navigatorApp.config.get('project');
             navigatorApp.ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
@@ -541,8 +543,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
             });
         });
 
-        $(this.el).find('#project-create-button').unbind();
-        $(this.el).find('#project-create-button').click(function(e) {
+        $(this.el).find('#project-create-button').off();
+        $(this.el).find('#project-create-button').on('click', function(e) {
 
             e.stopPropagation();
             e.preventDefault();
@@ -550,7 +552,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
             // swap projectname chooser from renaming to creation functionality
             var chooser = $('#project-chooser-name');
-            chooser.unbind();
+            chooser.off();
 
             var value_old = chooser.editable('getValue', true);
             chooser.editable('destroy');
@@ -612,6 +614,8 @@ navigatorApp.addInitializer(function(options) {
 
     // load project when receiving "project:load" event
     this.listenTo(this, 'project:load', function(projectname) {
+
+        log('project:load happened for:', projectname);
 
         // remember current project name to detect project-switch later
         var projectname_before;

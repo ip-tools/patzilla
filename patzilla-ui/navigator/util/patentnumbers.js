@@ -41,21 +41,22 @@ function split_patent_number(patent_number) {
 function normalize_numberlist(payload) {
     var deferred = $.Deferred();
     $.ajax({
-        method: 'post',
-        url: '/api/util/numberlist?normalize=true',
-        beforeSend: function(xhr, settings) {
-            xhr.requestUrl = settings.url;
-        },
-        data: payload,
-        contentType: "text/plain; charset=utf-8",
-    }).success(function(response, status, options) {
+            method: 'post',
+            url: '/api/util/numberlist?normalize=true',
+            beforeSend: function(xhr, settings) {
+                xhr.requestUrl = settings.url;
+            },
+            data: payload,
+            contentType: "text/plain; charset=utf-8",
+        }).then(function(response, status, options) {
             if (response) {
                 deferred.resolve(response);
             } else {
                 navigatorApp.ui.notify('Number normalization failed (empty response)', {type: 'warning', icon: 'icon-exchange', right: true});
                 deferred.reject();
             }
-        }).error(function(xhr, settings) {
+        }).catch(function(xhr, settings) {
+            console.warn('Error with normalize_numberlist:', xhr);
             navigatorApp.ui.propagate_backend_errors(xhr);
             deferred.reject();
         });

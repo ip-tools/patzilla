@@ -7,8 +7,9 @@ development
 - Add status endpoints for monitoring upstream services
 - Honor tag "login:disabled" on authentication
 - Add multi-tenant email address and content configuration
-- Upgrade to webpack v4
-- Fix Javascript source maps
+- [ui] Upgrade to webpack v4
+- [ui] Fix Javascript source maps
+- [ui] Upgrade to jQuery 3.3.1, modernizr 3.6.0, moment 2.22.1, select2 3.5.1, url-join 2.0.5 and waypoints 4.0.1
 
 2018-03-17 0.150.0
 ==================

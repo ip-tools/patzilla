@@ -27,8 +27,8 @@ $(document).ready(function() {
         }, 150);
     }
 
-    $('#mail-register').unbind('click');
-    $('#mail-register').bind('click', function() {
+    $('#mail-register').off('click');
+    $('#mail-register').on('click', function() {
 
         var subject = _.template('<%= productname %>: Account registration on domain "<%= domain %>"')(login_settings);
         var body = _.template(_.string.ltrim($('#template-mail-register').html()))(login_settings);
@@ -37,8 +37,8 @@ $(document).ready(function() {
 
     });
 
-    $('#mail-login-failed').unbind('click');
-    $('#mail-login-failed').bind('click', function() {
+    $('#mail-login-failed').off('click');
+    $('#mail-login-failed').on('click', function() {
 
         var subject = _.template('<%= productname %>: Login keeps failing for account "<%= username %>" on domain "<%= domain %>"')(login_settings);
         var body = _.template(_.string.ltrim($('#template-mail-login-failed').html()))(login_settings);
@@ -47,8 +47,8 @@ $(document).ready(function() {
 
     });
 
-    $('#visit-demo').unbind('click');
-    $('#visit-demo').bind('click', function() {
+    $('#visit-demo').off('click');
+    $('#visit-demo').on('click', function() {
 
         var demourl = url.attr('protocol') + '://' + url.attr('host');
         if (url.attr('port')) demourl += ':' + url.attr('port');

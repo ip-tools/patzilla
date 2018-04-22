@@ -817,13 +817,13 @@ NavigatorApp = Backbone.Marionette.Application.extend({
                 // late for further processing, so the whole function must be made asynchronous.
                 try {
                     var r = ifi_doc.fetch({sync: true, async: false})
-                        .success(function() {
+                        .then(function() {
                             console.info('Document "' + document_missing.number + '" available at IFI Claims.');
                             //log('ifi.document:', ifi_doc);
                             placeholder = ifi_doc;
                         })
-                        .fail(function() {
-                            console.warn('Document "' + document_missing.number + '" not available at IFI Claims.');
+                        .catch(function(error) {
+                            console.warn('Document "' + document_missing.number + '" not available at IFI Claims:', error);
                         });
                 } catch(ex) {
                     console.warn(ex);
@@ -1044,8 +1044,8 @@ NavigatorApp = Backbone.Marionette.Application.extend({
 
         // set hook to record all queries
         this.stopListening(this, 'query:record');
-        this.listenTo(this, 'query:record', function(arguments) {
-            project.record_query(arguments);
+        this.listenTo(this, 'query:record', function(args) {
+            project.record_query(args);
         });
 
         // trigger project reload when window gets focus
@@ -1093,10 +1093,17 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             _this.config.set('project', project.get('name'));
         }
 
-        // activate basket
+        // Activate basket
         var basket = project.get('basket');
 
-        // refetch basket to work around localforage.backbone vs. backbone-relational woes
+        // Runtime behavior changed when upgrading to jQuery 3. Counter this.
+        if (basket == null) {
+            console.warn('Reloading project because basket is null:', projectname);
+            this.trigger('project:load', projectname);
+            return;
+        }
+
+        // Refetch basket to work around localforage.backbone vs. backbone-relational woes
         // otherwise, data storage mayhem may happen, because of model.id vs. model.sync.localforageKey mismatch
         // FIXME: it's ridiculous that we don't receive stacktraces from within "then()"
         basket.fetch({
@@ -1128,6 +1135,8 @@ NavigatorApp = Backbone.Marionette.Application.extend({
     // TODO: move to basket.js
     basket_deactivate: function() {
 
+        console.log('App.basket_deactivate');
+
         // TODO: how to decouple this? is there something like a global utility registry?
         // TODO: is old model killed properly?
         if (this.basketModel) {
@@ -1155,6 +1164,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             return;
         }
 
+        // FIXME: Experimentally remove this weird/misplaced call.
         this.basket_deactivate();
 
         // A. model and view
@@ -1214,7 +1224,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
 
         // handle checkbox clicks by add-/remove-operations on basket
         /*
-        $(".chk-patent-number").click(function() {
+        $(".chk-patent-number").on('click', function() {
             var patent_number = this.value;
             if (this.checked)
                 _this.basketModel.add(patent_number);
@@ -1224,20 +1234,20 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         */
 
         // handle button clicks by add-/remove-operations on basket
-        $(".add-patent-number").unbind('click');
-        $(".add-patent-number").click(function() {
+        $(".add-patent-number").off('click');
+        $(".add-patent-number").on('click', function() {
             var patent_number = $(this).data('patent-number');
             _this.basketModel.add(patent_number);
         });
-        $(".remove-patent-number").unbind('click');
-        $(".remove-patent-number").click(function() {
+        $(".remove-patent-number").off('click');
+        $(".remove-patent-number").on('click', function() {
             var patent_number = $(this).data('patent-number');
             _this.basketModel.remove(patent_number);
         });
 
         // handle "add all documents"
-        $("#basket-add-all-documents").unbind('click');
-        $("#basket-add-all-documents").click(function() {
+        $("#basket-add-all-documents").off('click');
+        $("#basket-add-all-documents").on('click', function() {
             // collect all document numbers
             _this.documents.each(function(document) {
                 var number = document.get_patent_number();
@@ -1285,7 +1295,8 @@ NavigatorApp = Backbone.Marionette.Application.extend({
     document_seen_twice: function(document_number) {
 
         if (!this.basketModel) {
-            throw new BasketError('Basket not active');
+            // TODO: Throw a BasketError here
+            throw new Error('Basket not active');
         }
 
         // skip saving as "seen" if already in basket
@@ -1310,7 +1321,8 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         }
 
         if (!this.basketModel) {
-            throw new BasketError('Basket not active');
+            // TODO: Throw a BasketError here
+            throw new Error('Basket not active');
         }
 
         // skip saving as "seen" if already in basket

@@ -21,13 +21,14 @@ AbstractResultFetcher = Marionette.Controller.extend({
         var _this = this;
         log('url:', url);
         $.ajax({url: url, async: true})
-            .success(function(payload) {
+            .then(function(payload) {
                 if (payload) {
                     deferred.resolve(payload);
                 } else {
                     deferred.reject('Empty response');
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
+                console.warn('Error with AbstractResultFetcher:', error);
                 deferred.reject(JSON.stringify(error));
             });
         return deferred;
@@ -161,8 +162,8 @@ navigatorApp.addInitializer(function(options) {
         var module_available = navigatorApp.user_has_module(module_name);
 
         // wire fetch-results buttons
-        $('#analytics-family-overview-button').unbind('click');
-        $('#analytics-family-overview-button').click(function() {
+        $('#analytics-family-overview-button').off('click');
+        $('#analytics-family-overview-button').on('click', function() {
             if (module_available) {
                 make_modal_view(ResultAnalyticsFamilyView, _this.metadata);
             } else {
@@ -170,8 +171,8 @@ navigatorApp.addInitializer(function(options) {
             }
         });
 
-        $('.analytics-daterange-button').unbind('click');
-        $('.analytics-daterange-button').click(function() {
+        $('.analytics-daterange-button').off('click');
+        $('.analytics-daterange-button').on('click', function() {
             if (module_available) {
                 make_modal_view(ResultAnalyticsDaterangeView, _this.metadata, {kind: $(this).data('kind')});
             } else {
@@ -179,8 +180,8 @@ navigatorApp.addInitializer(function(options) {
             }
         });
 
-        $('.analytics-applicants-distinct-button').unbind('click');
-        $('.analytics-applicants-distinct-button').click(function() {
+        $('.analytics-applicants-distinct-button').off('click');
+        $('.analytics-applicants-distinct-button').on('click', function() {
             if (module_available) {
                 make_modal_view(ResultAnalyticsDistinctApplicantView, _this.metadata);
             } else {

@@ -177,8 +177,8 @@ PermalinkPlugin = Marionette.Controller.extend({
                 $(tip).find('#permalink-uri-textinput').val(uri);
 
                 // open permalink on click
-                $(tip).find('#permalink-open').unbind('click');
-                $(tip).find('#permalink-open').click(function(e) {
+                $(tip).find('#permalink-open').off('click');
+                $(tip).find('#permalink-open').on('click', function(e) {
                     e.preventDefault();
                     window.open(uri);
                     $(element).popover('toggle');
@@ -198,7 +198,7 @@ PermalinkPlugin = Marionette.Controller.extend({
             }
 
             // focus permalink text input element and select text
-            $(tip).find('#permalink-uri-textinput').select();
+            $(tip).find('#permalink-uri-textinput').trigger('select');
 
             // show ttl message if desired
             if (options.ttl) {

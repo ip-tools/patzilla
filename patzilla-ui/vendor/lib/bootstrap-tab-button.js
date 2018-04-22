@@ -51,7 +51,14 @@
 
             $href = $(href)
 
-            this.activate($this.parent('button'), $ul)
+            // Activate button
+            // jQuery 1.x
+            //this.activate($this.parent('button'), $ul);
+
+            // jQuery 3.x
+            this.activate($this, $ul);
+
+            // Activate linked content element
             this.activate($href, $href.parent(), function () {
                 $this.trigger({
                     type: 'shown'

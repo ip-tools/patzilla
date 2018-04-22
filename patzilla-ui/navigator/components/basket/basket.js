@@ -40,7 +40,7 @@ BasketModel = Backbone.RelationalModel.extend({
     },
 
     initialize: function() {
-        console.log('BasketModel.initialize');
+        console.log('BasketModel.initialize', this);
 
         // backbone-relational backward-compat
         if (!this.fetchRelated) this.fetchRelated = this.getAsync;
@@ -64,10 +64,10 @@ BasketModel = Backbone.RelationalModel.extend({
         };
 
         // invalidate cache on all model change events
-        //this.bind('change', this.invalidate_cache);
-        this.bind('change:add', this.invalidate_cache);
-        this.bind('change:remove', this.invalidate_cache);
-        this.bind('change:rate', this.invalidate_cache);
+        //this.on('change', this.invalidate_cache);
+        this.on('change:add', this.invalidate_cache);
+        this.on('change:remove', this.invalidate_cache);
+        this.on('change:rate', this.invalidate_cache);
     },
 
     // initialize model from url query parameters ("numberlist")
@@ -604,7 +604,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
     },
 
     setup_ui: function() {
-        //console.log('BasketView.setup_ui');
+        console.log('BasketView.setup_ui');
 
         var _this = this;
 
@@ -626,7 +626,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         }
 
         // import clipboard content by intercepting paste event
-        $("#basket").unbind('paste').bind('paste', function(e) {
+        $("#basket").off('paste').on('paste', function(e) {
             e.preventDefault();
             var text = (e.originalEvent || e).clipboardData.getData('text');
             var entries = text.split(/[,;\r\n]/);
@@ -636,13 +636,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // basket import
-        $('#basket-import-button').unbind('click').bind('click', function(e) {
+        $('#basket-import-button').off('click').on('click', function(e) {
             _this.future_premium_feature();
             return false;
         });
 
         // review feature: trigger search from basket content
-        $('#basket-review-button').unbind('click').bind('click', function(event) {
+        $('#basket-review-button').off('click').on('click', function(event) {
             event.preventDefault();
             if (_this.check_empty({kind: 'review', icon: 'icon-indent-left', seen: false})) { return; }
 
@@ -651,13 +651,13 @@ BasketView = Backbone.Marionette.ItemView.extend({
             _this.model.review();
         });
         // disable counter buttons, required to retain popover
-        $('#basket-entry-count-button,#basket-seen-count-button').unbind('click').bind('click', function(event) {
+        $('#basket-entry-count-button,#basket-seen-count-button').off('click').on('click', function(event) {
             event.preventDefault();
             event.stopPropagation();
         });
 
         // submit selected documents to origin or 3rd-party system
-        $('#basket-submit-button').unbind('click').bind('click', function() {
+        $('#basket-submit-button').off('click').on('click', function() {
             if (_this.check_empty()) { return; }
             var numbers = _this.model.get_numbers();
             $('textarea#basket').val(numbers.join('\n'));
@@ -665,7 +665,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
 
         // Export Dossier
-        $('#dossier-export-button').unbind('click').bind('click', function(event) {
+        $('#dossier-export-button').off('click').on('click', function(event) {
 
             if (!navigatorApp.component_enabled('export')) {
                 var message = 'Export feature not enabled.';
@@ -693,22 +693,22 @@ BasketView = Backbone.Marionette.ItemView.extend({
         /*
 
         // wire display-results buttons
-        $('#share-display-rated').unbind('click');
-        $('#share-display-rated').click(function(e) {
+        $('#share-display-rated').off('click');
+        $('#share-display-rated').on('click', function(e) {
             var modal = new ModalRegion({el: '#modal-area'});
             var basket_list_view = new BasketListView({});
             modal.show(basket_list_view);
         });
-        $('#share-display-seen').unbind('click');
-        $('#share-display-seen').click(function(e) {
+        $('#share-display-seen').off('click');
+        $('#share-display-seen').on('click', function(e) {
             var modal = new ModalRegion({el: '#modal-area'});
             var basket_list_view = new BasketListView({'seen': true});
             modal.show(basket_list_view);
         });
 
         // share via mail
-        $('#share-numberlist-email').unbind('click');
-        $('#share-numberlist-email').click(function() {
+        $('#share-numberlist-email').off('click');
+        $('#share-numberlist-email').on('click', function() {
             if (_this.check_empty()) { return; }
             var params = _this.model.share_email_params();
             var mailto_link = 'mailto:?' + jQuery.param(params).replace(/\+/g, '%20');
@@ -724,8 +724,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         }, {element: $('#share-numberlist-clipboard')});
 
         // share via url
-        $('#share-numberlist-url').unbind('click');
-        $('#share-numberlist-url').click(function() {
+        $('#share-numberlist-url').off('click');
+        $('#share-numberlist-url').on('click', function() {
             if (_this.check_empty()) { return; }
             var url = navigatorApp.permalink.make_uri(_this.model.get_view_state());
             $(this).attr('target', '_blank');
@@ -733,8 +733,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // share via url, with ttl
-        $('#share-numberlist-url-ttl').unbind('click');
-        $('#share-numberlist-url-ttl').click(function(e) {
+        $('#share-numberlist-url-ttl').off('click');
+        $('#share-numberlist-url-ttl').on('click', function(e) {
 
             e.preventDefault();
             e.stopPropagation();
@@ -763,8 +763,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // download zip archive of pdf documents
-        $('#download-documents-pdf-archive').unbind('click');
-        $('#download-documents-pdf-archive').click(function() {
+        $('#download-documents-pdf-archive').off('click');
+        $('#download-documents-pdf-archive').on('click', function() {
             if (_this.check_empty()) { return; }
             var numberlist = navigatorApp.basketModel.get_numbers();
             //log('numberlist:', numberlist);
@@ -775,15 +775,15 @@ BasketView = Backbone.Marionette.ItemView.extend({
         */
 
         // share via document transfer
-        $('#share-documents-transfer').unbind('click');
-        $('#share-documents-transfer').click(function() {
+        $('#share-documents-transfer').off('click');
+        $('#share-documents-transfer').on('click', function() {
             _this.future_premium_feature();
         });
 
 
         // simple permalink
-        $('.permalink-review-liveview').unbind('click');
-        $('.permalink-review-liveview').click(function(e) {
+        $('.permalink-review-liveview').off('click');
+        $('.permalink-review-liveview').on('click', function(e) {
 
             e.preventDefault();
             e.stopPropagation();
@@ -808,8 +808,8 @@ BasketView = Backbone.Marionette.ItemView.extend({
         });
 
         // signed permalink with time-to-live
-        $('.permalink-review-liveview-ttl').unbind('click');
-        $('.permalink-review-liveview-ttl').click(function(e) {
+        $('.permalink-review-liveview-ttl').off('click');
+        $('.permalink-review-liveview-ttl').on('click', function(e) {
 
             e.preventDefault();
             e.stopPropagation();
@@ -892,6 +892,9 @@ BasketController = Marionette.Controller.extend({
     link_document: function(entry, number) {
 
         //log('link_document', entry, number);
+
+        // Update basket view
+        navigatorApp.basketView.render();
 
         // why do we have to access the global object here?
         // maybe because of the event machinery which dispatches to us?

@@ -98,8 +98,8 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
         var _this = this;
 
         // "save" button should save all models and close modal dialog
-        $('#keyword-editor-save-button').unbind('click');
-        $('#keyword-editor-save-button').click(function() {
+        $('#keyword-editor-save-button').off('click');
+        $('#keyword-editor-save-button').on('click', function() {
             $.when(_this.save_models()).then(function() {
                 navigatorApp.keywords.keyword_modal.close();
                 navigatorApp.keywords.unhighlight();
@@ -214,8 +214,8 @@ KeywordsController = Marionette.Controller.extend({
 
         var _this = this;
 
-        $('.action-keyword-editor').unbind('click');
-        $('.action-keyword-editor').click(function() {
+        $('.action-keyword-editor').off('click');
+        $('.action-keyword-editor').on('click', function() {
             if (_this.module_available) {
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);

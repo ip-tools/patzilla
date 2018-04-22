@@ -525,7 +525,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
 
         var url = _.template('/api/ifi/download/<%= document_number %>.json')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
-            .success(function(response) {
+            .then(function(response) {
                 if (response) {
                     log('response:', response);
 
@@ -555,7 +555,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     };
                     deferred.resolve(data, _this.get_datasource_label());
                 }
-            }).error(function(error) {
+            }).catch(function(error) {
                 console.warn('Error while fetching claims from IFI Claims for', _this.document_number, error);
                 deferred.reject({html: 'Error fetching data'});
             });
@@ -630,7 +630,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
 
         var url = _.template('/api/ifi/download/<%= document_number %>.json')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
-            .success(function(response) {
+            .then(function(response) {
                 if (response) {
                     //log('response:', response);
 
@@ -663,7 +663,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     deferred.resolve(data, _this.get_datasource_label());
                 }
 
-            }).error(function(error) {
+            }).catch(function(error) {
                 console.warn('Error while fetching description from IFI Claims for', _this.document_number, error);
                 deferred.reject({html: 'Error fetching data'});
             });

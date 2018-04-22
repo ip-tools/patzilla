@@ -85,8 +85,8 @@ navigatorApp.addInitializer(function(options) {
         var _this = this;
 
         // wire fetch-results buttons
-        $('#fetch-result-numbers-action').unbind('click');
-        $('#fetch-result-numbers-action').click(function(e) {
+        $('#fetch-result-numbers-action').off('click');
+        $('#fetch-result-numbers-action').on('click', function(e) {
 
             // Reset all filters
             _this.metadata.set('filter', {});
@@ -103,8 +103,8 @@ navigatorApp.addInitializer(function(options) {
             modal.show(result_numbers_view);
         });
 
-        $('#fetch-result-numbers-no-kindcodes-action').unbind('click');
-        $('#fetch-result-numbers-no-kindcodes-action').click(function(e) {
+        $('#fetch-result-numbers-no-kindcodes-action').off('click');
+        $('#fetch-result-numbers-no-kindcodes-action').on('click', function(e) {
 
             // Reset all filters
             // Set signal to apply filter "strip_kindcodes" on response

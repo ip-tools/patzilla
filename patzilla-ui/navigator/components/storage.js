@@ -116,7 +116,7 @@ StoragePlugin = Marionette.Controller.extend({
             }
 
             try {
-                backup = jQuery.parseJSON(payload);
+                backup = JSON.parse(payload);
 
             } catch(error) {
                 var msg = error.message;
@@ -229,14 +229,14 @@ StoragePlugin = Marionette.Controller.extend({
         var _this = this;
 
         // Export database
-        $('#data-export-button').unbind('click');
+        $('#data-export-button').off('click');
         $('#data-export-button').on('click', function(e) {
             _this.dbexport($(this).parent());
         });
 
         // Import database
         // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
-        $('#data-import-file').unbind('change');
+        $('#data-import-file').off('change');
         $('#data-import-file').on('change', function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -283,7 +283,7 @@ StoragePlugin = Marionette.Controller.extend({
 
         });
 
-        $('#data-import-button').unbind('click');
+        $('#data-import-button').off('click');
         $('#data-import-button').on('click', function(e) {
 
             navigatorApp.ui.confirm(
@@ -295,7 +295,7 @@ StoragePlugin = Marionette.Controller.extend({
                 'Continue import operation?').then(function() {
 
                 // Event handler for "import ready"
-                $('#data-import-file').unbind('import:ready');
+                $('#data-import-file').off('import:ready');
                 $('#data-import-file').on('import:ready', function(e) {
                     setTimeout(function() {
                         window.location.reload();
@@ -304,7 +304,7 @@ StoragePlugin = Marionette.Controller.extend({
 
                 // Start import by displaying file dialog
                 navigatorApp.project_deactivate();
-                $('#data-import-file').click();
+                $('#data-import-file').trigger('click');
 
             });
 
@@ -312,8 +312,8 @@ StoragePlugin = Marionette.Controller.extend({
 
 
         // Drop database
-        $('#database-wipe-button').unbind();
-        $('#database-wipe-button').click(function(e) {
+        $('#database-wipe-button').off();
+        $('#database-wipe-button').on('click', function(e) {
 
             navigatorApp.ui.confirm(
                 'You requested to wipe the whole local database including custom keywords. ' +

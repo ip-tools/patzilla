@@ -26,30 +26,33 @@ WaypointController = Marionette.Controller.extend({
             });
             $(this).prop('sticky', sticky);
         });
-        log('waypoint:', $('.ops-collection-entry-heading')[0]);
+        //log('waypoint:', $('.ops-collection-entry-heading')[0]);
 
         Waypoint.destroyAll();
 
         var _this = this;
         $('.ops-collection-entry-heading').each(function() {
 
+            var _element = this;
+            //log('_element:', _element);
 
             //log('new Waypoint.Inview on:', this);
             var inview = new Waypoint.Inview({
-                element: this,
+                element: _element,
                 enter: function(direction) {
+
+                    log('waypoint: Event "enter" triggered with direction "' + direction + '"');
 
                     var event = _this.build_event(this);
                     _this.emit_event('document:enter', event);
 
-                    //log('waypoint: Enter triggered with direction ' + direction + ':', this);
                     if (direction == 'up') {
 
                         _this.emit_event('document:enter:up', event);
 
                         // TODO: for letting the drawing follow the text
                         /*
-                         var container = $(this.element).closest('.ops-collection-entry')
+                         var container = $(_element.element).closest('.ops-collection-entry')
                          var elem = container.find('.ops-collection-entry-heading-second');
                          elem.hide();
                          */
@@ -86,7 +89,7 @@ WaypointController = Marionette.Controller.extend({
                             }
                             current_header = null;
 
-                            var container = $(this.element).closest('.ops-collection-entry')
+                            var container = $(_element.element).closest('.ops-collection-entry')
                             var elem = container.find('.ops-collection-entry-heading-second');
                             log('sticky elem:', elem);
                             //elem.show();
@@ -103,7 +106,7 @@ WaypointController = Marionette.Controller.extend({
                     }
                 },
                 entered: function(direction) {
-                    //log('waypoint: Entered triggered with direction ' + direction)
+                    //log('waypoint: Event "entered" triggered with direction "' + direction + '"');
 
                     var event = _this.build_event(this);
                     _this.emit_event('document:entered', event);
@@ -117,7 +120,7 @@ WaypointController = Marionette.Controller.extend({
                     // TODO: for letting the drawing follow the text
                     /*
                     if (direction == 'down') {
-                        var container = $(this.element).closest('.ops-collection-entry')
+                        var container = $(_element.element).closest('.ops-collection-entry')
                         var elem = container.find('.ops-collection-entry-heading-second');
                         elem.show();
                         current_header = elem;
