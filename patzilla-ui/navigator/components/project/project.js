@@ -458,7 +458,8 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
         var project_links = container.find('a');
         project_links.off('click');
         project_links.on('click', function() {
-            var projectname = $(this).data('value');
+            var projectname = $(this).data('value').toString();
+            console.info('Switching to project:', projectname);
             navigatorApp.trigger('project:load', projectname);
         });
 

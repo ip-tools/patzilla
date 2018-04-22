@@ -13,6 +13,7 @@ development
 - [ui] Use Babel loader for webpack
 - [doc] Improve installation documentation
 - [mw] Direct access to OPS 3.1 API has been disabled, so stop linking to it
+- [ui] Fix: When creating new project, convert project name to string
 
 2018-03-17 0.150.0
 ==================
