@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2011,2014,2015,2017,2018 Andreas Motl <andreas.motl@elmyra.de>
+# (c) 2011-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 import sys
 import attr
@@ -114,10 +114,10 @@ class DpmaRegisterAccess:
             return document
 
     @cache.cache_on_arguments()
-    def fetch_st36xml(self, patent):
+    def fetch_st36xml(self, patent, language='en'):
 
         # Fetch main HTML resource of document
-        result = self.search_and_fetch(patent)
+        result = self.search_and_fetch(patent, language)
 
         if not result:
             logger.warning('Could not find document {}'.format(patent))
@@ -132,10 +132,10 @@ class DpmaRegisterAccess:
         return self.browser.open(st36xml_href)
 
     @cache.cache_on_arguments()
-    def fetch_pdf(self, patent):
+    def fetch_pdf(self, patent, language='en'):
 
         # Fetch main HTML resource of document
-        result = self.search_and_fetch(patent)
+        result = self.search_and_fetch(patent, language)
 
         if not result:
             logger.warning('Could not find document {}'.format(patent))
@@ -715,7 +715,7 @@ def run():
         document_number = options['<document-number>']
         output_format = options['--format']
         try:
-            payload = access_register(document_number, output_format)
+            payload = access_register(document_number, output_format, 'en')
             print(payload)
         except NoResults as ex:
             sys.exit(1)
@@ -726,16 +726,16 @@ def access_register(document_number, output_format, language='en'):
     register = DpmaRegisterAccess()
 
     if output_format == 'xml':
-        response = register.fetch_st36xml(document_number)
+        response = register.fetch_st36xml(document_number, language)
         payload = response.content
 
     elif output_format == 'json-raw':
-        response = register.fetch_st36xml(document_number)
+        response = register.fetch_st36xml(document_number, language)
         document = DpmaRegisterXmlDocument(response.content).decode_badgerfish()
         payload = json.dumps(document._data, indent=4)
 
     elif output_format == 'json':
-        response = register.fetch_st36xml(document_number)
+        response = register.fetch_st36xml(document_number, language)
         document = DpmaRegisterXmlDocument(response.content).decode()
         payload = json.dumps(document.asdict(), indent=4)
 
@@ -750,7 +750,7 @@ def access_register(document_number, output_format, language='en'):
         payload = document.html_compact()
 
     elif output_format == 'pdf':
-        response = register.fetch_pdf(document_number)
+        response = register.fetch_pdf(document_number, language)
         payload = response.content
 
     elif output_format == 'url':
