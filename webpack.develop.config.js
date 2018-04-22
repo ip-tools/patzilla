@@ -5,8 +5,16 @@ const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
 
 // https://www.npmjs.com/package/sourcemapped-stacktrace
-config.devtool = "source-map";
+// https://webpack.js.org/configuration/devtool/
+// https://webpack.js.org/plugins/source-map-dev-tool-plugin/
+//config.devtool = 'cheap-source-map';
+config.devtool = 'cheap-module-eval-source-map',
+//config.devtool = 'eval-cheap-module-source-map',
+//config.devtool = 'cheap-module-inline-source-map',
 
+// Apply code splitting
+// https://webpack.js.org/guides/code-splitting/
+// https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
 config.optimization.splitChunks = {
     cacheGroups: {
         commons: {

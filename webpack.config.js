@@ -13,12 +13,6 @@ const config = {
 
     cache: true,
 
-    //devtool: "source-map",
-    //devtool: "cheap-source-map",
-    //devtool: 'cheap-module-eval-source-map',
-    //devtool: 'eval-cheap-module-source-map',
-    //devtool: 'cheap-module-inline-source-map',
-
     context: __contextpath,
 
     entry: {
@@ -27,6 +21,30 @@ const config = {
         'app-help':       [path.resolve(__ui, 'navigator', 'app', 'help')],
         'app-login':      [path.resolve(__ui, 'common', 'login')],
         'app-admin':      [path.resolve(__ui, 'common', 'admin')],
+    },
+
+    output: {
+        path: path.resolve(__contextpath, 'assets'),
+        filename: '[name].bundle.js',
+        publicPath: '/static/assets/',
+    },
+
+    optimization: {
+        usedExports: true,
+
+        // https://webpack.js.org/plugins/module-concatenation-plugin/
+        //concatenateModules: false,
+
+        // To keep filename consistent between different modes (for example building only)
+        occurrenceOrder: true
+    },
+
+    // Configure performance budget
+    // https://webpack.js.org/configuration/performance/
+    // https://github.com/webpack/webpack/issues/3486
+    // https://github.com/webpack/webpack/issues/3216
+    performance: {
+        //hints: false,
     },
 
     amd: {
@@ -39,14 +57,49 @@ const config = {
         'backbone-relational': true,
     },
 
-    output: {
-        path: path.resolve(__contextpath, 'assets'),
-        filename: '[name].bundle.js',
-        publicPath: '/static/assets/',
-    },
+    plugins: [
+
+        // https://webpack.js.org/plugins/provide-plugin/
+        new webpack.ProvidePlugin({
+            '$': 'jquery',
+            'jQuery': 'jquery',
+            '_': 'underscore',
+            '_.str': 'underscore.string',
+            '_.string': 'underscore.string',
+            'moment': 'moment',
+            'Humanize': 'humanize-plus',
+            'Backbone': 'backbone',
+            'Marionette': 'backbone.marionette',
+            'Backbone.Marionette': 'backbone.marionette',
+        }),
+
+        new webpack.BannerPlugin('\nLicensed to ACME, Inc. under one\nor more contributor license agreements.  See the NOTICE file\ndistributed with this work for additional information\nregarding copyright ownership.  ACME, Inc. licenses this file\nto you under the Apache License, Version 2.0 (the\n"License"); you may not use this file except in compliance\nwith the License.  You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n'),
+
+    ],
 
     module: {
         rules: [
+
+            // Use Babel for loading own code
+            // https://www.npmjs.com/package/babel-loader
+            {
+                test: /\.js$/,
+                exclude: /(node_modules|bower_components)/,
+                use: [
+                    {
+                        loader: 'babel-loader',
+                        options: {
+                            cacheDirectory: true,
+                            presets: [
+                                // https://babeljs.io/docs/plugins/preset-env/
+                                ['env', { modules: false, debug: true }],
+                            ],
+                            //plugins: ['transform-runtime'],
+                        }
+                    },
+                ]
+            },
+
             // Do these to expose their symbols to the template namespace
             {
                 test: require.resolve('jquery'),
@@ -61,6 +114,13 @@ const config = {
                     },
                 ],
             },
+
+            // https://github.com/jquery/jquery-migrate/issues/273
+            {
+                test: require.resolve("jquery-migrate"),
+                use: "imports-loader?define=>false",
+            },
+
             {
                 test: require.resolve('humanize-plus'),
                 use: [
@@ -100,18 +160,10 @@ const config = {
             {
                 test: /\.modernizrrc(\.json)?$/,
                 loader: "modernizr-loader!json-loader"
-            }
+            },
 
             /*
              {
-                 test: /\.js$/,
-                 exclude: /node_modules/,
-                 use: [
-                     { loader: 'ng-annotate-loader', options: { es6: true } },
-                     { loader: 'babel-loader', options: { presets: ['env'] } },
-                 ]
-             },
-            {
                 test: /\.(csv|tsv)$/,
                 use: [
                     'csv-loader'
@@ -188,26 +240,6 @@ const config = {
 
         }
     },
-
-    plugins: [
-
-        // https://webpack.js.org/plugins/provide-plugin/
-        new webpack.ProvidePlugin({
-            '$': 'jquery',
-            'jQuery': 'jquery',
-            '_': 'underscore',
-            '_.str': 'underscore.string',
-            '_.string': 'underscore.string',
-            'moment': 'moment',
-            'Humanize': 'humanize-plus',
-            'Backbone': 'backbone',
-            'Marionette': 'backbone.marionette',
-            'Backbone.Marionette': 'backbone.marionette',
-        }),
-
-    ],
-
-    optimization: {},
 
 };
 

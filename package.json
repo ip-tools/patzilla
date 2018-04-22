@@ -29,14 +29,15 @@
     "url": "https://github.com/ip-tools/ip-navigator/issues"
   },
   "scripts": {
-    "watch": "time webpack --define process.env.NODE_ENV='development' --config=webpack.develop.config.js --watch --hot",
-    "build": "webpack --define process.env.NODE_ENV='production' --config=webpack.develop.config.js --display detailed --display-error-details --progress",
-    "release": "webpack --define process.env.NODE_ENV='production' --config=webpack.release.config.js --display detailed --display-error-details --progress"
+    "watch": "webpack --debug --output-pathinfo --mode=development --config=webpack.develop.config.js --watch --hot",
+    "build": "webpack --debug --output-pathinfo --mode=development --config=webpack.develop.config.js --display detailed --display-error-details --progress",
+    "release": "webpack --mode=production --config=webpack.release.config.js --display detailed --display-error-details --progress"
   },
   "devDependencies": {
     "autonumeric": "2.0.13",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
     "backbone": "1.0.0",
     "backbone.marionette": "1.1.0",

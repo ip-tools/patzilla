@@ -10,8 +10,13 @@ const CompressionPlugin = require("compression-webpack-plugin");
 config.output.filename = '[name].bundle.min.js';
 
 // https://www.npmjs.com/package/sourcemapped-stacktrace
+// https://webpack.js.org/configuration/devtool/
+// https://webpack.js.org/plugins/source-map-dev-tool-plugin/
 config.devtool = "source-map";
 
+// Apply code splitting
+// https://webpack.js.org/guides/code-splitting/
+// https://gist.github.com/sokra/1522d586b8e5c0f5072d7565c2bee693
 config.optimization.splitChunks = {
     cacheGroups: {
         commons: {
@@ -27,7 +32,10 @@ config.optimization.splitChunks = {
 
 config.plugins.push(
 
+    // TODO: Serve static .gz files via Nginx
     // https://github.com/webpack-contrib/compression-webpack-plugin
+    // https://github.com/zeit/next.js/issues/1446#issuecomment-317359011
+    // https://medium.com/smartboxtv-engineering/optimizing-loading-time-for-big-react-apps-cf13bbf63c57
     /*
     new CompressionPlugin({
         cache: true,
