@@ -16,6 +16,7 @@ development
 - [ui] Fix: When creating new project, convert project name to string
 - [mw] Improve DpmaRegisterAccess re. language selection
 - [mw] Improve image conversion by using the Pillow library
+- [mw] Improve downtime signalling for EPO OPS API
 
 2018-03-17 0.150.0
 ==================

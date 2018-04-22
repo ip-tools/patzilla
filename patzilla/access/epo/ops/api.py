@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import time
 import logging
 from pprint import  pformat
@@ -720,13 +720,14 @@ def handle_error(response, location):
 
     # Compute name
     name = 'http-response'
-    if 'CLIENT.CQL' in response_dict['content']:
+    body = response_dict['content']
+    if 'CLIENT.CQL' in body:
         name = 'expression'
 
-    if 'SERVER.DomainAccess' in response_dict['content']:
+    if 'SERVER.DomainAccess' in body or 'EpoqueCommand short-circuited and fallback disabled' in body:
         response_dict['content'] += \
             "<br/><br/>" \
-            "The OPS API might be in maintenance mode, this happens regularly at 03:00 hours UTC (05:00 hours CEST)<br/>" \
+            "The OPS API might be in maintenance mode, this happens regularly at 05:00 hours CET or CEST<br/>" \
             "and usually does not take longer than 30 minutes."
 
     request.errors.add(location, name, response_dict)
