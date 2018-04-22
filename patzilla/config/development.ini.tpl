@@ -282,7 +282,7 @@ level = NOTSET
 formatter = generic
 
 [formatter_generic]
-format = %(asctime)s %(levelname)-5.5s [%(name)s][%(threadName)s] %(message)s
+format = %(asctime)s %(levelname)-8.8s [%(name)-40s][%(threadName)s] %(message)s
 
 
 # ---------------------------

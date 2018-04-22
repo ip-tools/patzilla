@@ -27,7 +27,7 @@ def run():
 
     Configuration file options:
       make-config               Will dump configuration file content to STDOUT,
-                                suitable for piping into a configuration file
+                                suitable for redirecting into a configuration file
       <config-kind>             One of "development" or "production"
 
     Miscellaneous options:

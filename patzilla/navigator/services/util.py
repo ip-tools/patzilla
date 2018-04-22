@@ -305,7 +305,7 @@ def export_util_handler(request):
 
         except Exception as ex:
             message = u'Exporting format "{format}" failed.'.format(format=output_format)
-            log.warning('{message}. Exception:\n{trace}'.format(message=message, trace=exception_traceback()))
+            log.error('{message}. Exception:\n{trace}'.format(message=message, trace=exception_traceback()))
             return HTTPServerError(message)
 
         # Send HTTP response
