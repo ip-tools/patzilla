@@ -99,6 +99,8 @@ requires = [
     'xlrd==0.9.3',              # 1.1.0
     'XlsxWriter==0.9.3',        # 1.0.2
 
+    # Data conversion
+    'Pillow==5.1.0',
 
     # ----------------------------------------------
     #   Program flow
@@ -108,10 +110,11 @@ requires = [
 
 
     # ----------------------------------------------
-    #   Console interface
+    #   Console and system interfaces
     # ----------------------------------------------
     'docopt==0.6.2',
     'envoy==0.0.3',
+    'where==1.0.2',
 
 ]
 

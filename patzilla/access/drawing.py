@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+from six import BytesIO
 from beaker.cache import cache_region
 from pyramid.httpexceptions import HTTPNotFound
+
 from patzilla.util.numbers.common import split_patent_number
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.util.image.convert import to_png
@@ -50,7 +52,7 @@ def get_drawing_png(document, page, kind):
         raise HTTPNotFound(msg)
 
     # 4. Convert image from TIFF to PNG format
-    payload = to_png(payload, format='tif')
+    payload = to_png(BytesIO(payload))
 
     return payload
 
