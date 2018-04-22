@@ -12,6 +12,7 @@ development
 - [ui] Upgrade to jQuery 3.3.1, modernizr 3.6.0, moment 2.22.1, select2 3.5.1, url-join 2.0.5 and waypoints 4.0.1
 - [ui] Use Babel loader for webpack
 - [doc] Improve installation documentation
+- [mw] Direct access to OPS 3.1 API has been disabled, so stop linking to it
 
 2018-03-17 0.150.0
 ==================
