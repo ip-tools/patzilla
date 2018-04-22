@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2017 Andreas Motl, Elmyra UG
-import sys
+# (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+import os
 import json
 import logging
 import requests
@@ -257,21 +257,23 @@ if __name__ == '__main__':
     ========
     ::
 
-        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini
-        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini | jq --raw-output '.xml'
-        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini | jq .
-        python patzilla/access/dpma/depatisconnect.py patzilla/config/development-local.ini | jq --raw-output '.xml' | xmllint --format -
+        export PATZILLA_CONFIG=patzilla/config/development-local.ini
+
+        python patzilla/access/dpma/depatisconnect.py
+        python patzilla/access/dpma/depatisconnect.py | jq --raw-output '.xml'
+        python patzilla/access/dpma/depatisconnect.py | jq .
+        python patzilla/access/dpma/depatisconnect.py | jq --raw-output '.xml' | xmllint --format -
     """
 
     from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
-    configfile = sys.argv[1]
+    configfile = os.environ['PATZILLA_CONFIG']
 
     env = setup_commandline_pyramid(configfile)
     logger = logging.getLogger(__name__)
 
     # Populate archive_service_baseurl again because "includeme" runs in a different thread
     registry = env['registry']
-    archive_service_baseurl = registry.application_settings.datasource_depatisconnect.api_uri
+    archive_service_baseurl = registry.datasource_settings.datasource.depatisconnect.api_uri
     if archive_service_baseurl.startswith('https'):
         use_https = True
 
@@ -286,5 +288,8 @@ if __name__ == '__main__':
     #print depatisconnect_claims('US2014250599A1')
     response = depatisconnect_claims('US2014339530A1')
     #response = depatisconnect_claims('DE102006019883A1')
+
+    # Failed on 2018-04-23
+    #response = depatisconnect_claims('USD813591S')
 
     print json.dumps(response)
