@@ -17,6 +17,7 @@ development
 - [mw] Improve DpmaRegisterAccess re. language selection
 - [mw] Improve image conversion by using the Pillow library
 - [mw] Improve downtime signalling for EPO OPS API
+- [mw] Improve report generation with ``unoconv``
 
 2018-03-17 0.150.0
 ==================

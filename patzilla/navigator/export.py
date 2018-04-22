@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2016 Andreas Motl, Elmyra UG
+# (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import os
 import json
 import types
@@ -8,6 +8,7 @@ import logging
 import pandas
 import numpy
 import html2text
+import where
 import envoy
 import shutil
 import tempfile
@@ -683,13 +684,14 @@ class DossierXlsx(Dossier):
             payload = self.create()
 
         # Save to temporary file
-        xlsx_file = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=True)
+        xlsx_file = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False)
         xlsx_file.write(payload)
         xlsx_file.flush()
 
         # Create temporary path for PDF conversion
-        pdf_path = tempfile.mkdtemp()
+        #pdf_path = tempfile.mkdtemp()
         #pdf_path = os.path.dirname(xlsx_file.name)
+        pdf_path = xlsx_file.name.replace('.xlsx', '.pdf')
 
         # Run conversion command ("unoconv", based on Open Office)
         # "aptitude install unoconv" should get you started
@@ -709,9 +711,10 @@ class DossierXlsx(Dossier):
         log.info('STDERR:\n{}'.format(process.std_err))
 
         if process.status_code == 0:
-            pdf_name = os.path.join(pdf_path, os.path.basename(xlsx_file.name).replace('.xlsx', '.pdf'))
-            payload = file(pdf_name, 'r').read()
-            shutil.rmtree(pdf_path)
+            #pdf_name = os.path.join(pdf_path, os.path.basename(xlsx_file.name).replace('.xlsx', '.pdf'))
+            payload = file(pdf_path, 'r').read()
+            #shutil.rmtree(pdf_path)
+            os.unlink(pdf_path)
             return payload
         else:
             log.error('XLSX->PDF conversion failed, status={status}, command={command}. Error:\n{error}'.format(
@@ -721,12 +724,17 @@ class DossierXlsx(Dossier):
     @staticmethod
     def find_unoconv():
         # Debian: aptitude install unoconv
-        # Mac OS X: YMMV
+        # Mac OS X: brew install unoconv
         # TODO: Make unoconv configurable via ini file
-        programs = ['/Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv', '/usr/bin/unoconv']
-        for program in programs:
-            if os.path.isfile(program):
-                return program
+        candidates = [
+            # LibreOffice 4.x on Mac OSX 10.7, YMMV
+            '/Applications/LibreOffice.app/Contents/program/LibreOfficePython.framework/bin/unoconv',
+            '/usr/bin/unoconv',
+        ]
+        candidates += where.where('unoconv')
+        for candidate in candidates:
+            if os.path.isfile(candidate):
+                return candidate
 
 class ReportMetadata(OrderedDict):
 

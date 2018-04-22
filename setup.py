@@ -101,6 +101,8 @@ requires = [
 
     # Data conversion
     'Pillow==5.1.0',
+    #'unoconv==0.8.2',          # Does not work from within virtualenv
+
 
     # ----------------------------------------------
     #   Program flow
@@ -188,6 +190,7 @@ setup(name='patzilla',
       },
       dependency_links=[
           #'https://github.com/MechanicalSoup/MechanicalSoup/archive/master.tar.gz#egg=MechanicalSoup-1.0.0-dev',
+          #'https://github.com/dagwieers/unoconv/archive/master.tar.gz#egg=unoconv-0.8.2',
       ],
 
       entry_points={
