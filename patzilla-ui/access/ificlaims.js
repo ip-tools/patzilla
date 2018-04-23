@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2015-2017 Andreas Motl, Elmyra UG
+// (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('./base.js');
 require('./util.js');
 
@@ -503,12 +503,12 @@ IFIClaimsFulltext = Marionette.Controller.extend({
             {key: 'summary-of-invention.tech-problem', label: 'Summary of invention » Technological problem' },
             {key: 'summary-of-invention.tech-solution', label: 'Summary of invention » Technological solution' },
             {key: 'summary-of-invention.advantageous-effects', label: 'Summary of invention » Advantageous effects' },
-            {key: 'description-of-drawings', original_label: 'Specification attached drawing', label: 'Description of drawings' },
             {key: 'description-of-embodiments', label: 'Description of embodiments' },
             {key: 'description-of-embodiments.embodiments-example', label: 'Examples of embodiments' },
             {key: 'industrial-applicability', label: 'Industrial applicability' },
             {key: 'reference-signs-list', label: 'Reference signs' },
             {key: 'disclosure', original_label: 'The content of invention', label: 'Content of invention' },
+            {key: 'description-of-drawings', original_label: 'Specification attached drawing', label: 'Description of drawings' },
             {key: 'mode-for-invention', label: 'Specific implementing manner' },
         ];
 
@@ -532,7 +532,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     var document = response['patent-document'];
 
                     if (!document.claims) {
-                        deferred.reject({html: 'No data available'});
+                        deferred.reject({html: 'No claims available for ' + _this.document_number});
                         return deferred.promise();
                     }
 
@@ -637,7 +637,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     var document = response['patent-document'];
 
                     if (!document.description) {
-                        deferred.reject({html: 'No data available'});
+                        deferred.reject({html: 'No description available for ' + _this.document_number});
                         return deferred.promise();
                     }
 

@@ -91,8 +91,9 @@ def ificlaims_download_handler(request):
         return response.payload
 
     else:
-
-        raise HTTPNotFound("Resource '%s' with format='%s' not found" % (resource, format))
+        msg = "Resource '%s' with format='%s' not found" % (resource, format)
+        log.warning(msg)
+        raise HTTPNotFound(msg)
 
 
 @ificlaims_deliver_service.get(renderer='null')

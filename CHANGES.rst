@@ -19,6 +19,7 @@ development
 - [mw] Improve downtime signalling for EPO OPS API
 - [mw] Improve report generation with ``unoconv``
 - [license] Officially upgrade to EUPL 1.2
+- [ui] Improve full text display for IFI Claims
 
 2018-03-17 0.150.0
 ==================
