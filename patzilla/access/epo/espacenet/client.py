@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 import requests
 from BeautifulSoup import BeautifulSoup
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def espacenet_fetch(document_number, section, element_id):
 
-    patent = normalize_patent(document_number, as_dict=True)
+    patent = normalize_patent(document_number, as_dict=True, provider='espacenet')
 
     # Blueprint: https://worldwide.espacenet.com/publicationDetails/biblio?CC=EP&NR=0666666&KC=A3
     url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}'
@@ -29,7 +29,7 @@ def espacenet_fetch(document_number, section, element_id):
     response = requests.get(url, headers={'User-Agent': regular_user_agent})
 
     # Debugging
-    print 'response.content:\n', response.content
+    #print 'response.content:\n', response.content
 
     message_404 = 'No section "{section}" at Espacenet for "{document_number}"'.format(**locals())
     message_fail = 'Fetching section "{section}" from Espacenet for "{document_number}" failed'.format(**locals())

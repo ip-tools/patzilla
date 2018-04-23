@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2017 Andreas Motl <andreas@ip-tools.org>
+# (c) 2017 Andreas Motl <andreas.motl@ip-tools.org>
 import os
 import sys
 import csv

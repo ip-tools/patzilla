@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2007-2011,2014-2017 Andreas Motl <andreas.motl@elmyra.de>
+# (c) 2007-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 import types
 from copy import copy
@@ -12,7 +12,7 @@ Normalize patent- and document-numbers.
 """
 
 
-def patch_patent(patent, for_ops=True):
+def patch_patent(patent, provider=None):
 
     if not patent:
         return
@@ -93,7 +93,7 @@ def patch_patent(patent, for_ops=True):
 
     # 2007-07-26: US applications are 4+7
     elif patched['country'] == 'US':
-        patched = normalize_patent_us(patched, for_ops=for_ops)
+        patched = normalize_patent_us(patched, provider=provider)
 
     # normalize wo numbers to 4+6 format
     elif patched['country'] == 'WO':
@@ -186,7 +186,10 @@ def depatisconnect_alternatives(number):
     return numbers
 
 
-def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False, for_ops=True):
+def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False, for_ops=True, provider=None):
+
+    if provider is None and for_ops is True:
+        provider = 'ops'
 
     # 1. handle patent dicts or convert (split) from string
     if isinstance(number, types.DictionaryType):
@@ -195,7 +198,7 @@ def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False,
         patent = split_patent_number(number)
 
     # 2.a. normalize patent dict
-    patent_normalized = patch_patent(patent, for_ops=for_ops)
+    patent_normalized = patch_patent(patent, provider=provider)
 
     # 2.b. apply fixes
     if fix_kindcode:
@@ -384,7 +387,7 @@ def normalize_patent_wo_pct(patent):
 
 
 
-def normalize_patent_us(patent, for_ops=True):
+def normalize_patent_us(patent, provider=None):
 
     # USPTO number formats
 
@@ -412,7 +415,7 @@ def normalize_patent_us(patent, for_ops=True):
 
     length = len(patched['number'])
 
-    if for_ops:
+    if provider == 'ops' or provider == 'espacenet':
 
         # OPS accepts US patent application publication numbers in 4+6=10 format
         # Examples: US2015322651A1, US2017250417A1, US2017285092A1
@@ -463,6 +466,14 @@ def normalize_patent_us(patent, for_ops=True):
         elif length == 9 or length == 10:
             padding = '0' * (11 - length)
             patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
+
+
+    # 2018-04-23: Espacenet changed behavior, handle edge case for
+    # USD813591S to yield https://worldwide.espacenet.com/publicationDetails/claims?CC=US&NR=D813591S&KC=S
+    if provider == 'espacenet':
+        if 'number-type' in patched:
+            if patched['number-type'] == 'D' and patched['kind'] == 'S':
+                patched['number'] += patched['kind']
 
     return patched
 
