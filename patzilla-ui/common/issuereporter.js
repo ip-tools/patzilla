@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2016-2017 Andreas Motl, Elmyra UG
+// (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
 var StackTrace = require('stacktrace-js');
 
 IssueReporter = Backbone.Model.extend({
@@ -15,7 +15,13 @@ IssueReporter = Backbone.Model.extend({
 
     setup_stacktrace_interceptor: function(options) {
 
+        console.log('IssueReporter.setup_stacktrace_interceptor');
+
         var _this = this;
+
+        // Disable jQuery exception hook
+        // https://jquery.com/upgrade-guide/3.0/#callback-exit
+        jQuery.Deferred.exceptionHook = undefined;
 
         // Register global error handler
         window.onerror = function(msg, file, line, col, error) {
@@ -56,10 +62,10 @@ IssueReporter = Backbone.Model.extend({
             // Fallback stacktrace.js error handler
             var stacktrace_errback = function(err) {
 
-                console.warn('Collecting stacktrace failed: ', err);
+                console.warn('Collecting stacktrace failed:', err);
 
                 // Send error to Javascript console
-                console.error(error);
+                console.error('Error reason:', error);
 
                 // Send report to backend
                 _this.send(report, options);
@@ -96,11 +102,11 @@ IssueReporter = Backbone.Model.extend({
             data: JSON.stringify(report.toJSON()),
             contentType: "application/json; charset=utf-8",
 
-        }).then(function(response, status, options) {
+        }).done(function(response, status, options) {
             console.log('Successfully submitted issue report to backend');
             deferred.resolve(response, status, options);
 
-        }).catch(function(xhr, settings) {
+        }).fail(function(xhr, settings) {
             console.warn('Error submitting issue report to backend');
             deferred.reject(xhr, settings);
         });

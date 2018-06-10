@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2016 Andreas Motl, Elmyra UG
+// (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery.redirect');
 var Slider = require('bootstrap-slider');
 require('bootstrap-slider/dist/css/bootstrap-slider');
@@ -107,9 +107,34 @@ ExportPlugin = Backbone.Model.extend({
             _this.update_expiration_time();
         });
 
-        // Update expiration time stuff after widget was displayed
+
+        // After "Display" page was displayed
+        $('#display-content').off('shown').on('shown', function() {
+            // setup "copy/paste" buttons
+            var notification_wrapper = dialog[0];
+            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
+                return dialog.find('#result-content-rated').val();
+            }, {element: dialog.find('#result-content-rated-copy'), wrapper: notification_wrapper});
+            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
+                return dialog.find('#result-content-seen').val();
+            }, {element: dialog.find('#result-content-seen-copy'), wrapper: notification_wrapper});
+        });
+
+        // After "Link" page was displayed
         $('#link-embed-content').off('shown').on('shown', function() {
+
+            // update expiration time
             _this.update_expiration_time();
+
+            // setup "copy/paste" buttons
+            var notification_wrapper = dialog[0];
+            navigatorApp.ui.copy_to_clipboard('text/plain', function() {
+                return dialog.find('#share-link-numberlist').val();
+            }, {element: dialog.find('#share-link-numberlist-copy'), wrapper: notification_wrapper});
+            navigatorApp.ui.copy_to_clipboard('text/plain', function() {
+                return dialog.find('#share-link-external').val();
+            }, {element: dialog.find('#share-link-external-copy'), wrapper: notification_wrapper});
+
         });
 
 
@@ -117,26 +142,6 @@ ExportPlugin = Backbone.Model.extend({
         dialog.find('#share-link-numberlist,#share-link-external').off('focus').on('focus', function(event) {
             $(this).trigger('select');
         });
-
-        // Setup "copy/paste" buttons
-        var notification_wrapper = dialog[0];
-
-        // Copy/paste links on "link-embed" screen
-        navigatorApp.ui.copy_to_clipboard('text/plain', function() {
-            return dialog.find('#share-link-numberlist').val();
-        }, {element: dialog.find('#share-link-numberlist-copy'), wrapper: notification_wrapper});
-        navigatorApp.ui.copy_to_clipboard('text/plain', function() {
-            return dialog.find('#share-link-external').val();
-        }, {element: dialog.find('#share-link-external-copy'), wrapper: notification_wrapper});
-
-        // Copy/paste document numbers on "display" screen
-        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
-            return dialog.find('#result-content-rated').val();
-        }, {element: dialog.find('#result-content-rated-copy'), wrapper: notification_wrapper});
-        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
-            return dialog.find('#result-content-seen').val();
-        }, {element: dialog.find('#result-content-seen-copy'), wrapper: notification_wrapper});
-
 
         // Setup "open link" buttons
         dialog.find('#share-link-numberlist-open').off('click').on('click', function() {

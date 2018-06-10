@@ -5,10 +5,6 @@ var urljoin = require('url-join');
 var bootbox = require('bootbox');
 var screenfull = require('screenfull');
 
-// ZeroClipboard
-var ZeroClipboard = require('zeroclipboard/dist/ZeroClipboard.js');
-ZeroClipboard.config({ swfPath: require('zeroclipboard/dist/ZeroClipboard.swf') });
-
 // NotificationFx
 require('notificationfx/css/ns-default');
 require('notificationfx/css/ns-style-attached');
@@ -140,12 +136,12 @@ UiController = Marionette.Controller.extend({
 
         $('#alert-area').empty();
         try {
-            var response = JSON.parse(xhr.responseText);
+            var response = xhr.responseJSON;
 
         // Display detailed data from XHR response
         } catch (err) {
 
-            console.error('Problem while propagating backend alerts:', err);
+            console.error('Problem while propagating backend alerts.\nError:', err, '\nResponse:', xhr.responseText);
 
             // If decoding from JSON fails, make up a JSON error in
             // cornice-compatible format from XHR response information
@@ -402,9 +398,83 @@ UiController = Marionette.Controller.extend({
         this.scroll_smooth(selector);
     },
 
+
     copy_to_clipboard: function(mimetype, payload, options) {
         options = options || {};
         var deferred = $.Deferred();
+
+        var element = options.element;
+
+        //log('copy_to_clipboard: mimetype, payload, options:', mimetype, payload, options);
+
+        // Unwrap jQuery object
+        if (element.length !== undefined) {
+            element = element[0];
+        }
+
+        // Sanity checks
+        //if (!element) return;
+
+        // clipboard.js
+        var ClipboardJS = require('clipboard');
+
+        var clipboard = new ClipboardJS(element, {
+            text: function(trigger) {
+                if (_.isFunction(payload)) {
+                    payload = payload();
+                }
+                return payload;
+            },
+        });
+
+        // For use in Bootstrap Modals or with any other library that changes the focus
+        // you'll want to set the focused element as the container value.
+        var modal = $(element).closest('.modal');
+        if (modal.exists()) {
+            clipboard.container = modal[0];
+        }
+
+        // Event handlers
+        clipboard.on('success', function(event) {
+            console.info('Action:', event.action);
+            console.info('Text:', event.text);
+            console.info('Trigger:', event.trigger);
+
+            if (_.isEmpty(event.text)) {
+                var message = "Empty content, nothing copied to clipboard.";
+                navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                return;
+            }
+            var size_value = event.text.length;
+            var size_label = 'Bytes';
+            if (size_value >= 1000) {
+                var size_value = Math.round(size_value / 1000);
+                var size_label = 'kB';
+            }
+            var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
+            navigatorApp.ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
+            if (options.callback) {
+                options.callback();
+            }
+
+        });
+
+        clipboard.on('error', function(event) {
+            var message = "Error copying content to clipboard.";
+            console.error(message, event.action, event.trigger);
+            navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+        });
+
+    },
+
+    /*
+    copy_to_clipboard: function(mimetype, payload, options) {
+        options = options || {};
+        var deferred = $.Deferred();
+
+        // ZeroClipboard
+        var ZeroClipboard = require('zeroclipboard/dist/ZeroClipboard.js');
+        ZeroClipboard.config({ swfPath: require('zeroclipboard/dist/ZeroClipboard.swf') });
 
         if (ZeroClipboard.isFlashUnusable()) {
             $(options.element).off('click');
@@ -457,6 +527,7 @@ UiController = Marionette.Controller.extend({
         });
         return deferred.promise();
     },
+    */
 
     copy_to_clipboard_bind_button: function(mimetype, payload, options) {
 

@@ -21,6 +21,12 @@ development
 - [license] Officially upgrade to EUPL 1.2
 - [ui] Improve full text display for IFI Claims
 - [mw] Fix full text acquisition from Espacenet
+- [ui] jQuery 3.x upgrade aftermath:
+
+    - Migration fixes
+    - Upgrade packages bootbox, jq-pagination, jquery.viewport and stacktrace-js
+    - Use clipboard.js instead of ZeroClipboard
+
 
 2018-03-17 0.150.0
 ==================

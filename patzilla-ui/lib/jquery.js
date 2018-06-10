@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2018 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 
 // jQuery fame
 require('jquery');
@@ -7,6 +7,21 @@ require('jquery');
 // Helper for transitioning to jQuery 3.x
 // https://www.npmjs.com/package/jquery-migrate
 require('jquery-migrate');
+
+
+
+// ------------------------------------------
+//   Addons to jQuery 3.3.1
+// ------------------------------------------
+
+
+// Global exception handlers
+
+// https://www.learningjquery.com/2017/03/different-methods-of-error-handling-in-jquery
+jQuery.readyException = function(error) {
+    console.error('jQuery exception:', error);
+    throw error;
+};
 
 
 // ------------------------------------------
