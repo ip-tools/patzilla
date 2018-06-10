@@ -290,9 +290,16 @@ The software will search for appropriate candidates in this order::
 
 Setup
 -----
+Prerequisites::
+
+    apt install build-essential libmagickcore-dev libm17n-dev libgif-dev libopenjp2-7-dev libzlcore-dev liblz-dev libltdl-dev libperl-dev
+
 ::
 
     wget http://www.imagemagick.org/download/ImageMagick.tar.gz
+    tar -xzf ImageMagick.tar.gz
+    cd ImageMagick-7.0.7-31/
+
     ./configure --prefix=/opt/imagemagick
     make && make install
 
