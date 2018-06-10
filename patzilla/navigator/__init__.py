@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 def includeme(config):
 
     # Register application components: URL generator, renderer globals

@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 
 /**
  * --------------------
@@ -51,12 +51,6 @@ require('patzilla.common.issuereporter');
 _(window).extend(require('patzilla.navigator.util.linkmaker'));
 _(window).extend(require('patzilla.navigator.util.patentnumbers'));
 
-// Datasource adapters
-require('patzilla.access.depatech');
-require('patzilla.access.depatisnet');
-require('patzilla.access.epo.ops');
-require('patzilla.access.ificlaims');
-
 // Application
 require('patzilla.navigator.app.config');
 require('patzilla.navigator.app.application');
@@ -81,7 +75,6 @@ console.info('Load application configuration');
 var navigatorConfiguration = new NavigatorConfiguration();
 navigatorConfiguration.set(navigator_configuration);
 navigatorConfiguration.set(window.request_hidden);
-navigatorConfiguration.set('component_list', []);
 if (navigatorConfiguration.get('opaque.meta.status') != 'error') {
     navigatorConfiguration.history_pushstate();
 }
@@ -100,8 +93,16 @@ var navigatorTheme = new NavigatorTheme(theme_settings);
 
 console.info('Load application core');
 
+// Main application object
 navigatorApp = new NavigatorApp({config: navigatorConfiguration, theme: navigatorTheme});
 
+// Setup data source adapters
+require('patzilla.access.depatech');
+require('patzilla.access.depatisnet');
+require('patzilla.access.epo.ops');
+require('patzilla.access.ificlaims');
+
+// Setup user interface regions
 navigatorApp.addRegions({
     mainRegion: "#root-region",
     queryBuilderRegion: "#querybuilder-region",
@@ -111,7 +112,6 @@ navigatorApp.addRegions({
     paginationRegionTop: "#ops-pagination-region-top",
     paginationRegionBottom: "#ops-pagination-region-bottom",
 });
-
 
 // Main application user interface
 navigatorApp.addInitializer(function(options) {

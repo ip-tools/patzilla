@@ -2,7 +2,7 @@
 .. (c) 2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
 ===============================================
-CQL pyparsing parser tests: IFI Claims features
+CQL pyparsing parser tests: IFI CLAIMS features
 ===============================================
 
 see also:

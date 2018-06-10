@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2015 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 
 ResultItemView = Backbone.Marionette.ItemView.extend({
 
@@ -14,6 +14,8 @@ ResultItemView = Backbone.Marionette.ItemView.extend({
         if (!_(this.model.collection.reference_document_numbers).contains(this.model.get('publication_number')) ||
             _(this.model.collection.placeholder_document_numbers).contains(this.model.get('publication_number'))) {
             data.is_document_missing = true;
+        } else {
+            data.is_document_missing = false;
         }
         return data;
     },
@@ -24,14 +26,16 @@ ResultCollectionView = Backbone.Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "resultcollection",
-    className: "container",
-    //template: "#generic-collection-template",
+    //className: "container",
+    template: _.template(''),
 
     getItemView: function(item) {
-        if (item.get('upstream_provider') == 'ftpro') {
-            return FulltextProResultView;
+        log('ResultCollectionView.getItemView');
+        var view_class = navigatorApp.current_datasource_info().adapter.result_item_view;
+        if (view_class) {
+            return view_class;
         } else {
-            console.error('Could not create result view instance for upstream provider "' + item.get('upstream_provider') + '"');
+            console.warn('Result item view not implemented for upstream provider "' + item.get('upstream_provider') + '"');
         }
     },
 

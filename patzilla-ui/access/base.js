@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 
 DatasourceSearch = Backbone.Model.extend({
     keywords: [],

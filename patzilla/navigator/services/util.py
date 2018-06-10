@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 import json
 import logging
@@ -54,7 +54,7 @@ void_service = Service(
 @query_expression_util_service.post()
 def query_expression_util_handler(request):
 
-    # TODO: split functionality between ops/depatisnet, google and ftpro/ftpro
+    # TODO: split functionality between ops/depatisnet, google and sip
     # TODO: improve error handling
 
     data = request.json
@@ -84,6 +84,7 @@ def make_expression_filter(data):
     #if data['format'] == 'comfort':
     if True:
 
+        # TODO: Refactor to "patzilla.access.google" namespace
         if datasource == 'google':
             gpe = GooglePatentsExpression(criteria, query)
             expression = gpe.serialize()
@@ -128,7 +129,8 @@ def make_expression_filter(data):
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
 
-                elif datasource == 'ifi':
+                # TODO: Refactor to "patzilla.access.ificlaims" namespace
+                elif datasource == 'ificlaims':
 
                     if key == 'pubdate':
                         expression_part = {'empty': True}
@@ -142,6 +144,7 @@ def make_expression_filter(data):
                             else:
                                 keywords += keywords_from_boolean_expression(key, value)
 
+                # TODO: Refactor to "patzilla.access.depatech" namespace
                 elif datasource == 'depatech':
 
                     expression_part = DepaTechExpression.pair_to_elasticsearch(key, value, modifiers)
@@ -188,7 +191,7 @@ def make_expression_filter(data):
     if datasource in ['ops', 'depatisnet']:
         expression = ' and '.join(expression_parts)
 
-    elif datasource in ['ifi', 'depatech']:
+    elif datasource in ['ificlaims', 'depatech']:
         expression = ' AND '.join(expression_parts)
 
     elif datasource == 'ftpro':

@@ -365,7 +365,7 @@ def lucene_convert_class(value):
     return value
 
 
-# TODO: refactor elsewhere; together with same code from ftpro.search
+# TODO: refactor elsewhere; together with same code from sip.client
 def has_booleans(value):
     return ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower() or ' to ' in value.lower()
 

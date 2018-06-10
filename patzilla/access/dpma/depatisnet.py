@@ -292,7 +292,7 @@ class DPMADepatisnetSearchResponse(GenericSearchResponse):
             'name': 'depatisnet',
             'query': self.input['query'],
             #'message': self.input['message'],
-            # TODO: Reference from IFI, fill up/unify.
+            # TODO: Reference from IFI CLAIMS, fill up/unify.
             #'time': self.input['time'],
             #'status': self.input['status'],
             #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),

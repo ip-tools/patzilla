@@ -8,6 +8,8 @@ DepatisnetSearch = DatasourceSearch.extend({
 
 DepatisnetCrawler = DatasourceCrawler.extend({
 
+    crawler_limit: 1000,
+
     initialize: function(options) {
         log('DepatisnetCrawler.initialize');
         options = options || {};
@@ -16,6 +18,43 @@ DepatisnetCrawler = DatasourceCrawler.extend({
     },
 
 });
+
+// Register data source adapter with application
+navigatorApp.addInitializer(function(options) {
+    this.register_datasource('depatisnet', {
+
+        // The title used when referencing this data source to the user
+        title: 'DPMA',
+
+        // The data source adapter classes
+        adapter: {
+            search: DepatisnetSearch,
+            crawl: DepatisnetCrawler,
+        },
+
+        // Settings for query builder
+        querybuilder: {
+
+            // Hotkey for switching to this data source
+            hotkey: 'ctrl+shift+d',
+
+            // Which additional extra fields can be queried for
+            extra_fields: ['pubdate', 'citation'],
+
+            // Enable sorting feature
+            enable_sorting: true,
+
+            // Enable the "remove/replace family members" feature
+            enable_remove_replace_family_members: true,
+
+            // Bootstrap color variant used for referencing this data source in a query history entry
+            history_label_color: 'inverse',
+
+        },
+
+    });
+});
+
 
 DepatisConnectFulltext = Marionette.Controller.extend({
 

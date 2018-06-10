@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014,2017 Andreas Motl, Elmyra UG
+# (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import uuid
 import arrow
 import logging
@@ -178,7 +178,7 @@ def provision_users(event):
             username = 'admin',
             password = 'admin',
             tags     = ['staff'],
-            modules  = ['keywords-user', 'family-citations', 'analytics', 'ifi', 'depatech']),
+            modules  = ['keywords-user', 'family-citations', 'analytics', 'ificlaims', 'depatech']),
 
         """
         User(

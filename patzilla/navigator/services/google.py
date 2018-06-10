@@ -31,7 +31,7 @@ def google_published_data_search_handler(request):
 
     #propagate_keywords(request, query_object)
 
-    # lazy-fetch more entries up to maximum of FulltextPRO
+    # lazy-fetch more entries up to maximum
     # TODO: get from patzilla.access.google
     limit = 100
     offset_local = int(request.params.get('range_begin', 1))

@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014,2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery-hotkeys');
 var urljoin = require('url-join');
 
@@ -225,7 +225,7 @@ HotkeysPlugin = Marionette.Controller.extend({
 
         var _this = this;
 
-        // user interface flavor chooser
+        // User interface flavor chooser
         $(selector).on('keydown', null, 'ctrl+shift+c', function(event) {
             $('#querybuilder-flavor-chooser button[data-value="comfort"]').tab('show');
         });
@@ -236,15 +236,25 @@ HotkeysPlugin = Marionette.Controller.extend({
             $('#querybuilder-flavor-chooser button[data-value="numberlist"]').tab('show');
         });
 
-        // datasource selector
-        $(selector).on('keydown', null, 'ctrl+shift+e', function(event) {
-            $('#datasource button[data-value="ops"]').button('toggle');
-            _this.app.set_datasource('ops');
+        // Generic data source selector
+        _.each(navigatorApp.config.get('datasources_enabled'), function(datasource) {
+
+            var datasource_info = navigatorApp.datasource_info(datasource);
+            if (!datasource_info) return;
+
+            var hotkey = datasource_info.querybuilder.hotkey;
+            if (!hotkey) {
+                console.warn('No hotkey defined for data source', datasource);
+                return;
+            }
+
+            $(selector).on('keydown', null, hotkey, function(event) {
+                $('#datasource button[data-value="' + datasource + '"]').button('toggle');
+                _this.app.set_datasource(datasource);
+            });
         });
-        $(selector).on('keydown', null, 'ctrl+shift+d', function(event) {
-            $('#datasource button[data-value="depatisnet"]').button('toggle');
-            _this.app.set_datasource('depatisnet');
-        });
+
+        // TODO: Remove or integrate into generic data source selector
         if (navigatorApp.config.get('google_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
                 var google_button = $('#datasource button[data-value="google"]');
@@ -253,25 +263,8 @@ HotkeysPlugin = Marionette.Controller.extend({
                 _this.app.set_datasource('google');
             });
         }
-        if (navigatorApp.config.get('ftpro_enabled')) {
-            $(selector).on('keydown', null, 'ctrl+shift+f', function(event) {
-                $('#datasource button[data-value="ftpro"]').button('toggle');
-                _this.app.set_datasource('ftpro');
-            });
-        }
-        if (navigatorApp.config.get('ifi_enabled')) {
-            $(selector).on('keydown', null, 'ctrl+shift+i', function(event) {
-                $('#datasource button[data-value="ifi"]').button('toggle');
-                _this.app.set_datasource('ifi');
-            });
-        }
-        if (navigatorApp.config.get('depatech_enabled')) {
-            $(selector).on('keydown', null, 'ctrl+shift+t', function(event) {
-                $('#datasource button[data-value="depatech"]').button('toggle');
-                _this.app.set_datasource('depatech');
-            });
-        }
 
+        // Basket review action
         $(selector).on('keydown', null, 'ctrl+shift+r', function(event) {
             _this.app.basketModel.review();
         });

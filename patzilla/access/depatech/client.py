@@ -118,7 +118,7 @@ class DepaTechClient(GenericSearchClient):
                 result = sr.render()
                 duration = round(duration, 1)
 
-                # TODO: Unify between IFI and depa.tech
+                # TODO: Unify between IFI CLAIMS and depa.tech
                 log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
                     duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 

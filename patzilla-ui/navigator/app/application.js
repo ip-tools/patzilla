@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 
 /**
  * ------------------------------------------
@@ -21,7 +21,14 @@ NavigatorApp = Backbone.Marionette.Application.extend({
     },
 
     set_datasource: function(datasource) {
-        $("#datasource .btn[data-value='" + datasource + "']").button('toggle');
+
+        // Backward compatibility
+        if (datasource == 'ifi') {
+            datasource = 'ificlaims';
+        }
+
+        // Activate appropriate user interface elements
+        this.queryBuilderView.setup_datasource_button(datasource);
         this.queryBuilderView.setup_cql_field_chooser();
         this.queryBuilderView.setup_common_form();
         this.queryBuilderView.setup_comfort_form();
@@ -61,6 +68,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         var query = this.get_query();
         var datasource = this.get_datasource();
         this.metadata.set('datasource', datasource);
+        this.metadata.set('datasource_info', this.datasource_info(datasource));
 
         // It's probably important to reset e.g. "result_range",
         // because we have to fetch 1-10 for each single result page from OPS
@@ -160,24 +168,11 @@ NavigatorApp = Backbone.Marionette.Application.extend({
 
             });
 
-        // Auxilliary data sources are used for searching
-        } else if (datasource == 'depatisnet') {
-            var engine = new DepatisnetSearch();
-            search_info.engine = engine;
-            return this.generic_search(search_info, options);
-
-        } else if (datasource == 'ftpro') {
-            var engine = new FulltextProSearch();
-            search_info.engine = engine;
-            return this.generic_search(search_info, options);
-
-        } else if (datasource == 'ifi') {
-            var engine = new IFIClaimsSearch();
-            search_info.engine = engine;
-            return this.generic_search(search_info, options);
-
-        } else if (datasource == 'depatech') {
-            var engine = new DepaTechSearch();
+        // Generic data source adapters
+        } else if (this.has_datasource(datasource)) {
+            var datasource_info = this.datasource_info(datasource);
+            var engine_class = datasource_info.adapter.search;
+            var engine = new engine_class();
             search_info.engine = engine;
             return this.generic_search(search_info, options);
 
@@ -189,49 +184,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             this.metadata.set('query_origin', query);
 
             var engine = new GooglePatentSearch();
-            engine.perform(query, options).done(function(response) {
-                options = options || {};
-
-                _this.trigger('search:success', search_info);
-
-                _this.propagate_datasource_message(response);
-
-                // propagate keywords
-                log('engine.keywords:', engine.keywords);
-                _this.metadata.set('keywords', engine.keywords);
-
-                // debugging
-                console.log('google response:', response);
-                console.log('google keywords:', engine.keywords);
-
-                var publication_numbers = response['numbers'];
-                var hits = response['hits'];
-
-                if (publication_numbers) {
-
-                    // TODO: return pagesize from backend
-                    options.remote_limit = 100;
-
-                    self.perform_listsearch(options, query, publication_numbers, hits, 'pn', 'OR').done(function() {
-
-                        // propagate upstream message again, because "perform_listsearch" clears it; TODO: enhance mechanics!
-                        _this.propagate_datasource_message(response);
-
-                        if (hits == null) {
-                            _this.ui.user_alert(
-                                'Result count unknown. At Google Patents, sometimes result counts are not displayed. ' +
-                                "Let's assume 1000 to make the paging work.", 'warning');
-                        }
-
-                        if (hits > _this.metadata.get('maximum_results')['google']) {
-                            _this.ui.user_alert(
-                                'Total results ' + hits + '. From Google Patents, the first 1000 results are accessible. ' +
-                                'You might want to narrow your search by adding more search criteria.', 'warning');
-                        }
-                    });
-                }
-
-            });
+            engine.search(search_info, query, options);
 
         } else {
             this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'icon-search'});
@@ -453,19 +406,24 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         }
 
 
-        // propagate to generic result collection view
-        if (!_.isEmpty(entries_sliced) && _.isObject(entries_sliced[0])) {
-            try {
-                this.results.reset(entries_sliced);
-            } catch (ex) {
-                console.warn('Problem propagating data to results collection:', ex);
-                //throw(ex);
+        // Propagate to generic result collection
+        if (this.current_datasource_info().adapter.entry) {
+            if (!_.isEmpty(entries_sliced) && _.isObject(entries_sliced[0])) {
+                try {
+                    this.results.reset(entries_sliced);
+                } catch (ex) {
+                    console.warn('Problem propagating data to results collection:', ex);
+                    //throw(ex);
+                }
+            } else {
+                this.results.reset();
             }
         } else {
-            this.results.reset();
+            var datasource = this.get_datasource();
+            console.warn('Generic result entry model not implemented for data source "' + datasource + '"');
         }
 
-        // compute list of requested publication numbers for this slice
+        // Compute list of requested publication numbers for this slice
         var publication_numbers = _.map(entries_sliced, function(entry) {
             var number;
             if (_.isObject(entry)) {
@@ -478,7 +436,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         //log('publication_numbers:', publication_numbers);
 
 
-        // compute query expression to display documents from OPS
+        // Compute query expression to display documents from OPS
         var query_ops_constraints = _(_.map(publication_numbers, function(publication_number) {
             if (publication_number) {
                 // 2016-04-23: Do it without quotes. Does this break anything?
@@ -804,23 +762,23 @@ NavigatorApp = Backbone.Marionette.Application.extend({
 
             // Fall back to IFI Claims for bibliographic data
             var ificlaims_settings = navigatorApp.config.get('system').datasource.ificlaims;
-            var ifi_allowed =
+            var ificlaims_allowed =
                 ificlaims_settings.details_enabled &&
                 _.contains(ificlaims_settings.details_countries, patent.country);
 
             // || _.isEmpty(document_missing.alternatives_local)
-            if (ifi_allowed) {
-                var ifi_doc = new IFIClaimsDocument({document_number: document_missing.number});
+            if (ificlaims_allowed) {
+                var ificlaims_doc = new IFIClaimsDocument({document_number: document_missing.number});
 
                 // TODO:
-                // Move to async mode! The current problem is that setting "placeholder = ifi_doc" is too
+                // Move to async mode! The current problem is that setting "placeholder = ificlaims_doc" is too
                 // late for further processing, so the whole function must be made asynchronous.
                 try {
-                    var r = ifi_doc.fetch({sync: true, async: false})
+                    var r = ificlaims_doc.fetch({sync: true, async: false})
                         .then(function() {
                             console.info('Document "' + document_missing.number + '" available at IFI Claims.');
-                            //log('ifi.document:', ifi_doc);
-                            placeholder = ifi_doc;
+                            //log('ificlaims.document:', ificlaims_doc);
+                            placeholder = ificlaims_doc;
                         })
                         .catch(function(error) {
                             console.warn('Document "' + document_missing.number + '" not available at IFI Claims:', error);
@@ -1389,6 +1347,22 @@ NavigatorApp = Backbone.Marionette.Application.extend({
     component_enabled: function(name) {
         //log('is_enabled?: ', this.config.get('component_list'), name);
         return _.contains(this.config.get('component_list'), name);
+    },
+
+    register_datasource: function(name, info) {
+        log('Registering data source adapter for "' + name + '"');
+        this.config.get('datasources')[name] = info;
+    },
+
+    datasource_info: function(name) {
+        return this.config.get('datasources')[name];
+    },
+    has_datasource: function(name) {
+        return !_.isEmpty(this.config.get('datasources')[name]);
+    },
+    current_datasource_info: function() {
+        var datasource = this.get_datasource();
+        return this.datasource_info(datasource);
     },
 
 });

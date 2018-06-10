@@ -312,6 +312,8 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
 OpsPublishedDataCrawler = DatasourceCrawler.extend({
 
+    crawler_limit: 2000,
+
     initialize: function(options) {
         log('OpsPublishedDataCrawler.initialize');
         options = options || {};
@@ -324,6 +326,37 @@ OpsPublishedDataCrawler = DatasourceCrawler.extend({
     },
 
 });
+
+// Register data source adapter with application
+navigatorApp.addInitializer(function(options) {
+    this.register_datasource('ops', {
+
+        // The title used when referencing this data source to the user
+        title: 'EPO',
+
+        // The data source adapter classes
+        adapter: {
+            search: OpsPublishedDataSearch,
+            crawl: OpsPublishedDataCrawler,
+        },
+
+        // Settings for query builder
+        querybuilder: {
+
+            // Hotkey for switching to this data source
+            hotkey: 'ctrl+shift+e',
+
+            // Which additional extra fields can be queried for
+            extra_fields: ['pubdate', 'citation'],
+
+            // Bootstrap color variant used for referencing this data source in a query history entry
+            history_label_color: 'important',
+
+        },
+
+    });
+});
+
 
 
 OpsExchangeDocument = Backbone.Model.extend({});

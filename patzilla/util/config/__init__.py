@@ -25,7 +25,7 @@ def get_configuration(*args, **kwargs):
                     config_files.append(include)
             logger.info('Expanded configuration files:  {}'.format(make_list(config_files)))
             config, used = read_config(config_files, kind=kwargs.get('kind'))
-        logger.info('Used configuration files:      {}'.format(make_list(used)))
+        logger.info('Effective configuration files: {}'.format(make_list(used)))
         return config
     else:
         msg = u'Could not read settings from configuration files: {}'.format(config_files)

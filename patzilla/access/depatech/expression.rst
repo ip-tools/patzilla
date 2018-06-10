@@ -22,7 +22,7 @@ IPC/CPC
 >>> DepaTechParser('H01F7/00').dumps()
 u'H01F7/00'
 
-# Rewrite all patent classifications from IFI format to OPS format
+# Rewrite all patent classifications from depa.tech format to OPS format
 >>> DepaTechParser('IC:G01F000184').parse().rewrite_classes_ops().dumps()
 u'IC : G01F1/84'
 

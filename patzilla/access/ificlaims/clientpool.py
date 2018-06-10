@@ -17,7 +17,7 @@ def includeme(config):
     try:
         api_uri = datasource_settings.datasource.ificlaims.api_uri
     except:
-        raise NoOptionError('api_uri', 'datasource_ificlaims')
+        raise NoOptionError('api_uri', 'datasource:ificlaims')
 
     config.registry.registerUtility(IFIClaimsClientPool(api_uri=api_uri))
     config.add_subscriber(attach_ificlaims_client, "pyramid.events.ContextFound")
@@ -85,7 +85,7 @@ class IFIClaimsClientFactory(object):
             self.password = credentials['password']
 
         else:
-            message = u'No credentials configured for IFI Claims API.'
+            message = u'No credentials configured for IFI CLAIMS API.'
             logger.error(u'IFIClaimsClientFactory: ' + message)
             raise HTTPBadGateway(message)
 

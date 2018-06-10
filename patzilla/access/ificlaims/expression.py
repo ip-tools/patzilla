@@ -242,7 +242,7 @@ class IFIClaimsExpression(object):
                         raise ValueError(value)
 
             except Exception as ex:
-                message = 'IFI Claims query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
+                message = 'IFI CLAIMS query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
                 logger.warn(message + '\nException was:\n{0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
@@ -379,7 +379,7 @@ def ifi_convert_class(value):
     return value
 
 
-# TODO: refactor elsewhere; together with same code from ftpro.search
+# TODO: refactor elsewhere; together with same code from sip.client
 def has_booleans(value):
     return ' or ' in value.lower() or ' and ' in value.lower() or ' not ' in value.lower() or ' to ' in value.lower()
 

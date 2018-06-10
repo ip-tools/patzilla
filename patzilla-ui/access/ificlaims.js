@@ -4,7 +4,7 @@ require('./base.js');
 require('./util.js');
 
 IFIClaimsSearch = DatasourceSearch.extend({
-    url: '/api/ifi/published-data/search',
+    url: '/api/ificlaims/published-data/search',
 });
 
 IFIClaimsResultEntry = Backbone.Model.extend({
@@ -14,15 +14,58 @@ IFIClaimsResultEntry = Backbone.Model.extend({
 
 IFIClaimsCrawler = DatasourceCrawler.extend({
 
+    crawler_limit: 50000,
+
     initialize: function(options) {
         log('IFIClaimsCrawler.initialize');
         options = options || {};
-        options.datasource = 'ifi';
+        options.datasource = 'ificlaims';
         this.__proto__.constructor.__super__.initialize.apply(this, arguments);
     },
 
 });
 
+// Register data source adapter with application
+navigatorApp.addInitializer(function(options) {
+    this.register_datasource('ificlaims', {
+
+        // The title used when referencing this data source to the user
+        title: 'IFI CLAIMS',
+
+        // The data source adapter classes
+        adapter: {
+            search: IFIClaimsSearch,
+            //entry: IFIClaimsResultEntry,
+            crawl: IFIClaimsCrawler,
+        },
+
+        // Settings for query builder
+        querybuilder: {
+
+            // Hotkey for switching to this data source
+            hotkey: 'ctrl+shift+i',
+
+            // Which additional extra fields can be queried for
+            extra_fields: ['pubdate', 'citation'],
+
+            // Enable the "remove/replace family members" feature
+            enable_remove_family_members: true,
+
+            // Use a separate query field for filter expression
+            enable_separate_filter_expression: true,
+
+            // Which placeholders to use for comfort form demo criteria
+            placeholder: {
+                patentnumber: 'single',
+            },
+
+            // Bootstrap color variant used for referencing this data source in a query history entry
+            history_label_color: 'info',
+
+        },
+
+    });
+});
 
 
 IFIClaimsDocument = Backbone.Model.extend({});
@@ -31,14 +74,14 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
 
     initialize: function(options) {
         log('IFIClaimsDocument.initialize');
-        this.set('datasource', 'ifi');
+        this.set('datasource', 'ificlaims');
         options = options || {};
-        options.datasource = 'ifi';
+        options.datasource = 'ificlaims';
         this.__proto__.constructor.__super__.initialize.apply(this, arguments);
     },
 
     url: function() {
-        return _.template('/api/ifi/download/<%= document_number %>.json')({ document_number: this.get('document_number')});
+        return _.template('/api/ificlaims/download/<%= document_number %>.json')({ document_number: this.get('document_number')});
     },
 
     sync: function() {
@@ -48,7 +91,7 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
         // Raise exception if document is empty
         if (_.isEmpty(this.get('patent-document'))) {
             var document_number = this.get('document_number');
-            throw new Error('Empty document ' + document_number + ' from IFI Claims');
+            throw new Error('Empty document ' + document_number + ' from IFI CLAIMS');
         }
 
         // Mungle local attributes to make it almost compliant to OPS model
@@ -60,7 +103,7 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
     },
 
     get_datasource_label: function() {
-        return 'IFI Claims';
+        return 'IFI CLAIMS';
     },
 
     get_patent_number: function() {
@@ -77,7 +120,7 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
          format = docdb|epodoc
          */
 
-        // Let "epodoc" format converge to "epo" for IFI Claims
+        // Let "epodoc" format converge to "epo" for IFI CLAIMS
         if (format == 'epodoc') {
             format = 'epo';
         }
@@ -515,7 +558,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
     },
 
     get_datasource_label: function() {
-        return 'IFI Claims';
+        return 'IFI CLAIMS';
     },
 
     get_claims: function() {
@@ -523,7 +566,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         var _this = this;
         var deferred = $.Deferred();
 
-        var url = _.template('/api/ifi/download/<%= document_number %>.json')({ document_number: this.document_number});
+        var url = _.template('/api/ificlaims/download/<%= document_number %>.json')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
             .then(function(response) {
                 if (response) {
@@ -556,7 +599,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                     deferred.resolve(data, _this.get_datasource_label());
                 }
             }).catch(function(error) {
-                console.warn('Error while fetching claims from IFI Claims for', _this.document_number, error);
+                console.warn('Error while fetching claims from IFI CLAIMS for', _this.document_number, error);
                 deferred.reject({html: 'Error fetching data'});
             });
 
@@ -628,7 +671,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         var _this = this;
         var deferred = $.Deferred();
 
-        var url = _.template('/api/ifi/download/<%= document_number %>.json')({ document_number: this.document_number});
+        var url = _.template('/api/ificlaims/download/<%= document_number %>.json')({ document_number: this.document_number});
         $.ajax({url: url, async: true})
             .then(function(response) {
                 if (response) {
@@ -664,7 +707,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                 }
 
             }).catch(function(error) {
-                console.warn('Error while fetching description from IFI Claims for', _this.document_number, error);
+                console.warn('Error while fetching description from IFI CLAIMS for', _this.document_number, error);
                 deferred.reject({html: 'Error fetching data'});
             });
 

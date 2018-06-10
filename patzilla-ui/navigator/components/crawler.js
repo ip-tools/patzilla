@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2015 Andreas Motl, Elmyra UG
+// (c) 2015,2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('patzilla.lib.marionette-modalregion');
 require('patzilla.navigator.components.results-dialog');
 
@@ -47,28 +47,17 @@ ResultNumbersView = GenericResultView.extend({
         var datasource = this.model.get('datasource');
         var filter = this.model.get('filter');
 
-        // compute crawler by datasource
-        var crawler_class;
-        if (datasource == 'ops') {
-            crawler_class = OpsPublishedDataCrawler;
-            this.crawler_limit = 2000;
-
-        } else if (datasource == 'depatisnet') {
-            crawler_class = DepatisnetCrawler;
-            this.crawler_limit = 1000;
-
-        } else if (datasource == 'ftpro') {
-            crawler_class = FulltextProCrawler;
-            this.crawler_limit = 5000;
-
-        } else if (datasource == 'ifi') {
-            crawler_class = IFIClaimsCrawler;
-            this.crawler_limit = 50000;
-
+        // Generic data source adapters
+        if (navigatorApp.has_datasource(datasource)) {
+            var datasource_info = navigatorApp.datasource_info(datasource);
+            var crawler_class = datasource_info.adapter.crawl;
+            if (crawler_class) {
+                this.crawler_limit = crawler_class.crawler_limit;
+            } else {
+                this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
+            }
         } else {
-            this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
-            return;
-
+            this.user_message('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'icon-search'});
         }
 
         var crawler = new crawler_class({constituents: 'pub-number', query: query, query_data: query_data, filter: filter})

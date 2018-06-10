@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('select2/select2.js');
 require('select2/select2.css');
 require('jquery-caret-plugin/dist/jquery.caret.js');
@@ -29,11 +29,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         this.setup_ui_actions();
     },
 
+    get_datasource_info: function() {
+        var datasource = navigatorApp.get_datasource();
+        datasource_info = navigatorApp.datasource_info(datasource) || {};
+        //log('get_datasource_info:', datasource, datasource_info);
+        return datasource_info;
+    },
+
     setup_ui_base: function() {
         console.log('QueryBuilderView.setup_ui');
 
         var _this = this;
-
 
         // ------------------------------------------
         //   datasource selector
@@ -46,7 +52,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var datasource = $(this).data('value');
             navigatorApp.set_datasource(datasource);
 
-            // hide query textarea for ftpro, if not in debug mode
+            // Hide query textarea for some data sources, if not in debug mode
             _this.setup_ui_query_textarea();
         });
 
@@ -109,8 +115,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // show history chooser
                 $('#cql-history-chooser').show();
 
-                // show filter field
-                if (navigatorApp.get_datasource() == 'ifi') {
+                // Optionally show filter field
+                var datasource_info = _this.get_datasource_info();
+                if (datasource_info.querybuilder.enable_separate_filter_expression) {
                     $('#cql-filter-container').show();
                 } else {
                     $('#cql-filter-container').hide();
@@ -131,7 +138,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     });
                 });
 
-                // hide query textarea for ftpro, if not in debug mode
+                // Hide query textarea for some data sources, if not in debug mode
                 _this.setup_ui_query_textarea();
 
 
@@ -184,10 +191,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // set label text
             _this.radios.label_behaviour(this, already_active);
 
-            // when clicking a mode button which augments search behavior, recompute upstream query expression
-            // for search backends where query_data modifiers already influence the expression building
-            // with "ftpro", we inject the attribute 'fullfamily="true"' into the xml nodes
-            if (navigatorApp.get_datasource() == 'ftpro') {
+            // When clicking a mode button which augments search behavior, recompute upstream query expression
+            // for search backends where query_data modifiers already influence the expression building.
+            var datasource_info = _this.get_datasource_info();
+            if (datasource_info.recompute_query_on_modechange) {
                 _this.compute_comfort_query();
             }
         });
@@ -224,7 +231,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // define default search action when using "Start search" button
         $('.btn-query-perform').off('click');
         $('.btn-query-perform').on('click', function() {
-            $( "#querybuilder-comfort-form" ).submit();
+            $( "#querybuilder-comfort-form" ).trigger('submit');
         });
 
 
@@ -253,39 +260,45 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // Then, compute data sources the user is allowed to see
         if (_.isEmpty(whitelist)) {
-            whitelist = ['ops', 'depatisnet'];
-            if (navigatorApp.config.get('google_enabled')) {
-                whitelist.push('google');
-            }
-            if (navigatorApp.config.get('ftpro_enabled')) {
-                //whitelist.push('ftpro');
-            }
-            if (navigatorApp.config.get('ifi_enabled')) {
-                whitelist.push('ifi');
-            }
-            if (navigatorApp.config.get('depatech_enabled')) {
-                whitelist.push('depatech');
-            }
+            whitelist = navigatorApp.config.get('datasources_enabled');
         }
 
-        // Finally, activate buttons for allowed data sources
+        // Finally, display buttons for switching to all data sources available
+        //var vendor = navigatorApp.config.get('vendor');
+        var _this = this;
         _.each(whitelist, function(item) {
-            $("#datasource > button[data-value='" + item + "']").show();
+            var element = _this.get_datasource_button(item);
+            /*
+            var element = $("#datasource > button[data-value='" + item + "'][data-vendor='" + vendor + "']");
+            if (!$(element).exists()) {
+                element = $("#datasource > button[data-value='" + item + "']:not([data-vendor])");
+            }
+            */
+            element.show();
         });
 
     },
 
-    // hide query textarea for ftpro, if not in debug mode
+    get_datasource_button: function(datasource) {
+        var vendor = navigatorApp.config.get('vendor');
+        var element = $("#datasource > button[data-value='" + datasource + "'][data-vendor='" + vendor + "']");
+        if (!$(element).exists()) {
+            element = $("#datasource > button[data-value='" + datasource + "']:not([data-vendor])");
+        }
+        return element;
+    },
+
+    // Hide query textarea for some data sources, if not in debug mode
     setup_ui_query_textarea: function() {
 
         if (navigatorApp.config.get('debug')) {
             return;
         }
 
-        if (navigatorApp.get_datasource() == 'ftpro') {
+        if (this.get_datasource_info().querybuilder.disable_raw_query) {
             $('#query').hide();
             $('#query').parent().find('#query-alert').remove();
-            $('#query').parent().append('<div id="query-alert" class="alert alert-default span10" style="margin-left: 0px;">Expert mode not available for datasource "FulltextPRO".</div>');
+            $('#query').parent().append('<div id="query-alert" class="alert alert-default span10" style="margin-left: 0px;">Expert mode not available for this data source.</div>');
             var alert_element = $('#query').parent().find('#query-alert');
             alert_element.height($('#query').height() - 18);
             //alert_element.marginBottom($('#query').marginBottom());
@@ -586,9 +599,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     },
 
+    setup_datasource_button: function(datasource) {
+        // Activate appropriate datasource button
+        var button = this.get_datasource_button(datasource);
+        button && button.button('toggle');
+    },
+
     setup_cql_field_chooser: function(hide) {
 
         var datasource = navigatorApp.get_datasource();
+        var datasource_info = this.get_datasource_info();
         var queryflavor = navigatorApp.queryBuilderView.get_flavor();
 
         var analytics_actions = $('#analytics-actions')[0]; //.previousSibling;
@@ -598,8 +618,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $(analytics_actions).hide();
         }
 
-        // TODO: reduce conditional weirdness
-        if (hide || !datasource || _(['review', 'google', 'ftpro']).contains(datasource) || queryflavor != 'cql') {
+        // Disable field chooser
+        if (hide || !datasource || queryflavor != 'cql' ||
+            (datasource_info && datasource_info.querybuilder.disable_field_chooser)
+            ) {
             var chooser = $('#cql-field-chooser');
             if (chooser.exists()) {
                 var container = chooser[0].previousSibling;
@@ -787,6 +809,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var created = query.get('created');
         var result_count = query.get('result_count');
 
+        // Backward compatibility
+        if (datasource == 'ifi') {
+            datasource = 'ificlaims';
+        }
+
+        var datasource_info = navigatorApp.datasource_info(datasource);
+
         // Use query expression as title
         var expression = '';
 
@@ -803,10 +832,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             }
         }
 
-        if ((flavor == 'comfort' || datasource == 'ftpro') && query_data && _.isObject(query_data['criteria'])) {
+        // Add serialized representation of fulltext modifiers
+        var enable_fulltext_modifiers = flavor == 'comfort' || this.get_datasource_info().querybuilder.enable_fulltext_modifiers;
+        if (enable_fulltext_modifiers && query_data && _.isObject(query_data['criteria'])) {
             // serialize query_data criteria
             var entries = _.map(query_data['criteria'], function(value, key) {
-                // add serialized representation of fulltext modifiers if not all(modifiers) == true
+                // Either add "all(modifiers) == true" or individual modifiers
                 if (key == 'fulltext' && query_data['modifiers'] && query_data['modifiers']['fulltext']) {
                     if (_.every(_.values(query_data['modifiers']['fulltext']))) {
                         value += ' [all]';
@@ -839,21 +870,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             flavor_title = 'Expert';
         }
 
-        // Data source
-        var datasource_title = datasource;
-        var datasource_color = 'default';
-        if (datasource == 'ops') {
-            datasource_title = 'EPO';
-            datasource_color = 'important';
-        } else if (datasource == 'depatisnet') {
-            datasource_title = 'DPMA';
-            datasource_color = 'inverse';
-        } else if (datasource == 'ifi') {
-            datasource_title = 'IFI Claims';
-            datasource_color = 'info';
-        } else if (datasource == 'depatech') {
-            datasource_title = 'depa.tech';
-            datasource_color = 'success';
+        // Title and color for data source label
+        var datasource_label_title = datasource;
+        var datasource_label_color_class = 'default';
+        if (datasource_info) {
+            datasource_label_title = datasource_info.title || datasource_label_title;
+            datasource_label_color_class = datasource_info.querybuilder.history_label_color || datasource_label_color_class;
         }
 
         // Result count
@@ -879,17 +901,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 tags_html.push(this.html_history_tag('Recent pub.', {name: 'rf', width: 'narrow'}));
             }
 
-            // Modifiers for DPMA, FulltextPRO, IFI
+            // Modifier for "Remove family members"
             if (query_data['modifiers']['family-remove']) {
                 tags_html.push(this.html_history_tag('Remove family members', {name: '-fam:rm', width: 'wide'}));
             }
 
-            // Modifier for DPMA
+            // Modifier for "Replace family members"
             if (query_data['modifiers']['family-replace']) {
                 tags_html.push(this.html_history_tag('Replace family members', {name: '-fam:rp', width: 'wide'}));
             }
 
-            // Modifier for FulltextPRO
+            // Modifier for "Expand family members"
             if (query_data['modifiers']['family-full']) {
                 tags_html.push(this.html_history_tag('Full family', {name: '+fam', width: 'narrow'}));
             }
@@ -919,7 +941,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var row1_right_side = [
             this.html_history_tag(created, {type: 'text'}),
             this.html_history_tag(flavor_title, {role: 'flavor'}),
-            this.html_history_tag(datasource_title, {role: 'datasource', kind: datasource_color}),
+            this.html_history_tag(datasource_label_title, {role: 'datasource', kind: datasource_label_color_class}),
         ];
         var row2_right_side = tags_html;
 
@@ -1054,40 +1076,42 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_common_form: function() {
         var container = $('#querybuilder-area');
-        var datasource = navigatorApp.get_datasource();
+        var datasource_info = this.get_datasource_info();
 
-        var _this = this;
-
-        // display "(Remove|Replace) family members" only for certain search backends
+        // Display button "(Remove|Replace) family members" only for certain search backends
         var button_family_remove         = container.find("button[id='btn-family-remove']");
         var button_family_remove_replace = container.find("button[id='btn-family-remove'],button[id='btn-family-replace']");
-        if (_(['depatisnet']).contains(datasource)) {
+
+        // Display mode button "Replace family members"
+        if (datasource_info.querybuilder.enable_remove_replace_family_members) {
             button_family_remove_replace.show();
-        } else if (_(['ftpro', 'ifi']).contains(datasource)) {
-            button_family_remove_replace.hide();
-            button_family_remove.show();
         } else {
             button_family_remove_replace.hide();
         }
 
-        // display "Full family" only for certain search backends
+        // Display mode button "Remove family members"
+        if (datasource_info.querybuilder.enable_remove_family_members) {
+            button_family_remove.show();
+        }
+
+        // Display mode button "Expand family members"
         var button_family_full = container.find("button[id='btn-family-full']");
-        if (_(['ftpro']).contains(datasource)) {
+        if (datasource_info.querybuilder.enable_expand_family_members) {
             button_family_full.show();
         } else {
             button_family_full.hide();
         }
 
-        // display sorting only for certain search backends
-        if (_(['depatisnet']).contains(datasource)) {
+        // Display sorting widget
+        if (datasource_info.querybuilder.enable_sorting) {
             $('#sorting-chooser').show();
             this.setup_sorting_chooser();
         } else {
             $('#sorting-chooser').hide();
         }
 
-        // display CQL filter only for datasource IFI
-        if (_(['ifi']).contains(datasource)) {
+        // Display CQL filter
+        if (datasource_info.querybuilder.enable_separate_filter_expression) {
             $('#cql-filter-container').show();
         } else {
             $('#cql-filter-container').hide();
@@ -1097,64 +1121,61 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_comfort_form: function() {
         var form = $('#querybuilder-comfort-form');
-        var datasource = navigatorApp.get_datasource();
+        var datasource_info = this.get_datasource_info();
+        var extra_fields = datasource_info.querybuilder.extra_fields || [];
+        var placeholder = datasource_info.querybuilder.placeholder || {};
 
         var _this = this;
 
-        // fix submit by enter for internet explorer
+        // Fix submit by enter for internet explorer
         form.handle_enter_keypress();
 
-        // hide publication date for certain search backends
+        // Display "publication date" query field conditionally
         var pubdate = form.find("input[name='pubdate']").closest("div[class='control-group']");
-        if (_(['ops', 'depatisnet', 'ftpro']).contains(datasource)) {
+        pubdate.hide();
+        if (_(extra_fields).contains('pubdate')) {
             pubdate.show();
-        } else if (_(['google']).contains(datasource)) {
-            pubdate.hide();
         }
 
-        // hide citations for certain search backends
+        // Display "citations" query field conditionally
         var citation = form.find("input[name='citation']").closest("div[class='control-group']");
-        if (_(['ops', 'depatisnet', 'ifi']).contains(datasource)) {
+        citation.hide();
+        if (_(extra_fields).contains('citation')) {
             citation.show();
-        } else if (_(['google', 'ftpro', 'depatech']).contains(datasource)) {
-            citation.hide();
         }
 
-        // amend placeholder values for certain search backends
-        function activate_placeholder(element, kind) {
+        // Adjust placeholder values for certain data sources
+        function activate_placeholder(name) {
+
+            // 1. Acquire DOM element
+            var element = form.find("input[name='" + name + "']");
+
+            // 2. Save current placeholder as default one
+            if (!element.data('placeholder-default')) {
+                element.data('placeholder-default', element.attr('placeholder'))
+            }
+
+            // 3. Activate placeholder based on data source
+            if (placeholder[name]) {
+                activate_placeholder_element(element, placeholder[name]);
+            } else {
+                activate_placeholder_element(element, 'default');
+            }
+
+        }
+        function activate_placeholder_element(element, kind) {
             element.attr('placeholder', element.data('placeholder-' + kind));
         }
 
-        var patentnumber = form.find("input[name='patentnumber']");
-        if (_(['google', 'ftpro', 'ifi']).contains(datasource)) {
-            activate_placeholder(patentnumber, 'single');
-        } else if (datasource == 'depatech') {
-            activate_placeholder(patentnumber, 'depatech');
-        } else {
-            activate_placeholder(patentnumber, 'multi');
-        }
+        activate_placeholder('patentnumber');
+        activate_placeholder('inventor');
+        activate_placeholder('class');
 
-        var input_class = form.find("input[name='class']");
-        /*
-        if (_(['ifi']).contains(datasource)) {
-            activate_placeholder(input_class, 'single');
-        } else {
-            activate_placeholder(input_class, 'multi');
-        }
-        */
-        activate_placeholder(input_class, 'multi');
 
-        var inventor = form.find("input[name='inventor']");
-        if (datasource == 'depatech') {
-            activate_placeholder(inventor, 'depatech');
-        } else {
-            activate_placeholder(inventor, 'default');
-        }
-
-        // enrich form fields with actions
+        // Enrich form fields with actions
         _.each(form.find(".input-prepend"), function(item) {
 
-            // populate field value with placeholder value on demand
+            // Populate field value with placeholder value on demand
             $(item).find('.add-on.add-on-label').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 if (!input_element.val()) {
@@ -1166,15 +1187,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 }
             });
 
-            // zoom input field to textarea
+            // Zoom input field to textarea
             $(item).find('.add-on.add-on-zoom').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 _this.comfort_form_regular_to_zoomed(input_element);
             });
         });
 
-        // conditionally display fulltext-modifier-chooser
-        if (_(['ftpro']).contains(datasource)) {
+        // Conditionally display fulltext-modifier-chooser
+        if (datasource_info.querybuilder.enable_fulltext_modifiers) {
             $('#fulltext-modifier-chooser').show();
             $('#fulltext-textarea-container').removeClass('span12').addClass('span11');
             $('#fulltext-textarea-container').find('textarea').removeClass('span11').addClass('span10');
@@ -1226,21 +1247,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
 
     get_form_modifier_elements: function() {
-
         var datasource = navigatorApp.get_datasource();
+        var datasource_info = navigatorApp.datasource_info(datasource);
         var modifier_buttons_selector = 'button[data-name="full-cycle"],[data-name="family-swap-ger"]';
         modifier_buttons_selector += ',[data-name="first-pub"]';
         modifier_buttons_selector += ',[data-name="recent-pub"]';
 
-        if (_(['depatisnet']).contains(datasource)) {
-            modifier_buttons_selector += ',[data-name="family-remove"]';
-            modifier_buttons_selector += ',[data-name="family-replace"]';
-        }
-        if (_(['ftpro', 'ifi']).contains(datasource)) {
-            modifier_buttons_selector += ',[data-name="family-remove"]';
-        }
-        if (_(['ftpro']).contains(datasource)) {
-            modifier_buttons_selector += ',[data-name="family-full"]';
+        if (datasource_info) {
+            if (datasource_info.querybuilder.enable_remove_replace_family_members) {
+                modifier_buttons_selector += ',[data-name="family-remove"]';
+                modifier_buttons_selector += ',[data-name="family-replace"]';
+            }
+            if (datasource_info.querybuilder.enable_remove_family_members) {
+                modifier_buttons_selector += ',[data-name="family-remove"]';
+            }
+            if (datasource_info.querybuilder.enable_expand_family_members) {
+                modifier_buttons_selector += ',[data-name="family-full"]';
+            }
         }
 
         var elements = $('#querybuilder-area').find(modifier_buttons_selector);
@@ -1380,7 +1403,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var datasource = navigatorApp.get_datasource();
 
-        if (_(['depatisnet']).contains(datasource)) {
+        var datasource_info = this.get_datasource_info();
+        if (datasource_info.querybuilder.enable_sorting) {
             var field_chooser = $('#querybuilder-area').find('#sort-field-chooser');
             var order_chooser = $('#querybuilder-area').find('#sort-order-chooser');
             sort_field = field_chooser.val();
@@ -1427,6 +1451,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $("#keywords").val(keywords);
 
         }).fail(function() {
+            console.warn('Failed computing query expression from:', payload);
             $("#query").val('');
             $("#keywords").val('');
             navigatorApp.ui.reset_content({documents: true, keep_notifications: true});
@@ -1443,14 +1468,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             },
             data: JSON.stringify(payload),
             contentType: "application/json; charset=utf-8",
-        }).then(function(data, status, options) {
+        }).done(function(data, status, jqXHR) {
             if (data) {
-                var keywords = options.getResponseHeader('X-PatZilla-Query-Keywords');
+                var keywords = jqXHR.getResponseHeader('X-PatZilla-Query-Keywords');
                 deferred.resolve(data, keywords);
             } else {
                 deferred.resolve({}, '[]');
             }
-        }).catch(function(xhr, reason, status) {
+        }).fail(function(xhr, status, reason) {
             console.error({location: 'compute_query_expression', xhr: xhr, reason: reason, status: status});
             navigatorApp.ui.propagate_backend_errors(xhr);
             deferred.reject();

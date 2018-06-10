@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2017 Andreas Motl <andreas.motl@ip-tools.org>
 #
-# Lowlevel adapter to search provider "IFI Claims Direct"
+# Lowlevel adapter to search provider "IFI CLAIMS Direct"
 # http://docs.ificlaims.com/
 #
 import re
@@ -34,7 +34,7 @@ class IFIClaimsClient(GenericSearchClient):
 
     def __init__(self, uri, username=None, password=None, token=None):
 
-        self.backend_name = 'IFI'
+        self.backend_name = 'ificlaims'
 
         self.search_method = ificlaims_search
         self.crawl_max_count = 50000
@@ -101,7 +101,7 @@ class IFIClaimsClient(GenericSearchClient):
             'start': offset, 'rows': limit,
         }
 
-        log.info(u'IFI search. query={query}, uri={uri}, params={params}, options={options}'.format(
+        log.info(u'IFI CLAIMS search. query={query}, uri={uri}, params={params}, options={options}'.format(
             query=query, uri=uri, params=params, options=options.dump()))
 
         # Perform search request
@@ -191,7 +191,7 @@ class IFIClaimsClient(GenericSearchClient):
                 result = sr.render()
                 duration = round(duration, 1)
 
-                # TODO: Unify between FulltextPRO and IFI
+                # TODO: Unify between IFI CLAIMS and SIP
                 log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
                     duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 

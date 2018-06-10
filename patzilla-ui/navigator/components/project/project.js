@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2017 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('patzilla.navigator.components.storage');
 require('x-editable/dist/bootstrap-editable/js/bootstrap-editable');
 require('x-editable/dist/bootstrap-editable/css/bootstrap-editable');
@@ -11,7 +11,7 @@ QueryModel = Backbone.RelationalModel.extend({
 
     defaults: {
         flavor: undefined,              // comfort, expert
-        datasource: undefined,          // ops, depatisnet, ftpro
+        datasource: undefined,          // data source name
         query_data: undefined,          // comfort mode form dictionary
         query_expert: undefined,        // expert mode query expression and filter
         query_expression: undefined,    // expert mode query expression, deprecated

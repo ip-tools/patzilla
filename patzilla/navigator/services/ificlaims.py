@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2018 Andreas Motl, Elmyra UG
+# (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 #
-# Cornice services for search provider "IFI Claims Direct"
+# Cornice services for search provider "IFI CLAIMS Direct"
 #
 import re
 import json
@@ -25,21 +25,21 @@ log = logging.getLogger(__name__)
 
 ificlaims_published_data_search_service = Service(
     name='ificlaims-published-data-search',
-    path='/api/ifi/published-data/search',
-    description="IFI Claims search interface")
+    path='/api/ificlaims/published-data/search',
+    description="IFI CLAIMS search interface")
 ificlaims_published_data_crawl_service = Service(
     name='ificlaims-published-data-crawl',
-    path='/api/ifi/published-data/crawl{dummy1:\/?}{constituents:.*?}',
-    description="IFI Claims crawler interface")
+    path='/api/ificlaims/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    description="IFI CLAIMS crawler interface")
 
 ificlaims_download_service = Service(
     name='ificlaims-download',
-    path='/api/ifi/download/{resource}.{format}',
-    description="IFI Claims download interface")
+    path='/api/ificlaims/download/{resource}.{format}',
+    description="IFI CLAIMS download interface")
 ificlaims_deliver_service = Service(
     name='ificlaims-deliver',
-    path='/api/ifi/deliver/{kind}',
-    description="IFI Claims deliver interface")
+    path='/api/ificlaims/deliver/{kind}',
+    description="IFI CLAIMS deliver interface")
 
 status_upstream_ificlaims = Service(
     name='status_ificlaims',
@@ -59,7 +59,7 @@ def status_upstream_ificlaims_handler(request):
 
 @ificlaims_download_service.get(renderer='null')
 def ificlaims_download_handler(request):
-    """Download resources from IFI Claims Direct"""
+    """Download resources from IFI CLAIMS Direct"""
 
     resource = request.matchdict['resource']
     format   = request.matchdict['format'].lower()
@@ -98,7 +98,7 @@ def ificlaims_download_handler(request):
 
 @ificlaims_deliver_service.get(renderer='null')
 def ificlaims_deliver_handler(request):
-    """Deliver resources from IFI Claims Direct in bulk"""
+    """Deliver resources from IFI CLAIMS Direct in bulk"""
 
     kind = request.matchdict['kind']
     formats = map(unicode.strip, request.params.get('formats', u'').lower().split(u','))
@@ -134,7 +134,7 @@ def ificlaims_deliver_handler(request):
 @ificlaims_published_data_search_service.get(accept="application/json")
 @ificlaims_published_data_search_service.post(accept="application/json")
 def ificlaims_published_data_search_handler(request):
-    """Search for published-data at IFI Claims Direct"""
+    """Search for published-data at IFI CLAIMS Direct"""
 
     # Get hold of query expression and filter
     query = SmartBunch({
@@ -205,7 +205,7 @@ def ificlaims_published_data_search_handler(request):
 @ificlaims_published_data_crawl_service.get(accept="application/json")
 @ificlaims_published_data_crawl_service.post(accept="application/json")
 def ificlaims_published_data_crawl_handler(request):
-    """Crawl published-data at IFI Claims Direct"""
+    """Crawl published-data at IFI CLAIMS Direct"""
 
     # Get hold of query expression and filter
     query = SmartBunch({

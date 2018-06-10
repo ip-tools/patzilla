@@ -12,7 +12,7 @@ from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
 """
 About
 =====
-Run requests to search provider "IFI Claims Direct" from the command line.
+Run requests to search provider "IFI CLAIMS Direct" from the command line.
 
 Synopsis
 ========

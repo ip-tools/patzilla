@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 from pyramid.config import Configurator
 from patzilla.navigator.settings import GlobalSettings
 from patzilla.util.web.pyramid.renderer import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer

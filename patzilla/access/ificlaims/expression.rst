@@ -2,7 +2,7 @@
 .. (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 
 ==================================
-IFI Claims expression parser tests
+IFI CLAIMS expression parser tests
 ==================================
 
 >>> from patzilla.access.ificlaims.expression import IFIClaimsParser, IFIClaimsExpression
@@ -43,7 +43,7 @@ Publication date
 ================
 
 >>> IFIClaimsExpression.pair_to_solr('pubdate', 'foobar')
-{'message': 'IFI Claims query: Invalid date or range expression "foobar". Reason: foobar.', 'error': True}
+{'message': 'IFI CLAIMS query: Invalid date or range expression "foobar". Reason: foobar.', 'error': True}
 
 
 *********

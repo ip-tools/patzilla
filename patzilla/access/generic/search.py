@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import time
 import logging
 from pprint import pprint
@@ -61,10 +61,10 @@ class GenericSearchClient(object):
         count_total = min(count_total, self.crawl_max_count)
 
         """
-        # FulltextPRO:
+        # SIP:
         pointer_total_count = JsonPointer('/meta/MemCount')
         total_count = int(pointer_total_count.resolve(first_chunk))
-        log.info('FulltextProClient.crawl total_count: %s', total_count)
+        log.info('SipClient.crawl total_count: %s', total_count)
 
         # Limit maximum size
         # TODO: make configurable, put into instance variable

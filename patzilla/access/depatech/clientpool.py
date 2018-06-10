@@ -17,7 +17,7 @@ def includeme(config):
     try:
         api_uri = datasource_settings.datasource.depatech.api_uri
     except:
-        raise NoOptionError('api_uri', 'datasource_depatech')
+        raise NoOptionError('api_uri', 'datasource:depatech')
 
     config.registry.registerUtility(DepaTechClientPool(api_uri=api_uri))
     config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")

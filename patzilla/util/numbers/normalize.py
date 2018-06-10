@@ -434,7 +434,7 @@ def normalize_patent_us(patent, provider=None):
             patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
 
         # US application publication numbers: Convert from 4+7=11 to 4+6=10
-        # 2015-12-20: Normalize "FulltextPRO "responses like "US20150322651A1" to "US2015322651A1"
+        # 2015-12-20: Normalize responses from SIP like "US20150322651A1" to "US2015322651A1"
         elif length == 11:
             if patched['number'][4] == '0':
                 patched['number'] = patched['number'][0:4] + patched['number'][5:]
@@ -498,7 +498,7 @@ def normalize_patent_jp(patent):
 
     Examples:
     - Something yields JP8-179521, which OPS will only accept as JPH08179521
-    -"FulltextPRO "yields JP58002167U, which OPS will only accept as JPS582167U
+    - "SIP" yields JP58002167U, which OPS will only accept as JPS582167U
     - JP3657641B2 should stay the same
     - JP08007001AA should become JP08007001A
     """

@@ -76,7 +76,7 @@ api_uri      = {ificlaims_api_uri}
 api_username = {ificlaims_api_username}
 api_password = {ificlaims_api_password}
 
-# 2017-03-09: Add fulltexts for more countries through IFI Claims
+# 2017-03-09: Add fulltexts for more countries through IFI CLAIMS
 fulltext_enabled = true
 fulltext_countries = BE, CA, CN, FR, GB, IN, JP, KR, LU, NL, RU
 # Not enabled yet: EA, SI, ES, IN, AU, HK, BR, PL, CZ, IT, NZ, HU, TR, DK, HR, YU, RS, PT, UA, ZA, SE, MX, NO, BG, SK, TW, AR, GR, ID, IL, FI, DD, CS, MC

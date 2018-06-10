@@ -27,6 +27,9 @@ development
     - Upgrade packages bootbox, jq-pagination, jquery.viewport and stacktrace-js
     - Use clipboard.js instead of ZeroClipboard
 
+- [ui,mw] Refactor, improve and modularize data source adapter interfaces
+
+
 
 2018-03-17 0.150.0
 ==================

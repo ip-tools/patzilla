@@ -1,5 +1,11 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+
+ResultEntry = Backbone.Model.extend({
+    defaults: {
+    },
+});
+
 
 ResultCollection = Backbone.Collection.extend({
 
@@ -16,14 +22,9 @@ ResultCollection = Backbone.Collection.extend({
     },
 
     model: function(attrs, options) {
-        if (attrs.upstream_provider == 'ftpro') {
-            return new FulltextProResultEntry(attrs, options);
-        } else if (attrs.upstream_provider == 'ifi') {
-            log('Make IFIClaimsResultEntry');
-            return new IFIClaimsResultEntry(attrs, options);
-        } else {
-            console.warn('Could not create result model instance for upstream provider "' + attrs.upstream_provider + '"');
-        }
+        var entry_class = navigatorApp.current_datasource_info().adapter.entry || ResultEntry;
+        var model = new entry_class(attrs, options);
+        return model;
     },
 
 });

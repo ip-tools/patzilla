@@ -1,6 +1,6 @@
 <%
 // -*- coding: utf-8 -*-
-// (c) 2014-2017 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 %>
 
 <div id="querybuilder-area">
@@ -148,17 +148,15 @@
                     <img src="/static/img/icons/google-g.svg" class="square"/>
                     Google
                 </button>
-                <button class="btn hide" data-value="ftpro">
+                <button class="btn hide" data-value="sip">
                     <img src="/static/img/icons/pro.svg" class="square"/>
-                  "FulltextPRO "
+                    SIP
                 </button>
-                <!--
-                <button class="btn hide" data-value="ifi" style="height: 31px;" >
+                <button class="btn hide" data-value="ificlaims" style="height: 32px;" >
                     <div class="icon icon-globe icon-large" style="color: #3781b7;"/>
-                    IFI
+                    IFI CLAIMS
                 </button>
-                -->
-                <button class="btn hide" data-value="ifi">
+                <button class="btn hide" data-value="ificlaims" data-vendor="europatent">
                     <img src="/static/vendor/europatent/europatent_icon.png" style="height: 20px" />
                     WPS Fulltext
                 </button>
@@ -188,7 +186,7 @@
                                 <div class="controls">
                                     <div class="input-prepend">
                                         <span class="add-on add-on-label">Number</span>
-                                        <input id="patentnumber" name="patentnumber" class="input-xlarge" data-placeholder-multi="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-depatech="DE102011078918A1" type="text" autofocus="autofocus">
+                                        <input id="patentnumber" name="patentnumber" class="input-xlarge" placeholder="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-dpma="DE102011078918A1" type="text" autofocus="autofocus">
                                     </div>
                                 </div>
                             </div>
@@ -219,7 +217,7 @@
                                 <div class="controls">
                                     <div class="input-prepend">
                                         <span class="add-on add-on-label">Inventor</span>
-                                        <input name="inventor" class="input-xlarge" data-placeholder-default="&quot;Edison Thomas&quot;" data-placeholder-depatech="&quot;Robert Bosch&quot;" type="text">
+                                        <input name="inventor" class="input-xlarge" placeholder="&quot;Edison Thomas&quot;" data-placeholder-bosch="&quot;Robert Bosch&quot;" type="text">
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +233,7 @@
                                 <div class="controls">
                                     <div class="input-prepend">
                                         <span class="add-on add-on-label">Class</span>
-                                        <input name="class" class="input-xlarge" data-placeholder-multi="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
+                                        <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
                                     </div>
                                 </div>
                             </div>

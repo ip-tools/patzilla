@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2015 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery.shorten.1.0');
 require('./util.js');
 
@@ -233,6 +233,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         });
 
         // Resolve handler and appropriate document number representation
+        // TODO: Refactor to patzilla.access.{epo-ops,depatisconnect,ificlaims} namespaces
         var clazz;
         var document_number;
         if (datasource_name == 'ops') {
@@ -336,7 +337,7 @@ DocumentDetailsController = Marionette.Controller.extend({
     display_family: function(document, container, view_type) {
 
         var document_number = document.get_publication_number('epodoc');
-        if (document.get('datasource') == 'ifi') {
+        if (document.get('datasource') == 'ificlaims') {
             document_number = document.get_publication_number('docdb');
         }
 

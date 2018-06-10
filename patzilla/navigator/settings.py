@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2018 Andreas Motl, Elmyra UG
+# (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import os
 import json
 import logging
 from copy import deepcopy
 from email.utils import parseaddr
+
 from pyramid.exceptions import ConfigurationError
 from pyramid.threadlocal import get_current_request, get_current_registry
 from patzilla.version import __version__
@@ -217,6 +218,7 @@ class RuntimeSettings(object):
         vendor_names = self.registry.vendor_settings.vendors
         for vendor_name in vendor_names:
             vendor_info = self.registry.vendor_settings.vendor[vendor_name]
+            vendor_info['name'] = vendor_name
             if 'hostname_matches' in vendor_info:
                 for hostname_candidate in vendor_info.hostname_matches:
                     if hostname_candidate in self.hostname:
@@ -236,7 +238,7 @@ class RuntimeSettings(object):
             '<a href="https://depatisnet.dpma.de" target="_blank" class="incognito pointer">DPMA/DEPATISnet</a>',
             '<a href="https://www.uspto.gov/" target="_blank" class="incognito pointer">USPTO/PATIMG</a>',
             '<a href="http://cipo.gc.ca" target="_blank" class="incognito pointer">CIPO</a>',
-            '<a href="https://www.ificlaims.com/" target="_blank" class="incognito pointer">IFI Claims</a>',
+            '<a href="https://www.ificlaims.com/" target="_blank" class="incognito pointer">IFI CLAIMS</a>',
             '<a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
         ]
 
@@ -366,16 +368,19 @@ class RuntimeSettings(object):
 
         # D. special customizations
 
+        # 0. Vendor
+        params['vendor'] = self.vendor.name
+
         # 1. On patentview domains, limit access to liveview mode only
         params['isviewer'] = isviewer
         if isviewer:
             params['mode'] = 'liveview'
 
         # 2. Compute whether data sources are enabled
-        params['google_enabled']    = self.is_datasource_enabled('google')
-        params['ifi_enabled']       = self.is_datasource_enabled('ificlaims')
-        params['depatech_enabled']  = self.is_datasource_enabled('depatech')
-
+        params['datasources_enabled'] = []
+        for datasource in self.registry.datasource_settings.datasources:
+            if self.is_datasource_enabled(datasource):
+                params['datasources_enabled'].append(datasource)
 
         # E. backward-compat amendments
         for key, value in params.iteritems():
