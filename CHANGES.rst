@@ -29,6 +29,7 @@ development
 
 - [ui,mw] Refactor, improve and modularize data source adapter interfaces
 - [ui] Add timestamp to error report
+- [ui] Fix display of query builder sorting state
 
 
 2018-03-17 0.150.0
