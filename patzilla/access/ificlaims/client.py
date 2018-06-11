@@ -548,7 +548,7 @@ def ificlaims_client(options=None):
         client = get_ificlaims_client()
     return client
 
-#@cache_region('static')
+@cache_region('static')
 def ificlaims_fetch(resource, format, options=None):
     options = options or {}
     client = ificlaims_client(options=options)
@@ -566,7 +566,7 @@ def ificlaims_fetch(resource, format, options=None):
         raise IFIClaimsFormatException(msg)
 
 
-#@cache_region('search')
+@cache_region('search')
 def ificlaims_search(query, options=None):
 
     options = options or SmartBunch()

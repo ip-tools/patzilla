@@ -19,7 +19,7 @@ development
 - [mw] Improve downtime signalling for EPO OPS API
 - [mw] Improve report generation with ``unoconv``
 - [license] Officially upgrade to EUPL 1.2
-- [ui] Improve full text display for IFI Claims
+- [ui] Improve full text display for IFI CLAIMS
 - [mw] Fix full text acquisition from Espacenet
 - [ui] jQuery 3.x upgrade aftermath:
 
@@ -30,6 +30,7 @@ development
 - [ui,mw] Refactor, improve and modularize data source adapter interfaces
 - [ui] Add timestamp to error report
 - [ui] Fix display of query builder sorting state
+- [mw] Reenable response caching for IFI CLAIMS API
 
 
 2018-03-17 0.150.0
@@ -42,7 +43,7 @@ development
 ==================
 - Upgrade to MechanicalSoup 0.10.0. Thanks, Matthieu and Dan!
 - Improve whitelabel capabilities
-- Improve error response handling for IFI Claims
+- Improve error response handling for IFI CLAIMS
 - Set default language for "dpmaregister" crawler to English
 - Improve confirm dialogs for database "wipe" and "import" actions
 - Improve whitespace handling at query expression translation time. Thanks, Luca!
@@ -138,7 +139,7 @@ development
 - Add Sphinx documentation infrastructure and skeleton
 - Fix search metadata reset behavior
 - Activate IssueReporter email target again
-- Update IFI Claims documentation
+- Update IFI CLAIMS documentation
 - Fix dependencies in setup.py for compatibility between Mac OSX and Debian GNU/Linux
 - Backward compatibility for datasource identifier in user enablement settings
 - Fix error when opening export dialog after creating new project. Thanks, Benjamin!
@@ -148,7 +149,7 @@ development
 2017-10-13 0.141.0
 ==================
 - Enable display of "CPCNO" classifications
-- IFI Claims fulltext fixes and improvements
+- IFI CLAIMS fulltext fixes and improvements
 
     - Add proper escaping and newline replacement for description, e.g. KR20170103976A
     - Description sections “industrial-applicability” and “reference-signs-list” were missing, e.g. KR20170103976A
@@ -247,7 +248,7 @@ development
 - Vendor MTC: Update product name to “depa.tech navigator"
 - Use jquery.redirect from npmjs.com
 - Use jquery.viewport from npmjs.com
-- IFI Claims: Improve description fulltext display re.
+- IFI CLAIMS: Improve description fulltext display re.
   section “advantageous effects” (missing), embedded lists and embedded drawings
 - Improve handling of global and runtime configuration settings
 - Add vendor branding assets as discrete css stylesheets
@@ -293,7 +294,7 @@ development
 
 2017-09-08 0.135.0
 ==================
-- Update IFI Claims API endpoint
+- Update IFI CLAIMS API endpoint
 - Use [OL] prefix for displaying titles without @lang attribute
 - Fix online help link in menu
 - Fix issue reporter for query transformation
@@ -301,7 +302,7 @@ development
 - Fix behavior when reviewing empty basket
 - Add datasource depa.tech
 - Add branding for vendor MTC
-- Improve number normalization around datasource IFI Claims
+- Improve number normalization around datasource IFI CLAIMS
 - Fix document cycle sorting
 - Fix highlighting for Solr complexphrase expressions
 - depa.tech: Also search for priority number when using “Number” field in comfort search
@@ -322,25 +323,25 @@ development
 2017-04-05 0.134.0
 ==================
 - Minor improvement to basket.add(…) method
-- Fix IFI Claims anomaly: KR20170037210A has "name" instead of "last-name" in applicants node
-- Also grok “image/jpeg” as source format from IFI Claims for delivering single pages and drawings
-- Enable caching for IFI Claims media downloads
+- Fix IFI CLAIMS anomaly: KR20170037210A has "name" instead of "last-name" in applicants node
+- Also grok “image/jpeg” as source format from IFI CLAIMS for delivering single pages and drawings
+- Enable caching for IFI CLAIMS media downloads
 
 2017-04-04 0.133.0
 ==================
-- Fix parties (applicants, inventors) display for IFI Claims: An error occurred when displaying the document 'IN268402B’. Thanks, Benjamin!
+- Fix parties (applicants, inventors) display for IFI CLAIMS: An error occurred when displaying the document 'IN268402B’. Thanks, Benjamin!
 - Fix exception flood from basket model
 - Fix basket “Add visible” feature
-- Properly handle errors when IFI Claims delivers empty document for bibliographic data, e.g. IN268402A
-- Make IFI Claims data model grok patent citations
-- Enable documents from office “KR” for IFI Claims bibliographic data interface
-- Improve language priorization for fulltexts from IFI Claims: EN, DE, others
+- Properly handle errors when IFI CLAIMS delivers empty document for bibliographic data, e.g. IN268402A
+- Make IFI CLAIMS data model grok patent citations
+- Enable documents from office “KR” for IFI CLAIMS bibliographic data interface
+- Improve language priorization for fulltexts from IFI CLAIMS: EN, DE, others
 - Add datasource label to fulltext sections
 
 2017-03-28 0.132.3
 ==================
-- Improve/fix IFI Claims data model implementation
-- Add “CN” to list of countries where bibliographic data can be acquired from IFI Claims
+- Improve/fix IFI CLAIMS data model implementation
+- Add “CN” to list of countries where bibliographic data can be acquired from IFI CLAIMS
 - Add datasource label to detail view
 
 2017-03-28 0.132.2
@@ -353,19 +354,19 @@ development
 
 2017-03-28 0.132.0
 ==================
-- Improve fulltext/claims display for RU2015121704A via IFI Claims
+- Improve fulltext/claims display for RU2015121704A via IFI CLAIMS
 - Refactor bibliographic model implementation
-- Optionally display bibliographic data from IFI Claims (e.g. IN2015CH00356A)
+- Optionally display bibliographic data from IFI CLAIMS (e.g. IN2015CH00356A)
 
 2017-03-10 0.131.0
 ==================
 - Improve logging and error handling
-- Enable fulltext acquisition for countries BE, CA, CN, FR, GB, JP, KR, LU, NL, RU through IFI Claims
+- Enable fulltext acquisition for countries BE, CA, CN, FR, GB, JP, KR, LU, NL, RU through IFI CLAIMS
 
 2017-03-08 0.130.3
 ==================
-- Update IFI Claims documentation re. combined {!complexphrase} expressions
-- Improve IFI Claims translation re. queries with {!complexphrase} fulltext criteria
+- Update IFI CLAIMS documentation re. combined {!complexphrase} expressions
+- Improve IFI CLAIMS translation re. queries with {!complexphrase} fulltext criteria
 
 2017-03-08 0.130.2
 ==================
@@ -379,7 +380,7 @@ development
 ==================
 - Bugfix re. bad assignment between “seen” and “rated” documents in basket model
 - Switch to interface flavor “expert” when signalling through url parameter “mode=expert”
-- IFI Claims: Distinguish between query expression and query filter parameters to better support certain time range searches
+- IFI CLAIMS: Distinguish between query expression and query filter parameters to better support certain time range searches
 
 2017-03-03 0.129.1
 ==================
@@ -388,8 +389,8 @@ development
 
 2017-03-02 0.129.0
 ==================
-- IFI Claims: Properly respond to “no servers hosting shard” error messages
-- IFI Claims: Improve keyword highlighting
+- IFI CLAIMS: Properly respond to “no servers hosting shard” error messages
+- IFI CLAIMS: Improve keyword highlighting
 - Improve error handling
 - Keyword highlighting: Switch from whole words to fragments
 - Improve support- and system-email machinery
@@ -398,35 +399,35 @@ development
 
 2017-02-27 0.128.2
 ==================
-- Improve datetime and fulltext parsing for IFI Claims
+- Improve datetime and fulltext parsing for IFI CLAIMS
 
 2017-02-27 0.128.1
 ==================
-- Improve IFI Claims interface and documentation re. “maxClauseCount is set to …” error messages
+- Improve IFI CLAIMS interface and documentation re. “maxClauseCount is set to …” error messages
 
 2017-02-22 0.128.0
 ==================
-- Update IFI Claims documentation
+- Update IFI CLAIMS documentation
 - Add vendor branding for Europatent
 
 2017-02-20 0.127.0
 ==================
-- Fix typo in IFI Claims documentation
+- Fix typo in IFI CLAIMS documentation
 - Disable data source “FulltextPRO”
 
 2017-02-20 0.126.2
 ==================
-- Fix date parsing for full 4-digit years with IFI Claims
+- Fix date parsing for full 4-digit years with IFI CLAIMS
 
 2017-02-20 0.126.1
 ==================
-- Fix parsing regular ISO dates with IFI Claims
+- Fix parsing regular ISO dates with IFI CLAIMS
 
 2017-02-20 0.126.0
 ==================
 - Update branding for vendor Europatent
-- IFI Claims: Add handbook and fix field name chooser
-- Make comfort search at IFI Claims accept date expressions in german format
+- IFI CLAIMS: Add handbook and fix field name chooser
+- Make comfort search at IFI CLAIMS accept date expressions in german format
 
 2016-11-15 0.125.3
 ==================
@@ -591,7 +592,7 @@ Features
 Infrastructure
 --------------
 - Generalize keyword field whitelist handling between OPS and DEPATISnet
-- Generalize query expression parsing between CQL (EPO, DEPATISnet) and Solr (IFI Claims)
+- Generalize query expression parsing between CQL (EPO, DEPATISnet) and Solr (IFI CLAIMS)
 
     - IFI: Improve keyword extraction and highlighting
     - IFI: Improve class rewriting in comfort form
@@ -645,7 +646,7 @@ Bug fixes and minor updates
 - Improve"FulltextPRO "session management for error cases
 - Improve placeholders re. gracefulness to WO anomalies like WO2003049775A2 vs. WO03049775A2
 - Improve drawings carousel by using drawings from family members for references (Aktenzeichen) like DE112013003369A5
-- Reactivate SDP data adapter as IFI Claims
+- Reactivate SDP data adapter as IFI CLAIMS
 
 2016-03-19 0.113.0
 ==================
