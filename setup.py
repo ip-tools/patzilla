@@ -117,6 +117,7 @@ requires = [
     'docopt==0.6.2',
     'envoy==0.0.3',
     'where==1.0.2',
+    'tqdm==4.23.4',
 
 ]
 
@@ -203,6 +204,7 @@ setup(name='patzilla',
             'patzilla      = patzilla.commands:run',
             'patzilla-user = patzilla.commands:usercmd',
             'dpmaregister  = patzilla.access.dpma.dpmaregister:run',
+            'patzilla-sip  = patzilla.access.sip.commands:run',
         ],
 
       },

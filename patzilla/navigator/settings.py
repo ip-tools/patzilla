@@ -240,6 +240,7 @@ class RuntimeSettings(object):
             '<a href="http://cipo.gc.ca" target="_blank" class="incognito pointer">CIPO</a>',
             '<a href="https://www.ificlaims.com/" target="_blank" class="incognito pointer">IFI CLAIMS</a>',
             '<a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
+            '<a href="https://patentfamily.com/" target="_blank" class="incognito pointer">SIP</a>',
         ]
 
         software_version_label = 'PatZilla release: ' + self.registry.application_settings.software_version

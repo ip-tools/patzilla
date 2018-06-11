@@ -15,7 +15,7 @@ include     = vendors.ini
 vendors     = patzilla
 
 # Which datasources are configured?
-# Choose one or more of ops, depatisconnect, ificlaims, depatech.
+# Choose one or more of ops, depatisconnect, ificlaims, depatech, sip.
 datasources = ops
 
 # Fields to protect from being leaked into Javascript environment

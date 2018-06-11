@@ -75,8 +75,13 @@ def make_expression_filter(data):
         from patzilla.access.ificlaims.expression import IFIClaimsExpression
     elif datasource == 'depatech':
         from patzilla.access.depatech.expression import DepaTechExpression
+    elif datasource == 'sip':
+        from patzilla.access.sip.expression import SipExpression
     elif datasource == 'google':
         from patzilla.access.google.search import GooglePatentsExpression
+
+    if datasource == 'sip':
+        modifiers = SipExpression.compute_modifiers(modifiers)
 
     expression = ''
     expression_parts = []
@@ -123,8 +128,9 @@ def make_expression_filter(data):
                 if datasource in ['ops', 'depatisnet']:
                     expression_part = pair_to_cql(datasource, key, value)
 
-                elif datasource == 'ftpro':
-                    expression_part = FulltextProExpression.pair_to_ftpro_xml(key, value, modifiers)
+                # TODO: Refactor to "patzilla.access.sip" namespace
+                elif datasource == 'sip':
+                    expression_part = SipExpression.pair_to_sip_xml(key, value, modifiers)
                     if expression_part:
                         if expression_part.has_key('keywords'):
                             keywords += expression_part['keywords']
@@ -196,7 +202,7 @@ def make_expression_filter(data):
     elif datasource in ['ificlaims', 'depatech']:
         expression = ' AND '.join(expression_parts)
 
-    elif datasource == 'ftpro':
+    elif datasource == 'sip':
         if expression_parts:
             if len(expression_parts) == 1:
                 expression = expression_parts[0]
@@ -206,7 +212,7 @@ def make_expression_filter(data):
 
             # apply full family mode to whole xml search expression
             if asbool(modifiers.get('family-full')):
-                expression = FulltextProExpression.enrich_fullfamily(expression)
+                expression = SipExpression.enrich_fullfamily(expression)
 
             expression = pretty_print(expression, xml_declaration=False)
 

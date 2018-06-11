@@ -105,14 +105,16 @@ mongodb-start:
 	mkdir -p ./var/lib/mongodb
 	mongod --dbpath=./var/lib/mongodb --smallfiles
 
-mongodb-ftpro-export:
+mongodb-sip-export:
 	mkdir -p var/tmp/mongodb
-	mongoexport --db patzilla_development --collection ftpro_country > var/tmp/mongodb/ftpro_country.mongodb
-	mongoexport --db patzilla_development --collection ftpro_ipc_class > var/tmp/mongodb/ftpro_ipc_class.mongodb
+	mongoexport --db patzilla_development --collection sip_country > var/tmp/mongodb/sip_country.mongodb
+	mongoexport --db patzilla_development --collection sip_ipc_class > var/tmp/mongodb/sip_ipc_class.mongodb
+	mongoexport --db patzilla_development --collection sip_cpc_class > var/tmp/mongodb/sip_cpc_class.mongodb
 
-mongodb-ftpro-import:
-	mongoimport --db patzilla_development --collection ftpro_country < var/tmp/mongodb/ftpro_country.mongodb
-	mongoimport --db patzilla_development --collection ftpro_ipc_class < var/tmp/mongodb/ftpro_ipc_class.mongodb
+mongodb-sip-import:
+	mongoimport --db patzilla_development --collection sip_country < var/tmp/mongodb/sip_country.mongodb
+	mongoimport --db patzilla_development --collection sip_ipc_class < var/tmp/mongodb/sip_ipc_class.mongodb
+	mongoimport --db patzilla_development --collection sip_cpc_class < var/tmp/mongodb/sip_cpc_class.mongodb
 
 sloccount:
 	sloccount patzilla

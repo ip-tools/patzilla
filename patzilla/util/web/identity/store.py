@@ -178,7 +178,7 @@ def provision_users(event):
             username = 'admin',
             password = 'admin',
             tags     = ['staff'],
-            modules  = ['keywords-user', 'family-citations', 'analytics', 'ificlaims', 'depatech']),
+            modules  = ['keywords-user', 'family-citations', 'analytics', 'ificlaims', 'depatech', 'sip']),
 
         """
         User(

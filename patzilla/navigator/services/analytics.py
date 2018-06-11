@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 import datetime
 import operator
@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from jsonpointer import JsonPointer
 from transitions.core import Machine
 from patzilla.access.epo.ops.api import analytics_family, ops_published_data_search, _result_list_compact
+from patzilla.access.sip.client import sip_published_data_search, sip_published_data_crawl
 from patzilla.navigator.services.dpma import dpma_published_data_search
 from patzilla.navigator.services.util import make_expression_filter
 
@@ -138,8 +139,8 @@ class QueryDateRangeNarrower(object):
         elif self.datasource == 'depatisnet':
             self.response, self.hits = query_depatisnet(query, limit=self.maxcount)
 
-        elif self.datasource == 'ftpro':
-            self.response, self.hits = query_ftpro(query, limit=self.maxcount)
+        elif self.datasource == 'sip':
+            self.response, self.hits = query_sip(query, limit=self.maxcount)
 
         else:
             raise ValueError('Data source "{0}" not implemented'.format(self.datasource))
@@ -230,7 +231,7 @@ def analytics_daterange(datasource, kind, criteria):
         items = fsm.response['results']
         sort_field = 'pubdate'
 
-    elif fsm.datasource == 'ftpro':
+    elif fsm.datasource == 'sip':
         items = fsm.response['details']
         sort_field = 'Priority'
 
@@ -261,8 +262,8 @@ def query_depatisnet(query, limit=50):
     log.info('query: %s, total_count: %s', query, response['hits'])
     return response, response['hits']
 
-def query_ftpro(query, limit=50):
-    response = ftpro_published_data_search(query, {'offset': 1, 'limit': limit})
+def query_sip(query, limit=50):
+    response = sip_published_data_search(query, {'offset': 1, 'limit': limit})
     total_count = int(response['meta']['MemCount'])
     log.info('query: %s, total_count: %s', query, total_count)
     return response, total_count
@@ -284,12 +285,12 @@ def analytics_applicants_distinct_handler(request):
     expression_data = _decode_expression_from_query(request)
 
     query = make_expression({
-        'datasource': 'ftpro',
+        'datasource': 'sip',
         'format': 'comfort',
         'criteria': expression_data['criteria'],
     })
 
-    results = ftpro_published_data_crawl('biblio', query, 2500)
+    results = sip_published_data_crawl('biblio', query, 2500)
     #print 'results:', results
 
     applicants = {}

@@ -101,6 +101,7 @@ require('patzilla.access.depatech');
 require('patzilla.access.depatisnet');
 require('patzilla.access.epo.ops');
 require('patzilla.access.ificlaims');
+require('patzilla.access.sip');
 
 // Setup user interface regions
 navigatorApp.addRegions({

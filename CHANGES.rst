@@ -32,6 +32,7 @@ development
 - [ui] Fix display of query builder sorting state
 - [mw] Reenable response caching for IFI CLAIMS API
 - [ui] Use "cheap-source-map" strategy with webpack to fix error handling with Chrome
+- [mw,ui] Add improved data source adapter for SIP again
 
 
 2018-03-17 0.150.0
