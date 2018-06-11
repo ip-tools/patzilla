@@ -148,6 +148,7 @@ IssueReport = Backbone.Model.extend({
         //   - Application runtime state
         //   - TODO: Request object
         this.get('meta').id              = this.uuid4();
+        this.get('meta').timestamp       = (new Date()).toISOString();
 
         // TODO: Decouple from navigatorApp
         this.get('application').config   = navigatorApp.config && navigatorApp.config.toJSON() || {};

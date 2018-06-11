@@ -28,7 +28,7 @@ development
     - Use clipboard.js instead of ZeroClipboard
 
 - [ui,mw] Refactor, improve and modularize data source adapter interfaces
-
+- [ui] Add timestamp to error report
 
 
 2018-03-17 0.150.0
