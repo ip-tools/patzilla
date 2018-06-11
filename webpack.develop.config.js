@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2017 Andreas Motl, Elmyra UG
+// (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 const config = require('./webpack.config');
 const webpack = require('webpack');
 const WebpackNotifierPlugin = require('webpack-notifier');
@@ -7,10 +7,17 @@ const WebpackNotifierPlugin = require('webpack-notifier');
 // https://www.npmjs.com/package/sourcemapped-stacktrace
 // https://webpack.js.org/configuration/devtool/
 // https://webpack.js.org/plugins/source-map-dev-tool-plugin/
-//config.devtool = 'cheap-source-map';
-config.devtool = 'cheap-module-eval-source-map',
-//config.devtool = 'eval-cheap-module-source-map',
-//config.devtool = 'cheap-module-inline-source-map',
+// https://github.com/webpack/webpack/issues/5681#issuecomment-345861733
+
+// This is safe wrt. error handling in Chrome
+config.devtool = 'cheap-source-map';
+
+// This is fast, but messes up error handling, at least in Chrome
+//config.devtool = 'cheap-module-eval-source-map';
+
+//config.devtool = 'cheap-module-inline-source-map';
+//config.devtool = 'eval-cheap-module-source-map';
+
 
 // Apply code splitting
 // https://webpack.js.org/guides/code-splitting/

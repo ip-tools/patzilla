@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2017 Andreas Motl, Elmyra UG
+// (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 const path = require('path');
 const webpack = require('webpack');
 
