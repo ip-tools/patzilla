@@ -10,9 +10,6 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
-from patzilla.access.depatech.expression import DepaTechExpression
-from patzilla.access.google.search import GooglePatentsExpression
-from patzilla.access.ificlaims.expression import IFIClaimsExpression
 from patzilla.navigator.export import Dossier, DossierXlsx
 from patzilla.util.config import read_list
 from patzilla.util.cql.util import pair_to_cql
@@ -73,8 +70,13 @@ def make_expression_filter(data):
     modifiers = data.get('modifiers', {})
     query = data.get('query')
 
-    if datasource == 'ftpro':
-        modifiers = FulltextProExpression.compute_modifiers(modifiers)
+    # TODO: Refactor to "patzilla.access.{sip,ificlaims,depatech,google}" namespaces
+    if datasource == 'ificlaims':
+        from patzilla.access.ificlaims.expression import IFIClaimsExpression
+    elif datasource == 'depatech':
+        from patzilla.access.depatech.expression import DepaTechExpression
+    elif datasource == 'google':
+        from patzilla.access.google.search import GooglePatentsExpression
 
     expression = ''
     expression_parts = []
