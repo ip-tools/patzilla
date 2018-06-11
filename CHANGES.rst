@@ -450,18 +450,18 @@ development
 ==================
 - Improve interactive DEPATISconnect behavior through fastpath document retrieval and acquisition
 - Fix Espacenet fulltext retrieval fallback
-- Improve"FulltextPRO "error handling
+- Improve "FulltextPRO" error handling
 
 2016-10-26 0.123.1
 ==================
-- Fix logging error on"FulltextPRO "exception
+- Fix logging error on "FulltextPRO" exception
 
 2016-10-18 0.123.0
 ==================
 - Fix placeholder display re. WO2001000469A1 vs. WO0100469A1
 - Fix setup woes re. setuptools>=11.3 dependency
 - Reduce production search cache time to 2 hours
-- Catch new type of"FulltextPRO "error
+- Catch new type of "FulltextPRO" error
 - Improve layout of search modifiers "Family member by priority" and "Remove family members"
 
 2016-10-12 0.122.0
@@ -641,10 +641,10 @@ Bug fixes and minor updates
 
 2016-04-18 0.114.0
 ==================
-- Improve exception handling for"FulltextPRO "upstream
-- Update"FulltextPRO "database search endpoint after server changeover
+- Improve exception handling for "FulltextPRO" upstream
+- Update "FulltextPRO" database search endpoint after server changeover
 - Improve OPS drawing inquiry re. US amendments/corrections
-- Improve"FulltextPRO "session management for error cases
+- Improve "FulltextPRO" session management for error cases
 - Improve placeholders re. gracefulness to WO anomalies like WO2003049775A2 vs. WO03049775A2
 - Improve drawings carousel by using drawings from family members for references (Aktenzeichen) like DE112013003369A5
 - Reactivate SDP data adapter as IFI CLAIMS
@@ -660,7 +660,7 @@ Bug fixes and minor updates
 
 2016-01-06 0.111.2
 ==================
--"FulltextPRO "adapter: don’t decode xml from utf-8 when pretty printing
+- "FulltextPRO" adapter: don’t decode xml from utf-8 when pretty printing
 - middleware: adapt tests to changes in US number normalization
 - middleware: reactivate SE..A to SE..L rewriting with number normalization
 
@@ -727,7 +727,7 @@ Bug fixes and minor updates
 
 2015-12-15 0.105.0
 ==================
-- ui: display results in the same order as coming from upstream; this applies to DEPATISnet,"FulltextPRO "and Numberlist queries
+- ui: display results in the same order as coming from upstream; this applies to DEPATISnet, "FulltextPRO" and Numberlist queries
 
 2015-12-15 0.104.2
 ==================
@@ -758,7 +758,7 @@ Bug fixes and minor updates
 
 2015-09-25 0.101.1
 ==================
--"FulltextPRO "adapter: fix xml query building re. xml declaration
+- "FulltextPRO" adapter: fix xml query building re. xml declaration
 
 2015-09-25 0.101.0
 ==================
@@ -780,7 +780,7 @@ Bug fixes and minor updates
 
 2015-07-16 0.99.0
 =================
-
+- middleware: add datasource "SDP": Serviva Data Proxy / IFI CLAIMS
 
 2015-06-02 0.98.0
 =================
@@ -789,7 +789,7 @@ Bug fixes and minor updates
 2015-05-18 0.97.10
 ==================
 - middleware/ui: add "applicant-distinct" analytics module
-- middleware: fix edge case re. proximity operators in"FulltextPRO "expressions
+- middleware: fix edge case re. proximity operators in "FulltextPRO" expressions
 - middleware: DPMA register: fix form selection (don't select by name, but by number)
 
 2015-04-10 0.97.9
@@ -1086,7 +1086,7 @@ Bug fixes and minor updates
 2015-01-05 0.79.0
 =================
 - ui: fix direct numberlist mode for internet explorer
-- middleware: fix FulltextPRO query generation (deactivated "modern mode" due to problems with"FulltextPRO "query parser)
+- middleware: fix FulltextPRO query generation (deactivated "modern mode" due to problems with "FulltextPRO" query parser)
 - ui: shortcut button for jumping from bibliographic data directly to the “Family » Citations” tab
 
 2015-01-04 0.78.0
@@ -1158,11 +1158,11 @@ Bug fixes and minor updates
 
 2014-12-08 0.70.1
 =================
-- middleware: fix"FulltextPRO "CPC classes import
+- middleware: fix "FulltextPRO" CPC classes import
 
 2014-12-08 0.70.0
 =================
-- middleware: integrate"FulltextPRO "CPC classes
+- middleware: integrate "FulltextPRO" CPC classes
 
 2014-12-05 0.69.0
 =================
@@ -1177,13 +1177,13 @@ Bug fixes and minor updates
 
 2014-12-02 0.67.0
 =================
-- middleware: propagate error message from"FulltextPRO "search to user interface
+- middleware: propagate error message from "FulltextPRO" search to user interface
 - ui: reset document model on error while avoiding double rendering on initial page load
 - middleware/ui: propagate ftpro search exception to user interface
 - middleware: fix for boolean fulltext expressions for FulltextPRO search
 - ui: enhance/fix error behavior, error display and hotkeys
 - ui: enable/fix autocomplete in comfort form (workaround)
-- middleware: strip spaces from values of comfort form @ FulltextPRO to fix"FulltextPRO "syntax error
+- middleware: strip spaces from values of comfort form @ FulltextPRO to fix "FulltextPRO" syntax error
 - ui: fix comfort form submit-on-return for non-ie/-safari browsers
 - middleware/ui: enhance error message propagation
 - middleware/ui: fix/enhance query expression building experience
@@ -1206,7 +1206,7 @@ Bug fixes and minor updates
 - ui: display other classifications (UC, FI, FTERM)
 - middleware: enhance timeout behavior when downloading PDF documents (1 second)
 - ui/middleware: fulltext-modifier-chooser for selecting in which fulltext fields
-  (title, abstract, claim, description) to search at"FulltextPRO "backend
+  (title, abstract, claim, description) to search at "FulltextPRO" backend
 - ui: fullscreen mode feature
 
 2014-11-17 0.63.0
@@ -1243,7 +1243,7 @@ Bug fixes and minor updates
 
 2014-11-12 0.60.0
 =================
-- ui/middleware: display nice error message if"FulltextPRO "is in maintenance mode
+- ui/middleware: display nice error message if "FulltextPRO" is in maintenance mode
 
 2014-11-12 0.59.1
 =================
@@ -1325,13 +1325,13 @@ Bug fixes and minor updates
 2014-10-08 0.46.0
 =================
 - middleware/ui: compute keywords from comfort form field values if datasource=ftpro
-- middleware/ui: enhance error handling on invalid field values in"FulltextPRO "comfort form
-- middleware: enable"FulltextPRO "IPC class querying with right truncation, e.g. H04L29*
+- middleware/ui: enhance error handling on invalid field values in "FulltextPRO" comfort form
+- middleware: enable "FulltextPRO" IPC class querying with right truncation, e.g. H04L29*
 
 2014-10-08 0.45.0
 =================
 - middleware/ui: connect comfort search form with ftpro datasource
-- middleware:"FulltextPRO "concordance subsystem for resolving countries and ipc classes
+- middleware: "FulltextPRO" concordance subsystem for resolving countries and ipc classes
 
 2014-10-07 0.44.2
 =================
@@ -1344,7 +1344,7 @@ Bug fixes and minor updates
 
 2014-10-07 0.44.0
 =================
-- middleware: lowlevel adapter to search provider "FulltextPRO"
+- middleware: lowlevel adapter to search provider "SIP/FulltextPRO"
 - ui/middleware: integrate "FulltextPRO" search provider into user interface
 
 2014-10-04 0.43.2
