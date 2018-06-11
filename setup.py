@@ -30,9 +30,9 @@ requires = [
     'PasteScript==2.0.2',
 
     # Caching
-    'Beaker==1.9.0',
+    'Beaker==1.9.0',            # 1.10.0
     'pyramid_beaker==0.8',
-    'dogpile.cache==0.6.4',
+    'dogpile.cache==0.6.4',     # 0.6.5
 
     # Database
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
@@ -42,12 +42,12 @@ requires = [
     'mongoengine==0.13.0',      # 0.15.0
 
     # Web services
-    'cornice==2.4.1',           # 3.1.0
+    'cornice==2.4.1',           # 3.4.0
 
     # Authorization
     'pycrypto==2.6.1',
     'jws==0.1.3',
-    'python_jwt==2.0.2',        # 3.0.0
+    'python_jwt==2.0.2',        # 3.1.0
     'pbkdf2==1.3',
 
 
@@ -95,9 +95,9 @@ requires = [
     'pandas==0.18.1',           # 0.22.0
 
     # Data formatting
-    'openpyxl==2.1.0',          # 2.5.1
+    'openpyxl==2.1.0',          # 2.5.4
     'xlrd==0.9.3',              # 1.1.0
-    'XlsxWriter==0.9.3',        # 1.0.2
+    'XlsxWriter==0.9.3',        # 1.0.5
 
     # Data conversion
     'Pillow==5.1.0',
