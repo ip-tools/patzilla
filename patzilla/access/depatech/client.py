@@ -38,7 +38,8 @@ class DepaTechClient(GenericSearchClient):
         self.search_max_hits = 10000
         self.crawl_max_count = 50000
 
-        self.path_search            = '/es/deparom/_search'
+        self.path_search = '/es/deparom/_search'
+        self.path_dqt = '/dqt/query/es'
 
         self.uri = uri
         self.username = username
@@ -62,6 +63,14 @@ class DepaTechClient(GenericSearchClient):
 
         offset = options.offset
         limit  = options.limit
+        transport = 'querystring'
+
+        # Use DEPAROM Query Translator
+        # https://depa.tech/api/manual/dqt-translator/
+        # https://api.depa.tech/dqt/query/es
+        if query.expression and query.expression.strip().startswith('DEPAROM V1.0'):
+            transport = 'json'
+            query.expression = self.translate_deparom_query(query.expression)
 
         log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}; user={username}".format(
             query.expression, offset, limit, **self.__dict__))
@@ -89,12 +98,20 @@ class DepaTechClient(GenericSearchClient):
         headers = {}
         headers.update({'Accept': 'application/json'})
         try:
-            response = requests.get(
-                uri,
-                params=params,
-                headers=headers,
-                auth=(self.username, self.password),
-                verify=self.tls_verify)
+            if transport == 'querystring':
+                response = requests.get(
+                    uri,
+                    params=params,
+                    headers=headers,
+                    auth=(self.username, self.password),
+                    verify=self.tls_verify)
+            else:
+                response = requests.post(
+                    uri,
+                    data=query.expression,
+                    headers=headers,
+                    auth=(self.username, self.password),
+                    verify=self.tls_verify)
         except RequestException as ex:
             raise self.search_failed(
                 ex=ex,
@@ -150,6 +167,58 @@ class DepaTechClient(GenericSearchClient):
 
                 raise self.search_failed(
                     user_info=u'Error searching depa.tech.',
+                    message=message,
+                    response=response)
+
+        raise self.search_failed(response=response)
+
+    def translate_deparom_query(self, deparom_expression):
+        uri = self.uri + self.path_dqt
+
+        log.info(u'{backend_name}: Translate DEPAROM query expression={expression}, uri={uri}'.format(
+            expression=deparom_expression, uri=uri, backend_name=self.backend_name))
+
+        # Perform search request
+        headers = {}
+        headers.update({'Accept': 'application/json'})
+        try:
+            response = requests.post(
+                uri,
+                data=deparom_expression,
+                headers=headers,
+                auth=(self.username, self.password),
+                verify=self.tls_verify,
+            )
+        except RequestException as ex:
+            raise self.search_failed(
+                ex=ex,
+                user_info='Error or timeout while connecting to upstream database. Database might be offline.',
+                meta={'username': self.username, 'uri': uri})
+
+        # Process search response
+        if response.status_code == 200:
+            #print "response:", response.content        # debugging
+
+            response_data = json.loads(response.content)
+            result = {'query': response_data}
+            return json.dumps(result)
+
+        elif response.status_code in [400, 500] and response.headers.get('Content-Type', '').startswith('application/json'):
+
+            response_data = json.loads(response.content)
+
+            # Handle search expression errors
+            if 'error' in response_data:
+                upstream_error = response_data['error']['caused_by']
+                upstream_error['code'] = response_data['status']
+
+                if 'reason' not in upstream_error:
+                    upstream_error['reason'] = 'Reason unknown'
+
+                message = u'Response status code: {code}\n\n{reason}'.format(**upstream_error)
+
+                raise self.search_failed(
+                    user_info=u'Error translating DEPAROM query expression with depa.tech.',
                     message=message,
                     response=response)
 
