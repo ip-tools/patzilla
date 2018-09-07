@@ -8,6 +8,7 @@ from email.utils import parseaddr
 
 from pyramid.exceptions import ConfigurationError
 from pyramid.threadlocal import get_current_request, get_current_registry
+
 from patzilla.version import __version__
 from patzilla.navigator.util import dict_prefix_key
 from patzilla.util.config import read_list, asbool, get_configuration
@@ -156,29 +157,19 @@ class RuntimeSettings(object):
 
     # TODO: Refactor IpsuiteNavigatorConfig.defaults here as well, trim down config.js
 
-    development_hosts = [
-        'localhost',
-        'offgrid',
-    ]
-
-    staging_hosts = [
-        'localhost',
-        'offgrid',
-        'patentsearch-develop.elmyra.de',
-        'patentsearch-staging.elmyra.de',
-    ]
-
     def __init__(self):
 
         self.request = get_current_request()
         self.registry = get_current_registry()
 
         self.hostname = self.request.host.split(':')[0]
+        self.development_mode = development_mode()
 
         self.vendor = self.effective_vendor()
         self.config = self.config_parameters()
         self.theme = self.theme_parameters()
         self.beta_badge = '<div class="label label-success label-large do-not-print">BETA</div>'
+
 
     def asdict(self):
         return self.__dict__.copy()
@@ -394,6 +385,10 @@ class RuntimeSettings(object):
 
     def is_datasource_enabled(self, datasource):
 
+        # Default data sources are always enabled
+        if datasource in ['ops', 'depatisnet']:
+            return True
+
         # Compatibility aliasing
         datasource_user_module = datasource
         if datasource == 'ificlaims':
@@ -402,7 +397,7 @@ class RuntimeSettings(object):
         # Matching
         enabled = \
             datasource in self.registry.datasource_settings.datasources and \
-            (self.hostname in self.development_hosts or \
+            (self.development_mode or \
              datasource in self.request.user.modules or \
              datasource_user_module in self.request.user.modules)
 
@@ -414,21 +409,20 @@ class RuntimeSettings(object):
         params = self.theme_settings()
 
         # 3. add badges for staging- and development-environments
-        if self.hostname in self.staging_hosts:
-            badge_text = None
-            label_kind = None
-            if 'staging' in self.hostname:
-                badge_text = 'staging'
-                label_kind = 'info'
-            elif 'develop' in self.hostname:
-                badge_text = 'development'
-                label_kind = 'info'
-            elif 'localhost' in self.hostname:
-                badge_text = 'localhost'
-                label_kind = 'info'
+        badge_text = None
+        label_kind = None
+        if 'localhost' in self.hostname or '127.0.0.' in self.hostname:
+            badge_text = 'localhost'
+            label_kind = 'info'
+        elif 'develop' in self.hostname:
+            badge_text = 'development'
+            label_kind = 'info'
+        elif 'staging' in self.hostname:
+            badge_text = 'staging'
+            label_kind = 'info'
 
-            if badge_text and label_kind:
-                params['ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
+        if badge_text and label_kind:
+            params['ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
 
         # TODO: Move the html stuff elsewhere!
         if self.config.get('mode') == 'liveview':
@@ -469,3 +463,12 @@ class JavascriptParameterFiddler(object):
         javascript_theme  = 'var navigator_theme = {theme};'.format(**tplvars)
         payload = '\n'.join([javascript_config, javascript_theme])
         return payload
+
+
+# Whether we are in development or production mode
+def development_mode():
+    registry = get_current_registry()
+    try:
+        return asbool(registry.application_settings.ip_navigator.development_mode)
+    except:
+        return False
