@@ -4,6 +4,10 @@ IP Navigator CHANGES
 
 development
 ===========
+
+
+2018-09-26 0.151.0
+==================
 - Add status endpoints for monitoring upstream services
 - Honor tag "login:disabled" on authentication
 - Add multi-tenant email address and content configuration
@@ -37,7 +41,6 @@ development
 - [mw] Fix development mode re. missing display of data source chooser
 - [ui,mw] Add basic Ikofax expression support for searching at DPMA DEPATISnet
 - [ui] Move logout link to the bottom of the menu
-
 
 2018-03-17 0.150.0
 ==================
