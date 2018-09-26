@@ -165,7 +165,7 @@ class DpmaDepatisnetAccess:
             error_message = self.find_errors(body)
 
 
-        # collect result count
+        # Collect result count
 
         # Total hits: 230175    A random selection of 1000 hits is being displayed.  You can narrow your search by adding more search criteria.
         matches = re.search('Total hits:&nbsp;(\d+)', error_message)
@@ -218,17 +218,19 @@ class DpmaDepatisnetAccess:
             raise SyntaxError('Empty response from DPMA server. Please check your search criteria for syntax errors, '
                               'otherwise don\'t hesitate to report this problem to us.')
 
-        # check for error messages
+        # Check for error messages
         soup = BeautifulSoup(body)
         error_message = soup.find('div', {'class': 'error'})
         if error_message:
+            parts = []
             [s.extract() for s in error_message('a')]
-            [s.extract() for s in error_message('p', {'class': 'headline'})]
-            error_message = str(error_message)
+            [parts.append(s.extract()) for s in error_message('p', {'class': 'headline'})]
+            reason = ', '.join([part.getText() for part in parts])
+            error_message = u'{}\n{}'.format(reason, str(error_message))
         else:
             error_message = ''
 
-        if 'An error has occurred' in body:
+        if u'An error has occurred' in body:
             error_message = error_message.replace('\t', '').replace('\r\n', '\n').strip()
             raise SyntaxError(error_message)
 

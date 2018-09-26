@@ -7,6 +7,7 @@ development
 - Exclude .DS_Store files from the release tarball
 - [mw] Fix Umlaut issues with DEPATISnet
 - [mw] Strip DEPATISnet query expression before propagating to upstream
+- [mw] Grok error messages from erroneous DEPATISnet queries
 
 
 2018-09-26 0.151.0
