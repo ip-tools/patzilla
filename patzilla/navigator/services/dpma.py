@@ -93,7 +93,7 @@ def depatisnet_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('expression', '')
-    log.info('DEPATISnet query: {}, syntax: {}'.format(query, syntax))
+    log.info(u'DEPATISnet query: {}, syntax: {}'.format(query, syntax))
 
     # Lazy-fetch more entries up to maximum of DEPATISnet
     # TODO: get from patzilla.access.dpma.depatisnet

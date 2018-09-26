@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- [mw] Fix Umlaut issues with DEPATISnet
 
 
 2018-09-26 0.151.0

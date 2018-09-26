@@ -80,7 +80,7 @@ class DpmaDepatisnetAccess:
         limit = options.get('limit', self.hits_per_page)
         options.setdefault('max_hits', self.search_max_hits)
 
-        logger.info('Searching documents. query="%s", options=%s' % (query, options))
+        logger.info(u'Searching documents. query="%s", options=%s' % (query, options))
 
         # 0. create browser instance
         if not self.browser:
