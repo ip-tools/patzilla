@@ -8,3 +8,4 @@ recursive-include patzilla/navigator/static/meta *.*
 recursive-include patzilla/navigator/static/vendor *.*
 recursive-include patzilla/navigator/static/assets *.min.js *.min.js.map *.svg *.png *.jpg *.gif *.ico *.swf *.eot *.ttf *.woff
 recursive-include patzilla/util *.js
+global-exclude .DS_Store
