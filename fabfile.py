@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl, Elmyra UG
 import os
 from distutils.core import run_setup
 from fabric.contrib.project import rsync_project
@@ -8,7 +8,7 @@ from fabric.colors import yellow, red
 from fabric.utils import abort
 from fabric.state import env
 from cuisine import run, file_exists, file_is_dir, file_is_file, file_upload, dir_ensure
-from pip.utils import ask
+from pip._internal.utils.misc import ask
 
 env.colorize_errors = True
 env.confirm = False
