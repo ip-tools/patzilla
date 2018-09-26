@@ -41,6 +41,9 @@ navigatorApp.addInitializer(function(options) {
             // Which additional extra fields can be queried for
             extra_fields: ['pubdate', 'citation'],
 
+            // Whether to enable the expression syntax chooser
+            enable_syntax_chooser: true,
+
             // Enable sorting feature
             enable_sorting: true,
 

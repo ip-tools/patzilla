@@ -6,6 +6,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region
 from patzilla.access.dpma import dpmaregister
 from patzilla.access.generic.exceptions import NoResultsException
+from patzilla.util.config import asbool
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
@@ -83,11 +84,18 @@ def depatisnet_published_data_search_handler(request):
 
     #pprint(request.params)
 
+    # Compute expression syntax
+    syntax_cql = asbool(request.params.get('query_data[modifiers][syntax][cql]'))
+    syntax_ikofax = asbool(request.params.get('query_data[modifiers][syntax][ikofax]'))
+    syntax = 'cql'
+    if syntax_ikofax:
+        syntax = 'ikofax'
+
     # CQL query string
     query = request.params.get('expression', '')
-    log.info('query raw: ' + query)
+    log.info('DEPATISnet query: {}, syntax: {}'.format(query, syntax))
 
-    # lazy-fetch more entries up to maximum of depatisnet
+    # Lazy-fetch more entries up to maximum of DEPATISnet
     # TODO: get from patzilla.access.dpma.depatisnet
     request_size = 250
     if int(request.params.get('range_begin', 0)) > request_size:
@@ -99,11 +107,12 @@ def depatisnet_published_data_search_handler(request):
     # - whether to remove family members
     options = {}
     options.update({'limit': request_size})
+    options.update({'syntax': syntax})
 
     # propagate request parameters to search options parameters
     request_to_options(request, options)
 
-    # transcode CQL query
+    # Transcode CQL query
     query_object, query = cql_prepare_query(query)
     log.info('query cql: ' + query)
 

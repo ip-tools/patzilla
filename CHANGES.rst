@@ -35,6 +35,7 @@ development
 - [mw,ui] Add improved data source adapter for SIP again
 - [mw] Unlock DEPAROM Query Translator from MTC depa.tech API
 - [mw] Fix development mode re. missing display of data source chooser
+- [ui,mw] Add basic Ikofax expression support for searching at DPMA DEPATISnet
 
 
 2018-03-17 0.150.0

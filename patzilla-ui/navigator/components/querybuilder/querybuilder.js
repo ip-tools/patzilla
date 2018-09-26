@@ -102,6 +102,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     $( "#querybuilder-comfort-form" ).submit();
                 });
 
+            // TODO: Rename "cql" to "expert"
             } else if (flavor == 'cql') {
 
                 // focus textarea
@@ -181,7 +182,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        var common_buttons = $('.btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
+        var common_buttons = $('.btn-mode-syntax, .btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
         common_buttons.off('click');
         common_buttons.on('click', function(e) {
 
@@ -1117,6 +1118,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $('#cql-filter-container').hide();
         }
 
+        // Display syntax chooser
+        if (datasource_info.querybuilder.enable_syntax_chooser) {
+            $('#expert-syntax-chooser').show();
+        } else {
+            $('#expert-syntax-chooser').hide();
+        }
+
     },
 
     setup_comfort_form: function() {
@@ -1264,6 +1272,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (datasource_info.querybuilder.enable_expand_family_members) {
                 modifier_buttons_selector += ',[data-name="family-full"]';
             }
+            if (datasource_info.querybuilder.enable_syntax_chooser) {
+                modifier_buttons_selector += ',[data-name="syntax"]';
+            }
         }
 
         var elements = $('#querybuilder-area').find(modifier_buttons_selector);
@@ -1293,24 +1304,47 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
 
     set_common_form_data: function(data, options) {
-        options = options || {};
 
-        // populate query modifiers to user interface
+        options = options || {};
         var _this = this;
+
+        // Populate query modifiers to user interface
+        // FIXME: This currently doesn't account for resetting of buttons
+        //        not having a corresponding representation in "data".
         var modifier_elements = this.get_form_modifier_elements();
 
         _.each(modifier_elements, function(element) {
             var name = $(element).data('name');
 
             if (data && data.modifiers && data.modifiers[name]) {
-                $(element).addClass('active');
-                $(element).addClass('btn-info');
-            } else {
-                $(element).removeClass('active');
-                $(element).removeClass('btn-info');
+
+                // Populate scalar modifiers
+                if (_.isBoolean(data.modifiers[name])) {
+                    if (data.modifiers[name]) {
+                        $(element).addClass('active');
+                        $(element).addClass('btn-info');
+                    } else {
+                        $(element).removeClass('active');
+                        $(element).removeClass('btn-info');
+                    }
+
+                // Populate nested modifiers
+                } else if (_.isObject(data.modifiers[name])) {
+
+                    var element_modifier = $(element).data('modifier');
+                    if (data.modifiers[name][element_modifier]) {
+                        $(element).addClass('active');
+                        $(element).addClass('btn-info');
+                    } else {
+                        $(element).removeClass('active');
+                        $(element).removeClass('btn-info');
+                    }
+
+                }
+
             }
 
-            // set label text to default
+            // Set label text to default
             _this.radios.label_behaviour(element, true);
 
         });

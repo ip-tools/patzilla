@@ -46,7 +46,8 @@ class DpmaDepatisnetAccess:
     def __init__(self):
         print 'DpmaDepatisnetAccess.__init__'
         self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
-        self.searchurl = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
+        self.searchurl_cql    = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
+        self.searchurl_ikofax = self.baseurl + '/depatisnet?action=ikofax&switchToLang=en'
         self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
         self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
         self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
@@ -85,9 +86,12 @@ class DpmaDepatisnetAccess:
         if not self.browser:
             self.setup_browser()
 
-        # 1. open search url
+        # 1. Open search url
+        search_url = self.searchurl_cql
+        if options.get('syntax') == 'ikofax':
+            search_url = self.searchurl_ikofax
         try:
-            self.browser.open(self.searchurl)
+            self.browser.open(search_url)
         except urllib2.HTTPError as ex:
             logger.critical('Hard error with DEPATISnet: {}'.format(ex))
             self.logout()

@@ -272,6 +272,7 @@
 
                         </div>
 
+                        <!-- Fulltext modifiers -->
                         <div id="fulltext-zoomed" class="field-zoomed hide">
                             <div class="span11" id="fulltext-textarea-container">
                                 <div class="input-prepend" style="vertical-align: top">
@@ -306,14 +307,54 @@
                 Expert query builder on top of jQuery QueryBuilder
             </div>
 
-            <!-- raw cql query string -->
             <div class="tab-pane fade" id="querybuilder-cql-tab">
-                <textarea class="span12" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
-                <span id="cql-filter-container" class="hide">
-                    Filter: <input name="cql-filter" id="cql-filter" style="width: 94%" placeholder="Query filter"/>
-                    <br/><br/>
-                </span>
+
+                <div class="span12" id="querybuilder-expression-area">
+
+                    <!-- Query expression -->
+                    <div class="span10" id="expression-text">
+                        <textarea class2="span9" style="width: 100%" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
+                        <span id="cql-filter-container" class="hide">
+                            Filter: <input name="cql-filter" id="cql-filter" style="width: 94%" placeholder="Query filter"/>
+                            <br/><br/>
+                        </span>
+                    </div>
+
+                    <!-- Expression syntax chooser -->
+                    <div class="span2 pull-right text-align-right" id="syntax-modifier-chooser">
+                        <div style="margin-bottom: 0.33rem">
+                            Search&nbsp;syntax:
+                        </div>
+
+                        <div class="btn-group" data-toggle="buttons-radio" id="mode-syntax-buttons">
+
+                            <!-- toggle mode: first-pub -->
+                            <button role="button"
+                                    class="btn btn-popover btn-mode-syntax"
+                                    data-name="syntax"
+                                    data-modifier="cql"
+                                    data-toggle="button"
+                                    >
+                                CQL
+                            </button>
+                            <button role="button"
+                                    class="btn btn-popover btn-mode-syntax"
+                                    data-name="syntax"
+                                    data-modifier="ikofax"
+                                    data-toggle="button"
+                                    >
+                                Ikofax
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Transport form field -->
                 <input id="keywords" hidden="true" />
+
             </div>
 
             <!-- numberlist -->
