@@ -36,6 +36,7 @@ development
 - [mw] Unlock DEPAROM Query Translator from MTC depa.tech API
 - [mw] Fix development mode re. missing display of data source chooser
 - [ui,mw] Add basic Ikofax expression support for searching at DPMA DEPATISnet
+- [ui] Move logout link to the bottom of the menu
 
 
 2018-03-17 0.150.0
