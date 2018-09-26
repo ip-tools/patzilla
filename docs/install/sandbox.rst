@@ -69,7 +69,7 @@ Python sandbox
 --------------
 Create a virtual environment holding the sandbox installation::
 
-    virtualenv-2.7 --no-site-packages .venv27
+    virtualenv --python=python2 --no-site-packages .venv27
     source .venv27/bin/activate
 
 Install/upgrade some prerequisites::

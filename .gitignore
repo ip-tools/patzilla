@@ -3,6 +3,8 @@
 *.pyc
 .eggs
 /.venv*
+/.nodeenv*
+/.vagrant
 *.egg-info
 MANIFEST
 /build

@@ -118,7 +118,7 @@ mongodb-sip-import:
 
 sloccount:
 	sloccount patzilla
-	sloccount --addlang js patzilla-ui/{access,common,lib,navigator}
+	sloccount patzilla-ui/{access,common,lib,navigator}
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
