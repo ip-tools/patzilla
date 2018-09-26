@@ -92,7 +92,7 @@ def depatisnet_published_data_search_handler(request):
         syntax = 'ikofax'
 
     # CQL query string
-    query = request.params.get('expression', '')
+    query = request.params.get('expression', '').strip()
     log.info(u'DEPATISnet query: {}, syntax: {}'.format(query, syntax))
 
     # Lazy-fetch more entries up to maximum of DEPATISnet
@@ -114,7 +114,7 @@ def depatisnet_published_data_search_handler(request):
 
     # Transcode CQL query
     query_object, query = cql_prepare_query(query)
-    log.info('query cql: ' + query)
+    log.info(u'query cql: ' + query)
 
     # propagate keywords to highlighting component
     propagate_keywords(request, query_object)

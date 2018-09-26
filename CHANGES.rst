@@ -4,8 +4,10 @@ IP Navigator CHANGES
 
 development
 ===========
-- [mw] Fix Umlaut issues with DEPATISnet
 - Exclude .DS_Store files from the release tarball
+- [mw] Fix Umlaut issues with DEPATISnet
+- [mw] Strip DEPATISnet query expression before propagating to upstream
+
 
 2018-09-26 0.151.0
 ==================
