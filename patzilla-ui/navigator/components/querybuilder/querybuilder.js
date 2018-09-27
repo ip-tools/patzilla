@@ -124,19 +124,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     $('#cql-filter-container').hide();
                 }
 
-                // convert query from form fields to cql expression
+                // Convert query from form fields to cql expression
                 _this.compute_comfort_query();
 
-                // perform cql expression search
+                // Perform CQL expression search
                 $('.btn-query-perform').on('click', function() {
-                    var query_data = _this.get_common_form_data();
-                    navigatorApp.disable_reviewmode();
-                    navigatorApp.perform_search({
-                        reviewmode: false,
-                        flavor: flavor,
-                        query_data: query_data,
-                        reset: ['pagination_current_page', 'page_size'],
-                    });
+                    navigatorApp.start_expert_search();
                 });
 
                 // Hide query textarea for some data sources, if not in debug mode
@@ -208,23 +201,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $( "#querybuilder-comfort-form" ).off();
         $( "#querybuilder-comfort-form" ).on('submit', function( event ) {
 
-            // transfer values from zoomed fields
+            // Transfer values from zoomed modifier fields
             _this.comfort_form_zoomed_to_regular_data();
 
+            // Get information from form fields
             var query_data = _this.get_comfort_form_data();
 
-            // convert query from form fields to cql expression
+            // Compute CQL expression from form fields
             _this.compute_comfort_query().then(function() {
-
                 //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
-                navigatorApp.disable_reviewmode();
-                navigatorApp.perform_search({
-                    reviewmode: false,
-                    flavor: _this.get_flavor(),
-                    query_data: query_data,
-                    reset: ['pagination_current_page', 'page_size'],
-                });
-
+                navigatorApp.start_search({flavor: 'comfort', query_data: query_data});
             });
 
         });

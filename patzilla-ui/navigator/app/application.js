@@ -54,6 +54,24 @@ NavigatorApp = Backbone.Marionette.Application.extend({
 
     // TODO: move to search.js
 
+    start_search: function(options) {
+
+        options = options || {};
+
+        _.extend(options, {
+            reviewmode: false,
+            reset: ['pagination_current_page', 'page_size'],
+        });
+
+        this.disable_reviewmode();
+        this.perform_search(options);
+    },
+
+    start_expert_search: function() {
+        var query_data = this.queryBuilderView.get_common_form_data();
+        this.start_search({flavor: 'cql', query_data: query_data});
+    },
+
     // Perform OPS search and process response
     perform_search: function(options) {
 

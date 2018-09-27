@@ -18,14 +18,16 @@ HotkeysPlugin = Marionette.Controller.extend({
         //   hotkeys
         // ------------------------------------------
 
+        // Perform CQL expression search
         // submit on meta+enter
         $('#query').on('keydown', null, 'meta+return', function() {
-            _this.app.perform_search({reviewmode: false, flavor: 'cql'});
+            _this.app.start_expert_search();
         });
         $('#query').on('keydown', null, 'ctrl+return', function(event) {
-            _this.app.perform_search({reviewmode: false, flavor: 'cql'});
+            _this.app.start_expert_search();
         });
 
+        // Perform numberlist search
         // submit on meta+enter
         $('#numberlist').on('keydown', null, 'meta+return', function() {
             _this.app.perform_numberlistsearch();

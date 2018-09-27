@@ -8,6 +8,7 @@ development
 - [mw] Fix Umlaut issues with DEPATISnet. Thanks, Martin!
 - [mw] Strip DEPATISnet query expression before propagating to upstream. Thanks, Martin!
 - [mw] Grok error messages from erroneous DEPATISnet queries
+- [ui] Add new universal "start_search" method for kicking off a blank-slate search action
 
 
 2018-09-26 0.151.0
