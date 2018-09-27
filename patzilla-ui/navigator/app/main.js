@@ -272,10 +272,10 @@ navigatorApp.addInitializer(function(options) {
         }
 
         // The ui loading and lag woes are ready after the basket was fully initialized
-        //this.listenToOnce(this, "basket:activated", function() {
+        this.listenToOnce(this, "basket:activated", function() {
             // Run search
             this.perform_search();
-        //});
+        });
 
     });
 
