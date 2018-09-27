@@ -5,8 +5,8 @@ IP Navigator CHANGES
 development
 ===========
 - Exclude .DS_Store files from the release tarball
-- [mw] Fix Umlaut issues with DEPATISnet
-- [mw] Strip DEPATISnet query expression before propagating to upstream
+- [mw] Fix Umlaut issues with DEPATISnet. Thanks, Martin!
+- [mw] Strip DEPATISnet query expression before propagating to upstream. Thanks, Martin!
 - [mw] Grok error messages from erroneous DEPATISnet queries
 
 
