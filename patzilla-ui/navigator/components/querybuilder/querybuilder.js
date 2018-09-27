@@ -1106,9 +1106,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // Display syntax chooser
         if (datasource_info.querybuilder.enable_syntax_chooser) {
-            $('#expert-syntax-chooser').show();
+            $('#syntax-modifier-chooser').show();
         } else {
-            $('#expert-syntax-chooser').hide();
+            $('#syntax-modifier-chooser').hide();
         }
 
     },
