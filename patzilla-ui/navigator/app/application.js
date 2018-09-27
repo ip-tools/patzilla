@@ -105,22 +105,25 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         }
 
 
-        // 3. perform search
+        // 3. Perform search
 
         if (_.isEmpty(query.expression)) {
             return;
         }
 
-        console.log('App.perform_search: datasource=' + datasource, 'query=' + JSON.stringify(query), 'options=', options);
-
-        // propagate keywords from comfort form for fallback mechanism
+        // Propagate keywords from comfort form for fallback mechanism
         options.keywords = $('#keywords').val();
 
-        // propagate bunches of options around
+        // Propagate bunches of options around
         // a) to metadata object
         // b) to search_info summary object
         // TODO: consolidate somehow
         var search_info = {datasource: datasource, query: query};
+
+        // Logging
+        console.info('App.perform_search', '\nsearch_info=', search_info, '\noptions    =', options);
+
+        // Dispatch and propagate options
         if (options.flavor) {
             this.metadata.set('flavor', options.flavor);
             search_info.flavor = options.flavor;
