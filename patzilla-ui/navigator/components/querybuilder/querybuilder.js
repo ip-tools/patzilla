@@ -594,6 +594,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_cql_field_chooser: function(hide) {
 
+        var _this = this;
+
         var datasource = navigatorApp.get_datasource();
         var datasource_info = this.get_datasource_info();
         var queryflavor = navigatorApp.queryBuilderView.get_flavor();
@@ -617,8 +619,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             return;
         }
 
+        // Get knowledge about fields
         var fields_knowledge = FIELDS_KNOWLEDGE[datasource] || {};
 
+        // Setup "select" widget
         $('#cql-field-chooser').select2({
             placeholder: 'Field symbols' + ' (' + datasource + ')',
             data: { results: fields_knowledge.fields },
@@ -626,28 +630,61 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             escapeMarkup: function(text) { return text; },
             width: '100%',
         });
+
+        // Setup "onselect" event handler
         $('#cql-field-chooser').off('change');
         $('#cql-field-chooser').on('change', function(event) {
 
-            var value = $(this).val();
-            if (!value) return;
+            // Only apply to "added" events, skip all others
+            if (!event.added) return;
 
-            //console.log(value);
+            // Get field metadata
+            var fields_metadata  = fields_knowledge.meta || {};
+
+            if (datasource_info.querybuilder.enable_syntax_chooser) {
+                var form_data = _this.get_common_form_data();
+                var syntax = form_data.modifiers.syntax.ikofax == true ? 'ikofax' : 'cql';
+                fields_metadata = fields_metadata[syntax] || {};
+            }
+
+            //log('fields_metadata:', fields_metadata);
+
+
+            var fieldname = $(this).val();
+            if (!fieldname) return;
 
             var query = $('#query').val();
             var position = $('#query').caret();
-            var leftchar = query.substring(position - 1, position);
 
-            // skip insert if we're right behind a "="
-            if (leftchar == fields_knowledge.meta.separator) {
+            var location = fields_metadata.location || 'left';
+
+            // Characters left and right of current cursor position
+            var leftchar = query.substring(position - 1, position);
+            var rightchar = query.substring(position, position + 1);
+
+            // Insert space before new field if there is none and we're not at the beginning
+            var padding = '';
+            if (leftchar != ' ' && position != 0) padding = ' ';
+
+            // Skip insert if we're right behind a "=" or right before a "/"
+            if (leftchar == fields_metadata.separator || rightchar == fields_metadata.separator) {
                 $('#query').trigger('focus');
                 return;
             }
 
-            // insert space before new field if there is none and we're not at the beginning
-            if (leftchar != ' ' && position != 0) value = ' ' + value;
+            // Insert field name and separator
+            if (location == 'left') {
+                var inject = padding + fieldname + fields_metadata.separator;
+                $('#query').caret(inject);
 
-            $('#query').caret(value + fields_knowledge.meta.separator);
+            } else if (location == 'right') {
+                var fragment = fields_metadata.separator + fieldname;
+                var inject = padding + fragment;
+                $('#query').caret(inject).caret(-fragment.length);
+
+            }
+
+            // Reset select widget
             $(this).data('select2').clear();
 
         });

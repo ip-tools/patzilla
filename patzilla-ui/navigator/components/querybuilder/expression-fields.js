@@ -9,8 +9,11 @@ function _field_text(label, fields, more, options) {
     fields = to_list(fields);
     options = options || {};
 
-    _.defaults(options, {'sep': '='});
-    var separator = options.sep;
+    //_.defaults(options, {'sep': '='});
+    //var separator = options.sep;
+
+    // 2018-09-28: Don't *display* separator
+    var separator = '';
 
     var tpl = require('./expression-field.html');
     fields = fields.map(function(item) { return item + separator });
@@ -374,11 +377,18 @@ var FIELDS_KNOWLEDGE = {
         'fields': OPS_CQL_FIELDS,
     },
     'depatisnet': {
-        'meta': {
-            'separator': '=',
+        meta: {
+            cql: {
+                separator: '=',
+                location: 'left',
+            },
+            ikofax: {
+                separator: '/',
+                location: 'right',
+            },
         },
-        'fields': DEPATISNET_CQL_FIELDS,
-        'sorting': DEPATISNET_SORT_FIELDS,
+        fields: DEPATISNET_CQL_FIELDS,
+        sorting: DEPATISNET_SORT_FIELDS,
     },
     'ificlaims': {
         'meta': {

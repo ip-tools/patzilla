@@ -11,6 +11,7 @@ development
 - [ui] Add new universal "start_search" method for kicking off a blank-slate search action
 - [ui] Run boot-time search after activating basket model
 - [ui] Limit query expression syntax chooser to DEPATISnet only
+- [ui] Adjust field name chooser for Ikofax syntax
 
 
 2018-09-26 0.151.0
