@@ -12,6 +12,7 @@ development
 - [ui] Run boot-time search after activating basket model
 - [ui] Limit query expression syntax chooser to DEPATISnet only
 - [ui] Adjust field name chooser for Ikofax syntax
+- [mw] Compute keywords from Ikofax expression
 
 
 2018-09-26 0.151.0

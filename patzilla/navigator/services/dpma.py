@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2018 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+
+import re
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region
 from patzilla.access.dpma import dpmaregister
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.config import asbool
+from patzilla.util.expression.keywords import clean_keyword
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
@@ -112,12 +115,31 @@ def depatisnet_published_data_search_handler(request):
     # propagate request parameters to search options parameters
     request_to_options(request, options)
 
-    # Transcode CQL query
+    # Transcode CQL query expression
     query_object, query = cql_prepare_query(query)
-    log.info(u'query cql: ' + query)
 
-    # propagate keywords to highlighting component
-    propagate_keywords(request, query_object)
+    # Compute keywords from Ikofax expression
+    # TODO: Refactor elsewhere
+    more_keywords = None
+    if syntax == 'ikofax':
+        words_raw = re.split('(\s+)', query)
+        words = []
+        stopwords = ['and', 'or', 'not']
+        badchars = '()?!#\''
+        for word in words_raw:
+            word = word.strip()
+            if not word: continue
+            if word.lower() in stopwords: continue
+            word = word.split('/')[0]
+            word = clean_keyword(word.strip(badchars))
+            if len(word) <= 3: continue
+            words.append(word)
+
+        #print 'words:', words
+        more_keywords = words
+
+    # Propagate keywords to highlighting component
+    propagate_keywords(request, query_object, more_keywords=more_keywords)
 
     try:
         return dpma_published_data_search(query, options)

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import json
 import logging
 import cornice
@@ -12,6 +12,7 @@ from patzilla.access.epo.ops.api import ops_keyword_fields
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 
 log = logging.getLogger(__name__)
+
 
 def cql_prepare_query(query, grammar=None, keyword_fields=None):
 
@@ -39,29 +40,48 @@ def cql_prepare_query(query, grammar=None, keyword_fields=None):
         if query_recompiled:
             query = query_recompiled
 
+        if query_recompiled != query:
+            log.info(u'Recompiled search expression to "{query}"'.format(query=query))
+
     except Exception as ex:
-        # TODO: can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
+        # TODO: Can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
         log.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
 
     return query_object, query
 
-def propagate_keywords(request, query_object):
-    """propagate keywords to client for highlighting"""
+
+def propagate_keywords(request, query_object=None, more_keywords=None):
+    """
+    Propagate keywords to client for highlighting
+    """
+
+    more_keywords = more_keywords or []
+
+    origins = []
+    keywords = []
+
     if query_object:
 
         try:
-            keywords = query_object.keywords()
-            origin = 'cql'
+            keywords += query_object.keywords()
+            origins.append('cql')
 
         except AttributeError:
-            keywords = compute_keywords(query_object)
-            origin = 'compute'
+            keywords += compute_keywords(query_object)
+            origins.append('compute')
+
+    if more_keywords:
+        keywords += more_keywords
+        origins.append('static')
+
+    if keywords:
 
         # List of keywords should contain only unique items, if possible
         keywords = unique_sequence(keywords)
 
-        log.info('Propagating keywords from expression "{origin}": {keywords}'.format(origin=origin, keywords=keywords))
+        log.info(u'Propagating keywords from "{origin}": {keywords}'.format(origin=', '.join(origins), keywords=keywords))
         request.response.headers['X-PatZilla-Query-Keywords'] = json.dumps(keywords)
+
 
 def compute_keywords(query_object):
     keywords = []
@@ -69,9 +89,10 @@ def compute_keywords(query_object):
     keywords = list(set(keywords))
     return keywords
 
+
 def scan_keywords(op, keywords):
 
-    # TODO: move to some ops.py
+    # TODO: Move to some ops.py
 
     if not op: return
     #print "op:", dir(op)
