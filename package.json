@@ -1,7 +1,7 @@
 {
   "name": "patzilla-ui",
   "description": "PatZilla is a modular patent information research platform and toolkit with a modern user interface and access to multiple data sources.",
-  "version": "0.151.0",
+  "version": "0.152.0",
   "license": [
     "AGPL 3",
     "EUPL 1.2"
