@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- [mw] Don't run Ikofax expression through CQL parser
 
 
 2018-09-28 0.152.0
@@ -16,7 +17,7 @@ development
 - [ui] Run boot-time search after activating basket model
 - [ui] Limit query expression syntax chooser to DEPATISnet only
 - [ui] Adjust field name chooser for Ikofax syntax
-- [mw] Compute keywords from Ikofax expression
+- [mw] Compute keywords from Ikofax expression (quick solution)
 
 
 2018-09-26 0.151.0

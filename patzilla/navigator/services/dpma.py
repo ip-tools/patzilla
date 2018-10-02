@@ -9,12 +9,12 @@ from beaker.cache import cache_region
 from patzilla.access.dpma import dpmaregister
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.config import asbool
-from patzilla.util.expression.keywords import clean_keyword
+from patzilla.util.expression.keywords import clean_keyword, keywords_to_response
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 from patzilla.access.epo.espacenet.pyramid import espacenet_claims_handler, espacenet_description_handler
-from patzilla.navigator.services import cql_prepare_query, propagate_keywords, handle_generic_exception
+from patzilla.navigator.services import cql_prepare_query, handle_generic_exception, ikofax_prepare_query
 from patzilla.navigator.services.util import request_to_options
 
 log = logging.getLogger(__name__)
@@ -115,34 +115,20 @@ def depatisnet_published_data_search_handler(request):
     # propagate request parameters to search options parameters
     request_to_options(request, options)
 
-    # Transcode CQL query expression
-    query_object, query = cql_prepare_query(query)
-
-    # Compute keywords from Ikofax expression
-    # TODO: Refactor elsewhere
-    more_keywords = None
-    if syntax == 'ikofax':
-        words_raw = re.split('(\s+)', query)
-        words = []
-        stopwords = ['and', 'or', 'not']
-        badchars = '()?!#\''
-        for word in words_raw:
-            word = word.strip()
-            if not word: continue
-            if word.lower() in stopwords: continue
-            word = word.split('/')[0]
-            word = clean_keyword(word.strip(badchars))
-            if len(word) <= 3: continue
-            words.append(word)
-
-        #print 'words:', words
-        more_keywords = words
+    # Transcode query expression
+    if syntax == 'cql':
+        search = cql_prepare_query(query)
+    elif syntax == 'ikofax':
+        search = ikofax_prepare_query(query)
+    else:
+        request.errors.add('depatisnet-search', 'expression', u'Unknown syntax {}'.format(syntax))
 
     # Propagate keywords to highlighting component
-    propagate_keywords(request, query_object, more_keywords=more_keywords)
+    keywords_to_response(request, search=search)
 
+    # Run query through upstream database
     try:
-        return dpma_published_data_search(query, options)
+        return dpma_published_data_search(search.expression, options)
 
     except SyntaxError as ex:
         request.errors.add('depatisnet-search', 'expression', str(ex.msg))
@@ -154,7 +140,7 @@ def depatisnet_published_data_search_handler(request):
         return ex.data
 
     except Exception as ex:
-        message = handle_generic_exception(request, ex, 'depatisnet-search', query)
+        message = handle_generic_exception(request, ex, 'depatisnet-search', search.expression)
         request.errors.add('depatisnet-search', 'search', message)
 
 
@@ -167,8 +153,11 @@ def depatisnet_published_data_crawl_handler(request):
     query = request.params.get('expression', '')
     log.info('query raw: ' + query)
 
-    query_object, query = cql_prepare_query(query)
-    propagate_keywords(request, query_object)
+    # Transcode CQL query expression
+    search_expression = cql_prepare_query(query)
+
+    # Propagate keywords to highlighting component
+    keywords_to_response(request, search=search_expression)
 
     chunksize = 1000
 
@@ -182,7 +171,7 @@ def depatisnet_published_data_crawl_handler(request):
     # propagate request parameters to search options parameters
     request_to_options(request, options)
 
-    log.info('query cql: ' + query)
+    log.info(u'query cql: ' + query)
     try:
         result = dpma_published_data_search(query, options)
         return result

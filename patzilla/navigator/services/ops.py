@@ -8,7 +8,8 @@ from patzilla.access.epo.ops.api import inquire_images, get_ops_image, ops_famil
     pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_family_publication_docdb_xml, \
     ops_published_data_search, ops_published_data_search_real, ops_published_data_search_swap_family, \
     ops_published_data_crawl
-from patzilla.navigator.services import propagate_keywords, cql_prepare_query, handle_generic_exception
+from patzilla.navigator.services import cql_prepare_query, handle_generic_exception
+from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.python import _exception_traceback
 
@@ -83,11 +84,12 @@ def ops_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('expression', '')
-    log.info('query raw: %s', query)
+    log.info(u'query raw: %s', query)
 
-    query_object, query = cql_prepare_query(query)
+    # Transcode CQL query expression
+    search = cql_prepare_query(query)
 
-    log.info('query cql: %s', query)
+    log.info(u'query cql: %s', search.expression)
 
     # range: x-y, maximum delta is 100, default is 25
     range = request.params.get('range')
@@ -98,10 +100,13 @@ def ops_published_data_search_handler(request):
 
     try:
         if family_swap_default:
-            result = ops_published_data_search_swap_family(constituents, query, range)
+            result = ops_published_data_search_swap_family(constituents, search.expression, range)
         else:
-            result = ops_published_data_search(constituents, query, range)
-        propagate_keywords(request, query_object)
+            result = ops_published_data_search(constituents, search.expression, range)
+
+        # Propagate keywords to highlighting component
+        keywords_to_response(request, search=search)
+
         return result
 
     except NoResultsException as ex:
@@ -110,7 +115,7 @@ def ops_published_data_search_handler(request):
         return ex.data
 
     except Exception as ex:
-        message = handle_generic_exception(request, ex, 'ops-search', query)
+        message = handle_generic_exception(request, ex, 'ops-search', search.expression)
         request.errors.add('ops-search', 'search', message)
 
     log.info('query finished')
@@ -126,18 +131,21 @@ def ops_published_data_crawl_handler(request):
 
     # CQL query string
     query = request.params.get('expression', '')
-    log.info('query raw: ' + query)
+    log.info(u'query raw: ' + query)
 
-    query_object, query = cql_prepare_query(query)
-    propagate_keywords(request, query_object)
+    # Transcode CQL query expression
+    search = cql_prepare_query(query)
 
-    log.info('query cql: ' + query)
+    # Propagate keywords to highlighting component
+    keywords_to_response(request, search=search)
+
+    log.info(u'query cql: ' + search.expression)
 
 
     chunksize = int(request.params.get('chunksize', '100'))
 
     try:
-        result = ops_published_data_crawl(constituents, query, chunksize)
+        result = ops_published_data_crawl(constituents, search.expression, chunksize)
         return result
 
     except Exception as ex:

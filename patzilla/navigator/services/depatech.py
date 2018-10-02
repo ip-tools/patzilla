@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2017-2018 Andreas Motl, Elmyra UG
+# (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 #
 # Cornice services for search provider "MTC depa.tech"
 #
@@ -10,7 +10,8 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from patzilla.access.depatech import get_depatech_client
 from patzilla.access.depatech.client import depatech_search, LoginException, depatech_crawl
 from patzilla.access.depatech.expression import DepaTechParser, should_be_quoted
-from patzilla.navigator.services import propagate_keywords, handle_generic_exception
+from patzilla.navigator.services import handle_generic_exception
+from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.util.data.container import SmartBunch
@@ -58,7 +59,7 @@ def depatech_published_data_search_handler(request):
 
     # Parse expression, extract and propagate keywords to user interface
     parser = DepaTechParser(query.expression)
-    propagate_keywords(request, parser)
+    keywords_to_response(request, parser)
 
     # Fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
     if should_be_quoted(query.expression):

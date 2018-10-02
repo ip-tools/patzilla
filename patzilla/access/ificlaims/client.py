@@ -193,11 +193,11 @@ class IFIClaimsClient(GenericSearchClient):
 
                 # TODO: Unify between IFI CLAIMS and SIP
                 log.info('{backend_name}: Search succeeded. duration={duration}s, meta=\n{meta}'.format(
-                    duration=duration, meta=result['meta'].prettify(), **self.__dict__))
+                    duration=duration, meta=result['meta'], **self.__dict__))
 
                 if not result['numbers']:
                     log.warn('{backend_name}: Search had empty results. duration={duration}s, meta=\n{meta}'.format(
-                        duration=duration, meta=result['meta'].prettify(), **self.__dict__))
+                        duration=duration, meta=result['meta'], **self.__dict__))
 
                 return result
 

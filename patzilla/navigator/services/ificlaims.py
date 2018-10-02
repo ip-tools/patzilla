@@ -11,7 +11,8 @@ from cornice.service import Service
 from pyramid.settings import asbool
 from pymongo.errors import OperationFailure
 from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
-from patzilla.navigator.services import propagate_keywords, handle_generic_exception
+from patzilla.navigator.services import handle_generic_exception
+from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
 from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
@@ -145,7 +146,7 @@ def ificlaims_published_data_search_handler(request):
 
     # Parse expression, extract and propagate keywords to user interface
     parser = IFIClaimsParser(query.expression)
-    propagate_keywords(request, parser)
+    keywords_to_response(request, parser)
 
     # Fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
     if should_be_quoted(query.expression):

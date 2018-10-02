@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl, Elmyra UG
+# (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 import sys
 import types
@@ -18,15 +18,18 @@ from patzilla.util.python import _exception_traceback
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+
 class IFIClaimsGrammar(CQLGrammar):
     def preconfigure(self):
         CQLGrammar.preconfigure(self)
         self.cmp_single = u':'.split()
 
+
 class IFIClaimsParser(object):
 
     def __init__(self, expression=None, modifiers=None):
         self.expression = expression
+        self.search = None
         self.query_object = None
 
     def parse(self):
@@ -34,9 +37,9 @@ class IFIClaimsParser(object):
         if self.query_object:
             return self
 
-        # Parse expression, extract and propagate keywords
-        self.query_object, query_recompiled = cql_prepare_query(
-            self.expression, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
+        # Parse CQL expression and extract keywords
+        self.search = cql_prepare_query(self.expression, grammar=IFIClaimsGrammar, keyword_fields=IFIClaimsExpression.fieldnames)
+        self.query_object = self.search.cql_parser
 
         return self
 
@@ -61,9 +64,13 @@ class IFIClaimsParser(object):
         self.expression = self.expression.replace(u'{!complexphrase}', '')
         #print >>sys.stderr, 'expression-after :', self.expression
 
+    @property
     def keywords(self):
+
         self.trim_complexphrase()
         self.parse()
+
+        # Extract classes from representation like "IC:H04L0012433"
         self.rewrite_classes_ops()
 
         keywords = self.query_object.keywords()
@@ -72,6 +79,11 @@ class IFIClaimsParser(object):
         keywords = unique_sequence(keywords)
 
         return keywords
+
+    @property
+    def keywords_origin(self):
+        return 'lucene'
+
 
 class IFIClaimsExpression(object):
 
