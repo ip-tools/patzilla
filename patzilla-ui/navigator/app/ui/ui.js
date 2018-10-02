@@ -137,6 +137,7 @@ UiController = Marionette.Controller.extend({
         $('#alert-area').empty();
         try {
             var response = xhr.responseJSON;
+            return this.propagate_cornice_errors(response);
 
         // Display detailed data from XHR response
         } catch (err) {
@@ -160,10 +161,9 @@ UiController = Marionette.Controller.extend({
                 'status': 'error',
                 'errors': [error],
             };
+            return this.propagate_cornice_errors(response);
 
         }
-
-        return this.propagate_cornice_errors(response);
 
     },
 

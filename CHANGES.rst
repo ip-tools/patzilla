@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - [mw] Don't run Ikofax expression through CQL parser
+- [ui] Fix error propagation
 
 
 2018-09-28 0.152.0
