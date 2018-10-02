@@ -8,6 +8,7 @@ development
 - [ui] Fix error propagation
 - [ui] Signal search syntax in search history entry
 - [mw] Allow Ikofax syntax from URLs like ?datasource=depatisnet&query=ikofax:EP666666%2Fpn
+- [ui] Refactor syntax chooser data model
 
 
 2018-09-28 0.152.0

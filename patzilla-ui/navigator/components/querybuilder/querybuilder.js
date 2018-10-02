@@ -175,7 +175,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // workaround for making "hasClass('active')" work stable
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
-        var common_buttons = $('.btn-mode-syntax, .btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
+        var common_buttons = $('.btn-syntax, .btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
         common_buttons.off('click');
         common_buttons.on('click', function(e) {
 
@@ -643,7 +643,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             if (datasource_info.querybuilder.enable_syntax_chooser) {
                 var form_data = _this.get_common_form_data();
-                var syntax = form_data.modifiers.syntax.ikofax == true ? 'ikofax' : 'cql';
+                var syntax = form_data.modifiers['syntax-ikofax'] == true ? 'ikofax' : 'cql';
                 fields_metadata = fields_metadata[syntax] || {};
             }
 
@@ -891,6 +891,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var flavor_title = flavor;
         if (flavor == 'comfort') {
             flavor_title = 'Comfort';
+
+        // TODO: Rename from "cql" to "expert"
         } else if (flavor == 'cql') {
             flavor_title = 'Expert';
         }
@@ -909,7 +911,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 (result_count == 1 ? ' hit' : ' hits');
 
         // Search modifiers
-        var syntax;
+        var syntax_label;
         var tags_html = [];
         if (_.isObject(query_data) && _.isObject(query_data['modifiers'])) {
 
@@ -928,8 +930,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             }
 
             // Modifier for "Expression syntax"
-            if (query_data['modifiers']['syntax']) {
-                syntax = query_data.modifiers.syntax.ikofax == true ? 'ikofax' : 'cql';
+            // TODO: Rename from "cql" to "expert"
+            if (flavor == 'cql') {
+                syntax_label = 'CQL';
+                if (query_data['modifiers']['syntax-ikofax']) {
+                    syntax_label = 'Ikofax';
+                }
             }
 
             // Modifier for "Remove family members"
@@ -972,7 +978,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Bootstrapify labels
         var history_header = [];
         history_header.push(this.html_history_tag(created, {type: 'text'}));
-        flavor == 'cql' && syntax && history_header.push(this.html_history_tag(_.string.titleize(syntax), {role: 'flavor'}));
+        syntax_label && history_header.push(this.html_history_tag(syntax_label, {role: 'flavor'}));
         history_header.push(this.html_history_tag(flavor_title, {role: 'flavor'}));
         history_header.push(this.html_history_tag(datasource_label_title, {role: 'datasource', kind: datasource_label_color_class}));
 
@@ -1304,7 +1310,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 modifier_buttons_selector += ',[data-name="family-full"]';
             }
             if (datasource_info.querybuilder.enable_syntax_chooser) {
-                modifier_buttons_selector += ',[data-name="syntax"]';
+                modifier_buttons_selector += ',[data-name="syntax-cql"]';
+                modifier_buttons_selector += ',[data-name="syntax-ikofax"]';
             }
         }
 

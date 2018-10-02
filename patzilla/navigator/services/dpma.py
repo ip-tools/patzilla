@@ -91,8 +91,8 @@ def depatisnet_published_data_search_handler(request):
     expression = request.params.get('expression', '').strip()
 
     # Compute expression syntax
-    syntax_cql = asbool(request.params.get('query_data[modifiers][syntax][cql]'))
-    syntax_ikofax = asbool(request.params.get('query_data[modifiers][syntax][ikofax]'))
+    syntax_cql = asbool(request.params.get('query_data[modifiers][syntax-cql]'))
+    syntax_ikofax = asbool(request.params.get('query_data[modifiers][syntax-ikofax]'))
     syntax = 'cql'
     if syntax_ikofax or expression.startswith('ikofax:'):
         expression = expression.replace('ikofax:', '')
