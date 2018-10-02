@@ -87,16 +87,18 @@ def depatisnet_published_data_search_handler(request):
 
     #pprint(request.params)
 
+    # CQL expression string
+    expression = request.params.get('expression', '').strip()
+
     # Compute expression syntax
     syntax_cql = asbool(request.params.get('query_data[modifiers][syntax][cql]'))
     syntax_ikofax = asbool(request.params.get('query_data[modifiers][syntax][ikofax]'))
     syntax = 'cql'
-    if syntax_ikofax:
+    if syntax_ikofax or expression.startswith('ikofax:'):
+        expression = expression.replace('ikofax:', '')
         syntax = 'ikofax'
 
-    # CQL query string
-    query = request.params.get('expression', '').strip()
-    log.info(u'DEPATISnet query: {}, syntax: {}'.format(query, syntax))
+    log.info(u'DEPATISnet query: {}, syntax: {}'.format(expression, syntax))
 
     # Lazy-fetch more entries up to maximum of DEPATISnet
     # TODO: get from patzilla.access.dpma.depatisnet
@@ -117,9 +119,9 @@ def depatisnet_published_data_search_handler(request):
 
     # Transcode query expression
     if syntax == 'cql':
-        search = cql_prepare_query(query)
+        search = cql_prepare_query(expression)
     elif syntax == 'ikofax':
-        search = ikofax_prepare_query(query)
+        search = ikofax_prepare_query(expression)
     else:
         request.errors.add('depatisnet-search', 'expression', u'Unknown syntax {}'.format(syntax))
 
