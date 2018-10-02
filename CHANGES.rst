@@ -6,6 +6,7 @@ development
 ===========
 - [mw] Don't run Ikofax expression through CQL parser
 - [ui] Fix error propagation
+- [ui] Signal search syntax in search history entry
 
 
 2018-09-28 0.152.0

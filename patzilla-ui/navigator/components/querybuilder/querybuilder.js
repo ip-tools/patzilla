@@ -843,6 +843,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Use query expression as title
         var expression = '';
 
+        // TODO: Rename to "expert"
         if (flavor == 'cql') {
             if (query_expert) {
                 var parts = [query_expert.expression];
@@ -908,6 +909,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 (result_count == 1 ? ' hit' : ' hits');
 
         // Search modifiers
+        var syntax;
         var tags_html = [];
         if (_.isObject(query_data) && _.isObject(query_data['modifiers'])) {
 
@@ -925,6 +927,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 tags_html.push(this.html_history_tag('Recent pub.', {name: 'rf', width: 'narrow'}));
             }
 
+            // Modifier for "Expression syntax"
+            if (query_data['modifiers']['syntax']) {
+                syntax = query_data.modifiers.syntax.ikofax == true ? 'ikofax' : 'cql';
+            }
+
             // Modifier for "Remove family members"
             if (query_data['modifiers']['family-remove']) {
                 tags_html.push(this.html_history_tag('Remove family members', {name: '-fam:rm', width: 'wide'}));
@@ -939,6 +946,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             if (query_data['modifiers']['family-full']) {
                 tags_html.push(this.html_history_tag('Full family', {name: '+fam', width: 'narrow'}));
             }
+
         }
 
         // Sorting control
@@ -962,15 +970,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Right side
 
         // Bootstrapify labels
-        var row1_right_side = [
-            this.html_history_tag(created, {type: 'text'}),
-            this.html_history_tag(flavor_title, {role: 'flavor'}),
-            this.html_history_tag(datasource_label_title, {role: 'datasource', kind: datasource_label_color_class}),
-        ];
-        var row2_right_side = tags_html;
-
+        var history_header = [];
+        history_header.push(this.html_history_tag(created, {type: 'text'}));
+        flavor == 'cql' && syntax && history_header.push(this.html_history_tag(_.string.titleize(syntax), {role: 'flavor'}));
+        history_header.push(this.html_history_tag(flavor_title, {role: 'flavor'}));
+        history_header.push(this.html_history_tag(datasource_label_title, {role: 'datasource', kind: datasource_label_color_class}));
 
         // The whole entry
+        var row1_right_side = history_header;
+        var row2_right_side = tags_html;
         var entry_html =
             '<div class="container-fluid history-container">' +
             '<div class="row-fluid history-row-1">' + row1_left_side.join('') + this.html_history_labels(row1_right_side.join('')) + '</div>' +
