@@ -287,7 +287,10 @@ OpsExchangeMetadata = Backbone.Model.extend({
         // There's already a first stage which transports
         // query parameters to the application configuration
         if (modifiers) {
-            modifiers = modifiers.split(',');
+            //log('modifiers:', modifiers);
+            if (_.isString(modifiers)) {
+                modifiers.split(',');
+            }
             _.each(modifiers, function(modifier) {
                 //log('modifier:', modifier);
                 _.defaults(query_data, {modifiers: {}});

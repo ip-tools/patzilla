@@ -416,26 +416,28 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         });
 
-        // share via url, with ttl
+        // Share query via opaque link, with expiration time (ttl)
         $('#btn-query-permalink').off('click');
         $('#btn-query-permalink').on('click', function(e) {
 
             e.preventDefault();
             e.stopPropagation();
 
+            // Sanity checks: Don't submit empty queries
             if (_this.check_query_empty({'icon': 'icon-external-link'})) { return; }
 
-            var anchor = this;
-
-            var query_state = {
+            // Create viewstate context for liveview mode
+            var viewstate = navigatorApp.permalink.query_parameters_viewstate();
+            _.extend(viewstate, {
                 mode: 'liveview',
                 context: 'viewer',
                 project: 'query-permalink',
-                query: navigatorApp.get_query().expression,
-                datasource: navigatorApp.get_datasource(),
-            };
+            });
+            //log('viewstate:', viewstate);
 
-            navigatorApp.permalink.make_uri_opaque(query_state).then(function(url) {
+            // Create opaque link for propagating viewstate
+            var anchor = this;
+            navigatorApp.permalink.make_uri_opaque(viewstate).then(function(url) {
 
                 // v1: open url
                 //$(anchor).attr('href', url);

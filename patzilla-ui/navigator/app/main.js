@@ -273,8 +273,15 @@ navigatorApp.addInitializer(function(options) {
 
         // The ui loading and lag woes are ready after the basket was fully initialized
         this.listenToOnce(this, "basket:activated", function() {
+
+            // Forward viewstate
+            var options = {};
+            if (query_data) {
+                options.query_data = query_data;
+            }
+
             // Run search
-            this.perform_search();
+            this.perform_search(options);
         });
 
     });
