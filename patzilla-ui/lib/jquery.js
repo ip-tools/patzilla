@@ -18,10 +18,12 @@ require('jquery-migrate');
 // Global exception handlers
 
 // https://www.learningjquery.com/2017/03/different-methods-of-error-handling-in-jquery
+/*
 jQuery.readyException = function(error) {
     console.error('jQuery exception:', error);
     throw error;
 };
+*/
 
 
 // ------------------------------------------

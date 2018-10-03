@@ -11,6 +11,7 @@ development
 - [ui] Refactor syntax chooser data model
 - [ui] Properly propagate Ikofax mode to Liveview mode
 - [ui] Improve "Share this search" dialog
+- [ui] Disable dummy exception catcher introduced accidentally when migration to jQuery3
 
 
 2018-09-28 0.152.0
