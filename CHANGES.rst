@@ -7,11 +7,12 @@ development
 - [mw] Don't run Ikofax expression through CQL parser
 - [ui] Fix error propagation
 - [ui] Signal search syntax in search history entry
-- [mw] Allow Ikofax syntax from URLs like ?datasource=depatisnet&query=ikofax:EP666666%2Fpn
+- [mw] Allow Ikofax syntax from URLs, e.g. ``?datasource=depatisnet&query=ikofax:EP666666%2Fpn``
 - [ui] Refactor syntax chooser data model
 - [ui] Properly propagate Ikofax mode to Liveview mode
 - [ui] Improve "Share this search" dialog
 - [ui] Disable dummy exception catcher introduced accidentally when migration to jQuery3
+- [ui] Fix rendering in quick access mode, e.g. ``/view/pn/EP0666666``
 
 
 2018-09-28 0.152.0

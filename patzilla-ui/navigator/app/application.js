@@ -428,7 +428,8 @@ NavigatorApp = Backbone.Marionette.Application.extend({
 
 
         // Propagate to generic result collection
-        if (this.current_datasource_info().adapter.entry) {
+        var datasource_info = this.current_datasource_info();
+        if (datasource_info && datasource_info.adapter.entry) {
             if (!_.isEmpty(entries_sliced) && _.isObject(entries_sliced[0])) {
                 try {
                     this.results.reset(entries_sliced);
