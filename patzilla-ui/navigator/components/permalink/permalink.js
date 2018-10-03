@@ -171,12 +171,15 @@ PermalinkPlugin = Marionette.Controller.extend({
                     $(tip).find('#permalink-popover-intro').html(intro_html);
                 }
 
-                // popover-container
+                // Adjust popover-container
 
-                // set the uri
+                // Increase width
+                $(tip).css('width', '20rem');
+
+                // Set the uri
                 $(tip).find('#permalink-uri-textinput').val(uri);
 
-                // open permalink on click
+                // Open permalink on click
                 $(tip).find('#permalink-open').off('click');
                 $(tip).find('#permalink-open').on('click', function(e) {
                     e.preventDefault();
@@ -184,7 +187,7 @@ PermalinkPlugin = Marionette.Controller.extend({
                     $(element).popover('toggle');
                 });
 
-                // copy permalink to clipboard
+                // Copy permalink to clipboard
                 var copy_button = $(tip).find('#permalink-copy');
                 navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', uri, {
                     element: copy_button[0],
@@ -192,17 +195,18 @@ PermalinkPlugin = Marionette.Controller.extend({
                     callback: function() { $(element).popover('toggle'); },
                 });
 
-                // apply more generic augmentations
+                // Apply more generic augmentations
                 navigatorApp.ui.setup_text_tools();
 
             }
 
-            // focus permalink text input element and select text
+            // Focus permalink text input element and select text
             $(tip).find('#permalink-uri-textinput').trigger('select');
 
-            // show ttl message if desired
-            if (options.ttl) {
-                $(tip).find('#ttl-24').show();
+            // Show expiration/ttl message if desired
+            if (options.ttl && !_.isBoolean(options.ttl)) {
+                var ttl_label = options.ttl.humanize(true);
+                $(tip).find('#permalink-expiration').show().find('#permalink-expiration-time').html(ttl_label);
             }
         }
     },

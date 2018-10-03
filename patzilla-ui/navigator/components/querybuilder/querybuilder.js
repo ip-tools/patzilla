@@ -437,19 +437,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // Create opaque link for propagating viewstate
             var anchor = this;
-            navigatorApp.permalink.make_uri_opaque(viewstate).then(function(url) {
+            var expiration = moment.duration(7, 'days');
+            navigatorApp.permalink.make_uri_opaque(viewstate, {ttl: expiration.asSeconds()}).then(function(url) {
 
                 // v1: open url
                 //$(anchor).attr('href', url);
 
                 // v2: open permalink popover
                 navigatorApp.permalink.popover_show(anchor, url, {
-                    title: 'External query review',
-                    intro:
-                        '<small>' +
-                            'This offers a link for external/anonymous users to review the current query. ' +
-                        '</small>',
-                    ttl: true,
+                    title: 'Share search',
+                    intro: 'by sending a link to the current search to third-party users.',
+                    ttl: expiration,
                 });
 
             });
