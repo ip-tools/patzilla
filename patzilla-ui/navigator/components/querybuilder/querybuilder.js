@@ -235,11 +235,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // Transfer values from zoomed modifier fields
             _this.comfort_form_zoomed_to_regular_data();
 
-            // Get information from form fields
-            var query_data = _this.get_comfort_form_data();
-
             // Compute CQL expression from form fields
             _this.compute_comfort_query().then(function() {
+
+                // Get information from form fields
+                var query_data = _this.get_comfort_form_data();
+
                 //$("#querybuilder-flavor-chooser button[data-flavor='cql']").tab('show');
                 navigatorApp.start_search({flavor: 'comfort', query_data: query_data});
             });
@@ -1587,6 +1588,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $("#query").val(data['expression']);
             $("#cql-filter").val(data['filter']);
             $("#keywords").val(keywords);
+
+            // Disable Ikofax syntax
+            $('#mode-syntax-buttons button').removeClass('active').removeClass('btn-info');
 
         }).fail(function() {
             console.warn('Failed computing query expression from:', payload);

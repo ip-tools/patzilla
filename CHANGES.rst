@@ -16,6 +16,7 @@ development
 - [ui] Improve usability of "Share this search" and "Fetch result numbers" in the context of search results
 - [mw] Fix "List of publication numbers" with Ikofax searches
 - [ui] Reset search modifiers when recalling a search from history
+- [ui] Reset Ikofax mode when using comfort form again
 
 
 2018-09-28 0.152.0
