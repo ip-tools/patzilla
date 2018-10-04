@@ -79,11 +79,7 @@ def status_upstream_dpmaregister_handler(request):
     return "OK"
 
 
-# TODO: implement as JSON POST
-@depatisnet_published_data_search_service.get(accept="application/json")
-@depatisnet_published_data_search_service.post(accept="application/json")
-def depatisnet_published_data_search_handler(request):
-    """Search for published-data at DEPATISnet"""
+def prepare_search(request):
 
     #pprint(request.params)
 
@@ -100,18 +96,11 @@ def depatisnet_published_data_search_handler(request):
 
     log.info(u'DEPATISnet query: {}, syntax: {}'.format(expression, syntax))
 
-    # Lazy-fetch more entries up to maximum of DEPATISnet
-    # TODO: get from patzilla.access.dpma.depatisnet
-    request_size = 250
-    if int(request.params.get('range_begin', 0)) > request_size:
-        request_size = 1000
-
     # Compute query options, like
     # - limit
     # - sorting
     # - whether to remove family members
     options = {}
-    options.update({'limit': request_size})
     options.update({'syntax': syntax})
 
     # propagate request parameters to search options parameters
@@ -127,6 +116,26 @@ def depatisnet_published_data_search_handler(request):
 
     # Propagate keywords to highlighting component
     keywords_to_response(request, search=search)
+
+    return search, options
+
+
+# TODO: implement as JSON POST
+@depatisnet_published_data_search_service.get(accept="application/json")
+@depatisnet_published_data_search_service.post(accept="application/json")
+def depatisnet_published_data_search_handler(request):
+    """Search for published-data at DEPATISnet"""
+
+    search, options = prepare_search(request)
+
+    # Lazy-fetch more entries up to maximum of DEPATISnet
+    # TODO: get from patzilla.access.dpma.depatisnet
+    request_size = 250
+    if int(request.params.get('range_begin', 0)) > request_size:
+        request_size = 1000
+
+    options.update({'limit': request_size})
+
 
     # Run query through upstream database
     try:
@@ -151,31 +160,13 @@ def depatisnet_published_data_search_handler(request):
 def depatisnet_published_data_crawl_handler(request):
     """Crawl published-data at DEPATISnet"""
 
-    # CQL query string
-    query = request.params.get('expression', '')
-    log.info('query raw: ' + query)
-
-    # Transcode CQL query expression
-    search_expression = cql_prepare_query(query)
-
-    # Propagate keywords to highlighting component
-    keywords_to_response(request, search=search_expression)
+    search, options = prepare_search(request)
 
     chunksize = 1000
-
-    # Compute query options, like
-    # - limit
-    # - sorting
-    # - whether to remove family members
-    options = {}
     options.update({'limit': chunksize})
 
-    # propagate request parameters to search options parameters
-    request_to_options(request, options)
-
-    log.info(u'query cql: ' + query)
     try:
-        result = dpma_published_data_search(query, options)
+        result = dpma_published_data_search(search.expression, options)
         return result
 
     except SyntaxError as ex:
