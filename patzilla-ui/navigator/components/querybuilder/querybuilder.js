@@ -436,22 +436,22 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             dialog.appendTo("body");
         });
 
-        // open query chooser
+        // Open query chooser
         $('#btn-query-history').off('click');
         $('#btn-query-history').on('click', function(e) {
 
-            // setup select2 widget
+            // Setup select2 widget
             _this.cql_history_chooser_setup().then(function() {
 
                 var opened = $('#cql-history-chooser').hasClass('open');
 
-                // if already opened, skip event propagation to prevent wrong parent nesting
+                // If already opened, skip event propagation to prevent wrong parent nesting
                 if (opened) {
                     e.preventDefault();
                     e.stopPropagation();
                 }
 
-                // open select2 widget *after* dropdown has been opened
+                // Open select2 widget *after* dropdown has been opened
                 // TODO: use "shown.bs.dropdown" event when migrating to bootstrap3
                 var chooser_widget = $('#cql-history-chooser-select2');
                 setTimeout(function() {
@@ -1076,20 +1076,20 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         var chooser_widget = $('#cql-history-chooser-select2');
 
-        // initialize empty cql history chooser widget
+        // Initialize empty cql history chooser widget
         this.cql_history_chooser_load_data();
 
-        // when query was selected, put it into cql query input field
+        // When query was selected, put it into cql query input field
         var _this = this;
         chooser_widget.off('change');
         chooser_widget.on('change', function(event) {
 
             $(this).off('change');
 
-            // this gets the "id" attribute of an entry in select2 `data`
+            // This gets the "id" attribute of an entry in select2 `data`
             var query_object = $(this).val();
 
-            // transfer history data to current querybuilder state
+            // Transfer history data to current querybuilder state
             if (query_object) {
 
                 var flavor = query_object.get('flavor');
@@ -1101,7 +1101,9 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 navigatorApp.set_datasource(query_object.get('datasource'));
 
                 if (flavor == 'comfort') {
+
                     _this.clear_comfort_form();
+                    _this.clear_common_form_data();
 
                     var data = query_object.get('query_data');
                     _this.set_comfort_form_data(data);
@@ -1111,6 +1113,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     log('history cql - query_object:', query_object);
 
                     _this.clear_comfort_form();
+                    _this.clear_common_form_data();
 
                     var query_expert = query_object.get('query_expert');
                     if (query_expert && query_expert.expression) {
@@ -1406,14 +1409,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             if (data && data.modifiers && data.modifiers[name]) {
 
+                var activate = false;
+
                 // Populate scalar modifiers
                 if (_.isBoolean(data.modifiers[name])) {
                     if (data.modifiers[name]) {
-                        $(element).addClass('active');
-                        $(element).addClass('btn-info');
-                    } else {
-                        $(element).removeClass('active');
-                        $(element).removeClass('btn-info');
+                        activate = true;
                     }
 
                 // Populate nested modifiers
@@ -1421,13 +1422,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                     var element_modifier = $(element).data('modifier');
                     if (data.modifiers[name][element_modifier]) {
-                        $(element).addClass('active');
-                        $(element).addClass('btn-info');
-                    } else {
-                        $(element).removeClass('active');
-                        $(element).removeClass('btn-info');
+                        activate = true;
                     }
 
+                }
+
+                if (activate) {
+                    $(element).addClass('active');
+                    $(element).addClass('btn-info');
+                } else {
+                    $(element).removeClass('active');
+                    $(element).removeClass('btn-info');
                 }
 
             }
@@ -1457,6 +1462,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $('#sort-order-chooser').data('value', null);
             this.setup_sorting_chooser();
         }
+
+    },
+
+    clear_common_form_data: function() {
+
+        var modifier_elements = this.get_form_modifier_elements();
+
+        _.each(modifier_elements, function(element) {
+            $(element).removeClass('active');
+            $(element).removeClass('btn-info');
+        });
 
     },
 

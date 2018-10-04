@@ -15,6 +15,7 @@ development
 - [ui] Fix rendering in quick access mode, e.g. ``/view/pn/EP0666666``
 - [ui] Improve usability of "Share this search" and "Fetch result numbers" in the context of search results
 - [mw] Fix "List of publication numbers" with Ikofax searches
+- [ui] Reset search modifiers when recalling a search from history
 
 
 2018-09-28 0.152.0
