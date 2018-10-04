@@ -188,9 +188,13 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 
 });
 
+// TODO: Refactor to generic metadata container object
 OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
+
+        is_dirty: true,
+
         // these carry state, so switching the navigator into a special mode, currently
         reviewmode: false,
 
@@ -309,6 +313,14 @@ OpsExchangeMetadata = Backbone.Model.extend({
         // Finally, update metadata object
         _.extend(this.get('query_data'), query_data);
 
+    },
+
+    dirty: function(value) {
+        if (value !== undefined) {
+            log('Tainting metadata as dirty');
+            this.set('is_dirty', asbool(value));
+        }
+        return asbool(this.get('is_dirty'));
     },
 
 });

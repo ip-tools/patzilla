@@ -46,14 +46,16 @@ PermalinkPlugin = Marionette.Controller.extend({
         return params_computed;
     },
 
-    // build query parameters to view state
-    // TODO: refactor this elsewhere, e.g. some UrlBuilder?
+    // Aggregate queryparameter-compatible data bunch reflecting the current view state
+    // TODO: Refactor this elsewhere, e.g. some UrlBuilder?
     query_parameters_viewstate: function(uri, options) {
 
         options = options || {};
 
         // Aggregate parameters comprising viewer state, currently a 4-tuple
         // See also config.js:history_pushstate
+
+        // Add baseline parameters
         var config = navigatorApp.config;
         var state = {
             mode: config.get('mode'),
@@ -61,6 +63,12 @@ PermalinkPlugin = Marionette.Controller.extend({
             project: config.get('project'),
             datasource: config.get('datasource'),
         };
+
+        // Add datasource and query expression
+        _.extend(state, {
+            datasource: navigatorApp.get_datasource(),
+            query: navigatorApp.get_query().expression,
+        });
 
         // Add search modifiers and more to viewstate
         if (!options.no_modifiers) {
@@ -75,7 +83,8 @@ PermalinkPlugin = Marionette.Controller.extend({
             }
         }, this);
 
-        // Merge viewstate with current url parameters and clean it up before shipping
+        // Merge viewstate with current url parameters (former takes precedence)
+        // and purge empty parameters before shipping
         var params_computed = this.query_parameters(state, uri);
 
         return params_computed;

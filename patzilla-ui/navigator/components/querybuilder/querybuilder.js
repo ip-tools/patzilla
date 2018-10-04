@@ -36,19 +36,46 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         return datasource_info;
     },
 
+    // Set dirty when modifying any search parameter
+    wire_dirty_events: function() {
+
+        // Capture editing comfort search field
+        $('#querybuilder-comfort-form input').off('input').on('input', function() {
+            navigatorApp.metadata.dirty(true);
+        });
+
+        // Capture editing expert query expression
+        $('#query').off('input').on('input', function() {
+            navigatorApp.metadata.dirty(true);
+        });
+
+        // Capture choosing a datasource
+        $('#datasource button').off('click').on('click', function() {
+            navigatorApp.metadata.dirty(true);
+        });
+
+        // Capture toggling any modifier button
+        this.radios.off('toggle').on('toggle', function() {
+            navigatorApp.metadata.dirty(true);
+        });
+
+    },
+
     setup_ui_base: function() {
         console.log('QueryBuilderView.setup_ui');
 
         var _this = this;
 
-        // ------------------------------------------
-        //   datasource selector
-        // ------------------------------------------
+        // -------------------
+        // Datasource selector
+        // -------------------
         this.display_datasource_buttons();
 
-        // switch cql field chooser when selecting datasource
+        // Switch cql field chooser when selecting datasource
         // TODO: do it properly on the configuration data model
         $('#datasource').on('click', '.btn', function(event) {
+
+            // Set datasource in model
             var datasource = $(this).data('value');
             navigatorApp.set_datasource(datasource);
 
@@ -57,10 +84,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
 
+        // Flag search metadata as dirty when modifying any search field
+        this.wire_dirty_events();
 
-        // ------------------------------------------
-        //   user interface flavor chooser
-        // ------------------------------------------
+
+        // -----------------------------
+        // User interface flavor chooser
+        // -----------------------------
 
         $('#querybuilder-flavor-chooser button[data-toggle="tab"]').on('shown', function (e) {
 
@@ -84,20 +114,21 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $('.btn-query-perform').off('click');
             if (flavor == 'comfort') {
 
+                // Setup zoomed fields
                 _this.comfort_form_zoomed_to_regular_ui();
 
-                // focus first field
+                // Focus first field
                 $('#patentnumber').trigger('focus');
 
-                // hide action tools
+                // Hide action tools
                 $('#querybuilder-comfort-actions').show();
                 $('#querybuilder-cql-actions').hide();
                 $('#querybuilder-numberlist-actions').hide();
 
-                // hide history chooser
+                // Hide history chooser
                 $('#cql-history-chooser').show();
 
-                // perform field-based search
+                // Perform field-based search
                 $('.btn-query-perform').on('click', function() {
                     $( "#querybuilder-comfort-form" ).submit();
                 });
@@ -105,15 +136,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // TODO: Rename "cql" to "expert"
             } else if (flavor == 'cql') {
 
-                // focus textarea
+                // Focus textarea
                 $('#query').trigger('focus');
 
-                // show action tools
+                // Show action tools
                 $('#querybuilder-comfort-actions').hide();
                 $('#querybuilder-cql-actions').show();
                 $('#querybuilder-numberlist-actions').hide();
 
-                // show history chooser
+                // Show history chooser
                 $('#cql-history-chooser').show();
 
                 // Optionally show filter field
@@ -300,6 +331,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         return _.isEmpty($('#query').val().trim());
     },
     check_query_empty: function(options) {
+        options = options || {};
         if (this.query_empty()) {
             navigatorApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
             return true;
@@ -313,6 +345,20 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     check_numberlist_empty: function(options) {
         if (this.numberlist_empty()) {
             navigatorApp.ui.notify('Numberlist is empty', {type: 'warning', icon: options.icon});
+            return true;
+        }
+        return false;
+    },
+
+    data_is_dirty: function() {
+        return navigatorApp.metadata.dirty();
+    },
+    check_data_is_dirty: function(options) {
+        options = options || {};
+        if (this.data_is_dirty()) {
+            navigatorApp.ui.notify(
+                'Search parameters empty, modified or invalid. Please submit valid search first.',
+                {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -423,8 +469,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             e.preventDefault();
             e.stopPropagation();
 
-            // Sanity checks: Don't submit empty queries
+            // Sanity check: Don't share empty queries
             if (_this.check_query_empty({'icon': 'icon-external-link'})) { return; }
+
+            // Sanity check: Don't share dirty queries
+            if (_this.check_data_is_dirty({'icon': 'icon-external-link'})) { return; }
 
             // Create viewstate context for liveview mode
             var viewstate = navigatorApp.permalink.query_parameters_viewstate();
@@ -437,6 +486,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // Create opaque link for propagating viewstate
             var anchor = this;
+            // TODO: Make expiration time configurable
             var expiration = moment.duration(7, 'days');
             navigatorApp.permalink.make_uri_opaque(viewstate, {ttl: expiration.asSeconds()}).then(function(url) {
 

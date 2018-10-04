@@ -127,6 +127,8 @@ if ($.isNumeric(data.result_count)) {
             </div>
             <% } %>
 
+            <% if (false) { %>
+
             <% if (data.config.get('mode') != 'liveview') { %>
             <div class="span6 pull-right">
 
@@ -138,47 +140,9 @@ if ($.isNumeric(data.result_count)) {
                 </a>
                 <% } %>
 
-                <% if (navigatorApp.component_enabled('crawler')) { %>
-                <div class="btn-group">
-                    <button class="btn dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-wrench"></i>
-                    </button>
-                    <ul class="dropdown-menu pull-right">
-
-                        <li>
-
-                            <!--
-                            <div class="dropdown-section-header">Highlighting</div>
-                            -->
-
-                            <a id="fetch-result-numbers-action" class="btn-popover"
-                               data-toggle="popover" data-trigger="hover" data-placement="left"
-                               data-content="Fetch publication numbers of all results. This is the raw response of the datasource."
-                                    >
-                                <i class="icon-download"></i> &nbsp; Fetch raw result numbers
-                            </a>
-
-                            <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
-                               data-toggle="popover" data-trigger="hover" data-placement="left"
-                               data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
-                                    >
-                                <i class="icon-download"></i> &nbsp; Fetch unique result numbers w/o kindcodes
-                            </a>
-
-                            <!--
-                            <hr class="divider"/>
-                            -->
-
-                        </li>
-                    </ul>
-
-                </div>
-                <% } %>
-
             </div>
             <% } %>
 
-            <% if (false) { %>
             <!-- result list actions -->
             <!-- PDF export and print view -->
             <!--

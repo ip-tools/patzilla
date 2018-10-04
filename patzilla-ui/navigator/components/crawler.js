@@ -65,6 +65,22 @@ ResultNumbersView = GenericResultView.extend({
 
     },
 
+    show: function() {
+
+        // Sanity check: Don't share dirty queries
+        if (navigatorApp.queryBuilderView.check_data_is_dirty({'icon': 'icon-download'})) { return; }
+
+        // Sanity check: Do we have valid query criteria
+        if (!this.has_criteria()) {
+            navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
+            return;
+        }
+
+        // Display dialog
+        var modal = new ModalRegion({el: '#modal-area'});
+        modal.show(this);
+    },
+
 });
 
 
@@ -79,36 +95,21 @@ navigatorApp.addInitializer(function(options) {
 
             // Reset all filters
             _this.metadata.set('filter', {});
+
+            // Display numberlist widget
             var result_numbers_view = new ResultNumbersView({model: _this.metadata});
-
-            // Sanity checks
-            if (!result_numbers_view.has_criteria()) {
-                navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
-                return;
-            }
-
-            // Display dialog
-            var modal = new ModalRegion({el: '#modal-area'});
-            modal.show(result_numbers_view);
+            result_numbers_view.show();
         });
 
         $('#fetch-result-numbers-no-kindcodes-action').off('click');
         $('#fetch-result-numbers-no-kindcodes-action').on('click', function(e) {
 
-            // Reset all filters
             // Set signal to apply filter "strip_kindcodes" on response
             _this.metadata.set('filter', {'strip_kindcodes': true});
+
+            // Display numberlist widget
             var result_numbers_view = new ResultNumbersView({model: _this.metadata});
-
-            // Sanity checks
-            if (!result_numbers_view.has_criteria()) {
-                navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
-                return;
-            }
-
-            // Display dialog
-            var modal = new ModalRegion({el: '#modal-area'});
-            modal.show(result_numbers_view);
+            result_numbers_view.show();
 
         });
 

@@ -88,11 +88,6 @@
 
                         <li>
 
-                            <!-- permalink -->
-                            <a id="btn-query-permalink" href="#" target="_blank">
-                                <i class="icon-external-link"></i> &nbsp; Share this search
-                            </a>
-
                             <!-- content transformation -->
                             <a id="btn-query-transform">
                                 <i class="icon-exchange"></i> &nbsp; Transform query
@@ -441,27 +436,66 @@
 
             <div class="span2">
 
-                <!-- send query to database -->
-                <div
-                        class="btn-group btn-popover"
-                        data-toggle="popover" data-trigger="hover" data-placement="right"
-                        data-content="Send query to database"
-                        >
+                <!-- Submit query to database -->
+                <div class="btn-group">
 
-                    <!-- activity indicator -->
+                    <!-- Activity indicator -->
                     <button type="submit" role="button" class="btn btn-query-perform">
                         <i class="idler icon-search"></i>
                         <i class="spinner icon-refresh icon-spin" style="display: none"></i>
                     </button>
 
-                    <button type="submit" role="button" class="btn btn-query-perform">
+                    <!-- Start search action -->
+                    <button type="submit" role="button" class="btn btn-popover btn-query-perform"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                        data-content="Submit search to database"
+                        >
                         Start search
                     </button>
+
+                    <!-- More utilities -->
+                    <button role="button" data-toggle="dropdown" class="btn dropdown-toggle"
+                            style="padding-left: 0.7rem; padding-right: 0.7rem">
+                        <i class="icon-wrench"></i>
+                    </button>
+                    <ul class="dropdown-menu">
+
+                        <li>
+
+                            <!-- Permalink to current search, with expiration time -->
+                            <a id="btn-query-permalink" href="#" target="_blank">
+                                <i class="icon-external-link"></i> &nbsp; Share this search
+                            </a>
+
+                            <!-- Numberlist crawler subsystem -->
+                            <% if (navigatorApp.component_enabled('crawler')) { %>
+                                <a id="fetch-result-numbers-action" class="btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Fetch publication numbers of all results. This is the raw response of the datasource."
+                                        >
+                                    <i class="icon-download"></i> &nbsp; List of publication numbers
+                                </a>
+
+                                <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
+                                   data-toggle="popover" data-trigger="hover" data-placement="left"
+                                   data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
+                                        >
+                                    <i class="icon-download"></i> &nbsp; List of publication numbers w/o kindcodes
+                                </a>
+                            <% } %>
+
+                            <!--
+                            <hr class="divider"/>
+                            -->
+
+                        </li>
+                    </ul>
+
                 </div>
 
             </div>
 
-            <div class="span10">
+            <div class="span10" id="querybuilder-modifier-elements">
 
             <!-- First row -->
             <div>

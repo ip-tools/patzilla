@@ -141,7 +141,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 
-// initialize models
+// Initialize models
 navigatorApp.addInitializer(function(options) {
 
     // application domain model objects
@@ -150,9 +150,17 @@ navigatorApp.addInitializer(function(options) {
     this.documents = new OpsExchangeDocumentCollection();
     this.results = new ResultCollection();
 
+    // Set hooks to toggle search input dirtyness
+    this.listenTo(this, 'search:success', function(args) {
+        this.metadata.dirty(false);
+    });
+    this.listenTo(this, 'search:failure', function(args) {
+        this.metadata.dirty(true);
+    });
+
 });
 
-// initialize views
+// Initialize views
 navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, "application:init", function() {
