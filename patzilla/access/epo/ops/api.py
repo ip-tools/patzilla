@@ -727,8 +727,8 @@ def handle_error(response, location):
     if 'SERVER.DomainAccess' in body or 'EpoqueCommand short-circuited and fallback disabled' in body:
         response_dict['content'] += \
             "<br/><br/>" \
-            "The OPS API might be in maintenance mode, this happens regularly at 05:00 hours CET or CEST<br/>" \
-            "and usually does not take longer than 30 minutes."
+            "The OPS API might be in maintenance mode, this happens regularly at 05:00 a.m. <br/>" \
+            "and usually does not last longer than 30 minutes."
 
     request.errors.add(location, name, response_dict)
 
