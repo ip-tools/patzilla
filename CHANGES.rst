@@ -23,6 +23,7 @@ development
 - [ui] Improve querybuilder responsiveness
 - [mw] Improve date parsing for query expression translator
 - [ui] Better demo values for new comfort form fields "appdate" and "priodate"
+- [ui] Search by kindcode through comfort form at DEPATISnet
 
 
 2018-09-28 0.152.0

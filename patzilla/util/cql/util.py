@@ -63,6 +63,9 @@ def pair_to_cql(datasource, key, value):
                 except ValueError as ex:
                     return {'error': True, 'message': ex.message}
 
+        elif key == 'patentnumber' and 1 <= len(value) <= 2:
+            fieldname = 'pcod'
+
         elif key == 'inventor' or key == 'applicant':
             value = value.strip(' "')
             if not has_booleans(value) and should_be_quoted(value):
