@@ -578,6 +578,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
 
     clear_comfort_form: function() {
+        navigatorApp.metadata.dirty(true);
         $('#querybuilder-comfort-form').find('input').val('');
     },
 
@@ -1244,7 +1245,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
 
         // Adjust placeholder values for certain data sources
-        function activate_placeholder(name) {
+        function enable_placeholder(name) {
 
             // 1. Acquire DOM element
             var element = form.find("input[name='" + name + "']");
@@ -1256,19 +1257,19 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // 3. Activate placeholder based on data source
             if (placeholder[name]) {
-                activate_placeholder_element(element, placeholder[name]);
+                enable_placeholder_element(element, placeholder[name]);
             } else {
-                activate_placeholder_element(element, 'default');
+                enable_placeholder_element(element, 'default');
             }
 
         }
-        function activate_placeholder_element(element, kind) {
+        function enable_placeholder_element(element, kind) {
             element.attr('placeholder', element.data('placeholder-' + kind));
         }
 
-        activate_placeholder('patentnumber');
-        activate_placeholder('inventor');
-        activate_placeholder('class');
+        enable_placeholder('patentnumber');
+        enable_placeholder('inventor');
+        enable_placeholder('class');
 
 
         // Enrich form fields with actions
@@ -1278,11 +1279,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $(item).find('.add-on.add-on-label').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 if (!input_element.val()) {
+
+                    // Activate placeholder
                     var demo_value = input_element.attr('placeholder');
                     if (input_element.data('demo')) {
                         demo_value = input_element.data('demo');
                     }
                     input_element.val(demo_value);
+
+                    // When data was modified, mark state as dirty
+                    navigatorApp.metadata.dirty(true);
+
                 }
             });
 
