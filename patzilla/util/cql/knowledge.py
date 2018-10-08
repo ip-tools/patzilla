@@ -14,7 +14,8 @@ datasource_indexnames = {
     'inventor':     {'ops': 'in',  'depatisnet': 'in'},
     'class':        {'ops': 'cl',  'depatisnet': 'ic'},
     'country':      {'ops': 'pn',  'depatisnet': 'pc'},
-    'pubdate':      {'ops': 'pd',  'depatisnet': 'pub'},
-    'appdate':      {'ops': 'ap',  'depatisnet': 'ap'},
+    'pubdate':      {'ops': 'pd',  'depatisnet': {'date': 'pub', 'year': 'py'}},
+    'appdate':      {'ops': 'ap',  'depatisnet': {'date': 'ad',  'year': 'ay'}},
+    'priodate':     {'ops': None,  'depatisnet': {'date': 'prd', 'year': 'pry'}},
     'citation':     {'ops': 'ct',  'depatisnet': 'ct'},
 }

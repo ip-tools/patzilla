@@ -176,7 +176,9 @@ def make_expression_filter(data):
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
                 else:
-                    expression_part.get('query') and expression_parts.append(expression_part.get('query'))
+                    query = expression_part.get('query')
+                    if query:
+                        expression_parts.append(query)
 
                 # Accumulate filter part
                 error_tpl = u'Filter "{0}: {1}" has invalid format, datasource={2}.'

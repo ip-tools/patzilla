@@ -39,7 +39,7 @@ navigatorApp.addInitializer(function(options) {
             hotkey: 'ctrl+shift+d',
 
             // Which additional extra fields can be queried for
-            extra_fields: ['pubdate', 'citation'],
+            extra_fields: ['pubdate', 'appdate', 'priodate', 'citation'],
 
             // Whether to enable the expression syntax chooser
             enable_syntax_chooser: true,

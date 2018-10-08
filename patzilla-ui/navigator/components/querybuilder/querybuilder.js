@@ -317,7 +317,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (this.get_datasource_info().querybuilder.disable_raw_query) {
             $('#query').hide();
             $('#query').parent().find('#query-alert').remove();
-            $('#query').parent().append('<div id="query-alert" class="alert alert-default span10" style="margin-left: 0px;">Expert mode not available for this data source.</div>');
+            $('#query').parent().append(
+                '<div id="query-alert" class="alert alert-default">' +
+                'Expert mode not available for this data source.' +
+                '</div>');
             var alert_element = $('#query').parent().find('#query-alert');
             alert_element.height($('#query').height() - 18);
             //alert_element.marginBottom($('#query').marginBottom());
@@ -663,12 +666,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (hide || !datasource || queryflavor != 'cql' ||
             (datasource_info && datasource_info.querybuilder.disable_field_chooser)
             ) {
-            var chooser = $('#cql-field-chooser');
-            if (chooser.exists()) {
-                var container = chooser[0].previousSibling;
-                $(container).hide();
-            }
+            $('#cql-field-chooser-row').hide();
             return;
+        } else {
+            $('#cql-field-chooser-row').show();
         }
 
         // Get knowledge about fields
@@ -1230,19 +1231,26 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Fix submit by enter for internet explorer
         form.handle_enter_keypress();
 
-        // Display "publication date" query field conditionally
-        var pubdate = form.find("input[name='pubdate']").closest("div[class='control-group']");
-        pubdate.hide();
-        if (_(extra_fields).contains('pubdate')) {
-            pubdate.show();
-        }
+        /*
+        var fieldset = $('#querybuilder-comfort-form input');
+        $.each(fieldset, function(index, element) {
+            log('fieldset-element:', element.name);
+        });
+        */
 
-        // Display "citations" query field conditionally
-        var citation = form.find("input[name='citation']").closest("div[class='control-group']");
-        citation.hide();
-        if (_(extra_fields).contains('citation')) {
-            citation.show();
-        }
+        // Display some query fields conditionally
+        var optional_fields = ['pubdate', 'appdate', 'priodate', 'citation'];
+        _.each(optional_fields, function(fieldname) {
+            var field = form.find("input[name='" + fieldname + "']");
+            var container = field.closest("div[class='control-group']");
+            if (_(extra_fields).contains(fieldname)) {
+                field.prop('disabled', false);
+                container.show();
+            } else {
+                field.prop('disabled', true);
+                container.hide();
+            }
+        });
 
         // Adjust placeholder values for certain data sources
         function enable_placeholder(name) {
@@ -1486,22 +1494,25 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     get_comfort_form_data: function() {
 
-        // 1. collect search criteria from comfort form input fields
+        // 1. Collect search criteria from comfort form input fields
         var criteria = {};
         var form = $('#querybuilder-comfort-form');
-        var fields = $(form).find($('input'));
-        _.each(fields, function(item) {
-            if (item.value) {
-                criteria[item.name] = item.value;
-            }
+        var fields = $(form).find('input');
+        _.each(fields, function(field) {
+
+            // Skip disabled or empty form fields
+            if ($(field).prop('disabled') || !field.value) return;
+
+            // Use field value as query criteria
+            criteria[field.name] = field.value;
         });
 
-        // skip if collected criteria is empty
+        // Skip if collected criteria is empty
         if (_.isEmpty(criteria)) {
             return;
         }
 
-        // 2. collect modifiers from user interface
+        // 2. Collect modifiers from user interface
         var buttons = $('#querybuilder-area').find($('button[data-name="fulltext"]'));
         var modifiers = this.radios.get_state(buttons);
 
@@ -1512,7 +1523,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             modifiers: modifiers,
         };
 
-        // merge common- and comfort-form-data
+        // Merge common- and comfort-form-data
         $.extend(true, payload, payload_local);
         //log('========= payload:', payload);
 

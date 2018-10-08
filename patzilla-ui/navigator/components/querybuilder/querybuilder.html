@@ -8,7 +8,7 @@
     <div class="row-fluid">
 
         <!-- choose ui flavor -->
-        <div class="span5">
+        <div class="span6">
 
             <div id="querybuilder-flavor-chooser" class="btn-group tabs">
 
@@ -129,8 +129,8 @@
         </div>
 
         <!-- data source chooser -->
-        <div class="span5">
-            <div id="datasource" class="btn-group pull-right" data-toggle="buttons-radio">
+        <div class="span6">
+            <div id="datasource" class="btn-group" data-toggle="buttons-radio">
                 <button class="btn active" data-value="ops">
                     <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
                     EPO
@@ -166,7 +166,7 @@
 
     <div class="row-fluid">
 
-        <div class="span10 tab-content">
+        <div class="span12 tab-content">
 
             <!-- trimmed-down user interface -->
             <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
@@ -176,17 +176,17 @@
 
                         <div class="span6 field-regular">
 
-                            <!-- patent number -->
+                            <!-- Country -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
-                                        <span class="add-on add-on-label">Number</span>
-                                        <input id="patentnumber" name="patentnumber" class="input-xlarge" placeholder="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-dpma="DE102011078918A1" type="text" autofocus="autofocus">
+                                        <span class="add-on add-on-label">Country</span>
+                                        <input name="country" class="input-xlarge" placeholder="DE or EP or US; DE, EP" data-demo="DE or EP or US" type="text">
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- full text -->
+                            <!-- Full text -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend input-append">
@@ -197,7 +197,17 @@
                                 </div>
                             </div>
 
-                            <!-- applicant -->
+                            <!-- Classification -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Classification</span>
+                                        <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Applicant -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
@@ -207,7 +217,7 @@
                                 </div>
                             </div>
 
-                            <!-- inventor -->
+                            <!-- Inventor -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
@@ -221,39 +231,47 @@
 
                         <div class="span6 field-regular">
 
-                            <div class="pull-right">
-
-                            <!-- class -->
+                            <!-- Publication number -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
-                                        <span class="add-on add-on-label">Class</span>
-                                        <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
+                                        <span class="add-on add-on-label">Publication number</span>
+                                        <input id="patentnumber" name="patentnumber" class="input-xlarge" placeholder="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-dpma="DE102011078918A1" type="text" autofocus="autofocus">
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- country -->
+                            <!-- Publication date -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
-                                        <span class="add-on add-on-label">Country</span>
-                                        <input name="country" class="input-xlarge" placeholder="DE or EP or US; DE, EP" data-demo="DE or EP or US" type="text">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- publication date -->
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on add-on-label">Publication</span>
+                                        <span class="add-on add-on-label">Publication date</span>
                                         <input name="pubdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="within 1978,1986" type="text">
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- citation -->
+                            <!-- Application date -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Application date</span>
+                                        <input name="appdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="within 1978,1986" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Priority date -->
+                            <div class="control-group">
+                                <div class="controls">
+                                    <div class="input-prepend">
+                                        <span class="add-on add-on-label">Priority date</span>
+                                        <input name="priodate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="within 1978,1986" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Citation -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
@@ -261,8 +279,6 @@
                                         <input name="citation" class="input-xlarge" placeholder="US5155725 or EP0352041" type="text">
                                     </div>
                                 </div>
-                            </div>
-
                             </div>
 
                         </div>
@@ -316,7 +332,7 @@
                     </div>
 
                     <!-- Expression syntax chooser -->
-                    <div class="span2 pull-right text-align-right" id="syntax-modifier-chooser">
+                    <div class="span2" id="syntax-modifier-chooser">
                         <div style="margin-bottom: 0.33rem">
                             Search&nbsp;syntax:
                         </div>
@@ -376,7 +392,7 @@
 
     </div>
 
-    <div class="row-fluid">
+    <div class="row-fluid" id="cql-field-chooser-row">
 
         <!-- cql field symbol chooser -->
         <div class="span10">
@@ -432,9 +448,9 @@
 
     <div class="row-fluid">
 
-        <div class="span12 light-panel" style="width: 152%; min-height: 6.5em; margin-top: 2em">
+        <div class="span12 light-panel">
 
-            <div class="span2">
+            <div class="span3">
 
                 <!-- Submit query to database -->
                 <div class="btn-group">
@@ -495,7 +511,7 @@
 
             </div>
 
-            <div class="span10" id="querybuilder-modifier-elements">
+            <div class="span9" id="querybuilder-modifier-elements">
 
             <!-- First row -->
             <div>

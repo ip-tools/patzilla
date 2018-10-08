@@ -19,6 +19,7 @@ development
 - [ui] Reset Ikofax mode when using comfort form again
 - [ui] Fix inline "query-link" mechanics
 - [ui] Improve dirty signalling for comfort form
+- [ui,mw] Add fields "application date" and "priority date" to comfort form
 
 
 2018-09-28 0.152.0
