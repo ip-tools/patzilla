@@ -20,6 +20,7 @@ development
 - [ui] Fix inline "query-link" mechanics
 - [ui] Improve dirty signalling for comfort form
 - [ui,mw] Add fields "application date" and "priority date" to comfort form
+- [ui] Improve querybuilder responsiveness
 
 
 2018-09-28 0.152.0

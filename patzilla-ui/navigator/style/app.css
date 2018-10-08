@@ -84,8 +84,6 @@ pre.inline {
 
 
 
-
-
 /*
 https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
 https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-break-after
@@ -222,12 +220,18 @@ ul.breathe li {
 #datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
 #datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
 
+#querybuilder-area .row-fluid {
+    margin-bottom: 1rem;
+}
+
 #querybuilder-nav {
     margin-bottom: 0px;
 }
 #querybuilder-nav li a {
     padding-bottom: 0px;
 }
+
+/* querybuilder comfort form */
 #querybuilder-comfort-form {
     padding-top: 5px;
 }
@@ -235,7 +239,7 @@ ul.breathe li {
     margin-bottom: 1px;
 }
 #querybuilder-comfort-form .add-on.add-on-label {
-    width: 80px;
+    width: 8rem;
 }
 #querybuilder-comfort-form input::-webkit-input-placeholder {
     color: #DDDDDD;
@@ -249,6 +253,21 @@ ul.breathe li {
 #querybuilder-comfort-form input:-ms-input-placeholder {
     color: #DDDDDD;
 }
+
+/* Wrap querybuilder form fields more early */
+@media (max-width: 1280px) {
+    [class*="span"], .uneditable-input[class*="span"], .row-fluid [class*="span"] {
+        display: block;
+        float: none;
+        width: 100%;
+        margin-left: 0;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+}
+
+
 
 
 /* Query expression history chooser */
