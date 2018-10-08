@@ -17,6 +17,7 @@ development
 - [mw] Fix "List of publication numbers" with Ikofax searches
 - [ui] Reset search modifiers when recalling a search from history
 - [ui] Reset Ikofax mode when using comfort form again
+- [ui] Fix inline "query-link" mechanics
 
 
 2018-09-28 0.152.0

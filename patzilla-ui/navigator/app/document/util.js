@@ -11,10 +11,14 @@ OpsBaseViewMixin = {
         container.find(".query-link").off('click');
         container.find(".query-link").on('click', function(event) {
 
-            // add important parameters which reflect current gui state (e.g. selected project)
-            var href = $(this).attr('href');
+            // Add baseline parameters which reflect current gui state (e.g. selected project)
             var no_modifiers = $(this).data('no-modifiers');
-            var params = navigatorApp.permalink.query_parameters_viewstate(href, {'no_modifiers': no_modifiers});
+            var params = navigatorApp.permalink.query_parameters_viewstate({'no_modifiers': no_modifiers});
+
+            // Add parameters from designated link
+            var href = $(this).attr('href');
+            var uri = $.url(href);
+            _(params).extend(uri.param());
 
             // Regardless where the query originates from (e.g. datasource=review),
             // requests for query-links need switching to ops.
@@ -40,9 +44,10 @@ OpsBaseViewMixin = {
                 });
 
 
-                // Otherwise, serialize state into regular query parameters
+            // Otherwise, serialize state into regular query parameters
             } else {
-                $(this).attr('href', '?' + navigatorApp.permalink.serialize_params(params));
+                var viewstate_query = navigatorApp.permalink.serialize_params(params);
+                $(this).attr('href', '?' + viewstate_query);
             }
 
         });

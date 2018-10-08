@@ -24,31 +24,21 @@ PermalinkPlugin = Marionette.Controller.extend({
         return deferred.promise();
     },
 
-    // build query parameters
+    // Build query parameters from parameter object
     // TODO: refactor this elsewhere, e.g. some UrlBuilder?
-    query_parameters: function(params, uri) {
+    query_parameters: function(params) {
 
         params = params || {};
-        uri = uri || window.location.href;
 
-        var params_computed = {};
+        // Clear parameters having empty values
+        params = _.objRejectEmpty(params);
 
-        // collect parameters from url
-        var url = $.url(uri);
-        _(params_computed).extend(url.param());
-
-        // merge / overwrite with local params
-        _(params_computed).extend(params);
-
-        // clear parameters having empty values
-        params_computed = _.objRejectEmpty(params_computed);
-
-        return params_computed;
+        return params;
     },
 
     // Aggregate queryparameter-compatible data bunch reflecting the current view state
     // TODO: Refactor this elsewhere, e.g. some UrlBuilder?
-    query_parameters_viewstate: function(uri, options) {
+    query_parameters_viewstate: function(options) {
 
         options = options || {};
 
@@ -85,7 +75,7 @@ PermalinkPlugin = Marionette.Controller.extend({
 
         // Merge viewstate with current url parameters (former takes precedence)
         // and purge empty parameters before shipping
-        var params_computed = this.query_parameters(state, uri);
+        var params_computed = this.query_parameters(state);
 
         return params_computed;
     },
