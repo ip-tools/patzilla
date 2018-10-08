@@ -4,6 +4,10 @@ IP Navigator CHANGES
 
 development
 ===========
+
+
+2018-10-08 0.153.0
+==================
 - [mw] Don't run Ikofax expression through CQL parser
 - [ui] Fix error propagation
 - [ui] Signal search syntax in search history entry
