@@ -22,6 +22,7 @@ development
 - [ui,mw] Add fields "application date" and "priority date" to comfort form
 - [ui] Improve querybuilder responsiveness
 - [mw] Improve date parsing for query expression translator
+- [ui] Better demo values for new comfort form fields "appdate" and "priodate"
 
 
 2018-09-28 0.152.0
