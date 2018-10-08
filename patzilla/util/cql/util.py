@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 from patzilla.util.cql.knowledge import datasource_indexnames
 from patzilla.util.date import parse_date_within, iso_to_german, year_range_to_within
 
@@ -10,16 +10,27 @@ def pair_to_cql(datasource, key, value):
     except KeyError:
         return
 
+    # Sanity checks
+    if fieldname is None:
+        return
+
     cql_part = None
     format = u'{0}=({1})'
 
-    # special processing rules for depatisnet
+    # Special processing rules for depatisnet
     if datasource == 'depatisnet':
 
-        if key == 'pubdate':
+        if key in ['pubdate', 'appdate', 'priodate']:
 
+            # Date fields for DEPATISnet yield a dictionary here
+            fieldinfo = fieldname
+
+            # Assume parsing a regular date
+            fieldname = fieldinfo['date']
+
+            # Check if value is a year (4 digits)
             if len(value) == 4 and value.isdigit():
-                fieldname = 'py'
+                fieldname = fieldinfo['year']
 
             # e.g. 1990-2014, 1990 - 2014
             value = year_range_to_within(value)
@@ -30,15 +41,17 @@ def pair_to_cql(datasource, key, value):
                 cql_parts = []
                 if within_dates['startdate']:
                     startdate = within_dates['startdate']
+                    # Check if value is a year (4 digits)
                     if len(startdate) == 4 and startdate.isdigit():
-                        fieldname = 'py'
+                        fieldname = fieldinfo['year']
                     part = '{fieldname} >= {startdate}'.format(fieldname=fieldname, startdate=iso_to_german(startdate))
                     cql_parts.append(part)
 
                 if within_dates['enddate']:
                     enddate = within_dates['enddate']
+                    # Check if value is a year (4 digits)
                     if len(enddate) == 4 and enddate.isdigit():
-                        fieldname = 'py'
+                        fieldname = fieldinfo['year']
                     part = '{fieldname} <= {enddate}'.format(fieldname=fieldname, enddate=iso_to_german(enddate))
                     cql_parts.append(part)
 

@@ -39,6 +39,7 @@ def parse_date_universal(datestring):
         '%d.%m.%Y',     # german
         '%Y-%m-%d',     # ISO
         '%Y%m%d',       # ISO, compact
+        '%Y-%m',        # ISO
         '%Y',           # Year only
     ]
     for format in formats:
@@ -96,7 +97,7 @@ def unixtime_to_human(unixtime):
 
 def iso_to_german(date):
     if '-' in date:
-        date = date_german(parse_date_iso(date))
+        date = date_german(parse_date_universal(date))
     return date
 
 def iso_to_iso_compact(date):
@@ -126,7 +127,8 @@ def year_range_to_within(value):
         parts = value.split(u'-')
         parts = [part.strip() for part in parts]
         year_from, year_to = parts
-        value = u'within {year_from},{year_to}'.format(**locals())
+        if len(year_from) == 4 and len(year_to) == 4:
+            value = u'within {year_from},{year_to}'.format(**locals())
     return value
 
 def week_range(date):
