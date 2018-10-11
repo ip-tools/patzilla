@@ -4,6 +4,7 @@ IP Navigator CHANGES
 
 development
 ===========
+- [ui] Fix occasional cropped display of drawings
 
 
 2018-10-08 0.153.0
