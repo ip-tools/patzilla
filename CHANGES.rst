@@ -5,6 +5,7 @@ IP Navigator CHANGES
 development
 ===========
 - [ui] Fix occasional cropped display of drawings
+- [ui] Prepare drawings loader for fetching new items when navigating to previous item
 
 
 2018-10-08 0.153.0

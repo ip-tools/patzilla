@@ -437,12 +437,18 @@ DocumentCarouselController = Marionette.Controller.extend({
             _this.update_carousel_metadata(this);
         });
 
-        // fetch more drawings when triggering right navigation button
-        var carousel_button_more = $('.drawings-carousel .carousel-control.right');
-        carousel_button_more.on('click', function(event) {
-            // dynamically load more drawings into the carousel, until maximum is reached
-            var carousel = $(this).closest('.ops-collection-entry').find('.drawings-carousel');
-            _this.carousel_fetch_next(carousel);
+        // Load drawing when pressing respective navigation button
+        function drawing_navigate(context, offset) {
+            var carousel = $(context).closest('.ops-collection-entry').find('.drawings-carousel');
+            _this.carousel_load_drawing(carousel, offset);
+        }
+        /*
+        $('.drawings-carousel .carousel-control.left').on('click', function(event) {
+            drawing_navigate(this, -1);
+        });
+        */
+        $('.drawings-carousel .carousel-control.right').on('click', function(event) {
+            drawing_navigate(this, +1);
         });
 
         // Rotate drawings clockwise in steps of 90 degrees
@@ -541,19 +547,19 @@ DocumentCarouselController = Marionette.Controller.extend({
         }
     },
 
-    carousel_fetch_next: function(carousel) {
+    carousel_load_drawing: function(carousel, offset) {
 
         var carousel_items = carousel.find('.carousel-inner');
 
-        var item_index = carousel_items.find('div.active').index() + 1;
+        var item_index_current = carousel_items.find('div.active').index() + 1;
+        var item_index_new = item_index_current + offset;
         var item_count = carousel_items.find('div').length;
 
+        // Use regular page flip mechanics when not on the last page,
+        // i.e. don't manifest a new carousel item
+        if (item_index_current != item_count) return;
 
-        // skip if we're not on the last page
-        if (item_index != item_count) return;
-
-
-        // "number of drawings" is required to limit the upper page bound,
+        // "number of drawings" is required to limit the upper page bound
         var totalcount = carousel.data('totalcount');
 
         // skip if totalcount is invalid
@@ -572,7 +578,7 @@ DocumentCarouselController = Marionette.Controller.extend({
         var img = $(blueprint).children('img');
         img.css('transform', 'inherit');
         var src = img.attr('src').replace(/\?page=.*/, '');
-        src += '?page=' + (item_index + 1);
+        src += '?page=' + (item_index_new);
         img.attr('src', src);
         //console.log(src);
 
