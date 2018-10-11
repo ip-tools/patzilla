@@ -6,6 +6,7 @@ development
 ===========
 - [ui] Fix occasional cropped display of drawings
 - [ui] Prepare drawings loader for fetching new items when navigating to previous item
+- [ui] Reorder comfort form fields again
 
 
 2018-10-08 0.153.0
