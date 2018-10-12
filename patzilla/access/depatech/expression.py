@@ -30,6 +30,9 @@ class DepaTechParser(object):
         self.expression = expression
         self.search = None
         self.query_object = None
+        self.syntax = None
+
+        self.expression = self.expression and self.expression.strip()
 
     def parse(self):
 
@@ -56,6 +59,9 @@ class DepaTechParser(object):
     def keywords(self):
 
         self.parse()
+
+        if not self.query_object:
+            return
 
         # Extract classes from representation like "IC:H04L0012433"
         self.rewrite_classes_ops()

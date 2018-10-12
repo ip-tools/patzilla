@@ -51,15 +51,24 @@ def depatech_published_data_search_handler(request):
     """Search for published-data at MTC depa.tech"""
 
     # Get hold of query expression and filter
+    expression = request.params.get('expression', '')
+    filter = request.params.get('filter', '')
     query = SmartBunch({
-        'expression': request.params.get('expression', ''),
-        'filter':     request.params.get('filter', ''),
+        'syntax':     'lucene',
+        'expression': expression,
+        'filter':     filter,
     })
+    if expression.startswith('DEPAROM V1.0') or expression.startswith('deparom:'):
+        query.syntax = 'deparom'
+
     log.info('Query: {}'.format(query))
 
     # Parse expression, extract and propagate keywords to user interface
-    parser = DepaTechParser(query.expression)
-    keywords_to_response(request, parser)
+    if query.syntax == 'lucene':
+        parser = DepaTechParser(query.expression)
+        keywords_to_response(request, parser)
+
+    # TODO: Parse DEPAROM query expression and extract keywords
 
     # Fixup query: wrap into quotes if cql string is a) unspecific, b) contains spaces and c) is still unquoted
     if should_be_quoted(query.expression):

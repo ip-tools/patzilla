@@ -68,7 +68,7 @@ class DepaTechClient(GenericSearchClient):
         # Use DEPAROM Query Translator
         # https://depa.tech/api/manual/dqt-translator/
         # https://api.depa.tech/dqt/query/es
-        if query.expression and query.expression.strip().startswith('DEPAROM V1.0'):
+        if query.expression and query.syntax == 'deparom':
             transport = 'json'
             query.expression = self.translate_deparom_query(query.expression)
 
@@ -79,11 +79,11 @@ class DepaTechClient(GenericSearchClient):
 
         # Define search request URI
         # https://api.depa.tech/es/deparom/_search?q=AB:cloud-computing
-        uri     = self.uri + self.path_search
+        uri = self.uri + self.path_search
 
         # Define search request parameters
         # 'family.simple': True,
-        params  = {
+        params = {
             'q': query.expression,
             #'fq': query.filter,
             #'sort': 'pd desc, ucid asc',
@@ -172,11 +172,17 @@ class DepaTechClient(GenericSearchClient):
 
         raise self.search_failed(response=response)
 
-    def translate_deparom_query(self, deparom_expression):
+    def translate_deparom_query(self, expression):
         uri = self.uri + self.path_dqt
 
+        upstream_prefix = 'DEPAROM V1.0\n1\n'
+
+        expression = expression.replace(upstream_prefix, '').replace('deparom:', '')
+
         log.info(u'{backend_name}: Translate DEPAROM query expression={expression}, uri={uri}'.format(
-            expression=deparom_expression, uri=uri, backend_name=self.backend_name))
+            expression=expression, uri=uri, backend_name=self.backend_name))
+
+        expression = upstream_prefix + expression
 
         # Perform search request
         headers = {}
@@ -184,7 +190,7 @@ class DepaTechClient(GenericSearchClient):
         try:
             response = requests.post(
                 uri,
-                data=deparom_expression,
+                data=expression,
                 headers=headers,
                 auth=(self.username, self.password),
                 verify=self.tls_verify,
@@ -203,24 +209,31 @@ class DepaTechClient(GenericSearchClient):
             result = {'query': response_data}
             return json.dumps(result)
 
-        elif response.status_code in [400, 500] and response.headers.get('Content-Type', '').startswith('application/json'):
+        elif response.status_code >= 400:
 
-            response_data = json.loads(response.content)
+            message = u'Reason unknown'
 
-            # Handle search expression errors
-            if 'error' in response_data:
-                upstream_error = response_data['error']['caused_by']
-                upstream_error['code'] = response_data['status']
+            if response.headers.get('Content-Type', '').startswith('application/json'):
 
-                if 'reason' not in upstream_error:
-                    upstream_error['reason'] = 'Reason unknown'
+                response_data = json.loads(response.content)
 
-                message = u'Response status code: {code}\n\n{reason}'.format(**upstream_error)
+                # Handle search expression errors
+                if 'error' in response_data:
+                    upstream_error = response_data['error']['caused_by']
+                    upstream_error['code'] = response_data['status']
 
-                raise self.search_failed(
-                    user_info=u'Error translating DEPAROM query expression with depa.tech.',
-                    message=message,
-                    response=response)
+                    if 'reason' not in upstream_error:
+                        upstream_error['reason'] = u'Reason unknown'
+
+                    message = u'Response status code: {code}\n\n{reason}'.format(**upstream_error)
+
+            else:
+                message = response.content
+
+            raise self.search_failed(
+                user_info=u'Translating DEPAROM query expression failed',
+                message=message,
+                response=response)
 
         raise self.search_failed(response=response)
 
