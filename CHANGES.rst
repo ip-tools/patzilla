@@ -11,6 +11,7 @@ Development
 - [ui] Nail Javascript module dependencies to exact versions
 - [mw] Fix error reporting and logging issues
 - [ui] Hide previous/next drawing navigation buttons when displaying a single drawing
+- [ui] Prevent out of bounds navigation to the previous drawing if there's just one item in the collection
 
 
 2018-10-08 0.153.0

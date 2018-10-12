@@ -442,11 +442,24 @@ DocumentCarouselController = Marionette.Controller.extend({
             var carousel = $(context).closest('.ops-collection-entry').find('.drawings-carousel');
             _this.carousel_load_drawing(carousel, offset);
         }
-        /*
+
+        // Navigate to previous drawing
         $('.drawings-carousel .carousel-control.left').on('click', function(event) {
-            drawing_navigate(this, -1);
+
+            // Prevent over-navigation to the previous drawing if there's just one item in the collection
+            var carousel_items = $(this).closest('.ops-collection-entry').find('.drawings-carousel').find('.carousel-inner');
+            var item_count = carousel_items.find('div').length;
+            if (item_count <= 1) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            // TODO: Use same navigation utility function like the "next" button on the right hand side
+            //drawing_navigate(this, -1);
+
         });
-        */
+
+        // Navigate to next drawing
         $('.drawings-carousel .carousel-control.right').on('click', function(event) {
             drawing_navigate(this, +1);
         });
