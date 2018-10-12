@@ -13,15 +13,27 @@
 
 }
 
+body {
+    background-color: #F9F9F9!important;
+}
+
 .header-inner-left {
     margin-top: 35px;
 }
 
+.header-container {
+    background-color: #FFFFFF!important;
+    border-bottom: 1px solid #DBDBDB!important;
+    padding-bottom: 3px!important;
+}
+
+
 .header-logo {
-    font-size: 3em;
+    font-size: 18px;
+	font-family: Verdana;
     font-weight: 500;
     /* font-variant: small-caps; */
     letter-spacing: 0.05em;
-    color: #333;
+    color: #545454;
     margin-right: 0.6em;
 }
