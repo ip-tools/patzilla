@@ -527,23 +527,29 @@ DocumentCarouselController = Marionette.Controller.extend({
 
     },
 
-    // update drawing-number and -totalcount in ui
+    // Update number of current drawing and totalcount in user interface
     update_carousel_metadata: function(carousel) {
 
         var container = $(carousel).closest('.ops-collection-entry');
+        var navigation_controls = $(carousel).find('.carousel-control.left, .carousel-control.right');
 
-        // current drawing number
-        var carousel_real = $(carousel).data('carousel');
-        if (carousel_real) {
-            var page = carousel_real.getActiveIndex() + 1;
+        navigation_controls.show();
+
+        // Current drawing number
+        var carousel_data = $(carousel).data('carousel');
+        if (carousel_data) {
+            var page = carousel_data.getActiveIndex() + 1;
             container.find('.drawing-number').text(page);
         }
 
-        // number of all drawings
-        //var carousel = container.find('.drawings-carousel');
+        // Total count of all drawings
         var totalcount = $(carousel).data('totalcount');
         if (totalcount) {
             container.find('.drawing-totalcount').text('/' + totalcount);
+
+        // Hide previous/next navigation buttons if there is no totalcount
+        } else {
+            navigation_controls.hide();
         }
     },
 
