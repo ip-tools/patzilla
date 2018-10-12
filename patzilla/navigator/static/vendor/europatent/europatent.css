@@ -13,18 +13,26 @@
 
 }
 
+/*
 body {
-    background-color: #F9F9F9!important;
+    background-color: #F9F9F9 !important;
 }
+*/
 
+/*
 .header-inner-left {
     margin-top: 35px;
 }
+*/
+
+.header-inner-right {
+    padding-right: 1.42rem;
+}
 
 .header-container {
-    background-color: #FFFFFF!important;
-    border-bottom: 1px solid #DBDBDB!important;
-    padding-bottom: 3px!important;
+    background-color: #FFFFFF !important;
+    border-bottom: 1px solid #DBDBDB !important;
+    padding-bottom: 3px !important;
 }
 
 
