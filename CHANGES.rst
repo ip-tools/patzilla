@@ -2,12 +2,14 @@
 IP Navigator CHANGES
 ====================
 
-development
+
+Development
 ===========
 - [ui] Fix occasional cropped display of drawings
 - [ui] Prepare drawings loader for fetching new items when navigating to previous item
 - [ui] Reorder comfort form fields again
 - [ui] Nail Javascript module dependencies to exact versions
+- [mw] Fix error reporting and logging issues
 
 
 2018-10-08 0.153.0

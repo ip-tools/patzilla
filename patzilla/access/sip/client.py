@@ -116,11 +116,11 @@ class SipClient(GenericSearchClient):
         try:
             response = requests.post(self.uri + '/search/new', data={'session': self.sessionid, 'searchtree': expression})
         except (ConnectionError, ConnectTimeout) as ex:
-            log.error('SIP search for user "{username}" at "{uri}" failed. Reason: {0} {1}.'.format(
+            log.error(u'SIP search for user "{username}" at "{uri}" failed. Reason: {0} {1}.'.format(
                 ex.__class__, ex.message, username=self.username, uri=self.uri))
             self.logout()
             raise SearchException(ex.message,
-                sip_info='Error or timeout while connecting to upstream database. Database might be offline.')
+                sip_info=u'Error or timeout while connecting to upstream database. Database might be offline.')
 
         # Process search response
         if response.status_code == 200:
@@ -171,8 +171,7 @@ class SipClient(GenericSearchClient):
 
                 else:
                     message = u'Search failed. Reason: Upstream response lacks valid ResultSetId. content={0}'.format(response.text)
-                    raise SearchException(message,
-                        sip_info=u'Search failed. Search response could not be parsed.')
+                    raise SearchException(message, sip_info=u'Search failed. Search response could not be parsed.')
 
             except Exception as ex:
                 log.error(u'Search failed. {name}: {message}. expression={expression}, response={response}'.format(
@@ -181,12 +180,12 @@ class SipClient(GenericSearchClient):
 
         else:
             response_status = str(response.status_code) + ' ' + response.reason
-            message = 'SIP search failed. Reason: response status != 200. status={0}, content={1}'.format(
+            message = u'SIP search failed. Reason: response status != 200. status={0}, content={1}'.format(
                 response_status,
-                response.content)
+                response.text)
             log.error(message)
             raise SearchException(message,
-                sip_info='HTTP error "{status}" while searching upstream database'.format(status=response_status))
+                sip_info=u'HTTP error "{status}" while searching upstream database'.format(status=response_status))
 
 
     def getresults(self, resultid, options):
@@ -208,22 +207,24 @@ class SipClient(GenericSearchClient):
                         raise SearchException(message)
 
                     duration = timeit.default_timer() - starttime
-                    log.info('SIP getresults succeeded. duration={0}s'.format(round(duration, 1)))
+                    log.info(u'SIP getresults succeeded. duration={0}s'.format(round(duration, 1)))
                     return results
 
             except SearchException:
                 raise
 
             except Exception as ex:
-                message = 'SIP getresults failed. Unknown exception. Reason: {0} {1}. response={2}'.format(ex.__class__, ex.message, response.content)
-                log.error(message)
+                message = u'SIP getresults failed. Unknown exception. Reason: {0} {1}'.format(
+                    ex.__class__, ex.message)
+                logmessage = u'{}. response={}'.format(message, response.text)
+                log.error(logmessage)
                 raise SearchException(message)
 
         else:
-            message = 'SIP getresults failed. status_code={0}, content={1}'.format(
-                str(response.status_code) + ' ' + response.reason,
-                response.content)
-            log.error(message)
+            message = u'SIP getresults failed. status_code={0}'.format(
+                str(response.status_code) + ' ' + response.reason)
+            logmessage = u'{}. response={}'.format(message, response.text)
+            log.error(logmessage)
             raise SearchException(message)
 
     def _login_parse_xml(self, xml):
