@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2018-10-12 0.154.0
+==================
 - [ui] Fix occasional cropped display of drawings
 - [ui] Prepare drawings loader for fetching new items when navigating to previous item
 - [ui] Reorder comfort form fields again
