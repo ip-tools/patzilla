@@ -559,9 +559,10 @@ DocumentCarouselController = Marionette.Controller.extend({
         var totalcount = $(carousel).data('totalcount');
         if (totalcount) {
             container.find('.drawing-totalcount').text('/' + totalcount);
+        }
 
         // Hide previous/next navigation buttons if there is no totalcount
-        } else {
+        if (!totalcount || totalcount == 1) {
             navigation_controls.hide();
         }
     },

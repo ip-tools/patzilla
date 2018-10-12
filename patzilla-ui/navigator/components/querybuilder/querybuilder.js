@@ -985,7 +985,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // Modifier for "Expression syntax"
             // TODO: Rename from "cql" to "expert"
             if (flavor == 'cql') {
-                syntax_label = 'CQL';
+                //syntax_label = 'CQL';
                 if (query_data['modifiers']['syntax-ikofax']) {
                     syntax_label = 'Ikofax';
                 }

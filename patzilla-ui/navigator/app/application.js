@@ -785,7 +785,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             // Fall back to IFI Claims for bibliographic data
             var ificlaims_settings = navigatorApp.config.get('system').datasource.ificlaims;
             var ificlaims_allowed =
-                ificlaims_settings.details_enabled &&
+                ificlaims_settings && ificlaims_settings.details_enabled &&
                 _.contains(ificlaims_settings.details_countries, patent.country);
 
             // || _.isEmpty(document_missing.alternatives_local)
