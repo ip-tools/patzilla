@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2018-10-13 0.155.0
+==================
 - [mw] Improve DEPAROM query expression syntax handling
 - [ui] Simplify header layout by using CSS Flexbox
 
