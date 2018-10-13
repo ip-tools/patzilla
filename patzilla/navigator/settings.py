@@ -168,7 +168,7 @@ class RuntimeSettings(object):
         self.vendor = self.effective_vendor()
         self.config = self.config_parameters()
         self.theme = self.theme_parameters()
-        self.beta_badge = '<div class="label label-success label-large do-not-print">BETA</div>'
+        self.beta_badge = '<span class="label label-success label-large do-not-print">BETA</span>'
 
 
     def asdict(self):
@@ -422,13 +422,13 @@ class RuntimeSettings(object):
             label_kind = 'info'
 
         if badge_text and label_kind:
-            params['ui.page.title'] += ' &nbsp; ' + '<div class="label label-{label_kind} label-large do-not-print">{badge_text}</div>'.format(**locals())
+            params['ui.page.title'] += \
+                '<span class="label label-{label_kind} label-large do-not-print">{badge_text}</span>'.format(**locals())
 
         # TODO: Move the html stuff elsewhere!
         if self.config.get('mode') == 'liveview':
             params['ui.page.title'] = 'Patent view'
-            #params['ui.page.title'] += ' &nbsp; ' + self.beta_badge
-            params['ui.page.title'] += ' &nbsp; <i class="spinner icon-refresh icon-spin" style="display: none"></i>'
+            params['ui.spinner'] = ' &nbsp; <i class="spinner icon-refresh icon-spin" style="display: none"></i>'
             if self.config.get('datasource') == 'review':
                 params['ui.page.statusline'] =\
                 '<span id="ui-project-name"></span>' +\

@@ -1,7 +1,6 @@
 .header-container {
 
     color: #ddd;
-    margin-bottom: 20px;
 
     background-color: #3781b7;
     background-image: linear-gradient(transparent 50%, rgba(255,255,255,.2) 50%);
@@ -16,15 +15,12 @@
 
 }
 
-.header-inner-left {
-    margin-top: 25px;
-}
-
 .header-logo {
-    color: #ddd;
-    font-size: 3em;
+    color: #eeeeee;
+    margin-right: 0.8em;
+
+    font-size: 2em;
     font-weight: 500;
     font-variant: small-caps;
     letter-spacing: 0.04em;
-    margin-right: 0.8em;
 }

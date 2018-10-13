@@ -31,7 +31,7 @@ development_mode    = false
 
 [vendor:patzilla]
 organization        = PatZilla
-productname         = IP Navigator
+productname         = PatZilla IP Navigator
 productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
 page_title          = Patent search
 copyright_html      = &copy; 2013-2018, <a href="https://www.example.org/" class="incognito pointer" target="_blank">Example Inc.</a> — All rights reserved.
