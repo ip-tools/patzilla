@@ -33,6 +33,14 @@ PermalinkPlugin = Marionette.Controller.extend({
         // Clear parameters having empty values
         params = _.objRejectEmpty(params);
 
+        // Prefer "numberlist" over "query" parameter
+        if (params.numberlist && params.query) {
+            delete params.query;
+        }
+
+        // Sort all parameters by key
+        params = _.sortKeysBy(params);
+
         return params;
     },
 
@@ -260,8 +268,8 @@ PermalinkPlugin = Marionette.Controller.extend({
             params[key] = value;
         });
 
-        // Serialize all items sorted by key
-        return jQuery.param(_.sortKeysBy(params));
+        // Serialize query parameters to query string
+        return jQuery.param(this.query_parameters(params));
     },
 
 });

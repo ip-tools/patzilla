@@ -7,7 +7,7 @@ OpsBaseViewMixin = {
 
         var _this = this;
 
-        // run search actions when clicking query-links
+        // Run search actions when clicking query-links
         container.find(".query-link").off('click');
         container.find(".query-link").on('click', function(event) {
 
@@ -29,7 +29,7 @@ OpsBaseViewMixin = {
             // debugging
             //navigatorApp.config.set('isviewer', true);
 
-            // When in liveview, scrumble database query and viewstate parameters into opaque parameter token
+            // When in liveview mode, scrumble database query and viewstate parameters into opaque parameter token
             if (navigatorApp.config.get('isviewer')) {
 
                 event.preventDefault();

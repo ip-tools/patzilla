@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2018-10-24 0.155.1
+==================
+- [ui] Fix regression re. query-link propagation when following cited documents
+
+
 2018-10-13 0.155.0
 ==================
 - [mw] Improve DEPAROM query expression syntax handling
