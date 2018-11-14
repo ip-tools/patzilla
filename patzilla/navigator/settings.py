@@ -422,7 +422,7 @@ class RuntimeSettings(object):
             label_kind = 'info'
 
         if badge_text and label_kind:
-            params['ui.page.title'] += \
+            params['ui.environment.badge'] = \
                 '<span class="label label-{label_kind} label-large do-not-print">{badge_text}</span>'.format(**locals())
 
         # TODO: Move the html stuff elsewhere!

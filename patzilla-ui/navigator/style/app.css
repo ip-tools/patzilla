@@ -1,4 +1,4 @@
-/* general */
+/* Text */
 
 .monospace {
     font-family: Monaco, "Lucida Console", monospace;
@@ -36,19 +36,7 @@
 }
 
 pre.inline {
-    display: inline-block;;
-}
-
-.vertical-align-middle {
-    /* http://zerosixthree.se/vertical-align-anything-with-just-3-lines-of-css/ */
-    position: relative;
-    top: 50%;
-    transform: translateY(50%);
-}
-
-.content-center-vertical {
-    display: flex;
-    align-items: center;
+    display: inline-block;
 }
 
 .label-large {
@@ -64,7 +52,55 @@ pre.inline {
 }
 
 
-/* header */
+
+/* Alignment */
+
+.vertical-align-middle {
+    /* http://zerosixthree.se/vertical-align-anything-with-just-3-lines-of-css/ */
+    position: relative;
+    top: 50%;
+    transform: translateY(50%);
+}
+
+.align-middle {
+    display: flex;
+    align-items: center;
+}
+
+
+.align-center-middle {
+  /* https://alligator.io/css/centering-using-flexbox/ */
+
+  /* Flex, baby */
+  display: flex;
+
+  /* Vertical centering */
+  align-items: center;
+
+  /* Horizontal centering */
+  justify-content: center;
+
+  /* Make the container cover the full page height */
+  height: 100vh;
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+}
+
+.align-left {
+  display: flex;
+  justify-content: left;
+}
+
+.align-right {
+  display: flex;
+  justify-content: right;
+}
+
+
+/* Header */
 .header-content {
     min-height: 5rem;
 }

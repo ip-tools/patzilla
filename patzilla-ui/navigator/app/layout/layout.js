@@ -15,7 +15,16 @@ LayoutView = Backbone.Marionette.Layout.extend({
     },
 
     onShow: function() {
-        this.header.show(new HeaderView());
+
+        // Select header variant: Regular vs. vendor-specific
+        var vendor = navigatorApp.config.get('vendor');
+        if (vendor == 'serviva') {
+            this.header.show(new WideHeaderView());
+        } else {
+            this.header.show(new HeaderView());
+        }
+
+        // Select content- and footer-views
         this.content.show(new ContentView());
         this.footer.show(new FooterView());
     },
@@ -52,10 +61,10 @@ MenuView = Backbone.Marionette.ItemView.extend({
 
 HeaderView = Backbone.Marionette.Layout.extend({
 
-    template: require('./header.html'),
     regions: {
         menu: "#menu-region",
     },
+    template: require('./header.html'),
 
     initialize: function() {
         console.log('HeaderView.initialize');
@@ -75,6 +84,51 @@ HeaderView = Backbone.Marionette.Layout.extend({
 
     onRender: function() {
         console.log('HeaderView.onRender');
+    },
+
+    onDomRefresh: function() {
+        console.log('HeaderView.onDomRefresh');
+    },
+
+});
+
+
+WideHeaderView = Backbone.Marionette.Layout.extend({
+
+    regions: {
+        menu: "#menu-region",
+    },
+
+    initialize: function() {
+        console.log('WideHeaderView.initialize:', this);
+        this.config = this.templateHelpers.config;
+        this.theme = this.templateHelpers.theme;
+    },
+
+    //template: require('./header.html'),
+
+    template: function(model) {
+        console.log('WideHeaderView.template');
+        var header_wide = require('./header_wide.html');
+        return header_wide(model);
+    },
+
+    onShow: function() {
+        console.log('WideHeaderView.onShow');
+
+        // TODO: Relocate to appropriate place
+        //this.menu.show(new MenuView());
+    },
+
+    templateHelpers: function() {
+        return {
+            config: navigatorApp.config.attributes,
+            theme: navigatorApp.theme.attributes,
+        };
+    },
+
+    onRender: function() {
+        console.log('WideHeaderView.onRender');
     },
 
     onDomRefresh: function() {

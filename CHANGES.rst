@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2018-11-14 0.156.0
+==================
+[ui] Add wide header variant
+
+
 2018-10-24 0.155.1
 ==================
 - [ui] Fix regression re. query-link propagation when following cited documents

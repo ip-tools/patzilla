@@ -1,26 +1,44 @@
+@import "texgyreadventor.css";
+
 .header-container {
-
     color: #ddd;
+    height: 8rem;
+}
 
-    background-color: #3781b7;
-    background-image: linear-gradient(transparent 50%, rgba(255,255,255,.2) 50%);
-    background-size: 1px 2px;
+.header-content {
+    height: 100%;
+    margin: 0px;
+}
 
-    /* http://www.cssmatic.com/box-shadow */
-    /*
-    -webkit-box-shadow: 0px 10px 7px 3px #3781b7;
-    -moz-box-shadow: 0px 10px 7px 3px #3781b7;
-    box-shadow: 0px 10px 7px 3px #3781b7;
-    */
+.header-content-left {
+    background-color: white;
+    height: inherit;
+    background-image: url("/static/vendor/serviva/serviva-logo.png");
+    background-repeat: no-repeat;
+    background-size: 70%;
+    background-position: center;
+}
+
+.header-content-right {
+
+    height: inherit;
+    margin: 0px !important;
+
+    display: flex;
+    justify-content: right;
+
+    background-color: #0062A1;
+
+    font-family: TeXGyreAdventor;
+    font-size: 4.0rem;
+    line-height: normal;
 
 }
 
-.header-logo {
-    color: #eeeeee;
-    margin-right: 0.8em;
+.header-content-right-inner {
+    margin-right: 1rem !important;
+}
 
-    font-size: 2em;
-    font-weight: 500;
-    font-variant: small-caps;
-    letter-spacing: 0.04em;
+.header-content-small {
+    font-size: 1.5rem;
 }
