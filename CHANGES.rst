@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2018-11-14 0.156.1
+==================
+[ui] Fix header layout
+
+
 2018-11-14 0.156.0
 ==================
 [ui] Add wide header variant
