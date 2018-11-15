@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+var Grid = require('split-grid').default;
 
 LayoutView = Backbone.Marionette.Layout.extend({
 
@@ -16,16 +17,17 @@ LayoutView = Backbone.Marionette.Layout.extend({
 
     onShow: function() {
 
-        // Select header variant: Regular vs. vendor-specific
+        // Select between regular vs. vendor-specific header and content variants
         var vendor = navigatorApp.config.get('vendor');
         if (vendor == 'serviva') {
             this.header.show(new WideHeaderView());
+            this.content.show(new GridContentView());
         } else {
             this.header.show(new HeaderView());
+            this.content.show(new ContentView());
         }
 
-        // Select content- and footer-views
-        this.content.show(new ContentView());
+        // Select footer view
         this.footer.show(new FooterView());
     },
 
@@ -44,6 +46,34 @@ ContentView = Backbone.Marionette.ItemView.extend({
         this.templateHelpers.config = navigatorApp.config;
     },
     templateHelpers: {},
+});
+
+GridContentView = Backbone.Marionette.ItemView.extend({
+    template: require('./content_grid.html'),
+    initialize: function() {
+        console.log('GridContentView.initialize');
+        this.templateHelpers.config = navigatorApp.config;
+    },
+    templateHelpers: {},
+    onShow: function() {
+        log('GridContentView.onShow');
+
+        // Setup Grid
+        // https://split.js.org/
+        // https://github.com/nathancahill/split/tree/master/packages/split-grid
+        var gutter = $(".gutter")[0];
+        const grid = new Grid({
+            columnGutters: [{
+                track: 1,
+                element: gutter,
+            }],
+        });
+        log('GridContentView.grid:', grid);
+
+    },
+    onDomRefresh: function() {
+        log('GridContentView.onDomRefresh');
+    },
 });
 
 MenuView = Backbone.Marionette.ItemView.extend({

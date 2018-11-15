@@ -1,0 +1,71 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
+%>
+
+<div class="main-grid">
+
+    <!-- Sidebar left -->
+    <div id="sidebar-left">
+
+        <!-- Query builder and basket -->
+        <div id="querybuilder-basket-area" class="container-fluid do-not-print non-liveview">
+
+            <!-- Query builder -->
+            <div class="row-fluid">
+                <div class="span12" id="querybuilder-region">&nbsp;</div>
+            </div>
+
+            <!-- Project chooser and basket -->
+            <div class="row-fluid">
+
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <!-- project chooser -->
+                            <div id="project-chooser-area"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="row-fluid">
+                        <% if (config.get('ship-mode') != 'single-bibdata') { %>
+                        <div class="span12" id="basket-region"></div>
+                        <% } %>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Separator -->
+    <div class="gutter gutter-horizontal"></div>
+
+    <!-- Content area -->
+    <div id="main-content" class="container-fluid">
+
+        <!-- pager top -->
+        <div class="pager-area do-not-print" id="ops-pagination-region-top"></div>
+
+        <div id="modal-area"></div>
+
+        <!-- metadata -->
+        <div id="ops-metadata-region"></div>
+
+        <!-- notifications and alerts -->
+        <div id="alert-area"></div>
+        <div id="info-area"></div>
+
+        <!-- results -->
+        <div id="ops-collection-region"></div>
+
+        <!-- pager bottom -->
+        <div class="pager-area do-not-print" id="ops-pagination-region-bottom"></div>
+
+    </div>
+
+</div>
+

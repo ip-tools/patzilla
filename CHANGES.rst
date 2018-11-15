@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2018-11-15 0.157.0
+==================
+[ui] Add grid content variant
+
+
 2018-11-14 0.156.1
 ==================
 [ui] Fix header layout

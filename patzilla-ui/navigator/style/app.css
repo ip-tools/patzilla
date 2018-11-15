@@ -100,7 +100,31 @@ pre.inline {
 }
 
 
+/* Grid layout */
+/* https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1.7fr 1px 4fr;
+}
+.gutter {
+    cursor: ew-resize;
+}
+.gutter.gutter-horizontal {
+    float: left;
+    background-color: darkgrey;
+}
+
+
+/* Sidebars */
+#sidebar-left {
+
+    overflow-x: hidden;
+
+}
 /* Header */
+.header-container #menu-region {
+    margin-right: 1.2em;
+}
 .header-content {
     min-height: 5rem;
 }
@@ -117,12 +141,8 @@ pre.inline {
     margin-top: 8px;
 }
 
-.header-container #menu-region {
-    margin-right: 1.2em;
-}
 
-
-/* footer */
+/* Footer */
 .footer-container {
     margin-top: 50px
 }
@@ -132,7 +152,7 @@ pre.inline {
 
 
 
-/* export dialog */
+/* Export dialog */
 #export-dialog .modal-body .row-fluid {
     margin-bottom: 2em;
 }
@@ -238,13 +258,22 @@ ul.breathe li {
 }
 
 
-/* query builder */
+/* Query builder */
 
 #datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
 #datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
 
+#querybuilder-basket-area {
+    margin-top: 1.2em;
+}
+
 #querybuilder-area .row-fluid {
     margin-bottom: 1rem;
+}
+
+.query-actions {
+  display: flex;
+  line-height: 2rem;
 }
 
 #querybuilder-nav {
@@ -487,7 +516,7 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .ops-collection-entry, .ops-collection-meta, .light-panel {
     position: relative;
-    margin: 15px 0;
+    margin-bottom: 1.3rem;
     padding: 0px;
     background-color: #fff;
     border: 1px solid #ddd;

@@ -7,8 +7,8 @@
 
     <div class="row-fluid">
 
-        <!-- choose ui flavor -->
-        <div class="span6">
+        <!-- Search type chooser (comfort/expert/list) -->
+        <span>
 
             <div id="querybuilder-flavor-chooser" class="btn-group tabs">
 
@@ -84,8 +84,7 @@
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu">
-
+                    <ul class="dropdown-menu pull-right">
                         <li>
 
                             <!-- content transformation -->
@@ -126,10 +125,10 @@
 
             </div>
 
-        </div>
+        </span>
 
-        <!-- data source chooser -->
-        <div class="span6">
+        <!-- Data source chooser -->
+        <span class="pull-right">
             <div id="datasource" class="btn-group" data-toggle="buttons-radio">
                 <button class="btn active" data-value="ops">
                     <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
@@ -160,7 +159,7 @@
                     depa.tech
                 </button>
             </div>
-        </div>
+        </span>
 
     </div>
 
@@ -323,8 +322,8 @@
                 <div class="span12" id="querybuilder-expression-area">
 
                     <!-- Query expression -->
-                    <div class="span10" id="expression-text">
-                        <textarea class2="span9" style="width: 100%" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
+                    <div class="" id="expression-text">
+                        <textarea class="span12 monospace" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
                         <span id="cql-filter-container" class="hide">
                             Filter: <input name="cql-filter" id="cql-filter" style="width: 94%" placeholder="Query filter"/>
                             <br/><br/>
@@ -332,7 +331,7 @@
                     </div>
 
                     <!-- Expression syntax chooser -->
-                    <div class="span2" id="syntax-modifier-chooser">
+                    <div class="" id="syntax-modifier-chooser">
                         <div style="margin-bottom: 0.33rem">
                             Search&nbsp;syntax:
                         </div>
@@ -395,7 +394,7 @@
     <div class="row-fluid" id="cql-field-chooser-row">
 
         <!-- cql field symbol chooser -->
-        <div class="span10">
+        <div class="span12">
 
             <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
 
@@ -448,9 +447,9 @@
 
     <div class="row-fluid">
 
-        <div class="span12 light-panel">
+        <div class="span12 light-panel query-actions">
 
-            <div class="span3">
+            <div class="">
 
                 <!-- Submit query to database -->
                 <div class="btn-group">
@@ -511,7 +510,7 @@
 
             </div>
 
-            <div class="span9" id="querybuilder-modifier-elements">
+            <div class="" id="querybuilder-modifier-elements">
 
             <!-- First row -->
             <div>
@@ -568,7 +567,7 @@
             </div>
 
             <!-- Second row -->
-            <div style="margin-top: 0.5em">
+            <div>
 
                 <!-- toggle mode: swap family members -->
                 <button role="button"
