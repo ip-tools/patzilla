@@ -1,5 +1,12 @@
 @import "texgyreadventor.css";
 
+#header-region {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
 .header-container {
     color: #ddd;
     height: 8rem;
