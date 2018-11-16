@@ -104,7 +104,7 @@ pre.inline {
 /* https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout/Basic_Concepts_of_Grid_Layout */
 .main-grid {
   display: grid;
-  grid-template-columns: 1.7fr 1px 4fr;
+  grid-template-columns: 1.7fr 2px 4fr;
 }
 .gutter {
     cursor: ew-resize;
@@ -258,18 +258,49 @@ ul.breathe li {
 }
 
 
-/* Query builder */
-
-#datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
-#datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
-
-#querybuilder-basket-area {
-    margin-top: 1.2em;
-}
-
+/*
+ *
+ * Query builder
+ */
 #querybuilder-area .row-fluid {
     margin-bottom: 1rem;
 }
+
+/* Query builder: Data source and flavor chooser */
+.querybuilder-datasource-flavor-chooser {
+
+    /* Flex, baby */
+    display: flex;
+
+    /*
+     * Define the flow direction and allow wrapping.
+     * This is the same as:
+     * flex-direction: row;
+     * flex-wrap: wrap;
+     */
+    flex-flow: row wrap;
+    /* Add some nice spacing between elements */
+    justify-content: space-between;
+
+    margin-bottom: 0.25rem;
+}
+
+/* Combine CSS Element Queries with CSS Flexbox to style
+ * elements based on container size, not screen size. */
+.querybuilder-datasource-flavor-chooser[max-width~="910px"] {
+    flex-wrap: wrap-reverse;
+
+}
+
+.querybuilder-datasource-flavor-chooser * {
+    margin-bottom: 1px;
+}
+
+/* Query builder: Data source chooser */
+#datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
+#datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
+
+
 
 .query-actions {
   display: flex;
@@ -283,13 +314,42 @@ ul.breathe li {
     padding-bottom: 0px;
 }
 
-/* querybuilder comfort form */
+/* Query builder comfort form */
 #querybuilder-comfort-form {
     padding-top: 5px;
 }
+.querybuilder-comfort-form-fieldset {
+
+    /* Flex, baby */
+    display: flex;
+
+    /*
+     * Define the flow direction and allow wrapping.
+     * This is the same as:
+     * flex-direction: row;
+     * flex-wrap: wrap;
+     */
+    flex-flow: row wrap;
+
+}
+
+/* When expanded, align to the beginning of its parent container */
+.querybuilder-comfort-form-fieldset[min-width~="871px"] {
+    justify-content: flex-start;
+}
+
+#querybuilder-comfort-form .input-xlarge {
+    width: 250px;
+}
+#querybuilder-comfort-form .input-xlarge.smaller {
+    width: 225px;
+}
+
+/* A little vertical spacing between elements */
 #querybuilder-comfort-form * {
     margin-bottom: 1px;
 }
+
 #querybuilder-comfort-form .add-on.add-on-label {
     width: 8rem;
 }
@@ -320,6 +380,10 @@ ul.breathe li {
 }
 
 
+/* Dossier management */
+#querybuilder-basket-area {
+    margin-top: 1.2em;
+}
 
 
 /* Query expression history chooser */

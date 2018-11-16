@@ -7,19 +7,24 @@ Development
 ===========
 
 
+2018-11-16 0.158.0
+==================
+- [ui] Improve responsiveness of query builder and its widgets
+
+
 2018-11-15 0.157.0
 ==================
-[ui] Add grid content variant
+- [ui] Add grid content variant
 
 
 2018-11-14 0.156.1
 ==================
-[ui] Fix header layout
+- [ui] Fix header layout
 
 
 2018-11-14 0.156.0
 ==================
-[ui] Add wide header variant
+- [ui] Add wide header variant
 
 
 2018-10-24 0.155.1

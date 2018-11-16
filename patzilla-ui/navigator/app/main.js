@@ -7,7 +7,15 @@
  * --------------------
  */
 
+// Compatibility shims for ECMAScript 6 (Harmony)
 require('es6-shim');
+
+// CSS Element Queries: Element responsiveness for a modern web
+var EQ = require('css-element-queries').ElementQueries;
+$(window).ready(function() {
+    console.info('window.load happened');
+    EQ.init();
+});
 
 
 // Twitter Bootstrap 2.3.2

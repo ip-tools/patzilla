@@ -5,11 +5,10 @@
 
 <div id="querybuilder-area">
 
-    <div class="row-fluid">
+    <div class="querybuilder-datasource-flavor-chooser">
 
-        <!-- Search type chooser (comfort/expert/list) -->
+        <!-- Search flavor chooser (comfort/expert/list) -->
         <span>
-
             <div id="querybuilder-flavor-chooser" class="btn-group tabs">
 
                 <button class="btn active" data-toggle="tab"
@@ -124,11 +123,10 @@
                 </div>
 
             </div>
-
         </span>
 
         <!-- Data source chooser -->
-        <span class="pull-right">
+        <span>
             <div id="datasource" class="btn-group" data-toggle="buttons-radio">
                 <button class="btn active" data-value="ops">
                     <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
@@ -171,16 +169,16 @@
             <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
 
                 <form id="querybuilder-comfort-form" target="querybuilder-comfort-form-iframe" action="/api/void">
-                    <fieldset>
+                    <fieldset class="querybuilder-comfort-form-fieldset">
 
-                        <div class="span6 field-regular">
+                        <div class="field-regular">
 
                             <!-- Full text -->
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend input-append">
                                         <span class="add-on add-on-label">Full text</span>
-                                        <input name="fulltext" style="width: 245px" placeholder="rohr or tube or circular" type="text"></input>
+                                        <input name="fulltext" class="input-xlarge smaller" st2yle="width: 245px" placeholder="rohr or tube or circular" type="text"></input>
                                         <span class="add-on add-on-zoom"><i class="icon-resize-full"></i></span>
                                     </div>
                                 </div>
@@ -228,7 +226,7 @@
 
                         </div>
 
-                        <div class="span6 field-regular">
+                        <div class="field-regular">
 
                             <!-- Publication number -->
                             <div class="control-group">
