@@ -260,15 +260,18 @@ class RuntimeSettings(object):
             'ui.page.footer': 'Data sources: ' + u', '.join(data_source_list),
         }
 
-        if 'stylesheet_uri' in vendor and vendor.stylesheet_uri:
-            data['ui.stylesheet'] = vendor.stylesheet_uri
+        # Transfer all properties having designated prefixes 1:1
+        prefixes = ['ui.', 'feature.']
+        for key, value in vendor.iteritems():
+            for prefix in prefixes:
+                if key.startswith(prefix):
+                    if key.endswith('.enabled'):
+                        value = asbool(value)
+                    data[key] = value
 
-        for field in ['header_layout', 'content_layout']:
-            if field in vendor and vendor[field]:
-                data['ui.' + field] = vendor[field]
-
-        if 'module_psexport' in vendor and asbool(vendor['module_psexport']):
-            data['module.psexport.enabled'] = True
+        # Backward compatibility
+        if 'ui.stylesheet' not in data:
+            data['ui.stylesheet'] = vendor.get('stylesheet_uri')
 
         return data
 
