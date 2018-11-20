@@ -1386,5 +1386,9 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         var datasource = this.get_datasource();
         return this.datasource_info(datasource);
     },
+    is_datasource_enabled: function(name) {
+        var whitelist = navigatorApp.config.get('datasources_enabled');
+        return _.contains(whitelist, name);
+    },
 
 });

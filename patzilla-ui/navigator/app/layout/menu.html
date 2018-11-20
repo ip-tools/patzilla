@@ -66,7 +66,7 @@
                 Using hotkey navigation
             </a>
 
-            <% if (_.contains(navigatorApp.config.get('system').datasources, 'ificlaims')) { %>
+            <% if (navigatorApp.is_datasource_enabled('ificlaims')) { %>
             <a class="action-help-ificlaims" target="_blank">
                 <i class="icon-question-sign"></i>
                 &nbsp;
