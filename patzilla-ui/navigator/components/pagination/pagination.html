@@ -1,27 +1,25 @@
 <%
 // -*- coding: utf-8 -*-
-// (c) 2013,2014 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 %>
 
 <!-- This template is used in regular mode -->
 
-<div id="pagination-widget">
+    <div class="pagination-chooser">
 
-    <div class="row-fluid" id="pagination-chooser">
-
-        <div class="span4">
-            <div class="pagination medium">
+        <span class="">
+            <span class="pagination medium">
                 <a href="#" class="first" data-action="first">&laquo;</a>
                 <a href="#" class="previous" data-action="previous">&lsaquo;</a>
                 <input type="text" readonly="readonly" />
                 <a href="#" class="next" data-action="next">&rsaquo;</a>
                 <a href="#" class="last" data-action="last">&raquo;</a>
-            </div>
-        </div>
+            </span>
+        </span>
 
-        <div class="span2">
-            <div class="btn-group btn-popover page-size-chooser"
-                 data-toggle="popover" data-trigger="hover" data-placement="right"
+        <span class="span2">
+            <span class="btn-group btn-popover page-size-chooser"
+                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
                  data-content="Select page size"
                     >
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -32,9 +30,7 @@
                 </button>
                 <ul class="dropdown-menu">
                 </ul>
-            </div>
-        </div>
+            </span>
+        </span>
 
     </div>
-
-</div>

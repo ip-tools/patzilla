@@ -9,6 +9,7 @@ Development
 - [ui] Fix z-index for sticky header
 - [ui] Improve comfort form layout details
 - [ui] Improve project and basket controls layout
+- [ui] Improve pagination widget layout
 
 
 2018-11-16 0.158.0

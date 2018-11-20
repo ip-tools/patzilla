@@ -494,6 +494,11 @@ ul.breathe li {
     margin-bottom: 20px;
 }
 
+.pagination-chooser {
+    display: flex;
+    flex-flow: row wrap;
+}
+
 /* medium class for production purposes */
 .medium.pagination {
     margin: 0px;
