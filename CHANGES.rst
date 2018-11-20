@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Bump wording
 
 
 2018-11-20 0.159.0

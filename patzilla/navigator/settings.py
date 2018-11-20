@@ -401,6 +401,9 @@ class RuntimeSettings(object):
         if datasource == 'ificlaims':
             datasource_user_module = 'ifi'
 
+        # Debugging: Emulate specific conditions
+        #self.development_mode = False
+
         # Matching
         enabled = \
             datasource in self.registry.datasource_settings.datasources and \
