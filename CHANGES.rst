@@ -12,6 +12,7 @@ Development
 - [ui] Improve pagination widget layout
 - [ui] Enable menu in wide header again
 - [ui] Improve query action buttons layout
+- [ui] Fix wrapping of document action buttons
 
 
 2018-11-16 0.158.0
