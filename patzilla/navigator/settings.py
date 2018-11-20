@@ -263,6 +263,10 @@ class RuntimeSettings(object):
         if 'stylesheet_uri' in vendor and vendor.stylesheet_uri:
             data['ui.stylesheet'] = vendor.stylesheet_uri
 
+        for field in ['header_layout', 'content_layout']:
+            if field in vendor and vendor[field]:
+                data['ui.' + field] = vendor[field]
+
         return data
 
     def datasource_settings(self):

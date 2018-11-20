@@ -350,12 +350,24 @@ UiController = Marionette.Controller.extend({
             this.notification.dismiss();
         }
 
+        // Force specific options
+        //options.right = true;
+        //options.layout = 'wide';
+
+        var layout = 'attached-custom';
+        if (options.right) {
+            layout = 'attached-right';
+        }
+        if (options.layout) {
+            layout = 'attached-' + options.layout;
+        }
+
         //setTimeout( function() {
 
             // create the notification
             this.notification = new NotificationFx({
                 message : message,
-                layout : 'attached-custom',
+                layout : layout,
                 effect : 'bouncyflip',
                 //layout : 'box',
                 //effect : 'flip',
@@ -368,9 +380,11 @@ UiController = Marionette.Controller.extend({
                 //ttl: 100000,
             });
 
+            /*
             if (options.right) {
                 this.notification.ntf.className = this.notification.ntf.className.replace('ns-attached', 'ns-attached-right');
             }
+            */
 
             // show the notification
             this.notification.show();

@@ -873,6 +873,12 @@ dl.dl-horizontal-inline {
     max-width: 300px;
 }
 
+/* Notification box for wide header */
+.ns-attached-wide {
+    left: 490px;
+    max-width: 300px;
+}
+
 
 /* waypoint sticky */
 /* TODO: for letting the drawing follow the text */

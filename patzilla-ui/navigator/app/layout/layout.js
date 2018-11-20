@@ -18,12 +18,18 @@ LayoutView = Backbone.Marionette.Layout.extend({
     onShow: function() {
 
         // Select between regular vs. vendor-specific header and content variants
-        var vendor = navigatorApp.config.get('vendor');
-        if (vendor == 'serviva') {
+        var header_layout = navigatorApp.theme.get('ui.header_layout');
+        var content_layout = navigatorApp.theme.get('ui.content_layout');
+
+        if (header_layout == 'wide') {
             this.header.show(new WideHeaderView());
-            this.content.show(new GridContentView());
         } else {
             this.header.show(new HeaderView());
+        }
+
+        if (content_layout == 'grid') {
+            this.content.show(new GridContentView());
+        } else {
             this.content.show(new ContentView());
         }
 
