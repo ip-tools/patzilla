@@ -522,7 +522,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
 
-        // transform query: modifier kind selected in dialog
+        // Transform query: modifier kind selected in dialog
         $('.btn-clipboard-modifier').on('click', function() {
 
             // get field name and operator from dialog
@@ -549,7 +549,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
 
-        // normalize numberlist
+        // Normalize numberlist
         $('#btn-numberlist-normalize').off('click');
         $('#btn-numberlist-normalize').on('click', function(e) {
             e.preventDefault();
@@ -575,7 +575,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             });
         });
 
-        // strip kindcodes from numbers in numberlist
+        // Strip kindcodes from numbers in numberlist
         $('#btn-numberlist-strip-kindcodes').off('click');
         $('#btn-numberlist-strip-kindcodes').on('click', function(e) {
             e.preventDefault();
@@ -590,6 +590,13 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 'Stripped patent kind codes',
                 {type: 'success', icon: 'icon-eraser', right: true});
 
+        });
+
+        // Export to patselect
+        $('#btn-ps-export').off('click');
+        $('#btn-ps-export').on('click', function(e) {
+            e.preventDefault();
+            navigatorApp.ui.notify('Work in progress');
         });
 
     },

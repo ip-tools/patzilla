@@ -16,6 +16,7 @@ Development
 - [ui] Adjust user notification message box position for wide header
 - [ui] Add custom data sources
 - [ui] Improve theming for search action button
+- [ui] Add stub for custom export variant
 
 
 2018-11-16 0.158.0

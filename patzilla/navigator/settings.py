@@ -267,6 +267,9 @@ class RuntimeSettings(object):
             if field in vendor and vendor[field]:
                 data['ui.' + field] = vendor[field]
 
+        if 'module_psexport' in vendor and asbool(vendor['module_psexport']):
+            data['module.psexport.enabled'] = True
+
         return data
 
     def datasource_settings(self):

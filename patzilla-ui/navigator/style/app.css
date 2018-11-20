@@ -60,7 +60,7 @@ pre.inline {
   border-radius: 3px;
 }
 
-.btn-group-larger > .btn {
+.btn-group-larger > .btn, .btn-larger {
   padding: 8px 13px;
   font-size: 16px;
   line-height: 1.2;
