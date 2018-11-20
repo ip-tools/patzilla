@@ -8,6 +8,7 @@ Development
 - [ui] Fix comfort form zoom text width
 - [ui] Fix z-index for sticky header
 - [ui] Improve comfort form layout details
+- [ui] Improve project and basket controls layout
 
 
 2018-11-16 0.158.0
