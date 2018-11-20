@@ -343,6 +343,10 @@ ul.breathe li {
     justify-content: flex-start;
 }
 
+.querybuilder-comfort-form-fieldset[min-width~="871px"] .field-regular:nth-child(n+2) {
+    margin-left: 1rem;
+}
+
 #querybuilder-comfort-form .input-xlarge {
     width: 250px;
 }
@@ -357,6 +361,7 @@ ul.breathe li {
 
 #querybuilder-comfort-form .add-on.add-on-label {
     width: 8rem;
+    margin-left: unset;
 }
 #querybuilder-comfort-form input::-webkit-input-placeholder {
     color: #DDDDDD;
