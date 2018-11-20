@@ -49,3 +49,11 @@
 .header-content-small {
     font-size: 1.5rem;
 }
+
+
+/* Tweak menu opener positioning */
+.menu-wide {
+    align-self: center;
+    margin-left: 1rem;
+    margin-bottom: 2rem;
+}

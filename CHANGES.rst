@@ -7,6 +7,7 @@ Development
 ===========
 - [ui] Bump wording
 - [ui] Fix conditional menu item display
+- [ui] Improve design and positioning of menu opener
 
 
 2018-11-20 0.159.0

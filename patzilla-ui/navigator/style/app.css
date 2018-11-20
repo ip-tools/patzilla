@@ -145,12 +145,25 @@ pre.inline {
 .header-container #menu-region {
     margin-right: 1.2em;
 }
-.menu-wide {
-    align-self: flex-end;
+/* Menu opener button */
+.btn-menu {
+    color: #333;
 }
+.btn-menu:hover, .btn-menu:focus {
+    text-decoration-line: none;
+}
+
+/* Tweak menu opener based on layout */
+.menu-wide {
+    align-self: center;
+    margin-left: 1rem;
+}
+/*
 .menu-wide .icon-bars {
     font-size: 2em;
 }
+*/
+
 
 .header-content {
     min-height: 5rem;
