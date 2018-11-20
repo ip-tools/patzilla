@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2018-11-20 0.159.0
+==================
 - [ui] Fix comfort form zoom text width
 - [ui] Fix z-index for sticky header
 - [ui] Improve comfort form layout details
