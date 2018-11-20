@@ -102,7 +102,7 @@ var abstract_list = data.get_abstract_list();
                     <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf"
                        class="btn btn-popover anchor-pdf" role="button"
                        data-toggle="popover" data-trigger="hover" data-placement="top"
-                       data-content="PDF document"
+                       data-content="Show PDF document"
                             >
                         <%= navigatorApp.ui.pdf_icon() %>
                     </a>
@@ -110,7 +110,7 @@ var abstract_list = data.get_abstract_list();
                     <!-- external links -->
                     <div class="btn-group btn-popover external-links"
                          data-toggle="popover" data-trigger="hover" data-placement="top"
-                         data-content="Show more information from domestic patent offices and other sources"
+                         data-content="Drill down into information from domestic patent offices and other sources."
                             >
                         <a class="btn dropdown-toggle" data-toggle="dropdown">
                             <i class="icon-globe icon-large"></i>
@@ -588,7 +588,7 @@ var abstract_list = data.get_abstract_list();
                             Compact
                         </button>
                         <button class="btn btn-small" data-toggle="tab" data-view-type="verbose">
-                            Verbose
+                            Full
                         </button>
                         <% if (navigatorApp.user_has_module('family-citations')) { %>
                         <button class="btn btn-small" data-toggle="tab" data-view-type="citations">
