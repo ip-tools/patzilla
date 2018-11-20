@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Fix comfort form zoom text width
 
 
 2018-11-16 0.158.0

@@ -228,6 +228,10 @@ a.editable-click {
     padding: 0px;
 }
 
+.nomargin {
+    margin: 0 !important;
+}
+
 .dropdown-menu a {
     cursor: pointer;
 }
@@ -279,6 +283,7 @@ ul.breathe li {
      * flex-wrap: wrap;
      */
     flex-flow: row wrap;
+
     /* Add some nice spacing between elements */
     justify-content: space-between;
 
