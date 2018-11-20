@@ -335,6 +335,7 @@ ul.breathe li {
 /* Query builder: Data source chooser */
 #datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
 #datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
+#datasource button[class~=h-32] { height/*\**/: 32px; }
 
 
 .query-actions div {

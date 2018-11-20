@@ -350,6 +350,12 @@ UiController = Marionette.Controller.extend({
             this.notification.dismiss();
         }
 
+        // Adjust specific options from theme settings
+        var header_layout = navigatorApp.theme.get('ui.header_layout');
+        if (header_layout) {
+            options.layout = header_layout;
+        }
+
         // Force specific options
         //options.right = true;
         //options.layout = 'wide';

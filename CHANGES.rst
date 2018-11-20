@@ -14,6 +14,7 @@ Development
 - [ui] Improve query action buttons layout
 - [ui] Fix wrapping of document action buttons
 - [ui] Adjust user notification message box position for wide header
+- [ui] Add custom data sources
 
 
 2018-11-16 0.158.0

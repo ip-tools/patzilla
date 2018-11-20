@@ -31,7 +31,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     get_datasource_info: function() {
         var datasource = navigatorApp.get_datasource();
-        datasource_info = navigatorApp.datasource_info(datasource) || {};
+        datasource_info = navigatorApp.datasource_info(datasource);
+        if (!datasource_info) {
+            datasource_info = {
+                'querybuilder': {},
+            }
+        }
         //log('get_datasource_info:', datasource, datasource_info);
         return datasource_info;
     },
@@ -77,6 +82,15 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // Set datasource in model
             var datasource = $(this).data('value');
+
+            var datasource_info = navigatorApp.datasource_info(datasource);
+            //log('datasource_info:', datasource_info);
+
+            if (datasource_info === undefined) {
+                navigatorApp.ui.notify('Work in progress');
+            }
+
+            // Set datasource in model
             navigatorApp.set_datasource(datasource);
 
             // Hide query textarea for some data sources, if not in debug mode
