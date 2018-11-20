@@ -52,6 +52,26 @@ pre.inline {
 }
 
 
+/* Buttons */
+.btn-group-sm > .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.btn-group-larger > .btn {
+  padding: 8px 13px;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.btn-group-lg > .btn {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+}
+
 
 /* Alignment */
 
@@ -317,10 +337,12 @@ ul.breathe li {
 #datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
 
 
+.query-actions div {
+  margin: 0.15rem;
+}
 
-.query-actions {
-  display: flex;
-  line-height: 2rem;
+.start-search-buttons .btn {
+    color: #333;
 }
 
 #querybuilder-nav {

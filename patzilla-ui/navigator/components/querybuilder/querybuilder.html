@@ -106,7 +106,7 @@
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu pull-right">
                         <li>
                             <!-- normalize -->
                             <a id="btn-numberlist-normalize">
@@ -365,7 +365,7 @@
 
             <!-- numberlist -->
             <div class="tab-pane fade" id="querybuilder-numberlist-tab">
-                <textarea class="span12" id="numberlist" name="numberlist" placeholder="Numberlist" rows="7"></textarea>
+                <textarea class="span12 monospace" id="numberlist" name="numberlist" placeholder="Numberlist" rows="7"></textarea>
             </div>
 
         </div>
@@ -450,16 +450,16 @@
             <div class="">
 
                 <!-- Submit query to database -->
-                <div class="btn-group">
+                <div class="start-search-buttons btn-group btn-group-larger">
 
                     <!-- Activity indicator -->
-                    <button type="submit" role="button" class="btn btn-query-perform">
+                    <button type="submit" role="button" class="btn btn-success btn-query-perform">
                         <i class="idler icon-search"></i>
                         <i class="spinner icon-refresh icon-spin" style="display: none"></i>
                     </button>
 
                     <!-- Start search action -->
-                    <button type="submit" role="button" class="btn btn-popover btn-query-perform"
+                    <button type="submit" role="button" class="btn btn-success btn-popover btn-query-perform"
                         data-toggle="popover" data-trigger="hover" data-placement="bottom"
                         data-content="Submit search to database"
                         >
@@ -467,7 +467,7 @@
                     </button>
 
                     <!-- More utilities -->
-                    <button role="button" data-toggle="dropdown" class="btn dropdown-toggle"
+                    <button role="button" data-toggle="dropdown" class="btn btn-success dropdown-toggle"
                             style="padding-left: 0.7rem; padding-right: 0.7rem">
                         <i class="icon-wrench"></i>
                     </button>
@@ -476,23 +476,23 @@
                         <li>
 
                             <!-- Permalink to current search, with expiration time -->
-                            <a id="btn-query-permalink" href="#" target="_blank">
+                            <a id="btn-query-permalink" href="#" target="_blank"
+                                class="btn-popover" data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                data-content="Share link to this search with others.">
                                 <i class="icon-external-link"></i> &nbsp; Share this search
                             </a>
 
                             <!-- Numberlist crawler subsystem -->
                             <% if (navigatorApp.component_enabled('crawler')) { %>
                                 <a id="fetch-result-numbers-action" class="btn-popover"
-                                   data-toggle="popover" data-trigger="hover" data-placement="left"
-                                   data-content="Fetch publication numbers of all results. This is the raw response of the datasource."
-                                        >
+                                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                   data-content="Fetch publication numbers of all results. This is the raw response of the datasource.">
                                     <i class="icon-download"></i> &nbsp; List of publication numbers
                                 </a>
 
                                 <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
-                                   data-toggle="popover" data-trigger="hover" data-placement="left"
-                                   data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries."
-                                        >
+                                   data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                   data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries.">
                                     <i class="icon-download"></i> &nbsp; List of publication numbers w/o kindcodes
                                 </a>
                             <% } %>
