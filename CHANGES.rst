@@ -10,6 +10,7 @@ Development
 - [ui] Improve comfort form layout details
 - [ui] Improve project and basket controls layout
 - [ui] Improve pagination widget layout
+- [ui] Enable menu in wide header again
 
 
 2018-11-16 0.158.0

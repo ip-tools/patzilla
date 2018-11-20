@@ -125,8 +125,19 @@ pre.inline {
 .header-container #menu-region {
     margin-right: 1.2em;
 }
+.menu-wide {
+    align-self: flex-end;
+}
+.menu-wide .icon-bars {
+    font-size: 2em;
+}
+
 .header-content {
     min-height: 5rem;
+}
+
+.header-content-left {
+    display: flex !important;
 }
 
 .header-logo {

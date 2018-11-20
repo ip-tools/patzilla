@@ -145,9 +145,7 @@ WideHeaderView = Backbone.Marionette.Layout.extend({
 
     onShow: function() {
         console.log('WideHeaderView.onShow');
-
-        // TODO: Relocate to appropriate place
-        //this.menu.show(new MenuView());
+        this.menu.show(new MenuView());
     },
 
     templateHelpers: function() {
