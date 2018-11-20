@@ -1,122 +1,6 @@
-/* Text */
-
-.monospace {
-    font-family: Monaco, "Lucida Console", monospace;
-}
-
-.text-small {
-    font-size: small;
-}
-
-.text-large {
-    font-size: large;
-}
-
-.text-larger {
-    font-size: larger;
-}
-
-.text-align-left {
-    text-align: left;
-}
-.text-align-right {
-    text-align: right;
-}
-
-.text-muted {
-    color: #777777;
-}
-
-.full-width {
-    width: 100%;
-}
-
-.icon-bars:before {
-    content: "\f0c9";
-}
-
-pre.inline {
-    display: inline-block;
-}
-
-.label-large {
-    font-size: large;
-    padding: 9px;
-}
-
-.title {
-    font-size: 24.5px;
-    line-height: 40px;
-    font-weight: bold;
-    text-rendering: optimizelegibility;
-}
-
-
-/* Buttons */
-.btn-group-sm > .btn {
-  padding: 5px 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  border-radius: 3px;
-}
-
-.btn-group-larger > .btn, .btn-larger {
-  padding: 8px 13px;
-  font-size: 16px;
-  line-height: 1.2;
-}
-
-.btn-group-lg > .btn {
-  padding: 10px 16px;
-  font-size: 18px;
-  line-height: 1.33;
-}
-
-
-/* Alignment */
-
-.vertical-align-middle {
-    /* http://zerosixthree.se/vertical-align-anything-with-just-3-lines-of-css/ */
-    position: relative;
-    top: 50%;
-    transform: translateY(50%);
-}
-
-.align-middle {
-    display: flex;
-    align-items: center;
-}
-
-
-.align-center-middle {
-  /* https://alligator.io/css/centering-using-flexbox/ */
-
-  /* Flex, baby */
-  display: flex;
-
-  /* Vertical centering */
-  align-items: center;
-
-  /* Horizontal centering */
-  justify-content: center;
-
-  /* Make the container cover the full page height */
-  height: 100vh;
-}
-
-.align-center {
-  display: flex;
-  justify-content: center;
-}
-
-.align-left {
-  display: flex;
-  justify-content: left;
-}
-
-.align-right {
-  display: flex;
-  justify-content: right;
+/* Document */
+body {
+    background-color: #e7e7e7;
 }
 
 
@@ -137,10 +21,10 @@ pre.inline {
 
 /* Sidebars */
 #sidebar-left {
-
     overflow-x: hidden;
-
 }
+
+
 /* Header */
 .header-container #menu-region {
     margin-right: 1.2em;
@@ -195,6 +79,27 @@ pre.inline {
 }
 
 
+/* Text */
+.text-muted {
+    color: #777777;
+}
+
+.icon-bars:before {
+    content: "\f0c9";
+}
+
+.label-large {
+    font-size: large;
+    padding: 9px;
+}
+
+.title {
+    font-size: 24.5px;
+    line-height: 40px;
+    font-weight: bold;
+    text-rendering: optimizelegibility;
+}
+
 
 /* Export dialog */
 #export-dialog .modal-body .row-fluid {
@@ -217,33 +122,7 @@ pre.inline {
 }
 
 
-
-/*
-https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
-https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-break-after
-*/
-/*
-* {
-    overflow: visible !important;
-}
-*/
-.page-break-after {
-    page-break-inside: avoid;
-    page-break-after: always;
-}
-
-body {
-    background-color: #e7e7e7;
-}
-
-.strong {
-    font-weight: bold;
-}
-
-.clear-margin {
-    margin: 0px;
-}
-
+/* Icons */
 i.circle-icon {
     border: 4px solid #000000;
     border-radius: 50%;
@@ -254,6 +133,9 @@ i.circle-icon {
     vertical-align: middle;
     text-align: center;
 }
+
+
+/* Links */
 a.incognito, a.editable-click {
     color: #333333;
 }
@@ -268,20 +150,9 @@ a.editable-click {
     border-bottom: dashed 1px #333333;
 }
 
-.container-fluid.nopadding {
-    padding: 0px;
-}
-
-.nomargin {
-    margin: 0 !important;
-}
 
 .dropdown-menu a {
     cursor: pointer;
-}
-
-hr.no-margin {
-    margin: inherit;
 }
 
 p.hero-smaller {
@@ -297,17 +168,12 @@ p.hero-smaller {
 
 
 /* more modifiers */
-.inline-head {
-    display: inline;
-}
-
 ul.breathe li {
     margin-bottom: 1em;
 }
 
 
 /*
- *
  * Query builder
  */
 #querybuilder-area .row-fluid {
@@ -500,7 +366,7 @@ ul.breathe li {
 
 
 
-/* notification box */
+/* Notification box */
 .ns-box {
     font-size: 130% !important;
 }
@@ -521,21 +387,40 @@ ul.breathe li {
 }
 
 
-/* iframe for upstream errors in html */
+/* Notification box slightly shifted to the right */
+.ns-attached-custom {
+    left: 110px;
+    max-width: 300px;
+}
+
+/* Notification box on the right side */
+.ns-attached-right {
+    right: 30px;
+    max-width: 300px;
+}
+
+/* Notification box for wide header */
+.ns-attached-wide {
+    left: 490px;
+    max-width: 300px;
+}
+
+
+/* IFRAME for upstream errors in HTML */
 #error-iframe {
     width: 100%;
     height: 20em;
 }
 
 
-/* cql field chooser */
+/* Expression field chooser */
 /* .bigdrop .select2-container .select2-results {max-height: 200px;} */
 .bigdrop .select2-results {max-height: 35em;}
 /* .bigdrop .select2-choices {max-height: 150px; overflow-y: auto;} */
 
 
 
-/* pager, pagination */
+/* Pager, pagination */
 .pager-area {
     margin-top: 10px;
     margin-bottom: 20px;
@@ -546,7 +431,7 @@ ul.breathe li {
     flex-flow: row wrap;
 }
 
-/* medium class for production purposes */
+/* Medium pagination for production purposes */
 .medium.pagination {
     margin: 0px;
 }
@@ -563,7 +448,7 @@ ul.breathe li {
 }
 
 
-/* alert boxes */
+/* Alert boxes */
 .alert-inline {
     margin-bottom: inherit;
 }
@@ -573,7 +458,7 @@ ul.breathe li {
 }
 
 
-/* modal boxes */
+/* Modal boxes */
 
 .modal-not-rounded {
     border-radius: 0;
@@ -606,7 +491,7 @@ ul.breathe li {
     margin: -50px 0 0 -450px; /* CHANGE MARGINS TO ACCOMODATE THE NEW WIDTH (original = margin: -250px 0 0 -280px;) */
 }
 
-/* generalization of a large modal */
+/* Generalization of a large modal */
 .modal-high .modal-body {
     max-height: 750px;
     height: 550px;
@@ -623,7 +508,7 @@ ul.breathe li {
 
 
 
-/* clipboard modifier */
+/* Clipboard modifier */
 .btn-clipboard-modifier {
     min-width: 30em;
     min-height: 7em;
@@ -636,7 +521,7 @@ ul.breathe li {
 
 
 
-/* result entry */
+/* Result entry */
 
 img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
@@ -754,7 +639,7 @@ dl.dl-horizontal-inline {
 }
 
 
-
+/* Keyword highlighting */
 /* https://github.com/alanphoon/jquery-keyword-highlight */
 .highlight-base {
     padding: 2px;
@@ -779,6 +664,8 @@ dl.dl-horizontal-inline {
     font-weight:600;
 }
 
+
+/* Project management */
 #project-chooser-list .dropdown-menu {
     width: 300px;
 }
@@ -793,20 +680,6 @@ dl.dl-horizontal-inline {
     margin-left: 10px;
     padding: 5px;
 }
-
-.document-details.tab-content {
-    overflow: visible;
-}
-
-.inid {
-    font-weight: bold;
-}
-
-
-.document-actions .btn-group + .btn-group {
-    margin-left: 0px;
-}
-
 
 #basket {
     font-size: smaller;
@@ -824,7 +697,24 @@ dl.dl-horizontal-inline {
     padding: 10px;
 }
 
-/* permalink */
+
+
+/* Document */
+.document-details.tab-content {
+    overflow: visible;
+}
+
+.inid {
+    font-weight: bold;
+}
+
+
+.document-actions .btn-group + .btn-group {
+    margin-left: 0px;
+}
+
+
+/* Document: Permalink */
 #permalink-uri-textinput {
     font-size: 8px;
     line-height: 8px;
@@ -837,7 +727,8 @@ dl.dl-horizontal-inline {
     height: auto;
 }
 
-/* login form */
+
+/* Login form */
 .login-modal {
     z-index: 1050;
     position: fixed;
@@ -875,26 +766,7 @@ dl.dl-horizontal-inline {
 }
 
 
-/* Notification box slightly shifted to the right */
-.ns-attached-custom {
-    left: 110px;
-    max-width: 300px;
-}
-
-/* Notification box on the right side */
-.ns-attached-right {
-    right: 30px;
-    max-width: 300px;
-}
-
-/* Notification box for wide header */
-.ns-attached-wide {
-    left: 490px;
-    max-width: 300px;
-}
-
-
-/* waypoint sticky */
+/* Sticky waypoint */
 /* TODO: for letting the drawing follow the text */
 /*
 .stuck {

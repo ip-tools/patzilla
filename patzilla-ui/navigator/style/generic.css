@@ -1,0 +1,140 @@
+/* Text */
+.monospace {
+    font-family: Monaco, "Lucida Console", monospace;
+}
+
+.text-small {
+    font-size: small;
+}
+
+.text-large {
+    font-size: large;
+}
+
+.text-larger {
+    font-size: larger;
+}
+
+.text-align-left {
+    text-align: left;
+}
+.text-align-right {
+    text-align: right;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+
+
+/* Alignment */
+
+pre.inline {
+    display: inline-block;
+}
+
+.inline-head {
+    display: inline;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.clear-margin {
+    margin: 0px;
+}
+
+.container-fluid.nopadding {
+    padding: 0px;
+}
+
+.nomargin {
+    margin: 0 !important;
+}
+
+hr.no-margin {
+    margin: inherit;
+}
+
+.vertical-align-middle {
+    /* http://zerosixthree.se/vertical-align-anything-with-just-3-lines-of-css/ */
+    position: relative;
+    top: 50%;
+    transform: translateY(50%);
+}
+
+.align-middle {
+    display: flex;
+    align-items: center;
+}
+
+
+.align-center-middle {
+  /* https://alligator.io/css/centering-using-flexbox/ */
+
+  /* Flex, baby */
+  display: flex;
+
+  /* Vertical centering */
+  align-items: center;
+
+  /* Horizontal centering */
+  justify-content: center;
+
+  /* Make the container cover the full page height */
+  height: 100vh;
+}
+
+.align-center {
+  display: flex;
+  justify-content: center;
+}
+
+.align-left {
+  display: flex;
+  justify-content: left;
+}
+
+.align-right {
+  display: flex;
+  justify-content: right;
+}
+
+
+/* Buttons */
+.btn-group-sm > .btn {
+  padding: 5px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.btn-group-larger > .btn, .btn-larger {
+  padding: 8px 13px;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.btn-group-lg > .btn {
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+}
+
+
+/* Page breaks */
+/*
+https://stackoverflow.com/questions/27058472/wkhtmltopdf-page-break-after-have-whitespace
+https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-break-after
+*/
+/*
+* {
+    overflow: visible !important;
+}
+*/
+.page-break-after {
+    page-break-inside: avoid;
+    page-break-after: always;
+}
