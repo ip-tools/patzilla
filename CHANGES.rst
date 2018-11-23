@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Make IssueReporter work on dev and prod equally good
 
 
 2018-11-23 0.160.0

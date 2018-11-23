@@ -42,6 +42,10 @@ config.plugins.push(
     })
     */
 
+    new webpack.DefinePlugin({
+        PRODUCTION: JSON.stringify(true),
+    })
+
 );
 
 

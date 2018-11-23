@@ -40,6 +40,10 @@ config.optimization.minimizer = [];
 
 config.plugins.push(
 
+    new webpack.DefinePlugin({
+        PRODUCTION: JSON.stringify(false),
+    }),
+
     // https://www.npmjs.com/package/webpack-notifier
     new WebpackNotifierPlugin()
 

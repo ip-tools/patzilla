@@ -10,12 +10,12 @@ IssueReporter = Backbone.Model.extend({
     },
 
     initialize: function(options) {
-        console.log('Initialize IssueReporter');
+        console.log('IssueReporter::initialize');
     },
 
     setup_stacktrace_interceptor: function(options) {
 
-        console.log('IssueReporter.setup_stacktrace_interceptor');
+        console.log('IssueReporter::setup_stacktrace_interceptor with targets:', options.targets);
 
         var _this = this;
 
@@ -138,7 +138,7 @@ IssueReport = Backbone.Model.extend({
     },
 
     initialize: function(options) {
-        console.log('Initialize IssueReport');
+        console.log('IssueReport::initialize');
 
         options = options || {};
 
@@ -162,7 +162,7 @@ IssueReport = Backbone.Model.extend({
 IssueReporterGui = Backbone.Model.extend({
 
     initialize: function(options) {
-        console.log('Initialize IssueReporterGui');
+        console.log('IssueReporterGui::initialize');
         this.reporter = new IssueReporter();
     },
 
@@ -301,5 +301,9 @@ IssueReporterGui = Backbone.Model.extend({
 });
 
 var issueReporter = new IssueReporter();
-//issueReporter.setup_stacktrace_interceptor({targets: 'log'});
-issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});
+
+if (PRODUCTION) {
+    issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});
+} else {
+    issueReporter.setup_stacktrace_interceptor({targets: 'log'});
+}
