@@ -11,6 +11,7 @@ Development
 - [ui] Refactor main application CSS
 - [ui,mw] Refactor vendor-specific feature flags
 - [ui] Redesign document header with CSS Flexbox and CSS Grid Layout
+- [ui] Fix inline linking to application document with DOCDB number
 
 
 2018-11-20 0.159.0

@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('./base.js');
 require('./util.js');
 require('./epo-ops-base.js');
@@ -717,7 +717,18 @@ _.extend(OpsExchangeDocument.prototype, {
             return entries;
         },
         get_application_references: function(links) {
-            var appnumber_docdb = this.get_application_number('docdb');
+
+            // v1
+            //var appnumber_docdb = this.get_application_number('docdb');
+
+            // v2
+            try {
+                var document_id = this.get_application_reference('docdb');
+                var appnumber_docdb = document_id.country + document_id.docnumber;
+            } catch(error) {
+                var appnumber_docdb = document_id.fullnumber;
+            }
+
             var appnumber_epodoc = this.get_application_number('epodoc');
             var appnumber_original = this.get_application_number('original');
             var entry =
