@@ -122,6 +122,19 @@ navigatorApp.addRegions({
     paginationRegionBottom: "#ops-pagination-region-bottom",
 });
 
+
+// Load application components / plugins at runtime
+navigatorApp.addInitializer(function(options) {
+
+    // Stack plugin
+    var stack_enabled = this.theme.get('feature.stack.enabled');
+    if (stack_enabled) {
+        require('patzilla.navigator.components.stack');
+    }
+
+});
+
+
 // Main application user interface
 navigatorApp.addInitializer(function(options) {
 

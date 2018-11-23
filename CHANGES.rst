@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2018-11-23 0.160.0
+==================
 - [ui] Bump wording
 - [ui] Fix conditional menu item display
 - [ui] Improve design and positioning of menu opener
@@ -15,6 +19,7 @@ Development
 - [ui] Fix hotkey event handling
 - [ui] Link to CCD version 2.1.8
 - [ui] Add action for expanding comment panels of all documents
+- [ui] Introduce Stack subsystem
 
 
 2018-11-20 0.159.0

@@ -84,10 +84,10 @@ var abstract_list = data.get_abstract_list();
 
 
             <!-- Actions: Rating, Select for stack -->
-            <div class="do-not-print">
+            <div class="document-rating-stack do-not-print">
 
                 <% if (navigatorApp.component_enabled('basket')) { %>
-                    <span>
+                    <span class="document-rating-widget">
                         <a id="remove-patent-number-<%= patent_number %>" role="button"
                            class="btn-popover incognito remove-patent-number pointer"
                            data-patent-number="<%= patent_number %>"
@@ -114,6 +114,13 @@ var abstract_list = data.get_abstract_list();
                     </a>
                     -->
                 <% } %>
+
+                <!-- Stack -->
+                <label data-document-number="<%= patent_number %>" class="document-stack-widget hero-checkbox" style="display: none">
+                    Select
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
 
             </div>
 

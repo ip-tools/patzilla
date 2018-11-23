@@ -49,6 +49,14 @@ MetadataView = Backbone.Marionette.ItemView.extend({
             });
         }
 
+        // Action: Use stack mode
+        if (navigatorApp.component_enabled('stack')) {
+            $('.action-select-documents').off('click');
+            $('.action-select-documents').on('click', function(event) {
+                navigatorApp.stack.enable_stack_mode();
+            });
+        }
+
     },
 
 });

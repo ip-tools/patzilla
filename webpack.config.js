@@ -220,6 +220,7 @@ const config = {
             'patzilla.navigator.components.reading':         path.resolve(__ui, 'navigator', 'components', 'reading'),
             'patzilla.navigator.components.results-dialog':  path.resolve(__ui, 'navigator', 'components', 'results-dialog'),
             'patzilla.navigator.components.results-tabular': path.resolve(__ui, 'navigator', 'components', 'results-tabular'),
+            'patzilla.navigator.components.stack':           path.resolve(__ui, 'navigator', 'components', 'stack'),
             'patzilla.navigator.components.storage':         path.resolve(__ui, 'navigator', 'components', 'storage'),
             'patzilla.navigator.components.viewport':        path.resolve(__ui, 'navigator', 'components', 'viewport'),
             'patzilla.navigator.components.waypoints':       path.resolve(__ui, 'navigator', 'components', 'waypoints'),

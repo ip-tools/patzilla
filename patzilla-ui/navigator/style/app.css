@@ -618,6 +618,13 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
+/* Stack */
+.document-stack-decorated {
+    border-left: 3px solid #2196F3;
+    margin-left: -3px;
+}
+
+
 /* More info */
 .document-header-more-menu {
     top: unset;
