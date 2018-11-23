@@ -13,6 +13,7 @@ Development
 - [ui] Redesign document header with CSS Flexbox and CSS Grid Layout
 - [ui] Fix inline linking to application document with DOCDB number
 - [ui] Fix hotkey event handling
+- [ui] Link to CCD version 2.1.8
 
 
 2018-11-20 0.159.0
