@@ -12,6 +12,7 @@ Development
 - [ui,mw] Refactor vendor-specific feature flags
 - [ui] Redesign document header with CSS Flexbox and CSS Grid Layout
 - [ui] Fix inline linking to application document with DOCDB number
+- [ui] Fix hotkey event handling
 
 
 2018-11-20 0.159.0

@@ -95,7 +95,8 @@ HotkeysPlugin = Marionette.Controller.extend({
 
         var scroll_smooth = _this.app.ui.scroll_smooth;
 
-        // snap scrolling to our items (space key)
+
+        // Snap scrolling to document items with space key
         $(document).on('keydown', null, null, function(event) {
 
             if (event.keyCode == 32 && !_(['input', 'textarea']).contains(event.target.localName)) {
@@ -112,6 +113,8 @@ HotkeysPlugin = Marionette.Controller.extend({
 
             }
         });
+
+        // Snap scrolling to document items with page-up/page-down keys
         $(document).on('keydown', null, 'pagedown', function(event) {
             event.preventDefault();
             scroll_smooth(_this.app.viewport.next_item({paging: true}));
@@ -122,7 +125,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
 
 
-        // navigate the Biblio, Desc, Claims with left/right arrow keys
+        // Navigate the Biblio, Desc, Claims with left/right arrow keys
         $(document).on('keydown', null, 'right', function(event) {
             event.preventDefault();
             var tab_chooser = _this.app.viewport.get_document().find('.document-anchor .document-details-chooser').first();
@@ -172,48 +175,37 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
 
 
-        // open pdf on "shift+p"
+        // Open PDF document on "shift+p"
         $(document).on('keydown', null, 'shift+p', function(event) {
-            event.preventDefault();
-            var anchor = _this.app.viewport.get_document().find('a.anchor-pdf');
-            anchor[0].trigger('click');
+            _this.keypress_to_click(event, 'a.anchor-pdf');
         });
 
 
-        // links to various patent offices
-        // open Espacenet on "shift+e"
+        // Links to various patent offices
+
+        // Ppen Espacenet on "shift+e"
         $(document).on('keydown', null, 'shift+e', function(event) {
-            event.preventDefault();
-            var anchor = _this.app.viewport.get_document().find('a.anchor-biblio-espacenet');
-            anchor[0].trigger('click');
+            _this.keypress_to_click(event, 'a.anchor-biblio-espacenet');
         });
-        // open DEPATISnet on "shift+d"
+        // Open DEPATISnet on "shift+d"
         $(document).on('keydown', null, 'shift+d', function(event) {
-            event.preventDefault();
-            var anchor = _this.app.viewport.get_document().find('a.anchor-biblio-depatisnet');
-            anchor[0].trigger('click');
+            _this.keypress_to_click(event, 'a.anchor-biblio-depatisnet');
         });
-        // open epo register information on "shift+alt+e"
+        // Open EPOregister on "shift+alt+e"
         $(document).on('keydown', null, 'alt+shift+e', function(event) {
-            event.preventDefault();
-            var element = _this.app.viewport.get_document().find('a.anchor-register-epo')[0];
-            element && element.trigger('click');
+            _this.keypress_to_click(event, 'a.anchor-register-epo');
         });
-        // open dpma register information on "shift+alt+d"
+        // Open DPMAregister on "shift+alt+d"
         $(document).on('keydown', null, 'alt+shift+d', function(event) {
-            event.preventDefault();
-            var element = _this.app.viewport.get_document().find('a.anchor-register-dpma')[0];
-            element && element.trigger('click');
+            _this.keypress_to_click(event, 'a.anchor-register-dpma');
         });
-        // open ccd on "shift+c"
+        // Open CCD Viewer on "shift+c"
         $(document).on('keydown', null, 'shift+c', function(event) {
-            event.preventDefault();
-            var element = _this.app.viewport.get_document().find('a.anchor-ccd')[0]
-            element && element.trigger('click');
+            _this.keypress_to_click(event, 'a.anchor-ccd');
         });
 
 
-        // open help on "h"
+        // Open help about hotkeys with "h"
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
             var baseurl = _this.app.config.get('baseurl');
@@ -221,6 +213,12 @@ HotkeysPlugin = Marionette.Controller.extend({
             window.open(url);
         });
 
+    },
+
+    keypress_to_click: function(event, selector) {
+            event.preventDefault();
+            var element = this.app.viewport.get_document().find(selector)[0];
+            element && element.click();
     },
 
     querybuilder_hotkeys: function(selector) {
