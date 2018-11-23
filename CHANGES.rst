@@ -14,6 +14,7 @@ Development
 - [ui] Fix inline linking to application document with DOCDB number
 - [ui] Fix hotkey event handling
 - [ui] Link to CCD version 2.1.8
+- [ui] Add action for expanding comment panels of all documents
 
 
 2018-11-20 0.159.0

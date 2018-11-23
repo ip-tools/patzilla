@@ -23,6 +23,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
     setup_ui: function() {
         log('MetadataView.setup_ui');
 
+        // Display results either from OPS or from upstream
         $('.content-chooser > button[data-toggle="tab"]').on('show', function (e) {
             // e.target // activated tab
             // e.relatedTarget // previous tab
@@ -37,7 +38,16 @@ MetadataView = Backbone.Marionette.ItemView.extend({
 
         });
 
+        // Setup metadata information
         navigatorApp.trigger('metadataview:setup_ui');
+
+        // Action: Expand all comment areas
+        if (navigatorApp.component_enabled('comments')) {
+            $('.action-expand-comments').off('click');
+            $('.action-expand-comments').on('click', function(event) {
+                navigatorApp.comments.toggle_all();
+            });
+        }
 
     },
 

@@ -335,20 +335,35 @@ CommentsPlugin = Marionette.Controller.extend({
     bind_hotkeys: function() {
         var _this = this;
         $(document).on('keydown', null, 'C', function() {
-            _this.viewport_toggle_comment();
+            _this.toggle_by_viewport();
         });
     },
 
     // toggle comment currently in viewport
-    viewport_toggle_comment: function() {
+    toggle_by_viewport: function() {
 
         // resolve the closest backbone view
-        var view = $('.document-anchor:in-viewport').closest('.ops-collection-entry').backboneView();
+        var element = $('.document-anchor:in-viewport').closest('.ops-collection-entry');
 
         // edit-toggle the comment manager
-        if (view.comment_manager) {
-            view.comment_manager.toggle_edit();
+        this.toggle_by_element(element);
+    },
+
+    toggle_by_element: function(element) {
+
+        var backbone_view = element.backboneView();
+
+        // edit-toggle the comment manager
+        if (backbone_view.comment_manager) {
+            backbone_view.comment_manager.toggle_edit();
         }
+    },
+
+    toggle_all: function() {
+        var _this = this;
+        $('.ops-collection-entry').each(function(index, element) {
+            _this.toggle_by_element($(element));
+        });
     },
 
 });
@@ -375,5 +390,7 @@ navigatorApp.addInitializer(function(options) {
 
 
     });
+
+    this.register_component('comments');
 
 });
