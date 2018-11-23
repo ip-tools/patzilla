@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('patzilla.navigator.components.storage');
 require('backbone-dom-to-view');
 
@@ -132,11 +132,22 @@ CommentCollection = Backbone.Collection.extend({
 
 CommentButtonView = Backbone.Marionette.ItemView.extend({
     template: require('./comment-button.html'),
-    tagName: 'span',
+    //tagName: null,
 
     // forward the "click" dom event to a "toggle" application event
     triggers: {
         'click': 'toggle',
+    },
+
+    // How to display an item view with no tag
+    // https://stackoverflow.com/questions/14659597/backbonejs-view-self-template-replacewith-and-events/49246853#49246853
+    // https://stackoverflow.com/questions/11594961/backbone-not-this-el-wrapping/11598543#11598543
+    render: function() {
+        var html = this.template();
+        var el = $(html);
+        this.$el.replaceWith(el);
+        this.setElement(el);
+        return this;
     },
 
 });
@@ -332,7 +343,7 @@ CommentsPlugin = Marionette.Controller.extend({
     viewport_toggle_comment: function() {
 
         // resolve the closest backbone view
-        var view = $('.document-actions:in-viewport').closest('.ops-collection-entry').backboneView();
+        var view = $('.document-anchor:in-viewport').closest('.ops-collection-entry').backboneView();
 
         // edit-toggle the comment manager
         if (view.comment_manager) {

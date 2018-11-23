@@ -12,7 +12,7 @@ ViewportPlugin = Marionette.Controller.extend({
     },
 
     get_document: function() {
-        var document_in_focus = $('.document-actions:in-viewport').closest('.ops-collection-entry').first();
+        var document_in_focus = $('.document-anchor:in-viewport').closest('.ops-collection-entry').first();
         return document_in_focus;
     },
 

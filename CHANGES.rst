@@ -10,6 +10,7 @@ Development
 - [ui] Improve design and positioning of menu opener
 - [ui] Refactor main application CSS
 - [ui,mw] Refactor vendor-specific feature flags
+- [ui] Redesign document header with CSS Flexbox and CSS Grid Layout
 
 
 2018-11-20 0.159.0

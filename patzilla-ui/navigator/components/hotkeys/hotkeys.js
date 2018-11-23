@@ -125,7 +125,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         // navigate the Biblio, Desc, Claims with left/right arrow keys
         $(document).on('keydown', null, 'right', function(event) {
             event.preventDefault();
-            var tab_chooser = _this.app.viewport.get_document().find('.document-actions .document-details-chooser').first();
+            var tab_chooser = _this.app.viewport.get_document().find('.document-anchor .document-details-chooser').first();
             var active_button = tab_chooser.find('button.active');
             var next = active_button.next('button');
             if (!next.length) {
@@ -135,7 +135,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         });
         $(document).on('keydown', null, 'left', function(event) {
             event.preventDefault();
-            var tab_chooser = _this.app.viewport.get_document().find('.document-actions .document-details-chooser').first();
+            var tab_chooser = _this.app.viewport.get_document().find('.document-anchor .document-details-chooser').first();
             var active_button = tab_chooser.find('button.active');
             var next = active_button.prev('button');
             if (!next.length) {

@@ -1,6 +1,6 @@
 <%
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 %>
 
 <%
@@ -24,327 +24,308 @@ var abstract_list = data.get_abstract_list();
 
 <div class="container-fluid ops-collection-entry page-break-after" data-document-number="<%= patent_number %>">
 
-    <div class="ops-collection-entry-heading row-fluid">
+    <div class="ops-collection-entry-heading document-anchor">
 
-        <!-- patent number -->
-        <div class="span3 container-fluid">
-            <div class="header-compact">
+        <!-- Document header: Left side -->
+        <div class="document-header-main">
+
+            <!-- Document identifier / Patent number -->
+            <div class="document-title">
                 <%= data.enrich_link(patent_number, 'pn', null, null, {'no_modifiers': true}) %>
             </div>
-            <%
-            if (meta && meta['swapped'] && meta['swapped']['canonical']) {
-            print('<div style="margin-top: 0.5em">');
-            print('Original hit: ');
-            print(data.enrich_link(meta['swapped']['canonical'], 'pn', null, null, {'no_modifiers': true}));
-            print('</div>');
-            }
-            %>
-        </div>
 
-        <!-- dates -->
-        <div class="span2 container-fluid">
-            <div class="header-biblio">
-                <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(40)</span>
-                &nbsp;
-                <span><%= data.enrich_link(publication_date, 'publicationdate') %></span>
+            <!-- More bibliographic info -->
+            <div>
+                <% if (publication_date) { %>
+                <div>
+                    Published on: <%= data.enrich_link(publication_date, 'publicationdate') %>
+                </div>
+                <% } %>
+                <% if (meta && meta['swapped'] && meta['swapped']['canonical']) { %>
+                <div>
+                    Original hit: <%= data.enrich_link(meta['swapped']['canonical'], 'pn', null, null, {'no_modifiers': true}) %>
+                </div>
+                <% } %>
             </div>
-        </div>
 
-        <!-- actions -->
-        <div class="span7 container-fluid document-actions do-not-print">
-
-            <!-- details / fulltext -->
-            <div class="span9">
-
-                <div class="span8">
-
-                    <div class="btn-group btn-popover tabs document-details-chooser"
-                         data-toggle="popover" data-trigger="hover" data-placement="top"
-                         data-content="Toggle detail view"
-                            >
-                        <button class="btn active" data-toggle="tab"
-                                href="#document-details-biblio-container-<%= patent_number %>">
-                            Biblio
-                        </button>
-                        <% if (data.has_fulltext()) { %>
-                        <button class="btn" data-toggle="tab"
-                                href="#document-details-claims-container-<%= patent_number %>"
-                                data-details-title="Claims"
-                                data-details-type="claims"
-                                >
-                            Claims
-                        </button>
-                        <button class="btn" data-toggle="tab"
-                                href="#document-details-description-container-<%= patent_number %>"
-                                data-details-title="Description"
-                                data-details-type="description"
-                                >
-                            Desc
-                        </button>
-                        <% } %>
-                        <button class="btn" data-toggle="tab"
-                                id="document-details-family-button-<%= patent_number %>"
-                                href="#document-details-family-container-<%= patent_number %>"
-                                data-details-type="family"
-                                >
-                            Family
-                        </button>
-                    </div>
-
-                </div>
-
-
-                <div class="">
-
-                    <span id="region-comment-button"/>
-
-                    <!-- pdf document -->
-                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf"
-                       class="btn btn-popover anchor-pdf" role="button"
-                       data-toggle="popover" data-trigger="hover" data-placement="top"
-                       data-content="Show PDF document"
-                            >
-                        <%= navigatorApp.ui.pdf_icon() %>
-                    </a>
-
-                    <!-- external links -->
-                    <div class="btn-group btn-popover external-links"
-                         data-toggle="popover" data-trigger="hover" data-placement="top"
-                         data-content="Drill down into information from domestic patent offices and other sources."
-                            >
-                        <a class="btn dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-globe icon-large"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-
-                            <!-- bibliographic data -->
-                            <li><div style="padding-left: 10px">
-                                <h5><i class="icon-list"></i> &nbsp; Bibliographic data</h5>
-                            </div>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet">
-                                    [BIBLIO] <%= patent_number %> @ Espacenet
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" class="anchor-biblio-depatisnet">
-                                    [BIBLIO] <%= patent_number %> @ DEPATISnet
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.google_url() %>" target="_blank" class="anchor-biblio-google">
-                                    [BIBLIO] <%= patent_number %> @ Google Patents
-                                </a>
-                            </li>
-
-                            <% if (linkmaker.country == 'US') { %>
-                            <li>
-                                <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
-                                    [BIBLIO] <%= patent_number %> @ USPTO Application Database
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
-                                    [BIBLIO] <%= patent_number %> @ USPTO Patent Database
-                                </a>
-                            </li>
-                            <% } %>
-
-                            <% if (linkmaker.country == 'WO') { %>
-                            <li>
-                                <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" class="anchor-biblio-wipo">
-                                    [BIBLIO] <%= patent_number %> @ WIPO
-                                </a>
-                            </li>
-                            <% } %>
-
-                            <% if (linkmaker.country == 'CA') { %>
-                            <li>
-                                <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" class="anchor-biblio-cipo">
-                                    [BIBLIO] <%= patent_number %> @ CIPO
-                                </a>
-                            </li>
-                            <% } %>
-
-                            <li class="divider"/>
-
-
-                            <!-- legal status -->
-                            <li><div style="padding-left: 10px">
-                                <h5>§ &nbsp; Legal information</h5>
-                            </div>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank">
-                                    [LEGAL] <%= patent_number %> @ INPADOC legal status
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.epo_register_url() %>" target="_blank" class="anchor-register-epo">
-                                    [LEGAL] <%= patent_number %> @ European Patent Register
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" class="anchor-register-dpma">
-                                    [LEGAL] <%= patent_number %> @ DPMAregister
-                                </a>
-                            </li>
-                            <% if (linkmaker.country == 'US') { %>
-                            <li>
-                                <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank">
-                                    [LEGAL] USPTO PAIR
-                                </a>
-                            </li>
-                            <% } %>
-                            <li class="divider"/>
-
-
-                            <!-- patent family -->
-                            <li><div style="padding-left: 10px">
-                                <h5><i class="icon-group"></i> &nbsp; Patent family information</h5>
-                            </div>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" class="anchor-ccd">
-                                    [FAMILY] <%= patent_number %> @ CCD Viewer
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank">
-                                    [FAMILY] <%= patent_number %> @ USPTO Global Dossier (application)
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank">
-                                    [FAMILY] <%= patent_number %> @ USPTO Global Dossier (publication)
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank">
-                                    [FAMILY] <%= patent_number %> @ USPTO Global Dossier (patent)
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank">
-                                    [FAMILY] <%= patent_number %> @ INPADOC patent family
-                                </a>
-                            </li>
-                            <!--
-                            <li>
-                                <a href="<%= linkmaker.ops_family_url() %>" target="_blank">
-                                    [FAMILY] <%= patent_number %> @ OPS biblio,legal
-                                </a>
-                            </li>
-                            -->
-                            <li class="divider"/>
-
-
-                            <!-- PDF -->
-                            <li><div style="padding-left: 10px">
-                                <h5><%= navigatorApp.ui.pdf_icon() %> &nbsp; PDF and Images</h5>
-                            </div>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf-ops">
-                                    [PDF] <%= patent_number %> @ OPS
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf">
-                                    [PDF] <%= patent_number %> @ Espacenet
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf">
-                                    [PDF] <%= patent_number %> @ DEPATISnet
-                                </a>
-                            </li>
-
-                            <% if (linkmaker.country == 'US') { %>
-                            <li>
-                                <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
-                                    [PDF] <%= patent_number %> @ USPTO Application Database
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
-                                    [PDF] <%= patent_number %> @ USPTO Publication Database
-                                </a>
-                            </li>
-                            <% } %>
-
-                        </ul>
-                    </div>
-
-                </div>
-
-
-        </div>
-
-        <!-- add/remove -->
-        <div class="span3" style="line-height: 200%">
-            <% if (navigatorApp.component_enabled('basket')) { %>
-                <span class="pull-right">
-                    <a id="remove-patent-number-<%= patent_number %>" role="button"
-                       class="btn-popover incognito remove-patent-number pointer"
-                       data-patent-number="<%= patent_number %>"
-                       data-toggle="popover" data-trigger="hover" data-placement="top"
-                       data-content="Remove document number from collection">
-                        <i class="icon-trash icon-large"></i>
-                    </a>
-                    &nbsp;
-                    <span
-                        class="rating-widget"
-                        id="rate-patent-number-<%= patent_number %>"
-                        data-document-number="<%= patent_number %>"
-                        style="display: inline-block;">
-                    </span>
-                </span>
-                <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
-                <!--
-                <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
-                   data-patent-number="<%= patent_number %>"
-                   data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to collection"
-                   >
-                    <i class="icon-white icon-plus"></i>
-                </a>
-                -->
-            <% } %>
-
-        <% if (config.get('ship-mode') == 'single-bibdata') { %>
-        <form name="single-bibdata-<%= patent_number %>" method="post" action="<%= data.config.get('ship-url') %>" target="<%= data.config.get('ship-frame') %>" class="form-single-bibdata">
-            <input name="query" type="hidden" value="<%= $('#query').val().replace(/"/g, '&quot;') %>"/>
-            <input name="patent_number" type="hidden" value="<%= patent_number %>"/>
-            <input name="title" type="hidden" value="<%= title_list.join('\n') %>"/>
-            <input name="applicants" type="hidden" value="<%= data.get_applicants().join('\n') %>"/>
-            <input name="inventors" type="hidden" value="<%= data.get_inventors().join('\n') %>"/>
-            <input name="application_date" type="hidden" value="<%= application_date %>"/>
-            <input name="publication_date" type="hidden" value="<%= publication_date %>"/>
-            <input name="abstract" type="hidden" value="<%= abstract_list.join('\n') %>"/>
-            <!--
-            <input name="ship_action" type="submit" value="rate" class="btn"/>
-            -->
-            <button type="submit" role="button" class="btn btn-popover"
-                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                    data-content="Submit details of document to origin or 3rd-party system"
+            <!-- Document details: Claims, Description, Family -->
+            <div class="btn-group btn-popover tabs document-details-chooser do-not-print"
+                 data-toggle="popover" data-trigger="hover" data-placement="top"
+                 data-content="Toggle detail view"
                     >
-                <i class="icon-share"/>
-                Submit
+                <button class="btn active" data-toggle="tab"
+                        href="#document-details-biblio-container-<%= patent_number %>">
+                    Biblio
+                </button>
+                <% if (data.has_fulltext()) { %>
+                <button class="btn" data-toggle="tab"
+                        href="#document-details-claims-container-<%= patent_number %>"
+                        data-details-title="Claims"
+                        data-details-type="claims"
+                        >
+                    Claims
+                </button>
+                <button class="btn" data-toggle="tab"
+                        href="#document-details-description-container-<%= patent_number %>"
+                        data-details-title="Description"
+                        data-details-type="description"
+                        >
+                    Desc
+                </button>
+                <% } %>
+                <button class="btn" data-toggle="tab"
+                        id="document-details-family-button-<%= patent_number %>"
+                        href="#document-details-family-container-<%= patent_number %>"
+                        data-details-type="family"
+                        >
+                    Family
+                </button>
+            </div>
+
+
+            <!-- Actions: Rating, Select for stack -->
+            <div class="do-not-print">
+
+                <% if (navigatorApp.component_enabled('basket')) { %>
+                    <span>
+                        <a id="remove-patent-number-<%= patent_number %>" role="button"
+                           class="btn-popover incognito remove-patent-number pointer"
+                           data-patent-number="<%= patent_number %>"
+                           data-toggle="popover" data-trigger="hover" data-placement="top"
+                           data-content="Remove document number from collection">
+                            <i class="icon-trash icon-large"></i>
+                        </a>
+                        &nbsp;
+                        <span
+                            class="rating-widget"
+                            id="rate-patent-number-<%= patent_number %>"
+                            data-document-number="<%= patent_number %>"
+                            style="display: inline-block;">
+                        </span>
+                    </span>
+                    <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number hide" value="<%= patent_number %>"/>
+                    <!--
+                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
+                       data-patent-number="<%= patent_number %>"
+                       data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to collection"
+                       >
+                        <i class="icon-white icon-plus"></i>
+                    </a>
+                    -->
+                <% } %>
+
+            </div>
+
+        </div>
+
+
+        <!-- Document header: Menu on right side -->
+        <span class="btn-group btn-popover do-not-print">
+            <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
+                <i class="fa-icon icon-bars icon-2x"></i>
             </button>
 
-        </form>
-        <% } %>
+            <!-- Actions: Comment, PDF, Worldlinks -->
+            <ul class="dropdown-menu pull-right document-header-more-menu" role="menu">
 
-        </div>
+                <!--
+                <div class="dropdown-section-header">Actions</div>
+                -->
 
-        </div>
+                <!-- Open PDF document -->
+                <li>
+                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf">
+                        <%= navigatorApp.ui.pdf_icon() %>
+                        &nbsp;
+                        Open PDF
+                    </a>
+                </li>
+
+                <!-- Add/edit comment -->
+                <li id="region-comment-button"/>
+
+                <!-- Links to external resources -->
+                <li class="dropdown-submenu">
+
+                    <a tabindex="-1" href="#">
+                        <i class="icon-globe icon-large"></i>
+                        &nbsp;
+                        External sources
+                    </a>
+                    <ul class="dropdown-menu more-links-menu-container">
+
+                        <!-- bibliographic data -->
+                        <li><div style="padding-left: 10px">
+                            <h5><i class="icon-list"></i> &nbsp; Bibliographic data</h5>
+                        </div>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet">
+                                [BIBLIO] <%= patent_number %> @ Espacenet
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" class="anchor-biblio-depatisnet">
+                                [BIBLIO] <%= patent_number %> @ DEPATISnet
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.google_url() %>" target="_blank" class="anchor-biblio-google">
+                                [BIBLIO] <%= patent_number %> @ Google Patents
+                            </a>
+                        </li>
+
+                        <% if (linkmaker.country == 'US') { %>
+                        <li>
+                            <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
+                                [BIBLIO] <%= patent_number %> @ USPTO Application Database
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
+                                [BIBLIO] <%= patent_number %> @ USPTO Patent Database
+                            </a>
+                        </li>
+                        <% } %>
+
+                        <% if (linkmaker.country == 'WO') { %>
+                        <li>
+                            <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" class="anchor-biblio-wipo">
+                                [BIBLIO] <%= patent_number %> @ WIPO
+                            </a>
+                        </li>
+                        <% } %>
+
+                        <% if (linkmaker.country == 'CA') { %>
+                        <li>
+                            <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" class="anchor-biblio-cipo">
+                                [BIBLIO] <%= patent_number %> @ CIPO
+                            </a>
+                        </li>
+                        <% } %>
+
+                        <li class="divider"/>
+
+
+                        <!-- legal status -->
+                        <li><div style="padding-left: 10px">
+                            <h5>§ &nbsp; Legal information</h5>
+                        </div>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank">
+                                [LEGAL] <%= patent_number %> @ INPADOC legal status
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.epo_register_url() %>" target="_blank" class="anchor-register-epo">
+                                [LEGAL] <%= patent_number %> @ European Patent Register
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" class="anchor-register-dpma">
+                                [LEGAL] <%= patent_number %> @ DPMAregister
+                            </a>
+                        </li>
+                        <% if (linkmaker.country == 'US') { %>
+                        <li>
+                            <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank">
+                                [LEGAL] USPTO PAIR
+                            </a>
+                        </li>
+                        <% } %>
+                        <li class="divider"/>
+
+
+                        <!-- patent family -->
+                        <li><div style="padding-left: 10px">
+                            <h5><i class="icon-group"></i> &nbsp; Patent family information</h5>
+                        </div>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" class="anchor-ccd">
+                                [FAMILY] <%= patent_number %> @ CCD Viewer
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank">
+                                [FAMILY] <%= patent_number %> @ USPTO Global Dossier (application)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank">
+                                [FAMILY] <%= patent_number %> @ USPTO Global Dossier (publication)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank">
+                                [FAMILY] <%= patent_number %> @ USPTO Global Dossier (patent)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank">
+                                [FAMILY] <%= patent_number %> @ INPADOC patent family
+                            </a>
+                        </li>
+                        <!--
+                        <li>
+                            <a href="<%= linkmaker.ops_family_url() %>" target="_blank">
+                                [FAMILY] <%= patent_number %> @ OPS biblio,legal
+                            </a>
+                        </li>
+                        -->
+                        <li class="divider"/>
+
+
+                        <!-- PDF -->
+                        <li><div style="padding-left: 10px">
+                            <h5><%= navigatorApp.ui.pdf_icon() %> &nbsp; PDF and Images</h5>
+                        </div>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf-ops">
+                                [PDF] <%= patent_number %> @ OPS
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf">
+                                [PDF] <%= patent_number %> @ Espacenet
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf">
+                                [PDF] <%= patent_number %> @ DEPATISnet
+                            </a>
+                        </li>
+
+                        <% if (linkmaker.country == 'US') { %>
+                        <li>
+                            <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
+                                [PDF] <%= patent_number %> @ USPTO Application Database
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
+                                [PDF] <%= patent_number %> @ USPTO Publication Database
+                            </a>
+                        </li>
+                        <% } %>
+
+                    </ul>
+
+                </li>
+                <!--
+                <hr class="divider"/>
+                -->
+
+            </ul>
+        </span>
 
     </div>
 
     <span id="region-comment-text"/>
 
-    <div class="ops-collection-entry-inner container-fluid ops-bibliographic-details">
+    <div class="ops-collection-entry-inner ops-bibliographic-details">
 
         <div class="row-fluid">
             <div class="span12 keyword">
@@ -424,6 +405,16 @@ var abstract_list = data.get_abstract_list();
                         </dd>
                         <br/>
 
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
+                            (30)
+                        </dt>
+                        <dd class="keyword">
+                            <% var priority_claims_rendered = data.get_priority_claims(true).map(function(item) { return '<tr>' + item + '</tr>'; }).join(''); %>
+                            <table class="table table-striped2 table-condensed">
+                                <%= priority_claims_rendered %>
+                            </table>
+                        </dd>
+
                         <dt class="inid-tooltip" data-toggle="tooltip" title="application / domestic filing">
                             (20)
                         </dt>
@@ -434,15 +425,7 @@ var abstract_list = data.get_abstract_list();
                                 </tr>
                             </table>
                         </dd>
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
-                            (30)
-                        </dt>
-                        <dd class="keyword">
-                            <% var priority_claims_rendered = data.get_priority_claims(true).map(function(item) { return '<tr>' + item + '</tr>'; }).join(''); %>
-                            <table class="table table-striped2 table-condensed">
-                                <%= priority_claims_rendered %>
-                            </table>
-                        </dd>
+
                         <br/>
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="classifications">
@@ -522,7 +505,7 @@ var abstract_list = data.get_abstract_list();
 
                             <%= entry.get_patent_number() %>,
                             <%= entry.get_publication_date() %>
-                            <span class="inid inid-tooltip" data-toggle="tooltip" title="publication date">(45)</span>
+                            <span class="inid-tooltip strong" data-toggle="tooltip" title="publication date">(45)</span>
 
                             &nbsp;&nbsp;
 

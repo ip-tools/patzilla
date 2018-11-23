@@ -52,7 +52,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
             $(container).find('.ops-bibliographic-details').hide();
 
             // Hide other elements displaying bibliographic data
-            $(container).find('.header-biblio,.document-details-chooser').hide();
+            $(container).find('.header-biblio,.document-details-chooser').css('visibility', 'hidden');
 
         }
 
