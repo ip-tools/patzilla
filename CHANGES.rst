@@ -9,6 +9,7 @@ Development
 - [ui] Improve Stack subsystem mechanics
 - [ui] Improve logging and debugging
 - [ui] Add ApplicationProfile subsystem
+- [ui] Improve Stack subsystem data model
 
 
 2018-11-23 0.160.0

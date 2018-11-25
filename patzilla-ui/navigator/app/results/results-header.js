@@ -46,7 +46,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
         if (navigatorApp.component_enabled('comments')) {
             $('.action-expand-comments').off('click');
             $('.action-expand-comments').on('click', function(event) {
-                navigatorApp.comments.activate_all();
+                navigatorApp.comments.toggle_all();
             });
         }
 

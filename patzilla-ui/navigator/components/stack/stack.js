@@ -2,12 +2,16 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('backbone-dom-to-view');
 require('patzilla.lib.hero-checkbox');
+require('patzilla.lib.marionette');
 require('patzilla.navigator.components.storage');
 
 
 StackModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('StackEntry'),
+
+    // Automatically maintain "created" and "modified" model attributes
+    timestamped: true,
 
     relations: [
     ],
@@ -22,25 +26,19 @@ StackModel = Backbone.RelationalModel.extend({
     },
 
 });
-_.extend(StackModel.prototype, TimestampedModelMixin);
 
 
-StackCollection = Backbone.Collection.extend({
+StackCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
     sync: Backbone.localforage.sync('StackEntry'),
     find: Backbone.localforage.find,
     model: StackModel,
 
     // initialize model
     initialize: function() {
-    },
-
-    by_key: function(key) {
-        return this.get_or_create({key: key});
         //log('StackCollection::initialize');
     },
 
 });
-_.extend(StackCollection.prototype, SmartCollectionMixin);
 
 
 
@@ -131,7 +129,9 @@ StackManager = NamedViewController.extend({
         // Wire events
         this.listenTo(this.model, 'change:selected', this.save_model);
         this.listenTo(this.model, 'change:selected', this.update_sidecar_indicator);
-        this.listenTo(this.checkbox_widget, 'render', this.update_sidecar_indicator);
+
+        this.update_sidecar_indicator();
+        //this.listenTo(this.checkbox_widget, 'render', this.update_sidecar_indicator);
 
         // Debug events
         /*
@@ -209,40 +209,43 @@ StackManager = NamedViewController.extend({
 });
 
 
-StackPlugin = Marionette.Controller.extend({
+StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
 
     manager_class: StackManager,
 
     initialize: function(options) {
-        var _this = this;
 
         log('StackPlugin::initialize');
 
-        // The list view the items are rendered into,
-        // so we are listening to its 'itemview:item:rendered' events.
-        this.view = options.view;
+        // The application object.
+        this.application = this.getOption('application');
 
         // Setup the data store
-        this.listenTo(navigatorApp, 'localforage:ready', function() {
+        this.listenTo(this.application, 'localforage:ready', function() {
             log('localforage:ready-stack');
-            _this.setup_plugin(options);
+            this.setup(options);
         });
 
     },
 
-    setup_plugin: function(options) {
+    setup: function(options) {
+
         log('StackPlugin::setup');
 
+        // The list view the items are rendered into,
+        // so we are listening to its 'itemview:item:rendered' events.
+        this.view = this.getOption('view');
 
+        // Setup the data store.
         this.store = new StackCollection();
 
-        // Setup the data store
+        // Fetch data from store.
         this.store.fetch({success: function(response) {
             log('StackPlugin: fetch ready');
             // FIXME: nobody currently waits for this to happen
         }});
 
-        // Attach a new item-specific manager after itemview got rendered
+        // Attach a new item-specific manager after each itemview got rendered.
         this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
 
             // This guy will manage the widget to model to environment interactions
@@ -250,8 +253,21 @@ StackPlugin = Marionette.Controller.extend({
 
         });
 
+        // Apply intents after the whole listview has rendered.
+        this.listenTo(this.view, 'render', this.intent_hook);
+
         // TODO: Register global hotkeys
         this.bind_hotkeys();
+    },
+
+    intent_hook: function() {
+        if (this.application.component_enabled('profile')) {
+            var mode = this.application.profile.get_intent('work.mode');
+            log('StackPlugin::intent_hook mode:', mode);
+            if (mode) {
+                this.activate_all_real(mode);
+            }
+        }
     },
 
     make_stack_manager: function(view) {
@@ -321,18 +337,32 @@ StackPlugin = Marionette.Controller.extend({
         return stack;
     },
 
+
     // Activate all elements
-    activate_all: function(mode) {
+    activate_all_mode: function(mode) {
+        // Remember this choice in application state, so it will
+        // persist across paging actions and even page reloads.
+        if (this.application.component_enabled('profile')) {
+            this.application.profile.set_intent('work.mode', mode);
+        }
+
+        return this.activate_all_real(mode);
+    },
+
+    activate_all_real: function(mode) {
+        // Iterate list of visible result elements and activate
+        // the designated mode on each of them.
         var _this = this;
         $('.ops-collection-entry').each(function(index, element) {
             _this.activate_by_element($(element), mode);
         });
     },
+
     activate_all_stack: function() {
-        this.activate_all(StackDisplayMode.STACK);
+        this.activate_all_mode(StackDisplayMode.STACK);
     },
     activate_all_rating: function() {
-        this.activate_all(StackDisplayMode.RATING);
+        this.activate_all_mode(StackDisplayMode.RATING);
     },
 
 });
@@ -342,7 +372,7 @@ StackPlugin = Marionette.Controller.extend({
 navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, "application:init", function() {
-        this.stack = new StackPlugin({view: this.collectionView});
+        this.stack = new StackPlugin({application: this, view: this.collectionView});
     });
 
     this.register_component('stack');

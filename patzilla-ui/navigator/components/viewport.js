@@ -31,20 +31,26 @@ ViewportPlugin = Marionette.Controller.extend({
         if (document_number) {
             this.app.basketModel.add(document_number);
         }
+        this.activate_rating_widget();
     },
     document_remove_basket: function() {
         var document_number = this.get_document_number_in_focus();
         if (document_number) {
             this.app.basketModel.remove(document_number);
         }
+        this.activate_rating_widget();
     },
     document_rate: function(score, dismiss) {
-        if (navigatorApp.component_enabled('stack')) {
-            navigatorApp.stack.activate_by_viewport(StackDisplayMode.RATING);
-        }
+        this.activate_rating_widget();
         dismiss = dismiss || false;
         var document_number = this.get_document_number_in_focus();
         return this.app.document_rate(document_number, score, dismiss);
+    },
+
+    activate_rating_widget: function() {
+        if (navigatorApp.component_enabled('stack')) {
+            navigatorApp.stack.activate_by_viewport(StackDisplayMode.RATING);
+        }
     },
 
     // compute the best next list item

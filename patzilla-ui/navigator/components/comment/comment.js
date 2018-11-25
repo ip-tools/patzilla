@@ -9,6 +9,9 @@ CommentModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Comment'),
 
+    // Automatically maintain "created" and "modified" model attributes
+    timestamped: true,
+
     relations: [
         {
             type: Backbone.HasOne,
@@ -28,10 +31,9 @@ CommentModel = Backbone.RelationalModel.extend({
     },
 
 });
-_.extend(CommentModel.prototype, TimestampedModelMixin);
 
 
-CommentCollection = Backbone.Collection.extend({
+CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
     sync: Backbone.localforage.sync('Comment'),
     find: Backbone.localforage.find,
     model: CommentModel,
@@ -50,7 +52,6 @@ CommentCollection = Backbone.Collection.extend({
     },
 
 });
-_.extend(CommentCollection.prototype, SmartCollectionMixin);
 
 
 CommentButtonView = Backbone.Marionette.ItemView.extend({
