@@ -145,13 +145,13 @@ DirectRenderMixin = {
 NamedViewController = Marionette.Controller.extendEach(MarionetteFuture, {
 
     initialize: function(options) {
-        log('NamedViewController::initialize');
+        //log('NamedViewController::initialize');
         this.register_view_component();
     },
 
     register_view_component: function() {
-        log('NamedViewController::register_view_component');
-        log('name:', this.getOption('name'));
+        //log('NamedViewController::register_view_component');
+        //log('name:', this.getOption('name'));
         var name = this.getOption('name');
         this.view[name] = this;
     },

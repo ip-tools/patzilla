@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+
 
 MetadataView = Backbone.Marionette.ItemView.extend({
     tagName: "div",

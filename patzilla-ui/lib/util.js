@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('underscore');
 require('underscore.string');
 
@@ -381,6 +381,21 @@ function dotted_reference(obj, str) {
     return str.split(".").reduce(function(o, x) { return o[x] }, obj);
 }
 
+function xhr_decode_error(xhr, options) {
+    //log('xhr_decode_error:', xhr, options);
+    options = options || {};
+    var error = {
+        'name': xhr.status + ' ' + xhr.statusText,
+        'description': {
+            'content': xhr.responseText,
+            'headers': {'date': xhr.getResponseHeader('Date')},
+            'status_code': xhr.status,
+            'url': xhr.requestUrl || options.url,
+        }
+    };
+    return error;
+}
+
 
 exports.log = log;
 exports.asbool = asbool;
@@ -401,3 +416,5 @@ exports.now_iso_filename = now_iso_filename;
 exports.now_iso_human = now_iso_human;
 exports.timestamp = timestamp;
 exports.isodate_compact_to_verbose = isodate_compact_to_verbose;
+
+exports.xhr_decode_error = xhr_decode_error;

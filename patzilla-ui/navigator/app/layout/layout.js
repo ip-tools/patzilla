@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2017 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 var Grid = require('split-grid').default;
 
 LayoutView = Backbone.Marionette.Layout.extend({
@@ -12,7 +12,7 @@ LayoutView = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function() {
-        console.log('LayoutView.initialize');
+        //log('LayoutView::initialize');
     },
 
     onShow: function() {
@@ -40,7 +40,7 @@ LayoutView = Backbone.Marionette.Layout.extend({
     templateHelpers: {},
 
     onDomRefresh: function() {
-        console.log('LayoutView.onDomRefresh');
+        //log('LayoutView::onDomRefresh');
     },
 
 });
@@ -48,7 +48,7 @@ LayoutView = Backbone.Marionette.Layout.extend({
 ContentView = Backbone.Marionette.ItemView.extend({
     template: require('./content.html'),
     initialize: function() {
-        console.log('ContentView.initialize');
+        //log('ContentView::initialize');
         this.templateHelpers.config = navigatorApp.config;
     },
     templateHelpers: {},
@@ -57,12 +57,12 @@ ContentView = Backbone.Marionette.ItemView.extend({
 GridContentView = Backbone.Marionette.ItemView.extend({
     template: require('./content_grid.html'),
     initialize: function() {
-        console.log('GridContentView.initialize');
+        //log('GridContentView::initialize');
         this.templateHelpers.config = navigatorApp.config;
     },
     templateHelpers: {},
     onShow: function() {
-        log('GridContentView.onShow');
+        //log('GridContentView::onShow');
 
         // Setup Grid
         // https://split.js.org/
@@ -74,11 +74,11 @@ GridContentView = Backbone.Marionette.ItemView.extend({
                 element: gutter,
             }],
         });
-        log('GridContentView.grid:', grid);
+        //log('GridContentView::onShow grid:', grid);
 
     },
     onDomRefresh: function() {
-        log('GridContentView.onDomRefresh');
+        //log('GridContentView::onDomRefresh');
     },
 });
 
@@ -86,7 +86,7 @@ MenuView = Backbone.Marionette.ItemView.extend({
     template: require('./menu.html'),
     tagName: 'span',
     initialize: function() {
-        console.log('MenuView.initialize');
+        //log('MenuView::initialize');
     },
     /*
     templateHelpers: {
@@ -103,11 +103,11 @@ HeaderView = Backbone.Marionette.Layout.extend({
     template: require('./header.html'),
 
     initialize: function() {
-        console.log('HeaderView.initialize');
+        //log('HeaderView::initialize');
     },
 
     onShow: function() {
-        console.log('HeaderView.onShow');
+        //log('HeaderView::onShow');
         this.menu.show(new MenuView());
     },
 
@@ -119,11 +119,11 @@ HeaderView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        console.log('HeaderView.onRender');
+        //log('HeaderView::onRender');
     },
 
     onDomRefresh: function() {
-        console.log('HeaderView.onDomRefresh');
+        //log('HeaderView::onDomRefresh');
     },
 
 });
@@ -136,7 +136,7 @@ WideHeaderView = Backbone.Marionette.Layout.extend({
     },
 
     initialize: function() {
-        console.log('WideHeaderView.initialize:', this);
+        //log('WideHeaderView::initialize');
         this.config = this.templateHelpers.config;
         this.theme = this.templateHelpers.theme;
     },
@@ -144,13 +144,13 @@ WideHeaderView = Backbone.Marionette.Layout.extend({
     //template: require('./header.html'),
 
     template: function(model) {
-        console.log('WideHeaderView.template');
+        //log('WideHeaderView::template');
         var header_wide = require('./header_wide.html');
         return header_wide(model);
     },
 
     onShow: function() {
-        console.log('WideHeaderView.onShow');
+        //log('WideHeaderView::onShow');
         this.menu.show(new MenuView());
     },
 
@@ -162,11 +162,11 @@ WideHeaderView = Backbone.Marionette.Layout.extend({
     },
 
     onRender: function() {
-        console.log('WideHeaderView.onRender');
+        //log('WideHeaderView::onRender');
     },
 
     onDomRefresh: function() {
-        console.log('HeaderView.onDomRefresh');
+        //log('HeaderView::onDomRefresh');
     },
 
 });
@@ -177,7 +177,7 @@ FooterView = Backbone.Marionette.ItemView.extend({
     template: require('./footer.html'),
 
     initialize: function() {
-        console.log('FooterView.initialize');
+        //log('FooterView::initialize');
         this.config = this.templateHelpers.config = navigatorApp.config;
     },
 
@@ -189,7 +189,7 @@ FooterView = Backbone.Marionette.ItemView.extend({
     },
 
     onDomRefresh: function() {
-        console.log('FooterView.onDomRefresh');
+        //log('FooterView::onDomRefresh');
     },
 
 });

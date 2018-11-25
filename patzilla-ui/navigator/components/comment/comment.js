@@ -24,7 +24,7 @@ CommentModel = Backbone.RelationalModel.extend({
     },
 
     initialize: function() {
-        console.log('CommentModel.initialize');
+        //log('CommentModel::initialize');
     },
 
 });
@@ -38,7 +38,7 @@ CommentCollection = Backbone.Collection.extend({
 
     // initialize model
     initialize: function() {
-        console.log('CommentCollection.initialize');
+        //log('CommentCollection::initialize');
     },
 
     by_project_and_document_number: function(project, document_number) {
@@ -71,7 +71,7 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
     tagName: 'span',
 
     initialize: function() {
-        console.log('CommentTextView.initialize');
+        //log('CommentTextView::initialize');
         this.listenTo(this.model, 'remove', this.clear);
     },
 
@@ -133,7 +133,7 @@ CommentManager = Marionette.Controller.extend({
 
     initialize: function(options) {
 
-        log('CommentManager.initialize');
+        //log('CommentManager::initialize');
 
         this.collection = options.collection;
         this.project = options.project;
@@ -177,7 +177,7 @@ CommentsPlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
 
-        console.log('CommentsPlugin.initialize');
+        log('CommentsPlugin::initialize');
         var _this = this;
 
         this.view = options.view;

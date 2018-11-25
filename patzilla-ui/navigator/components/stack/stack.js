@@ -18,7 +18,7 @@ StackModel = Backbone.RelationalModel.extend({
     },
 
     initialize: function() {
-        console.log('StackModel::initialize');
+        //log('StackModel::initialize');
     },
 
 });
@@ -32,11 +32,11 @@ StackCollection = Backbone.Collection.extend({
 
     // initialize model
     initialize: function() {
-        console.log('StackCollection::initialize');
     },
 
     by_key: function(key) {
         return this.get_or_create({key: key});
+        //log('StackCollection::initialize');
     },
 
 });
@@ -62,7 +62,7 @@ StackCheckboxWidget = CheckboxWidget.extend({
     },
 
     initialize: function() {
-        log('StackCheckboxWidget::initialize');
+        //log('StackCheckboxWidget::initialize');
         // https://makandracards.com/makandra/22121-how-to-call-overwritten-methods-of-parent-classes-in-backbone-js
         // https://stackoverflow.com/questions/15987490/backbone-view-inheritance-call-parent-leads-to-recursion/15988038#15988038
         StackCheckboxWidget.__super__.initialize.apply(this, arguments);
@@ -97,7 +97,7 @@ StackManager = NamedViewController.extend({
 
     initialize: function(options) {
 
-        log('StackManager::initialize');
+        //log('StackManager::initialize');
 
         //this.collection = options.collection;
         this.model = options.model;
@@ -134,8 +134,11 @@ StackManager = NamedViewController.extend({
         this.listenTo(this.checkbox_widget, 'render', this.update_sidecar_indicator);
 
         // Debug events
-        //this.listenTo(this.model, 'all', this.on_model_event);
-        //this.listenTo(this.checkbox_widget, 'all', this.on_widget_event);
+        /*
+        this.listenTo(this, 'all', this.on_manager_event);
+        this.listenTo(this.model, 'all', this.on_model_event);
+        this.listenTo(this.checkbox_widget, 'all', this.on_widget_event);
+        */
 
     },
 
@@ -193,6 +196,9 @@ StackManager = NamedViewController.extend({
     },
 
     // Debugging helpers
+    on_manager_event: function(event) {
+        log('StackManager::on_manager_event', event);
+    },
     on_model_event: function(event) {
         log('StackManager::on_model_event', event);
     },
@@ -210,7 +216,7 @@ StackPlugin = Marionette.Controller.extend({
     initialize: function(options) {
         var _this = this;
 
-        console.log('StackPlugin::initialize');
+        log('StackPlugin::initialize');
 
         // The list view the items are rendered into,
         // so we are listening to its 'itemview:item:rendered' events.
@@ -225,8 +231,9 @@ StackPlugin = Marionette.Controller.extend({
     },
 
     setup_plugin: function(options) {
+        log('StackPlugin::setup');
 
-        log('StackPlugin::setup_component');
+
         this.store = new StackCollection();
 
         // Setup the data store
@@ -248,7 +255,7 @@ StackPlugin = Marionette.Controller.extend({
     },
 
     make_stack_manager: function(view) {
-        log('StackPlugin::make_stack_manager');
+        //log('StackPlugin::make_stack_manager');
 
         // Get unique key of model
         // `get_unique_key()` is a highlevel application convention

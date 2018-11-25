@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014,2017,2018 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('blobjs');
 var dataurl = require('dataurl').dataurl;
 var saveAs = require('file-saver').saveAs;

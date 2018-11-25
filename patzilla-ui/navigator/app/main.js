@@ -165,7 +165,7 @@ navigatorApp.addInitializer(function(options) {
 // Initialize models
 navigatorApp.addInitializer(function(options) {
 
-    // application domain model objects
+    // Application domain model objects
     this.search = new OpsPublishedDataSearch();
     this.metadata = new OpsExchangeMetadata();
     this.documents = new OpsExchangeDocumentCollection();

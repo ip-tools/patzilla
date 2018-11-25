@@ -13,6 +13,8 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
 
     template: require('./hero-checkbox.html'),
 
+    debug: true,
+
     defaults: {
         inputSelector: null,
         labelSelector: null,
@@ -22,7 +24,6 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
 
     // Propagate model changes to user interface
     modelEvents: function () {
-        log('CheckboxWidget::modelEvents');
         var modelEvents = {};
         modelEvents['change:' + this.getOption('modelField')] = '_updateView';
         return modelEvents;
@@ -36,7 +37,6 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
     },
 
     ui: function () {
-        //log('CheckboxWidget::ui');
         return {
             input: this.getOption('inputSelector'),
             label: this.getOption('labelSelector'),
@@ -44,8 +44,8 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
     },
 
     initialize: function () {
-        log('CheckboxWidget::initialize');
-        log('CheckboxWidget.model:', this.model);
+        this.log('CheckboxWidget::initialize');
+        this.log('CheckboxWidget.model:', this.model);
 
         if (!this.getOption('inputSelector')) {
             throw new Error('Must specify inputSelector for CheckboxWidget');
@@ -61,12 +61,12 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
     },
 
     onRender: function () {
-        log('CheckboxWidget::onRender');
+        this.log('CheckboxWidget::onRender');
         this._updateView();
     },
 
     _updateView: function () {
-        log('CheckboxWidget::_updateView');
+        this.log('CheckboxWidget::_updateView');
         var modelField = this.getOption('modelField');
         var checked = !!this.model.get(modelField);
         this.ui.input.prop('checked', checked);
@@ -76,11 +76,15 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
     },
 
     _updateModel: function () {
-        log('CheckboxWidget::_updateModel');
+        this.log('CheckboxWidget::_updateModel');
         var modelField = this.getOption('modelField');
-        //log('CheckboxWidget this.ui:', this.ui);
+        //this.log('CheckboxWidget this.ui:', this.ui);
         var checked = this.ui.input.is(':checked');
         this.model.set(modelField, checked);
     },
 
 });
+
+
+//CheckboxWidget.prototype.log = Function.prototype.bind.call(console.log, console);
+CheckboxWidget.prototype.log = function() {};

@@ -7,6 +7,7 @@ Development
 ===========
 - [ui] Make IssueReporter work on dev and prod equally good
 - [ui] Improve Stack subsystem mechanics
+- [ui] Improve logging and debugging
 
 
 2018-11-23 0.160.0

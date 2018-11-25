@@ -10,7 +10,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     className: 'row-fluid',
 
     initialize: function() {
-        console.log('OpsExchangeDocumentView.initialize');
+        //log('OpsExchangeDocumentView::initialize');
     },
 
     // Namespace template variables to "data", also accounting for "templateHelpers".
@@ -27,7 +27,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     },
 
     onDomRefresh: function() {
-        console.log('OpsExchangeDocumentView.onDomRefresh');
+        //log('OpsExchangeDocumentView::onDomRefresh');
 
         // Attach current model reference to result entry dom container so it can be used by different subsystems
         // A reference to the model is required for switching between document details (biblio/fulltext)

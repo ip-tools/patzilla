@@ -1,5 +1,5 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2018 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery.shorten.1.0');
 var urljoin = require('url-join');
 var bootbox = require('bootbox');
@@ -146,16 +146,8 @@ UiController = Marionette.Controller.extend({
 
             // If decoding from JSON fails, make up a JSON error in
             // cornice-compatible format from XHR response information
-            var error = {
-                'location': 'unknown',
-                'name': xhr.statusText,
-                'description': {
-                    'content': xhr.responseText,
-                    'headers': {'date': xhr.getResponseHeader('Date')},
-                    'status_code': xhr.status,
-                    'url': xhr.requestUrl || options.url,
-                }
-            };
+            var error = xhr_decode_error(xhr, options);
+            error.location = 'unknown';
 
             var response = {
                 'status': 'error',

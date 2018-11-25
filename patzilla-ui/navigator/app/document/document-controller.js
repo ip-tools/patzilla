@@ -520,7 +520,8 @@ DocumentCarouselController = Marionette.Controller.extend({
                     }
 
                 }).catch(function(error) {
-                    console.warn('Error while fetching total count of drawings', error);
+                    var error_data = xhr_decode_error(error);
+                    console.warn('No image information for ' + document_number + ':', error_data.name, error_data);
                 });
                 carousel.data('totalcount', totalcount);
                 _this.update_carousel_metadata(carousel);
