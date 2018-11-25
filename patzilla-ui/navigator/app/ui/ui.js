@@ -170,6 +170,8 @@ UiController = Marionette.Controller.extend({
     propagate_cornice_errors: function(response) {
         log('propagate_cornice_errors');
         var _this = this;
+
+        // FIXME: Uncaught TypeError: Cannot read property 'status' of undefined
         if (response['status'] == 'error') {
             _.each(response['errors'], function(error) {
 

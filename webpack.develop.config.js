@@ -40,6 +40,7 @@ config.optimization.minimizer = [];
 
 config.plugins.push(
 
+    // https://webpack.js.org/plugins/define-plugin/
     new webpack.DefinePlugin({
         PRODUCTION: JSON.stringify(false),
     }),
