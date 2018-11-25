@@ -40,7 +40,7 @@ ViewportPlugin = Marionette.Controller.extend({
     },
     document_rate: function(score, dismiss) {
         if (navigatorApp.component_enabled('stack')) {
-            navigatorApp.stack.activate_rating_by_viewport();
+            navigatorApp.stack.activate_by_viewport(StackDisplayMode.RATING);
         }
         dismiss = dismiss || false;
         var document_number = this.get_document_number_in_focus();

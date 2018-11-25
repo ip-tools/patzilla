@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2014,2015 Andreas Motl, Elmyra UG
 require('jquery.highlight.bartaz');
-require('patzilla.lib.marionette-modalregion');
+require('patzilla.lib.marionette');
 
 KeywordMapModel = Backbone.RelationalModel.extend({
 

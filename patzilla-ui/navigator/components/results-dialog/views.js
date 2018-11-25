@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2015 Andreas Motl, Elmyra UG
-require('patzilla.lib.marionette-modalregion');
+require('patzilla.lib.marionette');
 
 GenericResultView = Backbone.Marionette.ItemView.extend({
 

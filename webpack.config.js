@@ -234,8 +234,9 @@ const config = {
             'patzilla.lib.util':                             path.resolve(__ui, 'lib', 'util'),
             'patzilla.lib.jquery':                           path.resolve(__ui, 'lib', 'jquery'),
             'patzilla.lib.underscore':                       path.resolve(__ui, 'lib', 'underscore'),
-            'patzilla.lib.marionette-modalregion':           path.resolve(__ui, 'lib', 'marionette-modalregion'),
+            'patzilla.lib.marionette':                       path.resolve(__ui, 'lib', 'marionette'),
             'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
+            'patzilla.lib.hero-checkbox':                    path.resolve(__ui, 'lib', 'hero-checkbox'),
             'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
             modernizr$:                                      path.resolve(__ui, 'vendor', '.modernizrrc'),

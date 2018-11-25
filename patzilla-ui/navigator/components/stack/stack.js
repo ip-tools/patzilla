@@ -1,140 +1,203 @@
 // -*- coding: utf-8 -*-
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('patzilla.navigator.components.storage');
 require('backbone-dom-to-view');
+require('patzilla.lib.hero-checkbox');
+require('patzilla.navigator.components.storage');
 
 
 StackModel = Backbone.RelationalModel.extend({
 
-    sync: Backbone.localforage.sync('Stack'),
+    sync: Backbone.localforage.sync('StackEntry'),
 
     relations: [
     ],
 
     defaults: {
-        items: [],
+        key: undefined,
+        selected: undefined,
     },
 
     initialize: function() {
-        console.log('StackModel.initialize');
+        console.log('StackModel::initialize');
     },
 
 });
+_.extend(StackModel.prototype, TimestampedModelMixin);
 
 
 StackCollection = Backbone.Collection.extend({
-    sync: Backbone.localforage.sync('Stack'),
+    sync: Backbone.localforage.sync('StackEntry'),
     find: Backbone.localforage.find,
     model: StackModel,
 
     // initialize model
     initialize: function() {
-        console.log('StackCollection.initialize');
+        console.log('StackCollection::initialize');
     },
 
-    // TODO: refactor to common base class or mixin
-    get_or_create: function(attributes) {
-        var model = _(this.where(attributes)).first();
-        if (!model) {
-            model = this.model.build(attributes, { collection: this, parsed: false });
-            this.create(model, {success: function() {
-                log('StackCollection::get_or_create: SUCCESS');
-            }});
-
-        }
-        return model;
+    by_key: function(key) {
+        return this.get_or_create({key: key});
     },
 
-    by_name: function(name) {
-        return this.get_or_create({name: name});
+});
+_.extend(StackCollection.prototype, SmartCollectionMixin);
+
+
+
+
+
+// TODO: Use https://github.com/rafeememon/marionette-checkbox-behavior
+StackCheckboxWidget = CheckboxWidget.extend({
+    /*
+    Contemporary <input type="checkbox"> elements with bidirectional data binding.
+    Derived from https://github.com/rafeememon/marionette-checkbox-behavior
+    */
+
+    inputSelector: '> input',
+    labelSelector: '> .text_label',
+
+    // Forward the "click" dom event to a "toggle" application event
+    triggers: {
+        //'click': 'toggle',
+    },
+
+    initialize: function() {
+        log('StackCheckboxWidget::initialize');
+        // https://makandracards.com/makandra/22121-how-to-call-overwritten-methods-of-parent-classes-in-backbone-js
+        // https://stackoverflow.com/questions/15987490/backbone-view-inheritance-call-parent-leads-to-recursion/15988038#15988038
+        StackCheckboxWidget.__super__.initialize.apply(this, arguments);
     },
 
 });
 
 
-StackManager = Marionette.Controller.extend({
+StackDisplayMode = {
+    RATING: 'mode-rating',
+    STACK:  'mode-stack',
+};
+
+StackManager = NamedViewController.extend({
+
+    // The name under which this controller
+    // register itself with the designated view.
+    name: 'stack_manager',
+
+    // The model field to use as ground truth for
+    // whether an item is selected or not.
+    modelField: 'selected',
+
+    // Which text label to display besides the checkbox
+    textLabel: 'Select',
+
+    // Resolve the closest Backbone view
+    viewport_resolver: function() {
+        var element = $('.document-anchor:in-viewport').closest('.ops-collection-entry');
+        return element;
+    },
 
     initialize: function(options) {
 
-        log('StackManager.initialize');
+        log('StackManager::initialize');
 
-        this.collection = options.collection;
-        this.itemview = options.itemview;
+        //this.collection = options.collection;
+        this.model = options.model;
+        this.view = options.view;
+
+        // https://makandracards.com/makandra/22121-how-to-call-overwritten-methods-of-parent-classes-in-backbone-js
+        // https://stackoverflow.com/questions/15987490/backbone-view-inheritance-call-parent-leads-to-recursion/15988038#15988038
+        StackManager.__super__.initialize.apply(this, arguments);
+
+        this.setup_ui();
+
+        // Debugging: Activate stack selection mode immediately
+        //this.show_stack();
+
+    },
+
+    setup_ui: function() {
 
         // Find DOM elements
-        var rating_stack_container = this.itemview.$el.find('.document-rating-stack');
+        var rating_stack_container = this.view.$el.find('.document-rating-stack');
         this.rating_element = rating_stack_container.find('.document-rating-widget');
-        this.stack_element = rating_stack_container.find('.document-stack-widget');
 
-        // Setup data model
-        this.model = this.get_model();
+        // setup descendant views
+        // https://github.com/rafeememon/marionette-checkbox-behavior/blob/master/test/checkbox-behavior-test.js
+        this.checkbox_widget = new StackCheckboxWidget({
+            model: this.model,
+            modelField: this.modelField,
+            textLabel: this.textLabel,
+        });
 
-        // Debugging: Activate immediately
-        //this.toggle_checkbox();
+        // Wire events
+        this.listenTo(this.model, 'change:selected', this.save_model);
+        this.listenTo(this.model, 'change:selected', this.update_sidecar_indicator);
+        this.listenTo(this.checkbox_widget, 'render', this.update_sidecar_indicator);
+
+        // Debug events
+        //this.listenTo(this.model, 'all', this.on_model_event);
+        //this.listenTo(this.checkbox_widget, 'all', this.on_widget_event);
 
     },
 
-    get_model: function() {
-        var model = this.collection.by_name('default');
-        return model;
+    // Manipulate the data model
+    select: function() {
+        this.model.set('selected', true);
+    },
+    unselect: function() {
+        this.model.set('selected', false);
     },
 
-    show_toggle: function() {
-        this.rating_element.toggle('fast');
-        this.stack_element.toggle('fast');
+    // Persist model
+    save_model: function() {
+        log('StackManager::save_model');
+        this.model.save();
     },
 
+    // Update another UI element based on data model
+    update_sidecar_indicator: function() {
+
+        // Read model
+        var selected = !!this.model.get(this.modelField);
+
+        // Update sidecar view
+        var sidecar_element = this.view.$el;
+        if (selected) {
+            sidecar_element.addClass('document-stack-decorated');
+        } else {
+            sidecar_element.removeClass('document-stack-decorated');
+        }
+    },
+
+    // Manipulate the user interface
+    activate: function(mode) {
+        if (mode == StackDisplayMode.STACK) {
+            this.show_stack();
+        } else {
+            this.show_rating();
+        }
+    },
     show_stack: function() {
         this.rating_element.hide('fast');
-        this.stack_element.show('fast');
+        this.show_checkbox();
     },
-
     show_rating: function() {
-        this.stack_element.hide('fast');
+        this.hide_checkbox();
         this.rating_element.show('fast');
     },
 
-    select: function() {
-        log('StackManager::select');
-
-        // Visual representation
-        this.stack_element.find('input').prop('checked', true);
-        this.itemview.$el.addClass('document-stack-decorated');
-
-        // Data model manipulation
-        var docnumber = this.stack_element.data('document-number');
-        this.add(docnumber);
+    show_checkbox: function() {
+        this.view.region_stack_checkbox.show(this.checkbox_widget);
+    },
+    hide_checkbox: function() {
+        this.view.region_stack_checkbox.reset();
     },
 
-    unselect: function() {
-        log('StackManager::unselect');
-
-        // Visual representation
-        this.stack_element.find('input').prop('checked', false);
-        this.itemview.$el.removeClass('document-stack-decorated');
-
-        // Data model manipulation
-        var docnumber = this.stack_element.data('document-number');
-        this.remove(docnumber);
+    // Debugging helpers
+    on_model_event: function(event) {
+        log('StackManager::on_model_event', event);
     },
-
-    add: function(item) {
-        var items = this.model.get('items');
-        //log('items:', items);
-        if (!_.contains(items, item)) {
-            items.push(item);
-            this.model.set('items', items);
-            this.model.save();
-        }
-    },
-    remove: function(item) {
-        var items = this.model.get('items');
-        //log('items:', items);
-        if (_.contains(items, item)) {
-            items = _.without(items, item);
-            this.model.set('items', items);
-            this.model.save();
-        }
+    on_widget_event: function(event) {
+        log('StackManager::on_widget_event', event);
     },
 
 });
@@ -142,22 +205,26 @@ StackManager = Marionette.Controller.extend({
 
 StackPlugin = Marionette.Controller.extend({
 
+    manager_class: StackManager,
+
     initialize: function(options) {
         var _this = this;
 
         console.log('StackPlugin::initialize');
 
+        // The list view the items are rendered into,
+        // so we are listening to its 'itemview:item:rendered' events.
         this.view = options.view;
 
         // Setup the data store
         this.listenTo(navigatorApp, 'localforage:ready', function() {
             log('localforage:ready-stack');
-            _this.setup_component(options);
+            _this.setup_plugin(options);
         });
 
     },
 
-    setup_component: function(options) {
+    setup_plugin: function(options) {
 
         log('StackPlugin::setup_component');
         this.store = new StackCollection();
@@ -168,107 +235,97 @@ StackPlugin = Marionette.Controller.extend({
             // FIXME: nobody currently waits for this to happen
         }});
 
-        // Forward control to a new item-specific StackManager after itemview got rendered
+        // Attach a new item-specific manager after itemview got rendered
         this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
 
-            // place StackManager inside itemview for external access (e.g. viewport)
-            itemview.stack_manager = this.stack_factory(itemview);
+            // This guy will manage the widget to model to environment interactions
+            this.make_stack_manager(itemview);
 
         });
 
-
-        // register global hotkeys
+        // TODO: Register global hotkeys
         this.bind_hotkeys();
     },
 
-    stack_factory: function(itemview) {
-        return new StackManager({
-            collection: this.store,
-            itemview: itemview,
+    make_stack_manager: function(view) {
+        log('StackPlugin::make_stack_manager');
+
+        // Get unique key of model
+        // `get_unique_key()` is a highlevel application convention
+        var key = view.model.get_unique_key();
+
+        // Load model from store
+        var model = this.store.by_key(key);
+
+        var manager = new this.manager_class({
+            //collection: this.store,
+            model: model,
+            view: view,
         });
+        return manager;
     },
 
-    stack_by_element: function(element) {
-        var backbone_view = element.backboneView();
-        if (backbone_view.stack_manager) {
-            return backbone_view.stack_manager;
-        }
-    },
-
-    // register global hotkeys
+    // Register global hotkeys
     bind_hotkeys: function() {
         var _this = this;
         $(document).on('keydown', null, 'S', function() {
 
-            // Display checkbox and obtain StackManager object
-            var stack = _this.activate_stack_by_viewport();
+            try {
+                // Display checkbox and obtain manager object
+                var manager = _this.activate_by_viewport(StackDisplayMode.STACK);
 
-            // Select checkbox
-            stack.select();
+                // Select item
+                manager.select();
+
+            } catch (error) {
+                console.error('Selecting document failed:', error);
+            }
         });
 
         $(document).on('keydown', null, 'X', function() {
-            // Display checkbox and obtain StackManager object
-            var stack = _this.activate_stack_by_viewport();
 
-            // Unselect checkbox
-            stack.unselect();
+            try {
+                // Display checkbox and obtain manager object
+                var manager = _this.activate_by_viewport(StackDisplayMode.STACK);
+
+                // Unselect item
+                manager.unselect();
+
+            } catch (error) {
+                console.error('Unselecting document failed:', error);
+            }
         });
 
     },
 
-    // Toggle comment currently in viewport
-
-    activate_stack_by_viewport: function() {
-        var stack = this.stack_by_viewport();
-        stack.show_stack();
-        return stack;
-    },
-
-    activate_rating_by_viewport: function() {
-        var stack = this.stack_by_viewport();
-        stack.show_rating();
-        return stack;
-    },
-
-    stack_by_viewport: function() {
-        // Display checkbox
-        var element = this.content_element_by_viewport();
-
-        // Resolve StackManager object
-        var stack = this.stack_by_element(element);
-
-        return stack;
-    },
-
-    content_element_by_viewport: function() {
-        // Resolve the closest Backbone view
-        var element = $('.document-anchor:in-viewport').closest('.ops-collection-entry');
-        return element;
-    },
-
-    toggle_by_element: function(element, show_stack) {
-
-        var stack = this.stack_by_element(element);
-
+    // Activate single element
+    activate_by_element: function(element, mode) {
+        var stack = this.manager_class.prototype.by_element(element);
         if (!stack) return;
-
-        if (show_stack) {
-            stack.show_stack();
-        } else {
-            stack.show_toggle();
-        }
+        stack.activate(mode);
+        return stack;
     },
 
-    toggle_all: function(show_stack) {
+    // Activate single element currently in viewport
+    activate_by_viewport: function(mode) {
+        var stack = this.manager_class.prototype.by_viewport();
+        if (!stack) return;
+        stack.activate(mode);
+        return stack;
+    },
+
+    // Activate all elements
+    activate_all: function(mode) {
         var _this = this;
         $('.ops-collection-entry').each(function(index, element) {
-            _this.toggle_by_element($(element), show_stack);
+            _this.activate_by_element($(element), mode);
         });
     },
-
-    enable_stack_mode: function() {
-        this.toggle_all(true);
+    activate_all_stack: function() {
+        this.activate_all(StackDisplayMode.STACK);
+    },
+    activate_all_rating: function() {
+        this.activate_all(StackDisplayMode.RATING);
     },
 
 });

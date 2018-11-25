@@ -45,7 +45,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
         if (navigatorApp.component_enabled('comments')) {
             $('.action-expand-comments').off('click');
             $('.action-expand-comments').on('click', function(event) {
-                navigatorApp.comments.toggle_all();
+                navigatorApp.comments.activate_all();
             });
         }
 
@@ -53,7 +53,12 @@ MetadataView = Backbone.Marionette.ItemView.extend({
         if (navigatorApp.component_enabled('stack')) {
             $('.action-select-documents').off('click');
             $('.action-select-documents').on('click', function(event) {
-                navigatorApp.stack.enable_stack_mode();
+                navigatorApp.stack.activate_all_stack();
+            });
+
+            $('.action-rate-documents').off('click');
+            $('.action-rate-documents').on('click', function(event) {
+                navigatorApp.stack.activate_all_rating();
             });
         }
 

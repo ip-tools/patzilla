@@ -23,6 +23,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
     regions: {
         region_comment_button: '#region-comment-button',
         region_comment_text: '#region-comment-text',
+        region_stack_checkbox: '#region-stack-checkbox',
     },
 
     onDomRefresh: function() {

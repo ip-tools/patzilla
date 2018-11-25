@@ -3,6 +3,10 @@
 
 OpsBaseModel = Backbone.Model.extend({
 
+        get_unique_key: function() {
+            return this.get_document_number();
+        },
+
         get_document_id: function(node, reference_type, format) {
             /*
              reference_type = publication|application
