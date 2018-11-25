@@ -1,101 +1,118 @@
 // -*- coding: utf-8 -*-
-// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+// (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
+require('patzilla.lib.marionette');
+require('patzilla.navigator.components.storage');
 
 
-TimestampedModelMixin = {
+ProfileRecord = Backbone.RelationalModel.extend({
+
+    sync: Backbone.localforage.sync('ApplicationProfile'),
 
     defaults: {
-        parent: undefined,
-        created: undefined,
-        modified: undefined,
+        key: 'default',
+        intents: {},
     },
 
-    // TODO: refactor to common base class or mixin
-    // automatically set "created" and "modified" fields
-    // automatically create model in collection
-    // http://jstarrdewar.com/blog/2012/07/20/the-correct-way-to-override-concrete-backbone-methods/
-    save: function(key, val, options) {
+    initialize: function() {
+        //log('ProfileRecord::initialize');
+        //this.listenTo(this, 'all', this.on_event);
+    },
 
-        // Handle both `"key", value` and `{key: value}` -style arguments.
-        if (key == null || typeof key === 'object') {
-            attrs = key;
-            options = val;
-        } else {
-            (attrs = {})[key] = val;
-        }
 
-        options = _.extend({}, options);
+    // Debugging helpers
+    on_event: function(event, model, value, foo, bar) {
+        log('ProfileRecord event:', event, model, value, foo, bar);
+    },
 
+});
+
+
+ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
+    sync: Backbone.localforage.sync('ApplicationProfile'),
+    find: Backbone.localforage.find,
+    model: ProfileRecord,
+
+    // initialize model
+    initialize: function() {
+        //log('ProfileCollection::initialize');
+        //this.listenTo(this, 'all', this.on_event);
+    },
+
+    on_event: function(event, model, value, foo, bar) {
+        log('ProfileCollection event:', event, model, value, foo, bar);
+    },
+
+});
+
+
+ApplicationProfile = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
+
+    // We just support a single application profile by now.
+    profile_name: 'default',
+
+    initialize: function(options) {
+
+        console.log('ApplicationProfile::initialize');
+
+        // The application object.
+        this.application = this.getOption('application');
+
+        // The current profile we are operating on.
+        this.model = undefined;
+
+        // Setup component.
+        this.setup();
+
+        // Register ourselves with the application machinery.
+        this.application.register_component('profile');
+
+    },
+
+    setup: function() {
+
+        // What's the profile name?
+        var profile_name = this.getOption('profile_name');
+
+        // Debugging.
+        log('[ApplicationProfile::setup] Loading profile:', profile_name);
+
+        // Setup the data store.
+        this.store = new ProfileCollection();
+
+        // Fetch data from store.
         var _this = this;
-
-        var now = timestamp();
-        var isNew = this.isNew();
-
-        var data = {};
-        if (isNew) {
-            data.created = now;
-        }
-        data.modified = now;
-        this.set(data);
-
-
-        //var project = this.get('project');
-
-        var success = options.success;
-        options.success = function(model, resp, options) {
-
-            if (isNew) {
-
-                _this.collection.create(model, {success: function() {
-
-                    // forward "isNew" indicator via options object
-                    options.isNew = isNew;
-
-                    // FIXME: HACK ported from project/basket saving; check whether this is really required
-                    _this.collection.add(model);
-
-                    // FIXME: IMPORTANT HACK to reset project reference after it has vanished through collection.create
-                    //model.set('project', project);
-
-                    _this.trigger('saved', model, resp, options);
-                    if (success) success(model, resp, options);
-
-                }});
-
-            } else {
-                _this.trigger('saved', model, resp, options);
-                if (success) success(model, resp, options);
+        this.store.fetch({
+            success: function(response) {
+                _this.model = _this.store.by_key(profile_name);
+                log('[ApplicationProfile::setup] Loaded profile:', _this.model.attributes);
             }
-        };
-
-        return Backbone.Model.prototype.save.call(this, attrs, options);
+        });
 
     },
 
-};
+    get_intent: function(name) {
 
+        log('ApplicationProfile::get_intent');
+        var value = this.model.get('intents')[name];
 
-SmartCollectionMixin = {
-
-    // TODO: refactor to common base class or mixin
-    get_or_create: function(attributes) {
-        var model = _(this.where(attributes)).first();
-        if (!model) {
-            model = this.model.build(attributes, { collection: this, parsed: false });
-            this.create(model, {success: function() {
-                var classname = this.constructor.name;
-                log(classname + '::get_or_create: SUCCESS', model);
-            }});
-        }
-        return model;
+        return value;
     },
 
-    search: function(options) {
-        // "collection.where" would return an array of models, but we want to continue working with a collection.
-        // https://stackoverflow.com/questions/10548685/tojson-on-backbone-collectionwhere/10549086#10549086
-        var result = this.where(options);
-        var resultCollection = new this.constructor.prototype(result);
-        return resultCollection;
+    set_intent: function(name, value) {
+        log('ApplicationProfile::set_intent', name, value);
+        this.model.get('intents')[name] = value;
+        this.model.save();
     },
 
-};
+});
+
+
+// Setup addon
+navigatorApp.addInitializer(function(options) {
+
+    // Start application profile component after the data store has been initialized.
+    this.listenTo(this, 'localforage:ready', function() {
+        this.profile = new ApplicationProfile({application: this});
+    });
+
+});

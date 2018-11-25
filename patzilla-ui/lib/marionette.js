@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+require('./backbone.js');
 
 
 // Widget: Modal container as Marionette region component
@@ -27,58 +28,31 @@ ModalRegion = Marionette.Region.extend({
 });
 
 
-// Utility: Marionette forward-compat polyfill for `this.getOption`
+// Utility: Propagate "extendEach" monkeypatch from Backbone to Marionette
 (function () {
-
-    function getOption(name) {
-        return Backbone.Marionette.getOption(this, name);
-    }
-
-    Backbone.Marionette.View.getOption             =
-        Backbone.Marionette.ItemView.getOption     = getOption;
-
-})();
-
-
-
-// Utility: Easy multiple-inheritance in Backbone.js
-// https://gist.github.com/alassek/1227770
-(function () {
-
-  function extendEach () {
-    var args  = Array.prototype.slice.call(arguments),
-        child = this;
-
-    _.each(args, function (proto) {
-      child = child.extend(proto);
-    });
-
-    return child;
-  }
-
-  Backbone.Model.extendEach        =
-    Backbone.Collection.extendEach =
-    Backbone.Router.extendEach     =
-    Backbone.View.extendEach       = extendEach;
 
   Backbone.Marionette.Controller.extendEach     =
     Backbone.Marionette.View.extendEach         =
-    Backbone.Marionette.ItemView.extendEach     = extendEach;
+    Backbone.Marionette.ItemView.extendEach     = Backbone.Model.extendEach;
 
 })();
 
 
 MarionetteFuture = {
+    // Modern Marionettes like to enjoy this as `this.getOption(name)`.
+    // This is a forward-compat polyfill to satisfy downstream components.
     getOption: function(name) {
         return Backbone.Marionette.getOption(this, name);
     },
 };
 
 
-// Utlity: Directly render templates without intermediary
-// `this.tagName` element, effectively using the template
-// content as a replacement.
 DirectRenderMixin = {
+    /*
+    Utility: Directly render templates without intermediary wrapper element
+    made of `this.tagName`. This effectively makes Marionette views use the
+    very template content as a replacement for `this.el`.
+    */
 
     //mode: 'wrap',
     mode: 'replace',
@@ -127,6 +101,7 @@ DirectRenderMixin = {
 
             // Replace container element with effective elements.
             // ATTENTION: This will actually just use the first element.
+            // TODO: For more elements >1, new elements could be appended to its parent node.
             this.$el.replaceWith(elements);
             this.setElement(elements);
         }
@@ -143,6 +118,24 @@ DirectRenderMixin = {
 
 
 NamedViewController = Marionette.Controller.extendEach(MarionetteFuture, {
+    /*
+    In order to deduce the Marionette object currently visible in viewport,
+    we needed a way to connect the DOM universe to the Marionette one.
+
+    This helper assists by offering named helper components to be attached
+    to Marionette view objects.
+
+    The way a component is resolved by a given viewport is:
+
+    - Calls method `this.viewport_resolver` to resolve the designated DOM element.
+    - Calls method `.backboneView()` on the element, which obtains the Marionette
+      view attached to the closest element having one.
+    - Get the value of the object attribute called `this.name`, as this is a
+      reference to the object instance of ourselves which got primarily registered
+      by `this.register_view_component()`.
+      When inheriting from `NamedViewController` and running through a properly
+      established initializer chain, all this happens automatically.
+    */
 
     initialize: function(options) {
         //log('NamedViewController::initialize');
