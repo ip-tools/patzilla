@@ -144,7 +144,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
                 // Perform field-based search
                 $('.btn-query-perform').on('click', function() {
-                    $( "#querybuilder-comfort-form" ).submit();
+                    $( "#querybuilder-comfort-form" ).trigger('submit');
                 });
 
             // TODO: Rename "cql" to "expert"

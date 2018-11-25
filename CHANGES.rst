@@ -10,6 +10,7 @@ Development
 - [ui] Improve logging and debugging
 - [ui] Add ApplicationProfile subsystem
 - [ui] Improve Stack subsystem data model
+- [ui] Improve jQuery3 compatibility
 
 
 2018-11-23 0.160.0
