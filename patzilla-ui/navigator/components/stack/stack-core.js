@@ -6,6 +6,12 @@ require('patzilla.lib.marionette');
 require('patzilla.navigator.components.storage');
 
 
+StackDisplayMode = {
+    RATING: 'mode-rating',
+    STACK:  'mode-stack',
+};
+
+
 StackModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('StackEntry'),
@@ -40,39 +46,6 @@ StackCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 
 });
 
-
-
-
-
-// TODO: Use https://github.com/rafeememon/marionette-checkbox-behavior
-StackCheckboxWidget = CheckboxWidget.extend({
-    /*
-    Contemporary <input type="checkbox"> elements with bidirectional data binding.
-    Derived from https://github.com/rafeememon/marionette-checkbox-behavior
-    */
-
-    inputSelector: '> input',
-    labelSelector: '> .text_label',
-
-    // Forward the "click" dom event to a "toggle" application event
-    triggers: {
-        //'click': 'toggle',
-    },
-
-    initialize: function() {
-        //log('StackCheckboxWidget::initialize');
-        // https://makandracards.com/makandra/22121-how-to-call-overwritten-methods-of-parent-classes-in-backbone-js
-        // https://stackoverflow.com/questions/15987490/backbone-view-inheritance-call-parent-leads-to-recursion/15988038#15988038
-        StackCheckboxWidget.__super__.initialize.apply(this, arguments);
-    },
-
-});
-
-
-StackDisplayMode = {
-    RATING: 'mode-rating',
-    STACK:  'mode-stack',
-};
 
 StackManager = NamedViewController.extend({
 
@@ -226,6 +199,9 @@ StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
             this.setup(options);
         });
 
+        // Register ourselves with the application machinery.
+        this.application.register_component('stack');
+
     },
 
     setup: function(options) {
@@ -261,12 +237,25 @@ StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
     },
 
     intent_hook: function() {
+        var mode = this.get_intent_mode();
+        log('StackPlugin::intent_hook mode:', mode);
+        if (mode) {
+            this.update_content_view(mode);
+        }
+    },
+
+    get_intent_mode: function() {
         if (this.application.component_enabled('profile')) {
             var mode = this.application.profile.get_intent('work.mode');
-            log('StackPlugin::intent_hook mode:', mode);
-            if (mode) {
-                this.activate_all_real(mode);
-            }
+            return mode;
+        }
+    },
+
+    set_intent_mode: function(mode) {
+        // Remember this choice in application state, so it will
+        // persist across paging actions and even page reloads.
+        if (this.application.component_enabled('profile')) {
+            this.application.profile.set_intent('work.mode', mode);
         }
     },
 
@@ -342,28 +331,56 @@ StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
     activate_all_mode: function(mode) {
         // Remember this choice in application state, so it will
         // persist across paging actions and even page reloads.
-        if (this.application.component_enabled('profile')) {
-            this.application.profile.set_intent('work.mode', mode);
-        }
+        this.set_intent_mode(mode);
 
-        return this.activate_all_real(mode);
+        return this.update_content_view(mode);
     },
-
-    activate_all_real: function(mode) {
-        // Iterate list of visible result elements and activate
-        // the designated mode on each of them.
-        var _this = this;
-        $('.ops-collection-entry').each(function(index, element) {
-            _this.activate_by_element($(element), mode);
-        });
-    },
-
     activate_all_stack: function() {
         this.activate_all_mode(StackDisplayMode.STACK);
     },
     activate_all_rating: function() {
         this.activate_all_mode(StackDisplayMode.RATING);
     },
+
+
+    // Update the user interface
+    update_content_view: function(mode) {
+
+        // Iterate list of visible result elements and activate
+        // the designated mode on each of them.
+        var _this = this;
+        $('.ops-collection-entry').each(function(index, element) {
+            _this.activate_by_element($(element), mode);
+        });
+
+        this.update_opener_view(mode);
+    },
+
+    update_opener_view: function(mode) {
+
+        //log('StackPlugin::update_opener_view mode:', mode);
+
+        mode = mode || this.get_intent_mode();
+
+        // Toggle stack opener widget
+        if (mode == StackDisplayMode.STACK) {
+            this.show_opener();
+        } else if (mode == StackDisplayMode.RATING) {
+            this.hide_opener();
+        }
+    },
+
+    // Toggle stack opener widget
+    show_opener: function() {
+        var opener_widget = new StackOpenerWidget({
+            collection: this.store,
+        });
+        this.application.metadataView.region_stack_opener.show(opener_widget);
+    },
+    hide_opener: function() {
+        this.application.metadataView.region_stack_opener.reset();
+    },
+
 
 });
 
@@ -374,7 +391,5 @@ navigatorApp.addInitializer(function(options) {
     this.listenToOnce(this, "application:init", function() {
         this.stack = new StackPlugin({application: this, view: this.collectionView});
     });
-
-    this.register_component('stack');
 
 });

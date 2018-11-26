@@ -263,6 +263,7 @@ const config = {
             'patzilla.lib.util':                             path.resolve(__ui, 'lib', 'util'),
             'patzilla.lib.jquery':                           path.resolve(__ui, 'lib', 'jquery'),
             'patzilla.lib.underscore':                       path.resolve(__ui, 'lib', 'underscore'),
+            'patzilla.lib.backbone':                         path.resolve(__ui, 'lib', 'backbone'),
             'patzilla.lib.marionette':                       path.resolve(__ui, 'lib', 'marionette'),
             'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
             'patzilla.lib.hero-checkbox':                    path.resolve(__ui, 'lib', 'hero-checkbox'),

@@ -1,5 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
+//import { SmartCollectionMixin } from 'patzilla.lib.backbone';
+//import { MarionetteFuture } from 'patzilla.lib.marionette';
+require('patzilla.lib.backbone');
 require('patzilla.lib.marionette');
 require('patzilla.navigator.components.storage');
 
@@ -10,7 +13,7 @@ ProfileRecord = Backbone.RelationalModel.extend({
 
     defaults: {
         key: 'default',
-        intents: {},
+        intents: {}
     },
 
     initialize: function() {
@@ -22,7 +25,7 @@ ProfileRecord = Backbone.RelationalModel.extend({
     // Debugging helpers
     on_event: function(event, model, value, foo, bar) {
         log('ProfileRecord event:', event, model, value, foo, bar);
-    },
+    }
 
 });
 

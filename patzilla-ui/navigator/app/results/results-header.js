@@ -1,18 +1,25 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+//import {MDCRipple} from '@material/ripple';
+const ripple = require('@material/ripple');
 
 
-MetadataView = Backbone.Marionette.ItemView.extend({
+MetadataView = Backbone.Marionette.Layout.extend({
     tagName: "div",
     template: require('./results-header.html'),
 
+    regions: {
+        region_stack_opener: '#region-stack-opener',
+    },
+
+    templateHelpers: {},
+
     initialize: function() {
+        log('MetadataView::initialize');
         this.templateHelpers.config = navigatorApp.config;
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "render", this.setup_ui);
     },
-
-    templateHelpers: {},
 
     // Namespace template variables to "data", also accounting for "templateHelpers".
     serializeData: function() {
@@ -22,7 +29,7 @@ MetadataView = Backbone.Marionette.ItemView.extend({
     },
 
     setup_ui: function() {
-        log('MetadataView.setup_ui');
+        log('MetadataView::setup_ui');
 
         // Display results either from OPS or from upstream
         $('.content-chooser > button[data-toggle="tab"]').on('show', function (e) {
@@ -61,8 +68,25 @@ MetadataView = Backbone.Marionette.ItemView.extend({
             $('.action-rate-documents').on('click', function(event) {
                 navigatorApp.stack.activate_all_rating();
             });
+
+            // Update more user interface
+            // FIXME: This just has to be done as MetadataView gets rerendered way too often!
+            navigatorApp.stack.update_opener_view();
+
         }
 
+    },
+
+
+    onDomRefresh: function() {
+        // Further UI enhancements: Material Design ripple
+        /*
+        $('.ripple').each(function(index, element) {
+            log('ripple:', index, element);
+            log('ripple:', $(element).hasClass('mdc-ripple-upgraded'));
+            const rippler = new ripple.MDCRipple(element);
+        });
+        */
     },
 
 });

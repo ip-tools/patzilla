@@ -109,8 +109,8 @@ if ($.isNumeric(data.result_count)) {
 
         <div class="span4 do-not-print non-liveview">
 
-            <div class="span6">
             <% if (data.searchmode == 'subsearch' && !data.reviewmode && data.datasource_info && data.datasource_info.has_resultview) { %>
+            <div class="span6">
 
                 <div class="btn-group btn-popover tabs content-chooser"
                      data-toggle="popover" data-trigger="hover" data-placement="top"
@@ -124,8 +124,8 @@ if ($.isNumeric(data.result_count)) {
                     </button>
                 </div>
 
-            <% } %>
             </div>
+            <% } %>
 
             <% if (false) { %>
 
@@ -172,12 +172,15 @@ if ($.isNumeric(data.result_count)) {
 
 
             <!-- Collection menu -->
-            <div class="span6">
-                <span class="pull-right btn-group btn-popover do-not-print">
+            <div class="align-right align-middle">
+
+                <span id="region-stack-opener" style="margin-right: 1rem"/>
+
+                <span class="btn-group btn-popover do-not-print">
                     <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
                         <i class="fa-icon icon-tasks icon-2x"></i>
                     </button>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu pull-right">
 
                         <!--
                         <div class="dropdown-section-header">Actions</div>

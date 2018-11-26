@@ -14,6 +14,7 @@ Development
 - [ui] Improve INID code labels, refactoring
 - [ui] Add display flavour with verbose INID code labels
 - [ui] Add a few Material Design Components
+- [ui] Add Stack opener button
 
 
 2018-11-23 0.160.0
