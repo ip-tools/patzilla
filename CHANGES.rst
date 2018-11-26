@@ -12,6 +12,7 @@ Development
 - [ui] Improve Stack subsystem data model
 - [ui] Improve jQuery3 compatibility
 - [ui] Improve INID code labels, refactoring
+- [ui] Add display flavour with verbose INID code labels
 
 
 2018-11-23 0.160.0

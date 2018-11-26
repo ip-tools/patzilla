@@ -87,11 +87,46 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
         }
 
+        // Apply different display flavor at runtime: More verbose labels for INID codes
+        var verbose_labels = navigatorApp.theme.get('feature.inid-verbose.enabled');
+        if (verbose_labels) {
+            this.enable_verbose_labels();
+        }
+
+    },
 
     find_container_element: function() {
         var container = $(this.el).find('.ops-collection-entry');
         return container;
     },
+
+    enable_verbose_labels: function() {
+        var container = this.find_container_element();
+        var definitions = container.find('.document-details dl dt[class=inid-tooltip]');
+        //log('DocumentView definitions:', definitions);
+        definitions.each(function(index, element) {
+
+            //log('DocumentView element:', element);
+            var element = $(element);
+
+            // Destroy tooltip
+            element.removeClass('inid-tooltip');
+            //element.tooltip('destroy');
+
+            // Make it look like a <h5> element
+            element.css({'width': '100%', 'margin': '10px'});
+
+            // Compute and set more verbose content
+            var inid = element.html();
+            var title = element.attr('title');
+            var content = title + ' ' + inid;
+            element.html(content);
+
+            // Reduce margin of next DOM node
+            var dd = $(element[0].nextElementSibling);
+            dd.removeClass('dl-horizontal-inline-container');
+            dd.css('margin-left', '20px');
+        });
     },
 
     signalDrawingLoaded: function() {
