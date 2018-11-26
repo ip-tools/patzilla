@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2018-11-26 0.161.1
+==================
+- [ui] Add missing ``get_unique_key`` method on ``GenericExchangeDocument`` placeholder items
+
+
 2018-11-26 0.161.0
 ==================
 - [ui] Make IssueReporter work on dev and prod equally good

@@ -158,6 +158,10 @@ _.extend(GenericExchangeDocument.prototype,  {
         return undefined;
     },
 
+    get_unique_key: function() {
+        return this.get_document_number();
+    },
+
     get_patent_number: function() {
         return this.get_document_id().fullnumber;
     },
