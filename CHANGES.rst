@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2018-11-26 0.161.0
+==================
 - [ui] Make IssueReporter work on dev and prod equally good
 - [ui] Improve Stack subsystem mechanics
 - [ui] Improve logging and debugging
