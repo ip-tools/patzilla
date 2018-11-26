@@ -1,13 +1,30 @@
 // -*- coding: utf-8 -*-
-// (c) 2013-2015 Andreas Motl, Elmyra UG
+// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery.highlight.bartaz');
 require('patzilla.navigator.util.linkmaker');
 require('./util.js');
 
+
+// TODO: Rename to DocumentView
 OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
+
     template: require('./document-view.html'),
     tagName: 'div',
     className: 'row-fluid',
+
+    regions: {
+        region_comment_button: '#region-comment-button',
+        region_comment_text: '#region-comment-text',
+        region_stack_checkbox: '#region-stack-checkbox',
+    },
+
+    /*
+    events: {
+        'click .rank_up img': 'rankUp',
+        'click .rank_down img': 'rankDown',
+        'click a.disqualify': 'disqualify',
+    },
+    */
 
     initialize: function() {
         //log('OpsExchangeDocumentView::initialize');
@@ -20,13 +37,26 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         return {data: data};
     },
 
-    regions: {
-        region_comment_button: '#region-comment-button',
-        region_comment_text: '#region-comment-text',
-        region_stack_checkbox: '#region-stack-checkbox',
+    render: function() {
+
+        try {
+            var args = Array.prototype.slice.apply(arguments);
+            var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
+            return result;
+
+        } catch (error) {
+            console.error('Error while rendering OpsExchangeDocumentView:', error.message, error.stack);
+            var args = Array.prototype.slice.apply(arguments);
+            this.model.set('error_message', error.message);
+            this.template = require('./document-error.html');
+            var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
+            return result;
+        }
+
     },
 
     onDomRefresh: function() {
+
         //log('OpsExchangeDocumentView::onDomRefresh');
 
         // Attach current model reference to result entry dom container so it can be used by different subsystems
@@ -34,7 +64,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         // and for acquiring abstracts from third party data sources.
         // In other words, this is a central gateway between the jQuery DOM world and the Backbone Marionette world.
         // However, there should be better mechanisms. Investigate! (TODO)
-        var container = $(this.el).find('.ops-collection-entry');
+        var container = this.find_container_element();
         $(container).prop('view', this);
         $(container).prop('ops-document', this.model);
 
@@ -57,6 +87,11 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
         }
 
+
+    find_container_element: function() {
+        var container = $(this.el).find('.ops-collection-entry');
+        return container;
+    },
     },
 
     signalDrawingLoaded: function() {
@@ -69,7 +104,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
             }
 
             // Show content area again
-            var container = $(this.el).find('.ops-collection-entry');
+            var container = this.find_container_element();
             $(container).find('.ops-bibliographic-details').show();
 
             // We don't have any bibliographic data to display, so swap to informational message
@@ -94,32 +129,6 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         }
     },
 
-    events: {
-        'click .rank_up img': 'rankUp',
-        'click .rank_down img': 'rankDown',
-        'click a.disqualify': 'disqualify',
-    },
-
-    render: function() {
-
-        try {
-            var args = Array.prototype.slice.apply(arguments);
-            var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
-            return result;
-
-        } catch (error) {
-            console.error('Error while rendering OpsExchangeDocumentView:', error.message, error.stack);
-            var args = Array.prototype.slice.apply(arguments);
-            this.model.set('error_message', error.message);
-            this.template = require('./document-error.html');
-            var result = Backbone.Marionette.Layout.prototype.render.apply(this, args);
-            return result;
-        }
-
-    },
-
 });
 
 _.extend(OpsExchangeDocumentView.prototype, TemplateHelperMixin);
-
-

@@ -386,7 +386,7 @@ var abstract_list = data.get_abstract_list();
                 <div id="document-details-biblio-container-<%= patent_number %>" class="tab-pane fade in active">
                     <dl class="dl-horizontal dl-horizontal-biblio">
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="applicants">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Applicants">
                             (71)
                         </dt>
                         <dd class="keyword">
@@ -397,7 +397,7 @@ var abstract_list = data.get_abstract_list();
                             %>
                         </dd>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="inventors">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Inventors">
                             (72)
                         </dt>
                         <dd class="keyword">
@@ -409,7 +409,7 @@ var abstract_list = data.get_abstract_list();
                         </dd>
                         <br/>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="priority application">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Priority application">
                             (30)
                         </dt>
                         <dd class="keyword">
@@ -419,7 +419,7 @@ var abstract_list = data.get_abstract_list();
                             </table>
                         </dd>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="application / domestic filing">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Application / Domestic filing">
                             (20)
                         </dt>
                         <dd class="keyword">
@@ -432,7 +432,7 @@ var abstract_list = data.get_abstract_list();
 
                         <br/>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="classifications">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Classifications">
                             (51)
                         </dt>
                         <dd class="dl-horizontal-inline-container">
@@ -471,7 +471,7 @@ var abstract_list = data.get_abstract_list();
                             </dl>
                         </dd>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="references cited">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="References cited">
                             (56)
                         </dt>
                         <dd class="keyword">
@@ -488,7 +488,7 @@ var abstract_list = data.get_abstract_list();
                         </dd>
                         <br/>
 
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="abstract">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Abstract">
                             (57)
                         </dt>
                         <dd class="keyword">
@@ -499,17 +499,16 @@ var abstract_list = data.get_abstract_list();
                         <br/>
 
                         <% if (data.has_full_cycle()) { %>
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="full cycle">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="Full publication cycle">
                             (F)
                         </dt>
                         <dd class="keyword">
-                            Full cycle:
                             <br/>
                             <% _(data.get_full_cycle()).each(function(entry) { %>
 
                             <%= entry.get_patent_number() %>,
                             <%= entry.get_publication_date() %>
-                            <span class="inid-tooltip strong" data-toggle="tooltip" title="publication date">(45)</span>
+                            <span class="inid-tooltip strong" data-toggle="tooltip" title="Publication date">(45)</span>
 
                             &nbsp;&nbsp;
 
@@ -532,7 +531,7 @@ var abstract_list = data.get_abstract_list();
 
                         <% var npl_citations_rendered = data.get_npl_citation_list().map(function(item) { return '<tr><td>' + item + '</td></tr>'; }).join('') %>
                         <% if (npl_citations_rendered) { %>
-                        <dt class="inid-tooltip" data-toggle="tooltip" title="non-patent-literature references cited">
+                        <dt class="inid-tooltip" data-toggle="tooltip" title="References to non-patent-literature">
                             (N)
                         </dt>
                         <dd class="keyword">

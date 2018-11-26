@@ -11,6 +11,7 @@ Development
 - [ui] Add ApplicationProfile subsystem
 - [ui] Improve Stack subsystem data model
 - [ui] Improve jQuery3 compatibility
+- [ui] Improve INID code labels, refactoring
 
 
 2018-11-23 0.160.0
