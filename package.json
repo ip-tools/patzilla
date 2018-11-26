@@ -34,6 +34,10 @@
     "release": "webpack --mode=production --config=webpack.release.config.js --display detailed --display-error-details --progress"
   },
   "devDependencies": {
+    "@material/button": "0.41.0",
+    "@material/ripple": "0.41.0",
+    "@material/theme": "0.41.0",
+    "@material/typography": "0.41.0",
     "autonumeric": "2.0.13",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.4",
@@ -75,9 +79,11 @@
     "modernizr-loader": "1.0.1",
     "moment": "2.22.1",
     "ng-annotate-loader": "0.6.1",
+    "node-sass": "4.10.0",
     "notificationfx": "https://github.com/ip-tools/notificationFx#0.0.2",
     "promise": "8.0.1",
     "purl": "https://github.com/allmarkedup/purl",
+    "sass-loader": "7.1.0",
     "screenfull": "3.3.1",
     "script-loader": "0.7.2",
     "select2": "3.5.1",

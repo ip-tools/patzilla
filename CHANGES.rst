@@ -13,6 +13,7 @@ Development
 - [ui] Improve jQuery3 compatibility
 - [ui] Improve INID code labels, refactoring
 - [ui] Add display flavour with verbose INID code labels
+- [ui] Add a few Material Design Components
 
 
 2018-11-23 0.160.0

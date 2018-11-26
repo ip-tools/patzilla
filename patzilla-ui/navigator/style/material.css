@@ -1,0 +1,24 @@
+/* Material Components for the web *
+/* https://github.com/material-components/material-components-web */
+
+/* Use custom color theme */
+/* https://material-components.github.io/material-components-web-catalog/#/component/theme */
+$mdc-theme-primary: #1565c0;
+$mdc-theme-secondary: #ffffff;
+$mdc-theme-on-primary: #5e92f3;
+$mdc-theme-on-secondary: #000000;
+
+/* Use default font */
+/* https://material-components.github.io/material-components-web-catalog/#/component/typography */
+$mdc-typography-font-family: unset;
+
+/* https://material-components.github.io/material-components-web-catalog/#/component/button */
+@import "@material/button/mdc-button";
+
+/*
+.foo-button {
+    @include mdc-button-ink-color(#1565c0);
+    @include mdc-button-outline-color(#5e92f3);
+    @include mdc-states(#1565c0);
+}
+*/

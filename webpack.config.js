@@ -130,6 +130,9 @@ const config = {
                     },
                 ],
             },
+
+            // Disabled in favor of sass-loader, see below.
+            /*
             {
                 test: /\.css$/,
                 use: [
@@ -137,6 +140,32 @@ const config = {
                     'css-loader'
                 ]
             },
+            */
+
+            // Use Sass loader for using Material Components for the web
+            // https://github.com/webpack-contrib/sass-loader
+            // https://github.com/material-components/material-components-web
+            {
+                test: /\.(css|scss)$/,
+                use: [
+
+                    // Create style nodes from JS strings
+                    "style-loader",
+
+                    // Translate CSS into CommonJS
+                    "css-loader",
+
+                    // Compile Sass to CSS, using Node Sass by default
+                    {
+                        loader: "sass-loader",
+                        options: {
+                            includePaths: ['./node_modules']
+                        }
+                    },
+
+                ],
+            },
+
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
                 use: [
@@ -189,7 +218,7 @@ const config = {
             path.resolve(__ui, 'vendor', 'widget'),
         ],
 
-        extensions: [".js", ".jsx", ".min.js", ".json", ".css"],
+        extensions: [".js", ".jsx", ".min.js", ".json", ".css", ".scss"],
 
         alias: {
 
