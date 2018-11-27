@@ -1,11 +1,16 @@
 // -*- coding: utf-8 -*-
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('patzilla.lib.marionette');
+'use strict';
 
+import { MarionetteFuture, DirectRenderMixin } from 'patzilla.lib.marionette';
+
+export { CheckboxWidget };
+
+
+// TODO: Maybe
 //const CheckboxBehavior = require('marionette-checkbox-behavior');
 
-
-CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
+const CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
     /*
     Contemporary <input type="checkbox"> elements with bidirectional data binding.
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
@@ -23,7 +28,7 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
     },
 
     // Propagate model changes to user interface
-    modelEvents: function () {
+    modelEvents: function() {
         var modelEvents = {};
         modelEvents['change:' + this.getOption('modelField')] = '_updateView';
         return modelEvents;
@@ -36,14 +41,14 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
         'change': '_updateModel'
     },
 
-    ui: function () {
+    ui: function() {
         return {
             input: this.getOption('inputSelector'),
             label: this.getOption('labelSelector'),
         };
     },
 
-    initialize: function () {
+    initialize: function() {
         this.log('CheckboxWidget::initialize');
         this.log('CheckboxWidget.model:', this.model);
 
@@ -60,12 +65,12 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
 
     },
 
-    onRender: function () {
+    onRender: function() {
         this.log('CheckboxWidget::onRender');
         this._updateView();
     },
 
-    _updateView: function () {
+    _updateView: function() {
         this.log('CheckboxWidget::_updateView');
         var modelField = this.getOption('modelField');
         var checked = !!this.model.get(modelField);
@@ -75,7 +80,7 @@ CheckboxWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Direc
         this.ui.label.html(textLabel);
     },
 
-    _updateModel: function () {
+    _updateModel: function() {
         this.log('CheckboxWidget::_updateModel');
         var modelField = this.getOption('modelField');
         //this.log('CheckboxWidget this.ui:', this.ui);

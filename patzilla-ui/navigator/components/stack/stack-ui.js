@@ -1,12 +1,19 @@
 // -*- coding: utf-8 -*-
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('patzilla.lib.marionette');
+'use strict';
 
+import { MarionetteFuture, DirectRenderMixin } from 'patzilla.lib.marionette';
+import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
+
+export { StackCheckboxWidget, StackOpenerWidget };
+
+
+// TODO: Maybe
 //const CheckboxBehavior = require('marionette-checkbox-behavior');
 
 
 // TODO: Use https://github.com/rafeememon/marionette-checkbox-behavior
-StackCheckboxWidget = CheckboxWidget.extend({
+const StackCheckboxWidget = CheckboxWidget.extend({
     /*
     Contemporary <input type="checkbox"> elements with bidirectional data binding.
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
@@ -30,7 +37,7 @@ StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
+const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -54,7 +61,7 @@ StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Di
         };
     },
 
-    onRender: function () {
+    onRender: function() {
         //log('StackOpenerWidget::onRender');
         this._updateView();
     },
@@ -64,7 +71,7 @@ StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, Di
         return result.length;
     },
 
-    _updateView: function () {
+    _updateView: function() {
         //log('StackOpenerWidget::_updateView');
         this.ui.count.html(this.get_selected_count());
     },

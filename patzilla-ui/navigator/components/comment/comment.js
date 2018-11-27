@@ -1,8 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('patzilla.navigator.components.storage');
-require('patzilla.lib.marionette');
 require('backbone-dom-to-view');
+const DirectRenderMixin = require('patzilla.lib.marionette').DirectRenderMixin;
+const SmartCollectionMixin = require('patzilla.lib.backbone').SmartCollectionMixin;
 
 
 CommentModel = Backbone.RelationalModel.extend({

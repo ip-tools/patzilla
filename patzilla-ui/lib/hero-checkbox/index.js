@@ -1,2 +1,3 @@
 require('./hero-checkbox.css');
-require('./hero-checkbox.js');
+import { CheckboxWidget } from './hero-checkbox.js';
+export { CheckboxWidget };

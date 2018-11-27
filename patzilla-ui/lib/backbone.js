@@ -1,5 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
+export { SmartCollectionMixin };
 
 
 // Utility: Easy multiple-inheritance in Backbone.js
@@ -25,7 +28,7 @@
 })();
 
 
-SmartModelMixin = {
+const SmartModelMixin = {
     /*
     This supports the SmartCollectionMixin in supporting us re. DWIM.
 
@@ -105,7 +108,7 @@ SmartModelMixin = {
 };
 
 
-SmartCollectionMixin = {
+const SmartCollectionMixin = {
 
     by_key: function(key) {
         //log('SmartCollectionMixin::by_key', key);

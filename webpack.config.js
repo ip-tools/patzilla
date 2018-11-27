@@ -260,6 +260,7 @@ const config = {
             'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
             'patzilla.access.sip':                           path.resolve(__ui, 'access', 'sip'),
 
+            'patzilla.lib.es6':                              path.resolve(__ui, 'lib', 'es6'),
             'patzilla.lib.util':                             path.resolve(__ui, 'lib', 'util'),
             'patzilla.lib.jquery':                           path.resolve(__ui, 'lib', 'jquery'),
             'patzilla.lib.underscore':                       path.resolve(__ui, 'lib', 'underscore'),

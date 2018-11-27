@@ -1,13 +1,15 @@
 // -*- coding: utf-8 -*-
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
-//import { SmartCollectionMixin } from 'patzilla.lib.backbone';
-//import { MarionetteFuture } from 'patzilla.lib.marionette';
-require('patzilla.lib.backbone');
-require('patzilla.lib.marionette');
+'use strict';
+
 require('patzilla.navigator.components.storage');
+import { SmartCollectionMixin } from 'patzilla.lib.backbone';
+import { MarionetteFuture } from 'patzilla.lib.marionette';
+
+//export { ApplicationProfile, ProfileRecord, ProfileCollection };
 
 
-ProfileRecord = Backbone.RelationalModel.extend({
+const ProfileRecord = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('ApplicationProfile'),
 
@@ -30,7 +32,7 @@ ProfileRecord = Backbone.RelationalModel.extend({
 });
 
 
-ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
+const ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
     sync: Backbone.localforage.sync('ApplicationProfile'),
     find: Backbone.localforage.find,
     model: ProfileRecord,
@@ -48,7 +50,7 @@ ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-ApplicationProfile = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
+const ApplicationProfile = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
 
     // We just support a single application profile by now.
     profile_name: 'default',

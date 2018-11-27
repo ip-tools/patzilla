@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Gradually ramping up ES6
 
 
 2018-11-26 0.161.1

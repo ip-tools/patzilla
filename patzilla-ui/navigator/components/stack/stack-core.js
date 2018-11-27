@@ -1,18 +1,22 @@
 // -*- coding: utf-8 -*-
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
+import { SmartCollectionMixin } from 'patzilla.lib.backbone';
+import { MarionetteFuture, NamedViewController } from 'patzilla.lib.marionette';
+import { StackCheckboxWidget, StackOpenerWidget } from './stack-ui.js';
+
 require('backbone-dom-to-view');
-require('patzilla.lib.hero-checkbox');
-require('patzilla.lib.marionette');
 require('patzilla.navigator.components.storage');
 
 
-StackDisplayMode = {
+const StackDisplayMode = {
     RATING: 'mode-rating',
     STACK:  'mode-stack',
 };
 
 
-StackModel = Backbone.RelationalModel.extend({
+const StackModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('StackEntry'),
 
@@ -34,7 +38,7 @@ StackModel = Backbone.RelationalModel.extend({
 });
 
 
-StackCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
+const StackCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
     sync: Backbone.localforage.sync('StackEntry'),
     find: Backbone.localforage.find,
     model: StackModel,
@@ -47,7 +51,7 @@ StackCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-StackManager = NamedViewController.extend({
+const StackManager = NamedViewController.extend({
 
     // The name under which this controller
     // register itself with the designated view.
@@ -182,7 +186,7 @@ StackManager = NamedViewController.extend({
 });
 
 
-StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
+const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
 
     manager_class: StackManager,
 

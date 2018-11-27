@@ -11,7 +11,8 @@ require('notificationfx/css/ns-style-attached');
 require('notificationfx/js/notificationFx');
 
 
-UiController = Marionette.Controller.extend({
+
+const UiController = Backbone.Marionette.ItemView.extend({
 
     initialize: function() {
         log('UiController.initialize');

@@ -52,6 +52,8 @@ require('fontawesome-3.2.1/css/font-awesome.css');
 require('purl/purl');
 require('patzilla.lib.jquery');
 require('patzilla.lib.underscore');
+require('patzilla.lib.backbone');
+require('patzilla.lib.marionette');
 _(window).extend(require('patzilla.lib.util'));
 
 // Application utilities
