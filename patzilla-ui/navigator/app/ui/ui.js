@@ -10,6 +10,8 @@ require('notificationfx/css/ns-default');
 require('notificationfx/css/ns-style-attached');
 require('notificationfx/js/notificationFx');
 
+// Material Design Snackbar
+import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 
 
 const UiController = Backbone.Marionette.ItemView.extend({
@@ -25,6 +27,9 @@ const UiController = Backbone.Marionette.ItemView.extend({
         // ------------------------------------------
         //   generic
         // ------------------------------------------
+
+        // Snackbar notifications
+        this.setup_snackbar();
 
         // apply popovers to all desired buttons
         $('.btn-popover').popover();
@@ -329,7 +334,29 @@ const UiController = Backbone.Marionette.ItemView.extend({
         $(selector).append(alert_html);
     },
 
+    // Notify user of a thing just happened.
     notify: function(message, options) {
+        //return this.notify_fx(message, options);
+        return this.notify_snack(message, options);
+    },
+
+    work_in_progress: function() {
+        this.notify('This feature is a work in progress.');
+    },
+
+    // Notifications using the "Snackbar" Material Design Component (MDC).
+    // https://material.io/develop/web/components/snackbars/
+    setup_snackbar: function() {
+        this.snackbar = new SnackbarWidget();
+    },
+
+    notify_snack: function(message, options) {
+        this.snackbar || this.setup_snackbar();
+        this.snackbar.show(message, options);
+    },
+
+    // Notifications using the "NotificationFx" component.
+    notify_fx: function(message, options) {
 
         options = options || {};
         options.wrapper = options.wrapper || document.body;

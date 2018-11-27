@@ -87,7 +87,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             //log('datasource_info:', datasource_info);
 
             if (datasource_info === undefined) {
-                navigatorApp.ui.notify('Work in progress');
+                navigatorApp.ui.work_in_progress();
             }
 
             // Set datasource in model
@@ -596,7 +596,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-ps-export').off('click');
         $('#btn-ps-export').on('click', function(e) {
             e.preventDefault();
-            navigatorApp.ui.notify('Work in progress');
+            navigatorApp.ui.work_in_progress();
         });
 
     },

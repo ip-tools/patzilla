@@ -268,6 +268,7 @@ const config = {
             'patzilla.lib.marionette':                       path.resolve(__ui, 'lib', 'marionette'),
             'patzilla.lib.radioplus':                        path.resolve(__ui, 'lib', 'radioplus'),
             'patzilla.lib.hero-checkbox':                    path.resolve(__ui, 'lib', 'hero-checkbox'),
+            'patzilla.lib.mdc.snackbar':                     path.resolve(__ui, 'lib', 'mdc', 'snackbar'),
             'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
             modernizr$:                                      path.resolve(__ui, 'vendor', '.modernizrrc'),
