@@ -44,6 +44,7 @@ const SmartModelMixin = {
     save: function(key, val, options) {
 
         //log('SmartModelMixin::save', key, val, options);
+        var attrs, method, xhr, attributes = this.attributes;
 
         // Handle both `"key", value` and `{key: value}` -style arguments.
         if (key == null || typeof key === 'object') {
