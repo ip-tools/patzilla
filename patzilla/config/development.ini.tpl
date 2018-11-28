@@ -50,10 +50,10 @@ api_consumer_secret = {ops_api_consumer_secret}
 
 # 3.1.2. Fulltext inquiry and retrieval including description or claims
 #        Note, Currently full texts (description and/or claims) are only available for the following
-#        authorities: EP, WO, AT, CA (claims only), CH.
-# -- http://documents.epo.org/projects/babylon/eponet.nsf/0/7AF8F1D2B36F3056C1257C04002E0AD6/$File/OPS_RWS_ReferenceGuide_version1210_EN.pdf
+#        authorities: EP, WO, AT, BE, CA, CH, CY, ES, FR, GB, HR, IE, LU, MC, MD, NO, PL, PT, RO.
+# -- https://forums.epo.org/ops-extends-data-coverage-for-character-coded-full-text-xml-to-19-country-collections-7833
 fulltext_enabled = true
-fulltext_countries = EP, WO, AT, CH
+fulltext_countries = EP, WO, AT, BE, CA, CH, CY, ES, FR, GB, HR, IE, LU, MC, MD, NO, PL, PT, RO
 
 
 [datasource:depatisconnect]
