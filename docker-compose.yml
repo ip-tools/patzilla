@@ -7,9 +7,9 @@ services:
     ports:
       - 9999:9999
       - 6543:6543
-    volumes:
-      # uncomment the next line, to use local patzilla.ini
-      # - ./patzilla.ini:/patzilla.ini:ro
+    #uncomment the next two lines to mirror local patzilla.ini into container
+    #volumes:
+    #  - ./patzilla.ini:/patzilla.ini:ro
     networks:
       - patzilla_net
     container_name: patzilla
