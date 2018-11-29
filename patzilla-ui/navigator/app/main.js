@@ -74,6 +74,9 @@ var propagate_opaque_errors = require('patzilla.navigator.components.opaquelinks
 // CSS Stylesheets
 require('patzilla.navigator.style');
 
+// Material Design Icons
+require('patzilla.lib.mdc.material-icons');
+
 
 /**
  * -----------------------------------
