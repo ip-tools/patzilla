@@ -9,6 +9,7 @@ Development
 - [ui] Notify users by MDC Snackbar, ditch NotificationFx
 - [ui] Compute effective full text data source by honouring its definition order
 - [ui] Add Material Design Icons
+- [ui] Improve MDC dependency chain
 
 
 2018-11-26 0.161.1

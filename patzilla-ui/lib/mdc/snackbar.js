@@ -9,9 +9,6 @@ import { DirectRenderMixin } from 'patzilla.lib.marionette';
 export { SnackbarWidget };
 
 
-// Acquire CSS
-require('@material/snackbar/mdc-snackbar');
-
 class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRenderMixin) {
     /*
      * SnackbarWidget encapsulates the Snackbox Material Design Component (MDC)

@@ -6,5 +6,8 @@
 /* Material Components for the web */
 require('./material.css');
 
-/* Application styles */
-require('./index.css');
+/* Generic CSS styles */
+require('./generic.css');
+
+/* Application-specific CSS styles */
+require('./app.css');

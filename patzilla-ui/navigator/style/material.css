@@ -12,8 +12,11 @@ $mdc-theme-on-secondary: #000000;
 /* https://material-components.github.io/material-components-web-catalog/#/component/typography */
 $mdc-typography-font-family: unset;
 
+/* Acquire widget CSS */
 /* https://material-components.github.io/material-components-web-catalog/#/component/button */
 @import "@material/button/mdc-button";
+@import "@material/snackbar/mdc-snackbar";
+
 
 /*
 .foo-button {
