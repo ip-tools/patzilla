@@ -8,7 +8,7 @@ services:
       - 9999:9999
       - 6543:6543
     volumes:
-      - ./docker.patzilla.ini:/patzilla.ini:ro
+      - ./patzilla.ini:/patzilla.ini:ro
     networks:
       - patzilla_net
     container_name: patzilla
