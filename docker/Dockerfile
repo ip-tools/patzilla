@@ -20,7 +20,6 @@ RUN apk add --no-cache --update \
   pip install --upgrade pip setuptools && \
   rm -r /root/.cache && \
   pip install patzilla
-COPY ./docker.patzilla.ini /patzilla.ini
 ENTRYPOINT ["/usr/bin/pserve"]
 CMD ["/patzilla.ini"]
 EXPOSE 9999 6543
