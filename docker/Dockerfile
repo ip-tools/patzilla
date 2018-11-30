@@ -4,6 +4,10 @@ RUN apk add --no-cache --update \
   python2 \
   python2-dev \
   build-base \
+  jpeg-dev \
+  freetype-dev \
+  lcms2-dev \
+  tiff-dev \
   libffi-dev \
   openssl-dev \
   libxml2-dev \
@@ -16,6 +20,6 @@ RUN apk add --no-cache --update \
   pip install --upgrade pip setuptools && \
   rm -r /root/.cache && \
   pip install patzilla
-COPY patzilla.ini /patzilla.ini
-CMD ["/usr/bin/pserve", "/patzilla.ini"]
+ENTRYPOINT ["/usr/bin/pserve"]
+CMD ["/patzilla.ini"]
 EXPOSE 9999 6543
