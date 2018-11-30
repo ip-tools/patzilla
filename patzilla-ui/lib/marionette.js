@@ -59,6 +59,12 @@ const DirectRenderMixin = {
     //mode: 'wrap',
     mode: 'replace',
 
+    // Control whether to render this only once
+    renderOnce: false,
+
+    // Bookkeeping about whether this has already been rendered
+    isRendered: false,
+
     // How to display an item view with no tag
     // https://stackoverflow.com/questions/14659597/backbonejs-view-self-template-replacewith-and-events/49246853#49246853
     // https://stackoverflow.com/questions/11594961/backbone-not-this-el-wrapping/11598543#11598543
@@ -76,6 +82,14 @@ const DirectRenderMixin = {
     // you should override the `Marionette.Renderer` object to
     // change how Marionette renders views.
     render: function() {
+
+        // Suppress multiple rendering, if requested
+        if (this.isRendered && this.renderOnce) {
+            return this;
+        }
+        this.isRendered = true;
+
+        //log('DirectRenderMixin::render', this);
 
         this.isClosed = false;
 

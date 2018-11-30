@@ -4,7 +4,7 @@
 
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
 import { MarionetteFuture, NamedViewController } from 'patzilla.lib.marionette';
-import { StackCheckboxWidget, StackOpenerWidget } from './stack-ui.js';
+import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
 require('backbone-dom-to-view');
 require('patzilla.navigator.components.storage');
@@ -376,13 +376,31 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 
     // Toggle stack opener widget
     show_opener: function() {
+
+        // Hack for destroying the old instance
+        this.hide_opener();
+
         var opener_widget = new StackOpenerWidget({
             collection: this.store,
         });
+        opener_widget.listenTo(opener_widget, 'view:clicked', this.open_menu);
         this.application.metadataView.region_stack_opener.show(opener_widget);
     },
     hide_opener: function() {
         this.application.metadataView.region_stack_opener.reset();
+    },
+
+    open_menu: function(event) {
+
+        // Close menu before (re)opening, making this a singleton effectively.
+        if (this.menu) {
+            this.menu.close();
+        }
+
+        var opener_widget = event.view.$el;
+        this.menu = new StackMenuWidget({container: opener_widget.parent()});
+        //log('menu:', this.menu);
+        this.menu.open();
     },
 
 

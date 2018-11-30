@@ -1,0 +1,37 @@
+<%
+// -*- coding: utf-8 -*-
+// (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
+%>
+
+<!--
+Menu for selecting actions on the current stack.
+It also displays the number of selected documents.
+It is a Material Design Component (MDC) Menu with dynamic content.
+ -->
+<div class="mdc-menu mdc-menu-surface stack-menu" tabindex="-1">
+    <ul class="mdc-list mdc-list--two-line" role="menu" aria-hidden="true" aria-orientation="vertical">
+        <li class="mdc-list-item" role="menuitem">
+            <span class="mdc-list-item__graphic material-icons">share</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Share</span>
+                <span class="mdc-list-item__secondary-text">Share documents with others</span>
+            </span>
+            <span class="mdc-list-item__meta">⎇+S</span>
+        </li>
+        <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
+        <li class="mdc-list-item" role="menuitem">
+            <span class="mdc-list-item__graphic material-icons">forward</span>
+                Transfer to XPAT
+            <span class="mdc-list-item__meta">⎇+X</span>
+        </li>
+        <% } %>
+        <li class="mdc-list-item" role="menuitem">
+            <span class="mdc-list-item__graphic material-icons">clear_all</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Reset</span>
+                <span class="mdc-list-item__secondary-text">Clear list of selections</span>
+            </span>
+            <span class="mdc-list-item__meta">⎇+R</span>
+        </li>
+    </ul>
+</div>

@@ -624,6 +624,11 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     margin-left: -3px;
 }
 
+.stack-menu {
+    min-width: calc(25vw - 32px);
+    overflow: hidden;
+}
+
 
 /* More info */
 .document-header-more-menu {

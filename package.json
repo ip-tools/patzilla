@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@material/button": "0.41.0",
+    "@material/menu": "0.41.0",
     "@material/ripple": "0.41.0",
     "@material/snackbar": "0.41.0",
     "@material/theme": "0.41.0",
