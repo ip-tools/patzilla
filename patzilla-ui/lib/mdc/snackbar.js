@@ -11,7 +11,7 @@ export { SnackbarWidget };
 
 class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRenderMixin) {
     /*
-     * SnackbarWidget encapsulates the Snackbox Material Design Component (MDC)
+     * SnackbarWidget encapsulates the Snackbar Material Design Component (MDC)
      * into a `Marionette.ItemView`.
      *
      * https://material-components.github.io/material-components-web-catalog/#/component/snackbar
