@@ -4,7 +4,7 @@
 License
 #######
 
-This software is copyright © 2013-2018 The PatZilla authors. All rights reserved.
+This software is copyright © 2013-2019 The PatZilla authors. All rights reserved.
 
 PatZilla is and will always be **free and open source software**.
 

@@ -141,7 +141,7 @@ Thanks in advance for your efforts, we really appreciate any help or feedback.
 
 License
 =======
-This software is copyright © 2013-2018 The PatZilla authors. All rights reserved.
+This software is copyright © 2013-2019 The PatZilla authors. All rights reserved.
 
 It is and will always be **free and open source software**.
 
