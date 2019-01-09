@@ -6,6 +6,8 @@ import { SmartCollectionMixin } from 'patzilla.lib.backbone';
 import { MarionetteFuture, NamedViewController } from 'patzilla.lib.marionette';
 import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
+export { StackDisplayMode };
+
 require('backbone-dom-to-view');
 require('patzilla.navigator.components.storage');
 
@@ -103,12 +105,15 @@ const StackManager = NamedViewController.extend({
             textLabel: this.textLabel,
         });
 
-        // Wire events
+        // Wire model events to user interface updates
         this.listenTo(this.model, 'change:selected', this.save_model);
         this.listenTo(this.model, 'change:selected', this.update_sidecar_indicator);
 
+        // When model gets destroyed, shutdown the user interface.
+        this.listenTo(this.model, 'destroy', this.close);
+
+        // Show/hide vertical marker on the document's left side.
         this.update_sidecar_indicator();
-        //this.listenTo(this.checkbox_widget, 'render', this.update_sidecar_indicator);
 
         // Debug events
         /*
@@ -116,6 +121,20 @@ const StackManager = NamedViewController.extend({
         this.listenTo(this.model, 'all', this.on_model_event);
         this.listenTo(this.checkbox_widget, 'all', this.on_widget_event);
         */
+
+    },
+
+    close: function() {
+        //log('StackManager::close');
+
+        // Signal we are currently in progress of destroying ourselves.
+        // This will be used from StackManager::save_model.
+        this.shutting_down = true;
+
+        // Shutdown user interface components.
+        this.close_checkbox();
+
+        StackManager.__super__.close.apply(this);
 
     },
 
@@ -130,6 +149,13 @@ const StackManager = NamedViewController.extend({
     // Persist model
     save_model: function() {
         log('StackManager::save_model');
+
+        // Skip saving if we are currently shutting down.
+        if (this.shutting_down) {
+            return;
+        }
+
+        // Persist model.
         this.model.save();
     },
 
@@ -161,14 +187,14 @@ const StackManager = NamedViewController.extend({
         this.show_checkbox();
     },
     show_rating: function() {
-        this.hide_checkbox();
+        this.close_checkbox();
         this.rating_element.show('fast');
     },
 
     show_checkbox: function() {
         this.view.region_stack_checkbox.show(this.checkbox_widget);
     },
-    hide_checkbox: function() {
+    close_checkbox: function() {
         this.view.region_stack_checkbox.reset();
     },
 
@@ -283,6 +309,11 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 
     // Register global hotkeys
     bind_hotkeys: function() {
+        this.bind_hotkeys_viewport();
+        this.bind_hotkeys_selection();
+    },
+
+    bind_hotkeys_viewport: function() {
         var _this = this;
         $(document).on('keydown', null, 'S', function() {
 
@@ -312,6 +343,31 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
             }
         });
 
+    },
+
+    bind_hotkeys_selection: function() {
+        var _this = this;
+        $(document).off('keydown', null, 'alt+r');
+        $(document).on('keydown', null, 'alt+r', _.bind(this.reset, this));
+    },
+
+    reset: function() {
+
+        // Reset models.
+        var buffer = [];
+        this.store.forEach(function(item) {
+            buffer.push(item);
+        });
+        _.each(buffer, function(item, index) {
+            item && item.destroy();
+        });
+        this.store.reset();
+
+        // Reset user interface.
+        var _this = this;
+        this.view.children.forEach(function(itemview) {
+            _this.make_stack_manager(itemview);
+        });
     },
 
     // Activate single element
@@ -353,8 +409,8 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
         // Iterate list of visible result elements and activate
         // the designated mode on each of them.
         var _this = this;
-        $('.ops-collection-entry').each(function(index, element) {
-            _this.activate_by_element($(element), mode);
+        this.view.children.forEach(function(itemview) {
+            _this.activate_by_element(itemview.$el, mode);
         });
 
         this.update_opener_view(mode);
@@ -370,39 +426,56 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
         if (mode == StackDisplayMode.STACK) {
             this.show_opener();
         } else if (mode == StackDisplayMode.RATING) {
-            this.hide_opener();
+            this.close_opener();
         }
     },
 
     // Toggle stack opener widget
     show_opener: function() {
 
-        // Hack for destroying the old instance
-        this.hide_opener();
+        // Hack for destroying the old instance.
+        this.close_opener();
 
+        // Create stack menu opener button.
         var opener_widget = new StackOpenerWidget({
             collection: this.store,
         });
-        opener_widget.listenTo(opener_widget, 'view:clicked', this.open_menu);
+
+        // When clicked, open the menu widget.
+        opener_widget.listenTo(opener_widget, 'view:clicked', _.bind(this.open_menu, this));
+
+        // Render and show the button in its designated region.
         this.application.metadataView.region_stack_opener.show(opener_widget);
     },
-    hide_opener: function() {
+
+    close_opener: function() {
+        // Close menu opener button by shutting down its region.
         this.application.metadataView.region_stack_opener.reset();
     },
 
     open_menu: function(event) {
 
-        // Close menu before (re)opening, making this a singleton effectively.
-        if (this.menu) {
-            this.menu.close();
+        // Close menu widget before (re)opening, making this effectively a singleton.
+        if (this.menu_widget) {
+            this.menu_widget.close();
         }
 
+        // Create menu widget.
         var opener_widget = event.view.$el;
-        this.menu = new StackMenuWidget({container: opener_widget.parent()});
-        //log('menu:', this.menu);
-        this.menu.open();
-    },
+        this.menu_widget = new StackMenuWidget({
+            collection: this.store,
+            container: opener_widget.parent(),
+        });
 
+        // Wire menu events.
+        this.listenTo(this.menu_widget, 'action:edit', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
+        this.listenTo(this.menu_widget, 'action:share', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
+        this.listenTo(this.menu_widget, 'action:xpexport', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
+        this.listenTo(this.menu_widget, 'action:reset', this.reset);
+
+        // Open/show/display widget.
+        this.menu_widget.open();
+    },
 
 });
 

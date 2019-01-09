@@ -626,7 +626,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .stack-menu {
     min-width: calc(25vw - 32px);
-    overflow: hidden;
 }
 
 

@@ -10,7 +10,15 @@ It is a Material Design Component (MDC) Menu with dynamic content.
  -->
 <div class="mdc-menu mdc-menu-surface stack-menu" tabindex="-1">
     <ul class="mdc-list mdc-list--two-line" role="menu" aria-hidden="true" aria-orientation="vertical">
-        <li class="mdc-list-item" role="menuitem">
+        <li class="mdc-list-item" role="menuitem" data-action="edit">
+            <span class="mdc-list-item__graphic material-icons">comment</span>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">Edit</span>
+                <span class="mdc-list-item__secondary-text">Bulk-edit selected documents</span>
+            </span>
+            <span class="mdc-list-item__meta">⎇+E</span>
+        </li>
+        <li class="mdc-list-item" role="menuitem" data-action="share">
             <span class="mdc-list-item__graphic material-icons">share</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">Share</span>
@@ -19,13 +27,13 @@ It is a Material Design Component (MDC) Menu with dynamic content.
             <span class="mdc-list-item__meta">⎇+S</span>
         </li>
         <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
-        <li class="mdc-list-item" role="menuitem">
+        <li class="mdc-list-item" role="menuitem" data-action="xpexport">
             <span class="mdc-list-item__graphic material-icons">forward</span>
                 Transfer to XPAT
             <span class="mdc-list-item__meta">⎇+X</span>
         </li>
         <% } %>
-        <li class="mdc-list-item" role="menuitem">
+        <li class="mdc-list-item" role="menuitem" data-action="reset">
             <span class="mdc-list-item__graphic material-icons">clear_all</span>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">Reset</span>

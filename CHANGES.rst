@@ -7,9 +7,10 @@ Development
 ===========
 - [ui] Gradually ramping up ES6
 - [ui] Notify users by MDC Snackbar, ditch NotificationFx
-- [ui] Compute effective full text data source by honouring its definition order
+- [ui] Compute effective full text data source by honoring its definition order. Thanks, Felix!
 - [ui] Add Material Design Icons
 - [ui] Improve MDC dependency chain
+- [ui] Improve stack subsystem
 
 
 2018-11-26 0.161.1

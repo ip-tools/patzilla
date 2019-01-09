@@ -61,7 +61,8 @@ const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFutu
 
     // Propagate model changes to user interface
     collectionEvents: {
-        'sync': '_updateView',
+        'sync reset': '_updateView',
+        //'all': 'log_event',
     },
 
     // Propagate user interface events to view events
@@ -69,12 +70,8 @@ const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFutu
         'click': 'view:clicked'
     },
 
-    initialize: function() {
-        //this.listenTo(this, 'all', this.log_event);
-    },
-
     onRender: function() {
-        log('StackOpenerWidget::onRender');
+        //log('StackOpenerWidget::onRender');
         this._updateView();
     },
 
@@ -129,22 +126,47 @@ class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, Marione
     }
 
     onRender() {
-        log('StackMenuWidget::onRender', this.el);
+        //log('StackMenuWidget::onRender', this.el);
+        this.setup_mdc_element();
+    }
+
+    setup_mdc_element() {
         this.$el.remove();
         this.container = this.getOption('container') || $('body');
         this.container.append(this.$el);
         this.menu = new MDCMenu(this.el);
+        this.bind_mdc_events();
     }
 
     open() {
-        log('StackMenuWidget::open', this);
+        //log('StackMenuWidget::open', this);
         // TODO: Sanity check to reject this when not being rendered?
         this.menu.open = true;
     }
 
     onClose() {
-        log('StackMenuWidget::onClose');
+        //log('StackMenuWidget::onClose');
         this.menu.destroy();
+    }
+
+
+    bind_mdc_events() {
+        //log('StackMenuWidget::bind_mdc_events');
+        var _this = this;
+        this.el.addEventListener('MDCMenu:selected', function(event) {
+
+            //log('MDCMenu:selected', event);
+
+            // Resolve designated action from `mdc-list-item`.
+            var detail = event.detail;
+            var element = $(detail.item);
+            var action = element.data('action');
+
+            // Propagate as action event
+            detail.action = action;
+            _this.trigger('item:select', detail);
+            _this.trigger('action:' + action, detail);
+        });
     }
 
     log_event(event) {

@@ -1,8 +1,13 @@
 // -*- coding: utf-8 -*-
-// (c) 2014 Andreas Motl, Elmyra UG
+// (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
+import { StackDisplayMode } from 'patzilla.navigator.components.stack';
+
 require('jquery.viewport');
 
-ViewportPlugin = Marionette.Controller.extend({
+
+const ViewportPlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('ViewportPlugin.initialize');
