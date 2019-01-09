@@ -3,15 +3,18 @@ version: "3"
 services:
   patzilla:
     build: .
-    image: alpine-patzilla
+    image: aghster/patzilla
     ports:
       - 9999:9999
       - 6543:6543
+    volumes:
+      - ./patzilla.ini:/patzilla.ini:ro
     networks:
       - patzilla_net
     container_name: patzilla
     depends_on:
       - mongodb
+    restart: unless-stopped
   mongodb:
     image: mvertes/alpine-mongo
     ports:
@@ -19,6 +22,7 @@ services:
     networks:
       - patzilla_net
     container_name: mongodb
+    restart: unless-stopped
 
 networks:
   patzilla_net:
