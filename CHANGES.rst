@@ -16,6 +16,11 @@ Development
 - [env] Add notes about troubleshooting sandbox installation problems
 - [env] Add basic Vagrantfile
 - [ui] Adapt to renaming the font-awesome package dependency
+- [mw] Switch to `python-epo-ops-client`_ for accessing OPS.
+  Thanks Martin for reporting this glitch and thanks George for conceiving this fine Python package.
+
+
+.. _python-epo-ops-client: https://pypi.org/project/python-epo-ops-client/
 
 
 2018-11-26 0.161.1
