@@ -236,6 +236,15 @@
             return url;
         },
 
+        new_espacenet_worldwide_url: function() {
+            // https://worldwide.espacenet.com/beta/search/publication/EP0666666
+            // https://github.com/ip-tools/ip-navigator/issues/4
+            var document_id = this.document.get_publication_reference('docdb');
+            var url_tpl = _.template('https://worldwide.espacenet.com/beta/search/publication/<%= fullnumber %>');
+            var url = url_tpl(document_id);
+            return url;
+        },
+
         google_url: function() {
             // https://www.google.com/patents/EP0666666B1
             // https://patents.google.com/patent/EP0666666B1
