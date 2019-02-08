@@ -14,6 +14,7 @@ Development
 - [env] Improve Docker setup. Thanks, Felix!
 - [mw] Minor fix re. query expression parsing
 - [env] Add notes about troubleshooting sandbox installation problems
+- [env] Add basic Vagrantfile
 
 
 2018-11-26 0.161.1
