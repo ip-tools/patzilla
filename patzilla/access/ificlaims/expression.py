@@ -73,6 +73,9 @@ class IFIClaimsParser(object):
         # Extract classes from representation like "IC:H04L0012433"
         self.rewrite_classes_ops()
 
+        if self.query_object is None:
+            return []
+
         keywords = self.query_object.keywords()
 
         # List of keywords should contain only unique items
