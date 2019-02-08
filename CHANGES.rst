@@ -11,8 +11,9 @@ Development
 - [ui] Add Material Design Icons
 - [ui] Improve MDC dependency chain
 - [ui] Improve stack subsystem
-- [general] Improve Docker setup. Thanks, Felix!
+- [env] Improve Docker setup. Thanks, Felix!
 - [mw] Minor fix re. query expression parsing
+- [env] Add notes about troubleshooting sandbox installation problems
 
 
 2018-11-26 0.161.1
