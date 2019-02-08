@@ -56,16 +56,16 @@ requires = [
     # ----------------------------------------------
 
     # HTTP
-    'requests==2.18.4',
-    'requests-oauthlib==0.8.0',
+    'python-epo-ops-client==2.3.2',
+    'requests==2.21.0',
     'mechanize==0.3.6',
     'MechanicalSoup==0.10.0',
 
     # HTTP SNI support
-    'pyOpenSSL==17.3.0',        # 17.5.0
-    'cryptography==2.0.3',      # 2.1.4
-    'pyasn1==0.3.7',            # 0.4.2
-    'ndg-httpsclient==0.4.3',   # 0.4.4
+    'pyOpenSSL==19.0.0',
+    'cryptography==2.5',
+    'pyasn1==0.4.5',
+    'ndg-httpsclient==0.5.1',
 
     # HTML
     'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0
