@@ -15,6 +15,7 @@ Development
 - [mw] Minor fix re. query expression parsing
 - [env] Add notes about troubleshooting sandbox installation problems
 - [env] Add basic Vagrantfile
+- [ui] Adapt to renaming the font-awesome package dependency
 
 
 2018-11-26 0.161.1

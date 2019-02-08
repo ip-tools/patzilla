@@ -43,9 +43,8 @@ require('bootstrap-2.3.2/js/bootstrap-popover.js');
 require('bootstrap-2.3.2/js/bootstrap-transition.js');
 require('bootstrap-2.3.2/js/bootstrap-typeahead.js');
 
-// Font Awesome 3.2.1
-// TODO: Upgrade to more recent version
-require('fontawesome-3.2.1/css/font-awesome.css');
+// Font Awesome 3.2.1; TODO: Upgrade to more recent version
+require('font-awesome/css/font-awesome.css');
 
 
 // Global utilities

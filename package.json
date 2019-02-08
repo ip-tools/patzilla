@@ -61,7 +61,7 @@
     "expose-loader": "0.7.5",
     "file-loader": "1.1.11",
     "file-saver": "1.3.3",
-    "fontawesome-3.2.1": "https://github.com/ip-tools/fontawesome-3.2.1",
+    "font-awesome": "https://github.com/ip-tools/font-awesome#3.2.1",
     "humanize-plus": "1.8.2",
     "imports-loader": "0.8.0",
     "jq-pagination": "https://github.com/ip-tools/jqPagination#1.4.2-alpha.2",
