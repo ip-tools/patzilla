@@ -1,7 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2015,2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('patzilla.lib.marionette');
 require('patzilla.navigator.components.results-dialog');
+
+const ModalRegion = require('patzilla.lib.marionette').ModalRegion;
+
 
 ResultNumbersView = GenericResultView.extend({
 

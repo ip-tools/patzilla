@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-export { MarionetteFuture, DirectRenderMixin, NamedViewController };
+export { ModalRegion, MarionetteFuture, DirectRenderMixin, NamedViewController };
 
 
 // Widget: Modal container as Marionette region component
