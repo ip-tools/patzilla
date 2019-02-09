@@ -270,8 +270,8 @@ CommentsPlugin = Marionette.Controller.extend({
 
         var backbone_view = element.backboneView();
 
-        // edit-toggle the comment manager
-        if (backbone_view.comment_manager) {
+        // Edit-toggle the comment manager
+        if (backbone_view && backbone_view.comment_manager) {
             backbone_view.comment_manager.toggle_edit();
         }
     },

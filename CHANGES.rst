@@ -19,6 +19,7 @@ Development
 - [mw] Switch to `python-epo-ops-client`_ for accessing OPS.
   Thanks Martin for reporting this glitch and thanks George for conceiving this fine Python package.
 - [ui] Add link to New Espacenet, see #4. Thanks, Felix!
+- [ui] Attempt to mitigate "TypeError: t is null" notifications from production
 
 
 .. _python-epo-ops-client: https://pypi.org/project/python-epo-ops-client/
