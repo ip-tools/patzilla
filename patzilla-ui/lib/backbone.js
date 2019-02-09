@@ -134,11 +134,12 @@ const SmartCollectionMixin = {
         return model;
     },
 
-    search: function(options) {
-        // "collection.where" would return an array of models, but we want to continue working with a collection.
+    search: function(options, collection_factory) {
+        // While "collection.where" would return an array of models,
+        // but we intend to continue working with a Backbone collection.
         // https://stackoverflow.com/questions/10548685/tojson-on-backbone-collectionwhere/10549086#10549086
         var result = this.where(options);
-        var resultCollection = new this.constructor.prototype(result);
+        var resultCollection = new collection_factory(result);
         return resultCollection;
     },
 

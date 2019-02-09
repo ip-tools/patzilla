@@ -21,6 +21,7 @@ Development
 - [ui] Add link to New Espacenet, see #4. Thanks, Felix!
 - [ui] Attempt to mitigate "TypeError: t is null" notifications from production
 - [ui] Fix crawler dialog
+- [ui] Fix export dialog
 
 
 .. _python-epo-ops-client: https://pypi.org/project/python-epo-ops-client/

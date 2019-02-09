@@ -49,7 +49,7 @@ CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
     },
 
     get_by_project: function(project) {
-        return this.search({project: project});
+        return this.search({project: project}, CommentCollection);
     },
 
 });
