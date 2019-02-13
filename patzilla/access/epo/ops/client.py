@@ -75,3 +75,21 @@ class OpsClientPool(object):
             self.clients[identifier] = ops
 
         return self.clients.get(identifier)
+
+
+# Monkeypatch epo_ops_client
+def _make_request(self, url, data, extra_headers=None, params=None):
+    extra_headers = extra_headers or {}
+    token = 'Bearer {0}'.format(self.access_token.token)
+    extra_headers['Authorization'] = token
+
+    response = self._post(url, data, extra_headers, params)
+    response = self._check_for_expired_token(response)
+    response = self._check_for_exceeded_quota(response)
+
+    # Let errors propagate. Don't croak on anything status >= 400.
+    #response.raise_for_status()
+
+    return response
+
+epo_ops.Client._make_request = _make_request

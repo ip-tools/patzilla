@@ -7,7 +7,7 @@ from pyramid.settings import asbool
 from patzilla.access.epo.ops.api import inquire_images, get_ops_image, ops_family_inpadoc, \
     pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_family_publication_docdb_xml, \
     ops_published_data_search, ops_published_data_search_real, ops_published_data_search_swap_family, \
-    ops_published_data_crawl
+    ops_published_data_crawl, ops_register
 from patzilla.navigator.services import cql_prepare_query, handle_generic_exception
 from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.access.generic.exceptions import NoResultsException
@@ -61,6 +61,11 @@ ops_claims_service = Service(
 ops_kindcode_service = Service(
     name='ops-kindcodes',
     path='/api/ops/{patent}/kindcodes',
+    description="OPS kindcodes interface")
+
+ops_register_service = Service(
+    name='ops-register',
+    path='/api/ops/{reference_type}/{patent}/register',
     description="OPS kindcodes interface")
 
 status_upstream_ops = Service(
@@ -175,10 +180,11 @@ def ops_fullimage_handler(request):
 
 @ops_family_inpadoc_service.get(accept='application/json')
 def ops_family_inpadoc_json_handler(request):
+    # constituents: biblio, legal
+
+    # Decode request parameters.
     reference_type = request.matchdict.get('reference_type')
     patent = request.matchdict.get('patent')
-
-    # constituents: biblio, legal
     constituents = request.params.get('constituents', '')
 
     return ops_family_inpadoc(reference_type, patent, constituents)
@@ -186,13 +192,14 @@ def ops_family_inpadoc_json_handler(request):
 
 @ops_family_inpadoc_service.get(accept='text/xml', renderer='xml')
 def ops_family_publication_xml_handler(request):
-
-    patent = request.matchdict.get('patent')
-
     # constituents: biblio, legal
+
+    # Decode request parameters.
+    reference_type = request.matchdict.get('reference_type')
+    patent = request.matchdict.get('patent')
     constituents = request.params.get('constituents', '')
 
-    return ops_family_publication_docdb_xml(patent, constituents)
+    return ops_family_publication_docdb_xml(reference_type, patent, constituents)
 
 
 @ops_pdf_service.get(renderer='pdf')
@@ -221,6 +228,7 @@ def ops_claims_handler(request):
     description = ops_claims(patent)
     return description
 
+
 @ops_description_service.get()
 def ops_description_handler(request):
     # TODO: respond with proper 4xx codes if something fails
@@ -228,9 +236,29 @@ def ops_description_handler(request):
     description = ops_description(patent)
     return description
 
+
 @ops_kindcode_service.get()
 def ops_kindcode_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     patent = request.matchdict['patent']
     kindcodes = ops_document_kindcodes(patent)
     return kindcodes
+
+
+@ops_register_service.get(accept='application/json')
+def ops_register_handler_json(request):
+    return ops_register_handler_real(request)
+
+
+@ops_register_service.get(accept=['text/xml', 'application/xml'], renderer='xml')
+def ops_register_handler_xml(request):
+    return ops_register_handler_real(request, xml=True)
+
+
+def ops_register_handler_real(request, xml=False):
+    # TODO: respond with proper 4xx codes if something fails
+    # Decode request parameters.
+    reference_type = request.matchdict.get('reference_type')
+    patent = request.matchdict.get('patent')
+    constituents = request.params.get('constituents', '')
+    return ops_register(reference_type, patent, constituents, xml=xml)
