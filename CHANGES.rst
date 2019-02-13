@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-02-13 0.162.0
+==================
 - [ui] Gradually ramping up ES6
 - [ui] Notify users by MDC Snackbar, ditch NotificationFx
 - [ui] Compute effective full text data source by honoring its definition order. Thanks, Felix!
