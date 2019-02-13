@@ -7,11 +7,12 @@ from pyramid.httpexceptions import HTTPError, HTTPNotFound
 from patzilla.access.uspto.image import get_images_view_url
 from patzilla.util.numbers.common import decode_patent_number
 from patzilla.util.numbers.normalize import normalize_patent
-from patzilla.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf
+from patzilla.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf, NotConfiguredError
 from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
 from patzilla.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
+
 
 # TODO: Refactor to patzilla.access.composite
 def pdf_universal(patent):
@@ -34,8 +35,23 @@ def pdf_universal(patent):
 
     except Exception as ex:
 
-        if not isinstance(ex, HTTPNotFound):
+        # Evaluate exception.
+        if isinstance(ex, NotConfiguredError):
+            log.warning(ex)
+
+        elif not isinstance(ex, HTTPNotFound):
             log.error(exception_traceback())
+
+        # Try to fall back to OPS.
+
+        if document:
+
+            pdf = pdf_from_ops(patent, document, meta)
+            datasource = 'ops'
+
+        else:
+            log.error('Locating a document at the domestic office requires ' \
+                      'a decoded document number for "{}"'.format(patent))
 
         """
         # second, try archive again after running acquisition
@@ -51,21 +67,8 @@ def pdf_universal(patent):
         except Exception as ex:
         """
 
-        if True:
-
-            if not isinstance(ex, HTTPNotFound):
-                log.error(exception_traceback())
-
-            if document:
-
-                pdf = pdf_from_ops(patent, document, meta)
-                datasource = 'ops'
-
-            else:
-                log.error('Locating a document at the domestic office requires ' \
-                          'a decoded document number for "{}"'.format(patent))
-
     return {'pdf': pdf, 'datasource': datasource, 'meta': meta}
+
 
 # TODO: Refactor to patzilla.access.epo.ops.api
 def pdf_from_ops(patent, document, meta):
@@ -96,6 +99,7 @@ def pdf_from_ops(patent, document, meta):
             else:
                 log.warning('PDF USPTO not available for {}'.format(patent))
 
+
 def pdf_universal_multi_zip(patents):
     buffer = StringIO()
     with ZipFile(buffer, 'w', ZIP_DEFLATED) as archive:
@@ -103,6 +107,7 @@ def pdf_universal_multi_zip(patents):
     buffer.seek(0)
     payload = buffer.read()
     return {'zip': payload}
+
 
 def pdf_universal_multi(zipfile, numbers, path=''):
 
@@ -141,4 +146,3 @@ def pdf_universal_multi(zipfile, numbers, path=''):
         '\n\n' + \
         'Missing files ({0}):\n'.format(len(missing)) + '\n'.join(missing)
     zipfile.writestr('{path}/@report.txt'.format(path=path), report)
-

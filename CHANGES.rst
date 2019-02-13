@@ -22,6 +22,7 @@ Development
 - [ui] Attempt to mitigate "TypeError: t is null" notifications from production
 - [ui] Fix crawler dialog
 - [ui] Fix export dialog
+- [mw] Trim verboseness when not having DEPATISconnect enabled
 
 
 .. _python-epo-ops-client: https://pypi.org/project/python-epo-ops-client/
