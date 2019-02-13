@@ -260,5 +260,5 @@ def ops_register_handler_real(request, xml=False):
     # Decode request parameters.
     reference_type = request.matchdict.get('reference_type')
     patent = request.matchdict.get('patent')
-    constituents = request.params.get('constituents', '')
+    constituents = request.params.get('constituents', 'biblio,legal')
     return ops_register(reference_type, patent, constituents, xml=xml)

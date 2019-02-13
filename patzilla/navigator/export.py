@@ -220,7 +220,11 @@ class Dossier(object):
 
             # Add Workbook in PDF format
             if options.report.pdf:
-                zipfile.writestr('report/@dossier.pdf', DossierXlsx(self.data).to_pdf(payload=workbook_payload))
+                try:
+                    zipfile.writestr('report/@dossier.pdf', DossierXlsx(self.data).to_pdf(payload=workbook_payload))
+                except Exception as ex:
+                    log.error(u'Rendering dossier to PDF failed. ' \
+                              u'Exception: {ex}\n{trace}'.format(ex=ex, trace=exception_traceback()))
 
             # Add CSV
             if options.report.csv:
@@ -238,6 +242,7 @@ class Dossier(object):
             # Media files
             # -----------
 
+            # FIXME: This should go to some configuration setting.
             fulltext_countries_excluded_ops = ['BE', 'CN', 'DD', 'DE', 'DK', 'FR', 'GR', 'HU', 'JP', 'LU', 'KR', 'RU', 'PT', 'SE', 'TR', 'SK', 'US']
 
             # Add full PDF documents
@@ -256,7 +261,7 @@ class Dossier(object):
                 if not document or not document.strip():
                     continue
 
-                log.info('XML data acquisition for document {document}'.format(document=document))
+                log.info('Data acquisition for document {document}'.format(document=document))
 
                 status.setdefault(document, OrderedDict())
                 patent = decode_patent_number(document)
@@ -264,7 +269,7 @@ class Dossier(object):
                 # Add XML "bibliographic" data (full-cycle)
                 if options.media.biblio:
                     try:
-                        biblio_payload = get_ops_biblio_data(document, True)
+                        biblio_payload = get_ops_biblio_data('publication', document, xml=True)
                         zipfile.writestr('media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
                         status[document]['biblio'] = True
 
@@ -282,7 +287,7 @@ class Dossier(object):
                         try:
                             # Write XML
                             document_number = encode_epodoc_number(patent)
-                            description_payload = ops_description(document_number, True)
+                            description_payload = ops_description(document_number, xml=True)
                             zipfile.writestr('media/xml/{document}.description.xml'.format(document=document), description_payload)
                             status[document]['description'] = True
 
@@ -305,7 +310,7 @@ class Dossier(object):
                         try:
                             # Write XML
                             document_number = encode_epodoc_number(patent)
-                            claims_payload = ops_claims(document_number, True)
+                            claims_payload = ops_claims(document_number, xml=True)
                             zipfile.writestr('media/xml/{document}.claims.xml'.format(document=document), claims_payload)
                             status[document]['claims'] = True
 
@@ -324,8 +329,7 @@ class Dossier(object):
                 if options.media.register:
 
                     try:
-                        document_number = encode_epodoc_number(patent)
-                        register_payload = ops_register('publication', document_number, 'biblio', True)
+                        register_payload = ops_register('publication', document, xml=True)
                         zipfile.writestr('media/xml/{document}.register.xml'.format(document=document), register_payload)
                         status[document]['register'] = True
 
@@ -339,7 +343,7 @@ class Dossier(object):
                 if options.media.family:
                     try:
                         document_number = encode_epodoc_number(patent, {'nokind': True})
-                        family_payload = ops_family_inpadoc('publication', document_number, 'biblio', True)
+                        family_payload = ops_family_inpadoc('publication', document_number, 'biblio', xml=True)
                         zipfile.writestr('media/xml/{document}.family.xml'.format(document=document), family_payload)
                         status[document]['family'] = True
 
@@ -350,7 +354,7 @@ class Dossier(object):
                     self.clear_request_errors(request)
 
 
-            #print '====== status:'; pprint(status)
+            #from pprint import pprint; print '====== status:'; pprint(status)
 
 
 
@@ -462,6 +466,7 @@ class PandasJSONEncoder(JSONEncoder):
             return bool(o)
 
         raise TypeError(repr(o) + " is not JSON serializable")
+
 
 class DossierXlsx(Dossier):
 
@@ -585,8 +590,9 @@ class DossierXlsx(Dossier):
             df.to_excel(self.writer, sheet_name=sheet_name, index=False)
 
             # Set column widths
-            wks = self.worksheet_set_column_widths(sheet_name, 18, 10, 19, 18)
-            wks.set_column('C:C', width=19, cell_format=self.format_small_font)
+            wks = self.worksheet_set_column_widths(sheet_name, 25, 15, 30, 25, cell_format=self.format_wrap_top)
+            wks.set_landscape()
+            #wks.set_column('C:C', width=19, cell_format=self.format_small_font)
             self.set_header_footer(wks)
 
     def write_queries_sheet(self):
@@ -701,7 +707,7 @@ class DossierXlsx(Dossier):
         -n, --no-launch          fail if no listener is found (default: launch one)
         """
         command = [[unoconv, '--format=pdf', '--output={output}'.format(output=pdf_path), '--verbose', '-vvvvv', '--timeout=10', xlsx_file.name]]
-        process = envoy.run(command, timeout=15, env={'HOME': '/tmp'})
+        process = envoy.run(command, timeout=30, env={'HOME': '/tmp'})
 
         # Debugging
         #print 'status:', process.status_code
@@ -717,8 +723,8 @@ class DossierXlsx(Dossier):
             os.unlink(pdf_path)
             return payload
         else:
-            log.error('XLSX->PDF conversion failed, status={status}, command={command}. Error:\n{error}'.format(
-                status=process.status_code, command=process.command, error=process.std_err))
+            log.error('XLSX->PDF conversion failed, status={status}, command={command} ({command_cp}). Error:\n{error}'.format(
+                status=process.status_code, command=process.command, command_cp=' '.join(process.command), error=process.std_err))
             raise OSError('XLSX->PDF conversion failed')
 
     @staticmethod

@@ -23,6 +23,7 @@ Development
 - [ui] Fix crawler dialog
 - [ui] Fix export dialog
 - [mw] Trim verboseness when not having DEPATISconnect enabled
+- [mw] Fix and improve data export
 
 
 .. _python-epo-ops-client: https://pypi.org/project/python-epo-ops-client/
