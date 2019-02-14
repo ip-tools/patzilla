@@ -3,6 +3,7 @@
 import logging
 import requests
 from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.network.browser import regular_user_agent
 from pyramid.httpexceptions import HTTPNotFound
 
 
