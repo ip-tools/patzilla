@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2019-02-14 0.162.2
+==================
+- [ui] Fix opening keyword editor
+
+
 2019-02-14 0.162.1
 ==================
 - [ui] Fix feature flag evaluation

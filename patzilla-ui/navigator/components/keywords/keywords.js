@@ -1,7 +1,8 @@
 // -*- coding: utf-8 -*-
-// (c) 2014,2015 Andreas Motl, Elmyra UG
+// (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery.highlight.bartaz');
-require('patzilla.lib.marionette');
+const ModalRegion = require('patzilla.lib.marionette').ModalRegion;
+
 
 KeywordMapModel = Backbone.RelationalModel.extend({
 
