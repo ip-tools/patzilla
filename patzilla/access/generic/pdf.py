@@ -9,6 +9,7 @@ from patzilla.util.numbers.common import decode_patent_number
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf, NotConfiguredError
 from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
+from patzilla.access.epo.publicationserver.client import get_publication_server_pdf
 from patzilla.util.python import exception_traceback
 
 log = logging.getLogger(__name__)
@@ -46,8 +47,12 @@ def pdf_universal(patent):
 
         if document:
 
-            pdf = pdf_from_ops(patent, document, meta)
-            datasource = 'ops'
+            if document.country == 'EP':
+                pdf = get_publication_server_pdf(patent)
+                datasource = 'epo-publication-server'
+            else:
+                pdf = pdf_from_ops(patent, document, meta)
+                datasource = 'ops'
 
         else:
             log.error('Locating a document at the domestic office requires ' \
