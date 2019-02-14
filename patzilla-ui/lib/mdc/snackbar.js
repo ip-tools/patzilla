@@ -46,8 +46,18 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
     }
 
     show(message, options) {
+
+        // Compute colors based on ambient.
+        if ($('.modal-backdrop').exists()) {
+            $(this.el).css('background-color', 'lightgray');
+            $(this.el).find('.mdc-snackbar__text').css('color', 'black');
+        } else {
+            $(this.el).css('background-color', '#323232');
+            $(this.el).find('.mdc-snackbar__text').css('color', 'white');
+        }
+
         //this.snackbar.show({message: message, timeout: 40000});
-        this.snackbar.show({message: message});
+        this.snackbar.show({message: message, multiline: false});
     }
 
 }

@@ -5,7 +5,12 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-02-14 0.162.1
+==================
 - [ui] Fix feature flag evaluation
+- [ui] Tune snackbar position, padding and colors based on ambient
 
 
 2019-02-13 0.162.0
