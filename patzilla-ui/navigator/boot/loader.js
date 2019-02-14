@@ -45,6 +45,7 @@ require('patzilla.navigator.components.permalink');
 require('patzilla.navigator.components.reading');
 require('patzilla.navigator.components.viewport');
 require('patzilla.navigator.components.waypoints');
+require('patzilla.navigator.components.stack');
 
 
 // Bootstrap the application after registering all components

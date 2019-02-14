@@ -483,6 +483,11 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 // Setup plugin
 navigatorApp.addInitializer(function(options) {
 
+    var stack_enabled = navigatorApp.theme.get('feature.stack.enabled');
+
+    // Skip starting the stack subsystem.
+    if (!stack_enabled) { return; }
+
     this.listenToOnce(this, "application:init", function() {
         this.stack = new StackPlugin({application: this, view: this.collectionView});
     });

@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Fix feature flag evaluation
 
 
 2019-02-13 0.162.0
