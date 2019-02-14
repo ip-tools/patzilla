@@ -25,5 +25,7 @@ def includeme(config):
         config.include("patzilla.access.sip.concordance")
         config.include("patzilla.access.sip.clientpool")
 
+    config.include("patzilla.access.epo.publicationserver.client")
+    
     config.include('.office')
     config.scan()
