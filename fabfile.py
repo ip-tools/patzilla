@@ -52,7 +52,7 @@ def install(version, target):
         target_path = os.path.join(INSTALLATION_PATH, 'sites', target)
         dir_ensure(target_path, recursive=True)
 
-        venv_path = target_path + '/.venv27'
+        venv_path = target_path + '/.venv2'
 
         #if not file_is_file(source_package):
         #    abort('Source package does not exist: ' + source_package)
