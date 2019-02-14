@@ -1,7 +1,7 @@
 #VERSION := $(shell cat patzilla/version.py | awk '{ print $$3 }' | tr -d "'")
 #$(error VERSION=$(VERSION))
 
-$(eval venvpath     := .venv27)
+$(eval venvpath     := .venv2)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
