@@ -149,3 +149,32 @@ pdf-mammut:
 		'http://localhost:6543/navigator?query=pa=mammut&mode=print' var/tmp/patzilla-mammut.pdf
 
 	#	--debug-javascript \
+
+
+# ==========================================
+#           ptrace.getkotori.org
+# ==========================================
+
+# Don't commit media assets (screenshots, etc.) to the repository.
+# Instead, upload them to https://ptrace.getkotori.org/
+ptrace_target := www-data@ptrace.ip-tools.org:/srv/www/organizations/ip-tools/ptrace.ip-tools.org/htdocs/
+ptrace_http   := https://ptrace.ip-tools.org/
+ptrace: check-ptrace-options
+	$(eval prefix := $(shell gdate --iso-8601))
+	$(eval name   := $(shell basename $(source)))
+	$(eval id     := $(prefix)_$(name))
+
+	@# debugging
+	@#echo "name: $(name)"
+	@#echo "id:   $(id)"
+
+	@scp '$(source)' '$(ptrace_target)$(id)'
+
+	$(eval url    := $(ptrace_http)$(id))
+	@echo "Access URL: $(url)"
+
+check-ptrace-options:
+	@if test "$(source)" = ""; then \
+		echo "ERROR: 'source' not set"; \
+		exit 1; \
+	fi
