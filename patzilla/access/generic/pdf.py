@@ -48,8 +48,12 @@ def pdf_universal(patent):
         if document:
 
             if document.country == 'EP':
-                pdf = get_publication_server_pdf(patent)
-                datasource = 'epo-publication-server'
+                try:
+                    pdf = get_publication_server_pdf(patent)
+                    datasource = 'epo-publication-server'
+                except:
+                    pdf = pdf_from_ops(patent, document, meta)
+                    datasource = 'ops'
             else:
                 pdf = pdf_from_ops(patent, document, meta)
                 datasource = 'ops'
