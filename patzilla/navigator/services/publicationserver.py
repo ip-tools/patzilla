@@ -3,7 +3,6 @@
 import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid.settings import asbool
 from patzilla.access.epo.publicationserver.client import get_publication_server_pdf
 
 log = logging.getLogger(__name__)
@@ -14,7 +13,7 @@ publicationserver_pdf_service = Service(
     description="EPO publication server pdf interface")
 
 
-@publicationserver_pdf_service.get()
+@publicationserver_pdf_service.get(renderer='pdf')
 def publicationserver_pdf_handler(request):
     """request pdf from EPO publication server"""
     # https://data.epo.org/publication-server/pdf-document?cc=EP&pn=nnnnnn&ki=nn
