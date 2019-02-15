@@ -21,5 +21,5 @@ RUN apk add --no-cache --update \
   rm -r /root/.cache && \
   pip install patzilla
 ENTRYPOINT ["/usr/bin/pserve"]
-CMD ["--reload", "/patzilla.ini"]
+CMD ["/patzilla.ini"]
 EXPOSE 9999 6543
