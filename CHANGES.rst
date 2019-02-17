@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- Use EPO publication server for obtaining PDFs of EP publications (#12). Thanks, Felix!
 
 
 2019-02-14 0.162.2
