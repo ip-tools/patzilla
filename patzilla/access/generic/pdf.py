@@ -1,130 +1,167 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2016 Andreas Motl, Elmyra UG
+# (c) 2013-2019 The PatZilla Developers
 import logging
 from StringIO import StringIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
+
+import attr
 from pyramid.httpexceptions import HTTPError, HTTPNotFound
-from patzilla.access.uspto.image import get_images_view_url
 from patzilla.util.numbers.common import decode_patent_number
 from patzilla.util.numbers.normalize import normalize_patent
-from patzilla.access.dpma.depatisconnect import run_acquisition, fetch_pdf as archive_fetch_pdf, NotConfiguredError
-from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
-from patzilla.access.epo.publicationserver.client import get_publication_server_pdf
 from patzilla.util.python import exception_traceback
+from patzilla.access.dpma.depatisconnect import fetch_pdf as depatisconnect_fetch_pdf, NotConfiguredError
+from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
+from patzilla.access.epo.publicationserver.client import fetch_pdf as publicationserver_fetch_pdf
+from patzilla.access.uspto.pdf import document_viewer_url as uspto_pdfview_url, fetch_pdf as uspto_fetch_pdf
 
 log = logging.getLogger(__name__)
 
 
-# TODO: Refactor to patzilla.access.composite
-def pdf_universal(patent):
+@attr.s
+class PDFResponse(object):
+    pdf = attr.ib(default=None)
+    datasource = attr.ib(default=None)
+    meta = attr.ib(default=attr.Factory(dict))
+    success = attr.ib(default=False)
 
-    pdf = None
-    datasource = None
-    meta = {}
+
+def pdf_universal(patent):
+    """
+    Attempt to fetch PDF document from best practice sources.
+
+    It will progressively churn through these data sources:
+    - DPMA: DEPATISconnect
+    - EPO: European publication server
+    - EPO: OPS services
+    - USPTO: Publication server
+    """
+
+    # Create PDF response object.
+    response = PDFResponse()
+
+    # Acquire PDF document.
+    try:
+        response.success = pdf_universal_real(patent, response)
+
+    except Exception as ex:
+        log.warning('PDF acquisition for "%s" failed: %s', patent, ex)
+        response.success = False
+
+    return response
+
+
+def pdf_universal_real(patent, response):
 
     document = decode_patent_number(patent)
     number_normalized = normalize_patent(patent)
 
-    # first, try archive
-    try:
-        # Skip requests for documents w/o kindcode
-        if not document.kind:
-            raise ValueError(u'No kindcode for patent: {}'.format(patent))
+    # Sanity checks.
+    if document is None:
+        log.error('Locating a document at the domestic office requires ' \
+                  'a decoded document number for "{}"'.format(patent))
+        raise ValueError(u'Unable to decode document number {}'.format(patent))
 
-        pdf = archive_fetch_pdf(number_normalized)
-        datasource = 'archive'
+    # 1. If it's an EP document, try European publication server first.
+    if response.pdf is None and document.country == 'EP':
 
-    except Exception as ex:
-
-        # Evaluate exception.
-        if isinstance(ex, NotConfiguredError):
-            log.warning(ex)
-
-        elif not isinstance(ex, HTTPNotFound):
-            log.error(exception_traceback())
-
-        # Try to fall back to OPS.
-
-        if document:
-
-            if document.country == 'EP':
-                try:
-                    pdf = get_publication_server_pdf(patent)
-                    datasource = 'epo-publication-server'
-                except:
-                    pdf = pdf_from_ops(patent, document, meta)
-                    datasource = 'ops'
-            else:
-                pdf = pdf_from_ops(patent, document, meta)
-                datasource = 'ops'
-
-        else:
-            log.error('Locating a document at the domestic office requires ' \
-                      'a decoded document number for "{}"'.format(patent))
-
-        """
-        # second, try archive again after running acquisition
         try:
-
-            # Skip requests for documents w/o kindcode
-            if not document.kind: raise ValueError(u'No kindcode')
-
-            run_acquisition(number_normalized, 'pdf')
-            pdf = archive_fetch_pdf(number_normalized, 2)
-            datasource = 'archive'
+            response.pdf = publicationserver_fetch_pdf(patent)
+            response.datasource = 'epo-publication-server'
 
         except Exception as ex:
-        """
+            log.warning('PDF {}: Not available on European publication server. {}'.format(patent, ex))
+            if not isinstance(ex, HTTPError):
+                log.error(exception_traceback())
 
-    return {'pdf': pdf, 'datasource': datasource, 'meta': meta}
+    # 2. Next, try DEPATISconnect archive server.
+    if response.pdf is None:
+        try:
+            # Skip requests for documents w/o kindcode
+            if not document.kind:
+                raise ValueError(u'No kindcode for patent: {}'.format(patent))
 
+            response.pdf = depatisconnect_fetch_pdf(number_normalized)
+            response.datasource = 'depatisconnect'
 
-# TODO: Refactor to patzilla.access.epo.ops.api
-def pdf_from_ops(patent, document, meta):
-    # third, try building from OPS single images
-    try:
+        except Exception as ex:
+
+            # Evaluate exception.
+            if isinstance(ex, NotConfiguredError):
+                log.warning(ex)
+
+            elif not isinstance(ex, HTTPNotFound):
+                log.error(exception_traceback())
+
+    # 3. Next, try USPTO servers.
+    if response.pdf is None and document.country == 'US':
+
+        try:
+            response.pdf = uspto_fetch_pdf(patent)
+            response.datasource = 'uspto'
+
+        except Exception as ex:
+            log.warning('PDF {}: Not available at USPTO. {}'.format(patent, ex))
+            if not isinstance(ex, HTTPError):
+                log.error(exception_traceback())
+
+    # 4. Next, try EPO OPS service.
+    # Note this will assemble PDF out of single pages requested
+    # from EPO OPS, which is a rather expensive operation.
+    if response.pdf is None:
 
         # 2016-04-21: Amend document number for CA documents, e.g. CA2702893C -> CA2702893A1
-        # TOOD: Reenable feature, but only when prefixing document with a custom page
+        # TODO: Reenable feature, but only when prefixing document with a custom page
         #       informing the user about recent changes not yet arrived at EPO.
-        #if document.country == 'CA':
+        # if document.country == 'CA':
         #    patent = document.country + document.number
 
-        log.info('PDF OPS attempt for {0}'.format(patent))
+        try:
+            response.pdf = ops_build_pdf(patent)
+            response.datasource = 'epo-ops'
 
-        return ops_build_pdf(patent)
+        except Exception as ex:
+            log.warning('PDF {}: Not available on OPS. {}'.format(patent, ex))
+            if not isinstance(ex, HTTPError):
+                log.error(exception_traceback())
 
-    except Exception as ex:
+    # 5. Last but not least, try to redirect to USPTO server.
+    # Deactivated as of 2019-02-19.
+    if False and response.pdf is None and document.country == 'US':
 
-        if not isinstance(ex, HTTPNotFound):
-            log.error(exception_traceback())
-
-        if document.country == 'US':
-
-            log.info('PDF USPTO attempt for {0}'.format(patent))
-            images_location = get_images_view_url(document)
+        log.info('PDF {}: USPTO attempt'.format(patent))
+        uspto_found = False
+        reason = None
+        try:
+            images_location = uspto_pdfview_url(document)
             if images_location:
-                meta.update(images_location)
-            else:
-                log.warning('PDF USPTO not available for {}'.format(patent))
+                response.meta.update(images_location)
+                response.datasource = 'uspto'
+                uspto_found = True
+
+        except Exception as ex:
+            reason = ex
+            if not isinstance(ex, HTTPError):
+                log.error(exception_traceback())
+
+        if not uspto_found:
+            log.warning('PDF {}: Not available on USPTO. {}'.format(patent, reason))
+
+    return True
 
 
-def pdf_universal_multi_zip(patents):
+def pdf_ziparchive(patents):
     buffer = StringIO()
     with ZipFile(buffer, 'w', ZIP_DEFLATED) as archive:
-        pdf_universal_multi(archive, patents)
+        pdf_ziparchive_add(archive, patents)
     buffer.seek(0)
     payload = buffer.read()
     return {'zip': payload}
 
 
-def pdf_universal_multi(zipfile, numbers, path=''):
+def pdf_ziparchive_add(zipfile, numbers, path=''):
 
     delivered = []
     missing = []
-
-    #inode = ZipInfo('{path}/'.format(path=path))
-    #zipfile.writestr(inode, '')
 
     for patent in numbers:
 
@@ -135,9 +172,9 @@ def pdf_universal_multi(zipfile, numbers, path=''):
         log.info('PDF request for document {document}'.format(document=patent))
         try:
             data = pdf_universal(patent)
-            if 'pdf' in data and data['pdf']:
+            if data.pdf is not None:
                 inode = ZipInfo('{path}/{document}.pdf'.format(path=path, document=patent))
-                zipfile.writestr(inode, data['pdf'])
+                zipfile.writestr(inode, data.pdf)
                 delivered.append(patent)
             else:
                 log.warning('No PDF for "{patent}" in context of a bulk request'.format(patent=patent))

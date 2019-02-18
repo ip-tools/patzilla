@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-# (c) 2007,2014,2016,2017 Andreas Motl <andreas.motl@elmyra.de>
+# (c) 2014-2017 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-import requests
 import urllib2
 import cookielib
 from BeautifulSoup import BeautifulSoup
 from patzilla.util.network.browser import regular_user_agent
-from patzilla.util.numbers.common import split_patent_number, decode_patent_number
-from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
+
 
 def fetch_first_drawing(patent):
 
@@ -50,6 +49,7 @@ def fetch_first_drawing(patent):
         payload = fetch_first_drawing_do(number, baseurl, url)
         if payload:
             return payload
+
 
 def fetch_first_drawing_do(number, baseurl, url_initial):
 
@@ -150,39 +150,6 @@ def fetch_url(url):
         log.error('We failed to open url "{url}". reason={reason}, code={code}'.format(url=url, reason=reason, code=code))
 
     return payload
-
-
-def get_images_view_url(document):
-
-    document = normalize_patent(document, for_ops=False)
-
-    reference_type = None
-    if len(document.number) <= 9:
-        reference_type = 'publication'
-    elif len(document.number) >= 10:
-        reference_type = 'application'
-
-    url_tpl = None
-    if reference_type == 'application':
-        # AppFT image server
-        # http://pdfaiw.uspto.gov/.aiw?docid=20160105912
-        url_tpl = 'http://pdfaiw.uspto.gov/.aiw?docid={docid}'
-
-    elif reference_type == 'publication':
-        # PatFT image server
-        # http://pdfpiw.uspto.gov/.piw?docid=9317610
-        url_tpl = 'http://pdfpiw.uspto.gov/.piw?docid={docid}'
-
-    if url_tpl:
-        url = url_tpl.format(docid=document.number)
-
-        # Pre-flight check upstream url for existence of document
-        try:
-            response = requests.get(url)
-            if 'is not a valid ID' not in response.content:
-                return {'location': url, 'origin': 'USPTO'}
-        except:
-            pass
 
 
 if __name__ == '__main__':

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2018 Andreas Motl, Elmyra UG
+# (c) 2019 The PatZilla Developers
 import logging
 from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound
-from patzilla.access.epo.publicationserver.client import get_publication_server_pdf
+from patzilla.access.epo.publicationserver.client import fetch_pdf
 
 log = logging.getLogger(__name__)
+
 
 publicationserver_pdf_service = Service(
     name='publicationserver-pdf',
@@ -20,7 +20,7 @@ def publicationserver_pdf_handler(request):
 
     patent = request.matchdict['patent']
 
-    pdf_payload = get_publication_server_pdf(patent)
+    pdf_payload = fetch_pdf(patent)
 
     # http://tools.ietf.org/html/rfc6266#section-4.2
     request.response.headers['Content-Disposition'] = 'inline; filename={0}.pdf'.format(patent)

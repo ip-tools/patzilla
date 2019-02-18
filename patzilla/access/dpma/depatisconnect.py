@@ -86,11 +86,12 @@ def fetch_xml(number):
     return response
 
 def fetch_pdf(number, attempt=1):
-    log.info('PDF archive attempt #{attempt} for {number}'.format(attempt=attempt, number=number))
     return fetch_pdf_real(number)
 
 @cache_region('static')
 def fetch_pdf_real(number):
+
+    log.info('PDF {}: Accessing DEPATISconnect server'.format(number))
 
     sanity_check()
 

@@ -22,7 +22,7 @@ from collections import OrderedDict
 from cornice.util import _JSONError
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError
-from patzilla.access.generic.pdf import pdf_universal_multi
+from patzilla.access.generic.pdf import pdf_ziparchive_add
 from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
 from patzilla.access.generic.exceptions import ignored
 from patzilla.util.date import humanize_date_english
@@ -247,7 +247,7 @@ class Dossier(object):
 
             # Add full PDF documents
             if options.media.pdf:
-                pdf_universal_multi(zipfile, documents, path='media/pdf')
+                pdf_ziparchive_add(zipfile, documents, path='media/pdf')
 
             # Add XML data
             # TODO: Add @report.txt for reflecting missing documents, differentiate between different XML kinds.

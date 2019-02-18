@@ -239,8 +239,10 @@ def pdf_join(pages):
 
     finally:
         for tmpfile in tmpfiles:
-            logger.debug('Closing tempfile: %s', tmpfile.name)
-            tmpfile.close()
+            try:
+                tmpfile.close()
+            except Exception as ex:
+                logger.warn('Unable to delete temporary file "%s": %s', tmpfile.name, ex)
 
     return stdout
 

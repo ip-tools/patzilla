@@ -5,7 +5,9 @@ IP Navigator CHANGES
 
 Development
 ===========
-- Use EPO publication server for obtaining PDFs of EP publications (#12). Thanks, Felix!
+- [mw] Use EPO publication server for obtaining PDFs of EP publications (#12). Thanks, Felix!
+- [mw] Use USPTO publication servers for obtaining PDFs of US documents
+- [mw] Improve generic PDF data source
 
 
 2019-02-14 0.162.2

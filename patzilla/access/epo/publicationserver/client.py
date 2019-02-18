@@ -1,24 +1,30 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2019 The PatZilla Developers
 import logging
 import requests
+
+from beaker.cache import cache_region
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.util.network.browser import regular_user_agent
 from pyramid.httpexceptions import HTTPNotFound
 
-
-"""
-Document retreiver for EPO publication server
-https://data.epo.org/publication-server/
-"""
-
 logger = logging.getLogger(__name__)
 
-def get_publication_server_pdf(document_number):
+
+@cache_region('static')
+def fetch_pdf(document_number):
+    """
+    Retrieve PDF document from the European publication server.
+    https://data.epo.org/publication-server/
+
+    Blueprint address:
+    https://data.epo.org/publication-server/pdf-document?cc=EP&pn=nnnnnn&ki=nn
+    """
+
+    logger.info('PDF {}: European publication server attempt'.format(document_number))
 
     patent = normalize_patent(document_number, as_dict=True, provider='espacenet')
 
-    # Blueprint: https://data.epo.org/publication-server/pdf-document?cc=EP&pn=nnnnnn&ki=nn
     url_tpl = u'https://data.epo.org/publication-server/pdf-document?cc=EP&pn={number}&ki={kind}'
 
     url = url_tpl.format(**patent)
@@ -40,4 +46,4 @@ def get_publication_server_pdf(document_number):
 
 
 if __name__ == '__main__':
-    print get_publication_server_pdf('EP666666A2')
+    print fetch_pdf('EP666666A2')

@@ -829,6 +829,8 @@ def handle_error(response, location):
 @cache_region('static')
 def pdf_document_build(patent):
 
+    log.info('PDF {}: OPS attempt'.format(patent))
+
     # 1. collect all single pdf pages
     image_info = inquire_images(patent)
     if not image_info:
