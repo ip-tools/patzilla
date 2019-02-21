@@ -8,6 +8,7 @@ Development
 - [mw] Use EPO publication server for obtaining PDFs of EP publications (#12). Thanks, Felix!
 - [mw] Use USPTO publication servers for obtaining PDFs of US documents
 - [mw] Improve generic PDF data source
+- [mw] Fix "Family member by priority" functionality
 
 
 2019-02-14 0.162.2

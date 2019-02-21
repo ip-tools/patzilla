@@ -145,6 +145,7 @@ def results_swap_family_members(response):
         try:
             family_info = ops_family_members(representation_pubref_epodoc)
         except:
+            log.warning('Failed to fetch family information for %s', representation_pubref_epodoc)
             chunk['exchange-document'] = representation
             request = get_current_request()
             del request.errors[:]
@@ -176,11 +177,12 @@ def results_swap_family_members(response):
                 if match_filter(member_pubnum, filter):
 
                     # Debugging
-                    #print 'member_pubnum:', member_pubnum
+                    #print 'Filter matched for member:', member_pubnum
 
                     try:
                         bibdata = ops_biblio_documents(member_pubnum)
                     except:
+                        #log.warning('Fetching bibliographic data failed for %s', member_pubnum)
                         request = get_current_request()
                         del request.errors[:]
                         continue
@@ -230,6 +232,7 @@ def results_swap_family_members(response):
 def ops_published_data_search(constituents, query, range):
     return ops_published_data_search_real(constituents, query, range)
 
+
 def ops_published_data_search_real(constituents, query, range):
 
     # OPS client object, impersonated for the current user.
@@ -254,6 +257,7 @@ def ops_published_data_search_real(constituents, query, range):
             raise NoResultsException('No results', data=payload)
 
         return payload
+
 
 @cache_region('search')
 def ops_published_data_crawl(constituents, query, chunksize):
@@ -868,7 +872,7 @@ def pdf_document_build(patent):
 
 
 def ops_biblio_documents(patent):
-    data = get_ops_biblio_data(patent)
+    data = get_ops_biblio_data('publication', patent)
     documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
     return documents
 
@@ -883,13 +887,13 @@ def get_ops_biblio_data(reference_type, patent, xml=False):
     else:
         ops_id = epo_ops.models.Epodoc(document_id.country + document_id.number, document_id.kind)
 
-    # Acquire claims fulltext from OPS.
+    # Acquire bibliographic data from OPS.
     with ops_client(xml=xml) as ops:
         response = ops.published_data(reference_type, ops_id, constituents=['full-cycle'])
         return handle_response(response, 'ops-biblio')
 
 
-@cache_region('search')
+@cache_region('medium')
 def ops_document_kindcodes(patent):
 
     error_msg_access = 'No bibliographic information for document={0}'.format(patent)
@@ -1079,9 +1083,8 @@ def analytics_family(query):
 
     return payload
 
-def ops_family_members(document_number):
 
-    #print '=========== ops_family_members:', document_number
+def ops_family_members(document_number):
 
     pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
     pointer_publication_reference = JsonPointer('/publication-reference/document-id')
@@ -1106,7 +1109,10 @@ def ops_family_members(document_number):
             'application': {'number-docdb': appref_number, 'date': appref_date},
             })
 
+    #log.info('Family members for %s:\n%s', document_number, family_members)
+
     return family_members
+
 
 class OPSFamilyMembers(object):
 
