@@ -68,6 +68,7 @@ class DepaTechClient(GenericSearchClient):
         # Use DEPAROM Query Translator
         # https://depa.tech/api/manual/dqt-translator/
         # https://api.depa.tech/dqt/query/es
+        query.setdefault('syntax', None)
         if query.expression and query.syntax == 'deparom':
             transport = 'json'
             query.expression = self.translate_deparom_query(query.expression)
