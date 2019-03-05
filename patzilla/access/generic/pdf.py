@@ -30,10 +30,10 @@ def pdf_universal(patent):
     Attempt to fetch PDF document from best practice sources.
 
     It will progressively churn through these data sources:
-    - DPMA: DEPATISconnect
     - EPO: European publication server
-    - EPO: OPS services
     - USPTO: Publication server
+    - DPMA: DEPATISconnect
+    - EPO: OPS services
     """
 
     # Create PDF response object.
@@ -69,30 +69,11 @@ def pdf_universal_real(patent, response):
             response.datasource = 'epo-publication-server'
 
         except Exception as ex:
-            log.warning('PDF {}: Not available on European publication server. {}'.format(patent, ex))
+            log.warning('PDF {}: Not available from EPO. {}'.format(patent, ex))
             if not isinstance(ex, HTTPError):
                 log.error(exception_traceback())
 
-    # 2. Next, try DEPATISconnect archive server.
-    if response.pdf is None:
-        try:
-            # Skip requests for documents w/o kindcode
-            if not document.kind:
-                raise ValueError(u'No kindcode for patent: {}'.format(patent))
-
-            response.pdf = depatisconnect_fetch_pdf(number_normalized)
-            response.datasource = 'depatisconnect'
-
-        except Exception as ex:
-
-            # Evaluate exception.
-            if isinstance(ex, NotConfiguredError):
-                log.warning(ex)
-
-            elif not isinstance(ex, HTTPNotFound):
-                log.error(exception_traceback())
-
-    # 3. Next, try USPTO servers.
+    # 2. Next, try USPTO servers if it's an US document.
     if response.pdf is None and document.country == 'US':
 
         try:
@@ -100,8 +81,28 @@ def pdf_universal_real(patent, response):
             response.datasource = 'uspto'
 
         except Exception as ex:
-            log.warning('PDF {}: Not available at USPTO. {}'.format(patent, ex))
+            log.warning('PDF {}: Not available from USPTO. {}'.format(patent, ex))
             if not isinstance(ex, HTTPError):
+                log.error(exception_traceback())
+
+    # 3. Next, try DPMA servers.
+    if response.pdf is None:
+        try:
+            # Skip requests for documents w/o kindcode
+            if not document.kind:
+                raise ValueError(u'No kindcode for patent: {}'.format(patent))
+
+            response.pdf = depatisconnect_fetch_pdf(number_normalized)
+            response.datasource = 'dpma'
+
+        except Exception as ex:
+            log.warning('PDF {}: Not available from DPMA. {}'.format(patent, ex))
+
+            # Evaluate exception.
+            if isinstance(ex, NotConfiguredError):
+                log.warning(ex)
+
+            elif not isinstance(ex, HTTPNotFound):
                 log.error(exception_traceback())
 
     # 4. Next, try EPO OPS service.
@@ -120,12 +121,12 @@ def pdf_universal_real(patent, response):
             response.datasource = 'epo-ops'
 
         except Exception as ex:
-            log.warning('PDF {}: Not available on OPS. {}'.format(patent, ex))
+            log.warning('PDF {}: Not available from OPS. {}'.format(patent, ex))
             if not isinstance(ex, HTTPError):
                 log.error(exception_traceback())
 
     # 5. Last but not least, try to redirect to USPTO server.
-    # Deactivated as of 2019-02-19.
+    # TODO: Move elsewhere as deactivated on 2019-02-19.
     if False and response.pdf is None and document.country == 'US':
 
         log.info('PDF {}: USPTO attempt'.format(patent))

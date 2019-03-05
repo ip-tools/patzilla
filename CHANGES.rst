@@ -13,6 +13,7 @@ Development
   reference to WIPO as HTML response instead of PDF document
 - [mw] Pad document numbers for granted patents to 8 digits
   with leading zeros when accessing USPTO for PDF documents
+- [mw] Try USPTO servers before DPMA servers when accessing PDF documents
 
 
 2019-02-21 0.163.0
