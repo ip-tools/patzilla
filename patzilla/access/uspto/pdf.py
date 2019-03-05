@@ -54,11 +54,20 @@ def pdf_url(document_number):
     Application: US2016101909A1
     http://pdfaiw.uspto.gov/fdd/09/2016/19/010/0.pdf
 
+    >>> pdf_url('US2016101909A1')
+    'http://pdfaiw.uspto.gov/fdd/09/2016/19/010/0.pdf'
+
     Grant: US10194689B2
     http://pdfpiw.uspto.gov/fdd/89/946/101/0.pdf
+    >>> pdf_url('US10194689B2')
+    'http://pdfpiw.uspto.gov/fdd/89/946/101/0.pdf'
+
+    >>> pdf_url('US2548918')
+    'http://pdfpiw.uspto.gov/fdd/18/489/025/0.pdf'
+
     """
 
-    document = normalize_patent(document_number, for_ops=False, as_dict=True)
+    document = normalize_patent(document_number, for_ops=False, as_dict=True, provider='uspto')
     if not document:
         return
 

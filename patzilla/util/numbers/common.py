@@ -12,10 +12,15 @@ Common lowlevel functions
 
 log = logging.getLogger(__name__)
 
+
 class DocumentIdentifierBunch(SmartBunch):
 
     def __str__(self):
         return self.dump()
+
+    def serialize(self):
+        return join_patent(self)
+
 
 def join_patent(patent):
     if not patent:
