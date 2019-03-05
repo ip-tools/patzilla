@@ -14,6 +14,7 @@ Development
 - [mw] Pad document numbers for granted patents to 8 digits
   with leading zeros when accessing USPTO for PDF documents
 - [mw] Try USPTO servers before DPMA servers when accessing PDF documents
+- [mw] Deduplicate results with "family member by priority" feature
 
 
 2019-02-21 0.163.0

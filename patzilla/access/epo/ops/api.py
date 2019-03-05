@@ -225,6 +225,33 @@ def results_swap_family_members(response):
 
         chunk['exchange-document'] = representation
 
+    # Filter duplicates
+    seen = []
+    results = []
+    fields = ['@country', '@doc-number', '@kind', '@family-id']
+    for chunk in chunks:
+
+        # Prepare list of document cycles.
+        cycles = to_list(chunk['exchange-document'])
+
+        # Only look at first cycle slot.
+        doc = cycles[0]
+
+        # Compute unique document identifier.
+        ident = {}
+        for key in fields:
+            ident[key] = doc[key]
+
+        # Collect chunk if not seen yet.
+        if ident in seen:
+            continue
+        else:
+            seen.append(ident)
+            results.append(chunk)
+
+    # Overwrite reduced list of chunks in original DOM.
+    pointer_results.set(response, results)
+
     return publication_numbers
 
 
