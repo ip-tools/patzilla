@@ -36,11 +36,28 @@ def fetch_pdf(document_number):
     #print 'response.content:\n', response.content
 
     if response.status_code == 200:
-        payload = response.content
-        return payload
+
+        if response.headers['Content-Type'] == 'application/pdf':
+            payload = response.content
+            return payload
+
+        # Sometimes, an appropriate HTML document is returned,
+        # pointing to the corresponding WIPO document.
+        #
+        # Example: EP2706864A2
+        # https://data.epo.org/publication-server/pdf-document?cc=EP&pn=2706864&ki=A2
+        # http://www.wipo.int/patentscope/search/en/WO2012153305
+        #
+        # TODO: Unlock this again by leveraging the WIPO URL.
+        else:
+            msg = 'No PDF document returned from European ' \
+                  'publication server for "{document_number}".'.format(**locals())
+            logger.warn(msg)
+            raise HTTPNotFound(msg)
 
     else:
-        msg = 'No document found at EPO publication server for "{document_number}"'.format(**locals())
+        msg = 'No document found at European publication ' \
+              'server for "{document_number}"'.format(**locals())
         logger.warn(msg)
         raise HTTPNotFound(msg)
 
