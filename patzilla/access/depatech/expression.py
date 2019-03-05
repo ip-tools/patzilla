@@ -395,4 +395,4 @@ def should_be_quoted(value):
 
 
 if __name__ == '__main__':
-    print DepaTechParser('IC:G01F000184').keywords()
+    print DepaTechParser('IC:G01F000184').keywords

@@ -85,6 +85,7 @@ test:
 		--exclude-dir=patzilla/navigator/templates \
 		--exclude-dir=patzilla/util/database \
 		--exclude-dir=patzilla/util/web/uwsgi \
+		--exclude-dir=patzilla/access/sip \
 		--ignore-files=setup.py \
 		--ignore-files=fabfile.py \
 		--nocapture \
