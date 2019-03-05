@@ -152,9 +152,9 @@ Run selected test suite::
     make test options='--where patzilla.util.numbers.test.test_normalize'
 
 
-###############
+***************
 Troubleshooting
-###############
+***************
 
 Problem bundling Javascript frontend
 ====================================
