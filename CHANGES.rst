@@ -5,6 +5,12 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [doc] Update documentation
+- [mw] Allow access to /ping endpoint
+- [mw] Fix minor regression
+- [mw] Fix tests
+- [mw] Resolve issue when European publication server returns
+  reference to WIPO as HTML response instead of PDF document
 
 
 2019-02-21 0.163.0
