@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- Fix/improve Makefile and inline doctests
 
 
 2019-03-05 0.164.0

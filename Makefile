@@ -8,6 +8,9 @@ $(eval python       := $(venvpath)/bin/python)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
 
+$(eval nodeenvpath  := .nodeenv)
+$(eval yarn         := $(nodeenvpath)/bin/yarn)
+
 js:
 	# url cleaner
 	node_modules/.bin/uglifyjs \
@@ -25,7 +28,7 @@ js-release: js
 	@echo Bundling Javascript/CSS resources.
 	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
-	yarn run release
+	$(yarn) run release
 
 sdist:
 	$(python) setup.py sdist
@@ -38,10 +41,14 @@ upload-pypi:
 	@echo Uploading Python package to PyPI.
 	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
-	$(eval version  := $(shell cat setup.py | grep "version='" | sed -rn "s/.*version='(.+?)'.*/\1/p"))
-	$(eval filename := "dist/patzilla-$(version).tar.gz")
+
+	$(eval filename := "dist/patzilla-*.tar.gz")
 	@echo Uploading '$(filename)' to PyPI
 	$(twine) upload $(filename)
+
+# $(eval version  := $(shell cat setup.py | grep "version='" | sed -rn "s/.*version='(.+?)'.*/\1/p"))
+# $(eval filename := "dist/patzilla-$(version).tar.gz")
+
 
 setup-test:
 	$(pip) install -e .[test]
@@ -52,7 +59,7 @@ setup-deployment:
 setup-release:
 	$(pip) install --requirement requirements-release.txt
 
-install:
+install: setup-deployment
 	@# make install target=patoffice version=0.29.0
 	$(fab) install:target=$(target),version=$(version)
 
@@ -67,7 +74,7 @@ push:
 #release:
 #	$(MAKE) js && $(MAKE) bumpversion bump=$(bump) && $(MAKE) push
 
-release: js-release bumpversion push sdist upload-pypi
+release: setup-release js-release bumpversion push sdist upload-pypi
 
 install-nginx-auth:
 	fab upload_nginx_auth
