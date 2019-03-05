@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-03-05 0.164.0
+==================
 - [doc] Update documentation
 - [mw] Allow access to /ping endpoint
 - [mw] Fix minor regression
