@@ -45,7 +45,7 @@ requires = [
     'cornice==2.4.1',           # 3.4.0
 
     # Authorization
-    'pycrypto==2.6.1',
+    'pycrypto==2.6.1',          # CVE-2013-7459, CVE-2018-6594
     'jws==0.1.3',
     'python_jwt==2.0.2',        # 3.1.0
     'pbkdf2==1.3',
@@ -131,7 +131,7 @@ test_requires = [
 ]
 
 setup(name='patzilla',
-      version='0.164.0',
+      version='0.164.1',
       description='PatZilla is a modular patent information research platform and data integration ' \
                   'toolkit. It features a modern user interface and access to multiple data sources.',
       long_description=README,
@@ -205,6 +205,7 @@ setup(name='patzilla',
             'patzilla-user = patzilla.commands:usercmd',
             'dpmaregister  = patzilla.access.dpma.dpmaregister:run',
             'patzilla-sip  = patzilla.access.sip.commands:run',
+            'patzilla-cachecarver = patzilla.util.database.beaker_mongodb_carve:run',
         ],
 
       },
