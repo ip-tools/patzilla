@@ -5,7 +5,12 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-03-09 0.164.1
+==================
 - Fix/improve Makefile and inline doctests
+- Fix DPMAregister data source
 
 
 2019-03-05 0.164.0
