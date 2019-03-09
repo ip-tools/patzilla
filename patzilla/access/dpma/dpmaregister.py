@@ -123,12 +123,19 @@ class DpmaRegisterAccess:
             logger.warning('Could not find document {}'.format(patent))
             return
 
-        # Parse link to ST.36 XML document from HTML
+        # Parse link to ST.36 XML document from HTML.
+        # <a class="button" target="_blank" href="./register?AKZ=196308771&amp;VIEW=st36" name="st36xml">ST-36 download</a>
+        # <a class="button" target="_blank" href="./register?AKZ=196308771&amp;VIEW=st36">ST-36 download</a>
         soup = result.response.soup
-        st36xml_anchor = soup.find("a", {'name': 'st36xml'})
+        st36xml_anchor = \
+            soup.find("a", {'name': 'st36xml'}) or \
+            soup.find("a", {'href': re.compile('VIEW=st36$')})
         st36xml_href = st36xml_anchor['href']
 
-        # Download ST.36 XML document and return response body
+        if st36xml_href.startswith('./'):
+            st36xml_href = self.baseurl + st36xml_href
+
+        # Download ST.36 XML document and return response body.
         return self.browser.open(st36xml_href)
 
     @cache.cache_on_arguments()
