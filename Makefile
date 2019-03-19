@@ -44,7 +44,7 @@ upload-pypi:
 
 	$(eval filename := "dist/patzilla-*.tar.gz")
 	@echo Uploading '$(filename)' to PyPI
-	$(twine) upload $(filename)
+	$(twine) upload --skip-existing $(filename)
 
 # $(eval version  := $(shell cat setup.py | grep "version='" | sed -rn "s/.*version='(.+?)'.*/\1/p"))
 # $(eval filename := "dist/patzilla-$(version).tar.gz")
