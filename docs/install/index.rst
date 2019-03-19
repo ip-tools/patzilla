@@ -71,6 +71,6 @@ of `PatZilla on PyPI <https://pypi.org/project/patzilla/>`_.
     you might want to consider installing the software isolated from the system Python
     by using "virtualenv" before proceeding with ``pip install patzilla``::
 
-        virtualenv-2.7 --no-site-packages .venv27
+        virtualenv-2.7 .venv27
         source .venv27/bin/activate
 
