@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- Fix broken "nasa-public-domain" demo link. Thanks, Andrii!
 
 
 2019-03-09 0.164.1

@@ -8,6 +8,7 @@ the people who contributed to this software:
 * Alexander Wagner <https://ip7.tech/>
 * Andreas Motl <andreas.motl@elmyra.de>
 * Andreas Sykora <http://www.q-ip.de/sykora-lang.php>
+* Andrii Danyleiko <https://github.com/DefteZ>
 * Arne Krüger <https://depa.tech/>
 * Benjamin Walter <b.walter@europatent.net>
 * David Santamauro <https://www.ificlaims.com/>
