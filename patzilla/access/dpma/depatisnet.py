@@ -50,8 +50,8 @@ class DpmaDepatisnetAccess:
         self.searchurl_ikofax = self.baseurl + '/depatisnet?action=ikofax&switchToLang=en'
         self.csvurl = self.baseurl + '/jsp2/downloadtrefferliste.jsp?&firstdoc=1'
         self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
-        self.hits_per_page = 250      # one of: 10, 25, 50 (default), 100, 250, 1000
-        self.search_max_hits = 1000
+        self.hits_per_page = 250      # one of: 25, 50, 100, 250. [default: 50]
+        self.search_max_hits = 10000  # one of: 100, 250, 500, 1000, 5000, 10000. [default: 1000]
         self.setup_browser()
 
     def setup_browser(self):
@@ -77,8 +77,12 @@ class DpmaDepatisnetAccess:
         # search options
         options = options or {}
 
-        limit = options.get('limit', self.hits_per_page)
+        # Set search range defaults.
+        options.setdefault('limit', self.hits_per_page)
         options.setdefault('max_hits', self.search_max_hits)
+
+        limit = options.get('limit')
+        max_hits = options.get('max_hits')
 
         logger.info(u'Searching documents. query="%s", options=%s' % (query, options))
 
@@ -104,6 +108,7 @@ class DpmaDepatisnetAccess:
 
         self.browser['query'] = query.encode('iso-8859-1')
         self.browser['hitsPerPage'] = [str(limit)]
+        self.browser['maxHitsUser'] = [str(max_hits)]
 
         # turn on all fields
         # 2016-10-06: Field got disabled upstream

@@ -6,6 +6,7 @@ IP Navigator CHANGES
 Development
 ===========
 - Fix broken "nasa-public-domain" demo link. Thanks, Andrii!
+- Adjust DEPATISnet data source adapter to upstream changes. Thanks, Gaby!
 
 
 2019-03-09 0.164.1

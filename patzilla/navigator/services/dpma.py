@@ -128,15 +128,6 @@ def depatisnet_published_data_search_handler(request):
 
     search, options = prepare_search(request)
 
-    # Lazy-fetch more entries up to maximum of DEPATISnet
-    # TODO: get from patzilla.access.dpma.depatisnet
-    request_size = 250
-    if int(request.params.get('range_begin', 0)) > request_size:
-        request_size = 1000
-
-    options.update({'limit': request_size})
-
-
     # Run query through upstream database
     try:
         return dpma_published_data_search(search.expression, options)
@@ -161,9 +152,6 @@ def depatisnet_published_data_crawl_handler(request):
     """Crawl published-data at DEPATISnet"""
 
     search, options = prepare_search(request)
-
-    chunksize = 1000
-    options.update({'limit': chunksize})
 
     try:
         result = dpma_published_data_search(search.expression, options)
