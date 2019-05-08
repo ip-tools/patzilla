@@ -36,6 +36,11 @@ body {
     margin-right: 1.2em;
 }
 
+.environment-badge {
+    margin-left: 2rem;
+    margin-top: 0.5rem;
+}
+
 
 /* Tweak menu opener based on layout */
 .menu-wide {
@@ -47,7 +52,6 @@ body {
     font-size: 2em;
 }
 */
-
 
 .header-content {
     min-height: 5rem;
@@ -101,7 +105,7 @@ body {
     padding: 9px;
 }
 
-.title {
+.header-title {
     font-size: 24.5px;
     line-height: 40px;
     font-weight: bold;
