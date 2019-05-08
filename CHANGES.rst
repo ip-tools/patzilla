@@ -5,9 +5,13 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-05-08 0.165.0
+==================
 - Fix broken "nasa-public-domain" demo link. Thanks, Andrii!
 - Adjust DEPATISnet data source adapter to upstream changes. Thanks, Gaby!
-- Fix export with non-ascii characters accidentally slipped into patent numbers
+- Fix export with non-ascii characters accidentally slipped into patent numbers. Thanks, Andreas!
 - Improve styling capabilities
 - Remove defunct upstream database
 - Add ``patview`` to the list of accepted patentview subdomains
