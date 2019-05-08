@@ -21,9 +21,11 @@ def includeme(config):
     if 'depatech' in datasources:
         config.include("patzilla.access.depatech.clientpool")
 
+    """
     if 'sip' in datasources:
         config.include("patzilla.access.sip.concordance")
         config.include("patzilla.access.sip.clientpool")
+    """
 
     config.include('.office')
     config.scan()

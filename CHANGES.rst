@@ -9,6 +9,7 @@ Development
 - Adjust DEPATISnet data source adapter to upstream changes. Thanks, Gaby!
 - Fix export with non-ascii characters accidentally slipped into patent numbers
 - Improve styling capabilities
+- Remove defunct upstream database
 
 
 2019-03-09 0.164.1
