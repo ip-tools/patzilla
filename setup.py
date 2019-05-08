@@ -34,12 +34,14 @@ requires = [
     'pyramid_beaker==0.8',
     'dogpile.cache==0.6.4',     # 0.6.5
 
-    # Database
+    # Database and storage
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
     'pymongo==2.9.5',           # 3.6.1
     'mongodb_gridfs_beaker==0.5.4',
     'mongoengine==0.13.0',      # 0.15.0
+    'minio==4.0.14',
+    'python-magic==0.4.15',
 
     # Web services
     'cornice==2.4.1',           # 3.4.0
@@ -131,7 +133,7 @@ test_requires = [
 ]
 
 setup(name='patzilla',
-      version='0.164.1',
+      version='0.165.0',
       description='PatZilla is a modular patent information research platform and data integration ' \
                   'toolkit. It features a modern user interface and access to multiple data sources.',
       long_description=README,
