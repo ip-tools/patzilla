@@ -356,7 +356,7 @@ BasketModel = Backbone.RelationalModel.extend({
         var entries = this.get_entries(options);
 
         var numbers = entries.map(function(entry) {
-            return entry.get('number');
+            return sanitize_non_ascii(entry.get('number'));
         });
         //log('numbers:', numbers);
 
@@ -386,6 +386,7 @@ BasketModel = Backbone.RelationalModel.extend({
         var baseurl = navigatorApp.permalink.get_baseurl_patentview();
         return entries.map(function(entry) {
             var newentry = entry.toJSON();
+            newentry['number'] = sanitize_non_ascii(newentry['number']).trim();
             newentry['url'] = urljoin(baseurl, '/view/pn/', newentry['number']);
             return newentry;
         });

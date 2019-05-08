@@ -261,7 +261,7 @@ class Dossier(object):
                 if not document or not document.strip():
                     continue
 
-                log.info('Data acquisition for document {document}'.format(document=document))
+                log.info(u'Data acquisition for document {document}'.format(document=document))
 
                 status.setdefault(document, OrderedDict())
                 patent = decode_patent_number(document)
@@ -270,7 +270,7 @@ class Dossier(object):
                 if options.media.biblio:
                     try:
                         biblio_payload = get_ops_biblio_data('publication', document, xml=True)
-                        zipfile.writestr('media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
+                        zipfile.writestr(u'media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
                         status[document]['biblio'] = True
 
                     except Exception as ex:
@@ -288,14 +288,14 @@ class Dossier(object):
                             # Write XML
                             document_number = encode_epodoc_number(patent)
                             description_payload = ops_description(document_number, xml=True)
-                            zipfile.writestr('media/xml/{document}.description.xml'.format(document=document), description_payload)
+                            zipfile.writestr(u'media/xml/{document}.description.xml'.format(document=document), description_payload)
                             status[document]['description'] = True
 
                             # Write TEXT
                             with ignored():
                                 text_payload = self.get_fulltext(description_payload, 'description')
                                 if text_payload:
-                                    zipfile.writestr('media/txt/{document}.description.txt'.format(document=document), text_payload.encode('utf-8'))
+                                    zipfile.writestr(u'media/txt/{document}.description.txt'.format(document=document), text_payload.encode('utf-8'))
 
                         except Exception as ex:
                             self.handle_exception(ex, 'description', document)
@@ -311,14 +311,14 @@ class Dossier(object):
                             # Write XML
                             document_number = encode_epodoc_number(patent)
                             claims_payload = ops_claims(document_number, xml=True)
-                            zipfile.writestr('media/xml/{document}.claims.xml'.format(document=document), claims_payload)
+                            zipfile.writestr(u'media/xml/{document}.claims.xml'.format(document=document), claims_payload)
                             status[document]['claims'] = True
 
                             # Write TEXT
                             with ignored():
                                 text_payload = self.get_fulltext(claims_payload.replace('<claim-text>', '<p>').replace('</claim-text>', '</p>'), 'claims')
                                 if text_payload:
-                                    zipfile.writestr('media/txt/{document}.claims.txt'.format(document=document), text_payload.encode('utf-8'))
+                                    zipfile.writestr(u'media/txt/{document}.claims.txt'.format(document=document), text_payload.encode('utf-8'))
 
                         except Exception as ex:
                             self.handle_exception(ex, 'claims', document)
@@ -330,7 +330,7 @@ class Dossier(object):
 
                     try:
                         register_payload = ops_register('publication', document, xml=True)
-                        zipfile.writestr('media/xml/{document}.register.xml'.format(document=document), register_payload)
+                        zipfile.writestr(u'media/xml/{document}.register.xml'.format(document=document), register_payload)
                         status[document]['register'] = True
 
                     except Exception as ex:
@@ -344,7 +344,7 @@ class Dossier(object):
                     try:
                         document_number = encode_epodoc_number(patent, {'nokind': True})
                         family_payload = ops_family_inpadoc('publication', document_number, 'biblio', xml=True)
-                        zipfile.writestr('media/xml/{document}.family.xml'.format(document=document), family_payload)
+                        zipfile.writestr(u'media/xml/{document}.family.xml'.format(document=document), family_payload)
                         status[document]['family'] = True
 
                     except Exception as ex:
@@ -762,7 +762,7 @@ def write_url_deduce_title(self, row, col, url, cell_format=None, string=None, t
     if string is None:
         string = os.path.basename(url)
     if tip is None:
-        tip = 'Open "{name}" in Patent Navigator'.format(name=string)
+        tip = u'Open "{name}" in Patent Navigator'.format(name=string)
     return self.write_url_dist(row, col, url, cell_format=cell_format, string=string, tip=tip)
 
 def workbook_add_sheet_hook(self, name=None):
