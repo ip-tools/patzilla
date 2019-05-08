@@ -57,6 +57,8 @@ $(document).ready(function() {
             demourl = demourl.replace('patentsearch', 'patentview');
         } else if (_.string.contains(demourl, 'navigator')) {
             demourl = demourl.replace('navigator', 'viewer');
+        } else if (_.string.contains(demourl, 'patbib')) {
+            demourl = demourl.replace('patbib', 'patview');
         } else if (!_.string.contains(demourl, 'localhost')) {
             demourl = demourl.replace(url.attr('host'), 'patentview.ip-tools.io');
         }

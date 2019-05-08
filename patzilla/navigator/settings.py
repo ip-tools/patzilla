@@ -336,7 +336,7 @@ class RuntimeSettings(object):
 
         # determine if we're in view-only mode by matching against the hostname
         host = request.headers.get('Host')
-        isviewer = 'patentview' in host or 'viewer' in host
+        isviewer = 'patentview' in host or 'viewer' in host or 'patview' in host
 
         # 1. don't allow "query" from outside on view-only domains
         if request_params.has_key('query') and isviewer:

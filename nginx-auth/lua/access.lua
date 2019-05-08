@@ -60,7 +60,7 @@ end
 --end
 
 -- "patentview" domains
-if ngx.var.host:find("^patentview.*$") or ngx.var.host:find("^viewer.*$") then
+if ngx.var.host:find("^patentview.*$") or ngx.var.host:find("^viewer.*$") or ngx.var.host:find("^patview.*$") then
     return
 end
 
