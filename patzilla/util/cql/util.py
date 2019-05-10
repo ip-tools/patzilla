@@ -15,7 +15,7 @@ def pair_to_cql(datasource, key, value):
         return
 
     cql_part = None
-    format = u'{0}=({1})'
+    format = '{0}=({1})'
 
     # Special processing rules for depatisnet
     if datasource == 'depatisnet':
@@ -94,7 +94,7 @@ def pair_to_cql(datasource, key, value):
 
         if key == 'inventor' or key == 'applicant':
             if not has_booleans(value) and should_be_quoted(value):
-                value = u'"{0}"'.format(value)
+                value = '"{0}"'.format(value)
 
         if key == 'pubdate':
 

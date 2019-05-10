@@ -15,7 +15,7 @@ Usage:
 try:
     import xmlrpc.client as xmlrpc
 except ImportError:
-    import xmlrpclib as xmlrpc
+    import xmlrpc.client as xmlrpc
 
 import requests
 

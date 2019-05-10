@@ -94,8 +94,8 @@ def sip_published_data_search_handler(request):
         return ex.data
 
     except OperationFailure as ex:
-        message = unicode(ex)
-        message = re.sub(u'namespace: .*', u'', message)
+        message = str(ex)
+        message = re.sub('namespace: .*', '', message)
         request.errors.add('sip-search', 'internals', message)
         log.error(request.errors)
 
@@ -126,7 +126,7 @@ def sip_published_data_crawl_handler(request):
         if hasattr(ex, 'user_info'):
             message = ex.user_info
         else:
-            message = unicode(ex)
+            message = str(ex)
         request.errors.add('sip-crawl', 'crawl', message)
         log.error(request.errors)
-        log.error(u'query="{0}", exception:\n{1}'.format(query, _exception_traceback()))
+        log.error('query="{0}", exception:\n{1}'.format(query, _exception_traceback()))

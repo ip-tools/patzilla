@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2018 Andreas Motl, Elmyra UG
-from __future__ import absolute_import
+
 import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPBadRequest, HTTPNotFound

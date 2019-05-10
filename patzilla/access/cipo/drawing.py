@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-import re
+# py27 import re
+import regex as re
 import logging
 import requests
-from BeautifulSoup import BeautifulSoup
+# py27 from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from patzilla.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
@@ -70,7 +72,7 @@ def get_first_drawing_url(patent):
     images_index_html = fetch_images_index(images_index_url)
     soup = BeautifulSoup(images_index_html)
     # <img src="/opic-cipo/cpd/page/141597_20130713_drawings_page1_scale25_rotate0.gif?page=3&amp;section=drawings&amp;scale=25&amp;rotation=0&amp;type=" alt="Canadian Patent Document 141597. Drawings page. Image 1 of 3" />
-    first_drawing_url = cipo_baseurl + soup.find('img', src=re.compile(ur'/opic-cipo/cpd/page'))['src']
+    first_drawing_url = cipo_baseurl + soup.find('img', src=re.compile(r'/opic-cipo/cpd/page'))['src']
 
     return first_drawing_url
 
@@ -83,6 +85,6 @@ if __name__ == '__main__':
         payload = fetch_first_drawing(split_patent_number(number))
         if payload:
             #print "payload length:", len(payload)
-            print payload
+            print(payload)
         else:
-            print "not found"
+            print("not found")

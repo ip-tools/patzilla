@@ -25,7 +25,7 @@ def fetch_pdf(document_number):
 
     patent = normalize_patent(document_number, as_dict=True, provider='espacenet')
 
-    url_tpl = u'https://data.epo.org/publication-server/pdf-document?cc=EP&pn={number}&ki={kind}'
+    url_tpl = 'https://data.epo.org/publication-server/pdf-document?cc=EP&pn={number}&ki={kind}'
 
     url = url_tpl.format(**patent)
 
@@ -63,4 +63,4 @@ def fetch_pdf(document_number):
 
 
 if __name__ == '__main__':
-    print fetch_pdf('EP666666A2')
+    print(fetch_pdf('EP666666A2'))

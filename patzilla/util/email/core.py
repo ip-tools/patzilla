@@ -17,7 +17,7 @@ from email._parseaddr import AddressList
 log = logging.getLogger(__name__)
 
 
-def build_email(mail_to, subject, body_text, mail_from=u'test@example.org', reply_to=None, attachments=None, mime_headers=None):
+def build_email(mail_to, subject, body_text, mail_from='test@example.org', reply_to=None, attachments=None, mime_headers=None):
     """
     Flexible Multipart MIME message builder.
 
@@ -53,11 +53,11 @@ def build_email(mail_to, subject, body_text, mail_from=u'test@example.org', repl
     }
 
     # Subject header
-    mime_headers.update({u'Subject': Header(s=subject, charset='utf-8')})
+    mime_headers.update({'Subject': Header(s=subject, charset='utf-8')})
 
 
     # Add address headers
-    for key, item in address_headers.iteritems():
+    for key, item in address_headers.items():
         if isinstance(item, AddressList):
 
             # v1
@@ -70,7 +70,7 @@ def build_email(mail_to, subject, body_text, mail_from=u'test@example.org', repl
                 message[key] = value
 
     # Add more headers
-    for key, value in mime_headers.iteritems():
+    for key, value in mime_headers.items():
         #message.add_header(key, value)
         if value:
             message[key] = value
@@ -97,7 +97,7 @@ def build_email(mail_to, subject, body_text, mail_from=u'test@example.org', repl
     #            multipart attachments
     # ------------------------------------------
     # from https://docs.python.org/2/library/email-examples.html
-    for filename, payload in attachments.iteritems():
+    for filename, payload in attachments.items():
 
         # Guess the content type based on the file's extension.  Encoding
         # will be ignored, although we should check for simple things like
@@ -149,10 +149,10 @@ def build_email(mail_to, subject, body_text, mail_from=u'test@example.org', repl
     return payload
 
 
-def send_email(mail_to, message, smtp_settings=None, mail_from=u'test@example.org'):
+def send_email(mail_to, message, smtp_settings=None, mail_from='test@example.org'):
 
     smtp_settings = smtp_settings or {}
-    smtp_settings.setdefault('hostname', u'localhost')
+    smtp_settings.setdefault('hostname', 'localhost')
     smtp_settings.setdefault('port', 25)
 
     # sanity checks
@@ -191,7 +191,7 @@ def send_email(mail_to, message, smtp_settings=None, mail_from=u'test@example.or
 
 def format_addresslist(addresslist):
     #print 'addresslist:', addresslist.addresslist
-    return map(formataddr, addresslist.addresslist)
+    return list(map(formataddr, addresslist.addresslist))
 
 
 def fix_addresslist(addresslist):

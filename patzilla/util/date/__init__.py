@@ -111,7 +111,7 @@ def parse_date_within(value):
     """
     value = value.replace('within', '').strip().strip('"')
     parts = value.split(',')
-    parts = map(unicode.strip, parts)
+    parts = list(map(str.strip, parts))
     result = {
         'startdate': parts[0],
         'enddate': parts[1],
@@ -123,12 +123,12 @@ def year_range_to_within(value):
     Parse year ranges like "1990-2014" or "1990 - 2014"
     and convert into "within 1990,2014" expression
     """
-    if value.count(u'-') == 1:
-        parts = value.split(u'-')
+    if value.count('-') == 1:
+        parts = value.split('-')
         parts = [part.strip() for part in parts]
         year_from, year_to = parts
         if len(year_from) == 4 and len(year_to) == 4:
-            value = u'within {year_from},{year_to}'.format(**locals())
+            value = 'within {year_from},{year_to}'.format(**locals())
     return value
 
 def week_range(date):

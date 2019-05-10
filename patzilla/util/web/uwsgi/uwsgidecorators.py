@@ -4,7 +4,7 @@ import sys
 from threading import Thread
 
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except:
     import pickle
 

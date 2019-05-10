@@ -18,7 +18,7 @@ class XmlRendererTest(object):
         content_type = (context['request'].accept.best_match(acceptable)
                         or acceptable[0])
         response.content_type = content_type
-        print "data:", data
+        print("data:", data)
         return 'hello'
         #return json.dumps(data, use_decimal=True)
 

@@ -14,11 +14,11 @@ class GenericAdapterException(Exception):
     def __init__(self, *args, **kwargs):
 
         self.data = None
-        if kwargs.has_key('data'):
+        if 'data' in kwargs:
             self.data = kwargs['data']
 
         self.user_info = ''
-        if kwargs.has_key('user_info'):
+        if 'user_info' in kwargs:
             self.user_info = kwargs['user_info']
 
         super(GenericAdapterException, self).__init__(*args)
@@ -30,11 +30,11 @@ class GenericAdapterException(Exception):
             #message_parts.append(ex.user_info)
             message['user'] = cgi.escape(self.user_info)
         if hasattr(self, 'message'):
-            message_parts.append(self.__class__.__name__ + u': ' + u'<pre>{message}</pre>'.format(message=cgi.escape(self.message)))
+            message_parts.append(self.__class__.__name__ + ': ' + '<pre>{message}</pre>'.format(message=cgi.escape(self.message)))
         if hasattr(self, 'details'):
-            message_parts.append(u'<pre>{message}</pre>'.format(message=cgi.escape(self.details)))
+            message_parts.append('<pre>{message}</pre>'.format(message=cgi.escape(self.details)))
 
-        message['details'] = u'<br/>'.join(message_parts)
+        message['details'] = '<br/>'.join(message_parts)
 
         return message
 

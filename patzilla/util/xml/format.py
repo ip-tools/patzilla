@@ -69,5 +69,5 @@ class BadgerFishNoNamespace(BadgerFish):
         return super(BadgerFishNoNamespace, self).data(root)
 
     def clean_tag(self, node):
-        if isinstance(node.tag, basestring):
+        if isinstance(node.tag, str):
             node.tag = re.sub('{.*}', '', node.tag)

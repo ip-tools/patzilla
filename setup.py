@@ -73,8 +73,8 @@ requires = [
     'ndg-httpsclient<1',
 
     # HTML
-    'BeautifulSoup<4',
-    'html2text==2016.9.19',     # 2020.1.16
+    'beautifulsoup4',
+    'html2text', 
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)

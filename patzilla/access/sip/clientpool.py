@@ -6,6 +6,7 @@ import os
 from pyramid.httpexceptions import HTTPUnauthorized
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface import implementer
 
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.access.sip.client import SipClient
@@ -85,7 +86,7 @@ class SipClientPool(object):
     SIP client pool as Pyramid utility implementation.
     """
 
-    implements(ISipClientPool)
+# py27    implements(ISipClientPool)
 
     def __init__(self, api_uri):
         logger.info("Creating upstream client pool for SIP")
@@ -103,3 +104,4 @@ class SipClientPool(object):
                 uri=self.api_uri, username=credentials['api_username'], password=credentials['api_password'])
 
         return self.clients.get(identifier)
+

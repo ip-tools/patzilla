@@ -49,16 +49,16 @@ class SipExpression(object):
         }
 
     sip_xml_expression_templates = {
-        'patentnumber': u'<patentnumber>{value}</patentnumber>',
-        'fulltext':     u'<text searchintitle="{title}" searchinabstract="{abstract}" searchinclaim="{claim}" searchindescription="{description}" fullfamily="false">{value}</text>',
+        'patentnumber': '<patentnumber>{value}</patentnumber>',
+        'fulltext':     '<text searchintitle="{title}" searchinabstract="{abstract}" searchinclaim="{claim}" searchindescription="{description}" fullfamily="false">{value}</text>',
         #'applicant':    u'<applicant type="epo,inpadoc,original">{value}</applicant>',
         #'inventor':     u'<inventor type="epo,inpadoc,original">{value}</inventor>',
-        'applicant':    u'<applicant type="epo,original">{value}</applicant>',
-        'inventor':     u'<inventor type="epo,original">{value}</inventor>',
+        'applicant':    '<applicant type="epo,original">{value}</applicant>',
+        'inventor':     '<inventor type="epo,original">{value}</inventor>',
         'pubdate':      {
-            'both':      u'<date type="publication" startdate="{startdate}" enddate="{enddate}" />',
-            'startdate': u'<date type="publication" startdate="{startdate}" />',
-            'enddate':   u'<date type="publication" enddate="{enddate}" />',
+            'both':      '<date type="publication" startdate="{startdate}" enddate="{enddate}" />',
+            'startdate': '<date type="publication" startdate="{startdate}" />',
+            'enddate':   '<date type="publication" enddate="{enddate}" />',
             }
     }
 
@@ -83,11 +83,11 @@ class SipExpression(object):
         # {u'fulltext': {u'claim': True, u'abstract': True, u'description': True, u'title': True}
         # ->
         # {u'fulltext': {u'claim': 'true', u'abstract': 'true', u'description': 'true', u'title': 'true'}
-        for modifier_field, modifier_values in modifiers.iteritems():
-            if type(modifiers[modifier_field]) is types.DictionaryType:
-                for modifier_name, modifier_value in modifiers[modifier_field].iteritems():
+        for modifier_field, modifier_values in modifiers.items():
+            if type(modifiers[modifier_field]) is dict:
+                for modifier_name, modifier_value in modifiers[modifier_field].items():
                     modifiers[modifier_field][modifier_name] = str(modifier_value).lower()
-            elif type(modifiers[modifier_field]) is types.BooleanType:
+            elif type(modifiers[modifier_field]) is bool:
                 modifiers[modifier_field] = str(modifiers[modifier_field]).lower()
 
         xml_part = None
@@ -99,7 +99,7 @@ class SipExpression(object):
 
                 if len(value) == 4 and value.isdigit():
                     # e.g. 1978
-                    value = u'within {year}-01-01,{year}-12-31'.format(year=value)
+                    value = 'within {year}-01-01,{year}-12-31'.format(year=value)
 
                 # e.g. 1990-2014, 1990 - 2014
                 value = year_range_to_within(value)
@@ -198,13 +198,13 @@ class SipExpression(object):
                 #print pretty_print(xml_part)
 
             except FulltextDecodingError as ex:
-                return {'error': True, 'message': unicode(ex)}
+                return {'error': True, 'message': str(ex)}
 
             except pyparsing.ParseException as ex:
-                return {'error': True, 'message': u'<pre>' + ex.explanation + '</pre>'}
+                return {'error': True, 'message': '<pre>' + ex.explanation + '</pre>'}
 
             except SyntaxError as ex:
-                return {'error': True, 'message': u'<pre>' + unicode(ex) + '</pre>'}
+                return {'error': True, 'message': '<pre>' + str(ex) + '</pre>'}
 
         elif key in cls.sip_xml_expression_templates:
             template = cls.sip_xml_expression_templates[key]
@@ -232,7 +232,7 @@ class SipExpression(object):
     def compute_modifiers(cls, modifiers):
 
         # prefer defaults (all True), but mixin modifiers from query
-        for modifier_field, modifier_values in cls.modifier_defaults.iteritems():
+        for modifier_field, modifier_values in cls.modifier_defaults.items():
             if modifier_field in cls.modifier_defaults:
                 backup = deepcopy(modifiers.get(modifier_field, {}))
                 modifiers[modifier_field] = cls.modifier_defaults[modifier_field]
@@ -313,8 +313,8 @@ class SipCqlBase(object):
             result = self.parser._parser(expression, parseAll=True)
 
         except pyparsing.ParseException as ex:
-            ex.explanation = u'%s\n%s\n%s' % (expression, u' ' * ex.loc + u'^\n', ex)
-            logger.error(u'\n%s', ex.explanation)
+            ex.explanation = '%s\n%s\n%s' % (expression, ' ' * ex.loc + '^\n', ex)
+            logger.error('\n%s', ex.explanation)
             raise
 
         #print 'result:', result, type(result), dir(result)
@@ -487,16 +487,16 @@ class SipCqlFulltext(SipCqlBase):
         def eexists(element, name):
             return element.find(name) is not None
         child_constraints =\
-            all(map(lambda x: eexists(root, x), ['index', 'binop'])) and \
-            any(map(lambda x: eexists(root, x), ['value', 'quotes']))
+            all([eexists(root, x) for x in ['index', 'binop']]) and \
+            any([eexists(root, x) for x in ['value', 'quotes']])
         if root.tag == 'parenthesis' and child_constraints:
             root.tag = 'term'
 
         # also rewrite all other parenthesis looking like terms
         for parens in root.iter('parenthesis'):
             child_constraints =\
-                all(map(lambda x: eexists(parens, x), ['index', 'binop'])) and\
-                any(map(lambda x: eexists(parens, x), ['value', 'quotes', 'or', 'and', 'not']))
+                all([eexists(parens, x) for x in ['index', 'binop']]) and\
+                any([eexists(parens, x) for x in ['value', 'quotes', 'or', 'and', 'not']])
             if child_constraints:
                 parens.tag = 'term'
 
@@ -522,7 +522,7 @@ class SipCqlFulltext(SipCqlBase):
 
             elif boolean_content:
                 value = self.convert_boolean_nodes(term)
-                value = value.replace(u'and not', u'not')
+                value = value.replace('and not', 'not')
 
 
             # 2. expand triple
@@ -600,7 +600,7 @@ class SipCqlFulltext(SipCqlBase):
             # skip elements without a valid representation on this level, e.g. "(ab=fahrzeug or ab=pkw)"
             if not value:
                 return root
-            value = value.replace(u'and not', u'not')
+            value = value.replace('and not', 'not')
 
         elif tag in ['near', 'span']:
             value = self.convert_proximity_nodes(element_nested)
@@ -628,13 +628,13 @@ class SipCqlFulltext(SipCqlBase):
         if index_node is not None:
             index = index_node.text
         else:
-            index = u'bi'
+            index = 'bi'
 
         # 2. binop
         if binop_node is not None:
             binop = binop_node.text
         else:
-            binop = u'='
+            binop = '='
 
         return index, binop
 
@@ -667,14 +667,14 @@ class SipCqlFulltext(SipCqlBase):
 
         # fall back to using already translated "text" nodes
         if value:
-            expression = map(lambda x: x.text, value)
-            map(lambda x: self.keyword_add(x), expression)
+            expression = [x.text for x in value]
+            list(map(lambda x: self.keyword_add(x), expression))
         elif text:
-            expression = map(lambda x: '({0})'.format(x.text), text)
+            expression = ['({0})'.format(x.text) for x in text]
 
-        expression = u' '.join(expression)
+        expression = ' '.join(expression)
         distance = distance[0].text
-        value = u'{operator}({expression}, {distance})'.format(operator=container.tag, expression=expression, distance=distance)
+        value = '{operator}({expression}, {distance})'.format(operator=container.tag, expression=expression, distance=distance)
         return value
 
     def convert_boolean_nodes(self, node):
@@ -693,7 +693,7 @@ class SipCqlFulltext(SipCqlBase):
             elif element.tag == 'parenthesis':
                 result = self.convert_boolean_nodes(element)
                 if result:
-                    result = u'(' + result + u')'
+                    result = '(' + result + ')'
                 child_values.append(result)
 
             elif element.tag in ['near', 'span']:
@@ -706,9 +706,9 @@ class SipCqlFulltext(SipCqlBase):
                 pass
 
         if len(child_values) == 1 and node.tag == 'not':
-            child_values = [u'not ' + child_values[0]]
+            child_values = ['not ' + child_values[0]]
 
-        return u' {0} '.format(node.tag).join(child_values)
+        return ' {0} '.format(node.tag).join(child_values)
 
     def decode_quoted_value(self, element):
         """
@@ -731,15 +731,15 @@ class SipCqlFulltext(SipCqlBase):
             value = element.text
 
         elif element.tag == 'quotes':
-            values = map(lambda x: x.text, element.iter('value'))
-            value = u'"{0}"'.format(u' '.join(values))
+            values = [x.text for x in element.iter('value')]
+            value = '"{0}"'.format(' '.join(values))
 
         return value
 
     def expand_fulltext(self, value, origin=None, modifiers=None):
         triple = value
 
-        origin = origin or u'{0}{1}{2}'.format(*triple)
+        origin = origin or '{0}{1}{2}'.format(*triple)
 
         ft_field, ft_op, ft_value = triple
 
@@ -753,15 +753,15 @@ class SipCqlFulltext(SipCqlBase):
             try:
                 ft_modifier = SipExpression.fulltext_field_modifier_map[ft_field]
             except KeyError:
-                message = u'SIP expression "{0}" contains unknown index "{1}".'.format(origin, ft_field)
+                message = 'SIP expression "{0}" contains unknown index "{1}".'.format(origin, ft_field)
                 logger.warn(message)
                 raise FulltextDecodingError(message)
 
             ft_modifiers = SipExpression.fulltext_modifiers_off.copy()
 
-            if type(ft_modifier) in types.StringTypes:
+            if type(ft_modifier) in (str,):
                 ft_modifiers.update({ft_modifier: 'true'})
-            elif type(ft_modifier) is types.ListType:
+            elif type(ft_modifier) is list:
                 for ft_mod_item in ft_modifier:
                     ft_modifiers.update({ft_mod_item: 'true'})
 
@@ -776,10 +776,10 @@ def strip_accents(s):
     #return ''.join((c for c in unicodedata.normalize('NFD', unicode(s)) if unicodedata.category(c) != 'Mn'))
     result = []
     for char in s:
-        if char.lower() in u'äöüß':
+        if char.lower() in 'äöüß':
             result.append(char)
         else:
-            char_decomposed = unicodedata.normalize('NFD', unicode(char))
+            char_decomposed = unicodedata.normalize('NFD', str(char))
             for cd in char_decomposed:
                 if unicodedata.category(cd) != 'Mn':
                     result.append(cd)
