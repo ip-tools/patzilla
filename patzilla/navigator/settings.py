@@ -13,7 +13,11 @@ from patzilla.navigator.util import dict_prefix_key
 from patzilla.util.config import read_list, asbool, get_configuration
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
-from patzilla.util.data.container import SmartBunch
+
+from patzilla.util.data.munch import Munch, munchify
+
+#py27
+#from patzilla.util.data.container import Bunch
 
 log = logging.getLogger(__name__)
 
@@ -52,7 +56,6 @@ class GlobalSettings(object):
         # FIXME: Maybe do the same what `attach_ops_client` does?
         #        `if '/static' in event.request.url: return`.
         settings = get_configuration(self.configfile, kind=SmartBunch)
-
         # Add some global settings
         settings['software_version'] = __version__
 
@@ -68,8 +71,8 @@ class GlobalSettings(object):
         # Container for datasource settings.
         datasource_settings = SmartBunch({
             'datasources': [],
-            'datasource': SmartBunch(),
-            'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
+            'datasource': Munch(),
+            'total': munchify({'fulltext_countries': [], 'details_countries': []}),
         })
 
         # Read datasource settings from configuration.
@@ -101,9 +104,9 @@ class GlobalSettings(object):
     def get_vendor_settings(self):
 
         # Container for vendor settings
-        vendor_settings = SmartBunch({
+        vendor_settings = Munch({
             'vendors': [],
-            'vendor': SmartBunch(),
+            'vendor': Munch(),
         })
 
         # Read vendor settings from configuration
@@ -122,8 +125,8 @@ class GlobalSettings(object):
                     vendor=vendor, configfile=self.configfile))
 
             vendor_info = self.application_settings.get(settings_key, {})
-            for key, value in vendor_info.iteritems():
-                vendor_info[key] = value.decode('utf-8')
+            for key, value in vendor_info.items():
+                vendor_info[key] = value
 
             if 'hostname_matches' in vendor_info:
                 vendor_info.hostname_matches = read_list(vendor_info.hostname_matches)
@@ -146,9 +149,9 @@ class GlobalSettings(object):
         """
 
         # Container for email settings
-        email_settings = SmartBunch({
+        email_settings = Munch({
             'addressbook': [],
-            'content': SmartBunch(),
+            'content': Munch(),
         })
 
         for setting_name in ['addressbook', 'content']:
@@ -160,8 +163,8 @@ class GlobalSettings(object):
             if defaults and specific:
                 thing.update(deepcopy(specific))
 
-            for key, value in thing.items():
-                thing[key] = value.decode('utf-8')
+            for key, value in list(thing.items()):
+                thing[key] = value
 
             email_settings[setting_name] = thing
 
@@ -281,12 +284,12 @@ class RuntimeSettings(object):
             'ui.version': software_version_link,
             'ui.page.title': vendor.get('page_title', ''), # + ' &nbsp; ' + self.beta_badge,
             'ui.page.subtitle': '',
-            'ui.page.footer': 'Data sources: ' + u', '.join(data_source_list),
+            'ui.page.footer': 'Data sources: ' + ', '.join(data_source_list),
         }
 
         # Transfer all properties having designated prefixes 1:1
         prefixes = ['ui.', 'feature.']
-        for key, value in vendor.iteritems():
+        for key, value in vendor.items():
             for prefix in prefixes:
                 if key.startswith(prefix):
                     if key.endswith('.enabled'):
@@ -304,10 +307,10 @@ class RuntimeSettings(object):
         Return datasource settings while accounting for sensible settings like API URI and credentials.
         """
         request = get_current_request()
-        datasource_settings = SmartBunch.bunchify(request.registry.datasource_settings)
+        datasource_settings = munchify(request.registry.datasource_settings)
         if 'protected_fields' in datasource_settings:
             for fieldname in datasource_settings.protected_fields:
-                for name, settings in datasource_settings.datasource.iteritems():
+                for name, settings in datasource_settings.datasource.items():
                     if fieldname in settings:
                         del settings[fieldname]
             del datasource_settings['protected_fields']
@@ -363,7 +366,7 @@ class RuntimeSettings(object):
         isviewer = 'patentview' in host or 'viewer' in host or 'patview' in host
 
         # 1. don't allow "query" from outside on view-only domains
-        if request_params.has_key('query') and isviewer:
+        if 'query' in request_params and isviewer:
             log.warning('Parameter "query=%s" not allowed on host "%s", purging it', request_params['query'], host)
             del request_params['query']
 
@@ -388,7 +391,7 @@ class RuntimeSettings(object):
         # C. parameter firewall, OUTPUT
 
         # remove "opaque parameter"
-        if params.has_key('op'):
+        if 'op' in params:
             del params['op']
 
 
@@ -409,7 +412,7 @@ class RuntimeSettings(object):
                 params['datasources_enabled'].append(datasource)
 
         # E. backward-compat amendments
-        for key, value in params.iteritems():
+        for key, value in params.items():
             if key.startswith('ship_'):
                 newkey = key.replace('ship_', 'ship-')
                 params[newkey] = value

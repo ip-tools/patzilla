@@ -141,36 +141,36 @@ class IFIClaimsClient(GenericSearchClient):
                     if 'msg' not in upstream_error:
                         upstream_error['msg'] = 'Reason unknown'
 
-                    message = u'Response status code: {code}\n\n{msg}'.format(**upstream_error)
+                    message = 'Response status code: {code}\n\n{msg}'.format(**upstream_error)
 
                     # Enrich "maxClauseCount" message, e.g. raised by {!complexphrase}text:"auto* AND leucht*"~5
-                    if upstream_error["code"] == 500 and u'maxClauseCount is set to' in upstream_error["msg"]:
+                    if upstream_error["code"] == 500 and 'maxClauseCount is set to' in upstream_error["msg"]:
                         raise self.search_failed(
-                            user_info=u'Too many terms in phrase expression, wildcard term prefixes might by too short.',
+                            user_info='Too many terms in phrase expression, wildcard term prefixes might by too short.',
                             message=message,
                             response=response)
 
                     # Enrich "no servers hosting shard" message
                     elif upstream_error["code"] == 503 and \
                         (
-                            u'no servers hosting shard' in upstream_error["msg"] or \
-                            u'No server is available' in upstream_error["msg"]
+                            'no servers hosting shard' in upstream_error["msg"] or \
+                            'No server is available' in upstream_error["msg"]
                         ):
                         raise self.search_failed(
-                            user_info=u'Error while connecting to upstream database. Database might be offline.',
+                            user_info='Error while connecting to upstream database. Database might be offline.',
                             message=message,
                             response=response)
 
                     # Regular traceback
                     elif upstream_error["code"] == 500 and 'trace' in upstream_error:
-                        message = u'Response status code: {code}\n\n{trace}'.format(**upstream_error)
+                        message = 'Response status code: {code}\n\n{trace}'.format(**upstream_error)
                         raise self.search_failed(
-                            user_info=u'Unknown exception at search backend',
+                            user_info='Unknown exception at search backend',
                             message=message,
                             response=response)
 
                     # Enrich "SyntaxError" exception
-                    elif upstream_error["code"] == 400 and u'ParseException' in upstream_error["msg"]:
+                    elif upstream_error["code"] == 400 and 'ParseException' in upstream_error["msg"]:
                         user_info = re.sub(
                             r'.*(Encountered.*at line.*?\.).*',
                             r'SyntaxError, can not parse query expression: \1',
@@ -207,7 +207,7 @@ class IFIClaimsClient(GenericSearchClient):
 
                 user_info = None
                 if response_data['message'] == 'JSON error: failed to read response object':
-                    user_info = u'Error while connecting to upstream database. Database might be offline.'
+                    user_info = 'Error while connecting to upstream database. Database might be offline.'
 
                 raise self.search_failed(
                     user_info=user_info,
@@ -237,7 +237,7 @@ class IFIClaimsClient(GenericSearchClient):
             message = json.dumps(upstream_error)
 
             raise self.search_failed(
-                user_info=u'Error while connecting to upstream database. Database might be offline.',
+                user_info='Error while connecting to upstream database. Database might be offline.',
                 message=message,
                 response=response)
 
@@ -252,8 +252,9 @@ class IFIClaimsClient(GenericSearchClient):
         EP666666A2 => EP0666666A2 (EP0666666A3, EP0666666B1)
         """
 
-        log.info(u"{backend_name}: text_fetch, ucid={ucid}, format={format}; user={username}".format(
+        log.info("{backend_name}: text_fetch, ucid={ucid}, format={format}; user={username}".format(
             ucid=ucid, format=format, **self.__dict__))
+
 
         starttime = timeit.default_timer()
 
@@ -288,7 +289,7 @@ class IFIClaimsClient(GenericSearchClient):
     @cache_region('longer')
     def attachment_list(self, ucid):
 
-        log.info(u"{backend_name}: attachment_list, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
+        log.info("{backend_name}: attachment_list, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
 
         if not self.token or self.stale:
             self.login()
@@ -310,14 +311,14 @@ class IFIClaimsClient(GenericSearchClient):
             data = json.loads(response.content)
             return data
         else:
-            log.error(u"{backend_name}: attachment_list, ucid={ucid}, status={status}, response={response}".format(
+            log.error("{backend_name}: attachment_list, ucid={ucid}, status={status}, response={response}".format(
                 ucid=ucid, status=response.status_code, response=response.content , **self.__dict__))
 
 
     @cache_region('longer')
     def attachment_fetch(self, path):
 
-        log.info(u"{backend_name}: attachment_fetch, path={path}; user={username}".format(path=path, **self.__dict__))
+        log.info("{backend_name}: attachment_fetch, path={path}; user={username}".format(path=path, **self.__dict__))
 
         if not self.token or self.stale:
             self.login()
@@ -341,17 +342,18 @@ class IFIClaimsClient(GenericSearchClient):
             return response.content
 
         else:
-            log.error(u"{backend_name}: attachment_fetch, path={path}, status={status}, response={response}".format(
+            log.error("{backend_name}: attachment_fetch, path={path}, status={status}, response={response}".format(
                 path=path, status=response.status_code, response=response.content , **self.__dict__))
 
 
     def pdf_fetch(self, ucid):
 
-        log.info(u"{backend_name}: pdf_fetch, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
+        log.info("{backend_name}: pdf_fetch, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
 
         attachments_response = self.attachment_list(ucid)
         if not attachments_response:
             return
+
 
         #print 'attachments_response:'
         #pprint(attachments_response)
@@ -435,7 +437,7 @@ class IFIClaimsClient(GenericSearchClient):
             """
 
             # filter tif references only
-            tif_attachments = filter(lambda attachment: attachment['media'] in ['image/tiff', 'image/jpeg'], attachments)
+            tif_attachments = [attachment for attachment in attachments if attachment['media'] in ['image/tiff', 'image/jpeg']]
             #print 'tif_attachments:'
             #pprint(tif_attachments)
             return tif_attachments
@@ -443,7 +445,7 @@ class IFIClaimsClient(GenericSearchClient):
 
     def tif_fetch(self, ucid, seq=1):
 
-        log.info(u"{backend_name}: tif_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
+        log.info("{backend_name}: tif_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
 
         tif_attachments = self.tif_attachments(ucid)
 
@@ -464,7 +466,7 @@ class IFIClaimsClient(GenericSearchClient):
 
     @cache_region('longer')
     def png_fetch(self, ucid, seq=1):
-        log.info(u"{backend_name}: png_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
+        log.info("{backend_name}: png_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
         tif = self.tif_fetch(ucid, seq)
         if tif:
             png = to_png(tif)
@@ -535,7 +537,7 @@ class IFIClaimsSearchResponse(GenericSearchResponse):
         self.read_documents()
 
     def document_to_number(self, document):
-        ucid = document[u'ucid']
+        ucid = document['ucid']
         cc, docno, kindcode = ucid.split('-')
         number = cc + docno + kindcode
         number_normalized = normalize_patent(number)

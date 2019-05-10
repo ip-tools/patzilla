@@ -13,6 +13,7 @@ Direct mode, without configuration file::
     export OPS_API_CONSUMER_SECRET=rrXdr5WA7x9tudmP
     patzilla ops search "txt=(wind or solar) and energy"
 
+
 Use configuration file::
 
     export PATZILLA_CONFIG=patzilla/config/development-local.ini

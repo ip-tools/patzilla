@@ -194,9 +194,9 @@ from beaker.exceptions import InvalidCacheBackendError, MissingCacheParameter
 from beaker.synchronization import null_synchronizer
 from beaker.util import verify_directory, SyncDict
 
-from StringIO import StringIO
+from io import StringIO
 try:
-    import cPickle as pickle
+    import pickle as pickle
 except ImportError:
     import pickle
 
@@ -499,6 +499,6 @@ def _parse_uri(uri, default_port=27017):
 def _depickle(value):
     try:
         return pickle.loads(value)
-    except Exception, e:
+    except Exception as e:
         log.exception("Failed to unpickle value '{0}'.".format(e))
         return None

@@ -157,7 +157,7 @@ def ificlaims_download_multi(numberlist, formats):
 
         for format in formats:
 
-            format_parts = format.split(u':')
+            format_parts = format.split(':')
 
             # decode modifiers
             if len(format_parts) == 1:
@@ -235,7 +235,7 @@ def ificlaims_download_single(number, format, options=None):
     try:
         response = ificlaims_download(number, format, options)
 
-    except IFIClaimsException, ex:
+    except IFIClaimsException as ex:
         logger.warn('IFI: IFIClaimsException for number={number}, format={format}, options={options}: {ex}'.format(**locals()))
 
     if response.payload:

@@ -10,7 +10,7 @@ def decodeMatchToDict(match, key_suffix):
     if match:
         # transfer data from match groups to instance variable,
         # making all values uppercase
-        for key, value in match.groupdict().iteritems():
+        for key, value in match.groupdict().items():
             if key.endswith(key_suffix):
                 key = key.replace(key_suffix, '')
                 if value:
@@ -56,7 +56,7 @@ class IpcDecoder:
         m = self.r.match(self.raw)
         self.ipc = decodeMatchToDict(m, '__1')
         if not self.ipc:
-            raise ValueError, "IPCR class '%s' could not be decoded" % self.raw
+            raise ValueError("IPCR class '%s' could not be decoded" % self.raw)
 
     def fix(self):
 
@@ -82,7 +82,7 @@ class IpcDecoder:
 
     def formatFlexible(self, class_padding='', group_subgroup_delimiter='', group_padding='', subgroup_padding=''):
         if not self.ipc['section']:
-            raise ValueError, "IPCR class '%s' could not be formatted" % self.raw
+            raise ValueError("IPCR class '%s' could not be formatted" % self.raw)
 
         ipc_serialized = self.ipc['section']
 

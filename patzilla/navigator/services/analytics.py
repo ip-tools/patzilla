@@ -3,7 +3,7 @@
 import logging
 import datetime
 import operator
-import HTMLParser
+import html.parser
 from arrow.arrow import Arrow
 from cornice.service import Service
 from dateutil.relativedelta import relativedelta
@@ -63,7 +63,7 @@ def _decode_expression_from_query(request):
     # decode query parameters into datasource and criteria
     decoded = {}
     params = dict(request.params)
-    if params.has_key('datasource'):
+    if 'datasource' in params:
         decoded['datasource'] = params['datasource'].lower()
         del params['datasource']
     decoded.update({'criteria': params})
@@ -96,7 +96,7 @@ class QueryDateRangeNarrower(object):
 
 
         if self.kind == self.OLDEST:
-            self.date_from = Arrow.fromdatetime(datetime.datetime(1800, 01, 01))
+            self.date_from = Arrow.fromdatetime(datetime.datetime(1800, 0o1, 0o1))
             self.date_to   = Arrow.fromdatetime(datetime.datetime(1899, 12, 31))
             self.factor    = +1
 
@@ -106,7 +106,7 @@ class QueryDateRangeNarrower(object):
             self.machine.add_transition('step',  'right', 'whole', unless='is_ready', after=['range_shrink'])
 
         elif self.kind == self.NEWEST:
-            self.date_from = Arrow.fromdatetime(datetime.datetime(2000, 01, 01))
+            self.date_from = Arrow.fromdatetime(datetime.datetime(2000, 0o1, 0o1))
             self.date_to   = Arrow.utcnow()
             self.date_to   += relativedelta(months=12-self.date_to.month, days=31-self.date_to.day)
             self.factor    = -1
@@ -124,7 +124,7 @@ class QueryDateRangeNarrower(object):
 
     def runquery(self):
         criteria = self.criteria.copy()
-        criteria['pubdate'] = u'within {date_from},{date_to}'.format(
+        criteria['pubdate'] = 'within {date_from},{date_to}'.format(
                          date_from=self.date_from.format('YYYY-MM-DD'), date_to=self.date_to.format('YYYY-MM-DD'))
 
         query = make_expression_filter({
@@ -199,10 +199,10 @@ class QueryDateRangeNarrower(object):
         debug = False
         while True:
             if debug:
-                print '-' * 42
-                print 'state:', self.state
-                print 'delta:', self.delta
-                print 'querycount:', self.querycount
+                print('-' * 42)
+                print('state:', self.state)
+                print('delta:', self.delta)
+                print('querycount:', self.querycount)
             if self.state == 'finished' or self.querycount > 15:
                 break
             self.step()
@@ -294,7 +294,7 @@ def analytics_applicants_distinct_handler(request):
     #print 'results:', results
 
     applicants = {}
-    htmlparser = HTMLParser.HTMLParser()
+    htmlparser = html.parser.HTMLParser()
     for item in results['details']:
         applicant = item.get('applicant')
         if applicant:

@@ -86,7 +86,7 @@ class IFIClaimsClientPool(object):
     IFI CLAIMS client pool as Pyramid utility implementation.
     """
 
-    implements(IIFIClaimsClientPool)
+# py27    implements(IIFIClaimsClientPool)
 
     def __init__(self, api_uri, api_uri_json):
         logger.info("Creating upstream client pool for IFI CLAIMS")

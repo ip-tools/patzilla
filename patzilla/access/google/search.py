@@ -2,11 +2,13 @@
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import json
 from pyramid.encode import urlencode
-import re
+# py27 import re
 import sys
 import logging
 import requests
-from BeautifulSoup import BeautifulSoup
+# py27 from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+
 from patzilla.util.expression.keywords import keywords_from_boolean_expression
 from patzilla.util.numbers.normalize import normalize_patent
 
@@ -88,7 +90,7 @@ class GooglePatentsAccess(object):
         captcha_form['action'] = baseurl + '/' + captcha_form['action']
 
         newbody = str(soup)
-        print newbody
+        print(newbody)
         return newbody
 
     def parse_response(self, body):
@@ -163,7 +165,7 @@ class GooglePatentsAccess(object):
             'message': message,
         }
 
-        print payload
+        print(payload)
 
         return payload
 
@@ -226,7 +228,7 @@ class GooglePatentsExpression(object):
                 value_normalized = normalize_patent(value)
                 if value_normalized:
                     value = value_normalized
-            term = u'{0}:{1}'.format(fieldname, value)
+            term = '{0}:{1}'.format(fieldname, value)
         else:
             term = value
 
@@ -243,7 +245,7 @@ class GooglePatentsExpression(object):
         """
         query_params = []
         tbs_params = []
-        for key, value in self.criteria.iteritems():
+        for key, value in self.criteria.items():
             term = self.pair_to_term(key, value)
             if term['parameter'] == 'q':
                 query_params.append(term['term'])
@@ -265,7 +267,7 @@ class GooglePatentsExpression(object):
 
     def get_keywords(self):
         keywords = []
-        for key, value in self.criteria.iteritems():
+        for key, value in self.criteria.items():
             keywords += keywords_from_boolean_expression(key, value)
         return keywords
 
@@ -282,4 +284,4 @@ if __name__ == '__main__':
         #data = google.search('matrix', 19900)
         data = google.search('intitle:matrix', 19900)
 
-    print data
+    print(data)

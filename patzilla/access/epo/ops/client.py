@@ -78,7 +78,7 @@ class OpsClientPool(object):
     EPO/OPS client pool as Pyramid utility implementation.
     """
 
-    implements(IOpsClientPool)
+# py27    implements(IOpsClientPool)
 
     def __init__(self):
         logger.info("Creating upstream client pool for EPO/OPS")

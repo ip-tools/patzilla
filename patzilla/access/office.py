@@ -76,5 +76,5 @@ def jump_office(request):
             else:
                 return url
 
-    return HTTPNotFound(u'Could not locate document "{document_number}" at {office}/{service}.'.format(
+    return HTTPNotFound('Could not locate document "{document_number}" at {office}/{service}.'.format(
         document_number=document_number, office=office, service=service))

@@ -14,6 +14,7 @@ from mongoengine.errors import NotUniqueError
 from pyramid.threadlocal import get_current_request
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface import implementer
 
 log = logging.getLogger(__name__)
 
@@ -133,9 +134,10 @@ class UserMetrics(Document):
 class IUserMetricsManager(Interface):
     pass
 
+@implementer(IUserMetricsManager)
 class UserMetricsManager(object):
 
-    implements(IUserMetricsManager)
+# py27    implements(IUserMetricsManager)
 
     def measure_upstream(self, upstream, volume):
 

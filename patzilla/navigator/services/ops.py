@@ -89,12 +89,12 @@ def ops_published_data_search_handler(request):
 
     # CQL query string
     query = request.params.get('expression', '')
-    log.info(u'query raw: %s', query)
+    log.info('query raw: %s', query)
 
     # Transcode CQL query expression
     search = cql_prepare_query(query)
 
-    log.info(u'query cql: %s', search.expression)
+    log.info('query cql: %s', search.expression)
 
     # range: x-y, maximum delta is 100, default is 25
     range = request.params.get('range')
@@ -136,7 +136,7 @@ def ops_published_data_crawl_handler(request):
 
     # CQL query string
     query = request.params.get('expression', '')
-    log.info(u'query raw: ' + query)
+    log.info('query raw: ' + query)
 
     # Transcode CQL query expression
     search = cql_prepare_query(query)
@@ -144,7 +144,7 @@ def ops_published_data_crawl_handler(request):
     # Propagate keywords to highlighting component
     keywords_to_response(request, search=search)
 
-    log.info(u'query cql: ' + search.expression)
+    log.info('query cql: ' + search.expression)
 
 
     chunksize = int(request.params.get('chunksize', '100'))
@@ -154,7 +154,7 @@ def ops_published_data_crawl_handler(request):
         return result
 
     except Exception as ex:
-        log.error(u'OPS crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
+        log.error('OPS crawler error: query="{0}", reason={1}, Exception was:\n{2}'.format(query, ex, _exception_traceback()))
         request.errors.add('ops-published-data-crawl', 'query', str(ex))
 
 

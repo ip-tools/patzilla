@@ -94,7 +94,7 @@ def prepare_search(request):
         expression = expression.replace('ikofax:', '')
         syntax = 'ikofax'
 
-    log.info(u'DEPATISnet query: {}, syntax: {}'.format(expression, syntax))
+    log.info('DEPATISnet query: {}, syntax: {}'.format(expression, syntax))
 
     # Compute query options, like
     # - limit
@@ -112,7 +112,7 @@ def prepare_search(request):
     elif syntax == 'ikofax':
         search = ikofax_prepare_query(expression)
     else:
-        request.errors.add('depatisnet-search', 'expression', u'Unknown syntax {}'.format(syntax))
+        request.errors.add('depatisnet-search', 'expression', 'Unknown syntax {}'.format(syntax))
 
     # Propagate keywords to highlighting component
     keywords_to_response(request, search=search)
@@ -165,10 +165,10 @@ def depatisnet_published_data_crawl_handler(request):
         http_response = None
         if hasattr(ex, 'http_response'):
             http_response = ex.http_response
-        log.error(u'DEPATISnet crawler error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
+        log.error('DEPATISnet crawler error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
             query, ex, http_response, _exception_traceback()))
 
-        message = u'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
+        message = 'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
         request.errors.add('depatisnet-search', 'crawl', message)
 
 
