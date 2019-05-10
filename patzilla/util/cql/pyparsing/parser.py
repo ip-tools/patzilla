@@ -54,19 +54,19 @@ DEPATISnet - see `DEPATISnet Expert mode guide`_::
 
 TODO: maybe extract this to a different place, since ..services is also using it
 """
-wildcards = u'*?#!'
+wildcards = '*?#!'
 
 # - classification terms (IPC, CPC) may contain forward slashes and dashes, e.g. H04L12/433, F17D5-00
 # - numeric terms may contain punctuation (,.), e.g. 2.45
 # - dates may contain dashes, e.g. M11-2009
-separators = u'/,.-'
+separators = '/,.-'
 
 # limited set of unicode characters
 #umlauts = u'äöüÄÖÜß'
 
 # all unicode characters
 # http://stackoverflow.com/questions/2339386/python-pyparsing-unicode-characters/2340659#2340659
-unicode_printables = u''.join(unichr(c) for c in xrange(65536) if unichr(c).isalnum() and not unichr(c).isspace())
+unicode_printables = ''.join(chr(c) for c in range(65536) if chr(c).isalnum() and not chr(c).isspace())
 
 # indexchars
 indexchars = alphanums + '{}!'
@@ -92,9 +92,9 @@ class CQLGrammar(object):
     def preconfigure(self):
 
         # Binary comparison operators
-        self.cmp_single = u'= != < > <= >='.split()
-        self.cmp_perl = u'eq ne lt gt le ge'.split()
-        self.cmp_cql = u'exact within encloses all any any/relevant any/rel.lr'.split()
+        self.cmp_single = '= != < > <= >='.split()
+        self.cmp_perl = 'eq ne lt gt le ge'.split()
+        self.cmp_cql = 'exact within encloses all any any/relevant any/rel.lr'.split()
 
         # Boolean operators
         # TODO: Configure german operators with DPMAGrammar only

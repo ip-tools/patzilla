@@ -30,7 +30,7 @@ def admin_users_emails_handler(request):
             continue
         user_emails.append(user.username.lower())
 
-    payload = u'\n'.join(user_emails)
+    payload = '\n'.join(user_emails)
 
     return Response(payload, content_type='text/plain', charset='utf-8')
 

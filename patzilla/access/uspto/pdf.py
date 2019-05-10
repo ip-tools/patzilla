@@ -123,5 +123,5 @@ if __name__ == '__main__':
     appnumber = 'US2016101909A1'
     pubnumber = 'US10194689B2'
 
-    print(pdf_url(appnumber))
-    print(pdf_url(pubnumber))
+    print((pdf_url(appnumber)))
+    print((pdf_url(pubnumber)))

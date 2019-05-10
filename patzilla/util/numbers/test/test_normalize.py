@@ -512,7 +512,7 @@ test_numbers_normalized_ok = t
 class TestNumberNormalization:
 
     def examples_ok(self):
-        for number, number_normalized_expect in test_numbers_normalized_ok.iteritems():
+        for number, number_normalized_expect in test_numbers_normalized_ok.items():
             number_normalized_computed = normalize_patent(number, fix_kindcode=True, for_ops=True)
             yield number, number_normalized_expect, number_normalized_computed
 

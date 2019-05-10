@@ -60,7 +60,7 @@ requires = [
     # HTTP
     'python-epo-ops-client==2.3.2',
     'requests==2.21.0',
-    'mechanize==0.3.6',
+    'mechanize>=0.3.6',
     'MechanicalSoup==0.10.0',
 
     # HTTP SNI support
@@ -70,7 +70,7 @@ requires = [
     'ndg-httpsclient==0.5.1',
 
     # HTML
-    'BeautifulSoup==3.2.1',     # beautifulsoup4==4.6.0
+    'beautifulsoup4==4.6.0',
     'html2text==2016.9.19',     # 2018.1.9
 
     # XML

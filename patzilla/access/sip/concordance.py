@@ -202,7 +202,7 @@ def import_cpc_classes(filename, force=False):
 
         try:
             stream = DictReader(csvfile)
-            print stream.fieldnames
+            print(stream.fieldnames)
         except Exception as ex:
             log.error('SIP CPC class map: Reading CSV file {} failed: {}'.format(filename, ex.message))
             return
@@ -225,7 +225,7 @@ def import_cpc_classes(filename, force=False):
             return
 
         ws = wb.active
-        print 'XLSX row 1:', [cell.value for cell in ws.rows[0]]
+        print('XLSX row 1:', [cell.value for cell in ws.rows[0]])
         stream = ws.rows[1:20]
 
     #sys.exit(1)

@@ -124,16 +124,16 @@ WO2007054055
 WO1990004917
 """
 
-    print "-" * 30
-    print "original\tdenormalized"
-    print "-" * 30
+    print("-" * 30)
+    print("original\tdenormalized")
+    print("-" * 30)
     for number in payload.split("\n"):
         if not number or number == "\n": continue
         if number.startswith('---'):
-            print number
+            print(number)
             continue
         number_denormalized = join_patent(denormalize_patent(split_patent_number(number)))
-        print "%s\t%s" % (number, number_denormalized)
+        print("%s\t%s" % (number, number_denormalized))
 
 
 if __name__ == "__main__":

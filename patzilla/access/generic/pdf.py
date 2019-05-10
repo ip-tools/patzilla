@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2019 The PatZilla Developers
 import logging
-from StringIO import StringIO
+from io import StringIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 import attr
@@ -59,7 +59,7 @@ def pdf_universal_real(patent, response):
     if document is None:
         log.error('Locating a document at the domestic office requires ' \
                   'a decoded document number for "{}"'.format(patent))
-        raise ValueError(u'Unable to decode document number {}'.format(patent))
+        raise ValueError('Unable to decode document number {}'.format(patent))
 
     # 1. If it's an EP document, try European publication server first.
     if response.pdf is None and document.country == 'EP':
@@ -90,7 +90,7 @@ def pdf_universal_real(patent, response):
         try:
             # Skip requests for documents w/o kindcode
             if not document.kind:
-                raise ValueError(u'No kindcode for patent: {}'.format(patent))
+                raise ValueError('No kindcode for patent: {}'.format(patent))
 
             response.pdf = depatisconnect_fetch_pdf(number_normalized)
             response.datasource = 'dpma'

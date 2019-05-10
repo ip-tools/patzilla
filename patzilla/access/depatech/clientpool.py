@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import logging
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 from pyramid.httpexceptions import HTTPBadGateway
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface import implementer
 from patzilla.access.depatech.client import DepaTechClient
 
 logger = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ def attach_depatech_client(event):
     pool = registry.getUtility(IDepaTechClientPool)
 
     # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('depatech'):
+    if request.user and request.user.upstream_credentials and 'depatech' in request.user.upstream_credentials:
         request.depatech_client = pool.get(request.user.userid, request.user.upstream_credentials['depatech'])
 
     # System-wide credentials
@@ -54,9 +55,10 @@ def attach_depatech_client(event):
 class IDepaTechClientPool(Interface):
     pass
 
+@implementer(IDepaTechClientPool)
 class DepaTechClientPool(object):
 
-    implements(IDepaTechClientPool)
+# py27    implements(IDepaTechClientPool)
 
     def __init__(self, api_uri):
         self.api_uri = api_uri
@@ -85,8 +87,8 @@ class DepaTechClientFactory(object):
             self.password = credentials['password']
 
         else:
-            message = u'No credentials configured for depa.tech API.'
-            logger.error(u'DepaTechClientFactory: ' + message)
+            message = 'No credentials configured for depa.tech API.'
+            logger.error('DepaTechClientFactory: ' + message)
             raise HTTPBadGateway(message)
 
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
-from __future__ import absolute_import
+
 import logging
 import datetime
 import jws
@@ -9,6 +9,7 @@ from Crypto.Protocol.KDF import PBKDF2
 from Crypto.PublicKey import RSA
 from zope.interface.interface import Interface
 from zope.interface.declarations import implements
+from zope.interface import implementer
 
 log = logging.getLogger(__name__)
 
@@ -17,9 +18,10 @@ log = logging.getLogger(__name__)
 class ISigner(Interface):
     pass
 
+@implementer(ISigner)
 class JwtSigner(object):
 
-    implements(ISigner)
+# py27  implements(ISigner)
 
     def __init__(self, key=None, ttl=None):
         self.key = key
@@ -67,7 +69,7 @@ class JwtSigner(object):
             header_future, payload_future = jwt.process_jwt(token)
             header, payload = jwt.verify_jwt(token, pub_key=self.key, allowed_algs=['HS256', 'RS256', 'ES256', 'PS256'])
 
-            if not payload.has_key('data'):
+            if 'data' not in payload:
                 error_payload = {
                     'location': 'JSON Web Token',
                     'name': self.__class__.__name__,

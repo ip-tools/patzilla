@@ -34,12 +34,12 @@ def json_request(client, url, parameters, **kwargs):
     logger.info('headers:\n%s', json.dumps(dict(response.headers), indent=4))
     #print 'response:'; print response.content
     logger.info('response body:')
-    print json.dumps(response.json(), indent=4)
+    print(json.dumps(response.json(), indent=4))
 
 def tiff_request(client, url, parameters, **kwargs):
     response = client.get(url, params=parameters, **kwargs)
     #print response
-    print response.content
+    print(response.content)
 
 if __name__ == '__main__':
 

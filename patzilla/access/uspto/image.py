@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2017 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-import urllib2
-import cookielib
-from BeautifulSoup import BeautifulSoup
+import urllib.request, urllib.error, urllib.parse
+import http.cookiejar
+# py27 from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+
 from patzilla.util.network.browser import regular_user_agent
 from patzilla.util.numbers.common import split_patent_number
 
@@ -29,9 +31,9 @@ def fetch_first_drawing(patent):
     # how to handle cookies?
     # http://www.voidspace.org.uk/python/articles/cookielib.shtml
 
-    cj = cookielib.LWPCookieJar()
-    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    urllib2.install_opener(opener)
+    cj = http.cookiejar.LWPCookieJar()
+    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+    urllib.request.install_opener(opener)
 
     if type == 'patent':
         baseurls = ['http://patimg1.uspto.gov', 'http://patimg2.uspto.gov']
@@ -126,10 +128,10 @@ def fetch_url(url):
 
     payload = None
     try:
-        req = urllib2.Request(url, txdata, txheaders)
+        req = urllib.request.Request(url, txdata, txheaders)
         # create a request object
 
-        handle = urllib2.urlopen(req)
+        handle = urllib.request.urlopen(req)
         # and open it to return a handle on the url
 
         payload = handle.read()
@@ -140,7 +142,7 @@ def fetch_url(url):
 
         handle.close()
 
-    except IOError, e:
+    except IOError as e:
         code = None
         reason = None
         if hasattr(e, 'code'):
@@ -164,6 +166,6 @@ if __name__ == '__main__':
     for number in numbers:
         payload = fetch_first_drawing(split_patent_number(number))
         if payload:
-            print "payload length:", len(payload)
+            print("payload length:", len(payload))
         else:
-            print "not found"
+            print("not found")

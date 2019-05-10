@@ -2,7 +2,9 @@
 # (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 import requests
-from BeautifulSoup import BeautifulSoup
+# py27 from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
+
 from patzilla.util.network.browser import regular_user_agent
 from patzilla.util.numbers.normalize import normalize_patent
 
@@ -19,7 +21,7 @@ def espacenet_fetch(document_number, section, element_id):
     patent = normalize_patent(document_number, as_dict=True, provider='espacenet')
 
     # Blueprint: https://worldwide.espacenet.com/publicationDetails/biblio?CC=EP&NR=0666666&KC=A3
-    url_tpl = u'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}'
+    url_tpl = 'https://worldwide.espacenet.com/data/publicationDetails/{section}?CC={country}&NR={number}'
     if 'kind' in patent and patent['kind']:
         url_tpl += '&KC={kind}'
 
@@ -88,4 +90,4 @@ if __name__ == '__main__':
     #print espacenet_description('US5770123A')
 
     #print espacenet_claims('DE19814298A1')
-    print espacenet_claims('US5770123A')
+    print(espacenet_claims('US5770123A'))

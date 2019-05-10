@@ -4,7 +4,7 @@ import os
 import where
 import logging
 import datetime
-import StringIO
+import io
 import subprocess
 from six import BytesIO
 from tempfile import NamedTemporaryFile
@@ -159,7 +159,7 @@ def run_imagemagick(command, input=None):
 
 def png_resize(png_payload, width):
 
-    image = Image.open(StringIO.StringIO(png_payload)).convert('RGB')
+    image = Image.open(io.StringIO(png_payload)).convert('RGB')
 
     image_width = image.size[0]
     image_height = image.size[1]
@@ -173,13 +173,13 @@ def png_resize(png_payload, width):
     #size = (int(width), int(image_height * aspect))
     size = (int(width), int(image_height / scale_factor))
     #print "size:", size
-    print "Resizing image from %s to %s" % (image.size, size)
+    print("Resizing image from %s to %s" % (image.size, size))
 
     image.thumbnail(size, Image.ANTIALIAS)
     #image.resize(size, Image.ANTIALIAS)
     #print "thumbnail done"
 
-    png = StringIO.StringIO()
+    png = io.StringIO()
     image.save(png, 'PNG')
     #print "image saved to memory"
 

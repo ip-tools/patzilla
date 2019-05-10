@@ -5,6 +5,7 @@ import epo_ops
 from pyramid.threadlocal import get_current_registry
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface import implementer
 from patzilla.util.web.identity.store import IUserMetricsManager
 
 logger = logging.getLogger(__name__)
@@ -28,7 +29,7 @@ def attach_ops_client(event):
     pool = registry.getUtility(IOpsClientPool)
 
     # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ops'):
+    if request.user and request.user.upstream_credentials and 'ops' in request.user.upstream_credentials:
         request.ops_client = pool.get(request.user.userid, request.user.upstream_credentials['ops'])
 
     # System-wide credentials
@@ -52,9 +53,10 @@ def attach_ops_client(event):
 class IOpsClientPool(Interface):
     pass
 
+@implementer(IOpsClientPool)
 class OpsClientPool(object):
 
-    implements(IOpsClientPool)
+# py27    implements(IOpsClientPool)
 
     def __init__(self):
         self.clients = {}

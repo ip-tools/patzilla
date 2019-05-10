@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl <andreas.motl@ip-tools.org>
-from __future__ import absolute_import
+
 import sys
 import logging
 

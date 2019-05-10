@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 def includeme(config):
 

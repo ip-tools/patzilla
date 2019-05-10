@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-from ConfigParser import NoOptionError
+from configparser import NoOptionError
 
 from pyramid.httpexceptions import HTTPBadGateway
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface import implementer
 
 from patzilla.access.sip.client import SipClient
 
@@ -32,7 +33,7 @@ def attach_sip_client(event):
     pool = registry.getUtility(ISipClientPool)
 
     # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('sip'):
+    if request.user and request.user.upstream_credentials and 'sip' in request.user.upstream_credentials:
         request.sip_client = pool.get(request.user.userid, request.user.upstream_credentials['sip'])
 
     # System-wide credentials
@@ -56,9 +57,10 @@ def attach_sip_client(event):
 class ISipClientPool(Interface):
     pass
 
+@implementer(ISipClientPool)
 class SipClientPool(object):
 
-    implements(ISipClientPool)
+# py27    implements(ISipClientPool)
 
     def __init__(self, api_uri):
         self.api_uri = api_uri
@@ -87,8 +89,8 @@ class SipClientFactory(object):
             self.password = credentials['password']
 
         else:
-            message = u'No credentials configured for SIP API.'
-            logger.error(u'SipClientFactory: ' + message)
+            message = 'No credentials configured for SIP API.'
+            logger.error('SipClientFactory: ' + message)
             raise HTTPBadGateway(message)
 
     def client_create(self):

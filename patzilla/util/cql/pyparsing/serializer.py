@@ -3,7 +3,7 @@
 import re
 import types
 import logging
-import StringIO
+import io
 from pyparsing import ParseResults
 from patzilla.util.cql.pyparsing.parser import CQLGrammar
 from patzilla.util.cql.pyparsing.util import walk_token_results, token_to_triple
@@ -32,7 +32,7 @@ def tokens_to_cql(tokens):
     u'foo=bar and baz=(qux or quux)'
 
     """
-    buffer = StringIO.StringIO()
+    buffer = io.StringIO()
     tokens_to_cql_buffer(tokens, buffer)
     buffer.seek(0)
     return buffer.read()
@@ -51,23 +51,23 @@ def tokens_to_cql_buffer(tokens, buffer):
 
                     # surround binop with spaces for all operators but equality (=)
                     if binop != '=':
-                        triple[1] = u' {0} '.format(binop)
+                        triple[1] = ' {0} '.format(binop)
 
-                    payload = u''.join(triple)
+                    payload = ''.join(triple)
 
                 else:
-                    payload = u''.join(token)
+                    payload = ''.join(token)
 
                 buffer.write(payload)
 
             elif name.startswith('subquery'):
                 tokens_to_cql_buffer(token, buffer)
 
-        elif tokentype in types.StringTypes:
+        elif tokentype in (str,):
             out = token
             # surround all boolean operators with whitespace
             if token in grammar.booleans:
-                out = u' {0} '.format(token)
+                out = ' {0} '.format(token)
             buffer.write(out)
 
 def normalize_patentnumbers(tokens):
@@ -197,7 +197,7 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
                 # If it does, put term inside parenthesis, which got lost while performing shortcut expansion.
                 if token:
                     if re.match('.*(?:' + grammar.termop.pattern + ').*', token[0], flags=grammar.termop.flags):
-                        token[0] = u'({0})'.format(token[0])
+                        token[0] = '({0})'.format(token[0])
 
                 # Process triple in value shortcut notation (contains only the single term).
                 # Take action: Insert index and binop from subquery context.

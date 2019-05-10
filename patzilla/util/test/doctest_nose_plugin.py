@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # https://github.com/nltk/nltk/blob/develop/nltk/test/doctest_nose_plugin.py
-from __future__ import print_function
+
 from nose.suite import ContextList
 import re
 import sys

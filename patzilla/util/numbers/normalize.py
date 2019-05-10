@@ -196,7 +196,7 @@ def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False,
         provider = 'ops'
 
     # 1. handle patent dicts or convert (split) from string
-    if isinstance(number, types.DictionaryType):
+    if isinstance(number, dict):
         patent = number
     else:
         patent = split_patent_number(number)
@@ -211,7 +211,7 @@ def normalize_patent(number, as_dict=False, as_string=False, fix_kindcode=False,
     # 3. result handling
 
     # 3.a) default mechanism: return what we've got
-    if isinstance(number, types.DictionaryType):
+    if isinstance(number, dict):
         result = patent_normalized
     else:
         result = join_patent(patent_normalized)
@@ -610,7 +610,7 @@ def normalize_patent_it(patent):
 
     # filter: special document handling (with alphanumeric prefixes)
     # trim and pad sequential number with zeros to get total length of 7 characters for patent number
-    if patched.has_key('number-type') and patched.has_key('number-real'):
+    if 'number-type' in patched and 'number-real' in patched:
         subtype = patched['number-type']
         seqnumber = patched['number-real']
         patched['number'] = subtype + seqnumber.lstrip('0')
@@ -659,16 +659,16 @@ def test_normalization():
         'JP3657641B2',
     ]
 
-    print "-" * 30
-    print '{0}{1}'.format("original".ljust(20), "normalized")
-    print "-" * 30
+    print("-" * 30)
+    print('{0}{1}'.format("original".ljust(20), "normalized"))
+    print("-" * 30)
     for number in numbers:
         if number.find('---') != -1:
-            print number
+            print(number)
             continue
         result = normalize_patent(number)
         #result = join_patent(patch_patent_old_archive(patent))
-        print "{0}{1}".format(number.ljust(20), result)
+        print("{0}{1}".format(number.ljust(20), result))
 
 if __name__ == "__main__":
     test_normalization()

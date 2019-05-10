@@ -28,7 +28,7 @@ class TestNumberDecoding:
             yield self.check_ok, number, expected, computed
 
     def generate(self, data):
-        for number, number_normalized_expect in data.iteritems():
+        for number, number_normalized_expect in data.items():
             number_normalized_computed = split_patent_number(number)
             yield number, number_normalized_expect, number_normalized_computed
 

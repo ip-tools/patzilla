@@ -26,7 +26,7 @@ def read_numbersfile(file):
     fh = open(file, 'r')
     numbers_raw = fh.readlines()
     fh.close()
-    numbers = map(lambda number: number.replace("\n", '').replace(' ', ''), numbers_raw)
+    numbers = [number.replace("\n", '').replace(' ', '') for number in numbers_raw]
     numbers = [number for number in numbers if not number.startswith('#')]
     return numbers
 
