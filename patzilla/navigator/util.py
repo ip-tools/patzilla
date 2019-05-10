@@ -6,7 +6,7 @@ from cornice.util import _JSONError
 
 def get_exception_message(ex, add_traceback=False):
     name = ex.__class__.__name__
-    description = '%s: %s' % (name, unicode(ex.message))
+    description = '%s: %s' % (name, str(ex.message))
     if add_traceback:
         description += '\n' + get_safe_traceback(ex)
     return description
@@ -24,7 +24,7 @@ def safe_value(value):
     e.g. CaseInsensitiveDict to dict
     """
     if hasattr(value, 'items') and callable(value.items):
-        return dict(value.items())
+        return dict(list(value.items()))
     else:
         return value
 
@@ -35,7 +35,7 @@ def dict_subset(bigdict, *wanted_keys):
 def dict_prefix_key(d, prefix):
     # prefix keys in dictionary
     new = {}
-    for key, value in d.iteritems():
+    for key, value in d.items():
         key = prefix + key
         new[key] = value
     return new
@@ -53,7 +53,7 @@ def dict_merge(dct, merge_dct):
     :param merge_dct: dct merged into dct
     :return: None
     """
-    for k, v in merge_dct.iteritems():
+    for k, v in merge_dct.items():
         if (k in dct and isinstance(dct[k], dict)
             and isinstance(merge_dct[k], collections.Mapping)):
             dict_merge(dct[k], merge_dct[k])

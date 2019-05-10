@@ -6,7 +6,7 @@ def get_literals(*elements):
     literals = []
     for element in elements:
         for literal in element:
-            literal = unicode(literal).strip('"').strip("'")
+            literal = str(literal).strip('"').strip("'")
             literals.append(literal)
     return literals
 

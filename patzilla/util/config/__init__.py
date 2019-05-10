@@ -4,7 +4,7 @@ import os
 import logging
 import sys
 from glob import glob
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ def get_configuration(*args, **kwargs):
         logger.info('Effective configuration files: {}'.format(make_list(used)))
         return config
     else:
-        msg = u'Could not read settings from configuration files: {}'.format(config_files)
+        msg = 'Could not read settings from configuration files: {}'.format(config_files)
         logger.critical(msg)
         raise ValueError(msg)
 
@@ -76,22 +76,22 @@ def asbool(s):
     s = str(s).strip()
     return s.lower() in truthy
 
-def read_list(string, separator=u','):
+def read_list(string, separator=','):
     if string is None:
         return []
     elif isinstance(string, list):
         return string
-    result = map(unicode.strip, string.split(separator))
+    result = list(map(str.strip, string.split(separator)))
     if len(result) == 1 and not result[0]:
         result = []
     return result
 
-def make_list(items, separator=u', '):
+def make_list(items, separator=', '):
     return separator.join(items)
 
 def normalize_docopt_options(options):
     normalized = {}
-    for key, value in options.items():
+    for key, value in list(options.items()):
         key = key.strip('--<>')
         normalized[key] = value
     return normalized

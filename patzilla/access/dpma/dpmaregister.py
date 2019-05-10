@@ -16,7 +16,8 @@ from docopt import docopt
 from pprint import pformat
 from jsonpointer import JsonPointer, JsonPointerException
 from xml.etree.ElementTree import fromstring
-from BeautifulSoup import BeautifulSoup
+# py27 from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
 from patzilla.boot.cache import configure_cache_backend
@@ -528,13 +529,13 @@ class DpmaRegisterXmlDocument(object):
         self.decode_badgerfish()
 
         # Document numbers
-        self.application_reference = map(
+        self.application_reference = list(map(
             operator.itemgetter('document_id'),
-            self.convert_list(self.query_data(self.pointer_application_reference)))
+            self.convert_list(self.query_data(self.pointer_application_reference))))
 
-        self.publication_reference = map(
+        self.publication_reference = list(map(
             operator.itemgetter('document_id'),
-            self.convert_list(self.query_data(self.pointer_publication_reference)))
+            self.convert_list(self.query_data(self.pointer_publication_reference))))
 
         # Classifications
         self.classifications['ipcr'] = self.convert_list(self.query_data(self.pointer_classifications_ipcr))
@@ -565,9 +566,9 @@ class DpmaRegisterXmlDocument(object):
         self.designated_states = self.convert_list(self.query_data(self.pointer_designated_states))
 
         # Citations
-        self.references_cited = map(
+        self.references_cited = list(map(
             operator.attrgetter('document_id.doc_number'),
-            bunchify(self.convert_list(self.query_data(self.pointer_references_cited))))
+            bunchify(self.convert_list(self.query_data(self.pointer_references_cited)))))
 
         # office-specific-bib-data
         self.office_specific_bibdata = self.convert_dict(self.query_data(self.pointer_office_specific_bibdata))
@@ -590,7 +591,7 @@ class DpmaRegisterXmlDocument(object):
         things = []
         for thing in to_list(things_raw):
             if not thing: continue
-            if nested_element in thing and len(thing.keys()) == 1:
+            if nested_element in thing and len(list(thing.keys())) == 1:
                 thing = thing[nested_element]
             if isinstance(thing, dict):
                 thing = cls.convert_dict(thing)
@@ -606,7 +607,7 @@ class DpmaRegisterXmlDocument(object):
             return {}
 
         newdata = OrderedDict()
-        for key, value in data.items():
+        for key, value in list(data.items()):
 
             # Decode nested text or recurse
             if '$' in value:

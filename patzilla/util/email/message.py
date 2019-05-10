@@ -6,7 +6,7 @@ import jinja2
 import logging
 import textwrap
 from copy import deepcopy
-from core import build_email, send_email
+from .core import build_email, send_email
 from patzilla.util.config import read_config, to_list
 
 log = logging.getLogger(__name__)
@@ -38,25 +38,25 @@ class EmailMessage(object):
 
     def send(self, subject='', message='', files=None):
 
-        recipients = u', '.join(self.recipients)
-        reply_to = u', '.join(self.reply_to)
+        recipients = ', '.join(self.recipients)
+        reply_to = ', '.join(self.reply_to)
         files = files or {}
 
         # get smtp addressing information from settings
-        smtp_host = self.smtp_settings.get('hostname', u'localhost')
-        mail_from = self.email_settings['addressbook'].get('from', u'test@example.org')
+        smtp_host = self.smtp_settings.get('hostname', 'localhost')
+        mail_from = self.email_settings['addressbook'].get('from', 'test@example.org')
 
         # log smtp settings
         smtp_settings_log = deepcopy(self.smtp_settings)
         if 'password' in smtp_settings_log:
             del smtp_settings_log['password']
-        log.info(u'Sending email to "{recipients}". smtp settings: {smtp_settings}'.format(
+        log.info('Sending email to "{recipients}". smtp settings: {smtp_settings}'.format(
             recipients=recipients, smtp_settings=smtp_settings_log))
 
         # build subject
         event_date = time.strftime('%Y-%m-%d')
         event_time = time.strftime('%H:%M:%S')
-        subject_real = u''
+        subject_real = ''
         if 'subject_prefix' in self.email_settings['content']:
             prefix = self.email_settings['content'].get('subject_prefix')
             if not prefix.endswith(' '):
@@ -64,14 +64,14 @@ class EmailMessage(object):
             subject_real += prefix
 
         #subject_real += u'{subject} on {event_date} at {event_time}'.format(**locals())
-        subject_real += u'{}'.format(subject)
+        subject_real += '{}'.format(subject)
 
-        filenames = u'\n'.join([u'- ' + entry for entry in files.keys()])
+        filenames = '\n'.join(['- ' + entry for entry in list(files.keys())])
 
         body_template = textwrap.dedent(self.email_settings['content'].get('body', '')).strip()
 
         if 'signature' in self.email_settings['content']:
-            body_template += u'\n\n--\n' + textwrap.dedent(self.email_settings['content']['signature']).strip()
+            body_template += '\n\n--\n' + textwrap.dedent(self.email_settings['content']['signature']).strip()
 
         body_template = body_template.replace('\\n', '\r')
 
@@ -96,11 +96,11 @@ class EmailMessage(object):
             #   smtplib.SMTPServerDisconnected: Connection unexpectedly closed
             #
             send_email(recipients, message, smtp_settings=self.smtp_settings, mail_from=mail_from)
-            log.info(u'Email to recipients "{recipients}" sent successfully'.format(recipients=recipients))
+            log.info('Email to recipients "{recipients}" sent successfully'.format(recipients=recipients))
 
         except Exception as ex:
             # TODO: catch traceback when running in commandline mode
-            log.error(u'Error sending email: {failure}'.format(failure=ex))
+            log.error('Error sending email: {failure}'.format(failure=ex))
             raise
 
 
@@ -123,10 +123,10 @@ if __name__ == '__main__':
     message = EmailMessage(settings['smtp'], settings['email'], {'subject_prefix': 'acme-product'})
     message.add_recipient('test@example.org')
     message.send(
-        subject     = u'Self-test email from Räuber Hotzenplotz',
-        message     = u'Self-test email from Räuber Hotzenplotz',
+        subject     = 'Self-test email from Räuber Hotzenplotz',
+        message     = 'Self-test email from Räuber Hotzenplotz',
         files       = {
-            u'test.txt':  u'☠☠☠ SKULL AND CROSSBONES ☠☠☠',
-            u'test.json': json.dumps(u'☠☠☠ SKULL AND CROSSBONES ☠☠☠'),
+            'test.txt':  '☠☠☠ SKULL AND CROSSBONES ☠☠☠',
+            'test.json': json.dumps('☠☠☠ SKULL AND CROSSBONES ☠☠☠'),
             }
     )

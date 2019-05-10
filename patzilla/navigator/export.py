@@ -34,7 +34,7 @@ log = logging.getLogger(__name__)
 
 class Dossier(object):
 
-    summary_template = dedent(u"""
+    summary_template = dedent("""
         Summary
 
         The research about »{project_name}«
@@ -61,7 +61,7 @@ class Dossier(object):
 
         self.metadata = ReportMetadata()
 
-        self.metadata.set('producer', u'IP Navigator')
+        self.metadata.set('producer', 'IP Navigator')
 
         # Project metadata
         self.metadata.set('project_name',     self.data.project.name)
@@ -120,7 +120,7 @@ class Dossier(object):
 
 
         # Queries
-        queries = map(self.query_criteria_smoother, self.data.get('queries', []))
+        queries = list(map(self.query_criteria_smoother, self.data.get('queries', [])))
         self.df_queries = pandas.DataFrame(queries, columns=['criteria', 'query_expression', 'result_count', 'datasource', 'created'])
         self.df_queries.rename(columns={'query_expression': 'expression', 'result_count': 'hits', 'created': 'timestamp'}, inplace=True)
 
@@ -155,10 +155,10 @@ class Dossier(object):
 
     def get_metadata(self):
         return self.format_with_metadata(
-            u'Author:   {author_name} <{author_email}>\n'
-            u'Created:  {project_created}\n'
-            u'Updated:  {project_modified}\n'
-            u'Producer: {producer}')
+            'Author:   {author_name} <{author_email}>\n'
+            'Created:  {project_created}\n'
+            'Updated:  {project_modified}\n'
+            'Producer: {producer}')
 
     @staticmethod
     def to_csv(dataframe):
@@ -203,7 +203,7 @@ class Dossier(object):
         with ZipFile(buffer, 'w', ZIP_DEFLATED) as zipfile:
 
             # FIXME: Add TERMS (liability waiver) and more...
-            zipfile.writestr('@readme.txt', u'Zip archive created by IP Navigator.')
+            zipfile.writestr('@readme.txt', 'Zip archive created by IP Navigator.')
 
             # Add text summary
             zipfile.writestr('@metadata.txt', self.get_metadata().encode('utf-8'))
@@ -224,8 +224,8 @@ class Dossier(object):
                 try:
                     zipfile.writestr('report/@dossier.pdf', DossierXlsx(self.data).to_pdf(payload=workbook_payload))
                 except Exception as ex:
-                    log.error(u'Rendering dossier to PDF failed. ' \
-                              u'Exception: {ex}\n{trace}'.format(ex=ex, trace=exception_traceback()))
+                    log.error('Rendering dossier to PDF failed. ' \
+                              'Exception: {ex}\n{trace}'.format(ex=ex, trace=exception_traceback()))
 
             # Add CSV
             if options.report.csv:
@@ -263,7 +263,7 @@ class Dossier(object):
                 if not document or not document.strip():
                     continue
 
-                log.info(u'Data acquisition for document {document}'.format(document=document))
+                log.info('Data acquisition for document {document}'.format(document=document))
 
                 status.setdefault(document, OrderedDict())
                 patent = decode_patent_number(document)
@@ -272,7 +272,7 @@ class Dossier(object):
                 if options.media.biblio:
                     try:
                         biblio_payload = get_ops_biblio_data('publication', document, xml=True)
-                        zipfile.writestr(u'media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
+                        zipfile.writestr('media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
                         status[document]['biblio'] = True
 
                     except Exception as ex:
@@ -290,14 +290,14 @@ class Dossier(object):
                             # Write XML
                             document_number = encode_epodoc_number(patent)
                             description_payload = ops_description(document_number, xml=True)
-                            zipfile.writestr(u'media/xml/{document}.description.xml'.format(document=document), description_payload)
+                            zipfile.writestr('media/xml/{document}.description.xml'.format(document=document), description_payload)
                             status[document]['description'] = True
 
                             # Write TEXT
                             with ignored():
                                 text_payload = self.get_fulltext(description_payload, 'description')
                                 if text_payload:
-                                    zipfile.writestr(u'media/txt/{document}.description.txt'.format(document=document), text_payload.encode('utf-8'))
+                                    zipfile.writestr('media/txt/{document}.description.txt'.format(document=document), text_payload.encode('utf-8'))
 
                         except Exception as ex:
                             self.handle_exception(ex, 'description', document)
@@ -313,14 +313,14 @@ class Dossier(object):
                             # Write XML
                             document_number = encode_epodoc_number(patent)
                             claims_payload = ops_claims(document_number, xml=True)
-                            zipfile.writestr(u'media/xml/{document}.claims.xml'.format(document=document), claims_payload)
+                            zipfile.writestr('media/xml/{document}.claims.xml'.format(document=document), claims_payload)
                             status[document]['claims'] = True
 
                             # Write TEXT
                             with ignored():
                                 text_payload = self.get_fulltext(claims_payload.replace('<claim-text>', '<p>').replace('</claim-text>', '</p>'), 'claims')
                                 if text_payload:
-                                    zipfile.writestr(u'media/txt/{document}.claims.txt'.format(document=document), text_payload.encode('utf-8'))
+                                    zipfile.writestr('media/txt/{document}.claims.txt'.format(document=document), text_payload.encode('utf-8'))
 
                         except Exception as ex:
                             self.handle_exception(ex, 'claims', document)
@@ -332,7 +332,7 @@ class Dossier(object):
 
                     try:
                         register_payload = ops_register('publication', document, xml=True)
-                        zipfile.writestr(u'media/xml/{document}.register.xml'.format(document=document), register_payload)
+                        zipfile.writestr('media/xml/{document}.register.xml'.format(document=document), register_payload)
                         status[document]['register'] = True
 
                     except Exception as ex:
@@ -346,7 +346,7 @@ class Dossier(object):
                     try:
                         document_number = encode_epodoc_number(patent, options={'nokind': True})
                         family_payload = ops_family_inpadoc('publication', document_number, 'biblio', xml=True)
-                        zipfile.writestr(u'media/xml/{document}.family.xml'.format(document=document), family_payload)
+                        zipfile.writestr('media/xml/{document}.family.xml'.format(document=document), family_payload)
                         status[document]['family'] = True
 
                     except Exception as ex:
@@ -368,20 +368,20 @@ class Dossier(object):
 
             delivered_items = []
             missing_items = []
-            for document, kinds in status.iteritems():
+            for document, kinds in status.items():
                 delivered = []
                 missing = []
-                for kind, ok in kinds.iteritems():
+                for kind, ok in kinds.items():
                     if ok:
                         delivered.append(kind)
                     else:
                         missing.append(kind)
 
                 if delivered:
-                    item = u'{document:20}{delivered}'.format(document=document, delivered=u', '.join(delivered))
+                    item = '{document:20}{delivered}'.format(document=document, delivered=', '.join(delivered))
                     delivered_items.append(item)
                 if missing:
-                    item = u'{document:20}{missing}'.format(document=document, missing=u', '.join(missing))
+                    item = '{document:20}{missing}'.format(document=document, missing=', '.join(missing))
                     missing_items.append(item)
 
             if delivered_items or missing_items:
@@ -409,13 +409,13 @@ class Dossier(object):
 
     def handle_exception(self, ex, service_name, document):
         if isinstance(ex, (_JSONError, HTTPError)) and hasattr(ex, 'status_int') and ex.status_int == 404:
-            log.warning(u'XML({service_name}, {document}) not found'.format(service_name=service_name, document=document))
+            log.warning('XML({service_name}, {document}) not found'.format(service_name=service_name, document=document))
 
             # Signal exception has been handled (ignored)
             return True
         else:
-            log.warning(u'XML({service_name}, {document}) failed. ' \
-                        u'Exception:\n{trace}'.format(service_name=service_name, document=document, trace=exception_traceback()))
+            log.warning('XML({service_name}, {document}) failed. ' \
+                        'Exception:\n{trace}'.format(service_name=service_name, document=document, trace=exception_traceback()))
 
         # Signal exception should be re-raised, maybe
         return False
@@ -464,7 +464,7 @@ class PandasJSONEncoder(JSONEncoder):
                 return JSONEncoder.default(self, o)
 
         """
-        if isinstance(o, (numpy.bool_,)):
+        if isinstance(o, numpy.bool_):
             return bool(o)
 
         raise TypeError(repr(o) + " is not JSON serializable")
@@ -512,9 +512,9 @@ class DossierXlsx(Dossier):
 
     def set_header_footer(self, worksheet):
         # http://xlsxwriter.readthedocs.io/example_headers_footers.html
-        header = u'&LIP Navigator&RSearch report'
+        header = '&LIP Navigator&RSearch report'
         worksheet.set_header(header)
-        footer = u'&L&L&D &T&C&A&RPage &P of &N'
+        footer = '&L&L&D &T&C&A&RPage &P of &N'
         worksheet.set_footer(footer)
 
     def write_cover_sheet(self):
@@ -529,7 +529,7 @@ class DossierXlsx(Dossier):
         cover_sheet = self.workbook.add_worksheet('cover')
         self.set_header_footer(cover_sheet)
 
-        title = u'Dossier »{name}«'.format(name=self.data.project.name)
+        title = 'Dossier »{name}«'.format(name=self.data.project.name)
         title_format = self.workbook.add_format({'align': 'center', 'valign': 'vcenter', 'font_size': 17, 'bold': True})
         cover_sheet.merge_range('A1:I2', title, title_format)
 
@@ -545,7 +545,7 @@ class DossierXlsx(Dossier):
 
 
         footnote_format = self.workbook.add_format({'font_size': 9})
-        footnote = dedent(u"""
+        footnote = dedent("""
         Please have a look at the other worksheets in
         this workbook for more detailed information about
         all queries, comments and document numbers
@@ -554,7 +554,7 @@ class DossierXlsx(Dossier):
 
         summary = self.generate_with_metadata(self.summary_template, emphasis=blue)
 
-        args = list(summary) + ['\n'] + [footnote_format, u'\n\n' + footnote]
+        args = list(summary) + ['\n'] + [footnote_format, '\n\n' + footnote]
         args.append(cell_format)
         cover_sheet.write_rich_string('B10', *args)
 
@@ -571,7 +571,7 @@ class DossierXlsx(Dossier):
         sheets['rated']     = self.data.get('collections', {}).get('rated')
         sheets['dismissed'] = self.data.get('collections', {}).get('dismissed')
         sheets['seen']      = self.data.get('collections', {}).get('seen')
-        for sheet_name, entries in sheets.iteritems():
+        for sheet_name, entries in sheets.items():
 
             #print 'entries:'; pprint(entries)
 
@@ -581,10 +581,10 @@ class DossierXlsx(Dossier):
                 first = {}
 
             # Create pandas DataFrame
-            if type(first) in types.StringTypes:
+            if type(first) in (str,):
                 df = pandas.DataFrame(entries, columns=['PN'])
 
-            elif isinstance(first, (types.DictionaryType, Bunch)):
+            elif isinstance(first, (dict, Bunch)):
                 df = pandas.DataFrame(entries, columns=['number', 'score', 'timestamp', 'url'])
                 df.rename(columns={'number': 'document', 'url': 'display'}, inplace=True)
 
@@ -750,7 +750,7 @@ class ReportMetadata(OrderedDict):
 
     # https://stackoverflow.com/questions/17215400/python-format-string-unused-named-arguments/17215533#17215533
     def __missing__(self, key):
-        return u'n/a'
+        return 'n/a'
 
 
 # Machinery for monkeypatching XlsxWriter's Worksheet's ``write_url`` method
@@ -763,7 +763,7 @@ def write_url_deduce_title(self, row, col, url, cell_format=None, string=None, t
     if string is None:
         string = os.path.basename(url)
     if tip is None:
-        tip = u'Open "{name}" in Patent Navigator'.format(name=string)
+        tip = 'Open "{name}" in Patent Navigator'.format(name=string)
     return self.write_url_dist(row, col, url, cell_format=cell_format, string=string, tip=tip)
 
 def workbook_add_sheet_hook(self, name=None):

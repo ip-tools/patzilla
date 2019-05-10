@@ -17,7 +17,7 @@ def zip_multi(multi):
     now = time.localtime(time.time())[:6]
 
     # http://stackoverflow.com/questions/434641/how-do-i-set-permissions-attributes-on-a-file-in-a-zip-file-using-pythons-zip/434689#434689
-    unix_permissions = 0644 << 16L
+    unix_permissions = 0o644 << 16
 
     # add index file for drawings
     """

@@ -28,8 +28,8 @@ class SearchExpression(object):
 
     def parse_expression(self, query):
 
-        logger.info(u'Parsing search expression "{query}" with syntax "{syntax}" and grammar "{grammar}"'.format(
-            query=query, syntax=self.syntax, grammar=self.grammar and self.grammar.__name__ or u'default'))
+        logger.info('Parsing search expression "{query}" with syntax "{syntax}" and grammar "{grammar}"'.format(
+            query=query, syntax=self.syntax, grammar=self.grammar and self.grammar.__name__ or 'default'))
 
         if self.syntax == 'cql':
             self.parse_expression_cql(query)
@@ -40,8 +40,8 @@ class SearchExpression(object):
     def parse_expression_cql(self, expression):
 
         # Fixup query: Wrap into quotes if CQL expression is a) unspecific, b) contains spaces and c) is still unquoted
-        if should_be_quoted(expression) and u'within' not in expression:
-            expression = u'"%s"' % expression
+        if should_be_quoted(expression) and 'within' not in expression:
+            expression = '"%s"' % expression
 
         # Parse and recompile CQL query string to apply number normalization
         query_object = None
@@ -59,11 +59,11 @@ class SearchExpression(object):
                 expression = query_recompiled
 
             if query_recompiled != expression:
-                logger.info(u'Recompiled search expression to "{query}"'.format(query=expression))
+                logger.info('Recompiled search expression to "{query}"'.format(query=expression))
 
         except Exception as ex:
             # TODO: Can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
-            logger.warn(u'CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(expression, ex, _exception_traceback()))
+            logger.warn('CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(expression, ex, _exception_traceback()))
 
         self.cql_parser = query_object
         self.expression = expression

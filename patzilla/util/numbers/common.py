@@ -29,12 +29,12 @@ def join_patent(patent):
     return number
 
 def decode_patent_number(patent):
-    if isinstance(patent, types.StringTypes):
+    if isinstance(patent, (str,)):
         decoded = split_patent_number(patent)
-    elif isinstance(patent, types.DictionaryType):
+    elif isinstance(patent, dict):
         decoded = patent
     else:
-        raise TypeError(u'Document number "{patent}" of type "{type}" could not be decoded'.format(patent=patent, type=type(patent)))
+        raise TypeError('Document number "{patent}" of type "{type}" could not be decoded'.format(patent=patent, type=type(patent)))
     return decoded
 
 def split_patent_number(patent_number):
@@ -154,7 +154,7 @@ def split_patent_number(patent_number):
         return dib
 
     else:
-        log.error(u'Unable to parse patent number "{0}"'.format(patent_number))
+        log.error('Unable to parse patent number "{0}"'.format(patent_number))
 
 
 def split_patent_number_more(patent):

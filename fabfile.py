@@ -34,7 +34,7 @@ def install(version, target):
     if not version:
         version = pkg_version
 
-    print 'Installing package {0}, version {1} to target {2}.'.format(*map(yellow, [pkg_name, version, target]))
+    print('Installing package {0}, version {1} to target {2}.'.format(*list(map(yellow, [pkg_name, version, target]))))
     if env.confirm:
         response = ask('Proceed (y/n)? ', ('y', 'n'))
     else:
@@ -72,7 +72,7 @@ def install(version, target):
         restart_service(target)
 
     else:
-        print yellow('Skipped package install due to user request.')
+        print(yellow('Skipped package install due to user request.'))
 
 def setup_package(package, virtualenv, options=''):
     #--index-url=http://c.pypi.python.org/simple
@@ -100,7 +100,7 @@ def restart_service(target):
     if uwsgi_name:
         run('service uwsgi reload %s' % uwsgi_name)
     else:
-        print(red('WARNING: Could not restart service "%s"' % target))
+        print((red('WARNING: Could not restart service "%s"' % target)))
 
 @task
 @hosts(INSTALLATION_HOST)

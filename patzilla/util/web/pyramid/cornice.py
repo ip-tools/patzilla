@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2017 Andreas Motl, Elmyra UG
-from __future__ import absolute_import
+
 from cornice.errors import Errors
 
 def add_location_whitelisted(self, location, name=None, description=None, **kw):

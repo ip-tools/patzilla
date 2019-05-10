@@ -2,7 +2,7 @@
 # (c) 2014 Andreas Motl, Elmyra UG
 import sys
 import traceback
-from StringIO import StringIO
+from io import StringIO
 
 def exception_traceback(exc_info=None):
     """

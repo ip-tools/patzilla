@@ -64,7 +64,7 @@ def scan_keywords(op, keywords):
         #print "op.index:", op.index
         #print "op.term:", op.term
         if str(op.index) in keyword_fields:
-            keyword = clean_keyword(unicode(op.term))
+            keyword = clean_keyword(str(op.term))
             keywords.append(keyword)
 
     hasattr(op, 'leftOperand') and scan_keywords(op.leftOperand, keywords)
@@ -76,7 +76,7 @@ def keywords_to_response(request, search):
     Propagate keywords to client for highlighting
     """
 
-    logger.info(u'Propagating keywords from "{origin}": {keywords}'.format(
+    logger.info('Propagating keywords from "{origin}": {keywords}'.format(
         origin=search.keywords_origin, keywords=search.keywords))
 
     request.response.headers['X-PatZilla-Query-Keywords'] = json.dumps(search.keywords)

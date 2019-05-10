@@ -4,13 +4,13 @@ import re
 from patzilla.util.numbers.normalize import normalize_patent
 
 def parse_numberlist(rawdata):
-    pattern = re.compile(u'[,\n]')
+    pattern = re.compile('[,\n]')
     entries = pattern.split(rawdata)
-    entries = map(unicode.strip, entries)
+    entries = list(map(str.strip, entries))
     return entries
 
 def normalize_numbers(entries):
-    entries = map(lambda s: s.replace(u' ', u''), entries)
+    entries = [s.replace(' ', '') for s in entries]
     response = {'valid': [], 'invalid': [], 'all': []}
     for entry in entries:
         entry_normalized = normalize_patent(entry, fix_kindcode=True)

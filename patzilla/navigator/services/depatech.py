@@ -103,7 +103,7 @@ def depatech_published_data_search_handler(request):
         log.warn(request.errors)
 
     except SyntaxError as ex:
-        request.errors.add('depatech-search', 'expression', unicode(ex.msg))
+        request.errors.add('depatech-search', 'expression', str(ex.msg))
         log.warn(request.errors)
 
     except SearchException as ex:
@@ -117,7 +117,7 @@ def depatech_published_data_search_handler(request):
         return ex.data
 
     except OperationFailure as ex:
-        message = unicode(ex)
+        message = str(ex)
         request.errors.add('depatech-search', 'internals', message)
         log.error(request.errors)
 
@@ -151,6 +151,6 @@ def depatech_published_data_crawl_handler(request):
         return result
 
     except Exception as ex:
-        request.errors.add('depatech-crawl', 'crawl', unicode(ex))
+        request.errors.add('depatech-crawl', 'crawl', str(ex))
         log.error(request.errors)
-        log.error(u'query="{0}", exception:\n{1}'.format(query, _exception_traceback()))
+        log.error('query="{0}", exception:\n{1}'.format(query, _exception_traceback()))

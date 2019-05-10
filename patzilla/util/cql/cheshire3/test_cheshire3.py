@@ -60,7 +60,7 @@ class TestCheshire3CqlParser(unittest.TestCase):
         self.assertEqual(self.do_parse('bi=foo und bi=bar'), '(bi = "foo" und bi = "bar")')
 
     def test_utf8(self):
-        self.assertEqual(self.do_parse('ab=radaufstandskraft or ab=radaufstandskräfte?'), u'(ab = "radaufstandskraft" or ab = "radaufstandskr\xe4fte?")')
+        self.assertEqual(self.do_parse('ab=radaufstandskraft or ab=radaufstandskräfte?'), '(ab = "radaufstandskraft" or ab = "radaufstandskr\xe4fte?")')
 
 if __name__ == '__main__':
     unittest.main()

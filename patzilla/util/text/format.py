@@ -15,14 +15,14 @@ def slugify(value, strip_equals=True, lowercase=True):
     Via http://code.activestate.com/recipes/577257-slugify-make-a-string-usable-in-a-url-or-filename/
     """
     import unicodedata
-    if not isinstance(value, unicode):
-        value = unicode(value)
+    if not isinstance(value, str):
+        value = str(value)
     value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
 
     _strip_re = _slugify_strip_re
     if not strip_equals:
         _strip_re = _slugify_strip_wo_equals_re
-    value = unicode(_strip_re.sub('', value).strip())
+    value = str(_strip_re.sub('', value).strip())
 
     if lowercase:
         value = value.lower()
