@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-# py27 import re
-import regex as re
 import sys
 import json
 import types
 import logging
 import urllib.request, urllib.error, urllib.parse
 import mechanize
+import regex as re
 import http.cookiejar
-# py27 from BeautifulSoup import BeautifulSoup
 from bs4 import BeautifulSoup
 from xlrd import open_workbook
 from patzilla.access.generic.search import GenericSearchResponse
@@ -227,7 +225,7 @@ class DpmaDepatisnetAccess:
                               'otherwise don\'t hesitate to report this problem to us.')
 
         # Check for error messages
-        soup = BeautifulSoup(body)
+        soup = BeautifulSoup(body, 'lxml')
         error_message = soup.find('div', {'id': 'errormsg'})
         if error_message:
             parts = []
@@ -238,11 +236,13 @@ class DpmaDepatisnetAccess:
         else:
             error_message = ''
 
+        # Compute error message.
+        prefix = 'Upstream service: '
         if 'An error has occurred' in body:
-            error_message = error_message.replace('\t', '').replace('\r\n', '\n').strip()
+            error_message = prefix + error_message.replace('\t', '').replace('\r\n', '\n').strip()
             raise SyntaxError(error_message)
 
-        return error_message
+        return prefix + error_message
 
     def read_xls_response(self, xls_response):
         data = excel_to_dict(xls_response.read())
