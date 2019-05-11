@@ -42,7 +42,7 @@ requires = [
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
     'pymongo<3',                # 3.13.0, 4.3.3
-    'mongodb_gridfs_beaker==0.5.4',
+    'mongodb_gridfs_beaker==0.6.0dev1',
     'mongoengine==0.13.0',      # 0.24.1
     'python-magic<1',
 
@@ -99,8 +99,8 @@ requires = [
     'arrow==0.10.0',            # 0.12.1
     'validate_email<2',
     'numpy==1.16.6',            # 1.22.3
-    'pandas==0.18.1',           # 0.22.0, 0.25.3, 1.4.2
-    'pathlib2<3',
+    'pandas',           # 0.22.0, 0.25.3, 1.4.2
+    'pathlib',
 
     # Data formatting
     'openpyxl>=2.4.2,<3',
@@ -216,6 +216,8 @@ setup(name='patzilla',
           'test': test_requires,
       },
       dependency_links=[
+          'https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker-0.6.0dev1',
+          'https://github.com/ip-tools/mechanize/archive/v0.4.3dev1.tar.gz#egg=mechanize-0.4.3dev1',
       ],
 
       entry_points={
