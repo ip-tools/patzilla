@@ -53,6 +53,7 @@
     "bootstrap-2.3.2": "https://github.com/ip-tools/bootstrap-2.3.2#2.0.0",
     "bootstrap-slider": "9.1.1",
     "classie": "1.0.0",
+    "clean-webpack-plugin": "^2.0.2",
     "clipboard": "2.0.1",
     "compression-webpack-plugin": "1.1.11",
     "css-element-queries": "1.1.1",

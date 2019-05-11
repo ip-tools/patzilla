@@ -2,6 +2,7 @@
 // (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 const path = require('path');
 const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 // Concepts - Using Third Party Libraries that Are not CJS/AMD/ES6 Modules
 // https://github.com/webpack/webpack.js.org/issues/63
@@ -58,6 +59,10 @@ const config = {
     },
 
     plugins: [
+
+        new CleanWebpackPlugin({
+            cleanOnceBeforeBuildPatterns: ['**/*', '!README.txt', '!.gitignore'],
+        }),
 
         // https://webpack.js.org/plugins/provide-plugin/
         new webpack.ProvidePlugin({
