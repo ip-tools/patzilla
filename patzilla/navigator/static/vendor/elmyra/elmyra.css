@@ -1,8 +1,0 @@
-.header-container {
-    background-image: url(/static/vendor/elmyra/header-small.jpg);
-    background-repeat: repeat-x;
-}
-
-.header-content {
-    min-height: 69px;
-}

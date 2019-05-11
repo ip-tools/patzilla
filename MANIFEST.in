@@ -3,9 +3,9 @@ exclude .bumpversion.cfg
 recursive-include patzilla *.pt *.mak *.mako *.html *.xml *.pem *.ini.tpl *.rst
 include patzilla/navigator/templates/urlcleaner.min.js
 prune patzilla/navigator/static
+include patzilla/navigator/static/patzilla.css
 recursive-include patzilla/navigator/static/img *.*
 recursive-include patzilla/navigator/static/meta *.*
-recursive-include patzilla/navigator/static/vendor *.*
 recursive-include patzilla/navigator/static/assets *.min.js *.min.js.map *.svg *.png *.jpg *.gif *.ico *.swf *.eot *.ttf *.woff
 recursive-include patzilla/util *.js
 global-exclude .DS_Store
