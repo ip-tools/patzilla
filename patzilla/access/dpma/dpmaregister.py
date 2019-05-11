@@ -16,7 +16,6 @@ from docopt import docopt
 from pprint import pformat
 from jsonpointer import JsonPointer, JsonPointerException
 from xml.etree.ElementTree import fromstring
-# py27 from BeautifulSoup import BeautifulSoup
 from bs4 import BeautifulSoup
 from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
