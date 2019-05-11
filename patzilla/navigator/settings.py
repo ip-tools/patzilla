@@ -5,6 +5,7 @@ import json
 import logging
 from copy import deepcopy
 from email.utils import parseaddr
+from munch import Munch, munchify
 
 from pyramid.exceptions import ConfigurationError
 from pyramid.threadlocal import get_current_request, get_current_registry
@@ -15,10 +16,6 @@ from patzilla.util.config import read_list, asbool, get_configuration
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
 
-from patzilla.util.data.munch import Munch, munchify
-
-#py27
-#from patzilla.util.data.container import Bunch
 
 log = logging.getLogger(__name__)
 

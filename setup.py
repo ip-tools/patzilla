@@ -30,15 +30,15 @@ requires = [
     'PasteScript==2.0.2',
 
     # Caching
-    'Beaker==1.9.0',            # 1.10.0
+    'Beaker==1.10.1',
     'pyramid_beaker==0.8',
-    'dogpile.cache==0.6.4',     # 0.6.5
+    'dogpile.cache==0.7.1',
 
     # Database and storage
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
     'pymongo==2.9.5',           # 3.6.1
-    'mongodb_gridfs_beaker==0.5.4',
+    'mongodb_gridfs_beaker==0.6.0dev1',
     'mongoengine==0.13.0',      # 0.15.0
     'minio==4.0.14',
     'python-magic==0.4.15',
@@ -60,7 +60,7 @@ requires = [
     # HTTP
     'python-epo-ops-client==2.3.2',
     'requests==2.21.0',
-    'mechanize>=0.3.6',
+    'mechanize==0.4.3dev1',
     'MechanicalSoup==0.10.0',
 
     # HTTP SNI support
@@ -75,7 +75,7 @@ requires = [
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
-    'lxml==3.4.1',              # 4.2.0
+    'lxml==4.3.3',
     'xmljson==0.1.9',
 
     # JSON
@@ -87,14 +87,16 @@ requires = [
     # ----------------------------------------------
 
     # Data handling
+    'regex==2019.04.14',
     'attrs==17.3.0',            # 17.4.0
     'Bunch==1.0.1',             # Maybe switch to "Munch"
+    'munch==2.3.2',
     'pyparsing==2.0.2',         # 2.2.0
     'python-dateutil==2.6.1',   # 2.7.0
     'ago==0.0.9',               # 0.0.92
     'arrow==0.10.0',            # 0.12.1
     'validate_email==1.3',
-    'pandas==0.18.1',           # 0.22.0
+    'pandas==0.24.2',
 
     # Data formatting
     'openpyxl==2.1.0',          # 2.5.4
@@ -188,7 +190,8 @@ setup(name='patzilla',
           'test': test_requires,
       },
       dependency_links=[
-          #'https://github.com/MechanicalSoup/MechanicalSoup/archive/master.tar.gz#egg=MechanicalSoup-1.0.0-dev',
+          'https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker-0.6.0dev1',
+          'https://github.com/ip-tools/mechanize/archive/v0.4.3dev1.tar.gz#egg=mechanize-0.4.3dev1',
           #'https://github.com/dagwieers/unoconv/archive/master.tar.gz#egg=unoconv-0.8.2',
       ],
 
