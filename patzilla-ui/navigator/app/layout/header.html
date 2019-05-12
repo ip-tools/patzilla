@@ -5,20 +5,16 @@
 
 <div class="container-fluid header-container">
     <div class="row-fluid header-content align-middle">
-        <div class="span6 header-content-left">
+        <div class="header-content-left">
             <span id="menu-region" class="non-liveview"></span>
-            <span class="header-title">
-                <%= theme['ui.page.title'] %>
-            </span>
+            <span class="header-title"><%= theme['ui.page.title'] %></span>
             <span class="environment-badge"><%= theme['ui.environment.badge'] %></span>
             <span><%= theme['ui.spinner'] %></span>
             <span><%= theme['ui.page.subtitle'] %></span>
             <div><%= theme['ui.page.statusline'] %></div>
         </div>
-        <div class="span6 header-content-right">
-            <div class="pull-right">
-                <div><%= theme['ui.productname.rich'] %></div>
-            </div>
+        <div class="header-content-right">
+            <%= theme['ui.productname.rich'] %>
         </div>
     </div>
 </div>

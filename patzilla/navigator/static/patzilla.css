@@ -18,3 +18,10 @@
     */
 
 }
+
+.header-logo {
+    font-size: 24.5px;
+    line-height: 40px;
+    font-weight: bold;
+    text-rendering: optimizelegibility;
+}
