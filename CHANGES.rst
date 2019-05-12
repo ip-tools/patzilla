@@ -5,6 +5,8 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [mw] No need to manually encode form fields with "mechanize" anymore.
+  Thanks, `Kovid <https://github.com/kovidgoyal>`_!
 
 
 2019-05-08 0.165.0

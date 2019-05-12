@@ -106,7 +106,7 @@ class DpmaDepatisnetAccess:
         self.browser.select_form(nr=0)
         #self.browser.select_form(name='form')
 
-        self.browser['query'] = query.encode('iso-8859-1')
+        self.browser['query'] = query
         self.browser['hitsPerPage'] = [str(limit)]
         self.browser['maxHitsUser'] = [str(max_hits)]
 

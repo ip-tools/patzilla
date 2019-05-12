@@ -60,7 +60,7 @@ requires = [
     # HTTP
     'python-epo-ops-client==2.3.2',
     'requests==2.21.0',
-    'mechanize==0.4.3dev1',
+    'mechanize==0.4.3dev2',
     'MechanicalSoup==0.10.0',
 
     # HTTP SNI support
@@ -191,7 +191,7 @@ setup(name='patzilla',
       },
       dependency_links=[
           'https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker-0.6.0dev1',
-          'https://github.com/ip-tools/mechanize/archive/v0.4.3dev1.tar.gz#egg=mechanize-0.4.3dev1',
+          'https://github.com/ip-tools/mechanize/archive/v0.4.3dev2.tar.gz#egg=mechanize-0.4.3dev2',
           #'https://github.com/dagwieers/unoconv/archive/master.tar.gz#egg=unoconv-0.8.2',
       ],
 
