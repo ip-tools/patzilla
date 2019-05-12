@@ -176,7 +176,7 @@ feel free to get in touch with us. We are happy to receive respective inquiries 
 .. _nasa-public-domain demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiTFFoQzMxbjBzalpLZlU5QUNmRVNMQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAiTkFTQSBQdWJsaWMgRG9tYWluIiwgIm51bWJlcmxpc3QiOiAiVVM1Njg5MDA0LFVTNzAwODYwNSxVUzcwMjMxMTgsVVM3NDM4MDMwLFVTNzc3MzM2MixVUzc3OTAxMjgsVVM3ODA4MzUzLFVTNzkwMDQzNixVUzc5MzMwMjcsVVM4MjEyMTM4LFVTODI1OTEwNCxVUzg0MDc5NzksVVM4NzYzMzYyLFVTODkzODk3NCxVUzkwMTY2MzIsVVM5MDIxNzgyLFVTOTA5MTQ5MCxVUzkxOTQzMzQsVVM5MTk0MzM0QjEiLCAiY29udGV4dCI6ICJ2aWV3ZXIiLCAidHRsIjogIjE1Nzg1MjgwMCIsICJtb2RlIjogImxpdmV2aWV3IiwgImRhdGFzb3VyY2UiOiAicmV2aWV3In0sICJuYmYiOiAxNTUzMDM2MDgxLCAiZXhwIjogMTcxMDg4ODg4MSwgImlhdCI6IDE1NTMwMzYwODF9.gejftmq0JiHZEyjBQbQy0QSsKpjDd0TsGl0Zp8BVhH9IrxPi4YT5sxxXjWOU46I3OASzAANodttMJydzgP2DjeIF7VJnjMA9ZrHeqAL30gk8WOmbEIse7l2ciOfhJtyT
 
 .. _EPO/OPS: https://ops.epo.org/
-.. _DPMA/DEPATISnet: https://depatisnet.dpma.de
+.. _DPMA/DEPATISnet: https://depatisnet.dpma.de/DepatisNet/depatisnet?window=1&space=menu&content=index&action=index&switchToLang=en
 .. _USPTO/PATIMG: https://www.uspto.gov/
 .. _CIPO: http://cipo.gc.ca
 .. _IFI Claims: https://www.ificlaims.com/

@@ -28,7 +28,7 @@ js-release: js
 	@echo Bundling Javascript/CSS resources.
 	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
-	$(yarn) run release
+	$(yarn) release
 
 sdist:
 	$(python) setup.py sdist

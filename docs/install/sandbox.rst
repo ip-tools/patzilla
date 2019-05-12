@@ -92,11 +92,11 @@ Fetch all module dependencies::
 
 Bundle application and all required assets::
 
-    yarn run build
+    yarn build
 
 Rebundle on file change::
 
-    yarn run watch
+    yarn watch
 
 
 Configure
@@ -168,6 +168,12 @@ is by using the fine nodeenv_ package, like::
     nodeenv --node=6.14.4 .nodeenv
     source .nodeenv/bin/activate
     npm install -g yarn
+
+Pre-flight checks: Make sure you will be using the nodeenv'd ``yarn`` installation,
+which you can check like::
+
+    $ which yarn
+    /home/amo/dev/elmyra/sources/ip-navigator/.nodeenv/bin/yarn
 
 Then, run the build steps again, see :ref:`build-javascript-bundles`.
 

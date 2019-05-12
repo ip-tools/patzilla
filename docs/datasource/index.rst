@@ -22,6 +22,11 @@ Some primary data sources are obligatory, some are optional.
       -  :ref:`epo-ops-setup`
       -  Obligatory
 
+   *  -  DEPATISnet (DPMA)
+      -  `DEPATISnet <https://depatisnet.dpma.de/DepatisNet/depatisnet?window=1&space=menu&content=index&action=index&switchToLang=en>`_
+      -
+      -  Optional
+
    *  -  IFI CLAIMS Patent Services
       -  :ref:`datasource-ifi-claims`
       -  :ref:`ifi-claims-setup`

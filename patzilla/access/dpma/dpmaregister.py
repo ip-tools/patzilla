@@ -29,6 +29,9 @@ cache = dogpile.cache.make_region().configure(
     "dogpile.cache.dbm",
     expiration_time=3600 * 24,
     arguments={
+        # TODO: Prefer to put this into ``/var/cache/patzilla``.
+        #       However, we have to ensure it still works reliable
+        #       with any installation flavor.
         "filename": "/var/tmp/dpmaregister-cache.dbm"
     }
 )
@@ -116,7 +119,7 @@ class DpmaRegisterAccess:
     @cache.cache_on_arguments()
     def fetch_st36xml(self, patent, language='en'):
 
-        # Fetch main HTML resource of document
+        # Fetch main HTML resource of document.
         result = self.search_and_fetch(patent, language)
 
         if not result:
