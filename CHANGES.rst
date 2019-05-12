@@ -7,6 +7,7 @@ Development
 ===========
 - [ui] Upgrade to jQuery 3.4.1
 - [ui] Add "clean-webpack-plugin" to cleanup the assets folder before building
+- [mw] Improve settings for having per-vendor OPS credentials
 
 
 2019-05-08 0.165.0

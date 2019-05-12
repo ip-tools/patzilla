@@ -35,13 +35,13 @@ def main(global_config, **settings):
     config.include('cornice')
     #config.include("akhet.static")
 
-    # Register subsystem components
-    config.include("patzilla.util.web.identity")
     config.include("patzilla.util.web.pyramid")
     config.include("patzilla.util.database.beaker_mongodb_gridfs")
 
-    config.include("patzilla.access")
+    # Register subsystem components
+    config.include("patzilla.util.web.identity")
     config.include("patzilla.navigator")
+    config.include("patzilla.access")
 
     #config.scan()
 

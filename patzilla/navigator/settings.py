@@ -60,28 +60,37 @@ class GlobalSettings(object):
 
         return settings
 
-    def get_datasource_settings(self):
+    def get_datasource_settings(self, vendor=None):
 
-        # Container for datasource settings
+        # Container for datasource settings.
         datasource_settings = SmartBunch({
             'datasources': [],
             'datasource': SmartBunch(),
             'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
         })
 
-        # Read datasource settings from configuration
+        # Read datasource settings from configuration.
         datasource_settings.datasources = read_list(self.application_settings.get('ip_navigator', {}).get('datasources'))
         datasource_settings.protected_fields = read_list(self.application_settings.get('ip_navigator', {}).get('datasources_protected_fields'))
+
         for datasource in datasource_settings.datasources:
-            settings_key = 'datasource:{name}'.format(name=datasource)
-            datasource_info = self.application_settings.get(settings_key, {})
-            datasource_info['fulltext_enabled'] = asbool(datasource_info.get('fulltext_enabled', False))
-            datasource_info['fulltext_countries'] = read_list(datasource_info.get('fulltext_countries', ''))
-            datasource_info['details_enabled'] = asbool(datasource_info.get('details_enabled', False))
-            datasource_info['details_countries'] = read_list(datasource_info.get('details_countries', ''))
+            datasource_info = SmartBunch()
+            if vendor is None:
+                settings_key = 'datasource:{name}'.format(name=datasource)
+            else:
+                settings_key = 'datasource:{name}:{vendor}'.format(name=datasource, vendor=vendor)
+
+            ds_settings = self.application_settings.get(settings_key, {})
+            for key, value in ds_settings.iteritems():
+                datasource_info.setdefault(key, value)
+            datasource_info.setdefault('fulltext_enabled', asbool(ds_settings.get('fulltext_enabled', False)))
+            datasource_info.setdefault('fulltext_countries', read_list(ds_settings.get('fulltext_countries', '')))
+            datasource_info.setdefault('details_enabled', asbool(ds_settings.get('details_enabled', False)))
+            datasource_info.setdefault('details_countries', read_list(ds_settings.get('details_countries', '')))
+
             datasource_settings.datasource[datasource] = SmartBunch.bunchify(datasource_info)
 
-            # Aggregate data for all countries
+            # Aggregate data for all countries.
             datasource_settings.total.fulltext_countries += datasource_info['fulltext_countries']
 
         return datasource_settings
@@ -115,8 +124,13 @@ class GlobalSettings(object):
             if 'hostname_matches' in vendor_info:
                 vendor_info.hostname_matches = read_list(vendor_info.hostname_matches)
 
+            # Per-vendor email configuration.
             vendor_info.email = self.get_email_settings(vendor)
 
+            # Per-vendor data source settings.
+            vendor_info.datasource_settings = self.get_datasource_settings(vendor)
+
+            # Collect all vendor settings.
             vendor_settings.vendor[vendor] = SmartBunch.bunchify(vendor_info)
 
         return vendor_settings
@@ -169,7 +183,6 @@ class RuntimeSettings(object):
         self.config = self.config_parameters()
         self.theme = self.theme_parameters()
         self.beta_badge = '<span class="label label-success label-large do-not-print">BETA</span>'
-
 
     def asdict(self):
         return self.__dict__.copy()

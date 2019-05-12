@@ -2,6 +2,7 @@
 # (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 import epo_ops
+from bunch import bunchify
 from pyramid.threadlocal import get_current_registry
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
@@ -20,30 +21,54 @@ def includeme(config):
 
 
 def attach_ops_client(event):
-    #logger.info('Attaching OAuth client to request')
+
+    # Don't start data source machinery on requests to static assets.
+    if '/static' in event.request.url:
+        return
+
+    #logger.info('Attaching OPS client to request object')
 
     request = event.request
     registry = request.registry
 
     pool = registry.getUtility(IOpsClientPool)
 
+    vendor_settings = request.runtime_settings.vendor
+
+    credentials_source = None
+
     # User-associated credentials
     if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ops'):
-        request.ops_client = pool.get(request.user.userid, request.user.upstream_credentials['ops'])
+        credentials_source = request.user.userid
+        credentials_data = request.user.upstream_credentials['ops']
 
-    # System-wide credentials
+    # Vendor-wide credentials
+    elif vendor_settings and 'datasource_settings' in vendor_settings:
+        credentials_source = 'vendor'
+        credentials_data = get_ops_credentials(vendor_settings.datasource_settings)
+
+    # Fall back to system-wide credentials
+    if not credentials_data:
+        credentials_source = 'system'
+        credentials_data = get_ops_credentials(registry.datasource_settings)
+
+    logger.info('Attaching OPS credentials from "{}": {}...'.format(credentials_source, credentials_data.consumer_key[:10]))
+
+    if credentials_data:
+        request.ops_client = pool.get(credentials_source, credentials_data)
     else:
-        datasource_settings = registry.datasource_settings
-        datasources = datasource_settings.datasources
-        datasource = datasource_settings.datasource
-        if 'ops' in datasources and 'ops' in datasource and 'api_consumer_key' in datasource.ops and 'api_consumer_secret' in datasource.ops:
-            system_credentials = {
-                'consumer_key': datasource.ops.api_consumer_key,
-                'consumer_secret': datasource.ops.api_consumer_secret,
-            }
-            request.ops_client = pool.get('system', system_credentials)
-        else:
-            request.ops_client = pool.get('defunct')
+        raise KeyError('No credentials for data source "OPS" configured')
+
+
+def get_ops_credentials(datasource_settings):
+    datasources = datasource_settings.datasources
+    datasource = datasource_settings.datasource
+    if 'ops' in datasources and 'ops' in datasource and 'api_consumer_key' in datasource.ops and 'api_consumer_secret' in datasource.ops:
+        system_credentials = bunchify({
+            'consumer_key': datasource.ops.api_consumer_key,
+            'consumer_secret': datasource.ops.api_consumer_secret,
+        })
+        return system_credentials
 
 
 # ------------------------------------------

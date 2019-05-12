@@ -23,7 +23,7 @@ def get_configuration(*args, **kwargs):
                     config_files += glob(include)
                 else:
                     config_files.append(include)
-            logger.info('Expanded configuration files:  {}'.format(make_list(config_files)))
+            logger.debug('Expanded configuration files:  {}'.format(make_list(config_files)))
             config, used = read_config(config_files, kind=kwargs.get('kind'))
         logger.info('Effective configuration files: {}'.format(make_list(used)))
         return config
