@@ -142,6 +142,8 @@ Development
 - [mw] Improve settings for having per-vendor OPS credentials
 - [ui] More flexbox for header layout
 - [ui] Improve comment editing usability
+- [mw] No need to manually encode form fields with "mechanize" anymore.
+  Thanks, `Kovid <https://github.com/kovidgoyal>`_!
 
 
 2019-05-08 0.165.0
