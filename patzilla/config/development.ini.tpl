@@ -34,7 +34,7 @@ organization        = PatZilla
 productname         = PatZilla IP Navigator
 productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
 page_title          = Patent search
-copyright_html      = &copy; 2013-2019, <a href="https://www.example.org/" class="incognito pointer" target="_blank">Example Inc.</a> — All rights reserved.
+copyright_html      = &copy; 2013-2019, <a href="https://docs.ip-tools.org/ip-navigator/" class="incognito pointer" target="_blank">The PatZilla Developers</a> — All rights reserved.
 stylesheet_uri      = /static/patzilla.css
 
 
@@ -270,7 +270,7 @@ qualname = sqlalchemy.engine
 # "level = WARN" logs neither.  (Recommended for production systems.)
 
 [logger_patzilla]
-level = DEBUG
+level = INFO
 handlers =
 qualname = patzilla
 
