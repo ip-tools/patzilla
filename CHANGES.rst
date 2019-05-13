@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2019-05-13 0.166.1
+==================
+- [mw] Fix missing dependency
+
+
 2019-05-13 0.166.0
 ==================
 - [ui] Upgrade to jQuery 3.4.1
