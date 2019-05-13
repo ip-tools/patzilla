@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Improve input string sanitation
 
 
 2019-05-13 0.166.2

@@ -386,7 +386,8 @@ BasketModel = Backbone.RelationalModel.extend({
         var baseurl = navigatorApp.permalink.get_baseurl_patentview();
         return entries.map(function(entry) {
             var newentry = entry.toJSON();
-            newentry['number'] = sanitize_non_ascii(newentry['number']).trim();
+            if (!newentry) { return; }
+            newentry['number'] = sanitize_non_ascii(newentry['number']);
             newentry['url'] = urljoin(baseurl, '/view/pn/', newentry['number']);
             return newentry;
         });
@@ -632,7 +633,10 @@ BasketView = Backbone.Marionette.ItemView.extend({
             var text = (e.originalEvent || e).clipboardData.getData('text');
             var entries = text.split(/[,;\r\n]/);
             _.each(entries, function(entry) {
-                _this.model.add(entry);
+                entry = sanitize_non_ascii(entry);
+                if (entry) {
+                    _this.model.add(entry);
+                }
             });
         });
 
