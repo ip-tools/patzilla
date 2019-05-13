@@ -9,6 +9,7 @@ Development
 - [ui] Add "clean-webpack-plugin" to cleanup the assets folder before building
 - [mw] Improve settings for having per-vendor OPS credentials
 - [ui] More flexbox for header layout
+- [ui] Improve comment editing usability
 
 
 2019-05-08 0.165.0

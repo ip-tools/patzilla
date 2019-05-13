@@ -101,11 +101,26 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
 
         var _this = this;
 
-        // show the widget with animation
-        this.get_widget().slideToggle();
+        // Show the widget with animation.
+        this.get_widget().slideToggle(function() {
+            var element = _this.get_textarea();
+            var is_visible = element.is(":visible");
+            if (is_visible) {
+                element.trigger('focus');
 
-        // save the comment when loosing focus by connecting
-        // the textarea element's blur event to the item save action
+                element.off('keydown');
+                element.on('keydown', null, 'meta+return', function() {
+                    element.trigger('blur');
+                });
+                element.on('keydown', null, 'ctrl+return', function(event) {
+                    element.trigger('blur');
+                });
+
+            }
+        });
+
+        // Save the comment when loosing focus by connecting
+        // the textarea element's blur event to the item save action.
         var textarea = this.get_textarea();
         textarea.off('blur');
         textarea.on('blur', function() {
