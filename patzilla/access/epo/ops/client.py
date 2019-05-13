@@ -52,7 +52,7 @@ def attach_ops_client(event):
         credentials_source = 'system'
         credentials_data = get_ops_credentials(registry.datasource_settings)
 
-    logger.info('Attaching OPS credentials from "{}": {}...'.format(credentials_source, credentials_data.consumer_key[:10]))
+    logger.info('Attaching OPS credentials from "{}": {}...'.format(credentials_source, credentials_data['consumer_key'][:10]))
 
     if credentials_data:
         request.ops_client = pool.get(credentials_source, credentials_data)

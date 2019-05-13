@@ -81,12 +81,12 @@ class GlobalSettings(object):
                 settings_key = 'datasource:{name}:{vendor}'.format(name=datasource, vendor=vendor)
 
             ds_settings = self.application_settings.get(settings_key, {})
-            for key, value in ds_settings.iteritems():
-                datasource_info.setdefault(key, value)
             datasource_info.setdefault('fulltext_enabled', asbool(ds_settings.get('fulltext_enabled', False)))
             datasource_info.setdefault('fulltext_countries', read_list(ds_settings.get('fulltext_countries', '')))
             datasource_info.setdefault('details_enabled', asbool(ds_settings.get('details_enabled', False)))
             datasource_info.setdefault('details_countries', read_list(ds_settings.get('details_countries', '')))
+            for key, value in ds_settings.iteritems():
+                datasource_info.setdefault(key, value)
 
             datasource_settings.datasource[datasource] = SmartBunch.bunchify(datasource_info)
 

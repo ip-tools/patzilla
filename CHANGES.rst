@@ -5,7 +5,12 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-05-13 0.166.2
+==================
 - [ui] Improve "Fix export with non-ascii characters accidentally slipped into patent numbers"
+- [mw] Fix per-vendor settings for OPS credentials
 
 
 2019-05-13 0.166.1
