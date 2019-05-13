@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Improve "Fix export with non-ascii characters accidentally slipped into patent numbers"
 
 
 2019-05-13 0.166.1

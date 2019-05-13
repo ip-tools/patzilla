@@ -398,7 +398,11 @@ function xhr_decode_error(xhr, options) {
 
 function sanitize_non_ascii(value) {
     // https://www.w3resource.com/javascript-exercises/javascript-string-exercise-32.php
-    return value.replace(/[^\x20-\x7E]/g, '');
+    if (value) {
+        return value.replace(/[^\x20-\x7E]/g, '');
+    } else {
+        return value;
+    }
 }
 
 exports.log = log;
