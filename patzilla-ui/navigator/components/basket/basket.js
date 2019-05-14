@@ -4,7 +4,7 @@ require('patzilla.navigator.components.storage');
 require('raty');
 var memoize = require('memoize');
 var urljoin = require('url-join');
-
+var sanitize_non_ascii = require('patzilla.lib.util').sanitize_non_ascii;
 
 function BasketError(message) {
     this.name    = 'BasketError';
