@@ -68,31 +68,37 @@ StoragePlugin = Marionette.Controller.extend({
         var _this = this;
 
         this.dump().then(function(backup) {
-
-            // compute payload and filename
-            var payload = JSON.stringify(backup, undefined, 4);
-            var filename = 'ip-navigator-database_' + now_iso_filename() + '.json';
-
-            // write file
-            if (!payload) {
-                navigatorApp.ui.notify('Database export failed', {type: 'error', icon: 'icon-save'});
-                return;
-            }
-
-            var blob = new Blob([payload], {type: "application/json"});
-            saveAs(blob, filename);
-
-            // notify user
-            var size_kb = Math.round(blob.size / 1000);
-            navigatorApp.ui.notify(
-                'Database exported successfully, size is ' + size_kb + 'kB.',
-                {type: 'success', icon: 'icon-save'});
+            _this.export_json_file('ip-navigator-database', backup);
 
         });
 
     },
 
-    dbimport: function(payload) {
+    export_json_file: function(filename_prefix, data) {
+
+        // Compute payload and filename.
+        var payload = JSON.stringify(data, undefined, 4);
+        var filename = filename_prefix + '_' + now_iso_filename() + '.json';
+
+        // Write file.
+        if (!payload) {
+            navigatorApp.ui.notify('File export failed', {type: 'error', icon: 'icon-save'});
+            return;
+        }
+
+        // Create Blob object and offer file for download.
+        var blob = new Blob([payload], {type: "application/json"});
+        saveAs(blob, filename);
+
+        // Notify user.
+        var size_kb = Math.round(blob.size / 1000);
+        navigatorApp.ui.notify(
+            'File "' + filename + '" exported successfully, size is ' + size_kb + 'kB.',
+            {type: 'success', icon: 'icon-save'});
+
+    },
+
+    dbimport: function(kind, payload) {
 
         log('StoragePlugin.dbimport');
         var final_deferred = $.Deferred();
@@ -133,8 +139,10 @@ StoragePlugin = Marionette.Controller.extend({
         var filetype = dotresolve(backup, 'metadata.type');
         var database = dotresolve(backup, 'database');
 
-        if (filetype != 'patzilla.navigator.database' && filetype != 'elmyra.ipsuite.navigator.database') {
-            var message = 'ERROR: Database dump format "' + filetype + '" is invalid.';
+        var filetype_should = 'patzilla.navigator.' + kind;
+
+        if (filetype != filetype_should && filetype != 'elmyra.ipsuite.navigator.database') {
+            var message = 'ERROR: Import format "' + filetype + '" is invalid for importing as "' + filetype_should + '".';
             console.error(message);
             navigatorApp.ui.notify(message, {type: 'error'});
             final_deferred.reject(message);
@@ -142,7 +150,7 @@ StoragePlugin = Marionette.Controller.extend({
         }
 
         if (!database) {
-            var message = 'ERROR: Database is empty.';
+            var message = 'ERROR: Import file is empty.';
             console.error(message);
             navigatorApp.ui.notify(message, {type: 'error'});
             final_deferred.reject(message);
@@ -158,7 +166,7 @@ StoragePlugin = Marionette.Controller.extend({
             // Datamodel-specific restore behavior.
             // Merge project lists to get a union of (original, imported).
             // TODO: resolve project name collisions!
-            if (key == 'Project') {
+            if (key == 'Project' || key == 'Comment') {
                 localforage.getItem(key).then(function(original) {
                     if (original && value) {
                         value = _.union(original, value);
@@ -187,7 +195,7 @@ StoragePlugin = Marionette.Controller.extend({
             navigatorApp.trigger('projects:initialize');
 
             navigatorApp.ui.notify(
-                'Database imported successfully',
+                'File imported successfully',
                 {type: 'success', icon: 'icon-folder-open-alt'});
 
             final_deferred.resolve();
@@ -222,79 +230,107 @@ StoragePlugin = Marionette.Controller.extend({
 
     },
 
+    open_json_file: function(element) {
+
+        var deferred = $.Deferred();
+
+        // Read value of file element
+        var file = element.files[0];
+        if (!file) { return; }
+        $(element).val(undefined);
+
+        // Windows workaround
+        var file_type = file.type;
+        var running_in_hell = _.string.contains(navigator.userAgent, 'Windows');
+        if (running_in_hell && file.type == '' && _.string.endsWith(file.name, '.json')) {
+            file_type = 'application/json';
+        }
+
+        // Sanity checks
+        if (file_type != 'application/json') {
+            var message = 'ERROR: File type is ' + (file_type ? file_type : 'unknown') + ', but should be application/json';
+            //log('import message:', message);
+            navigatorApp.ui.notify(message, {type: 'error'});
+            deferred.reject(message);
+            return deferred.promise();
+        }
+
+        // Import file content to database
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var payload = e.target.result;
+            deferred.resolve(payload);
+        };
+        reader.onerror = function(e) {
+            var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
+            //log('import message:', message);
+            navigatorApp.ui.notify(message, {type: 'error'});
+        }
+        reader.readAsText(file);
+
+        return deferred.promise();
+
+    },
+
+    confirm_load_data: function() {
+        var deferred = $.Deferred();
+        navigatorApp.ui.confirm(
+            'You requested to load data from an import file which might render existing data inaccessible. ' +
+            'The application will reload itself after the import task has finished. ' +
+            '<br/><br/>' +
+            'Please make sure you performed a backup using the "export" feature.' +
+            '<br/><br/>' +
+            'Continue import operation?').then(function() {
+                deferred.resolve();
+            });
+        return deferred.promise();
+    },
+
     setup_ui: function() {
 
         console.log('StoragePlugin.setup_ui');
 
         var _this = this;
 
-        // Export database
+        // Export database.
         $('#data-export-button').off('click');
         $('#data-export-button').on('click', function(e) {
             _this.dbexport($(this).parent());
         });
 
-        // Import database
+        // Import database from file.
         // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
         $('#data-import-file').off('change');
         $('#data-import-file').on('change', function(e) {
             e.stopPropagation();
             e.preventDefault();
 
+            var element = this;
+
             // Deactivate project / windows.onfocus.
             // Otherwise, the default project (e.g. "ad-hoc") would be recreated almost instantly.
             navigatorApp.project_deactivate();
 
-            // Read value of file element
-            var file = this.files[0];
-            if (!file) { return; }
-            $(this).val(undefined);
+            // Open file dialog.
+            $.when(_this.open_json_file(element)).then(function(payload) {
 
-            // Windows workaround
-            var file_type = file.type;
-            var running_in_hell = _.string.contains(navigator.userAgent, 'Windows');
-            if (running_in_hell && file.type == '' && _.string.endsWith(file.name, '.json')) {
-                file_type = 'application/json';
-            }
+                // Import database payload.
+                $.when(_this.dbimport('database', payload)).then(function() {
 
-            // Sanity checks
-            if (file_type != 'application/json') {
-                var message = 'ERROR: File type is ' + (file_type ? file_type : 'unknown') + ', but should be application/json';
-                //log('import message:', message);
-                navigatorApp.ui.notify(message, {type: 'error'});
-                return;
-            }
-
-            // Import file content to database
-            var element = this;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var payload = e.target.result;
-                $.when(_this.dbimport(payload)).then(function() {
+                    // Reload environment.
                     $(element).trigger('import:ready');
                 });
-            };
-            reader.onerror = function(e) {
-                var message = 'ERROR: Could not read file ' + file.name + ', message=' + e.getMessage();
-                //log('import message:', message);
-                navigatorApp.ui.notify(message, {type: 'error'});
-            }
-            reader.readAsText(file);
+            });
+
 
         });
 
         $('#data-import-button').off('click');
         $('#data-import-button').on('click', function(e) {
 
-            navigatorApp.ui.confirm(
-                'You requested to load data from an import file which might render existing data inaccessible. ' +
-                'The application will reload itself after the import task has finished. ' +
-                '<br/><br/>' +
-                'Please make sure you performed a backup using the "export" feature.' +
-                '<br/><br/>' +
-                'Continue import operation?').then(function() {
+            _this.confirm_load_data().then(function() {
 
-                // Event handler for "import ready"
+                // Event handler for "import ready".
                 $('#data-import-file').off('import:ready');
                 $('#data-import-file').on('import:ready', function(e) {
                     setTimeout(function() {
@@ -302,7 +338,7 @@ StoragePlugin = Marionette.Controller.extend({
                     }, 750);
                 });
 
-                // Start import by displaying file dialog
+                // Start import by displaying file dialog.
                 navigatorApp.project_deactivate();
                 $('#data-import-file').trigger('click');
 
@@ -373,7 +409,7 @@ navigatorApp.addInitializer(function(options) {
         this.LOAD_IN_PROGRESS = true;
 
         // TODO: resolve project name collisions!
-        this.storage.dbimport(database_dump);
+        this.storage.dbimport('database', database_dump);
     }
 
     this.register_component('storage');

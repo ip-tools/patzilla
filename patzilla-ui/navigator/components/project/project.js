@@ -3,6 +3,7 @@
 require('patzilla.navigator.components.storage');
 require('x-editable/dist/bootstrap-editable/js/bootstrap-editable');
 require('x-editable/dist/bootstrap-editable/css/bootstrap-editable');
+var slugify = require('slugify');
 
 
 QueryModel = Backbone.RelationalModel.extend({
@@ -583,6 +584,137 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
             });
 
         });
+
+        // Import database from file.
+        // https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
+        $('#project-import-file').off('change');
+        $('#project-import-file').on('change', function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            var element = this;
+
+            // Deactivate project / windows.onfocus.
+            // Otherwise, the default project (e.g. "ad-hoc") would be recreated almost instantly.
+            navigatorApp.project_deactivate();
+
+            // Open file dialog.
+            $.when(navigatorApp.storage.open_json_file(element)).then(function(payload) {
+
+                // Import database payload.
+                $.when(navigatorApp.storage.dbimport('project', payload)).then(function() {
+
+                    // Reload environment.
+                    $(element).trigger('import:ready');
+                });
+            });
+
+        });
+
+
+        $(this.el).find('#project-import-button').off();
+        $(this.el).find('#project-import-button').on('click', function(e) {
+
+            navigatorApp.storage.confirm_load_data().then(function() {
+
+                // Event handler for "import ready"
+                $('#project-import-file').off('import:ready');
+                $('#project-import-file').on('import:ready', function(e) {
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 750);
+                });
+
+                // Start import by displaying file dialog.
+                navigatorApp.project_deactivate();
+                $('#project-import-file').trigger('click');
+
+            });
+
+        });
+
+        $(this.el).find('#project-export-button').off();
+        $(this.el).find('#project-export-button').on('click', function(e) {
+
+            e.stopPropagation();
+            e.preventDefault();
+            $(this).popover('hide');
+
+            _this.export_file(_this.model.get('id'));
+
+        });
+
+    },
+
+    export_file: function(project_id) {
+        var _this = this;
+        navigatorApp.storage.dump().then(function(backup) {
+            var project_data = _this.export_get_project(backup, project_id);
+            backup.database = project_data.database;
+            backup.metadata.description = 'IP Navigator Project';
+            backup.metadata.type = 'patzilla.navigator.project';
+            var project_slug = slugify(project_data.name);
+            navigatorApp.storage.export_json_file('ip-navigator-project_' + project_slug, backup);
+        });
+    },
+
+    export_get_project: function(backup, project_id) {
+
+        var mkitem = function(key, value) {
+            var item = {};
+            item[key] = value;
+            return item;
+        };
+
+        var items = [];
+
+        // Project index.
+        var project_key = 'Project/' + project_id;
+        items.push(mkitem("Project", [project_key]));
+
+        // Project.
+        var database = backup.database;
+        var project = database[project_key];
+        items.push(mkitem(project_key, project));
+
+        // Query.
+        _.each(project.queries, function(entry) {
+            var query_key = 'Query/' + entry;
+            var query = database[query_key];
+            items.push(mkitem(query_key, query));
+        });
+
+        // Basket.
+        var basket_key = 'Basket/' + project.basket;
+        var basket = database[basket_key];
+        items.push(mkitem(basket_key, basket));
+
+        // BasketEntry
+        _.each(basket.entries, function(entry) {
+            var basket_entry_key = 'BasketEntry/' + entry;
+            var basket_entry = database[basket_entry_key];
+            items.push(mkitem(basket_entry_key, basket_entry));
+        });
+
+        // Scan for comments.
+        var comment_index = [];
+        _.each(database, function(comment, key) {
+            if (_.string.startsWith(key, 'Comment/')) {
+                if (comment.project == project_id) {
+                    items.push(mkitem(key, comment));
+                    comment_index.push(key);
+                }
+            }
+        });
+        items.push(mkitem("Comment", comment_index));
+
+        var result = {
+            database: items,
+            project: project,
+            name: project.name,
+        };
+
+        return result;
 
     },
 
