@@ -5,6 +5,10 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-05-14 0.167.0
+==================
 - [ui] Improve input string sanitation
 - [ui] Project import/export
 - [ui] Improve snackbar
