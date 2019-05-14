@@ -128,6 +128,11 @@ sloccount:
 	sloccount patzilla
 	sloccount patzilla-ui/{access,common,lib,navigator}
 
+genlicenses:
+	$(pip) install third-party-license-file-generator
+	$(pip) freeze > /tmp/requirements.txt
+	$(python) -m third_party_license_file_generator --requirements-path /tmp/requirements.txt --python-path $(python) --output-file licenses-backend.txt
+
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
 

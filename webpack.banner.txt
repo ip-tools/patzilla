@@ -1,0 +1,65 @@
+=====================
+PatZilla IP Navigator
+=====================
+
+
+About
+=====
+PatZilla is a modular patent information research platform and
+data integration toolkit. It features an efficient user interface
+and access to multiple data sources.
+
+To make sure it remains free software for all its users and to guarantee
+the freedom to share and change all versions of this program, it is
+licensed under the terms of the GNU Affero General Public License.
+
+
+Details
+=======
+To find out more about PatZilla, you are welcome to explore the resources
+listed below. If you feel you want to help to move this project forward,
+you are welcome to join us on our community forum.
+
+- Repository
+  https://github.com/ip-tools/ip-navigator
+
+- Documentation
+  https://docs.ip-tools.org/ip-navigator/
+
+- Community Forum
+  https://meta.ip-tools.org/
+
+
+License
+=======
+PatZilla - Patent information research for humans
+Copyright (C) 2013-2019  The PatZilla authors
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Support
+=======
+For enterprises, dedicated commercial support is also available through
+Elmyra UG. `Elmyra UG`_ is the software development company that’s
+spearheading the ongoing development and as such will ensure
+continuity for the project.
+
+If you’re using PatZilla in your company and you need support or custom
+development or support, feel free to get in touch with us. We are happy
+to receive respective inquiries at info@elmyra.de.
+
+In this way, you are contributing to the ongoing maintenance and further
+development of PatZilla. As it still is a reasonably young project, it
+needs all support it can get.

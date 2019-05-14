@@ -3,6 +3,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
+var fs = require("fs");
 
 // Concepts - Using Third Party Libraries that Are not CJS/AMD/ES6 Modules
 // https://github.com/webpack/webpack.js.org/issues/63
@@ -78,7 +80,17 @@ const config = {
             'Backbone.Marionette': 'backbone.marionette',
         }),
 
-        new webpack.BannerPlugin('\nLicensed to ACME, Inc. under one\nor more contributor license agreements.  See the NOTICE file\ndistributed with this work for additional information\nregarding copyright ownership.  ACME, Inc. licenses this file\nto you under the Apache License, Version 2.0 (the\n"License"); you may not use this file except in compliance\nwith the License.  You may obtain a copy of the License at\n\nhttp://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an "AS IS" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n'),
+        // https://webpack.js.org/plugins/banner-plugin/
+        new webpack.BannerPlugin(fs.readFileSync('./webpack.banner.txt', 'utf8')),
+
+        // https://github.com/xz64/license-webpack-plugin
+        new LicenseWebpackPlugin({
+          perChunkOutput: false,
+          stats: {
+            warnings: false,
+            errors: false
+          }
+        }),
 
     ],
 
