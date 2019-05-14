@@ -17,7 +17,7 @@ PatZilla: Patent information research for humans
 About
 =====
 PatZilla is a modular patent information research platform and
-data integration toolkit. It features a modern user interface
+data integration toolkit. It features an efficient user interface
 and access to multiple data sources.
 
 The system provides convenient access to the OPS service from EPO and
@@ -153,12 +153,18 @@ Please also have a look at the `notices about licenses of third-party components
 
 Support
 =======
-For enterprises, dedicated commercial support is also available through Elmyra UG.
-`Elmyra UG`_ is the software development company that’s spearheading the ongoing
-development and as such will ensure continuity for the project.
+For enterprises, dedicated commercial support is also available through
+Elmyra UG. `Elmyra UG`_ is the software development company that’s
+spearheading the ongoing development and as such will ensure
+continuity for the project.
 
-If you’re using the IP Navigator in your company and you need support or custom development,
-feel free to get in touch with us. We are happy to receive respective inquiries at support@elmyra.de.
+If you’re using PatZilla in your company and you need support or custom
+development or support, feel free to get in touch with us. We are happy
+to receive respective inquiries at info@elmyra.de.
+
+In this way, you are contributing to the ongoing maintenance and further
+development of PatZilla. As it still is a reasonably young project, it
+needs all support it can get.
 
 
 .. _GNU-AGPL-3.0: https://docs.ip-tools.org/ip-navigator/_static/license/GNU-AGPL-3.0.txt
