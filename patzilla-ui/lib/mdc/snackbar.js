@@ -56,7 +56,7 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
             $(this.el).find('.mdc-snackbar__text').css('color', 'white');
         }
 
-        var timeout = 3000;
+        var timeout = 4000;
         if (message.length >= 30) {
             timeout = 5500;
         }

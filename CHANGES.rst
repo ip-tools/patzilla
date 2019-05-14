@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [ui] Tune minimum visibility duration of snackbar
 
 
 2019-05-14 0.167.0
