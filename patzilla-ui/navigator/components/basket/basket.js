@@ -301,6 +301,10 @@ BasketModel = Backbone.RelationalModel.extend({
             // let all entries pass
             //return false;
 
+            if (entry.get('number') == undefined) {
+                return true;
+            }
+
             var score = entry.get('score');
             var seen = entry.get('seen');
             var dismiss = entry.get('dismiss');

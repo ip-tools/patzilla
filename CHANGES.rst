@@ -5,7 +5,12 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-05-15 0.167.1
+==================
 - [ui] Tune minimum visibility duration of snackbar
+- [ui] Filter dangling BasketEntry items. Thanks, Andreas.
 
 
 2019-05-14 0.167.0
