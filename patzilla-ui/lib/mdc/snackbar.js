@@ -70,10 +70,13 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
 
             // https://github.com/material-components/material-components-web/issues/1398#issuecomment-391720258
             actionText: 'Dismiss',
+            actionHandler: function() {},
+            /*
             actionHandler: function () {
                 snackbarElement.setAttribute('aria-hidden', true);
                 snackbarElement.classList.remove('mdc-snackbar--active');
             }
+            */
         });
     }
 

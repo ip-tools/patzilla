@@ -6,6 +6,10 @@ IP Navigator CHANGES
 Development
 ===========
 
+2019-05-15 0.167.2
+==================
+- [ui] Fix snackbar actionHandler
+
 
 2019-05-15 0.167.1
 ==================
