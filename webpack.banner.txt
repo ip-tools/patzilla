@@ -52,14 +52,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Support
 =======
 For enterprises, dedicated commercial support is also available through
-Elmyra UG. `Elmyra UG`_ is the software development company that’s
+Elmyra UG. `Elmyra UG`_ is the software development company that's
 spearheading the ongoing development and as such will ensure
 continuity for the project.
 
-If you’re using PatZilla in your company and you need support or custom
+If you're using PatZilla in your company and you need support or custom
 development or support, feel free to get in touch with us. We are happy
 to receive respective inquiries at info@elmyra.de.
 
 In this way, you are contributing to the ongoing maintenance and further
 development of PatZilla. As it still is a reasonably young project, it
 needs all support it can get.
+
+
+Licenses of third-party components
+==================================
+This program uses third-party libraries or other resources that may
+be distributed under licenses different than this software itself.
+These licenses of software components included in this webpack bundle
+file are listed in the following document section.
