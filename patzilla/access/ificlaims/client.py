@@ -242,8 +242,7 @@ class IFIClaimsClient(GenericSearchClient):
 
         raise self.search_failed(response=response)
 
-
-    @cache_region('search')
+    @cache_region('longer')
     def text_fetch(self, ucid, format='xml'):
 
         """
@@ -251,7 +250,8 @@ class IFIClaimsClient(GenericSearchClient):
         EP666666A2 => EP0666666A2 (EP0666666A3, EP0666666B1)
         """
 
-        log.info(u"{backend_name}: text_fetch, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
+        log.info(u"{backend_name}: text_fetch, ucid={ucid}, format={format}; user={username}".format(
+            ucid=ucid, format=format, **self.__dict__))
 
         starttime = timeit.default_timer()
 
@@ -275,11 +275,15 @@ class IFIClaimsClient(GenericSearchClient):
             verify=self.tls_verify)
         duration = timeit.default_timer() - starttime
 
-        if response.status_code == 200:
+        response_content_type = response.headers['Content-Type']
+        if response.status_code == 200 and response_content_type.startswith(mimetype):
             return response.content
+        else:
+            response.raise_for_status()
+            raise ValueError('Server responded with wrong data format "{}", we requested "{}"'.format(response_content_type, format))
 
 
-    @cache_region('medium')
+    @cache_region('longer')
     def attachment_list(self, ucid):
 
         log.info(u"{backend_name}: attachment_list, ucid={ucid}; user={username}".format(ucid=ucid, **self.__dict__))
@@ -456,6 +460,7 @@ class IFIClaimsClient(GenericSearchClient):
                 path = tif_attachment['path']
                 return self.attachment_fetch(path)
 
+    @cache_region('longer')
     def png_fetch(self, ucid, seq=1):
         log.info(u"{backend_name}: png_fetch, ucid={ucid}, seq={seq}; user={username}".format(ucid=ucid, seq=seq, **self.__dict__))
         tif = self.tif_fetch(ucid, seq)
@@ -548,7 +553,7 @@ def ificlaims_client(options=None):
         client = get_ificlaims_client()
     return client
 
-@cache_region('static')
+
 def ificlaims_fetch(resource, format, options=None):
     options = options or {}
     client = ificlaims_client(options=options)

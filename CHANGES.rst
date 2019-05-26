@@ -5,6 +5,8 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [mw] Prevent wrong data format slipping through from data source
+
 
 2019-05-15 0.167.2
 ==================
