@@ -503,7 +503,7 @@ def normalize_patent_jp(patent):
     conversion: Western Year - 25
 
     HEISEI (HEI, H) - reign of Emperor Akihito
-    1989 to date
+    1989 to 2000
     Japanese emperor year: 01-12
     conversion: Western Year - 88
 
@@ -514,6 +514,10 @@ def normalize_patent_jp(patent):
     - "SIP" yields JP58002167U, which OPS will only accept as JPS582167U
     - JP3657641B2 should stay the same
     - JP08007001AA should become JP08007001A
+
+    The JPO no longer uses the era name for the publication numbers after 2000 (Heisei-12),
+    and therefore, we will not see the new era name “Reiwa” on publication numbers.
+    -- https://allegropat.com/new-era-reiwa-starts-in-japan-from-may-1-2019/
     """
 
     assert patent['country'] == 'JP'

@@ -18,7 +18,7 @@ PatZilla: Patent information research for humans
 ================================================
 
 PatZilla is a modular patent information research platform and
-data integration toolkit. It features a modern user interface
+data integration toolkit. It features an efficient user interface
 and access to multiple data sources.
 
 The system provides convenient access to the OPS service from EPO and

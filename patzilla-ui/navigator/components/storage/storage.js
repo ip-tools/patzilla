@@ -91,9 +91,9 @@ StoragePlugin = Marionette.Controller.extend({
         saveAs(blob, filename);
 
         // Notify user.
-        var size_kb = Math.round(blob.size / 1000);
+        var size_kb = parseFloat((blob.size / 1000).toFixed(1))
         navigatorApp.ui.notify(
-            'File "' + filename + '" exported successfully, size is ' + size_kb + 'kB.',
+            'File "' + filename + '" exported successfully, size is ' + size_kb + ' kB.',
             {type: 'success', icon: 'icon-save'});
 
     },
