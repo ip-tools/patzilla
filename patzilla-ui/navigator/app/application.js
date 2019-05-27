@@ -34,6 +34,29 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         this.queryBuilderView.setup_comfort_form();
     },
 
+    bootstrap_datasource: function() {
+
+        // Acquire "datasource" query parameter.
+        var datasource = this.config.get('datasource');
+
+        // Compute preferred data source.
+        if (!datasource) {
+            var datasources_enabled = this.config.get('datasources_enabled');
+            var datasource_preferred = this.theme.get('ui.datasource_preferred');
+            if (datasource_preferred && _(datasources_enabled).contains(datasource_preferred)) {
+                datasource = datasource_preferred;
+            }
+        }
+
+        // Use OPS as default data source.
+        if (!datasource) {
+            datasource = 'ops';
+        }
+
+        // Propagate computed data source downstream.
+        this.set_datasource(datasource);
+    },
+
     get_query: function() {
         var payload = {
             'expression': $('#query').val(),
@@ -208,7 +231,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             engine.search(search_info, query, options);
 
         } else {
-            this.ui.notify('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'icon-search'});
+            this.ui.notify('No data source adapter for "' + datasource + '".', {type: 'error', icon: 'icon-search'});
         }
 
     },
@@ -317,12 +340,10 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         this.metadata.set('page_size', page_size);
         options.local_limit = page_size;
 
-        // set parameter to control subsearch
+        // Set parameter to control subsearch.
         this.metadata.set('searchmode', 'subsearch');
 
-        //this.set_datasource('ops');
-
-
+        // Prepare searching.
         this.ui.indicate_activity(false);
         this.ui.reset_content();
         //this.ui.reset_content({keep_pager: true, documents: true});

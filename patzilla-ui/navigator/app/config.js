@@ -7,7 +7,7 @@ NavigatorConfiguration = Backbone.Model.extend({
         mode: undefined,
         context: 'default',
         project: 'ad-hoc',
-        datasource: 'ops',
+        datasource: undefined,
         'ship-param': 'payload',
         component_list: [],
         datasources: {},

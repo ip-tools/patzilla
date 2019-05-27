@@ -227,16 +227,13 @@ navigatorApp.addInitializer(function(options) {
 
         this.setup_ui();
 
-        // Propagate "datasource" query parameter
-        var datasource = this.config.get('datasource');
-        if (datasource) {
-            this.set_datasource(datasource);
-        }
+        // Compute and set optimal data source.
+        this.bootstrap_datasource();
 
-        // Activate regular list region right now to avoid double rendering on initial page load
+        // Activate regular list region right now to avoid double rendering on initial page load.
         this.listRegion.show(this.collectionView);
 
-        // Hide pagination- and metadata-area to start from scratch
+        // Hide pagination- and metadata-area to start from scratch.
         this.ui.reset_content();
 
         // Propagate opaque error messages to alert area

@@ -306,15 +306,6 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             element.show();
         });
 
-        // Honor preferred datasource by automatically selecting it.
-        var datasource_preferred = navigatorApp.theme.get('ui.datasource_preferred');
-        if (datasource_preferred && _(whitelist).contains(datasource_preferred)) {
-
-            // Set datasource in model.
-            navigatorApp.config.set('datasource', datasource_preferred);
-
-        }
-
     },
 
     get_datasource_button: function(datasource) {
