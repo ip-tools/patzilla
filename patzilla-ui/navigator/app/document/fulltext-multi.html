@@ -3,10 +3,6 @@
 // (c) 2013-2019 Andreas Motl <andreas.motl@ip-tools.org>
 %>
 
-<%
-var item_template = require('./fulltext.html');
-%>
-
 <div class="btn-group btn-popover tabs do-not-print"
      data-toggle="popover" data-trigger="hover" data-placement="top"
      data-content="Choose language"
@@ -16,6 +12,7 @@ var item_template = require('./fulltext.html');
     _(items).each(function(item) {
     %>
 
+    <!-- One button per language -->
     <button class="btn <%= first_item_classes %>" data-toggle="tab"
             href="#document-details-<%= item.type %>-container-<%= identifier %>-<%= item.language %>">
         <%= item.language %>
@@ -30,6 +27,7 @@ var item_template = require('./fulltext.html');
 
 <div class="tab-content">
 <%
+var item_template = require('./fulltext.html');
 var first_item_classes = 'in active';
 _(items).each(function(item) {
 %>
@@ -37,7 +35,7 @@ _(items).each(function(item) {
 <div id="document-details-<%= item.type %>-container-<%= identifier %>-<%= item.language %>"
      data-identifier="<%= identifier %>"
      class="tab-pane fade <%= first_item_classes %>" style="margin-top: 1em">
-    <span class="content-nt"><%= item_template(item) %></span>
+    <%= item_template(item) %>
 </div>
 
 <%

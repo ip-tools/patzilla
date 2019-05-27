@@ -12,6 +12,7 @@ Development
 - [ui] Honor vendor-based data source preference
 - [ui] Optionally expand maximum share time to five years
 - [ui] Fix preferred data source selector
+- [ui] Improve multi-language fulltext display
 
 
 2019-05-15 0.167.2

@@ -160,6 +160,8 @@ DocumentDetailsController = Marionette.Controller.extend({
 
     setup_ui: function() {
 
+        log('DocumentDetailsController.setup_ui');
+
         var _this = this;
 
         // --------------------------------------------
@@ -180,16 +182,19 @@ DocumentDetailsController = Marionette.Controller.extend({
             var document = navigatorApp.document_base.get_document_by_element(this);
 
             if (document) {
+
+                // Setup fulltext display.
                 if (_(['claims', 'description']).contains(details_type)) {
+
+                    // Acquire fulltext information and display it.
                     var details = _this.get_fulltext_details(details_type, document);
                     _this.display_fulltext(details, {element: container, type: details_type, title: details_title});
 
+                // Setup family information display.
                 } else if (details_type == 'family') {
 
+                    // Setup more button event handlers.
                     var family_chooser = $(container).find('.family-chooser');
-
-
-                    // event handler
                     family_chooser.find('button[data-toggle="tab"]').on('show', function (e) {
                         var view_type = $(this).data('view-type');
                         if (view_type == 'citations') {
@@ -206,7 +211,7 @@ DocumentDetailsController = Marionette.Controller.extend({
                         }
                     });
 
-                    // initial setup
+                    // Initial configuration.
                     var active_tab = family_chooser.find('button[data-toggle="tab"][class*="active"]');
                     var view_type = $(active_tab).data('view-type');
                     _this.display_family(document, container, view_type);
@@ -281,12 +286,12 @@ DocumentDetailsController = Marionette.Controller.extend({
         var container = options.element;
         var title = options.title;
 
-        var content_element = container.find('.content-nt');
+        var content_element = container.find('*[data-area="fulltext"]');
 
         var identifier = container.data('identifier');
 
-        //var template = _.template($('#document-fulltext-template').html(), {variable: 'data'});
-        var template = require('./fulltext.html');
+        //var template_single = _.template($('#document-fulltext-template').html(), {variable: 'data'});
+        var template_single = require('./fulltext.html');
 
         if (content_element) {
             this.indicate_activity(container, true);
@@ -296,7 +301,7 @@ DocumentDetailsController = Marionette.Controller.extend({
 
                     // Legacy format: Object w/o language, just contains "html" and "lang" attributes.
                     if (data.html) {
-                        var content = template({
+                        var content = template_single({
                             type: options.type,
                             title: title,
                             language: data.lang,
@@ -336,8 +341,10 @@ DocumentDetailsController = Marionette.Controller.extend({
                             });
                         };
 
+                        // Render HTML content for single or multiple languages.
                         var template_multi = require('./fulltext-multi.html');
-                        content_element.html(template_multi({identifier: identifier, items: parts}));
+                        html_content = template_multi({identifier: identifier, items: parts});
+                        content_element.html(html_content);
 
                     }
                     if (navigatorApp.keywords) {
