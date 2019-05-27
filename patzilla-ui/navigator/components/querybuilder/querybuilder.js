@@ -288,27 +288,32 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     display_datasource_buttons: function(whitelist) {
 
-        // At first, hide all buttons
+        // Hide all buttons as we will incrementally enable them.
         $('#datasource button').hide();
 
-        // Then, compute data sources the user is allowed to see
+        // Acquire vendor settings.
+        var vendor = navigatorApp.config.get('vendor');
+
+        // Compute data sources the user is allowed to see.
         if (_.isEmpty(whitelist)) {
             whitelist = navigatorApp.config.get('datasources_enabled');
         }
 
-        // Finally, display buttons for switching to all data sources available
-        //var vendor = navigatorApp.config.get('vendor');
+        // Display buttons for switching to different data sources.
         var _this = this;
         _.each(whitelist, function(item) {
             var element = _this.get_datasource_button(item);
-            /*
-            var element = $("#datasource > button[data-value='" + item + "'][data-vendor='" + vendor + "']");
-            if (!$(element).exists()) {
-                element = $("#datasource > button[data-value='" + item + "']:not([data-vendor])");
-            }
-            */
             element.show();
         });
+
+        // Honor preferred datasource by automatically selecting it.
+        var datasource_preferred = navigatorApp.theme.get('ui.datasource_preferred');
+        if (datasource_preferred && _(whitelist).contains(datasource_preferred)) {
+
+            // Set datasource in model.
+            navigatorApp.config.set('datasource', datasource_preferred);
+
+        }
 
     },
 
