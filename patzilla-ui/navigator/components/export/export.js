@@ -20,19 +20,27 @@ ExportPlugin = Backbone.Model.extend({
         var _this = this;
         this.dialog.ready(function() {
 
-            // Initialize expiration time slider
+            // Define expiration time steps.
+            var expiration_steps = ["short", "medium", "long"];
+
+            // Extend share time when having special permissions.
+            if (navigatorApp.theme.get('ui.sharing.extra_long')) {
+                expiration_steps.push("extra-long");
+            }
+
+            // Initialize expiration time slider.
             _this.ttl_element = _this.dialog.find('#expiration-time-slider');
             _this.ttl_slider = new Slider('#expiration-time-slider', {
-                ticks: [1, 2, 3],
-                ticks_labels: ["short", "medium", "long"],
+                ticks: _.range(expiration_steps.length),
+                ticks_labels: expiration_steps,
                 min: 1,
-                max: 3,
+                max: expiration_steps.length,
                 step: 1,
                 value: 1,
                 tooltip: 'hide',
             });
 
-            // Initialize Radio buttons
+            // Initialize Radio buttons.
             _this.radios = new RadioPlus({
                 container: _this.dialog,
                 elements: _this.dialog.find('.export-format,.export-content'),
@@ -269,6 +277,7 @@ ExportPlugin = Backbone.Model.extend({
             '1': moment().add(7, 'days'),
             '2': moment().add(30, 'days'),
             '3': moment().add(0.5, 'years'),
+            '4': moment().add(5, 'years'),
         };
         var exp = kmap[slider_val] || kmap['d'];
         //log('exp:', exp);

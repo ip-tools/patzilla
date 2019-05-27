@@ -10,6 +10,7 @@ Development
   by upgrading to most recent release
 - [ui] Offer multiple languages when displaying fulltext content
 - [ui] Honor vendor-based data source preference
+- [ui] Optionally expand maximum share time to five years
 
 
 2019-05-15 0.167.2
