@@ -1,6 +1,6 @@
 <%
 // -*- coding: utf-8 -*-
-// (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+// (c) 2013-2019 Andreas Motl <andreas.motl@ip-tools.org>
 %>
 
 <%
@@ -388,7 +388,7 @@ var abstract_list = data.get_abstract_list();
             </div>
             <div class="span7 tab-content document-details">
 
-                <div id="document-details-biblio-container-<%= patent_number %>" class="tab-pane fade in active">
+                <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade in active">
                     <dl class="dl-horizontal dl-horizontal-biblio">
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="Applicants">
@@ -561,17 +561,17 @@ var abstract_list = data.get_abstract_list();
                     </dl>
                 </div>
 
-                <div id="document-details-claims-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
+                <div id="document-details-claims-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
                     <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
                     <span class="content-nt"></span>
                 </div>
 
-                <div id="document-details-description-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
+                <div id="document-details-description-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
                     <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
                     <span class="content-nt"></span>
                 </div>
 
-                <div id="document-details-family-container-<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
+                <div id="document-details-family-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
                     <strong>Patent family</strong>
                     &nbsp;&nbsp;&nbsp;
                     <div class="btn-group tabs family-chooser">

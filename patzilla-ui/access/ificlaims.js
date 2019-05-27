@@ -570,7 +570,7 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         $.ajax({url: url, async: true})
             .then(function(response) {
                 if (response) {
-                    log('response:', response);
+                    //log('Response:', response);
 
                     var document = response['patent-document'];
 
@@ -579,23 +579,11 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                         return deferred.promise();
                     }
 
-                    // Serialize claims to HTML
-                    // TODO: Offer multiple languages at once
+                    // Decode and collect claim texts.
+                    var data = _this.collect_fulltext_items(
+                        document.claims,
+                        function(item) { return _this.parse_claim_list(to_list(item.claim)); });
 
-                    // Collect claims by language
-                    var claims_by_language = {};
-                    _.each(to_list(document.claims), function(claim_container) {
-                        var lang = claim_container['@lang'];
-                        claims_by_language[lang] = _this.parse_claim_list(to_list(claim_container.claim));
-                    });
-
-                    // Get claims prioritized by language
-                    var claims_parts = _this.fulltext_by_language(claims_by_language);
-
-                    var data = {
-                        html: claims_parts.join('<br/><br/>'),
-                        lang: document.claims['@lang'],
-                    };
                     deferred.resolve(data, _this.get_datasource_label());
                 }
             }).catch(function(error) {
@@ -605,6 +593,22 @@ IFIClaimsFulltext = Marionette.Controller.extend({
 
         return deferred.promise();
 
+    },
+
+    collect_fulltext_items: function(items, itemgetter) {
+        var response = {};
+
+        // Collect claims by language
+        _.each(to_list(items), function(item) {
+            var fragments = itemgetter(item);
+            var language = item['@lang'];
+            response[language] = {
+                text: fragments.join('<br/><br/>'),
+                lang: language,
+            };
+        });
+
+        return response;
     },
 
     parse_claim_list: function(claim_list) {
@@ -684,26 +688,12 @@ IFIClaimsFulltext = Marionette.Controller.extend({
                         return deferred.promise();
                     }
 
-                    // Serialize description to HTML
-                    // TODO: Offer multiple languages at once
+                    // Decode and collect description texts.
+                    var response = _this.collect_fulltext_items(
+                        document.description,
+                        function(item) { return _this.parse_description_container(item); });
 
-                    // Collect description by language
-                    var description_by_language = {};
-                    _.each(to_list(document.description), function(description_container) {
-                        var lang = description_container['@lang'];
-                        description_by_language[lang] = _this.parse_description_container(description_container);
-                    });
-
-                    // Get description prioritized by language
-                    var description_parts = _this.fulltext_by_language(description_by_language);
-
-                    //log('description_parts:', description_parts);
-
-                    var data = {
-                        html: description_parts.join('<br/><br/>'),
-                        lang: document.description['@lang'],
-                    };
-                    deferred.resolve(data, _this.get_datasource_label());
+                    deferred.resolve(response, _this.get_datasource_label());
                 }
 
             }).catch(function(error) {
@@ -730,26 +720,42 @@ IFIClaimsFulltext = Marionette.Controller.extend({
         if (description_container.p) {
             description_parts = this.parse_description_list(description_container.p);
 
-        // Description container contains section nodes
+        // Description container contains section nodes.
         } else {
-            // Follow order of fragments
+
+            // Follow predefined order of fragments.
             _.each(this.description_fragments, function(fragment_spec) {
+
                 var fragment_name = fragment_spec['key'];
                 try {
+                    //log('Resolving fragment:', description_container, fragment_name);
                     var value = dotted_reference(description_container, fragment_name);
-                    //log('Description fragment:', fragment_name, value);
-                    if (!value) {
-                        return;
-                    }
+                    //log('Description fragment:', fragment_name, value, _.isArray(value));
+                } catch(ex) {
+                    return;
+                }
+
+                if (!value) {
+                    return;
+                }
+
+                if (value.p) {
                     if (value.p.figref) {
-                        // TODO: This misses part number [0016] due to structural impedance mismatch, e.g. JP2017128728A
+                        // Todo: This misses part number [0016] due to structural impedance mismatch, e.g. JP2017128728A
                         description_parts = description_parts.concat(_this.parse_description_list(value.p.figref, fragment_spec));
                     } else {
                         description_parts = description_parts.concat(_this.parse_description_list(value.p, fragment_spec));
                     }
-                } catch(ex) {
-                    // pass
+
+                } else if (_.isArray(value)) {
+                    _.each(value, function(part) {
+                        description_parts = description_parts.concat(_this.parse_description_list(part.p, fragment_spec));
+                    });
+
+                } else {
+                    console.warn('Could not decode fulltext description fragment:', fragment_name);
                 }
+
             });
         }
         return description_parts;

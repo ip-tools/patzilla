@@ -342,7 +342,7 @@ class Dossier(object):
                 # Add XML family data
                 if options.media.family:
                     try:
-                        document_number = encode_epodoc_number(patent, {'nokind': True})
+                        document_number = encode_epodoc_number(patent, options={'nokind': True})
                         family_payload = ops_family_inpadoc('publication', document_number, 'biblio', xml=True)
                         zipfile.writestr(u'media/xml/{document}.family.xml'.format(document=document), family_payload)
                         status[document]['family'] = True

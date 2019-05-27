@@ -16,6 +16,8 @@ from patzilla.navigator.util import object_attributes_to_dict
 from patzilla.util.image.convert import pdf_join, pdf_set_metadata, pdf_make_metadata
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.numbers.common import decode_patent_number, split_patent_number
+from patzilla.util.numbers.common import encode_epodoc_number, encode_docdb_number
+from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
 
@@ -449,7 +451,7 @@ def inquire_images(document):
 
     # v1: docdb
     if patent.kind:
-        ops_patent = patent['country'] + '.' + patent['number'] + '.' + patent['kind']
+        ops_patent = encode_docdb_number(patent)
         url_image_inquiry_tpl = '{baseuri}/published-data/publication/docdb/images'
 
     # v2: epodoc
@@ -658,8 +660,13 @@ def ops_description(document_number, xml=False):
     # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666.A2/description.json
     # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666.B1/description.json
 
+    patent = normalize_patent(document_number, for_ops=True, as_dict=True)
+    document_number = encode_epodoc_number(patent)
+
     url_tpl = '{baseuri}/published-data/publication/epodoc/description'
     url = url_tpl.format(baseuri=OPS_API_URI)
+
+    log.info('Acquiring description for document "{}" from "{}"'.format(document_number, url))
 
     # Acquire description fulltext from OPS.
     with ops_client(xml=xml) as ops:
@@ -672,8 +679,13 @@ def ops_claims(document_number, xml=False):
 
     # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666/claims.json
 
+    patent = normalize_patent(document_number, for_ops=True, as_dict=True)
+    document_number = encode_epodoc_number(patent)
+
     url_tpl = '{baseuri}/published-data/publication/epodoc/claims'
     url = url_tpl.format(baseuri=OPS_API_URI)
+
+    log.info('Acquiring claims for document "{}" from "{}"'.format(document_number, url))
 
     # Acquire claims fulltext from OPS.
     with ops_client(xml=xml) as ops:

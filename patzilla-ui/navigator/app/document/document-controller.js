@@ -182,7 +182,7 @@ DocumentDetailsController = Marionette.Controller.extend({
             if (document) {
                 if (_(['claims', 'description']).contains(details_type)) {
                     var details = _this.get_fulltext_details(details_type, document);
-                    _this.display_fulltext(container, details_title, details);
+                    _this.display_fulltext(details, {element: container, type: details_type, title: details_title});
 
                 } else if (details_type == 'family') {
 
@@ -239,7 +239,8 @@ DocumentDetailsController = Marionette.Controller.extend({
         var document_number;
         if (datasource_name == 'ops') {
             clazz = OpsFulltext;
-            document_number = document.get_publication_number('epodoc');
+            document_number = document.get_publication_number('docdb');
+            log('Acquiring fulltext information for ' + document_number);
 
         } else if (datasource_name == 'depatisconnect') {
             clazz = DepatisConnectFulltext;
@@ -274,10 +275,15 @@ DocumentDetailsController = Marionette.Controller.extend({
         }
     },
 
-    display_fulltext: function(container, title, details) {
+    display_fulltext: function(details, options) {
         var _this = this;
 
+        var container = options.element;
+        var title = options.title;
+
         var content_element = container.find('.content-nt');
+
+        var identifier = container.data('identifier');
 
         //var template = _.template($('#document-fulltext-template').html(), {variable: 'data'});
         var template = require('./fulltext.html');
@@ -291,6 +297,7 @@ DocumentDetailsController = Marionette.Controller.extend({
                     // Legacy format: Object w/o language, just contains "html" and "lang" attributes.
                     if (data.html) {
                         var content = template({
+                            type: options.type,
                             title: title,
                             language: data.lang,
                             content: data.html,
@@ -300,17 +307,38 @@ DocumentDetailsController = Marionette.Controller.extend({
 
                     // New format: Object keyed by language.
                     } else {
+
+                        // Todo: Make this list configurable by user preferences.
+                        var language_sort_order = ['EN', 'DE', 'FR'];
+
+                        var language_sort_criteria = function(value) {
+                            var index = language_sort_order.indexOf(value);
+                            if (index == -1) {
+                                return 999;
+                            } else {
+                                return index;
+                            }
+                        };
+
+                        var languages = _(data).keys();
+                        languages = _.sortBy(languages, language_sort_criteria);
+
                         var parts = [];
-                        for (var key in data) {
-                            var item = data[key];
-                            parts.push(template({
+                        for (var index in languages) {
+                            var language = languages[index];
+                            var item = data[language];
+                            parts.push({
+                                type: options.type,
                                 title: title,
                                 language: item.lang,
                                 content: item.text,
                                 datasource: datasource_label,
-                            }));
+                            });
                         };
-                        content_element.html(parts.join('<hr/>'));
+
+                        var template_multi = require('./fulltext-multi.html');
+                        content_element.html(template_multi({identifier: identifier, items: parts}));
+
                     }
                     if (navigatorApp.keywords) {
                         navigatorApp.keywords.highlight($(content_element).find('*'));

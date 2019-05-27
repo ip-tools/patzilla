@@ -8,6 +8,7 @@ Development
 - [mw] Prevent wrong data format slipping through from data source
 - [ui] Attempt to mitigate https://github.com/marcj/css-element-queries/issues/268
   by upgrading to most recent release
+- [ui] Offer multiple languages when displaying fulltext content
 
 
 2019-05-15 0.167.2

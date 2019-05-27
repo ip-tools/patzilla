@@ -895,19 +895,7 @@ OpsFulltext = Marionette.Controller.extend({
                     var claims = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['claims'];
                     //console.log('claims', claims);
 
-                    var response = {};
-                    _(to_list(claims)).each(function(claims_per_language) {
-                        // TODO: maybe unify with display_description
-                        var content_parts = _(to_list(claims_per_language['claim']['claim-text'])).map(function(item) {
-                            return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/>') + '</p>';
-                        });
-                        var language = claims_per_language['@lang'];
-                        response[language] = {
-                            text: content_parts.join('\n'),
-                            lang: language,
-                        };
-                    });
-
+                    var response = _this.collect_fulltext_items(claims, function(item) { return item['claim']['claim-text']; });
                     deferred.resolve(response, _this.get_datasource_label());
                 }
             }).catch(function(error) {
@@ -931,15 +919,7 @@ OpsFulltext = Marionette.Controller.extend({
                     var description = payload['ops:world-patent-data']['ftxt:fulltext-documents']['ftxt:fulltext-document']['description'];
                     //console.log('description', document_number, description);
 
-                    // TODO: maybe unify with display_claims
-                    var content_parts = _(to_list(description.p)).map(function(item) {
-                        return '<p>' + _(item['$']).escape().replace(/\n/g, '<br/><br/>') + '</p>';
-                    });
-                    var content_text = content_parts.join('\n');
-                    var response = {
-                        html: content_text,
-                        lang: description['@lang'],
-                    };
+                    var response = _this.collect_fulltext_items(description, function(item) { return item['p']; });
                     deferred.resolve(response, _this.get_datasource_label());
                 }
             }).catch(function(error) {
@@ -949,6 +929,21 @@ OpsFulltext = Marionette.Controller.extend({
 
         return deferred.promise();
 
+    },
+
+    collect_fulltext_items: function(items, itemgetter) {
+        var response = {};
+        _(to_list(items)).each(function(item_per_language) {
+            var fragments = _(to_list(itemgetter(item_per_language))).map(function(fragment) {
+                return '<p>' + _(fragment['$']).escape().replace(/\n/g, '<br/>') + '</p>';
+            });
+            var language = item_per_language['@lang'];
+            response[language] = {
+                text: fragments.join('\n'),
+                lang: language,
+            };
+        });
+        return response;
     },
 
 });
