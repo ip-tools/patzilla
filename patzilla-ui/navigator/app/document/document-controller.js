@@ -2,6 +2,8 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('jquery.shorten.1.0');
 require('./util.js');
+var Nataraja = require('patzilla.navigator.components.nataraja').Nataraja;
+
 
 DocumentBaseController = Marionette.Controller.extend({
 
@@ -155,7 +157,8 @@ DocumentBaseController = Marionette.Controller.extend({
 DocumentDetailsController = Marionette.Controller.extend({
 
     initialize: function(options) {
-        console.log('DocumentDetailsController.initialize');
+        log('DocumentDetailsController.initialize');
+        this.nataraja = new Nataraja();
     },
 
     setup_ui: function() {
@@ -347,6 +350,9 @@ DocumentDetailsController = Marionette.Controller.extend({
                         content_element.html(html_content);
 
                     }
+
+                    _this.setup_fulltext_tools(content_element);
+
                     if (navigatorApp.keywords) {
                         navigatorApp.keywords.highlight($(content_element).find('*'));
                     } else {
@@ -367,6 +373,27 @@ DocumentDetailsController = Marionette.Controller.extend({
             });
         }
 
+    },
+
+    setup_fulltext_tools: function(container) {
+        var _this = this;
+        // Setup more button event handlers.
+        var elements = container.find('*[data-component="nataraja"] a');
+        elements.off('click');
+        elements.on('click', function (event) {
+            event.preventDefault();
+            //event.stopPropagation();
+
+            // Find out which comparison action has been clicked
+            // and forward this information to Nataraja.
+            var action = $(this).data('action');
+            var text_element = $(this).closest('*[data-area="fulltext"]').find('*[data-area="text"]');
+            if (action == 'comparison-select-left') {
+                _this.nataraja.select_left(text_element);
+            } else if (action == 'comparison-select-right') {
+                _this.nataraja.select_right(text_element);
+            }
+        });
     },
 
     // TODO: Move to family.js

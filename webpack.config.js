@@ -281,6 +281,7 @@ const config = {
             'patzilla.navigator.components.storage':         path.resolve(__ui, 'navigator', 'components', 'storage'),
             'patzilla.navigator.components.viewport':        path.resolve(__ui, 'navigator', 'components', 'viewport'),
             'patzilla.navigator.components.waypoints':       path.resolve(__ui, 'navigator', 'components', 'waypoints'),
+            'patzilla.navigator.components.nataraja':        path.resolve(__ui, 'navigator', 'components', 'nataraja'),
 
             'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
             'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
@@ -298,6 +299,7 @@ const config = {
             'patzilla.lib.hero-checkbox':                    path.resolve(__ui, 'lib', 'hero-checkbox'),
             'patzilla.lib.mdc.material-icons':               path.resolve(__ui, 'lib', 'mdc', 'material-icons'),
             'patzilla.lib.mdc.snackbar':                     path.resolve(__ui, 'lib', 'mdc', 'snackbar'),
+            'patzilla.lib.mui.dialog':                       path.resolve(__ui, 'lib', 'mui', 'dialog'),
             'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
             modernizr$:                                      path.resolve(__ui, 'vendor', '.modernizrrc'),

@@ -14,6 +14,7 @@ Development
 - [ui] Fix preferred data source selector
 - [ui] Improve multi-language fulltext display
 - [ui] Introduce TypeScript and Material-UI
+- [ui] Add fullscreen dialog based on Material-UI
 
 
 2019-05-15 0.167.2
