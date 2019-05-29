@@ -10,7 +10,7 @@ MANIFEST
 /build
 /dist*
 /var
-/node_modules
+/node_modules*
 .coverage
 o-*.min.js
 o-*.min.map

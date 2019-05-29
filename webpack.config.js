@@ -100,6 +100,17 @@ const config = {
             // Use Babel for loading own code
             // https://www.npmjs.com/package/babel-loader
             {
+                test: /\.tsx?$/,
+                exclude: /(node_modules|bower_components)/,
+                loaders: [
+                    {
+                        loader: 'babel-loader',
+                        options: { presets: ['env'] },
+                    },
+                    'ts-loader',
+                ],
+            },
+            {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: [
@@ -235,7 +246,7 @@ const config = {
             path.resolve(__ui, 'vendor', 'widget'),
         ],
 
-        extensions: [".js", ".jsx", ".min.js", ".json", ".css", ".scss"],
+        extensions: [".ts", ".tsx", ".js", ".jsx", ".min.js", ".json", ".css", ".scss"],
 
         alias: {
 
