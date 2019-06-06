@@ -1,0 +1,29 @@
+{
+  "include": [
+    "patzilla-ui"
+  ],
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "rootDir": "./patzilla-ui",
+    "baseUrl": "./patzilla-ui",
+    "lib": ["dom", "es2015", "es2016"],
+    "declaration": false,
+    "allowSyntheticDefaultImports": true,
+    "inlineSourceMap": false,
+    "sourceMap": true,
+    "jsx": "react",
+    "noEmitOnError": false,
+    "emitDecoratorMetadata": false,
+    "experimentalDecorators": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": false,
+    "noImplicitUseStrict": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "strictNullChecks": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  }
+}

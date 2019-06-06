@@ -5,7 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
-
+- [ui] Add missing ``tsconfig.json``. Thanks, Andrii.
 
 2019-05-29 0.168.0
 ==================
