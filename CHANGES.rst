@@ -5,8 +5,13 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-06-06 0.168.1
+==================
 - [ui] Add missing ``tsconfig.json``. Thanks, Andrii.
 - [ui] Bump material-ui versions
+
 
 2019-05-29 0.168.0
 ==================
