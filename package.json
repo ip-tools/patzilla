@@ -34,9 +34,9 @@
     "release": "webpack --mode=production --config=webpack.release.config.js --display detailed --display-error-details --progress"
   },
   "devDependencies": {
-    "@material-ui/core": "^4.0.1",
+    "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.0.1",
-    "@material-ui/styles": "^4.0.1",
+    "@material-ui/styles": "^4.0.2",
     "@material/button": "0.41.0",
     "@material/chips": "0.41.0",
     "@material/menu": "0.41.0",
