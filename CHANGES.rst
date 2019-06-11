@@ -5,6 +5,7 @@ IP Navigator CHANGES
 
 Development
 ===========
+- [mw] Improve API URI handling for upstream data source
 
 
 2019-06-06 0.168.1

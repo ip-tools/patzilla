@@ -73,6 +73,7 @@ fulltext_countries = DE, US
 
 # API connection settings
 api_uri      = {ificlaims_api_uri}
+api_uri_json = {ificlaims_api_uri_json}
 api_username = {ificlaims_api_username}
 api_password = {ificlaims_api_password}
 

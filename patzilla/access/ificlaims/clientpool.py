@@ -19,7 +19,11 @@ def includeme(config):
     except:
         raise NoOptionError('api_uri', 'datasource:ificlaims')
 
-    config.registry.registerUtility(IFIClaimsClientPool(api_uri=api_uri))
+    api_uri_json = None
+    if 'api_uri_json' in datasource_settings.datasource.ificlaims:
+        api_uri_json = datasource_settings.datasource.ificlaims.api_uri_json
+
+    config.registry.registerUtility(IFIClaimsClientPool(api_uri=api_uri, api_uri_json=api_uri_json))
     config.add_subscriber(attach_ificlaims_client, "pyramid.events.ContextFound")
 
 def attach_ificlaims_client(event):
@@ -58,15 +62,16 @@ class IFIClaimsClientPool(object):
 
     implements(IIFIClaimsClientPool)
 
-    def __init__(self, api_uri):
+    def __init__(self, api_uri, api_uri_json):
         self.api_uri = api_uri
+        self.api_uri_json = api_uri_json
         self.clients = {}
         logger.info('Creating IFIClaimsClientPool')
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
             logger.info('IFIClaimsClientPool.get: identifier={0}'.format(identifier))
-            factory = IFIClaimsClientFactory(self.api_uri, credentials=credentials, debug=False)
+            factory = IFIClaimsClientFactory(self.api_uri, api_uri_json=self.api_uri_json, credentials=credentials, debug=False)
             self.clients[identifier] = factory.client_create()
         return self.clients.get(identifier)
 
@@ -76,9 +81,10 @@ class IFIClaimsClientPool(object):
 # ------------------------------------------
 class IFIClaimsClientFactory(object):
 
-    def __init__(self, api_uri, credentials=None, debug=False):
+    def __init__(self, api_uri, api_uri_json=None, credentials=None, debug=False):
 
         self.api_uri = api_uri
+        self.api_uri_json = api_uri_json
 
         if credentials:
             self.username = credentials['username']
@@ -93,5 +99,5 @@ class IFIClaimsClientFactory(object):
         #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
 
     def client_create(self):
-        client = IFIClaimsClient(uri=self.api_uri, username=self.username, password=self.password)
+        client = IFIClaimsClient(uri=self.api_uri, uri_json=self.api_uri_json, username=self.username, password=self.password)
         return client

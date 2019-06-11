@@ -32,7 +32,7 @@ class IFIClaimsFormatException(IFIClaimsException):
 
 class IFIClaimsClient(GenericSearchClient):
 
-    def __init__(self, uri, username=None, password=None, token=None):
+    def __init__(self, uri, uri_json=None, username=None, password=None, token=None):
 
         self.backend_name = 'ificlaims'
 
@@ -45,6 +45,7 @@ class IFIClaimsClient(GenericSearchClient):
         self.path_attachment_fetch  = '/attachment/fetch'
 
         self.uri = uri
+        self.uri_json = uri_json
         self.username = username
         self.password = password
         self.token = token
@@ -269,7 +270,7 @@ class IFIClaimsClient(GenericSearchClient):
         headers = self.get_authentication_headers()
         headers.update({'Accept': mimetype})
         response = requests.get(
-            self.uri + self.path_text,
+            self.uri_json + self.path_text,
             params={'ucid': ucid},
             headers=headers,
             verify=self.tls_verify)
