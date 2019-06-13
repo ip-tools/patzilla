@@ -303,6 +303,8 @@ const config = {
             'patzilla.common.issuereporter':                 path.resolve(__ui, 'common', 'issuereporter'),
 
             modernizr$:                                      path.resolve(__ui, 'vendor', '.modernizrrc'),
+            'backbone': path.join(__dirname, 'node_modules', 'backbone', 'backbone.js'),
+            'underscore': path.join(__dirname, 'node_modules', 'underscore', 'underscore.js')
 
         }
     },
