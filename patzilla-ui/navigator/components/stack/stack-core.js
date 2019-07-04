@@ -195,7 +195,10 @@ const StackManager = NamedViewController.extend({
         this.view.region_stack_checkbox.show(this.checkbox_widget);
     },
     close_checkbox: function() {
-        this.view.region_stack_checkbox.reset();
+        var region_stack_checkbox = this.view.region_stack_checkbox;
+        if (region_stack_checkbox) {
+            region_stack_checkbox.reset();
+        }
     },
 
     // Debugging helpers
