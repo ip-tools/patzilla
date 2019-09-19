@@ -7,11 +7,16 @@ Development
 ===========
 
 
-2019-09-19 0.169.0
+2019-09-19 0.169.1
 ==================
 - [mw] Improve API URI handling for upstream data source
 - [mw] Fix ``ops_family_inpadoc`` service
+- [ui] Fix close_checkbox function (#21). Thanks, Vasily!
+- [ui] Update Backbone and Marionette to a bit newer version (#20). Thanks Andrii!
+    - Backbone 1.0.0 -> 1.1.2
+    - backbone.marionette 1.1.0 -> 1.8.8
 
+    A little workaround with aliases.
 
 2019-06-06 0.168.1
 ==================
