@@ -711,11 +711,16 @@ def ops_family_inpadoc(reference_type, document_number, constituents, xml=False)
 
     # Compute document identifier.
     document_id = split_patent_number(document_number)
-    ops_id = epo_ops.models.Epodoc(document_id.country + document_id.number, document_id.kind)
 
     # Acquire family information from OPS.
     with ops_client(xml=xml) as ops:
+        ops_id = epo_ops.models.Epodoc(document_id.country + document_id.number, document_id.kind)
         response = ops.family(reference_type, ops_id, constituents=to_list(constituents))
+
+        if response.status_code == 404:
+            ops_id = epo_ops.models.Docdb(document_id.number, document_id.country, document_id.kind)
+            response = ops.family(reference_type, ops_id, constituents=to_list(constituents))
+
         return handle_response(response, 'ops-family')
 
 

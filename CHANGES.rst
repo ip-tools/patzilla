@@ -5,7 +5,12 @@ IP Navigator CHANGES
 
 Development
 ===========
+
+
+2019-09-19 0.169.0
+==================
 - [mw] Improve API URI handling for upstream data source
+- [mw] Fix ``ops_family_inpadoc`` service
 
 
 2019-06-06 0.168.1
