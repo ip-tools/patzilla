@@ -103,12 +103,19 @@ class OpsClientPool(object):
 
 
 # Monkeypatch epo_ops_client
-def _make_request(self, url, data, extra_headers=None, params=None):
-    extra_headers = extra_headers or {}
-    token = 'Bearer {0}'.format(self.access_token.token)
-    extra_headers['Authorization'] = token
+def _make_request(self, url, data, extra_headers=None, params=None, use_get=False):
+    token = "Bearer {0}".format(self.access_token.token)
+    headers = {
+        "Accept": self.accept_type,
+        "Content-Type": "text/plain",
+        "Authorization": token,
+    }
+    headers.update(extra_headers or {})
+    request_method = self.request.post
+    if use_get:
+        request_method = self.request.get
 
-    response = self._post(url, data, extra_headers, params)
+    response = request_method(url, data=data, headers=headers, params=params)
     response = self._check_for_expired_token(response)
     response = self._check_for_exceeded_quota(response)
 

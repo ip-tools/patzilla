@@ -7,6 +7,12 @@ Development
 ===========
 
 
+2019-11-01 0.169.2
+==================
+- [mw] Upgrade to ``python-epo-ops-client==3.1.1``. Thanks, @gsong!
+  https://meta.ip-tools.org/t/bibliographic-data-missing-from-ops-family-response/161
+
+
 2019-09-19 0.169.1
 ==================
 - [mw] Improve API URI handling for upstream data source
@@ -17,6 +23,7 @@ Development
     - backbone.marionette 1.1.0 -> 1.8.8
 
     A little workaround with aliases.
+
 
 2019-06-06 0.168.1
 ==================

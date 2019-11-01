@@ -58,7 +58,7 @@ requires = [
     # ----------------------------------------------
 
     # HTTP
-    'python-epo-ops-client==2.3.2',
+    'python-epo-ops-client==3.1.1',
     'requests==2.21.0',
     'mechanize==0.3.6',
     'MechanicalSoup==0.10.0',
