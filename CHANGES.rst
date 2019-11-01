@@ -7,6 +7,11 @@ Development
 ===========
 
 
+2019-11-01 0.169.3
+==================
+- Fixes and improvements for building and installation procedure
+
+
 2019-11-01 0.169.2
 ==================
 - [mw] Upgrade to ``python-epo-ops-client==3.1.1``. Thanks, @gsong!

@@ -52,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Support
 =======
 For enterprises, dedicated commercial support is also available through
-Elmyra UG. `Elmyra UG`_ is the software development company that's
+Elmyra UG. Elmyra UG is the software development company that's
 spearheading the ongoing development and as such will ensure
 continuity for the project.
 
@@ -70,4 +70,10 @@ Licenses of third-party components
 This program uses third-party libraries or other resources that may
 be distributed under licenses different than this software itself.
 These licenses of software components included in this webpack bundle
-file are listed in the following document section.
+file are listed in the following document section and can also be
+reviewed at
+https://raw.githubusercontent.com/ip-tools/ip-navigator/master/licenses-frontend.txt
+
+Licenses from middleware and backend software components can be
+reviewed at
+https://raw.githubusercontent.com/ip-tools/ip-navigator/master/licenses-backend.txt

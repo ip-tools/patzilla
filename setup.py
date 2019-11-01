@@ -10,7 +10,7 @@ requires = [
     # ----------------------------------------------
     #   Environment
     # ----------------------------------------------
-    'setuptools>=36.4.0',       # 38.5.2
+    #'setuptools==36.4.0',       # 38.5.2
     'six>=1.10.0',              # 1.11.0
 
 
@@ -59,7 +59,7 @@ requires = [
 
     # HTTP
     'python-epo-ops-client==3.1.1',
-    'requests==2.21.0',
+    'requests==2.22.0',
     'mechanize==0.3.6',
     'MechanicalSoup==0.10.0',
 
@@ -94,6 +94,7 @@ requires = [
     'ago==0.0.9',               # 0.0.92
     'arrow==0.10.0',            # 0.12.1
     'validate_email==1.3',
+    'numpy==1.16.2',
     'pandas==0.18.1',           # 0.22.0
 
     # Data formatting

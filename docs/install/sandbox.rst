@@ -70,8 +70,8 @@ Python sandbox
 Create a virtual environment holding the sandbox installation::
 
     apt install python-virtualenv
-    virtualenv --python=python2 --no-site-packages .venv27
-    source .venv27/bin/activate
+    virtualenv --python=python2 --no-site-packages .venv2
+    source .venv2/bin/activate
 
 Install/upgrade some prerequisites::
 
@@ -119,7 +119,7 @@ Start database::
 
 Start web server::
 
-    source .venv27/bin/activate
+    source .venv2/bin/activate
     pserve patzilla/config/development-local.ini --reload
 
 Then, open http://localhost:6543/navigator/
@@ -156,30 +156,6 @@ Run selected test suite::
 Troubleshooting
 ***************
 
-Problem bundling Javascript frontend
-====================================
-When encountering problems while bundling the Javascript frontend, you might
-want to try again using an older release of Node.js. The best way to do this
-is by using the fine nodeenv_ package, like::
-
-    # Setup ancient Node.js 6.14.4 and corresponding Yarn to build the frontend.
-    source .venv27/bin/activate
-    pip install nodeenv
-    nodeenv --node=6.14.4 .nodeenv
-    source .nodeenv/bin/activate
-    npm install -g yarn
-
-Pre-flight checks: Make sure you will be using the nodeenv'd ``yarn`` installation,
-which you can check like::
-
-    $ which yarn
-    /home/amo/dev/elmyra/sources/ip-navigator/.nodeenv/bin/yarn
-
-Then, run the build steps again, see :ref:`build-javascript-bundles`.
-
-.. _nodeenv: https://pypi.org/project/nodeenv/
-
-
 Missing gmp on macOS
 ====================
 When encountering error like::
@@ -194,4 +170,3 @@ and that it's available to your environment::
 
     export LDFLAGS=-L/usr/local/opt/gmp/lib
     export CPPFLAGS=-I/usr/local/opt/gmp/include
-

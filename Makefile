@@ -8,12 +8,12 @@ $(eval python       := $(venvpath)/bin/python)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
 
-$(eval nodeenvpath  := .nodeenv)
-$(eval yarn         := $(nodeenvpath)/bin/yarn)
+$(eval nodeenvpath  := .nodeenv11)
+$(eval npx          := $(nodeenvpath)/bin/npx)
 
 js:
 	# url cleaner
-	node_modules/.bin/uglifyjs \
+	npx uglifyjs \
 		patzilla/navigator/templates/urlcleaner.js \
 		--mangle --compress \
 		> patzilla/navigator/templates/urlcleaner.min.js
@@ -28,7 +28,7 @@ js-release: js
 	@echo Bundling Javascript/CSS resources.
 	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
-	$(yarn) release
+	npx yarn release
 
 sdist:
 	$(python) setup.py sdist

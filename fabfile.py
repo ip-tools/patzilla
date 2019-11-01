@@ -78,7 +78,8 @@ def setup_package(package, virtualenv, options=''):
     #--index-url=http://c.pypi.python.org/simple
     pip_cmd_template = """
         source {virtualenv}/bin/activate;
-        sh -c "pip install --upgrade pip";
+        sh -c "pip install --upgrade setuptools==36.4.0";
+        sh -c "pip install --upgrade pip==19.2.3";
         sh -c "export TEMP=/var/tmp; pip install --cache-dir=/var/cache/pip --verbose {options} {package}"
         """
     #sh -c "pip install --download-cache=/var/cache/pip --allow-all-external --allow-unverified=which --verbose {options} {package}"
