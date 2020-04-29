@@ -72,7 +72,7 @@
     "humanize-plus": "1.8.2",
     "imports-loader": "0.8.0",
     "jq-pagination": "https://github.com/ip-tools/jqPagination#1.4.2-alpha.2",
-    "jquery": "3.4.1",
+    "jquery": "3.5.0",
     "jquery-caret-plugin": "1.5.3",
     "jquery-hotkeys": "0.2.2",
     "jquery-migrate": "3.0.1",
