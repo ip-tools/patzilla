@@ -4,13 +4,13 @@
    contain the root `toctree` directive.
 
 .. image:: https://img.shields.io/badge/Python-2.7-green.svg
-    :target: https://github.com/ip-tools/ip-navigator
+    :target: https://github.com/ip-tools/patzilla
 
 .. image:: https://img.shields.io/pypi/v/patzilla.svg
     :target: https://pypi.org/project/patzilla/
 
-.. image:: https://img.shields.io/github/tag/ip-tools/ip-navigator.svg
-    :target: https://github.com/ip-tools/ip-navigator
+.. image:: https://img.shields.io/github/tag/ip-tools/patzilla.svg
+    :target: https://github.com/ip-tools/patzilla
 
 |
 

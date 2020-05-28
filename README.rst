@@ -1,18 +1,6 @@
-.. image:: https://img.shields.io/badge/Python-2.7-green.svg
-    :target: https://github.com/ip-tools/ip-navigator
-
-.. image:: https://img.shields.io/pypi/v/patzilla.svg
-    :target: https://pypi.org/project/patzilla/
-
-.. image:: https://img.shields.io/github/tag/ip-tools/ip-navigator.svg
-    :target: https://github.com/ip-tools/ip-navigator
-
-|
-
 ################################################
 PatZilla: Patent information research for humans
 ################################################
-
 
 About
 =====
@@ -25,6 +13,23 @@ other professional fulltext patent databases in its standalone version.
 You can also use its software components and interfaces for
 building arbitrary vendor solutions.
 
+----
+
+**Documentation**: https://docs.ip-tools.org/patzilla/
+**Source Code**: https://github.com/ip-tools/patzilla
+**PyPI**: https://pypi.org/project/patzilla/
+
+**Status**:
+
+.. image:: https://img.shields.io/badge/Python-2.7-green.svg
+
+.. image:: https://img.shields.io/pypi/status/patzilla.svg
+
+.. image:: https://img.shields.io/pypi/v/patzilla.svg
+
+.. image:: https://img.shields.io/pypi/l/patzilla.svg
+
+.. image:: https://img.shields.io/pypi/dm/patzilla.svg
 
 Features
 ========
@@ -53,9 +58,9 @@ Screenshot
 ==========
 A picture says a thousand words.
 
-.. image:: https://raw.githubusercontent.com/ip-tools/ip-navigator/master/patzilla-screenshot.png
-    :alt: IP Navigator
-    :target: https://github.com/ip-tools/ip-navigator
+.. image:: https://raw.githubusercontent.com/ip-tools/patzilla/master/patzilla-screenshot.png
+    :alt: PatZilla
+    :target: https://github.com/ip-tools/patzilla
 
 
 Demos
@@ -83,7 +88,7 @@ Demos
 
 Data sources
 ============
-The IP Navigator uses different API services for accessing patent information.
+PatZilla IP Navigator uses different API services for accessing patent information.
 
 Primary data sources:
 
@@ -110,11 +115,11 @@ It runs on Python 2.7, but is not ready for Python 3.6 yet. Contributions are we
 
 Project information
 ===================
-The source code of the »IP Navigator« is available under an open source license using the brand name »PatZilla«.
+The source code of »PatZilla IP Navigator« is available under an open source license using the brand name »PatZilla«.
 For further details, please visit:
 
-- `PatZilla on GitHub <https://github.com/ip-tools/ip-navigator>`_
-- `PatZilla documentation <https://docs.ip-tools.org/ip-navigator/>`_
+- `PatZilla on GitHub <https://github.com/ip-tools/patzilla>`_
+- `PatZilla documentation <https://docs.ip-tools.org/patzilla/>`_
 - `PatZilla on the Python Package Index (PyPI) <https://pypi.org/project/patzilla/>`_
 
 
@@ -141,7 +146,7 @@ Thanks in advance for your efforts, we really appreciate any help or feedback.
 
 License
 =======
-This software is copyright © 2013-2019 The PatZilla authors. All rights reserved.
+This software is copyright © 2013-2020 The PatZilla authors. All rights reserved.
 
 It is and will always be **free and open source software**.
 
@@ -167,16 +172,16 @@ development of PatZilla. As it still is a reasonably young project, it
 needs all support it can get.
 
 
-.. _GNU-AGPL-3.0: https://docs.ip-tools.org/ip-navigator/_static/license/GNU-AGPL-3.0.txt
-.. _EUPL-1.2: https://docs.ip-tools.org/ip-navigator/_static/license/EUPL-1.2.txt
-.. _notices about licenses of third-party components: https://docs.ip-tools.org/ip-navigator/license/THIRD-PARTY-NOTICES.html
-.. _install documentation: https://docs.ip-tools.org/ip-navigator/install/
+.. _GNU-AGPL-3.0: https://docs.ip-tools.org/patzilla/_static/license/GNU-AGPL-3.0.txt
+.. _EUPL-1.2: https://docs.ip-tools.org/patzilla/_static/license/EUPL-1.2.txt
+.. _notices about licenses of third-party components: https://docs.ip-tools.org/patzilla/license/THIRD-PARTY-NOTICES.html
+.. _install documentation: https://docs.ip-tools.org/patzilla/install/
 
 .. _Elmyra UG: https://elmyra.de/
 .. _search demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiZDZUT3Ewc3NkRDB6TTVCSGdhOEJrQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAicXVlcnktcGVybWFsaW5rIiwgInF1ZXJ5IjogInR4dD0oU1M3IG9yICh0ZWxlY29tbXVuaWNhdGlvbiBvciBjb21tdW5pY2F0aW9uIG9yIGNvbXVuaWNhY2lcdTAwZjNuKSBvciAobW9iaWxlIG9yIE1vYmlsZnVua25ldHopIG9yIChuZXR3b3JrIG9yIChzZWN1cml0eSBvciBTaWNoZXJ1bmcpKSkgYW5kIHBhPShtb2JpbCBvciBrb21tdW5pa2F0aW9uKSBhbmQgY2w9KEgwNFcxMi8xMiBvciBIMDRMNjMvMDI4MSBvciBIMDRMNjMvMDQxNCkgbm90IHBuPShDTiBvciBDQSBvciBKUCkiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogIm9wcyJ9LCAibmJmIjogMTUwNzgyNjYxNywgImV4cCI6IDE2NjMzNDY2MTcsICJpYXQiOiAxNTA3ODI2NjE3fQ.fCl7I5wPd0r48O48UkVQxzw9QOy5PjFaFecmAoYisbM-Her9Z6R0E2hxc82TSdH68gz379jQe5v9eF6g620aG4odTOXtdhyoDrWcb-GJcfR-0BfpiqPRwzLng53ape69
 .. _numberlist demo: https://patentview.ip-tools.io/?numberlist=DE102011075997A1%2CDE102011076020A1%2CDE102011076022A1%2CDE102011076035A1&mode=liveview
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
-.. _issue: https://github.com/ip-tools/ip-navigator/issues
+.. _issue: https://github.com/ip-tools/patzilla/issues
 
 .. _NASA public domain: https://technology.nasa.gov/latest/public_domain
 .. _nasa-public-domain demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiTFFoQzMxbjBzalpLZlU5QUNmRVNMQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAiTkFTQSBQdWJsaWMgRG9tYWluIiwgIm51bWJlcmxpc3QiOiAiVVM1Njg5MDA0LFVTNzAwODYwNSxVUzcwMjMxMTgsVVM3NDM4MDMwLFVTNzc3MzM2MixVUzc3OTAxMjgsVVM3ODA4MzUzLFVTNzkwMDQzNixVUzc5MzMwMjcsVVM4MjEyMTM4LFVTODI1OTEwNCxVUzg0MDc5NzksVVM4NzYzMzYyLFVTODkzODk3NCxVUzkwMTY2MzIsVVM5MDIxNzgyLFVTOTA5MTQ5MCxVUzkxOTQzMzQsVVM5MTk0MzM0QjEiLCAiY29udGV4dCI6ICJ2aWV3ZXIiLCAidHRsIjogIjE1Nzg1MjgwMCIsICJtb2RlIjogImxpdmV2aWV3IiwgImRhdGFzb3VyY2UiOiAicmV2aWV3In0sICJuYmYiOiAxNTUzMDM2MDgxLCAiZXhwIjogMTcxMDg4ODg4MSwgImlhdCI6IDE1NTMwMzYwODF9.gejftmq0JiHZEyjBQbQy0QSsKpjDd0TsGl0Zp8BVhH9IrxPi4YT5sxxXjWOU46I3OASzAANodttMJydzgP2DjeIF7VJnjMA9ZrHeqAL30gk8WOmbEIse7l2ciOfhJtyT

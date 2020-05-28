@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'PatZilla'
-copyright = u'2013-2019, The PatZilla authors'
+copyright = u'2013-2020, The PatZilla authors'
 author = u'The PatZilla authors'
 
 # The version info for the project you're documenting, acts as replacement for

@@ -34,7 +34,7 @@ organization        = PatZilla
 productname         = PatZilla IP Navigator
 productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
 page_title          = Patent search
-copyright_html      = &copy; 2013-2019, <a href="https://docs.ip-tools.org/ip-navigator/" class="incognito pointer" target="_blank">The PatZilla Developers</a> — All rights reserved.
+copyright_html      = &copy; 2013-2020, <a href="https://docs.ip-tools.org/patzilla/" class="incognito pointer" target="_blank">The PatZilla Developers</a> — All rights reserved.
 stylesheet_uri      = /static/patzilla.css
 
 
@@ -110,19 +110,19 @@ password = {smtp_password}
 [email_addressbook]
 
 # Sender addresses "From" and "Reply-To"
-from        = IP Navigator <navigator-system@example.org>
-reply       = IP Navigator Support <navigator-support@example.org>
+from        = PatZilla IP Navigator <navigator-system@example.org>
+reply       = PatZilla IP Navigator Support <navigator-support@example.org>
 
 # Recipient addresses "To:"
-support     = IP Navigator Support <navigator-support@example.org>
-system      = IP Navigator System <navigator-system@example.org>
-purchase    = IP Navigator Sales <navigator-sales@example.org>
+support     = PatZilla IP Navigator Support <navigator-support@example.org>
+system      = PatZilla IP Navigator System <navigator-system@example.org>
+purchase    = PatZilla IP Navigator Sales <navigator-sales@example.org>
 
 
 [email_content]
 
 # Email content defaults
-subject_prefix = [ip-navigator]
+subject_prefix = [PatZilla]
 body =
     Sehr geehrter Kunde,
     \n
@@ -134,7 +134,7 @@ body =
     Bitte kommen Sie sonst telefonisch auf uns zu, unsere Telefonnummer finden Sie in der E-Mail Signatur.
     \n
     Mit freundlichen Grüßen,
-    Ihr IP Navigator Support Team.
+    Ihr PatZilla IP Navigator Support Team.
     \n
     ----
     \n

@@ -19,7 +19,7 @@ using the `GitHub issue tracker`_.
 Thanks in advance for your efforts, we appreciate any help or feedback.
 
 .. _IP-Tools community forum: https://meta.ip-tools.org/
-.. _GitHub issue tracker: https://github.com/ip-tools/ip-navigator/issues
+.. _GitHub issue tracker: https://github.com/ip-tools/patzilla/issues
 
 
 Commercial

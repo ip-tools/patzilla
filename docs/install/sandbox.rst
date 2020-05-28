@@ -8,7 +8,7 @@ Sandbox setup
 #############
 
 
-.. _run-ip-navigator-from-source:
+.. _run-patzilla-from-source:
 
 ************
 From sources
@@ -37,8 +37,8 @@ Using git
 ---------
 Get the source code::
 
-    git clone https://github.com/ip-tools/ip-navigator.git
-    cd ip-navigator
+    git clone https://github.com/ip-tools/patzilla.git
+    cd patzilla
 
 
 Using download
@@ -52,8 +52,8 @@ Once you have a copy of the source, you can embed it in your Python package, or 
 
     $ python setup.py install
 
-.. _tarball: https://github.com/ip-tools/ip-navigator/tarball/master
-.. _zipball: https://github.com/ip-tools/ip-navigator/zipball/master
+.. _tarball: https://github.com/ip-tools/patzilla/tarball/master
+.. _zipball: https://github.com/ip-tools/patzilla/zipball/master
 
 .. note::
 
