@@ -15,21 +15,23 @@ building arbitrary vendor solutions.
 
 ----
 
-**Documentation**: https://docs.ip-tools.org/patzilla/
-**Source Code**: https://github.com/ip-tools/patzilla
-**PyPI**: https://pypi.org/project/patzilla/
+- **Documentation**: https://docs.ip-tools.org/patzilla/
 
-**Status**:
+- **Source Code**: https://github.com/ip-tools/patzilla
 
-.. image:: https://img.shields.io/badge/Python-2.7-green.svg
+- **PyPI**: https://pypi.org/project/patzilla/
 
-.. image:: https://img.shields.io/pypi/status/patzilla.svg
+- **Status**:
 
-.. image:: https://img.shields.io/pypi/v/patzilla.svg
+  .. image:: https://img.shields.io/badge/Python-2.7-green.svg
 
-.. image:: https://img.shields.io/pypi/l/patzilla.svg
+  .. image:: https://img.shields.io/pypi/status/patzilla.svg
 
-.. image:: https://img.shields.io/pypi/dm/patzilla.svg
+  .. image:: https://img.shields.io/pypi/v/patzilla.svg
+
+  .. image:: https://img.shields.io/pypi/l/patzilla.svg
+
+  .. image:: https://img.shields.io/pypi/dm/patzilla.svg
 
 Features
 ========
