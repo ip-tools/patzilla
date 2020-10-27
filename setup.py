@@ -65,7 +65,7 @@ requires = [
 
     # HTTP SNI support
     'pyOpenSSL==19.0.0',
-    'cryptography==2.5',
+    'cryptography==3.2',
     'pyasn1==0.4.5',
     'ndg-httpsclient==0.5.1',
 
