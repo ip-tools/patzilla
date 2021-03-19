@@ -23,7 +23,7 @@ requires = [
     'pyramid_debugtoolbar==4.3',    # 4.4
     'Pygments==2.2.0',
     'pyramid_mako==1.0.2',
-    'Jinja2==2.10.1',
+    'Jinja2==2.11.3',
     'Akhet==2.0',
     'waitress==1.1.0',
     'Paste==2.0.3',
