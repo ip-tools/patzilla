@@ -75,7 +75,7 @@ requires = [
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
-    'lxml==3.4.1',              # 4.2.0
+    'lxml==4.6.5',              # 4.2.0
     'xmljson==0.1.9',
 
     # JSON
