@@ -103,7 +103,7 @@ requires = [
     'XlsxWriter==0.9.3',        # 1.0.5
 
     # Data conversion
-    'Pillow==5.1.0',
+    'Pillow==9.0.0',
     #'unoconv==0.8.2',          # Does not work from within virtualenv
 
 
