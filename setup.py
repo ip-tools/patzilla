@@ -22,8 +22,10 @@ requires = [
     'pyramid==1.9.1',
     'pyramid_debugtoolbar==4.3',    # 4.4
     'Pygments==2.2.0',
-    'pyramid_mako==1.0.2',
+    'pyramid-mako==1.0.2',
+    'Mako==1.0.0',
     'Jinja2==2.10.1',
+    'MarkupSafe==1.1.1',
     'Akhet==2.0',
     'waitress==1.1.0',
     'Paste==2.0.3',
@@ -62,6 +64,7 @@ requires = [
     'requests==2.22.0',
     'mechanize==0.3.6',
     'MechanicalSoup==0.10.0',
+    'beautifulsoup4==4.9.3',
 
     # HTTP SNI support
     'pyOpenSSL==19.0.0',
