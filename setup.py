@@ -20,14 +20,14 @@ requires = [
 
     # Pyramid core
     'pyramid==1.9.1',
-    'pyramid_debugtoolbar==4.3',    # 4.4
-    'Pygments==2.2.0',
+    'pyramid-debugtoolbar==4.3',    # 4.4
+    'Pygments==2.5.2',
     'pyramid-mako==1.0.2',
     'Mako==1.0.0',
-    'Jinja2==2.10.1',
+    'Jinja2>=2.11.3,<3',
     'MarkupSafe==1.1.1',
     'Akhet==2.0',
-    'waitress==1.1.0',
+    'waitress>=1,<2',
     'Paste==2.0.3',
     'PasteScript==2.0.2',
 
@@ -49,9 +49,9 @@ requires = [
     'cornice==2.4.1',           # 3.4.0
 
     # Authorization
-    'pycrypto==2.6.1',          # CVE-2013-7459, CVE-2018-6594
+    'pycryptodome>=3,<4',
     'jws==0.1.3',
-    'python_jwt==2.0.2',        # 3.1.0
+    'python-jwt==2.0.2',        # 3.1.0
     'pbkdf2==1.3',
 
 
@@ -61,14 +61,14 @@ requires = [
 
     # HTTP
     'python-epo-ops-client==3.1.1',
-    'requests==2.22.0',
+    'requests<=2.27.1',
     'mechanize==0.3.6',
     'MechanicalSoup==0.10.0',
     'beautifulsoup4==4.9.3',
 
     # HTTP SNI support
     'pyOpenSSL==19.0.0',
-    'cryptography==2.5',
+    'cryptography>=3.2,<3.4',
     'pyasn1==0.4.5',
     'ndg-httpsclient==0.5.1',
 
@@ -78,7 +78,8 @@ requires = [
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
-    'lxml==3.4.1',              # 4.2.0
+    #'lxml==3.4.1',              # 4.2.0
+    'lxml>=4.6.5,<5',
     'xmljson==0.1.9',
 
     # JSON
@@ -106,7 +107,7 @@ requires = [
     'XlsxWriter==0.9.3',        # 1.0.5
 
     # Data conversion
-    'Pillow==5.1.0',
+    'Pillow>=6,<7',
     #'unoconv==0.8.2',          # Does not work from within virtualenv
 
 
