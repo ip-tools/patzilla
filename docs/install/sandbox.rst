@@ -70,7 +70,7 @@ Python sandbox
 Create a virtual environment holding the sandbox installation::
 
     apt install python-virtualenv
-    virtualenv --python=python2 --no-site-packages .venv2
+    virtualenv --python=python2 .venv2
     source .venv2/bin/activate
 
 Install/upgrade some prerequisites::
@@ -79,13 +79,22 @@ Install/upgrade some prerequisites::
 
 Fetch module dependencies and install application::
 
-    pip install -e .
+    pip install --editable=.
 
 
 .. _build-javascript-bundles:
 
-Javascript foundation
----------------------
+Javascript sandbox
+------------------
+
+Create a Node.js environment::
+
+    export NODEJS_VERSION=11.15.0
+    export NPM_VERSION=6.14.15
+    export YARN_VERSION=1.22.18
+
+    source /dev/stdin <<<"$(curl -s https://raw.githubusercontent.com/cicerops/supernode/main/supernode)"
+
 Fetch all module dependencies::
 
     yarn install

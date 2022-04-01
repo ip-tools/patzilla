@@ -8,8 +8,6 @@ $(eval python       := $(venvpath)/bin/python)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
 
-$(eval nodeenvpath  := .nodeenv11)
-$(eval npx          := $(nodeenvpath)/bin/npx)
 
 js:
 	# url cleaner
@@ -132,7 +130,7 @@ genlicenses:
 	$(pip) install third-party-license-file-generator
 	$(pip) freeze > /tmp/requirements.txt
 	$(python) -m third_party_license_file_generator --requirements-path /tmp/requirements.txt --python-path $(python) --output-file licenses-backend.txt
-	$(npx) yarn licenses generate-disclaimer > licenses-frontend.txt
+	npx yarn licenses generate-disclaimer > licenses-frontend.txt
 
 clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
