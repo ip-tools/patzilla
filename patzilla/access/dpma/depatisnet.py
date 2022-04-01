@@ -63,6 +63,7 @@ class DpmaDepatisnetAccess:
             ssl._create_default_https_context = ssl._create_unverified_context
 
         # http://wwwsearch.sourceforge.net/mechanize/
+        # https://github.com/python-mechanize/mechanize
         self.browser = mechanize.Browser()
         self.browser.set_cookiejar(cookielib.LWPCookieJar())
         self.browser.addheaders = [('User-Agent', regular_user_agent)]

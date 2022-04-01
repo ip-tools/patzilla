@@ -33,7 +33,7 @@ you are welcome to join us on our community forum.
 License
 =======
 PatZilla - Patent information research for humans
-Copyright (C) 2013-2019  The PatZilla authors
+Copyright (C) 2013-2022  The PatZilla authors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published by

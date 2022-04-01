@@ -34,7 +34,7 @@ organization        = PatZilla
 productname         = PatZilla IP Navigator
 productname_html    = <span class="header-logo">PatZilla <i class="circle-icon">IP</i> Navigator</span>
 page_title          = Patent search
-copyright_html      = &copy; 2013-2020, <a href="https://docs.ip-tools.org/patzilla/" class="incognito pointer" target="_blank">The PatZilla Developers</a> — All rights reserved.
+copyright_html      = &copy; 2013-2022, <a href="https://docs.ip-tools.org/patzilla/" class="incognito pointer" target="_blank">The PatZilla Developers</a> — All rights reserved.
 stylesheet_uri      = /static/patzilla.css
 
 
