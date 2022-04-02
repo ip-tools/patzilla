@@ -8,6 +8,7 @@ Development
 - [mw] Fix dependencies for Python 2 compatibility
 - [mw] Update dependencies to resolve security warnings
 - [ui] Update dependencies to resolve security warnings
+- [ui] Fix dependencies to resolve build problems
 
 
 2019-11-01 0.169.3
