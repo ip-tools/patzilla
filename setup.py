@@ -98,7 +98,7 @@ requires = [
     'ago==0.0.9',               # 0.0.92
     'arrow==0.10.0',            # 0.12.1
     'validate_email==1.3',
-    'numpy==1.16.2',
+    'numpy==1.16.6',
     'pandas==0.18.1',           # 0.22.0
 
     # Data formatting
