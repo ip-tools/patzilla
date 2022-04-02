@@ -9,6 +9,7 @@ Development
 - [mw] Update dependencies to resolve security warnings
 - [ui] Update dependencies to resolve security warnings
 - [ui] Fix dependencies to resolve build problems
+- [ui] Update dependencies to satisfy ``yarn audit``
 
 
 2019-11-01 0.169.3
