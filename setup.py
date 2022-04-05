@@ -20,6 +20,8 @@ requires = [
 
     # Pyramid core
     'pyramid==1.9.1',
+    'hupper==1.10.2',
+    'watchdog==0.10.7',
     'pyramid-debugtoolbar==4.3',    # 4.4
     'Pygments==2.5.2',
     'pyramid-mako==1.0.2',

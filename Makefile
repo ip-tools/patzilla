@@ -109,7 +109,7 @@ nginx-start:
 
 mongodb-start:
 	mkdir -p ./var/lib/mongodb
-	mongod --dbpath=./var/lib/mongodb --smallfiles
+	mongod --dbpath=./var/lib/mongodb
 
 mongodb-sip-export:
 	mkdir -p var/tmp/mongodb

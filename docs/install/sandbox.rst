@@ -129,9 +129,10 @@ Start database::
 Start web server::
 
     source .venv2/bin/activate
-    pserve patzilla/config/development-local.ini --reload
+    export HUPPER_DEFAULT_MONITOR=hupper.watchdog.WatchdogFileMonitor
+    pserve --reload patzilla/config/development-local.ini
 
-Then, open http://localhost:6543/navigator/
+Then, navigate to http://localhost:6543/navigator/ in your browser.
 
 
 Nginx
