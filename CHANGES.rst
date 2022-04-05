@@ -11,6 +11,7 @@ Development
 - [ui] Fix dependencies to resolve build problems
 - [ui] Update dependencies to satisfy ``yarn audit``
 - [mw] Improve sandbox setup
+- [ui] Fix dependencies: Downgrade to jQuery 3.4.1
 
 
 2019-11-01 0.169.3
