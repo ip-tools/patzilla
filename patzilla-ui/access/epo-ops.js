@@ -579,7 +579,7 @@ _.extend(OpsExchangeDocument.prototype, {
         },
 
         get_classification_schemes: function() {
-            return ['IPC', 'IPC-R', 'CPC', 'CPCNO', 'UC', 'FI', 'FTERM'];
+            return ['IPC', 'IPC-R', 'CPC', 'CPCI', 'CPCNO', 'UC', 'FI', 'FTERM'];
         },
 
         get_classifications: function(links) {
@@ -646,7 +646,7 @@ _.extend(OpsExchangeDocument.prototype, {
                     _.defaults(classifications, defaults);
 
                     var entry;
-                    if (scheme == 'CPC' || scheme == 'CPCNO') {
+                    if (scheme == 'CPC' || scheme == 'CPCI' || scheme == 'CPCNO') {
                         var entry_parts = [];
                         _(cpc_fieldnames).each(function(cpc_fieldname) {
                             if (cpc_fieldname == '/') {
@@ -681,7 +681,7 @@ _.extend(OpsExchangeDocument.prototype, {
 
             if (links) {
                 _.each(classifications, function(value, key) {
-                    if (key == 'CPC' || key == 'CPCNO') {
+                    if (key == 'CPC' || key == 'CPCI' || key == 'CPCNO') {
                         classifications[key] = _this.enrich_links(value, 'cpc', quotate);
                     }
                 });

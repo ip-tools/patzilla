@@ -12,6 +12,7 @@ Development
 - [ui] Update dependencies to satisfy ``yarn audit``
 - [mw] Improve sandbox setup
 - [ui] Fix dependencies: Downgrade to jQuery 3.4.1
+- [ui] EPO/OPS: Support CPCI classifications
 
 
 2019-11-01 0.169.3
