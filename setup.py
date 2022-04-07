@@ -23,7 +23,7 @@ requires = [
     'hupper==1.10.2',
     'watchdog==0.10.7',
     'pyramid-debugtoolbar==4.3',    # 4.4
-    'Pygments==2.5.2',
+    'Pygments==2.7.4',
     'pyramid-mako==1.0.2',
     'Mako==1.0.0',
     'Jinja2>=2.11.3,<3',
