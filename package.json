@@ -89,7 +89,7 @@
     "material-design-icons-iconfont": "4.0.2",
     "modernizr": "^3.12.0",
     "modernizr-loader": "1.0.1",
-    "moment": "2.22.1",
+    "moment": "2.29.2",
     "node-sass": "^4.14.1",
     "notificationfx": "https://github.com/ip-tools/notificationFx#0.0.2",
     "promise": "8.0.1",
