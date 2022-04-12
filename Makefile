@@ -47,8 +47,11 @@ upload-pypi:
 # $(eval version  := $(shell cat setup.py | grep "version='" | sed -rn "s/.*version='(.+?)'.*/\1/p"))
 # $(eval filename := "dist/patzilla-$(version).tar.gz")
 
+# Setup Python virtualenv.
+setup-virtualenv:
+	@test -e $(python) || virtualenv --python=python2 $(venvpath)
 
-setup-test:
+setup-test: setup-virtualenv
 	$(pip) install --editable=.[test]
 
 setup-deployment:
