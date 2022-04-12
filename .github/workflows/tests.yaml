@@ -28,15 +28,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         architecture: x64
-
-    - name: Apply cache
-      uses: actions/cache@v3
-      env:
-        # Increase this value to reset cache even if `setup.py` has not changed.
-        CACHE_NUMBER: 1
-      with:
-        path: .venv
-        key: poetry-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('setup.py') }}-${{ env.CACHE_NUMBER }}
+        cache: 'pip'
+        cache-dependency-path: 'setup.py'
 
     - name: Setup project
       run: make setup-test
@@ -79,6 +72,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         architecture: x64
         cache: 'yarn'
+        cache-dependency-path: 'yarn.lock'
 
     - name: Setup project
       run: yarn install
