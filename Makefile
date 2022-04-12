@@ -49,7 +49,7 @@ upload-pypi:
 
 
 setup-test:
-	$(pip) install -e .[test]
+	$(pip) install --editable=.[test]
 
 setup-deployment:
 	$(pip) install --requirement requirements-deploy.txt
@@ -78,7 +78,7 @@ install-nginx-auth:
 	fab upload_nginx_auth
 
 test:
-	@python runtests.py          \
+	@$(python) runtests.py      \
 		$(options)              \
 		--all-modules           \
 		--traverse-namespace    \
