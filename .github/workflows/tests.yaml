@@ -32,7 +32,9 @@ jobs:
         cache-dependency-path: 'setup.py'
 
     - name: Setup project
-      run: make setup-test
+      run: |
+        pip install virtualenv
+        make setup-test
 
     - name: Run tests
       run: make test
