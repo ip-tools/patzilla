@@ -79,7 +79,7 @@ Install/upgrade some prerequisites::
 
 Fetch module dependencies and install application::
 
-    pip install --editable=.
+    pip install --editable=.[test]
 
 
 .. _build-javascript-bundles:
