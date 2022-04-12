@@ -12,6 +12,7 @@ MANIFEST
 /var
 /node_modules*
 .coverage
+coverage.xml
 o-*.min.js
 o-*.min.map
 yarn-error.log

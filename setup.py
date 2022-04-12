@@ -134,8 +134,8 @@ test_requires = [
     # ----------------------------------------------
     #   testing
     # ----------------------------------------------
-    'nose==1.3.3',              # 1.3.7
-    'nose-exclude==0.2.0',      # 0.5.0
+    'nose==1.3.7',
+    'nose-exclude==0.5.0',
     'nose2-cov==1.0a4',
 ]
 
@@ -164,6 +164,7 @@ setup(name='patzilla',
         "Operating System :: POSIX :: Linux",
         "Programming Language :: JavaScript",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         "Topic :: Scientific/Engineering",

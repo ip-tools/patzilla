@@ -1,0 +1,87 @@
+name: Tests
+on: push
+
+jobs:
+
+  tests-backend:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']   # 'macos-latest', 'windows-latest'
+        python-version: ['2.7']
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
+
+    defaults:
+      run:
+        shell: bash
+
+    name: Python ${{ matrix.python-version }} on OS ${{ matrix.os }}
+    steps:
+
+    - name: Acquire sources
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+        architecture: x64
+
+    - name: Apply cache
+      uses: actions/cache@v3
+      env:
+        # Increase this value to reset cache even if `setup.py` has not changed.
+        CACHE_NUMBER: 1
+      with:
+        path: .venv
+        key: poetry-${{ runner.os }}-py${{ matrix.python-version }}-${{ hashFiles('setup.py') }}-${{ env.CACHE_NUMBER }}
+
+    - name: Setup project
+      run: make setup-test
+
+    - name: Run tests
+      run: make test
+
+    - name: Upload coverage results to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        env_vars: OS,PYTHON
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  tests-ui:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest']   # 'macos-latest', 'windows-latest'
+        node-version: ['11']
+    env:
+      OS: ${{ matrix.os }}
+      PYTHON: ${{ matrix.python-version }}
+
+    defaults:
+      run:
+        shell: bash
+
+    name: Node.js ${{ matrix.node-version }} on OS ${{ matrix.os }}
+    steps:
+
+    - name: Acquire sources
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        architecture: x64
+        cache: 'yarn'
+
+    - name: Setup project
+      run: yarn install
+
+    - name: Run build
+      run: yarn build

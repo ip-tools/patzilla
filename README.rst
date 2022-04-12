@@ -21,7 +21,7 @@ building arbitrary vendor solutions.
 
 - **PyPI**: https://pypi.org/project/patzilla/
 
-- **Status**:
+- **Project status**:
 
   .. image:: https://img.shields.io/badge/Python-2.7-green.svg
 
@@ -32,6 +32,15 @@ building arbitrary vendor solutions.
   .. image:: https://img.shields.io/pypi/l/patzilla.svg
 
   .. image:: https://img.shields.io/pypi/dm/patzilla.svg
+
+- **Code status**:
+
+  .. image:: https://github.com/ip-tools/patzilla/workflows/Tests/badge.svg
+     :target: https://github.com/ip-tools/patzilla/actions?workflow=Tests
+
+  .. image:: https://codecov.io/gh/ip-tools/patzilla/branch/main/graph/badge.svg
+     :target: https://codecov.io/gh/ip-tools/patzilla
+
 
 Features
 ========
