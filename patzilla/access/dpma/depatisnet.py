@@ -174,12 +174,12 @@ class DpmaDepatisnetAccess:
         # Collect result count
 
         # Total hits: 230175    A random selection of 1000 hits is being displayed.  You can narrow your search by adding more search criteria.
-        matches = re.search('Total hits:&nbsp;(\d+)', error_message)
+        matches = re.search('Total hits: (\d+)', error_message)
         if matches:
             hits = int(matches.group(1))
 
         # Result list: 42 hits
-        matches = re.search('Result list:&nbsp;(\d+)&nbsp;hits', body)
+        matches = re.search('Result list: (\d+) hits', body)
         if matches:
             hits = int(matches.group(1))
 
@@ -226,7 +226,7 @@ class DpmaDepatisnetAccess:
 
         # Check for error messages
         soup = BeautifulSoup(body)
-        error_message = soup.find('div', {'class': 'error'})
+        error_message = soup.find('div', {'id': 'errormsg'})
         if error_message:
             parts = []
             [s.extract() for s in error_message('a')]
