@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2009,2015-2017 Andreas Motl <andreas.motl@elmyra.de>
 from collections import OrderedDict
+
+import pytest
+
 from patzilla.util.numbers.normalize import normalize_patent
 
 
@@ -506,19 +509,17 @@ t['SE9503964A']             = 'SE9503964L'
 t['US020170285092A1']       = 'US2017285092A1'
 
 
-test_numbers_normalized_ok = t
+def generate(data):
+    for number, number_normalized_expect in data.items():
+        number_normalized_computed = normalize_patent(number, fix_kindcode=True, for_ops=True)
+        yield number, number_normalized_expect, number_normalized_computed
 
 
 class TestNumberNormalization:
 
-    def examples_ok(self):
-        for number, number_normalized_expect in test_numbers_normalized_ok.iteritems():
-            number_normalized_computed = normalize_patent(number, fix_kindcode=True, for_ops=True)
-            yield number, number_normalized_expect, number_normalized_computed
-
-    def testDecodeOK(self):
-        for number, expected, computed in self.examples_ok():
-            yield self.check_ok, number, expected, computed
+    @pytest.mark.parametrize("number,expected,computed", generate(t), ids=t.keys())
+    def testDecodeOK(self, number, expected, computed):
+        self.check_ok(number, expected, computed)
 
     #def testDecodeFAIL(self):
     #    for ipc_class in test_ipc_classes_fail:
@@ -527,6 +528,5 @@ class TestNumberNormalization:
     def check_ok(self, number, expected, computed):
         assert computed == expected, "number: %s, expected: %s, computed: %s" % (number, expected, computed)
 
-        #@nose.tools.raises(ValueError)
-        #def check_fail(self, ipc_class):
-        #    IpcDecoder(ipc_class['raw'])
+    #def check_fail(self, ipc_class):
+    #    IpcDecoder(ipc_class['raw'])

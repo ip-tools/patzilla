@@ -642,7 +642,7 @@ def normalize_patent_se(patent):
     return patched
 
 
-def test_normalization():
+def normalization_example():
     numbers = [
 
         '--- from production',
@@ -674,5 +674,6 @@ def test_normalization():
         #result = join_patent(patch_patent_old_archive(patent))
         print "{0}{1}".format(number.ljust(20), result)
 
+
 if __name__ == "__main__":
-    test_normalization()
+    normalization_example()

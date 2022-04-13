@@ -17,6 +17,7 @@ Development
 - [ci] Add CI/GHA configuration
 - [ci] Add macOS to test matrix
 - [ui] Update a few JavaScript dependencies
+- [qa] Switch test framework from ``nose`` to ``pytest``
 
 
 2019-11-01 0.169.3
