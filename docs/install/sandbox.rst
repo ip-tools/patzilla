@@ -52,8 +52,8 @@ Once you have a copy of the source, you can embed it in your Python package, or 
 
     $ python setup.py install
 
-.. _tarball: https://github.com/ip-tools/patzilla/tarball/master
-.. _zipball: https://github.com/ip-tools/patzilla/zipball/master
+.. _tarball: https://github.com/ip-tools/patzilla/tarball/main
+.. _zipball: https://github.com/ip-tools/patzilla/zipball/main
 
 .. note::
 

@@ -20,13 +20,13 @@
     "search",
     "fulltext"
   ],
-  "homepage": "https://github.com/ip-tools/ip-navigator",
+  "homepage": "https://github.com/ip-tools/patzilla",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ip-tools/ip-navigator.git"
+    "url": "git://github.com/ip-tools/patzilla.git"
   },
   "bugs": {
-    "url": "https://github.com/ip-tools/ip-navigator/issues"
+    "url": "https://github.com/ip-tools/patzilla/issues"
   },
   "scripts": {
     "watch": "webpack --debug --output-pathinfo --mode=development --config=webpack.develop.config.js --watch --hot",

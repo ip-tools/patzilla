@@ -21,10 +21,10 @@ listed below. If you feel you want to help to move this project forward,
 you are welcome to join us on our community forum.
 
 - Repository
-  https://github.com/ip-tools/ip-navigator
+  https://github.com/ip-tools/patzilla
 
 - Documentation
-  https://docs.ip-tools.org/ip-navigator/
+  https://docs.ip-tools.org/patzilla/
 
 - Community Forum
   https://meta.ip-tools.org/
@@ -72,8 +72,8 @@ be distributed under licenses different than this software itself.
 These licenses of software components included in this webpack bundle
 file are listed in the following document section and can also be
 reviewed at
-https://raw.githubusercontent.com/ip-tools/ip-navigator/master/licenses-frontend.txt
+https://raw.githubusercontent.com/ip-tools/patzilla/main/licenses-frontend.txt
 
 Licenses from middleware and backend software components can be
 reviewed at
-https://raw.githubusercontent.com/ip-tools/ip-navigator/master/licenses-backend.txt
+https://raw.githubusercontent.com/ip-tools/patzilla/main/licenses-backend.txt

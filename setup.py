@@ -171,7 +171,7 @@ setup(name='patzilla',
       ],
       author='Andreas Motl',
       author_email='andreas.motl@ip-tools.org',
-      url='https://github.com/ip-tools/ip-navigator',
+      url='https://github.com/ip-tools/patzilla',
       keywords='patent information research management trademark design search fulltext '
                'patent patents patent-search patent-data information information-retrieval intellectual-property '
                'research researcher researchers research-data research-tool research-and-development '

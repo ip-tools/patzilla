@@ -69,7 +69,7 @@ Screenshot
 ==========
 A picture says a thousand words.
 
-.. image:: https://raw.githubusercontent.com/ip-tools/patzilla/master/patzilla-screenshot.png
+.. image:: https://raw.githubusercontent.com/ip-tools/patzilla/main/patzilla-screenshot.png
     :alt: PatZilla
     :target: https://github.com/ip-tools/patzilla
 

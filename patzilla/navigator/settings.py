@@ -248,7 +248,7 @@ class RuntimeSettings(object):
         ]
 
         software_version_label = 'PatZilla release: ' + self.registry.application_settings.software_version
-        software_version_link  = '<a href="https://github.com/ip-tools/ip-navigator" target="_blank" ' \
+        software_version_link  = '<a href="https://github.com/ip-tools/patzilla" target="_blank" ' \
                                  'class="incognito pointer">{label}</a>'.format(label=software_version_label)
 
         vendor = self.vendor
