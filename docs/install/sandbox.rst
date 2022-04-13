@@ -157,9 +157,13 @@ Run all tests::
 
 Run selected test suite::
 
-    make test options='--where patzilla.access.ificlaims'
-    make test options='--where patzilla.access.depatech'
-    make test options='--where patzilla.util.numbers.test.test_normalize'
+    make test options='-k patzilla/access/ificlaims'
+    make test options='-k patzilla/access/depatech'
+    make test options='-k test_normalize'
+
+Run test suite with coverage reporting::
+
+    make test-coverage
 
 
 ***************

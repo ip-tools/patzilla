@@ -1,6 +1,6 @@
-# =================================
-# General application configuration
-# =================================
+# ===============================================
+# General application configuration (development)
+# ===============================================
 
 [main]
 include     = vendors.ini

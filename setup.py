@@ -93,7 +93,7 @@ requires = [
     # ----------------------------------------------
 
     # Data handling
-    'attrs==17.3.0',            # 17.4.0
+    'attrs',
     'Bunch==1.0.1',             # Maybe switch to "Munch"
     'pyparsing==2.0.2',         # 2.2.0
     'python-dateutil==2.6.1',   # 2.7.0
@@ -131,12 +131,12 @@ requires = [
 ]
 
 test_requires = [
-    # ----------------------------------------------
-    #   testing
-    # ----------------------------------------------
-    'nose==1.3.7',
-    'nose-exclude==0.5.0',
-    'nose2-cov==1.0a4',
+    # -----------
+    #   Testing
+    # -----------
+    'pytest>=4,<5',
+    'pytest-cov>=2,<3',
+    'coverage>=5.3.1,<6',
 ]
 
 setup(name='patzilla',
@@ -189,7 +189,6 @@ setup(name='patzilla',
           'patzilla.util': ['*.js'],
       },
       zip_safe=False,
-      test_suite='nose.collector',
       install_requires=requires,
       tests_require=test_requires,
       extras_require={
