@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2009,2015 Andreas Motl <andreas.motl@elmyra.de>
-import nose.tools
 from collections import OrderedDict
+
+import pytest
+
 from patzilla.util.numbers.common import split_patent_number
 
 
@@ -17,24 +19,24 @@ bad['IT19732A88']        = None
 bad['JPHEI 3-53606']     = None
 
 
+def generate(data):
+    for number, number_normalized_expect in data.items():
+        number_normalized_computed = split_patent_number(number)
+        yield number, number_normalized_expect, number_normalized_computed
+
+
 class TestNumberDecoding:
 
-    def testDecodeOK(self):
-        for number, expected, computed in self.generate(good):
-            yield self.check_ok, number, expected, computed
+    @pytest.mark.parametrize("number,expected,computed", generate(good), ids=good.keys())
+    def testDecodeOK(self, number, expected, computed):
+        self.check_ok(number, expected, computed)
 
-    def testDecodeBAD(self):
-        for number, expected, computed in self.generate(bad):
-            yield self.check_ok, number, expected, computed
-
-    def generate(self, data):
-        for number, number_normalized_expect in data.iteritems():
-            number_normalized_computed = split_patent_number(number)
-            yield number, number_normalized_expect, number_normalized_computed
+    @pytest.mark.parametrize("number,expected,computed", generate(bad), ids=bad.keys())
+    def testDecodeBAD(self, number, expected, computed):
+        self.check_ok(number, expected, computed)
 
     def check_ok(self, number, expected, computed):
         assert computed == expected, "number: %s, expected: %s, computed: %s" % (number, expected, computed)
 
-    #@nose.tools.raises(ValueError)
     #def check_fail(self, ipc_class):
     #    IpcDecoder(ipc_class['raw'])

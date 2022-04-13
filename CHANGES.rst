@@ -16,6 +16,7 @@ Development
 - [ui] Fix dependencies: Upgrade Moment.js and Async
 - [ci] Add CI/GHA configuration
 - [ci] Add macOS to test matrix
+- [qa] Switch test framework from ``nose`` to ``pytest``
 
 
 2019-11-01 0.169.3

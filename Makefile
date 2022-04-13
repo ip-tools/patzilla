@@ -5,6 +5,7 @@ $(eval venvpath     := .venv2)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
+$(eval pytest       := $(venvpath)/bin/pytest)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
 
@@ -81,30 +82,19 @@ install-nginx-auth:
 	fab upload_nginx_auth
 
 test:
-	@$(python) runtests.py      \
-		$(options)              \
-		--all-modules           \
-		--traverse-namespace    \
-		--with-doctest          \
-		--doctest-tests         \
-		--doctest-extension=rst \
-		--doctest-options=doctestencoding=utf-8,+ELLIPSIS,+NORMALIZE_WHITESPACE,+REPORT_UDIFF \
-		--exclude-dir=patzilla/navigator/static \
-		--exclude-dir=patzilla/navigator/templates \
-		--exclude-dir=patzilla/util/database \
-		--exclude-dir=patzilla/util/web/uwsgi \
-		--exclude-dir=patzilla/access/sip \
-		--ignore-files=setup.py \
-		--ignore-files=fabfile.py \
-		--nocapture \
-		--nologcapture \
-		--verbose
+	@$(pytest) \
+		-vvv \
+		$(options)
 
-# +REPORT_ONLY_FIRST_FAILURE
+test-coverage:
+	@$(MAKE) test options="--cov"
 
-
-test-cover:
-	$(MAKE) test options="--with-coverage"
+# --all-modules
+# --traverse-namespace
+# --doctest-options=doctestencoding=utf-8,+ELLIPSIS,+NORMALIZE_WHITESPACE,+REPORT_UDIFF
+#                                   +REPORT_ONLY_FIRST_FAILURE
+# --nocapture
+# --nologcapture
 
 nginx_path=/Users/amo/dev/celeraone/sources/c1-ocb-integrator/rem_rp/parts/openresty
 nginx-start:

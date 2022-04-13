@@ -1,7 +1,8 @@
 import unittest
 from pyramid import testing
 
-class TestMyView(unittest.TestCase):
+
+class TestNavigatorStandalone(unittest.TestCase):
 
     def setUp(self):
         self.config = testing.setUp()
@@ -9,8 +10,8 @@ class TestMyView(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def test_it(self):
-        # At least, check if spinning this up doesn't throw an exception
+    def test_with_dummy_request(self):
+        # At least, check if spinning this up doesn't throw an exception.
         from patzilla.navigator.views import navigator_standalone
         request = testing.DummyRequest()
         info = navigator_standalone(request)
