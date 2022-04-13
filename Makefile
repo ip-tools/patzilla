@@ -1,20 +1,59 @@
 #VERSION := $(shell cat patzilla/version.py | awk '{ print $$3 }' | tr -d "'")
 #$(error VERSION=$(VERSION))
 
-$(eval venvpath     := .venv2)
-$(eval pip          := $(venvpath)/bin/pip)
-$(eval twine        := $(venvpath)/bin/twine)
-$(eval python       := $(venvpath)/bin/python)
-$(eval pserve       := $(venvpath)/bin/pserve)
-$(eval pytest       := $(venvpath)/bin/pytest)
-$(eval bumpversion  := $(venvpath)/bin/bumpversion)
-$(eval fab          := $(venvpath)/bin/fab)
 
-$(eval venv3path     := .venv)
-$(eval yarn          := $(venv3path)/bin/yarn)
-$(eval npx           := $(venv3path)/bin/npx)
+# ==================
+#  Operating system
+# ==================
+
+ifeq ($(OS),Windows_NT)
+    $(info Running on Windows)
+    IS_WINDOWS := true
+else
+    IS_WINDOWS := false
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        $(info Running on Linux)
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        $(info Running on Darwin)
+    endif
+endif
+
+ifeq ($(IS_WINDOWS),true)
+    $(eval venvpath     := .venv2)
+    $(eval pip          := $(venvpath)/Scripts/pip)
+    $(eval twine        := $(venvpath)/Scripts/twine)
+    $(eval python       := $(venvpath)/Scripts/python)
+    $(eval bumpversion  := $(venvpath)/Scripts/bumpversion)
+    $(eval fab          := $(venvpath)/Scripts/fab)
+    $(eval pserve       := $(venvpath)/Scripts/pserve)
+    $(eval pytest       := $(venvpath)/Scripts/pytest)
+
+else
+    $(eval venvpath     := .venv2)
+    $(eval pip          := $(venvpath)/bin/pip)
+    $(eval twine        := $(venvpath)/bin/twine)
+    $(eval python       := $(venvpath)/bin/python)
+    $(eval bumpversion  := $(venvpath)/bin/bumpversion)
+    $(eval fab          := $(venvpath)/bin/fab)
+    $(eval pserve       := $(venvpath)/bin/pserve)
+    $(eval pytest       := $(venvpath)/bin/pytest)
+
+    $(eval venv3path     := .venv)
+    $(eval yarn          := $(venv3path)/bin/yarn)
+    $(eval npx           := $(venv3path)/bin/npx)
+
+endif
+
+ifeq ($(venvpath),)
+$(error Unable to address virtual environment)
+endif
 
 
+# ===============
+#  Project tools
+# ===============
 setup: setup-py
 
 jswatch:
@@ -22,7 +61,6 @@ jswatch:
 
 pywatch:
 	HUPPER_DEFAULT_MONITOR=hupper.watchdog.WatchdogFileMonitor $(pserve) --reload patzilla/config/development-local.ini
-
 
 js:
 	# url cleaner
