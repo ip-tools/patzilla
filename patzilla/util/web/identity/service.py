@@ -66,7 +66,7 @@ def identity_auth_handler(request):
 
     # find user
     user = User.objects(username__iexact=username).first()
-    if user:
+    if user is not None:
 
         # check password
         if user.check_password(password):

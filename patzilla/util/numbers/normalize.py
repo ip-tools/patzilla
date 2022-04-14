@@ -70,10 +70,8 @@ def patch_patent(patent, provider=None):
         # e.g.
         # GE00U200501210Y = GEU20051210Y
         # GE00P200503700B = GEP20053700B
-        #print '77777777777:', patched['number'][5]
         if patched['number'][5] == '0':
             patched['number'] = patched['number'][:5] + patched['number'][6:]
-
 
     elif patched['country'] == 'IT':
         patched['number'] = patched['number'].lstrip('0')
@@ -254,11 +252,12 @@ def patch_patent_old_archive(patent):
 
 def normalize_patent_wo(patent):
     """
-    Normalizes to "WIPO Publication Number" format, e.g. WO2005092324
+    Normalizes to "WIPO Publication Number" format, e.g. WO2005092324.
 
     see "Pub. No.":
-    http://www.wipo.int/pctdb/en/wo.jsp?IA=WO/2005/092324
-    http://www.wipo.int/pctdb/en/wo.jsp?IA=WO0067640
+    - Works: https://patentscope.wipo.int/search/en/detail.jsf?docId=WO/2005/092324
+    - Works: https://patentscope.wipo.int/search/en/detail.jsf?docId=WO2000067640
+    - Fails: https://patentscope.wipo.int/search/en/detail.jsf?docId=WO0067640
     """
 
     assert patent['country'] == 'WO'
@@ -369,7 +368,8 @@ def normalize_patent_wo_pct(patent):
         wo_patent = split_patent_number(country_year + seqnumber)
         return normalize_patent_wo(wo_patent)
 
-    # handle special formatting like "WOEP/2004/008531"
+    # Handle special formatting like "WOEP/2004/008531".
+    # TODO: No way to get here because it's handled by `normalize_patent_wo` instead?
     if pct.startswith('WO') and len(pct) == 4:
         country_year = pct[2:4] + country_year
 
@@ -642,7 +642,7 @@ def normalize_patent_se(patent):
     return patched
 
 
-def normalization_example():
+def normalization_example():  # pragma: nocover
     numbers = [
 
         '--- from production',
@@ -675,5 +675,5 @@ def normalization_example():
         print "{0}{1}".format(number.ljust(20), result)
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: nocover
     normalization_example()

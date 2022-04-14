@@ -61,7 +61,10 @@ TODO:
 - add more kinds of wildcards ('*' at the beginning and '*' inside a word)?
 """
 from pyparsing import Word, alphanums, Keyword, Group, Combine, Forward, Suppress, Optional, OneOrMore, oneOf, nums, Literal
-from sets import Set
+try:
+   Set = set
+except NameError:
+   from sets import Set
 from patzilla.util.cql.pyparsing.parser import separators, wildcards
 
 # define characters comprising a word

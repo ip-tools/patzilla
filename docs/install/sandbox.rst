@@ -165,6 +165,10 @@ Run test suite with coverage reporting::
 
     make test-coverage
 
+Or run ``pytest`` directly, like::
+
+    pytest -vvv --cov -k normalize
+
 
 ***************
 Troubleshooting
