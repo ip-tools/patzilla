@@ -137,6 +137,8 @@ test_requires = [
     'pytest>=4,<5',
     'pytest-cov>=2,<3',
     'coverage>=5.3.1,<6',
+    'mock>=3,<4',
+    'testfixtures>=6,<7',
 ]
 
 setup(name='patzilla',

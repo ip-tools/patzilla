@@ -36,7 +36,7 @@ class TestNumberDecoding:
         self.check_ok(number, expected, computed)
 
     def check_ok(self, number, expected, computed):
-        assert computed == expected, "number: %s, expected: %s, computed: %s" % (number, expected, computed)
+        assert expected == computed, "number: %s, expected: %s, computed: %s" % (number, expected, computed)
 
     #def check_fail(self, ipc_class):
     #    IpcDecoder(ipc_class['raw'])
