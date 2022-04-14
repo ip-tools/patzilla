@@ -64,6 +64,7 @@ def split_patent_number(patent_number):
 
     # pre-flight check for WO applications (let them pass through)
 
+    # Like WOPCT/US02/03226
     if patent_number.startswith('WOPCT'):
         patent = {
             'country': 'WO',
@@ -73,6 +74,17 @@ def split_patent_number(patent_number):
             }
         return patent
 
+    # Like WOEP/2004/008531
+    elif patent_number.startswith('WOEP'):
+        patent = {
+            'country': 'WO',
+            'number': 'PCT/' + patent_number[2:].replace("/", "", 1),
+            'kind': '',
+            'ext': '',
+            }
+        return patent
+
+    # Like PCT/US99/009417
     elif patent_number.startswith('PCT'):
         patent = {
             'country': 'WO',

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # (c) 2009,2015-2017 Andreas Motl <andreas.motl@elmyra.de>
 from collections import OrderedDict
+from functools import partial
 
 import pytest
 
-from patzilla.util.numbers.normalize import normalize_patent
-
+from patzilla.util.numbers.common import DocumentIdentifierBunch
+from patzilla.util.numbers.normalize import normalize_patent, depatisconnect_alternatives, patch_patent_old_archive, \
+    normalize_patent_us
 
 t = OrderedDict()
 
@@ -125,7 +127,7 @@ t['PCT/US1999/9417']     = 'PCT/US1999/009417'
 # via: http://books.google.de/books?id=waOrACYzONMC&pg=PA91&lpg=PA91&dq=uspto+patent+number+format&source=bl&ots=tjJ3TgD9HH&sig=WUnhlkYPBaCYFJpgJNyptyEoMdE&hl=de&ei=WjD3SoTPCJzymwOEw4W0Aw&sa=X&oi=book_result&ct=result&resnum=3&ved=0CBEQ6AEwAg
 t['US845948']            = 'US845948'           # appnum
 t['US6990683']           = 'US6990683'          # pubnum
-#t['WOEP/2004/008531']    = 'PCT/EP2004/008531'  # appnum
+t['WOEP/2004/008531']    = 'PCT/EP2004/008531'  # appnum (WO2005098230)
 t['WO2005/098230']       = 'WO2005098230'       # pubnum
 t['EP20020762866']       = 'EP20020762866'      # appnum
 t['EP1333613']           = 'EP1333613'          # pubnum
@@ -490,6 +492,7 @@ t['US000000044856E']        = 'USRE44856E'
 
 
 # 2014-10-04: strip leading zeros (DEPATISnet yields numbers like JP002011251389A or JP00000S602468B2)
+t['JP002011251389A']        = 'JP2011251389A'
 t['JP00000S602468B2']       = 'JPS602468B2'
 
 # 2015-09-01: properly convert japanese numbers into "HEISEI (HEI, H) - reign of Emperor Akihito" format
@@ -508,17 +511,97 @@ t['SE9503964A']             = 'SE9503964L'
 # around October 2017. Account for that.
 t['US020170285092A1']       = 'US2017285092A1'
 
+# 2022-04-14, from implementation to increase code coverage.
+t['EA202191110A1'] = 'EA202191110A1'
+t['EA12345'] = 'EA012345'
+t['GEU1999535Y'] = 'GEU1999535Y'
+t['GEP20012536B'] = 'GEP20012536B'
+t['KR1020150124192A'] = 'KR20150124192A'
+t['DE000002363448A'] = 'DE2363448A1'
+t['ES1282550Y2'] = 'ES1282550Y'
+t['USRE49033E'] = 'USRE49033E'
+t['US49033E'] = 'USRE49033E'
+t['WOPCT/EP02/07746/123'] = None
+t['JP58002167U'] = 'JPS582167U'
+t['JP3657641B2'] = 'JP3657641B2'
+t['JPH0229970B2'] = 'JPH0229970B2'
 
-def generate(data):
+
+depatisconnect_cases = OrderedDict()
+depatisconnect_cases['DE000000121107C'] = ['DE000000121107C', 'DE000000121107B', 'DE000000121107A']
+depatisconnect_cases['DE000001020931A'] = ['DE000001020931A']
+depatisconnect_cases['DE000002363448A1'] = ['DE000002363448A1', 'DE000002363448A']
+depatisconnect_cases['DEM 89 08 812'] = ['DEM8908812']
+depatisconnect_cases['DE10001499.2'] = ['DE10001499.2']
+
+
+oldarchive_cases = [
+    {"input": {'country': 'WO', 'number': '1014', 'kind': 'A3'},
+     "output": {'country': 'WO', 'number': '00001014', 'kind': 'A3'}},
+    {"input": {'country': 'US', 'number': '24087', 'kind': 'E'},
+     "output": {'country': 'US', 'number': '00024087', 'kind': 'E'}},
+    {"input": {'country': 'EP', 'number': '666666', 'kind': 'A1'},
+     "output": {'country': 'EP', 'number': '00666666', 'kind': 'A1'}},
+]
+
+uspto_cases = [
+    {"input": {'number': 'USD813591S', 'provider': 'ops'},
+     "output": "USD813591S"},
+    {"input": {'number': 'USD813591S', 'provider': 'espacenet'},
+     "output": "USD813591SS"},
+    {"input": {'number': 'USD813591S', 'provider': 'uspto'},
+     "output": "USD0813591S"},
+    {"input": {'number': 'USD813591S', 'provider': 'others'},
+     "output": "USD0813591S"},
+    {"input": {'number': 'US201700054A1', 'provider': 'espacenet'},
+     "output": "US2017000054A1"},
+    {"input": {'number': 'US201700054A1', 'provider': 'uspto'},
+     "output": "US20170000054A1"},
+    {"input": {'number': 'US201700054A1', 'provider': 'others'},
+     "output": "US20170000054A1"},
+    {"input": {'number': 'US2548918', 'provider': 'espacenet'},
+     "output": "US2548918"},
+    {"input": {'number': 'US2548918', 'provider': 'uspto'},
+     "output": "US02548918"},
+    {"input": {'number': 'US2548918', 'provider': 'others'},
+     "output": "US2548918"},
+]
+
+
+def generate(data, fun):
     for number, number_normalized_expect in data.items():
-        number_normalized_computed = normalize_patent(number, fix_kindcode=True, for_ops=True)
+        number_normalized_computed = fun(number)
         yield number, number_normalized_expect, number_normalized_computed
+
+
+def from_list(data, fun):
+    for item in data:
+        computed = fun(item["input"])
+        yield item["input"], item["output"], computed
+
+
+def normalize_patent_us_smart(input):
+    number = input["number"]
+    provider = input["provider"]
+    return normalize_patent_us(patent=normalize_patent(number, as_dict=True), provider=provider).serialize()
 
 
 class TestNumberNormalization:
 
-    @pytest.mark.parametrize("number,expected,computed", generate(t), ids=t.keys())
+    @pytest.mark.parametrize("number,expected,computed", generate(t, fun=partial(normalize_patent, fix_kindcode=True, for_ops=True)), ids=t.keys())
     def testDecodeOK(self, number, expected, computed):
+        self.check_ok(number, expected, computed)
+
+    @pytest.mark.parametrize("number,expected,computed", generate(depatisconnect_cases, fun=partial(depatisconnect_alternatives)), ids=depatisconnect_cases.keys())
+    def test_depatisconnect_alternatives(self, number, expected, computed):
+        self.check_ok(number, expected, computed)
+
+    @pytest.mark.parametrize("number,expected,computed", from_list(oldarchive_cases, fun=partial(patch_patent_old_archive)))
+    def test_patch_patent_old_archive(self, number, expected, computed):
+        self.check_ok(number, expected, computed)
+
+    @pytest.mark.parametrize("number,expected,computed", from_list(uspto_cases, fun=partial(normalize_patent_us_smart)))
+    def test_normalize_patent_us(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 
     #def testDecodeFAIL(self):
@@ -526,7 +609,23 @@ class TestNumberNormalization:
     #        yield self.check_fail, ipc_class
 
     def check_ok(self, number, expected, computed):
-        assert computed == expected, "number: %s, expected: %s, computed: %s" % (number, expected, computed)
+        assert expected == computed, "number: %s, expected: %s, computed: %s" % (number, expected, computed)
 
     #def check_fail(self, ipc_class):
     #    IpcDecoder(ipc_class['raw'])
+
+
+def test_normalize_patent_dict():
+    assert normalize_patent({'kind': 'A1', 'country': 'DE', 'number': '000002363448'}) == {'country': 'DE', 'kind': 'A1', 'number': '2363448'}
+
+
+def test_normalize_patent_as_dict():
+    assert normalize_patent('DE000002363448A1', as_dict=True) == DocumentIdentifierBunch(country='DE', ext='', kind='A1', number='2363448')
+
+
+def test_normalize_patent_as_string():
+    assert normalize_patent({'kind': 'A1', 'country': 'DE', 'number': '000002363448'}, as_string=True) == 'DE2363448A1'
+
+
+# TODO: Test `normalize_patent_jp`.
+# TODO: Don't cover `normalization_example` and `__main__`.

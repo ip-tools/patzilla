@@ -49,10 +49,7 @@ def denormalize_patent_wo(patent):
         seqnumber = patched['number'][2:]
 
         fullyear = fullyear_from_year(year)
-        #print fullyear
-        #print patched['number']
         patched['number'] = denormalize_patent_wo_algo(int(fullyear), int(seqnumber))
-        #print patched['number']
 
 
     # wrong format: assume 4+5, convert to 2+5 ...
