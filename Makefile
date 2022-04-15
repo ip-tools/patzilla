@@ -87,7 +87,7 @@ test:
 		$(options)
 
 test-coverage:
-	@$(MAKE) test options="--cov"
+	@$(MAKE) test options="$(options) --cov"
 
 # --all-modules
 # --traverse-namespace

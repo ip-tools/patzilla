@@ -26,6 +26,16 @@ jobs:
     - name: Acquire sources
       uses: actions/checkout@v3
 
+    - name: Install dependencies for Linux
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt install poppler-utils
+
+    - name: Install dependencies for macOS
+      if: runner.os == 'macOS'
+      run: |
+        brew install poppler
+
     - name: Setup Python
       uses: actions/setup-python@v3
       with:
@@ -40,7 +50,7 @@ jobs:
         make setup-test
 
     - name: Run tests
-      run: make test-coverage
+      run: make test-coverage options="--app-cache-backend=memory"
 
     - name: Upload coverage results to Codecov
       uses: codecov/codecov-action@v3
