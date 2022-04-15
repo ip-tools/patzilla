@@ -241,7 +241,7 @@ class RuntimeSettings(object):
             '<a href="https://ops.epo.org/" target="_blank" class="incognito pointer">EPO/OPS</a>',
             '<a href="https://depatisnet.dpma.de" target="_blank" class="incognito pointer">DPMA/DEPATISnet</a>',
             '<a href="https://www.uspto.gov/" target="_blank" class="incognito pointer">USPTO/PATIMG</a>',
-            '<a href="http://cipo.gc.ca" target="_blank" class="incognito pointer">CIPO</a>',
+            '<a href="https://www.ic.gc.ca/eic/site/cipointernet-internetopic.nsf/eng/Home" target="_blank" class="incognito pointer">CIPO</a>',
             '<a href="https://www.ificlaims.com/" target="_blank" class="incognito pointer">IFI CLAIMS</a>',
             '<a href="https://depa.tech/" target="_blank" class="incognito pointer">MTC depa.tech</a>',
             #'<a href="https://patentfamily.com/" target="_blank" class="incognito pointer">SIP</a>',

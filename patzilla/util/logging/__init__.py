@@ -11,7 +11,7 @@ def boot_logging(options=None):
     setup_logging(level=log_level)
 
 def setup_logging(level=logging.INFO):
-    log_format = '%(asctime)-15s [%(name)-20s] %(levelname)-7s: %(message)s'
+    log_format = '%(asctime)-15s [%(name)-25s] %(levelname)-7s: %(message)s'
     logging.basicConfig(
         format=log_format,
         stream=sys.stderr,

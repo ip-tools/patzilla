@@ -28,6 +28,7 @@ from patzilla.access.generic.exceptions import ignored
 from patzilla.util.date import humanize_date_english
 from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number
 from patzilla.util.python import exception_traceback
+from patzilla.util.python.system import find_program_candidate
 
 log = logging.getLogger(__name__)
 
@@ -738,9 +739,8 @@ class DossierXlsx(Dossier):
             '/usr/bin/unoconv',
         ]
         candidates += where.where('unoconv')
-        for candidate in candidates:
-            if os.path.isfile(candidate):
-                return candidate
+        return find_program_candidate(candidates)
+
 
 class ReportMetadata(OrderedDict):
 

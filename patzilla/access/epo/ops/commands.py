@@ -41,7 +41,8 @@ def tiff_request(client, url, parameters, **kwargs):
     #print response
     print response.content
 
-if __name__ == '__main__':
+
+if __name__ == '__main__':  # pragma: nocover
 
     configfile = sys.argv[1]
 

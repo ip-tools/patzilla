@@ -40,3 +40,8 @@ class TestNumberDecoding:
 
     #def check_fail(self, ipc_class):
     #    IpcDecoder(ipc_class['raw'])
+
+
+def test_split_patent_number_invalid(caplog):
+    assert split_patent_number("invalid") is None
+    assert 'Unable to parse patent number "INVALID"' in caplog.messages
