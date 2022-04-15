@@ -19,6 +19,7 @@ Development
 - [ui] Update a few JavaScript dependencies
 - [qa] Switch test framework from ``nose`` to ``pytest``
 - [qa] Improve Python test harness
+- [mw] Fix getting PDF documents and drawings from USPTO. Thanks, @aghster!
 
 
 2019-11-01 0.169.3
