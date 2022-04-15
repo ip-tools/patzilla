@@ -20,6 +20,7 @@ Development
 - [qa] Switch test framework from ``nose`` to ``pytest``
 - [qa] Improve Python test harness
 - [mw] Fix getting PDF documents and drawings from USPTO. Thanks, @aghster!
+- [qa] Add software test infrastructure for data acquisition subsystems
 
 
 2019-11-01 0.169.3

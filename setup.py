@@ -37,6 +37,7 @@ requires = [
     'Beaker==1.9.0',            # 1.10.0
     'pyramid_beaker==0.8',
     'dogpile.cache==0.6.4',     # 0.6.5
+    'appdirs>=1,<2',
 
     # Database and storage
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
