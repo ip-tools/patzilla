@@ -2,64 +2,39 @@
 
 .. _install-development:
 .. _install-sandbox:
-
-#############
-Sandbox setup
-#############
-
-
 .. _run-patzilla-from-source:
 
-************
-From sources
-************
+####################
+Sandbox installation
+####################
 
-If you plan on contributing, this is the way to go!
+About
+=====
 
-This will install every necessary packages to
-run a sandbox instance, run the tests,
-build the documentation, build the packages, etc.
+If you plan to contribute to PatZilla, this is the way to go!
 
-
-Satisfy prerequisites
-=====================
-Setting up PatZilla from source has the same requirements as with the basic setup,
-so please follow :ref:`install-minimum-requirements` for satisfying these.
-
-Additionally, PatZilla requires the Yarn_ package manager for setting up the
-environment used for bundling the Javascript packages. Please read how to :ref:`setup-yarn`.
+This section of the documentation will guide you through the process of setting
+up a development sandbox in order to get hands on with the source code.
 
 
-Get the Source
-==============
 
-Using git
----------
-Get the source code::
+Prerequisites
+=============
 
-    git clone https://github.com/ip-tools/patzilla.git
+Running PatZilla from source has the same baseline requirements as the basic
+setup, so please follow :ref:`install-minimum-requirements` for satisfying
+these dependencies beforehand.
+
+For building PatZilla from source, more programs are needed.
+
+
+Acquire sources
+===============
+
+Get the source code by using ``git``::
+
+    git clone https://github.com/ip-tools/patzilla
     cd patzilla
-
-
-Using download
---------------
-You can also install PatZilla from source. The latest release (|version|) is available from GitHub.
-
-* tarball_
-* zipball_
-
-Once you have a copy of the source, you can embed it in your Python package, or install it into your site-packages easily::
-
-    $ python setup.py install
-
-.. _tarball: https://github.com/ip-tools/patzilla/tarball/main
-.. _zipball: https://github.com/ip-tools/patzilla/zipball/main
-
-.. note::
-
-    Please note that both variants do **not** contain the bundled Javascript packages,
-    so the user interface will not work out of the box before running webpack on it.
-    See also :ref:`build-javascript-bundles` for building the Javascript bundles.
 
 
 Setup
@@ -67,45 +42,32 @@ Setup
 
 Python sandbox
 --------------
-Create a virtual environment holding the sandbox installation::
+Create a Python virtual environment holding the sandbox installation::
 
     apt install python-virtualenv
-    virtualenv --python=python2 .venv2
-    source .venv2/bin/activate
-
-Install/upgrade some prerequisites::
-
-    pip install --upgrade pip
-
-Fetch module dependencies and install application::
-
-    pip install --editable=.[test]
+    make setup
 
 
 .. _build-javascript-bundles:
 
-Javascript sandbox
+JavaScript sandbox
 ------------------
 
-Create a Node.js environment::
+Create a Node.js environment using specific software versions and install the
+application's dependencies::
 
+    # Yes it's outdated but c'est la vie.
     export NODEJS_VERSION=11.15.0
     export NPM_VERSION=6.14.15
     export YARN_VERSION=1.22.18
-
     source /dev/stdin <<<"$(curl -s https://raw.githubusercontent.com/cicerops/supernode/main/supernode)"
 
-Fetch all module dependencies::
-
+    # Install all module dependencies.
     yarn install
 
-Bundle application and all required assets::
+Launch bundler in development mode, reloading files when changed on disk::
 
-    yarn build
-
-Rebundle on file change::
-
-    yarn watch
+    make jswatch
 
 
 Configure
@@ -120,17 +82,15 @@ Then, edit ``patzilla/config/development-local.ini`` according to your needs.
 Run instance
 ============
 
-Application container
----------------------
+Application
+-----------
 Start database::
 
-    make mongodb-start
+    make mongodb
 
-Start web server::
+Launch application in development mode, reloading files when changed on disk::
 
-    source .venv2/bin/activate
-    export HUPPER_DEFAULT_MONITOR=hupper.watchdog.WatchdogFileMonitor
-    pserve --reload patzilla/config/development-local.ini
+    make pywatch
 
 Then, navigate to http://localhost:6543/navigator/ in your browser.
 
@@ -139,17 +99,14 @@ Nginx
 -----
 ::
 
-    make nginx-start
+    make nginx
 
 
 Go to http://localhost:6544
 
 
-Run tests
-=========
-Setup::
-
-    make setup-test
+Software tests
+==============
 
 Run all tests::
 
@@ -179,22 +136,9 @@ Or run ``pytest`` directly, like::
 
     pytest -vvv --cov -k normalize
 
+In order to skip tests making upstream network requests, or which are otherwise
+slow, use::
 
-***************
-Troubleshooting
-***************
+    pytest -vvv -m "not slow"
 
-Missing gmp on macOS
-====================
-When encountering error like::
 
-    src/_fastmath.c:36:11: fatal error: 'gmp.h' file not found
-
-make sure you have gmp installed::
-
-    brew install gmp
-
-and that it's available to your environment::
-
-    export LDFLAGS=-L/usr/local/opt/gmp/lib
-    export CPPFLAGS=-I/usr/local/opt/gmp/include

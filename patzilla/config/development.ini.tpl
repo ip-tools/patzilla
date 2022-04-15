@@ -257,6 +257,11 @@ keys = generic
 level = INFO
 handlers = console
 
+[logger_patzilla]
+level = INFO
+handlers =
+qualname = patzilla
+
 [logger_oauthlib]
 level = INFO
 handlers =
@@ -269,11 +274,6 @@ qualname = sqlalchemy.engine
 # "level = INFO" logs SQL queries.
 # "level = DEBUG" logs SQL queries and results.
 # "level = WARN" logs neither.  (Recommended for production systems.)
-
-[logger_patzilla]
-level = INFO
-handlers =
-qualname = patzilla
 
 
 [handler_console]

@@ -153,8 +153,8 @@ def fetch_url(url, method="get"):
     system_under_test = \
         "PYTEST_CURRENT_TEST" in os.environ and \
         "sink" in socket.gethostname()
-    if system_under_test:
-        timeout = 0.3
+    if system_under_test:  # pragma: nocover
+        timeout = 0.8
 
     # Invoke HTTP request with specified method.
     fun = getattr(http, method)
