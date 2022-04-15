@@ -98,9 +98,9 @@ def get_reference_type(document):
     Analyze document number to tell application vs. patent (publication, grant) numbers apart.
     The basic heuristic is to assume e.g. US2007231208A1 (4+6=10 chars) to be an application.
     """
-    assert document is not None
-    assert isinstance(document.number, str)
-    number_length = len(document.number)
+    if document is None or not (hasattr(document, "number") and isinstance(document.number, (int, str, unicode))):
+        raise ValueError("Unknown document reference type: {}".format(document))
+    number_length = len(str(document.number))
     reference_type = None
     if number_length <= 9:
         reference_type = UsptoPdfReferenceType.PUBLICATION
