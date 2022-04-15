@@ -21,6 +21,7 @@ Development
 - [qa] Improve Python test harness
 - [mw] Fix getting PDF documents and drawings from USPTO. Thanks, @aghster!
 - [qa] Add software test infrastructure for data acquisition subsystems
+- [qa] Add tests covering the acquisition of USPTO PDF documents and drawings
 
 
 2019-11-01 0.169.3
