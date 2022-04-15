@@ -155,15 +155,25 @@ Run all tests::
 
     make test
 
-Run selected test suite::
 
-    make test options='-k patzilla/access/ificlaims'
-    make test options='-k patzilla/access/depatech'
-    make test options='-k test_normalize'
+Run tests, advanced
+===================
 
 Run test suite with coverage reporting::
 
     make test-coverage
+
+In order to improve performance, the test harness employs the same resource
+caching subsystem as the main application. By default, it will be enabled.
+To disable that, use the ``--app-cache-backend=memory`` option, e.g. like::
+
+    make test-coverage options="--app-cache-backend=memory"
+
+Run selected tests::
+
+    make test options='-k patzilla/access/ificlaims'
+    make test options='-k patzilla/access/depatech'
+    make test options='-k test_normalize'
 
 Or run ``pytest`` directly, like::
 
