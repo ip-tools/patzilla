@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
 from patzilla.access.dpma.dpmaregister import DpmaRegisterAccess
@@ -35,26 +35,26 @@ def jump_office(request):
             if document_type == 'publication':
                 # http://patft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1=9317610
                 document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://patft.uspto.gov/netacgi/nph-Parser'\
+                url = 'https://patft.uspto.gov/netacgi/nph-Parser'\
                       '?Sect1=PTO1&Sect2=HITOFF&d=PALL&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.htm&r=1&f=G&l=50&s1={number}.PN.'.format(**document)
 
             elif document_type == 'application':
                 # http://appft.uspto.gov/netacgi/nph-Parser?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1=20160105912
                 document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://appft.uspto.gov/netacgi/nph-Parser'\
+                url = 'https://appft.uspto.gov/netacgi/nph-Parser'\
                       '?Sect1=PTO1&Sect2=HITOFF&d=PG01&p=1&u=%2Fnetahtml%2FPTO%2Fsrchnum.html&r=1&f=G&l=50&s1={number}'.format(**document)
 
         elif office == 'uspto' and service == 'images':
 
             if document_type == 'publication':
-                # http://pdfpiw.uspto.gov/.piw?docid=9317610
+                # https://pdfpiw.uspto.gov/.piw?docid=9317610
                 document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://pdfpiw.uspto.gov/.piw?docid={number}'.format(**document)
+                url = 'https://pdfpiw.uspto.gov/.piw?docid={number}'.format(**document)
 
             elif document_type == 'application':
-                # http://pdfaiw.uspto.gov/.aiw?docid=20160105912
+                # https://pdfaiw.uspto.gov/.aiw?docid=20160105912
                 document = normalize_patent(document_number, as_dict=True, for_ops=False)
-                url = 'http://pdfaiw.uspto.gov/.aiw?docid={number}'.format(**document)
+                url = 'https://pdfaiw.uspto.gov/.aiw?docid={number}'.format(**document)
 
         elif office == 'uspto' and service == 'global-dossier':
             # https://globaldossier.uspto.gov/#/result/publication/DE/112015004959/1

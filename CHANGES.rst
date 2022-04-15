@@ -18,6 +18,7 @@ Development
 - [ci] Add macOS to test matrix
 - [qa] Switch test framework from ``nose`` to ``pytest``
 - [qa] Improve Python test harness
+- [mw] Fix getting PDF documents and drawings from USPTO. Thanks, @aghster!
 
 
 2019-11-01 0.169.3

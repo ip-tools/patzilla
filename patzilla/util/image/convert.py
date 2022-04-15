@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-# (c) 2011-2018 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2011-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import os
+import shutil
+import tempfile
+
 import where
 import logging
 import datetime
@@ -10,7 +13,7 @@ from six import BytesIO
 from tempfile import NamedTemporaryFile
 from cornice.util import to_list
 from patzilla.util.python.decorators import memoize
-from patzilla.util.python.system import run_command
+from patzilla.util.python.system import run_command, find_program_candidate
 
 logger = logging.getLogger(__name__)
 
@@ -364,6 +367,58 @@ def pdf_now():
     return now
 
 
+def pdf_extract_image(pdf_payload, format="tiff"):
+    """
+    pdfimages is an open-source command-line utility for extracting images from PDF files.
+
+    Example: The command `pdfimages -tiff 2.pdf out` produces the output file `out-000.tif`.
+
+    - https://en.wikipedia.org/wiki/Pdfimages
+    - https://manpages.debian.org/testing/poppler-utils/pdfimages.1.en.html
+    - https://gitlab.freedesktop.org/poppler/poppler/-/blob/master/utils/pdfimages.cc
+    """
+
+    # Discover workhorse program.
+    pdfimages = find_pdfimages()
+    if not pdfimages:
+        message = 'Could not find program "pdfimages", please install it'
+        logger.error(message)
+        raise AssertionError(message)
+
+    # Setup input and output files and directories.
+    infile = NamedTemporaryFile(suffix=".pdf", delete=False)
+    infile.write(pdf_payload)
+    infile.flush()
+
+    outdir = tempfile.mkdtemp()
+    outfile_effective = os.path.join(outdir, "out-000.tif")
+    outfile_basefile = os.path.join(outdir, "out")
+
+    # Extract image from PDF by shelling out.
+    tiff_payload = None
+    command = "{pdfimages} -{format} {infile} {outname}".format(
+        pdfimages=pdfimages, format=format, infile=infile.name, outname=outfile_basefile)
+    try:
+        run_command(command)
+        with open(outfile_effective, "rb") as f:
+            tiff_payload = f.read()
+
+    except Exception:
+        logger.exception('pdfimages: Command "{}" failed'.format(command))
+
+    finally:
+        try:
+            infile.close()
+        except Exception as ex:
+            logger.warning('pdfimages: Unable to delete temporary file "%s": %s', infile.name, ex)
+        try:
+            shutil.rmtree(outdir)
+        except Exception as ex:
+            logger.warning('pdfimages: Unable to delete temporary directory "%s": %s', outdir, ex)
+
+    return tiff_payload
+
+
 @memoize
 def find_convert():
     """
@@ -399,6 +454,7 @@ def find_convert():
     logger.info('Found "convert" program at {}'.format(convert_path))
     return convert_path
 
+
 @memoize
 def find_pdftk():
     """
@@ -423,7 +479,7 @@ def find_pdftk():
 
     return find_program_candidate(candidates)
 
-def find_program_candidate(candidates):
-    for candidate in candidates:
-        if os.path.isfile(candidate):
-            return candidate
+
+@memoize
+def find_pdfimages():
+    return find_program_candidate(where.where('pdfimages'))
