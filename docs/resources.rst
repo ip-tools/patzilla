@@ -8,6 +8,7 @@
 .. _DEPAROM: http://deparom.de/
 
 .. _PhantomJS: http://phantomjs.org/
+.. _pdfimages: https://manpages.debian.org/testing/poppler-utils/pdfimages.1.en.html
 .. _PDFtk: https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/
 .. _ImageMagick: https://www.imagemagick.org/
 .. _unoconv: http://dag.wiee.rs/home-made/unoconv/

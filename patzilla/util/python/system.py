@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-# (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2018-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+import os
+import shlex
 import subprocess
 from six import BytesIO
 
@@ -8,6 +10,9 @@ logger = logging.getLogger(__name__)
 
 
 def run_command(command, input=None):
+
+    if not isinstance(command, list):
+        command = shlex.split(command)
     command_string = ' '.join(command)
 
     proc = subprocess.Popen(
@@ -67,3 +72,9 @@ def run_command(command, input=None):
 
     return BytesIO(stdout)
     """
+
+
+def find_program_candidate(candidates):
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return candidate
