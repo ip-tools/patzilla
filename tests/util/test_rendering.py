@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# (c) 2022 Andreas Motl <andreas.motl@ip-tools.org>
 import subprocess
 from unittest import TestCase
 
@@ -10,9 +12,6 @@ from testfixtures.popen import MockPopen
 from patzilla.util.render.phantomjs import render_pdf
 
 
-dotted_path = 'testfixtures.tests.test_popen_docs.Popen'
-
-
 class TestPhantomJS(TestCase):
     """
     Test a `subprocess.check_call()` invocation to `phantomjs`.
@@ -23,7 +22,7 @@ class TestPhantomJS(TestCase):
     def setUp(self):
         self.Popen = MockPopen()
         self.r = Replacer()
-        self.r.replace(dotted_path, self.Popen)
+        self.r.replace("testfixtures.tests.test_popen_docs.Popen", self.Popen)
         self.addCleanup(self.r.restore)
 
     @mock.patch("patzilla.util.render.phantomjs.NamedTemporaryFile")

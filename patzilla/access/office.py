@@ -2,7 +2,6 @@
 # (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from patzilla.access.dpma.dpmaregister import DpmaRegisterAccess
 from patzilla.util.numbers.normalize import normalize_patent
 
 def includeme(config):
@@ -20,6 +19,7 @@ def jump_office(request):
 
         url = None
         if office == 'dpma' and service == 'register':
+            from patzilla.access.dpma.dpmaregister import DpmaRegisterAccess
             dra = DpmaRegisterAccess()
             try:
                 url = dra.get_document_url(document_number)

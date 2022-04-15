@@ -526,6 +526,9 @@ t['JP58002167U'] = 'JPS582167U'
 t['JP3657641B2'] = 'JP3657641B2'
 t['JPH0229970B2'] = 'JPH0229970B2'
 
+# 2022-04-17, ongoing development
+t['USD283289S'] = 'USD283289S'
+
 
 depatisconnect_cases = OrderedDict()
 depatisconnect_cases['DE000000121107C'] = ['DE000000121107C', 'DE000000121107B', 'DE000000121107A']

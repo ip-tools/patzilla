@@ -5,9 +5,23 @@ $(eval venvpath     := .venv2)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
+$(eval pserve       := $(venvpath)/bin/pserve)
 $(eval pytest       := $(venvpath)/bin/pytest)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
+
+$(eval venv3path     := .venv)
+$(eval yarn          := $(venv3path)/bin/yarn)
+$(eval npx           := $(venv3path)/bin/npx)
+
+
+setup: setup-py
+
+jswatch:
+	npx yarn watch
+
+pywatch:
+	HUPPER_DEFAULT_MONITOR=hupper.watchdog.WatchdogFileMonitor $(pserve) --reload patzilla/config/development-local.ini
 
 
 js:
@@ -28,6 +42,7 @@ js-release: js
 	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
 	npx yarn release
+
 
 sdist:
 	$(python) setup.py sdist
@@ -52,8 +67,10 @@ upload-pypi:
 setup-virtualenv:
 	@test -e $(python) || virtualenv --python=python2 $(venvpath)
 
-setup-test: setup-virtualenv
+setup-py: setup-virtualenv
 	$(pip) install --editable=.[test]
+
+setup-test: setup-py
 
 setup-deployment:
 	$(pip) install --requirement requirements-deploy.txt
@@ -96,13 +113,16 @@ test-coverage:
 # --nocapture
 # --nologcapture
 
-nginx_path=/Users/amo/dev/celeraone/sources/c1-ocb-integrator/rem_rp/parts/openresty
-nginx-start:
-	@$(nginx_path)/nginx/sbin/nginx -p $(nginx_path)/nginx -c `pwd`/nginx-auth/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
+nginx:
+	nginx -c `pwd`/nginx-auth/etc/nginx.conf -g "daemon off; error_log /dev/stdout info;"
 
-mongodb-start:
+nginx-start: nginx
+
+mongodb:
 	mkdir -p ./var/lib/mongodb
 	mongod --dbpath=./var/lib/mongodb
+
+mongodb-start: mongodb
 
 mongodb-sip-export:
 	mkdir -p var/tmp/mongodb

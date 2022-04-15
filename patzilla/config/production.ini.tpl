@@ -175,7 +175,6 @@ use = egg:PasteDeploy#prefix
 use = egg:PatZilla
 filter-with = prefix-middleware
 
-
 pyramid.reload_templates = false
 pyramid.debug_authorization = false
 pyramid.debug_notfound = false
@@ -236,7 +235,7 @@ port = 9999
 ###
 
 [loggers]
-keys = root, sqlalchemy, patzilla
+keys = root, oauthlib, sqlalchemy, patzilla
 
 [handlers]
 keys = console
@@ -253,6 +252,11 @@ level = WARN
 handlers =
 qualname = patzilla
 
+[logger_oauthlib]
+level = WARN
+handlers =
+qualname = oauthlib
+
 [logger_sqlalchemy]
 level = WARN
 handlers =
@@ -260,6 +264,7 @@ qualname = sqlalchemy.engine
 # "level = INFO" logs SQL queries.
 # "level = DEBUG" logs SQL queries and results.
 # "level = WARN" logs neither.  (Recommended for production systems.)
+
 
 [handler_console]
 class = StreamHandler
