@@ -1,127 +1,112 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2014-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+import os
+
 import epo_ops
-from bunch import bunchify
+from mock import mock
+from pyramid.httpexceptions import HTTPUnauthorized
 from pyramid.threadlocal import get_current_registry
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface.interfaces import ComponentLookupError
+
+from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.util.web.identity.store import IUserMetricsManager
 
 logger = logging.getLogger(__name__)
 
 
-# ------------------------------------------
-#   bootstrapping
-# ------------------------------------------
 def includeme(config):
-    #config.add_subscriber(setup_ops_client_pool, "pyramid.events.ApplicationCreated")
     config.registry.registerUtility(OpsClientPool())
     config.add_subscriber(attach_ops_client, "pyramid.events.ContextFound")
 
 
+class OpsCredentialsGetter(AbstractCredentialsGetter):
+    """
+    Define how to acquire EPO/OPS credentials from
+    configuration settings or environment variables.
+    """
+
+    @staticmethod
+    def from_settings(datasource_settings):
+        datasource = datasource_settings.datasource
+        return {
+            'consumer_key': datasource.ops.api_consumer_key,
+            'consumer_secret': datasource.ops.api_consumer_secret,
+        }
+
+    @staticmethod
+    def from_environment():
+        return {
+            "consumer_key": os.environ["OPS_API_CONSUMER_KEY"],
+            "consumer_secret": os.environ["OPS_API_CONSUMER_SECRET"],
+        }
+
+
 def attach_ops_client(event):
+    """
+    Create EPO/OPS client pool per credentials context.
+    """
 
     # Don't start data source machinery on requests to static assets.
     if '/static' in event.request.url:
         return
 
-    #logger.info('Attaching OPS client to request object')
-
     request = event.request
-    registry = request.registry
 
-    pool = registry.getUtility(IOpsClientPool)
+    try:
+        dcm = DatasourceCredentialsManager(identifier="ops", credentials_getter=OpsCredentialsGetter)
+        credentials_source, credentials_data = dcm.resolve(request)
+    except:
+        logger.exception("Unable to resolve credentials for OPS")
+        return
 
-    vendor_settings = request.runtime_settings.vendor
+    ckshort = credentials_data['consumer_key'][:10] + "..."
+    logger.debug('Attaching OPS credentials from "{}": {}'.format(credentials_source, ckshort))
 
-    credentials_source = None
-
-    # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ops'):
-        credentials_source = request.user.userid
-        credentials_data = request.user.upstream_credentials['ops']
-
-    # Vendor-wide credentials
-    elif vendor_settings and 'datasource_settings' in vendor_settings:
-        credentials_source = 'vendor'
-        credentials_data = get_ops_credentials(vendor_settings.datasource_settings)
-
-    # Fall back to system-wide credentials
-    if not credentials_data:
-        credentials_source = 'system'
-        credentials_data = get_ops_credentials(registry.datasource_settings)
-
-    logger.info('Attaching OPS credentials from "{}": {}...'.format(credentials_source, credentials_data['consumer_key'][:10]))
-
-    if credentials_data:
-        request.ops_client = pool.get(credentials_source, credentials_data)
-    else:
-        raise KeyError('No credentials for data source "OPS" configured')
+    pool = request.registry.getUtility(IOpsClientPool)
+    request.ops_client = pool.get(credentials_source, credentials_data)
 
 
-def get_ops_credentials(datasource_settings):
-    datasources = datasource_settings.datasources
-    datasource = datasource_settings.datasource
-    if 'ops' in datasources and 'ops' in datasource and 'api_consumer_key' in datasource.ops and 'api_consumer_secret' in datasource.ops:
-        system_credentials = bunchify({
-            'consumer_key': datasource.ops.api_consumer_key,
-            'consumer_secret': datasource.ops.api_consumer_secret,
-        })
-        return system_credentials
-
-
-# ------------------------------------------
-#   pool as utility
-# ------------------------------------------
 class IOpsClientPool(Interface):
     pass
 
+
 class OpsClientPool(object):
+    """
+    EPO/OPS client pool as Pyramid utility implementation.
+    """
 
     implements(IOpsClientPool)
 
     def __init__(self):
+        logger.info("Creating upstream client pool for EPO/OPS")
         self.clients = {}
-        logger.info('Creating OpsClientPool')
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
-
-            # TODO: Enable throttling and caching.
-            ops = epo_ops.Client(
-                key=credentials['consumer_key'], secret=credentials['consumer_secret'],
-                accept_type='json', middlewares=[]
-            )
-
-            # Attach metrics manager object to ops client instance.
-            registry = get_current_registry()
-            ops.metrics_manager = registry.getUtility(IUserMetricsManager)
-            self.clients[identifier] = ops
+            if credentials is None:
+                raise HTTPUnauthorized("Unable to discover credentials for EPO OPS. identifier={}".format(identifier))
+            logger.info("Creating upstream client for EPO/OPS. identifier={}".format(identifier))
+            self.clients[identifier] = ops_client_factory(key=credentials['consumer_key'], secret=credentials['consumer_secret'])
 
         return self.clients.get(identifier)
 
 
-# Monkeypatch epo_ops_client
-def _make_request(self, url, data, extra_headers=None, params=None, use_get=False):
-    token = "Bearer {0}".format(self.access_token.token)
-    headers = {
-        "Accept": self.accept_type,
-        "Content-Type": "text/plain",
-        "Authorization": token,
-    }
-    headers.update(extra_headers or {})
-    request_method = self.request.post
-    if use_get:
-        request_method = self.request.get
+def ops_client_factory(key, secret):
 
-    response = request_method(url, data=data, headers=headers, params=params)
-    response = self._check_for_expired_token(response)
-    response = self._check_for_exceeded_quota(response)
+    # TODO: Enable throttling and caching.
+    ops = epo_ops.Client(
+        key=key, secret=secret,
+        accept_type='json', middlewares=[]
+    )
 
-    # Let errors propagate. Don't croak on anything status >= 400.
-    #response.raise_for_status()
+    # Attach metrics manager object to ops client instance.
+    registry = get_current_registry()
+    try:
+        ops.metrics_manager = registry.getUtility(IUserMetricsManager)
+    except ComponentLookupError:
+        ops.metrics_manager = mock.Mock()
 
-    return response
-
-epo_ops.Client._make_request = _make_request
+    return ops

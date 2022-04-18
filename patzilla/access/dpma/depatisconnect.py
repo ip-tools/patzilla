@@ -284,10 +284,10 @@ if __name__ == '__main__':
         python patzilla/access/dpma/depatisconnect.py | jq --raw-output '.xml' | xmllint --format -
     """
 
-    from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
+    from patzilla.boot.framework import setup_pyramid
     configfile = os.environ['PATZILLA_CONFIG']
 
-    env = setup_commandline_pyramid(configfile)
+    env = setup_pyramid(configfile)
     logger = logging.getLogger(__name__)
 
     # Populate archive_service_baseurl again because "includeme" runs in a different thread

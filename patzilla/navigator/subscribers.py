@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 from pyramid.threadlocal import get_current_request
 from pyramid.url import route_url
 from akhet.urlgenerator import URLGenerator as ApplicationURLGenerator
-from patzilla.navigator.settings import GlobalSettings, RuntimeSettings
 from patzilla.navigator import helpers
 
 log = logging.getLogger(__name__)
@@ -12,24 +11,9 @@ log = logging.getLogger(__name__)
 
 def includeme(config):
     """Configure all application-specific subscribers."""
-    #config.add_subscriber(global_config, "pyramid.events.ApplicationCreated")
-    config.add_subscriber(runtime_config, "pyramid.events.ContextFound")
     config.add_subscriber(create_url_generators, "pyramid.events.ContextFound")
-    #config.add_subscriber(create_tools, "pyramid.events.ContextFound")
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
 
-def global_config(event):
-    """
-    A subscriber for ``pyramid.events.ApplicationCreated`` events.
-    """
-    registry = event.app.registry
-
-def runtime_config(event):
-    """
-    A subscriber for ``pyramid.events.ContextFound`` events.
-    I create the runtime configuration object and attach it to the request.
-    """
-    event.request.runtime_settings = RuntimeSettings()
 
 def create_url_generators(event):
     """A subscriber for ``pyramid.events.ContextFound`` events. I create various
@@ -48,16 +32,6 @@ def create_url_generators(event):
 
     #blob_url_generator = BlobURLGenerator(context, request, qualified=False)
     #request.blob_url_generator = blob_url_generator
-
-
-def create_tools(event):
-    """A subscriber for ``pyramid.events.ContextFound`` events. I create various
-    tools and attach them to the request.
-
-    - ``request.geolocator``: Queries geolocation service for geographic position
-    """
-    request = event.request
-    #request.geolocator = GeoLocator(request)
 
 
 def add_renderer_globals(event):

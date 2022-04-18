@@ -2,6 +2,7 @@
 # (c) 2016-2018 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import os
 import logging
+import sys
 from glob import glob
 from ConfigParser import ConfigParser
 
@@ -94,3 +95,9 @@ def normalize_docopt_options(options):
         key = key.strip('--<>')
         normalized[key] = value
     return normalized
+
+def get_configfile_from_commandline():
+    if len(sys.argv) >= 2:
+        configfile = sys.argv[1]
+        if os.path.exists(configfile):
+            return configfile

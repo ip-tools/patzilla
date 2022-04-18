@@ -5,12 +5,11 @@ import sys
 import csv
 import logging
 from docopt import docopt
-from pprint import pformat, pprint
 from patzilla.config import get_configuration
 from patzilla.util.config import read_list, normalize_docopt_options
-from patzilla.util.logging import boot_logging
+from patzilla.boot.logging import boot_logging
 from patzilla.util.web.identity.store import UserManager
-from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
+from patzilla.boot.framework import setup_pyramid
 from patzilla.version import __version__
 
 logger = logging.getLogger(__name__)
@@ -109,7 +108,7 @@ def usercmd():
     configfile = os.environ['PATZILLA_CONFIG']
 
     # TODO: Currently, this is a full bootstrap. It can be trimmed down to database setup only.
-    env = setup_commandline_pyramid(configfile)
+    env = setup_pyramid(configfile)
     #logger = logging.getLogger(__name__)
 
     # Clean option names

@@ -12,7 +12,7 @@ def test_mkconfig(kind):
     Proof that `patzilla make-config` works as intended.
     """
     config_payload = get_configuration(kind)
-    assert "General application configuration ({})".format(kind) in config_payload
+    assert "PatZilla application configuration ({})".format(kind) in config_payload
 
     config = ConfigParser()
     config.readfp(fp=six.StringIO(config_payload), filename="{}.ini".format(kind))

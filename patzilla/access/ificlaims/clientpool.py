@@ -1,103 +1,110 @@
 # -*- coding: utf-8 -*-
-# (c) 2015,2016,2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-from ConfigParser import NoOptionError
-from pyramid.httpexceptions import HTTPBadGateway
+import os
+
+from pyramid.httpexceptions import HTTPUnauthorized
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+
+from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.access.ificlaims.client import IFIClaimsClient
 
 logger = logging.getLogger(__name__)
 
-# ------------------------------------------
-#   bootstrapping
-# ------------------------------------------
+
 def includeme(config):
+
+    # Acquire settings for IFI CLAIMS.
     datasource_settings = config.registry.datasource_settings
-    try:
-        api_uri = datasource_settings.datasource.ificlaims.api_uri
-    except:
-        raise NoOptionError('api_uri', 'datasource:ificlaims')
+    ificlaims_settings = datasource_settings.datasource.ificlaims
 
-    api_uri_json = None
-    if 'api_uri_json' in datasource_settings.datasource.ificlaims:
-        api_uri_json = datasource_settings.datasource.ificlaims.api_uri_json
+    # Get URI settings, optionally falling back to environment variables.
+    api_uri = ificlaims_settings.get("api_uri", os.environ.get("IFICLAIMS_API_URI"))
+    api_uri_json = ificlaims_settings.get("api_uri_json", os.environ.get("IFICLAIMS_API_URI_JSON"))
 
-    config.registry.registerUtility(IFIClaimsClientPool(api_uri=api_uri, api_uri_json=api_uri_json))
-    config.add_subscriber(attach_ificlaims_client, "pyramid.events.ContextFound")
+    # When an API URI can be discovered, register the component.
+    if api_uri:
+        logger.info("Using IFI CLAIMS API at {}".format(api_uri))
+        config.registry.registerUtility(IFIClaimsClientPool(api_uri=api_uri, api_uri_json=api_uri_json))
+        config.add_subscriber(attach_ificlaims_client, "pyramid.events.ContextFound")
+
+
+class IfiClaimsCredentialsGetter(AbstractCredentialsGetter):
+    """
+    Define how to acquire IFI CLAIMS credentials from
+    configuration settings or environment variables.
+    """
+
+    @staticmethod
+    def from_settings(datasource_settings):
+        datasource = datasource_settings.datasource
+        return {
+            'api_username': datasource.ificlaims.api_username,
+            'api_password': datasource.ificlaims.api_password,
+        }
+
+    @staticmethod
+    def from_environment():
+        return {
+            "api_username": os.environ["IFICLAIMS_API_USERNAME"],
+            "api_password": os.environ["IFICLAIMS_API_PASSWORD"],
+        }
+
 
 def attach_ificlaims_client(event):
+    """
+    Create IFI CLAIMS client pool per credentials context.
+    """
+
+    # Don't start data source machinery on requests to static assets.
+    if '/static' in event.request.url:
+        return
+
     request = event.request
-    registry = request.registry
-    #context = request.context
 
-    pool = registry.getUtility(IIFIClaimsClientPool)
+    try:
+        dcm = DatasourceCredentialsManager(identifier="ificlaims", credentials_getter=IfiClaimsCredentialsGetter)
+        credentials_source, credentials_data = dcm.resolve(request)
+    except:
+        logger.exception("Unable to resolve credentials for IFI CLAIMS")
+        return
 
-    # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('ificlaims'):
-        request.ificlaims_client = pool.get(request.user.userid, request.user.upstream_credentials['ificlaims'])
+    username = credentials_data['api_username'][:10]
+    logger.debug('Attaching IFI CLAIMS credentials from "{}": {}'.format(credentials_source, username))
 
-    # System-wide credentials
-    else:
-        datasource_settings = registry.datasource_settings
-        datasources = datasource_settings.datasources
-        datasource = datasource_settings.datasource
-        if 'ificlaims' in datasources and 'ificlaims' in datasource and 'api_username' in datasource.ificlaims and 'api_password' in datasource.ificlaims:
-            system_credentials = {
-                'username': datasource.ificlaims.api_username,
-                'password': datasource.ificlaims.api_password,
-                }
-            request.ificlaims_client = pool.get('system', system_credentials)
-        else:
-            request.ificlaims_client = pool.get('defunct')
+    pool = request.registry.getUtility(IIFIClaimsClientPool)
+    request.ificlaims_client = pool.get(credentials_source, credentials_data)
 
 
-# ------------------------------------------
-#   pool as utility
-# ------------------------------------------
 class IIFIClaimsClientPool(Interface):
     pass
 
+
 class IFIClaimsClientPool(object):
+    """
+    IFI CLAIMS client pool as Pyramid utility implementation.
+    """
 
     implements(IIFIClaimsClientPool)
 
     def __init__(self, api_uri, api_uri_json):
+        logger.info("Creating upstream client pool for IFI CLAIMS")
         self.api_uri = api_uri
         self.api_uri_json = api_uri_json
         self.clients = {}
-        logger.info('Creating IFIClaimsClientPool')
 
-    def get(self, identifier, credentials=None):
+    def get(self, identifier, credentials=None, debug=False):
         if identifier not in self.clients:
-            logger.info('IFIClaimsClientPool.get: identifier={0}'.format(identifier))
-            factory = IFIClaimsClientFactory(self.api_uri, api_uri_json=self.api_uri_json, credentials=credentials, debug=False)
-            self.clients[identifier] = factory.client_create()
+
+            if credentials is None:
+                raise HTTPUnauthorized("Unable to discover credentials for IFI CLAIMS. identifier={}".format(identifier))
+
+            if debug:
+                logging.getLogger('oauthlib').setLevel(logging.DEBUG)
+
+            logger.info("Creating upstream client for IFI CLAIMS. identifier={}".format(identifier))
+            self.clients[identifier] = IFIClaimsClient(
+                self.api_uri, self.api_uri_json, credentials['api_username'], credentials['api_password'])
+
         return self.clients.get(identifier)
-
-
-# ------------------------------------------
-#   implementation
-# ------------------------------------------
-class IFIClaimsClientFactory(object):
-
-    def __init__(self, api_uri, api_uri_json=None, credentials=None, debug=False):
-
-        self.api_uri = api_uri
-        self.api_uri_json = api_uri_json
-
-        if credentials:
-            self.username = credentials['username']
-            self.password = credentials['password']
-
-        else:
-            message = u'No credentials configured for IFI CLAIMS API.'
-            logger.error(u'IFIClaimsClientFactory: ' + message)
-            raise HTTPBadGateway(message)
-
-        #if debug:
-        #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
-
-    def client_create(self):
-        client = IFIClaimsClient(uri=self.api_uri, uri_json=self.api_uri_json, username=self.username, password=self.password)
-        return client

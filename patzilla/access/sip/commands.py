@@ -5,9 +5,9 @@ from docopt import docopt
 
 from patzilla.access.sip.concordance import import_countries, import_ipc_classes, import_cpc_classes
 from patzilla.util.config import normalize_docopt_options
-from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
+from patzilla.boot.framework import setup_pyramid
 from patzilla.version import __version__
-from patzilla.util.logging import boot_logging
+from patzilla.boot.logging import boot_logging
 
 APP_NAME = 'patzilla-sip'
 
@@ -53,7 +53,7 @@ def run():
     configfile = os.environ['PATZILLA_CONFIG']
 
     # TODO: Currently, this is a full bootstrap. It can be trimmed down to database setup only.
-    env = setup_commandline_pyramid(configfile)
+    env = setup_pyramid(configfile)
 
     # Clean option names
     options = normalize_docopt_options(options)

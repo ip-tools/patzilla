@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
-import os
+# (c) 2014-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import json
 import logging
 from copy import deepcopy
@@ -22,7 +21,11 @@ log = logging.getLogger(__name__)
 class GlobalSettings(object):
 
     def __init__(self, configfile):
+
+        # Read configuration file.
         self.configfile = self.get_configuration_file(configfile)
+
+        # Decode configuration settings.
         self.application_settings = self.get_application_settings()
         self.datasource_settings  = self.get_datasource_settings()
         self.vendor_settings      = self.get_vendor_settings()
@@ -34,14 +37,10 @@ class GlobalSettings(object):
     @classmethod
     def get_configuration_file(cls, configfile=None):
 
-        # Compute configuration file
         if not configfile:
-            configfile = os.environ.get('PATZILLA_CONFIG')
+            raise ValueError('Configuration file missing, either use --config=/path/to/patzilla.ini or set PATZILLA_CONFIG environment variable')
 
-        if not configfile:
-            raise ValueError('No configuration file, either use --config=/path/to/patzilla.ini or set PATZILLA_CONFIG environment variable')
-
-        log.info('Root configuration file is {}'.format(configfile))
+        log.info('Root configuration file:       {}'.format(configfile))
         return configfile
 
     def get_application_settings(self):
@@ -50,13 +49,17 @@ class GlobalSettings(object):
         """
 
         # TODO: Optimize: Only read once, not on each request!
+        # FIXME: Maybe do the same what `attach_ops_client` does?
+        #        `if '/static' in event.request.url: return`.
         settings = get_configuration(self.configfile, kind=SmartBunch)
 
         # Add some global settings
         settings['software_version'] = __version__
 
         # Amend settings: Make real Booleans from strings
-        settings['smtp']['tls'] = asbool(settings['smtp'].get('tls', True))
+        # TODO: Refactor elsewhere.
+        if "smtp" in settings:
+            settings['smtp']['tls'] = asbool(settings['smtp'].get('tls', True))
 
         return settings
 
@@ -108,7 +111,8 @@ class GlobalSettings(object):
             vendor_settings.vendors = read_list(self.application_settings.ip_navigator.vendors)
             assert vendor_settings.vendors
         except:
-            raise ConfigurationError('No vendor configured in "{configfile}"'.format(configfile=self.configfile))
+            log.info('No vendors configured')
+            return
 
         for vendor in vendor_settings.vendors:
 
@@ -181,7 +185,10 @@ class RuntimeSettings(object):
 
         self.vendor = self.effective_vendor()
         self.config = self.config_parameters()
-        self.theme = self.theme_parameters()
+        # Theming is only possible with vendor configuration.
+        if self.vendor:
+            self.theme = self.theme_parameters()
+
         self.beta_badge = '<span class="label label-success label-large do-not-print">BETA</span>'
 
     def asdict(self):
@@ -218,6 +225,10 @@ class RuntimeSettings(object):
         on a first come, first serve basis.
         """
 
+        # Skip resolving effective vendor when no vendors are configured at all
+        if self.registry.vendor_settings is None:
+            return SmartBunch()
+
         # Select vendor by matching hostnames
         vendor_names = self.registry.vendor_settings.vendors
         for vendor_name in vendor_names:
@@ -228,7 +239,7 @@ class RuntimeSettings(object):
                     if hostname_candidate in self.hostname:
                         return vendor_info
 
-        # If now vendor can be resolved, use first configured vendor as fallback
+        # If no vendor can be resolved, use first configured vendor as fallback
         vendor_name = self.registry.vendor_settings.vendors[0]
         vendor_info = self.registry.vendor_settings.vendor[vendor_name]
 
@@ -384,7 +395,7 @@ class RuntimeSettings(object):
         # D. special customizations
 
         # 0. Vendor
-        params['vendor'] = self.vendor.name
+        params['vendor'] = self.vendor.get("name")
 
         # 1. On patentview domains, limit access to liveview mode only
         params['isviewer'] = isviewer

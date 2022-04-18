@@ -18,7 +18,7 @@ from BeautifulSoup import BeautifulSoup
 from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
 from patzilla.util.config import to_list
-from patzilla.util.logging import boot_logging
+from patzilla.boot.logging import boot_logging
 from patzilla.util.xml.format import BadgerFishNoNamespace
 from patzilla.version import __version__
 
