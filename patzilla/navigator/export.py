@@ -243,8 +243,9 @@ class Dossier(object):
             # Media files
             # -----------
 
+            # OPS does not offer full texts for all authorities.
             # FIXME: This should go to some configuration setting.
-            fulltext_countries_excluded_ops = ['BE', 'CN', 'DD', 'DE', 'DK', 'FR', 'GR', 'HU', 'JP', 'LU', 'KR', 'RU', 'PT', 'SE', 'TR', 'SK', 'US']
+            fulltext_countries_excluded_ops = ['BE', 'CN', 'DD', 'DE', 'FR', 'HU', 'JP', 'LU', 'KR', 'RU', 'PT', 'TR', 'US']
 
             # Add full PDF documents
             if options.media.pdf:
@@ -281,7 +282,7 @@ class Dossier(object):
                     self.clear_request_errors(request)
 
                 # Add XML "description" full text data
-                # OPS does not have full texts for DE, US, ...
+                # OPS does not have full texts for US, ...
                 if options.media.description:
                     status[document]['description'] = False
                     if patent.country not in fulltext_countries_excluded_ops:
@@ -304,7 +305,7 @@ class Dossier(object):
                     self.clear_request_errors(request)
 
                 # Add XML "claims" full text data
-                # OPS does not have full texts for DE, US, ...
+                # OPS does not have full texts for US, ...
                 if options.media.claims:
                     status[document]['claims'] = False
                     if patent.country not in fulltext_countries_excluded_ops:
