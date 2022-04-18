@@ -25,6 +25,7 @@ Development
 - [mw] Refactor the bootloader subsystem
 - [qa] Add tests for EPO OPS data source
 - [ui] Fix depa.tech data source logo
+- [ui] Improve loading behaviour for vendor data source logos
 
 
 2019-11-01 0.169.3
