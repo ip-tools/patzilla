@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2016 Andreas Motl, Elmyra UG
+import json
 import types
 from bunch import Bunch
+from jsonpointer import JsonPointer
+
 
 class SmartBunch(Bunch):
 
@@ -34,3 +37,20 @@ def unique_sequence(seq):
     seen_add = seen.add
     unhashable_types = (types.ListType, types.DictionaryType)
     return [x for x in seq if type(x) in unhashable_types or not (x in seen or seen_add(x))]
+
+
+def jpath(path, doc):
+    """
+    Resolve JSON Pointers according to RFC 6901.
+
+    - https://datatracker.ietf.org/doc/html/rfc6901
+    - https://github.com/stefankoegl/python-json-pointer
+    """
+    return JsonPointer(path).resolve(doc)
+
+
+def jd(data):
+    """
+    Serialize data to JSON, for printing to STDOUT.
+    """
+    return json.dumps(data, indent=2)

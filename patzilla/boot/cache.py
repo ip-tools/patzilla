@@ -68,9 +68,10 @@ def configure_cache_backend(kind="memory", cache_directory=None, clear_cache=Fal
 
     # Set general options.
     cache_opts.update({
-        'cache.regions': 'static,search',
+        'cache.regions': 'static,search,medium',
         'cache.static.expire': 2592000,  # 1 month
         'cache.search.expire': 604800,   # 1 week
+        'cache.medium.expire': 86400,    # 1 day
         'cache.key_length': 512,
     })
 
