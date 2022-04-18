@@ -310,7 +310,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     get_datasource_button: function(datasource) {
         var vendor = navigatorApp.config.get('vendor');
+
+        // Handle vendor-provided data source button element.
         var element = $("#datasource > button[data-value='" + datasource + "'][data-vendor='" + vendor + "']");
+        var img = element.find("img");
+        if ($(img).exists() && $(img).data("src")) {
+            $(img).attr("src", $(img).data("src"));
+        }
+
         if (!$(element).exists()) {
             element = $("#datasource > button[data-value='" + datasource + "']:not([data-vendor])");
         }
