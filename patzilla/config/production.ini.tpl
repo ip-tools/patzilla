@@ -1,6 +1,6 @@
-# ==============================================
-# General application configuration (production)
-# ==============================================
+# ===============================================
+# PatZilla application configuration (production)
+# ===============================================
 
 [main]
 include     = vendors.ini
@@ -172,7 +172,7 @@ signature =
 use = egg:PasteDeploy#prefix
 
 [app:main]
-use = egg:PatZilla
+use = egg:patzilla#web
 filter-with = prefix-middleware
 
 pyramid.reload_templates = false

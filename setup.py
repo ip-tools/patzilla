@@ -218,7 +218,8 @@ setup(name='patzilla',
 
       entry_points={
         'paste.app_factory': [
-            'main = patzilla:main',
+            'web     = patzilla:web',
+            'minimal = patzilla:minimal',
         ],
 
         # This is now a Beaker builtin as per "ext:mongodb"

@@ -1,98 +1,103 @@
 # -*- coding: utf-8 -*-
-# (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
+# (c) 2017-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-from ConfigParser import NoOptionError
-from pyramid.httpexceptions import HTTPBadGateway
+import os
+from pyramid.httpexceptions import HTTPUnauthorized
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
 from patzilla.access.depatech.client import DepaTechClient
+from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 
 logger = logging.getLogger(__name__)
 
-# ------------------------------------------
-#   bootstrapping
-# ------------------------------------------
-def includeme(config):
-    datasource_settings = config.registry.datasource_settings
-    try:
-        api_uri = datasource_settings.datasource.depatech.api_uri
-    except:
-        raise NoOptionError('api_uri', 'datasource:depatech')
 
-    config.registry.registerUtility(DepaTechClientPool(api_uri=api_uri))
-    config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")
+def includeme(config):
+
+    # Acquire settings for depa.tech.
+    datasource_settings = config.registry.datasource_settings
+    depatech_settings = datasource_settings.datasource.depatech
+
+    # Get URI settings, optionally falling back to environment variables.
+    api_uri = depatech_settings.get("api_uri", os.environ.get("DEPATECH_API_URI"))
+
+    # When an API URI can be discovered, register the component.
+    if api_uri:
+        logger.info("Using depa.tech API at {}".format(api_uri))
+        config.registry.registerUtility(DepaTechClientPool(api_uri=api_uri))
+        config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")
+
+
+class DepaTechCredentialsGetter(AbstractCredentialsGetter):
+    """
+    Define how to acquire depa.tech credentials from
+    configuration settings or environment variables.
+    """
+
+    @staticmethod
+    def from_settings(datasource_settings):
+        datasource = datasource_settings.datasource
+        return {
+            'api_username': datasource.depatech.api_username,
+            'api_password': datasource.depatech.api_password,
+        }
+
+    @staticmethod
+    def from_environment():
+        return {
+            "api_username": os.environ["DEPATECH_API_USERNAME"],
+            "api_password": os.environ["DEPATECH_API_PASSWORD"],
+        }
+
 
 def attach_depatech_client(event):
+    """
+    Create depa.tech client pool per credentials context.
+    """
+
+    # Don't start data source machinery on requests to static assets.
+    if '/static' in event.request.url:
+        return
+
     request = event.request
-    registry = request.registry
-    #context = request.context
 
-    pool = registry.getUtility(IDepaTechClientPool)
+    try:
+        dcm = DatasourceCredentialsManager(identifier="depatech", credentials_getter=DepaTechCredentialsGetter)
+        credentials_source, credentials_data = dcm.resolve(request)
+    except:
+        logger.exception("Unable to resolve credentials for depa.tech")
+        return
 
-    # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('depatech'):
-        request.depatech_client = pool.get(request.user.userid, request.user.upstream_credentials['depatech'])
+    username = credentials_data['api_username'][:10]
+    logger.debug('Attaching depa.tech credentials from "{}": {}'.format(credentials_source, username))
 
-    # System-wide credentials
-    else:
-        datasource_settings = registry.datasource_settings
-        datasources = datasource_settings.datasources
-        datasource = datasource_settings.datasource
-        if 'depatech' in datasources and 'depatech' in datasource and 'api_username' in datasource.depatech and 'api_password' in datasource.depatech:
-            system_credentials = {
-                'username': datasource.depatech.api_username,
-                'password': datasource.depatech.api_password,
-                }
-            request.depatech_client = pool.get('system', system_credentials)
-        else:
-            request.depatech_client = pool.get('defunct')
+    pool = request.registry.getUtility(IDepaTechClientPool)
+    request.depatech_client = pool.get(credentials_source, credentials_data)
 
 
-# ------------------------------------------
-#   pool as utility
-# ------------------------------------------
 class IDepaTechClientPool(Interface):
     pass
 
+
 class DepaTechClientPool(object):
+    """
+    depa.tech client pool as Pyramid utility implementation.
+    """
 
     implements(IDepaTechClientPool)
 
     def __init__(self, api_uri):
+        logger.info("Creating upstream client pool for depa.tech")
         self.api_uri = api_uri
         self.clients = {}
-        logger.info('Creating DepaTechClientPool')
 
-    def get(self, identifier, credentials=None):
+    def get(self, identifier, credentials=None, debug=False):
         if identifier not in self.clients:
-            logger.info('DepaTechClientPool.get: identifier={0}'.format(identifier))
-            factory = DepaTechClientFactory(self.api_uri, credentials=credentials, debug=False)
-            self.clients[identifier] = factory.client_create()
+
+            if credentials is None:
+                raise HTTPUnauthorized("Unable to discover credentials for depa.tech. identifier={}".format(identifier))
+
+            logger.info("Creating upstream client for depa.tech. identifier={}".format(identifier))
+            self.clients[identifier] = DepaTechClient(
+                uri=self.api_uri, username=credentials['api_username'], password=credentials['api_password'])
+
         return self.clients.get(identifier)
-
-
-# ------------------------------------------
-#   implementation
-# ------------------------------------------
-class DepaTechClientFactory(object):
-
-    def __init__(self, api_uri, credentials=None, debug=False):
-
-        self.api_uri = api_uri
-
-        if credentials:
-            self.username = credentials['username']
-            self.password = credentials['password']
-
-        else:
-            message = u'No credentials configured for depa.tech API.'
-            logger.error(u'DepaTechClientFactory: ' + message)
-            raise HTTPBadGateway(message)
-
-
-        #if debug:
-        #    logging.getLogger('oauthlib').setLevel(logging.DEBUG)
-
-    def client_create(self):
-        client = DepaTechClient(uri=self.api_uri, username=self.username, password=self.password)
-        return client

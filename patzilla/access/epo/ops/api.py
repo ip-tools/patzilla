@@ -22,6 +22,7 @@ from patzilla.util.numbers.normalize import normalize_patent
 log = logging.getLogger(__name__)
 
 
+OPS_BASE_URI        = 'https://ops.epo.org/3.2'
 OPS_API_URI         = 'https://ops.epo.org/3.2/rest-services'
 OPS_AUTH_URI        = 'https://ops.epo.org/3.2/auth'
 OPS_DEVELOPERS_URI  = 'https://ops.epo.org/3.2/developers'
@@ -52,10 +53,18 @@ ops_keyword_fields = [
 
 
 def get_ops_client():
+    """
+    Get a managed client for accessing the EPO OPS API.
+    """
     request = get_current_request()
-    ops_client = request.ops_client
-    log.debug('OPS request with client-id {0}'.format(ops_client.key))
-    return ops_client
+
+    if hasattr(request, 'ops_client'):
+        client = request.ops_client
+        log.debug('OPS request with consumer key: {}...'.format(client.key[:10]))
+        return client
+    else:
+        raise HTTPBadGateway("EPO OPS: Data source not enabled or not configured")
+
 
 
 @contextmanager

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 #
 # Lowlevel adapter to search provider "IFI CLAIMS Direct"
 # http://docs.ificlaims.com/
@@ -80,7 +80,7 @@ class IFIClaimsClient(GenericSearchClient):
         offset = options.offset
         limit  = options.limit
 
-        log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}; user={username}".format(
+        log.info("Searching documents. expression='{0}', offset={1}, limit={2}; user={username}".format(
             query.expression, offset, limit, **self.__dict__))
 
         if not self.token or self.stale:
@@ -102,7 +102,7 @@ class IFIClaimsClient(GenericSearchClient):
             'start': offset, 'rows': limit,
         }
 
-        log.info(u'IFI CLAIMS search. query={query}, uri={uri}, params={params}, options={options}'.format(
+        log.info("Submitting upstream request. query={query}, uri={uri}, params={params}, options={options}".format(
             query=query, uri=uri, params=params, options=options.dump()))
 
         # Perform search request
@@ -223,7 +223,7 @@ class IFIClaimsClient(GenericSearchClient):
 
             # Strip HTML from response body
             response_content = response.content
-            if response.headers['Content-Type'].startswith('text/html'):
+            if response.headers.get('Content-Type', '').startswith('text/html'):
                 response_content = re.sub('<[^<]+?>', '', response_content).strip().replace('\r\n', ', ')
 
             # Build alternative basic error structure
@@ -352,8 +352,8 @@ class IFIClaimsClient(GenericSearchClient):
         if not attachments_response:
             return
 
-        print 'attachments_response:'
-        pprint(attachments_response)
+        #print 'attachments_response:'
+        #pprint(attachments_response)
 
         attachments = attachments_response['attachments']
         if attachments:
@@ -401,8 +401,8 @@ class IFIClaimsClient(GenericSearchClient):
         if not attachments_response:
             return
 
-        print 'attachments_response:'
-        pprint(attachments_response)
+        #print 'attachments_response:'
+        #pprint(attachments_response)
 
         attachments = attachments_response['attachments']
         if attachments:

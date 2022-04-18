@@ -25,6 +25,7 @@ def includeme(config):
     #config.add_subscriber(setup_pymongo, "pyramid.events.NewRequest")
     config.add_subscriber(setup_mongoengine, "pyramid.events.ApplicationCreated")
     config.add_subscriber(provision_users, "pyramid.events.ApplicationCreated")
+    # TODO: Is it really needed in "minimal" mode?
     config.registry.registerUtility(UserMetricsManager())
 
 
@@ -34,11 +35,14 @@ def includeme(config):
 def setup_mongoengine(event):
     registry = event.app.registry
     mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
+    if mongodb_uri is None:
+        log.warning("No user identity database enabled")
+        return
     mongodb_database = parse_uri(mongodb_uri)['database']
     try:
         mongoengine_connect(mongodb_database, host=mongodb_uri)
-    except Exception as ex:
-        log.critical('Failed to connect to MongoDB database at %s. Reason: %s', mongodb_uri, ex)
+    except Exception:
+        log.exception('Failed to connect to MongoDB database at %s', mongodb_uri)
 
 # provide lowlevel access to the pymongo connection via ``request.db``
 def setup_pymongo(event):

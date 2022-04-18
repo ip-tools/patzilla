@@ -7,4 +7,3 @@
 def includeme(config):
     config.include(".store")
     config.include(".service")
-    config.scan(".service")

@@ -55,8 +55,8 @@ if __name__ == '__main__':  # pragma: nocover
     Demo program for fetching first drawing(s) of documents from USPTO servers.
     """
 
-    from patzilla.util.cache.backend import configure_cache_backend
-    from patzilla.util.logging import setup_logging
+    from patzilla.boot.cache import configure_cache_backend
+    from patzilla.boot.logging import setup_logging
 
     setup_logging()
 

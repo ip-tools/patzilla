@@ -1,6 +1,6 @@
-# ===============================================
-# General application configuration (development)
-# ===============================================
+# ================================================
+# PatZilla application configuration (development)
+# ================================================
 
 [main]
 include     = vendors.ini
@@ -172,7 +172,7 @@ signature =
 use = egg:PasteDeploy#prefix
 
 [app:main]
-use = egg:PatZilla
+use = egg:patzilla#web
 filter-with = prefix-middleware
 #filter-with = translogger
 
