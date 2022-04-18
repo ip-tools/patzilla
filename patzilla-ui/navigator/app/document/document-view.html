@@ -43,7 +43,7 @@ var abstract_list = data.get_abstract_list();
                 <% } %>
                 <% if (meta && meta['swapped'] && meta['swapped']['canonical']) { %>
                 <div>
-                    First hit: <%= data.enrich_link(meta['swapped']['canonical'], 'pn', null, null, {'no_modifiers': true}) %>
+                    Original hit: <%= data.enrich_link(meta['swapped']['canonical'], 'pn', null, null, {'no_modifiers': true}) %>
                 </div>
                 <% } %>
             </div>
