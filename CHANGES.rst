@@ -25,6 +25,7 @@ Development
 - [qa] Add tests for EPO OPS data source
 - [ui] Fix depa.tech data source logo
 - [ui] Improve loading behaviour for vendor data source logos
+- [mw] EPO/OPS: Update list of full text authorities. Thanks, @epo and @aghster!
 
 
 2019-11-01 0.169.3
