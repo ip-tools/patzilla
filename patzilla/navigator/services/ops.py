@@ -105,7 +105,8 @@ def ops_published_data_search_handler(request):
 
     try:
         if family_swap_default:
-            result = ops_published_data_search_swap_family(constituents, search.expression, range)
+            response = ops_published_data_search_swap_family(constituents, search.expression, range)
+            result = response.data
         else:
             result = ops_published_data_search(constituents, search.expression, range)
 
@@ -132,7 +133,6 @@ def ops_published_data_crawl_handler(request):
 
     # constituents: abstract, biblio and/or full-cycle
     constituents = request.matchdict.get('constituents', 'full-cycle')
-    print 'constituents:', constituents
 
     # CQL query string
     query = request.params.get('expression', '')

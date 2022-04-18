@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2019 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import time
 import logging
 from pprint import pformat
@@ -12,6 +12,8 @@ from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest, HTTPBadGateway
+
+from patzilla.access.epo.ops.model import OpsFamilyAwareSearchResult
 from patzilla.navigator.util import object_attributes_to_dict
 from patzilla.util.image.convert import pdf_join, pdf_set_metadata, pdf_make_metadata
 from patzilla.access.generic.exceptions import NoResultsException
@@ -66,7 +68,6 @@ def get_ops_client():
         raise HTTPBadGateway("EPO OPS: Data source not enabled or not configured")
 
 
-
 @contextmanager
 def ops_client(xml=False):
 
@@ -88,19 +89,33 @@ def ops_client(xml=False):
 
 @cache_region('search', 'ops_search')
 def ops_published_data_search_swap_family(constituents, query, range):
+    """
+    Run a search on EPO OPS, with adjustments to the selection of
+    representative documents.
+    """
     results = ops_published_data_search(constituents, query, range)
-    #pprint(results)
-    numbers = results_swap_family_members(results)
-    #pprint(numbers)
-    return results
+    ofasr = results_swap_family_members(results)
+    return ofasr
 
 
 def results_swap_family_members(response):
+    """
+    Enhance the response model by choosing different representative documents
+    from the list of available family members according to a defined list of
+    rules.
+
+    Roughly speaking, the rules implemented are:
+
+    - Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US.
+
+    TODO: The specification of this function has to be improved and covered by
+          corresponding test cases more thoroughly.
+    """
 
     #pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/ops:publication-reference')
     #entries = pointer_results.resolve(results)
 
-    publication_numbers = []
+    original_publication_numbers = []
 
     # DE, EP..B, WO, EP..A2, EP..A3, EP, US
     priorities = [
@@ -125,9 +140,7 @@ def results_swap_family_members(response):
     #pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
 
     # A.1 compute distinct list with unique families
-    family_representatives = {}
     chunks = to_list(pointer_results.resolve(response))
-    all_results = []
     for chunk in chunks:
 
         #print 'chunk:', chunk
@@ -148,6 +161,8 @@ def results_swap_family_members(response):
             representation_pubref_docdb, _ = _get_document_number_date(pubref, 'docdb')
             representation_pubrefs_docdb.append(representation_pubref_docdb)
 
+        original_publication_numbers += representation_pubrefs_docdb
+
         # Debugging
         #print 'representation_pubref_epodoc:', representation_pubref_epodoc
         #print 'representation_pubrefs_docdb:', representation_pubrefs_docdb
@@ -155,6 +170,7 @@ def results_swap_family_members(response):
         # Fetch family members. When failing, use first cycle as representation.
         try:
             family_info = ops_family_members(representation_pubref_epodoc)
+            #print "family_info:", family_info
         except:
             log.warning('Failed to fetch family information for %s', representation_pubref_epodoc)
             chunk['exchange-document'] = representation
@@ -162,8 +178,8 @@ def results_swap_family_members(response):
             del request.errors[:]
             continue
 
-        #members = family_info.publications_by_country()
-        #pprint(members)
+        #members = family_info.publications_by_country(countries=[])
+        #pprint(family_info)
 
         # Find replacement from list of family members controlled by priority list.
         for prio in priorities:
@@ -239,6 +255,7 @@ def results_swap_family_members(response):
     # Filter duplicates
     seen = []
     results = []
+    docnumbers_selected = []
     fields = ['@country', '@doc-number', '@kind', '@family-id']
     for chunk in chunks:
 
@@ -259,19 +276,32 @@ def results_swap_family_members(response):
         else:
             seen.append(ident)
             results.append(chunk)
+            docnumber = doc['@country'] + doc['@doc-number'] + doc.get('@kind', '')
+            docnumbers_selected.append(docnumber)
 
     # Overwrite reduced list of chunks in original DOM.
+    # TODO: Maybe make a copy beforehand in order to keep the original data untouched?
     pointer_results.set(response, results)
 
-    return publication_numbers
+    return OpsFamilyAwareSearchResult(
+        data=response,
+        selected_numbers=docnumbers_selected,
+        original_numbers=original_publication_numbers,
+    )
 
 
 @cache_region('search', 'ops_search')
 def ops_published_data_search(constituents, query, range):
+    """
+    Run a search on EPO OPS, with caching.
+    """
     return ops_published_data_search_real(constituents, query, range)
 
 
 def ops_published_data_search_real(constituents, query, range):
+    """
+    Run a search on EPO OPS, without caching.
+    """
 
     # OPS client object, impersonated for the current user.
     ops = get_ops_client()
@@ -925,6 +955,9 @@ def pdf_document_build(patent):
 
 
 def ops_biblio_documents(patent):
+    """
+    Acquire bibliographic information for a specific document.
+    """
     data = get_ops_biblio_data('publication', patent)
     documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
     return documents
@@ -932,6 +965,10 @@ def ops_biblio_documents(patent):
 
 @cache_region('medium')
 def get_ops_biblio_data(reference_type, patent, xml=False):
+    """
+    Acquire bibliographic information for a specific document,
+    in JSON or XML format.
+    """
 
     # Compute document identifier.
     document_id = decode_patent_number(patent)
@@ -948,6 +985,9 @@ def get_ops_biblio_data(reference_type, patent, xml=False):
 
 @cache_region('medium')
 def ops_document_kindcodes(patent):
+    """
+    Acquire all possible kind codes for a specific document.
+    """
 
     error_msg_access = 'No bibliographic information for document={0}'.format(patent)
 
@@ -1133,11 +1173,13 @@ def analytics_family(query):
                     except Exception as ex:
                         log.error('Retrieving designated states for {0} failed.'.format(pubref_number))
 
-
     return payload
 
 
 def ops_family_members(document_number):
+    """
+    Acquire all family members for a specific document.
+    """
 
     pointer_results = JsonPointer('/ops:world-patent-data/ops:patent-family/ops:family-member')
     pointer_publication_reference = JsonPointer('/publication-reference/document-id')

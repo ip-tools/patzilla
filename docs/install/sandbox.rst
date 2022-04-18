@@ -141,4 +141,10 @@ slow, use::
 
     pytest -vvv -m "not slow"
 
+.. note::
 
+    Please note that by default, test cases needing access to upstream data
+    sources will be skipped. In order to run them, you will have to properly
+    configure respective access credentials by setting corresponding
+    environment variables before invoking the test suite. The documentation
+    about the :ref:`cli`_ shows how to do that.
