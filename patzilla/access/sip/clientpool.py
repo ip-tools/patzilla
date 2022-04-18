@@ -1,96 +1,105 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-from ConfigParser import NoOptionError
+import os
 
-from pyramid.httpexceptions import HTTPBadGateway
+from pyramid.httpexceptions import HTTPUnauthorized
 from zope.interface.declarations import implements
 from zope.interface.interface import Interface
 
+from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.access.sip.client import SipClient
 
 logger = logging.getLogger(__name__)
 
-# ------------------------------------------
-#   bootstrapping
-# ------------------------------------------
-def includeme(config):
-    datasource_settings = config.registry.datasource_settings
-    try:
-        api_uri = datasource_settings.datasource.sip.api_uri
-    except:
-        raise NoOptionError('api_uri', 'datasource:sip')
 
-    config.registry.registerUtility(SipClientPool(api_uri=api_uri))
-    config.add_subscriber(attach_sip_client, "pyramid.events.ContextFound")
+def includeme(config):
+
+    # Acquire settings for SIP.
+    datasource_settings = config.registry.datasource_settings
+    sip_settings = datasource_settings.datasource.sip
+
+    # Get URI settings, optionally falling back to environment variables.
+    api_uri = sip_settings.get("api_uri", os.environ.get("SIP_API_URI"))
+
+    # When an API URI can be discovered, register the component.
+    if api_uri:
+        logger.info("Using SIP API at {}".format(api_uri))
+        config.registry.registerUtility(SipClientPool(api_uri=api_uri))
+        config.add_subscriber(attach_sip_client, "pyramid.events.ContextFound")
+
+
+class SipCredentialsGetter(AbstractCredentialsGetter):
+    """
+    Define how to acquire SIP credentials from
+    configuration settings or environment variables.
+    """
+
+    @staticmethod
+    def from_settings(datasource_settings):
+        datasource = datasource_settings.datasource
+        return {
+            'api_username': datasource.sip.api_username,
+            'api_password': datasource.sip.api_password,
+        }
+
+    @staticmethod
+    def from_environment():
+        return {
+            "api_username": os.environ["SIP_API_USERNAME"],
+            "api_password": os.environ["SIP_API_PASSWORD"],
+        }
+
 
 def attach_sip_client(event):
+    """
+    Create SIP client pool per credentials context.
+    """
+
+    # Don't start data source machinery on requests to static assets.
+    if '/static' in event.request.url:
+        return
+
     request = event.request
-    registry = request.registry
-    #context = request.context
 
-    pool = registry.getUtility(ISipClientPool)
+    try:
+        dcm = DatasourceCredentialsManager(identifier="sip", credentials_getter=SipCredentialsGetter)
+        credentials_source, credentials_data = dcm.resolve(request)
+    except:
+        logger.exception("Unable to resolve credentials for SIP")
+        return
 
-    # User-associated credentials
-    if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key('sip'):
-        request.sip_client = pool.get(request.user.userid, request.user.upstream_credentials['sip'])
+    username = credentials_data['api_username'][:10]
+    logger.debug('Attaching SIP credentials from "{}": {}'.format(credentials_source, username))
 
-    # System-wide credentials
-    else:
-        datasource_settings = registry.datasource_settings
-        datasources = datasource_settings.datasources
-        datasource = datasource_settings.datasource
-        if 'sip' in datasources and 'sip' in datasource and 'api_username' in datasource.sip and 'api_password' in datasource.sip:
-            system_credentials = {
-                'username': datasource.sip.api_username,
-                'password': datasource.sip.api_password,
-            }
-            request.sip_client = pool.get('system', system_credentials)
-        else:
-            request.sip_client = pool.get('defunct')
+    pool = request.registry.getUtility(ISipClientPool)
+    request.sip_client = pool.get(credentials_source, credentials_data)
 
 
-# ------------------------------------------
-#   pool as utility
-# ------------------------------------------
 class ISipClientPool(Interface):
     pass
 
+
 class SipClientPool(object):
+    """
+    SIP client pool as Pyramid utility implementation.
+    """
 
     implements(ISipClientPool)
 
     def __init__(self, api_uri):
+        logger.info("Creating upstream client pool for SIP")
         self.api_uri = api_uri
         self.clients = {}
-        logger.info('Creating SipClientPool')
 
-    def get(self, identifier, credentials=None):
+    def get(self, identifier, credentials=None, debug=False):
         if identifier not in self.clients:
-            logger.info('SipClientPool.get: identifier={0}'.format(identifier))
-            factory = SipClientFactory(self.api_uri, credentials=credentials, debug=False)
-            self.clients[identifier] = factory.client_create()
+
+            if credentials is None:
+                raise HTTPUnauthorized("Unable to discover credentials for SIP. identifier={}".format(identifier))
+
+            logger.info("Creating upstream client for SIP. identifier={}".format(identifier))
+            self.clients[identifier] = SipClient(
+                uri=self.api_uri, username=credentials['api_username'], password=credentials['api_password'])
+
         return self.clients.get(identifier)
-
-
-# ------------------------------------------
-#   implementation
-# ------------------------------------------
-class SipClientFactory(object):
-
-    def __init__(self, api_uri, credentials=None, debug=False):
-
-        self.api_uri = api_uri
-
-        if credentials:
-            self.username = credentials['username']
-            self.password = credentials['password']
-
-        else:
-            message = u'No credentials configured for SIP API.'
-            logger.error(u'SipClientFactory: ' + message)
-            raise HTTPBadGateway(message)
-
-    def client_create(self):
-        client = SipClient(uri=self.api_uri, username=self.username, password=self.password)
-        return client

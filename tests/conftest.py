@@ -1,27 +1,39 @@
 # -*- coding: utf-8 -*-
 # (c) 2022 Andreas Motl <andreas.motl@ip-tools.org>
+"""
+Configure and bootstrap the test harness.
+
+The most important topics are:
+
+a) bringing up a Pyramid environment at runtime.
+b) configuring the application object cache at runtime.
+"""
 import logging
-import warnings
 
 import pytest
 
-from patzilla.util.cache.backend import configure_cache_backend, get_cache_directory
+from patzilla.boot.cache import configure_cache_backend, get_cache_directory
+from patzilla.boot.config import BootConfiguration
+from patzilla.boot.framework import setup_pyramid
 
 logger = logging.getLogger(__name__)
 
 
-def suppress_warnings():
+@pytest.fixture(scope="session")
+def app_environment():
     """
-    Silence specific warnings.
-
-    - DeprecationWarning: Importing from numpy.testing.nosetester is deprecated since 1.15.0, import from numpy.testing instead.
+    Provide and configure a Pyramid environment at runtime.
     """
-    with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", category=DeprecationWarning)
-        import pandas.util.nosetester
+    setup_pyramid(bootconfiguration=BootConfiguration(datasources=["ops"]))
 
 
-suppress_warnings()
+@pytest.fixture(scope='session', autouse=True)
+def enable_app_cache_backend(pyt_options):
+    """
+    Enable application object cache through a session-wide fixture.
+    """
+    logger.info("Enabling application object cache backend: {}".format(pyt_options.cache_backend))
+    configure_cache_backend(pyt_options.cache_backend, cache_directory=pyt_options.cache_directory, clear_cache=pyt_options.cache_clear)
 
 
 class PytestOptionWrapper:
@@ -52,15 +64,6 @@ def pyt_options(request):
     Fixture for providing a PytestOptionWrapper instance.
     """
     return PytestOptionWrapper(request.config)
-
-
-@pytest.fixture(scope='session', autouse=True)
-def enable_app_cache_backend(pyt_options):
-    """
-    Enable application object cache through a session-wide fixture.
-    """
-    logger.info("Enabling application object cache backend: {}".format(pyt_options.cache_backend))
-    configure_cache_backend(pyt_options.cache_backend, cache_directory=pyt_options.cache_directory, clear_cache=pyt_options.cache_clear)
 
 
 def pytest_addoption(parser):

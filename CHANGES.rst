@@ -22,6 +22,7 @@ Development
 - [mw] Fix getting PDF documents and drawings from USPTO. Thanks, @aghster!
 - [qa] Add software test infrastructure for data acquisition subsystems
 - [qa] Add tests covering the acquisition of USPTO PDF documents and drawings
+- [mw] Refactor the bootloader subsystem
 
 
 2019-11-01 0.169.3

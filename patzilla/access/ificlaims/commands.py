@@ -1,14 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2015-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-import sys
-import json
-import logging
-from pprint import pprint
-from bunch import Bunch
-from patzilla.access.ificlaims.clientpool import IIFIClaimsClientPool
-from patzilla.util.data.container import SmartBunch
-from patzilla.util.web.pyramid.commandline import setup_commandline_pyramid
-
+# (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 """
 About
 =====
@@ -16,17 +7,32 @@ Run requests to search provider "IFI CLAIMS Direct" from the command line.
 
 Synopsis
 ========
-::
+Direct mode, without configuration file::
 
-    python patzilla/access/ificlaims/commands.py patzilla/config/development-local.ini
-    python patzilla/access/ificlaims/commands.py patzilla/config/development-local.ini | jq .
-    python patzilla/access/ificlaims/commands.py patzilla/config/development-local.ini | xmllint --format -
+    export IFICLAIMS_API_URI=https://cdws21.ificlaims.com
+    export IFICLAIMS_API_USERNAME=acme
+    export IFICLAIMS_API_PASSWORD=10f8GmWTz
+    python -m patzilla.access.ificlaims.commands
+
+Use configuration file::
+
+    python -m patzilla.access.ificlaims.commands patzilla/config/development-local.ini
+    python -m patzilla.access.ificlaims.commands patzilla/config/development-local.ini | jq .
+    python -m patzilla.access.ificlaims.commands patzilla/config/development-local.ini | xmllint --format -
 
 Todo
 ====
-- Pass output type (json/xml) via parameter
+- Pass output type (JSON/XML) via parameter
 
 """
+import json
+
+from patzilla.access.ificlaims import get_ificlaims_client
+from patzilla.boot.cache import configure_cache_backend
+from patzilla.boot.config import BootConfiguration
+from patzilla.util.config import get_configfile_from_commandline
+from patzilla.util.data.container import SmartBunch
+from patzilla.boot.framework import setup_pyramid
 
 
 def make_request(client):
@@ -38,12 +44,11 @@ def make_request(client):
     #results = client.search('pa:siemens OR pa:bosch', 0, 10)
     #results = client.search('pa:(siemens OR bosch)', 0, 10)
     #results = client.search('text:"solar energy"', 0, 10)
-    #results = client.search(SmartBunch({'expression': 'text:solar energy'}), SmartBunch({'offset': 0, 'limit': 10}))
-    results = client.search(SmartBunch({'expression': '{!complexphrase inOrder=true}"siemen* *haus"'}), SmartBunch({'offset': 0, 'limit': 10}))
+    results = client.search(SmartBunch({'expression': 'text:solar energy'}), SmartBunch({'offset': 0, 'limit': 10}))
+    #results = client.search(SmartBunch({'expression': '{!complexphrase inOrder=true}"siemen* *haus"'}), SmartBunch({'offset': 0, 'limit': 10}))
     #results = client.search(u'text:抑血管生成素的药物用途', 0, 10)
     #results = client.search(u'text:放射線を照射する放射線源と', 0, 10)
     #results = client.search(SmartBunch({'expression': 'pnctry:(de OR ep OR wo OR cn OR jp OR tw) AND pa:"taiwan paiho" AND pd:[20170101 TO 20170731]'}), SmartBunch({'offset': 0, 'limit': 50}))
-    print json.dumps(results)
 
     #results = client.text_fetch('US-20100077592-A1')
     #results = client.text_fetch('CN-1055497-A')
@@ -92,17 +97,25 @@ def make_request(client):
     #blob = client.tif_fetch('EP-0666666-A2')
     #print blob
 
+    return results
+
 
 if __name__ == '__main__':
+    """
+    Demo program for accessing different IFI CLAIMS services in a high-level manner.
+    """
 
-    configfile = sys.argv[1]
+    # Create a Pyramid runtime environment.
+    env = setup_pyramid(
+        configfile=get_configfile_from_commandline(),
+        bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
+    )
 
-    env = setup_commandline_pyramid(configfile)
-    logger = logging.getLogger(__name__)
+    # The IFI CLAIMS data source relies heavily on caching.
+    configure_cache_backend("filesystem")
 
-    # Get hold of data source client utility
-    registry = env['registry']
-    pool = registry.getUtility(IIFIClaimsClientPool)
-    client = pool.get('system')
+    # Get hold of data source client utility.
+    client = get_ificlaims_client()
 
-    make_request(client)
+    results = make_request(client)
+    print(json.dumps(results, indent=2))
