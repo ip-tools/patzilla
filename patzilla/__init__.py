@@ -12,6 +12,16 @@ from patzilla.util.web.pyramid.renderer import PngRenderer, XmlRenderer, PdfRend
 logger = logging.getLogger(__name__)
 
 
+def before_start():
+    """
+    All things which should be done before anything other. Probably monkey
+    patches and similar topics.
+    """
+
+    # This module carries a monkeypatch, make sure it is invoked before any other imports.
+    import patzilla.util.web.pyramid.cornice
+
+
 def configure(global_config, **settings):
     """
     Bootstrap Pyramid application configuration.
@@ -38,7 +48,18 @@ def minimal(global_config, **settings):
     Pyramid WSGI application factory with minimal footprint,
     suitable for CLI usage and software tests.
     """
+
+    # Prepare runtime environment.
+    before_start()
+
+    # Baseline configuration.
     config = configure(global_config, **settings)
+
+    # Mark environment flavor.
+    config.registry.app_flavor = "minimal"
+
+    # Register community addons.
+    config.include('cornice')
 
     # Register application addons.
     config.include("patzilla.navigator.opaquelinks")
@@ -60,12 +81,14 @@ def web(global_config, **settings):
     Pyramid WSGI application factory for a full server application.
     """
 
-    # This module carries a monkeypatch, make sure it is invoked before any other imports.
-    import patzilla.util.web.pyramid.cornice
+    # Prepare runtime environment.
+    before_start()
 
-    logging.getLogger("waitress.queue").setLevel(logging.ERROR)
-
+    # Baseline configuration.
     config = configure(global_config, **settings)
+
+    # Mark environment flavor.
+    config.registry.app_flavor = "web"
 
     # Add renderers.
     config.include('pyramid_mako')

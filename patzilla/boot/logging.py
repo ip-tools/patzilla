@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2017-2022 Andreas Motl <andreas.motl@ip-tools.org>
 from __future__ import absolute_import
+
+import socket
 import sys
 import logging
 import warnings
@@ -31,3 +33,7 @@ def suppress_warnings():
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=DeprecationWarning)
         from cryptography.exceptions import InvalidSignature
+
+    # Make waitress logging more silent on developer workstations.
+    if "sink" in socket.gethostname():
+        logging.getLogger("waitress.queue").setLevel(logging.ERROR)

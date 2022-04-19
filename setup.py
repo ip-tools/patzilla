@@ -139,6 +139,7 @@ test_requires = [
     'coverage>=5.3.1,<6',       # 6.3.2
     'mock>=3,<4',               # 4.0.3
     'testfixtures>=6,<7',
+    'pytest-forked>=1,<2',
 ]
 
 setup(name='patzilla',

@@ -22,6 +22,7 @@ Use configuration file::
 """
 import json
 import logging
+import sys
 
 from requests import HTTPError
 
@@ -30,7 +31,10 @@ from patzilla.boot.config import BootConfiguration
 from patzilla.boot.framework import setup_pyramid
 from patzilla.util.config import get_configfile_from_commandline
 
-logger = logging.getLogger(__name__)
+
+# Weird, but the main logger acquired by "getLogger(__name__)" was silent.
+# Probably, the Pyramid setup messes it up.
+logger = logging.root
 
 
 def mangle_range_parameter(parameters):
@@ -68,9 +72,10 @@ def json_request(client, url, parameters=None, use_get=False):
             return
     elif response.status_code == 404:
         logger.error('Resource "{}" not found. Parameters={}'.format(url, parameters))
-        return
+        sys.exit(1)
 
     logger.error("Request did not return JSON. Response was:\n{}".format(response.content))
+    sys.exit(1)
 
 
 def image_request(client, url, parameters):
@@ -131,6 +136,7 @@ if __name__ == '__main__':  # pragma: nocover
     # json_request(client, url, {'q': 'pn=DE142829T1', 'Range': '1-10'})
     # json_request(client, url, {'q': 'pn=EP666666', 'Range': '1-10'}, provoke_failure=True)
     json_request(client, url, {'q': 'pn=KR20000069056A', 'Range': '1-10'})
+    #json_request(client, url, {'q': 'foo=bar', 'Range': '1-10'})
 
     # 3.1.3. Images inquiry and retrieval
     # image_request(client, '{baseuri}/published-data/images/TW/201721043/A/fullimage.pdf'.format(baseuri=OPS_API_URI), {'Range': '19'})
