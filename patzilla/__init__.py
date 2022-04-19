@@ -3,6 +3,8 @@
 import logging
 
 from pyramid.config import Configurator
+
+from patzilla.boot.logging import suppress_warnings
 from patzilla.navigator.settings import GlobalSettings
 from patzilla.util.web.pyramid.renderer import PngRenderer, XmlRenderer, PdfRenderer, NullRenderer
 
@@ -97,3 +99,7 @@ def web(global_config, **settings):
 
     logger.info("Application is ready to serve requests. Enjoy your research.")
     return config.make_wsgi_app()
+
+
+# Suppress some "Python 2 is EOL" deprecation warnings.
+suppress_warnings()

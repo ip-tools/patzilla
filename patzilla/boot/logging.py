@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 import sys
 import logging
+import warnings
 
 
 def boot_logging(options=None):
@@ -18,3 +19,15 @@ def setup_logging(level=logging.INFO):
         format=log_format,
         stream=sys.stderr,
         level=level)
+
+
+def suppress_warnings():
+    """
+    Silence specific warnings.
+
+    - CryptographyDeprecationWarning: Python 2 is no longer supported by the Python core team.
+                                      Support for it is now deprecated in cryptography, and will be removed in the next release.
+    """
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        from cryptography.exceptions import InvalidSignature

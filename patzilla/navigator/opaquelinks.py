@@ -23,6 +23,7 @@ except ImportError:
 log = logging.getLogger(__name__)
 
 
+# https://github.com/davedoesdev/python-jwt/issues/15
 @postfork
 def init_random():
     Crypto.Random.atfork()
@@ -34,7 +35,7 @@ def includeme(config):
     signer = JwtSigner()
 
     # v1: always create a key
-    #signer.genkey('12345', salt='patzilla.navigator.opaquelinks', keysize=768)
+    # signer.genkey(keysize=768)
 
     # v2: have a key on the filesystem
     keyfile = resource_filename(__name__, 'resources/opaquelinks.pem')
