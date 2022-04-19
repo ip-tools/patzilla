@@ -18,7 +18,7 @@ class BootConfiguration:
 # https://github.com/ip-tools/patzilla/blob/main/patzilla/config/development.ini.tpl
 
 [app:main]
-use = egg:patzilla#minimal
+use = egg:patzilla#{flavor}
 
 [ip_navigator]
 datasources = {datasources}
@@ -71,7 +71,8 @@ formatter = generic
 format = %(asctime)s %(levelname)-8.8s [%(name)-40s] %(message)s
     """.strip()
 
-    def __init__(self, datasources=None):
+    def __init__(self, flavor=None, datasources=None):
+        self.flavor = flavor or "minimal"
         self.datasources = datasources or []
         self._tmpfiles = []
 
@@ -82,7 +83,7 @@ format = %(asctime)s %(levelname)-8.8s [%(name)-40s] %(message)s
     @property
     def for_application(self):
         application_ini = copy(self.INI_APPLICATION)
-        application_ini = application_ini.format(datasources=", ".join(self.datasources))
+        application_ini = application_ini.format(flavor=self.flavor, datasources=", ".join(self.datasources))
         return self.tmpfile(application_ini, suffix=".ini")
 
     def tmpfile(self, payload, suffix=None):

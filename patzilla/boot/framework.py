@@ -6,7 +6,6 @@ import logging.config
 import os
 import sys
 
-from pyramid.events import ContextFound
 from pyramid.paster import bootstrap
 
 from patzilla.boot.config import BootConfiguration
@@ -16,7 +15,8 @@ logger = logging.getLogger(__name__)
 
 def setup_pyramid(configfile=None, bootconfiguration=None):
     """
-    Configure and bootstrap the Pyramid framework environment.
+    Configure and bootstrap the Pyramid framework environment at runtime.
+    This is a different code path than when started as a WSGI application.
 
     Q: Can this be switched completely to runtime-based configuration?
     A: No, `pyramid.paster.bootstrap` apparently will always need a configuration file.
@@ -48,13 +48,5 @@ def setup_pyramid(configfile=None, bootconfiguration=None):
 
     # Bootstrap Pyramid.
     env = bootstrap(configfile_application)
-
-    # Get request and registry objects from environment.
-    request = env['request']
-    registry = env['registry']
-
-    # Run event subscriptions to attach data source client pool objects to request object.
-    event = ContextFound(request)
-    registry.notify(event)
 
     return env
