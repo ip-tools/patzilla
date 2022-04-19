@@ -15,7 +15,6 @@ Development
 - [ui] EPO/OPS: Support CPCI classifications
 - [ui] Fix dependencies: Upgrade Moment.js and Async
 - [ci] Add CI/GHA configuration
-- [ci] Add macOS to test matrix
 - [ui] Update a few JavaScript dependencies
 - [qa] Switch test framework from ``nose`` to ``pytest``
 - [qa] Improve Python test harness

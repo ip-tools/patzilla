@@ -13,7 +13,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest']
+        os: [
+          'ubuntu-latest',
+
+          # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
+          # 'macos-latest',
+        ]
         python-version: ['2.7']
 
     defaults:
@@ -69,7 +74,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest']
+        os: [
+          'ubuntu-latest',
+
+          # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
+          # 'macos-latest',
+        ]
         node-version: ['11']
 
     defaults:
