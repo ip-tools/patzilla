@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2007,2014 Andreas Motl <andreas.motl@elmyra.de>
+# (c) 2007-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 
 """
@@ -26,8 +26,8 @@ def read_numbersfile(file):
     fh = open(file, 'r')
     numbers_raw = fh.readlines()
     fh.close()
-    numbers = map(lambda number: number.replace("\n", '').replace(' ', ''), numbers_raw)
-    numbers = [number for number in numbers if not number.startswith('#')]
+    numbers = map(lambda number: number.strip(" ;\"'\t\n\r"), numbers_raw)
+    numbers = [number for number in numbers if number and not number.startswith('#')]
     return numbers
 
 def fullyear_from_year(year):

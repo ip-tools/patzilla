@@ -26,6 +26,7 @@ Development
 - [ui] Improve loading behaviour for vendor data source logos
 - [mw] EPO/OPS: Update list of full text authorities. Thanks, @epo and @aghster!
 - [mw] Fix JSON Web Token adapter for generating shareable links
+- [mw] Improve reading lists of document numbers from text files
 
 
 2019-11-01 0.169.3
