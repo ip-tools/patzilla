@@ -40,7 +40,7 @@ def test_baseurl(app_environment):
     assert "<title>EPO - Open Patent Services (OPS)</title>" in response.content
 
 
-def test_search_basic_success(app_environment):
+def test_search_basic_success(app_request):
     """
     Proof a basic search expression works on OPS and yields a response in the
     appropriate format. Validate that response by checking the result count.
@@ -50,7 +50,7 @@ def test_search_basic_success(app_environment):
     assert total_result_count == 2
 
 
-def test_search_basic_failure(app_environment):
+def test_search_basic_failure(app_request):
     """
     Proof that submitting an invalid search request fails.
     """
@@ -77,7 +77,7 @@ def test_search_basic_failure(app_environment):
     assert jpath('/errors/0/description/headers/Content-Type', error_data).startswith("application/xml")
 
 
-def test_search_swap_family(app_environment):
+def test_search_swap_family(app_request):
     """
     Test the adjustments to the selection of representative documents.
 
@@ -94,7 +94,7 @@ def test_search_swap_family(app_environment):
     assert results.selected_numbers == [u'DE69534171T2', u'EP0666667A2']
 
 
-def test_get_ops_biblio_data_json(app_environment):
+def test_get_ops_biblio_data_json_success(app_request):
     """
     Proof getting bibliographic for a specific document in JSON format works.
     """
@@ -114,7 +114,18 @@ def test_get_ops_biblio_data_json(app_environment):
     ]
 
 
-def test_get_ops_biblio_data_xml(app_environment):
+@pytest.mark.slow
+def test_get_ops_biblio_data_json_failure(app_request):
+    """
+    Proof getting bibliographic for an invalid document number croaks.
+    """
+    with pytest.raises(_JSONError) as ex:
+        ops_biblio_documents("EP0")
+
+    assert_404_not_found(ex, location="ops-biblio", url="https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/biblio/full-cycle")
+
+
+def test_get_ops_biblio_data_xml(app_request):
     """
     Proof getting bibliographic for a specific document in XML format works.
     """
@@ -122,7 +133,7 @@ def test_get_ops_biblio_data_xml(app_environment):
     assert results.startswith('<?xml version="1.0" encoding="UTF-8"?>')
 
 
-def test_ops_document_kindcodes(app_environment):
+def te2st_ops_document_kindcodes_success(app_request):
     """
     Validate acquiring document kind codes.
     """
@@ -130,7 +141,40 @@ def test_ops_document_kindcodes(app_environment):
     assert kindcodes == ["A2", "A3", "B1"]
 
 
-def test_ops_family_members(app_environment):
+def tes2t_ops_document_kindcodes_failure(app_request):
+    """
+    Validate acquiring document kind codes.
+    """
+    with pytest.raises(_JSONError) as ex:
+        ops_document_kindcodes("EP0")
+
+    assert_404_not_found(ex, location="ops-biblio", url="https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/biblio/full-cycle")
+
+
+def assert_404_not_found(ex, location=None, url=None):
+
+    json_error = ex.value
+    message = str(json_error)
+
+    # TODO: Maybe do XML parsing here? Or better within the core implementation?
+    assert "404 Not Found" in message
+    assert '<fault xmlns="http://ops.epo.org">' in message
+    assert "<code>SERVER.EntityNotFound</code>" in message
+    assert "<message>No results found</message>" in message
+
+    error_data = json_error.json
+    print("error_data:", error_data)
+    assert jpath('/status', error_data) == "error"
+    assert jpath('/errors/0/name', error_data) == "http-response"
+    assert jpath('/errors/0/location', error_data) == location
+    assert jpath('/errors/0/description/status_code', error_data) == 404
+    assert jpath('/errors/0/description/reason', error_data) == "Not Found"
+    assert jpath('/errors/0/description/url', error_data) == url
+    assert jpath('/errors/0/description/headers/X-API', error_data) == "ops-v3.2"
+    assert jpath('/errors/0/description/headers/Content-Type', error_data).startswith("application/xml")
+
+
+def test_ops_family_members(app_request):
     """
     Validate acquiring family members.
     """

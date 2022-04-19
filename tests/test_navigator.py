@@ -1,6 +1,7 @@
 import unittest
 
 import mock
+import pytest
 
 from pyramid import testing
 
@@ -68,3 +69,15 @@ class TestNavigatorStandalone(unittest.TestCase):
         request = testing.DummyRequest(matchdict={"password": "foobar"})
         pwhash = identity_pwhash_handler(request)
         assert '$p5k2$' in pwhash
+
+
+@pytest.mark.forked
+def test_navigator_app(app_environment):
+    registry = app_environment["registry"]
+    assert registry.app_flavor == "minimal"
+
+
+@pytest.mark.forked
+def test_navigator_web(web_environment):
+    registry = web_environment["registry"]
+    assert registry.app_flavor == "web"
