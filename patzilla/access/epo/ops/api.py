@@ -321,7 +321,11 @@ def ops_published_data_search_real(constituents, query, range):
         count_total = int(pointer_total_count.resolve(payload))
 
         # Raise an exception to skip caching empty results.
-        if count_total == 0:
+        # TODO: Maybe this code will never get reached anymore because the case
+        #       when there are zero results will always croak with 404, so it
+        #       will already be handled by `handle_response` beforehand, probably.
+        #       It might have been different before  earlier versions of EPO/OPS
+        if count_total == 0:  # pragma: nocover
             raise NoResultsException('No results', data=payload)
 
         return payload
@@ -331,7 +335,7 @@ def ops_published_data_search_real(constituents, query, range):
 def ops_published_data_crawl(constituents, query, chunksize):
 
     if constituents != 'pub-number':
-        raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
+        raise ValueError('Only constituent "pub-number" permitted here')
 
     real_constituents = constituents
     if constituents == 'pub-number':
@@ -433,8 +437,12 @@ def ops_published_data_crawl(constituents, query, chunksize):
         set_pointer(response, '/ops:world-patent-data/ops:biblio-search/ops:range', {'@begin': '1', '@end': new_total_count})
         #pointer_time_elapsed.set(response, str(time_elapsed))
 
-    if not response:
-        raise ValueError('constituents "{0}" invalid or not implemented yet'.format(constituents))
+    # TODO: Maybe this code will never get reached anymore because the case
+    #       when there are zero results will always croak with 404, so it
+    #       will already be handled by `handle_response` beforehand, probably.
+    #       It might have been different in earlier versions of EPO/OPS.
+    if not response:  # pragma: nocover
+        raise NoResultsException('No results when crawling data for query: {}'.format(query))
 
     return response
 
@@ -463,19 +471,21 @@ def image_representative_from_family(patent, countries, func_filter=None):
 
 
 def image_representative(patent):
+    """
+    When document does not offer drawings, search the family members for representative ones.
+    """
 
-    # Amend document number for german Aktenzeichen to Offenlegungsschrift. The former does not carry drawings.
+    # Amend document number for "German Aktenzeichen to Offenlegungsschrift". The former does not carry drawings.
     # Example: DE112013003369A5 to DE102012211542A1
     if patent.country == 'DE' and (patent.kind == 'A5' or patent.kind == 'A8'):
         def kindcode_filter(item):
             return not (item.startswith('DE') and (item.endswith('A5') or item.endswith('A8')))
-        image_representative_from_family(patent, ['DE', 'WO'], kindcode_filter)
+        return image_representative_from_family(patent, ['DE', 'WO'], kindcode_filter)
 
-
-    # Amend document number for European Search Report to  to Offenlegungsschrift. The former does not carry drawings.
+    # Amend document number for "European Search Report to Offenlegungsschrift". The former does not carry drawings.
     # Example: EP1929706A4 to EP1929706A1
     elif patent.country == 'EP' and (patent.kind == 'A4'):
-        image_representative_from_family(patent, ['EP', 'WO'])
+        return image_representative_from_family(patent, ['EP', 'WO'])
 
 
 @cache_region('medium')
@@ -1221,6 +1231,9 @@ class OPSFamilyMembers(object):
     def publications_by_country(self, exclude=None, countries=None):
         exclude = exclude or []
         countries = countries or []
+        assert isinstance(exclude, list)
+        assert isinstance(countries, list)
+
         member_publications = []
         for country in countries:
             country = country.upper()
@@ -1241,6 +1254,8 @@ def _flatten_ops_json_list(ops_list):
     for ops_entry in ops_list:
         yield ops_entry['$']
 
+
+"""
 def _find_publication_number_by_prio_number():
     if 'priority-claim' in payload[family_id]:
 
@@ -1251,7 +1266,7 @@ def _find_publication_number_by_prio_number():
             if family_member['application']['number'] == prio_number:
                 pubref_number = family_member['publication']['number']
                 break
-
+"""
 
 
 def _format_title(title):
@@ -1361,12 +1376,11 @@ def ops_service_usage(date_begin, date_end):
     client = get_ops_client()
 
     url = '{baseuri}/me/stats/usage?timeRange={date_begin}~{date_end}'.format(baseuri=OPS_DEVELOPERS_URI, **locals())
-    print "getting metrics for:", date_begin, date_end, url
-    response = client.get(url)
+    log.info("Getting metrics at: {}".format(url))
 
-    #print response
-    #print response.headers
-    #print response.content
+    response = client._make_request(
+        url, data={}, use_get=True,
+    )
 
     payload = response.json()
 
@@ -1379,13 +1393,13 @@ def ops_service_usage(date_begin, date_end):
         'message-count': message_count,
     }
 
-    log.info('OPS service usage for client_id={client_id} from {date_begin} to {date_end} is {data}'.format(
-        client_id = client.client_id, **locals()))
+    log.info('OPS service usage for client_key={client_key} from {date_begin} to {date_end} is {data}'.format(
+        client_key=client.key, **locals()))
 
     return data
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: nocover
     data = ops_service_usage('06/11/2014', '09/12/2014')
     print 'Time range:    {0}'.format(data['time-range'])
     print 'Response size: {0}G'.format(data['response-size'] / float(10**9))
