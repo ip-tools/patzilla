@@ -192,10 +192,12 @@ def dpma_published_data_search_real(query, options):
 def depatisconnect_claims_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
+    # return depatisconnect_claims_handler_real(patent)
     try:
-        return depatisconnect_claims_handler_real(patent)
-    except:
         return espacenet_claims_handler(patent)
+    except:
+        log.exception("Fetching claims from Espacenet failed for document: {}".format(patent))
+        raise
 
 def depatisconnect_claims_handler_real(patent):
     try:
@@ -220,10 +222,12 @@ def depatisconnect_claims_handler_real(patent):
 def depatisconnect_description_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
+    # return depatisconnect_description_handler_real(patent)
     try:
-        return depatisconnect_description_handler_real(patent)
-    except:
         return espacenet_description_handler(patent)
+    except:
+        log.exception("Fetching description from Espacenet failed for document: {}".format(patent))
+        raise
 
 def depatisconnect_description_handler_real(patent):
     try:
