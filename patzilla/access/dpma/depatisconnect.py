@@ -139,7 +139,9 @@ def get_xml_real(number):
         return response.content
 
     else:
-        raise ValueError('Retrieving XML document for "{0}" from DPMA failed'.format(number))
+        msg = 'Retrieving XML document for "{0}" from DPMA failed'.format(number)
+        log.error("{}. Response:\n{}".format(msg, response.content))
+        raise ValueError(msg)
 
     """
     elif response.status_code == 404:

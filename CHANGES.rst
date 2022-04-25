@@ -27,6 +27,7 @@ Development
 - [mw] EPO/OPS: Update list of full text authorities. Thanks, @epo and @aghster!
 - [mw] Fix JSON Web Token adapter for generating shareable links
 - [mw] Improve reading lists of document numbers from text files
+- [mw] Fix acquisition of claims and description for DE and US documents
 
 
 2019-11-01 0.169.3
