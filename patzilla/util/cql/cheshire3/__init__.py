@@ -25,7 +25,10 @@ class SmartSearchClause(SearchClause):
         # 1. for certain attributes, apply document number normalization to value
         term_vanilla = term = self.term.toCQL()
         if str(self.index).lower() in ['pn', 'num']:
-            term = normalize_patent(str(term))
+            docnumber = str(term)
+            # Don't apply to two-letter country codes, e.g. `pn=(DE or EP or US)`.
+            if len(docnumber) > 2:
+                term = normalize_patent(docnumber)
 
         # 2. fallback to original value, if number normalization couldn't handle this value
         if not term:

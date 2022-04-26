@@ -84,9 +84,12 @@ def normalize_patentnumbers(tokens):
         term = term.replace('"', '')
         # apply document number normalization to values of certain indexes only
         if index.lower() in indexes_publication_number:
-            term = normalize_patent(term, fix_kindcode=True)
-            if term:
-                token[2] = term
+            docnumber = str(term)
+            # Don't apply to two-letter country codes, e.g. `pn=(DE or EP or US)`.
+            if len(docnumber) > 2:
+                term = normalize_patent(term, fix_kindcode=True)
+                if term:
+                    token[2] = term
 
     walk_token_results(tokens, triple_callback=action)
 
