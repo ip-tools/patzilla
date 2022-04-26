@@ -28,6 +28,7 @@ Development
 - [mw] Fix JSON Web Token adapter for generating shareable links
 - [mw] Improve reading lists of document numbers from text files
 - [mw] Fix acquisition of claims and description for DE and US documents
+- [mw] Improve gracefulness when decoding document numbers
 
 
 2019-11-01 0.169.3
