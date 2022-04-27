@@ -9,12 +9,12 @@ from patzilla.navigator.views import navigator_standalone
 from patzilla.util.web.identity.service import identity_auth_handler, identity_pwhash_handler
 
 
-class TestNavigatorStandalone(unittest.TestCase):
+class TestNavigatorStandalone:
 
-    def setUp(self):
+    def setup_method(self):
         self.config = testing.setUp()
 
-    def tearDown(self):
+    def teardown_method(self):
         testing.tearDown()
 
     def test_navigator_standalone(self):
@@ -70,6 +70,22 @@ class TestNavigatorStandalone(unittest.TestCase):
         pwhash = identity_pwhash_handler(request)
         assert '$p5k2$' in pwhash
 
+    @pytest.mark.parametrize("payload",
+                             [{}, {"username": None}, {"username": ""}, {"username": "foo"}],
+                             ids=["empty-payload", "username-null", "username-empty", "password-missing"])
+    def test_identity_auth_incomplete_credentials(self, payload):
+        request = testing.DummyRequest(json=payload)
+        request.errors = mock.Mock()
+        response = identity_auth_handler(request)
+        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')
+        assert response is None
+
+    def test_identity_auth_invalid_payload(self):
+        request = testing.DummyRequest(post={})
+        request.errors = mock.Mock()
+        response = identity_auth_handler(request)
+        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')
+        assert response is None
 
 @pytest.mark.forked
 def test_navigator_app(app_environment):
