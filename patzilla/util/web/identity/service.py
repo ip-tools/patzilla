@@ -52,9 +52,15 @@ identity_user_password = Service(
 def identity_auth_handler(request):
     """Authenticate a user"""
 
-    payload = request.json
-    username = payload.get('username').lower()
-    password = payload.get('password')
+    try:
+        payload = request.json
+        username = payload['username'].lower()
+        password = payload['password']
+        assert len(username) > 0
+        assert len(password) > 0
+    except (KeyError, AttributeError, AssertionError):
+        request.errors.add('identity subsystem', 'authentication-failed', 'Incomplete credentials')
+        return
 
     # mitigate timing attacks
     # see also:

@@ -29,6 +29,7 @@ Development
 - [mw] Improve reading lists of document numbers from text files
 - [mw] Fix acquisition of claims and description for DE and US documents
 - [mw] Improve gracefulness when decoding document numbers
+- [mw] Improve parameter validation in authentication handler
 
 
 2019-11-01 0.169.3

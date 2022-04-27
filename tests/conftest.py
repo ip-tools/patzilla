@@ -9,6 +9,7 @@ a) bringing up a Pyramid environment at runtime.
 b) configuring the application object cache at runtime.
 """
 import logging
+import os
 
 import pytest
 from pyramid.events import ContextFound, NewRequest
@@ -46,6 +47,8 @@ def app_request(app_environment):
     event = NewRequest(request)
     registry.notify(event)
     del request.errors[:]
+
+    return request
 
 
 @pytest.fixture(scope="session")
@@ -131,3 +134,8 @@ def pytest_report_header(config):
         "app-cache-clear:     {}".format(options.cache_clear),
     ]
     return lines
+
+
+# When running software tests, mask specific environment variables.
+if "PATZILLA_CONFIG" in os.environ:
+    del os.environ["PATZILLA_CONFIG"]
