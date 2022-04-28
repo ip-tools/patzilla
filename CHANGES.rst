@@ -30,6 +30,7 @@ Development
 - [mw] Fix acquisition of claims and description for DE and US documents
 - [mw] Improve gracefulness when decoding document numbers
 - [mw] Improve parameter validation in authentication handler
+- [mw] Honour ``fulltext_enabled`` setting of data source
 
 
 2019-11-01 0.169.3
