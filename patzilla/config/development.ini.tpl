@@ -305,7 +305,7 @@ propagate = 0
 
 #[handler_accesslog]
 #class = FileHandler
-#args = ('/var/log/c1/as-rem-webapp/access.log','a')
+#args = ('/var/log/patzilla/access.log','a')
 #level = INFO
 #formatter = accesslog
 
