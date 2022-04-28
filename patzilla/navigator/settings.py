@@ -364,7 +364,7 @@ class RuntimeSettings(object):
 
         # 1. don't allow "query" from outside on view-only domains
         if request_params.has_key('query') and isviewer:
-            log.warn('parameter "query=%s" not allowed on this vhost, purging it', request_params['query'])
+            log.warning('Parameter "query=%s" not allowed on host "%s", purging it', request_params['query'], host)
             del request_params['query']
 
 
