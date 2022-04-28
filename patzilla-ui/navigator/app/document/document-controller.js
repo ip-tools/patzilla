@@ -235,7 +235,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         var country = document.get('@country');
         _.find(navigatorApp.config.get('system').datasources, function(name) {
             var datasource_info = navigatorApp.config.get('system').datasource[name];
-            if (_.contains(datasource_info.fulltext_countries, country)) {
+            if (datasource_info.fulltext_enabled && _.contains(datasource_info.fulltext_countries, country)) {
                 datasource_name = name;
                 return true;
             }
