@@ -25,14 +25,17 @@ def setup_logging(level=logging.INFO):
 
 def suppress_warnings():
     """
-    Silence specific warnings.
+    Silence specific warnings and log messages.
 
     - CryptographyDeprecationWarning: Python 2 is no longer supported by the Python core team.
                                       Support for it is now deprecated in cryptography, and will be removed in the next release.
+    - WARNING  [waitress.queue]  Task queue depth is X
     """
+
+    # Silence warnings about Python 2 deprecation.
     with warnings.catch_warnings():
-        warnings.filterwarnings("ignore", category=DeprecationWarning)
-        from cryptography.exceptions import InvalidSignature
+        warnings.filterwarnings("ignore", category=Warning, message="Python 2 is no longer supported")
+        import cryptography
 
     # Make waitress logging more silent on developer workstations.
     if "sink" in socket.gethostname():

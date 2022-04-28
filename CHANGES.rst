@@ -202,7 +202,7 @@ Development
 - [ui] Add ApplicationProfile subsystem
 - [ui] Improve Stack subsystem data model
 - [ui] Improve jQuery3 compatibility
-- [ui] Improve INID code labels, refactoring
+- [ui] Improve INID code labels, refactoring
 - [ui] Add display flavour with verbose INID code labels
 - [ui] Add a few Material Design Components
 - [ui] Add Stack opener button
@@ -275,7 +275,7 @@ Development
 - [ui] Fix occasional cropped display of drawings
 - [ui] Prepare drawings loader for fetching new items when navigating to previous item
 - [ui] Reorder comfort form fields again
-- [ui] Nail Javascript module dependencies to exact versions
+- [ui] Nail Javascript module dependencies to exact versions
 - [mw] Fix error reporting and logging issues
 - [ui] Hide previous/next drawing navigation buttons when displaying a single drawing
 - [ui] Prevent out of bounds navigation to the previous drawing if there's just one item in the collection

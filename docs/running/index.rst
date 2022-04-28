@@ -17,7 +17,7 @@ You can either install and run it system-wide on Debian GNU/Linux::
 ... or run it ad-hoc in the current working directory::
 
     mkdir -p ./var/lib/mongodb
-    mongod --dbpath=./var/lib/mongodb --smallfiles
+    mongod --dbpath=./var/lib/mongodb
 
 
 Running PatZilla
