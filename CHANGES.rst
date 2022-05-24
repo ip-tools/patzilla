@@ -32,6 +32,7 @@ Development
 - [mw] Improve parameter validation in authentication handler
 - [mw] Honour ``fulltext_enabled`` setting of data source
 - [mw] Disable acquisition of PDF documents from DPMA/DEPATISconnect
+- [mw] EPO/OPS: Unlock inquiry of image information for documents without kind code
 
 
 2019-11-01 0.169.3

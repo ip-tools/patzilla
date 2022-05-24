@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
+import operator
 import time
 import logging
+from collections import OrderedDict
 from pprint import pformat
 from contextlib import contextmanager
 
@@ -15,6 +17,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest, HTTP
 
 from patzilla.access.epo.ops.model import OpsFamilyAwareSearchResult
 from patzilla.navigator.util import object_attributes_to_dict
+from patzilla.util.data.container import jpath
 from patzilla.util.image.convert import pdf_join, pdf_set_metadata, pdf_make_metadata
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.numbers.common import decode_patent_number, split_patent_number
@@ -544,22 +547,37 @@ def inquire_images(document):
         error.status_code = 500
         raise error
 
-    result = data['ops:world-patent-data']['ops:document-inquiry']['ops:inquiry-result']
+    results = to_list(data['ops:world-patent-data']['ops:document-inquiry']['ops:inquiry-result'])
 
-    info = {}
-    for node in to_list(result['ops:document-instance']):
+    # Index results by document id and sort descending.
+    # In this manner, EP0666666B1 will come before EP0666666A2 and EP0666666A3.
+    for document in results:
+        docref = jpath("/publication-reference/document-id", document)
+        document_id, _ = _get_document_number_date(docref, "docdb")
+        document["__ID__"] = document_id
+    results = sorted(results, key=operator.itemgetter('__ID__'), reverse=True)
 
-        # Suppress correction pages of amendments like US2010252183A1.
-        if is_amendment_only(node): continue
+    # Aggregate all `ops:document-instance` nodes into dictionary, keyed by `@desc` attribute.
+    info = None
+    for document in results:
 
-        # Aggregate nodes into map, using the '@desc' attribute as key
-        key = node['@desc']
-        info[key] = node
+        info = OrderedDict()
+        for node in to_list(document['ops:document-instance']):
 
-    # Enrich image inquiry information. Compute image information for carousel widget.
-    enrich_image_inquiry_info(info)
+            # Suppress correction pages of amendments like US2010252183A1.
+            if is_amendment_only(node):
+                continue
 
-    #log.info('Image info: %s', info)
+            # Aggregate nodes into map, using the '@desc' attribute as key
+            key = node['@desc']
+            info[key] = node
+
+        # Enrich image inquiry information. Compute image information for carousel widget.
+        enrich_image_inquiry_info(info)
+        # log.info('Image info: %s', info)
+
+        if "META" in info and info["META"]:
+            return info
 
     return info
 
@@ -593,7 +611,9 @@ def is_amendment_only(node):
 def enrich_image_inquiry_info(info):
     """
     Enrich image inquiry information.
-    If DRAWINGS can be properly detected, add information to "meta" dictionary of document and return True.
+
+    If `DRAWINGS` can be properly detected, add information to
+    `META` dictionary of document and return `True`.
     """
 
     meta = {}
