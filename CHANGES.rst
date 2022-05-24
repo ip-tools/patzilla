@@ -31,6 +31,7 @@ Development
 - [mw] Improve gracefulness when decoding document numbers
 - [mw] Improve parameter validation in authentication handler
 - [mw] Honour ``fulltext_enabled`` setting of data source
+- [mw] Disable acquisition of PDF documents from DPMA/DEPATISconnect
 
 
 2019-11-01 0.169.3
