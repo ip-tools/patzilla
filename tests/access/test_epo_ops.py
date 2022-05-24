@@ -11,7 +11,7 @@ from patzilla.access.epo.ops.api import ops_published_data_search, get_ops_clien
     ops_biblio_documents, ops_document_kindcodes, ops_family_members, ops_published_data_search_swap_family, \
     ops_published_data_crawl, image_representative, get_ops_image, ops_description, ops_claims, get_ops_image_pdf, \
     ops_service_usage, _result_list_compact, ops_family_publication_docdb_xml, ops_register, \
-    _flatten_ops_json_list
+    _flatten_ops_json_list, inquire_images
 from patzilla.access.epo.ops.client import OpsCredentialsGetter
 from patzilla.util.data.container import jpath
 
@@ -297,6 +297,54 @@ def test_family_members(app_request):
         u'US5467352A',
         u'US5572526A',
     ]
+
+
+def test_image_inquiry_with_kindcode_A2_success(app_request):
+    """
+    Check successful image inquiry of a European Patent Application.
+    """
+    data = inquire_images("EP0666666A2")
+    assert jpath("/META/drawing-start-page", data) == 7
+    assert jpath("/META/drawing-total-count", data) == 2
+
+
+def test_image_inquiry_with_kindcode_B1_success(app_request):
+    """
+    Check successful image inquiry of a European Patent Specification.
+    """
+    data = inquire_images("EP0666666B1")
+    assert jpath("/META/drawing-start-page", data) == 12
+    assert jpath("/META/drawing-total-count", data) == 2
+
+
+def test_image_inquiry_with_kindcode_A3_success(app_request):
+    """
+    Check successful image inquiry of a European Search Report.
+    """
+    data = inquire_images("EP0666666A3")
+    assert jpath("/META", data) == {}
+    assert jpath("/FullDocument/ops:document-section/2/@name", data) == "SEARCH_REPORT"
+
+
+def test_image_inquiry_no_kindcode_success(app_request):
+    """
+    Check successful image inquiry without kind code.
+
+    Inquiring EP0666666 should yield the document EP0666666B1,
+    a European Patent Specification.
+    """
+    data = inquire_images("EP0666666")
+    assert jpath("/META/drawing-start-page", data) == 12
+    assert jpath("/META/drawing-total-count", data) == 2
+
+
+def test_image_inquiry_failure(app_request):
+    """
+    Check successful image inquiry.
+    """
+    with pytest.raises(HTTPNotFound) as ex:
+        inquire_images("EP123A2")
+    assert ex.match("No image information for document=EP123A2")
 
 
 def test_image_representative(app_request):
