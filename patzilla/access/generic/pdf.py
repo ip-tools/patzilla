@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2019 The PatZilla Developers
+# (c) 2013-2022 The PatZilla Developers
 import logging
 from StringIO import StringIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 import attr
-from pyramid.httpexceptions import HTTPError, HTTPNotFound
+from pyramid.httpexceptions import HTTPError
 from patzilla.util.numbers.common import decode_patent_number
-from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.util.python import exception_traceback
-from patzilla.access.dpma.depatisconnect import fetch_pdf as depatisconnect_fetch_pdf, NotConfiguredError
 from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
 from patzilla.access.epo.publicationserver.client import fetch_pdf as publicationserver_fetch_pdf
 from patzilla.access.uspto.pdf import document_viewer_url as uspto_pdfview_url, fetch_pdf as uspto_fetch_pdf
@@ -53,11 +51,10 @@ def pdf_universal(patent):
 def pdf_universal_real(patent, response):
 
     document = decode_patent_number(patent)
-    number_normalized = normalize_patent(patent)
 
     # Sanity checks.
     if document is None:
-        log.error('Locating a document at the domestic office requires ' \
+        log.error('Locating a document at the domestic office requires '
                   'a decoded document number for "{}"'.format(patent))
         raise ValueError(u'Unable to decode document number {}'.format(patent))
 
@@ -73,7 +70,7 @@ def pdf_universal_real(patent, response):
             if not isinstance(ex, HTTPError):
                 log.error(exception_traceback())
 
-    # 2. Next, try USPTO servers if it's an US document.
+    # 2. Next, try USPTO servers if it's a US document.
     if response.pdf is None and document.country == 'US':
 
         try:
@@ -86,7 +83,12 @@ def pdf_universal_real(patent, response):
                 log.error(exception_traceback())
 
     # 3. Next, try DPMA servers.
+    """
     if response.pdf is None:
+        from pyramid.httpexceptions import HTTPNotFound
+        from patzilla.util.numbers.normalize import normalize_patent
+        from patzilla.access.dpma.depatisconnect import fetch_pdf as depatisconnect_fetch_pdf, NotConfiguredError
+        number_normalized = normalize_patent(patent)
         try:
             # Skip requests for documents w/o kindcode
             if not document.kind:
@@ -104,6 +106,7 @@ def pdf_universal_real(patent, response):
 
             elif not isinstance(ex, HTTPNotFound):
                 log.error(exception_traceback())
+    """
 
     # 4. Next, try EPO OPS service.
     # Note this will assemble PDF out of single pages requested
