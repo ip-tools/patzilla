@@ -79,8 +79,8 @@
         },
 
         espacenet_pdf_url: function() {
-            // http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
-            var url_tpl = _.template('http://worldwide.espacenet.com/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            // https://worldwide.espacenet.com/data/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=US&NR=6269530B1&KC=B1
+            var url_tpl = _.template('https://worldwide.espacenet.com/data/espacenetDocument.pdf?flavour=trueFull&FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },
@@ -102,8 +102,8 @@
         },
 
         inpadoc_legal_url: function() {
-            // http://worldwide.espacenet.com/publicationDetails/inpadoc?CC=US&NR=6269530B1&KC=B1&FT=D
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadoc?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            // https://worldwide.espacenet.com/data/publicationDetails/inpadoc?CC=US&NR=6269530B1&KC=B1&FT=D
+            var url_tpl = _.template('https://worldwide.espacenet.com/data/publicationDetails/inpadoc?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },
@@ -173,8 +173,8 @@
         },
 
         inpadoc_family_url: function() {
-            // http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?CC=US&NR=6269530B1&KC=B1&FT=D
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/inpadocPatentFamily?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
+            // https://worldwide.espacenet.com/data/publicationDetails/inpadocPatentFamily?CC=US&NR=6269530B1&KC=B1&FT=D
+            var url_tpl = _.template('https://worldwide.espacenet.com/data/publicationDetails/inpadocPatentFamily?FT=D&CC=<%= country %>&NR=<%= docnumber %><%= kind %>&KC=<%= kind %>');
             var url = url_tpl(this);
             return url;
         },
@@ -229,18 +229,18 @@
         },
 
         espacenet_worldwide_url: function() {
-            // http://worldwide.espacenet.com/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=US&NR=2014140267A1&KC=A1
+            // https://worldwide.espacenet.com/data/publicationDetails/biblio?DB=worldwide.espacenet.com&FT=D&CC=US&NR=2014140267A1&KC=A1
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('http://worldwide.espacenet.com/publicationDetails/biblio?CC=<%= country %>&NR=<%= docnumber %>&KC=<%= kind %>');
+            var url_tpl = _.template('https://worldwide.espacenet.com/data/publicationDetails/biblio?CC=<%= country %>&NR=<%= docnumber %>&KC=<%= kind %>');
             var url = url_tpl(document_id);
             return url;
         },
 
         new_espacenet_worldwide_url: function() {
-            // https://worldwide.espacenet.com/beta/search/publication/EP0666666
+            // https://worldwide.espacenet.com/patent/search/publication/EP0666666
             // https://github.com/ip-tools/patzilla/issues/4
             var document_id = this.document.get_publication_reference('docdb');
-            var url_tpl = _.template('https://worldwide.espacenet.com/beta/search/publication/<%= fullnumber %>');
+            var url_tpl = _.template('https://worldwide.espacenet.com/patent/search/publication/<%= fullnumber %>');
             var url = url_tpl(document_id);
             return url;
         },
