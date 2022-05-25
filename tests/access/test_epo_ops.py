@@ -6,6 +6,7 @@ import pytest
 from cornice.util import _JSONError
 from epo_ops.exceptions import MissingRequiredValue
 from pyramid.httpexceptions import HTTPBadGateway, HTTPNotFound
+from pyramid.threadlocal import get_current_request
 
 from patzilla.access.epo.ops.api import ops_published_data_search, get_ops_client, OPS_BASE_URI, get_ops_biblio_data, \
     ops_biblio_documents, ops_document_kindcodes, ops_family_members, ops_published_data_search_swap_family, \
@@ -31,6 +32,9 @@ TIFF_HEADER_BIG_ENDIAN = b"\x4d\x4d\x00\x2a"
 
 
 def test_client_not_configured():
+    request = get_current_request()
+    if hasattr(request, 'ops_client'):
+        delattr(request, 'ops_client')
     with pytest.raises(HTTPBadGateway) as ex:
         get_ops_client()
     assert ex.match("EPO OPS: Data source not enabled or not configured")
