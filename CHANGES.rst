@@ -36,6 +36,7 @@ Development
 - [mw] EPO/OPS: Unlock inquiry of image information for documents without kind code
 - [mw] EPO/Espacenet: Repair access layer
 - [ui] EPO/Espacenet: Repair "external sources" links
+- [mw] EPO/Espacenet: Acquire "abstract" text
 
 
 2019-11-01 0.169.3
