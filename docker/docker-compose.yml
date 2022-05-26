@@ -3,11 +3,11 @@ version: "3"
 services:
   patzilla:
     build: .
-    image: aghster/patzilla
+    command: pserve /etc/patzilla.ini
     ports:
       - 6543:6543
     volumes:
-      - ./patzilla.ini:/patzilla.ini:ro
+      - ./patzilla.ini:/etc/patzilla.ini:ro
     networks:
       - patzilla_net
     container_name: patzilla
@@ -15,7 +15,7 @@ services:
       - mongodb
     restart: unless-stopped
   mongodb:
-    image: mvertes/alpine-mongo
+    image: mongo:4-focal
     ports:
       - 27017:27017
     networks:
