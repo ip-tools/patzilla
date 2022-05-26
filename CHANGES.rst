@@ -37,6 +37,7 @@ Development
 - [ui] EPO/Espacenet: Repair "external sources" links
 - [mw] EPO/Espacenet: Acquire "abstract" text
 - [mw] EPO/Espacenet: Make access layer production ready
+- [mw] EPO/Espacenet: Acquire "abstract" text from OPS API
 
 
 2019-11-01 0.169.3

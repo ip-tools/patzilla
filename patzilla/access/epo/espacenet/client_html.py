@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 """
-Screenscraper for Espacenet
+Data access for EPO/Espacenet, via Old Espacenet HTML.
 https://worldwide.espacenet.com/
 """
 import logging
@@ -20,8 +20,16 @@ http = requests.Session()
 
 
 @cache_region('medium')
-def espacenet_fetch(document_number, section, element_id=None, element_class=None):
+def espacenet_fetch_html(document_number, section, element_id=None, element_class=None):
+    """
+    Acquire data through regular HTML page of Old Espacenet.
 
+    Examples:
+    - https://worldwide.espacenet.com/data/publicationDetails/biblio?CC=EP&NR=0666666B1&KC=B1&FT=D
+    - https://worldwide.espacenet.com/data/publicationDetails/claims?CC=EP&NR=0666666B1&KC=B1&FT=D
+    """
+
+    document_number = normalize_patent(document_number, as_string=True, provider='espacenet')
     patent = normalize_patent(document_number, as_dict=True, provider='espacenet')
 
     message_404 = 'No section "{section}" at Espacenet for "{document_number}"'.format(**locals())
@@ -95,49 +103,22 @@ def espacenet_fetch(document_number, section, element_id=None, element_class=Non
             raise ValueError(message_fail)
 
 
-def espacenet_abstract(document_number):
-    """
-    Return Espacenet abstract text
-    https://worldwide.espacenet.com/data/publicationDetails/biblio?CC=US&NR=5770123A&DB=worldwide.espacenet.com&FT=D
-    https://worldwide.espacenet.com/data/publicationDetails/biblio?CC=DE&NR=19814298A1&DB=worldwide.espacenet.com&FT=D
-    """
-    return espacenet_fetch(document_number, 'biblio', element_class='printAbstract')
-
-
 def espacenet_description(document_number):
     """
-    Return Espacenet description fulltext
+    Acquire Espacenet "description" fulltext from HTML page of old Espacenet.
+
     https://worldwide.espacenet.com/data/publicationDetails/description?CC=US&NR=5770123A&DB=worldwide.espacenet.com&FT=D
     https://worldwide.espacenet.com/data/publicationDetails/description?CC=DE&NR=19814298A1&DB=worldwide.espacenet.com&FT=D
+    https://worldwide.espacenet.com/3.2/rest-services/published-data/publication/docdb/EP0666666B1/description.json
     """
-    return espacenet_fetch(document_number, 'description', 'description')
+    return espacenet_fetch_html(document_number, 'description', 'description')
 
 
 def espacenet_claims(document_number):
     """
-    Return Espacenet claims fulltext
+    Acquire Espacenet "claims" fulltext from HTML page of old Espacenet.
+
     https://worldwide.espacenet.com/data/publicationDetails/claims?CC=US&NR=5770123A&FT=D&DB=worldwide.espacenet.com
     https://worldwide.espacenet.com/data/publicationDetails/claims?CC=DE&NR=19814298A1&DB=worldwide.espacenet.com&FT=D
     """
-    return espacenet_fetch(document_number, 'claims', 'claims')
-
-
-if __name__ == '__main__':
-    """
-    python -m patzilla.access.epo.espacenet.client
-    """
-    numbers = [
-        "US5770123A",
-        "US6269530B1",
-        "DE19814298A1",
-        "DE29624638U1",
-    ]
-    for number in numbers:
-        print("## {}".format(number))
-        print("")
-        print("### Claims")
-        print(espacenet_claims(number))
-        print("")
-        print("### Description")
-        print(espacenet_description(number))
-        print("\n")
+    return espacenet_fetch_html(document_number, 'claims', 'claims')
