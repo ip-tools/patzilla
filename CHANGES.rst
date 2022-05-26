@@ -43,6 +43,7 @@ Development
 - [infra] Don't use designated port 9999 to avoid confusion
 - [infra] Rework the Docker setup
 - [doc] Various documentation updates across the board
+- [doc] Fix building the documentation
 
 
 2019-11-01 0.169.3
