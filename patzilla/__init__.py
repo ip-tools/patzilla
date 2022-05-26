@@ -72,8 +72,10 @@ def minimal(global_config, **settings):
     # Register subsystem components.
     config.include("patzilla.access")
 
+    # Boot application.
+    app = config.make_wsgi_app()
     logger.info("Application is ready to serve requests. Enjoy your research.")
-    return config.make_wsgi_app()
+    return app
 
 
 def web(global_config, **settings):
@@ -109,19 +111,19 @@ def web(global_config, **settings):
 
     # Register application components.
     config.include("patzilla.util.web.identity")
+    config.include("patzilla.navigator")
+    config.include("patzilla.boot.settings")
 
     # Register subsystem components.
-    config.include("patzilla.navigator")
-
-    # Boot application.
-    config.include("patzilla.boot.settings")
     config.include("patzilla.access")
 
     # Register all routes/handlers defined by function decorators.
     config.scan(ignore="patzilla.util.web.uwsgi.uwsgidecorators")
 
+    # Boot application.
+    app = config.make_wsgi_app()
     logger.info("Application is ready to serve requests. Enjoy your research.")
-    return config.make_wsgi_app()
+    return app
 
 
 # Suppress some "Python 2 is EOL" deprecation warnings.
