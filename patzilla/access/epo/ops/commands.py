@@ -28,7 +28,7 @@ from requests import HTTPError
 
 from patzilla.access.epo.ops.api import OPS_API_URI, get_ops_client
 from patzilla.boot.config import BootConfiguration
-from patzilla.boot.framework import setup_pyramid
+from patzilla.boot.framework import pyramid_setup
 from patzilla.util.config import get_configfile_from_commandline
 
 
@@ -108,7 +108,7 @@ if __name__ == '__main__':  # pragma: nocover
     """
 
     # Create a Pyramid runtime environment.
-    env = setup_pyramid(
+    env = pyramid_setup(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ops"]),
     )
