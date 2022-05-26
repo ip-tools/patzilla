@@ -250,7 +250,7 @@ level = INFO
 handlers = console
 
 [logger_patzilla]
-level = WARN
+level = INFO
 handlers =
 qualname = patzilla
 
