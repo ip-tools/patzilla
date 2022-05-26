@@ -12,11 +12,10 @@ import logging
 import os
 
 import pytest
-from pyramid.events import ContextFound, NewRequest
 
 from patzilla.boot.cache import configure_cache_backend, get_cache_directory
 from patzilla.boot.config import BootConfiguration
-from patzilla.boot.framework import setup_pyramid
+from patzilla.boot.framework import pyramid_setup, pyramid_dispatch_events
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +25,7 @@ def app_environment():
     """
     Provide and configure a Pyramid environment at runtime, a minimal application flavor.
     """
-    return setup_pyramid(bootconfiguration=BootConfiguration(flavor="minimal", datasources=["ops"]))
+    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="minimal", datasources=["ops"]))
 
 
 @pytest.fixture(scope="function")
@@ -34,19 +33,12 @@ def app_request(app_environment):
 
     env = app_environment
 
-    # Get request and registry objects from environment.
+    # Reset the errors recorded within the request object.
     request = env['request']
-    registry = env['registry']
-
-    # Run event subscriptions to attach data source client pool objects to request object.
-    # FIXME: It will be crucial to invoke all event types, in order emulate
-    #        Pyramid's application behaviour thoroughly.
-    event = ContextFound(request)
-    registry.notify(event)
-
-    event = NewRequest(request)
-    registry.notify(event)
     del request.errors[:]
+
+    # Make sure each test case has a fresh environment.
+    pyramid_dispatch_events(env)
 
     return request
 
@@ -56,7 +48,7 @@ def web_environment():
     """
     Provide and configure a Pyramid environment at runtime, this time the full web application flavor.
     """
-    return setup_pyramid(bootconfiguration=BootConfiguration(flavor="web", datasources=["ops"]))
+    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="web", datasources=["ops"]))
 
 
 @pytest.fixture(scope='session', autouse=True)

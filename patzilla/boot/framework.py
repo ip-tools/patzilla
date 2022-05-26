@@ -6,6 +6,7 @@ import logging.config
 import os
 import sys
 
+from pyramid.events import ContextFound, NewRequest
 from pyramid.paster import bootstrap
 
 from patzilla.boot.config import BootConfiguration
@@ -13,7 +14,7 @@ from patzilla.boot.config import BootConfiguration
 logger = logging.getLogger(__name__)
 
 
-def setup_pyramid(configfile=None, bootconfiguration=None):
+def pyramid_setup(configfile=None, bootconfiguration=None):
     """
     Configure and bootstrap the Pyramid framework environment at runtime.
     This is a different code path than when started as a WSGI application.
@@ -49,4 +50,26 @@ def setup_pyramid(configfile=None, bootconfiguration=None):
     # Bootstrap Pyramid.
     env = bootstrap(configfile_application)
 
+    # When booting a minimal application, there is some additional work needed
+    # to dispatch all context / request events.
+    if bootconfiguration.flavor == "minimal":
+        pyramid_dispatch_events(env)
+
     return env
+
+
+def pyramid_dispatch_events(env):
+    """
+    Run event subscriptions to attach data source client pool objects to request object.
+
+    FIXME: It will be crucial to invoke all event types, in order emulate
+           Pyramid's application behaviour thoroughly.
+    """
+    request = env['request']
+    registry = env['registry']
+
+    event = ContextFound(request)
+    registry.notify(event)
+
+    event = NewRequest(request)
+    registry.notify(event)

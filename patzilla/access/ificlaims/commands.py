@@ -32,7 +32,7 @@ from patzilla.boot.cache import configure_cache_backend
 from patzilla.boot.config import BootConfiguration
 from patzilla.util.config import get_configfile_from_commandline
 from patzilla.util.data.container import SmartBunch
-from patzilla.boot.framework import setup_pyramid
+from patzilla.boot.framework import pyramid_setup
 
 
 def make_request(client):
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     """
 
     # Create a Pyramid runtime environment.
-    env = setup_pyramid(
+    env = pyramid_setup(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
     )
