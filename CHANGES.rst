@@ -40,6 +40,7 @@ Development
 - [mw] EPO/Espacenet: Acquire "abstract" text from OPS API
 - [ui] Adjust JavaScript dependencies for ``bootbox``
 - [infra] Don't use designated port 9999 to avoid confusion
+- [infra] Rework the Docker setup
 
 
 2019-11-01 0.169.3
