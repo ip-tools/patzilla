@@ -1,5 +1,7 @@
 :orphan:
 
+.. _PatZilla on PyPI: https://pypi.org/project/patzilla/
+
 .. _IFI CLAIMS Patent Services: https://www.ificlaims.com/
 .. _IFI Claims: https://www.ificlaims.com/
 .. _MTC depa.tech: https://depa.tech/

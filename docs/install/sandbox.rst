@@ -147,4 +147,4 @@ slow, use::
     sources will be skipped. In order to run them, you will have to properly
     configure respective access credentials by setting corresponding
     environment variables before invoking the test suite. The documentation
-    about the :ref:`cli`_ shows how to do that.
+    about the :ref:`cli` shows how to do that.
