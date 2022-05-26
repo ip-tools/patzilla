@@ -1,7 +1,6 @@
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 
 import pytest
-import six
 
 from patzilla.config import get_configuration
 
@@ -15,7 +14,7 @@ def test_mkconfig(kind):
     assert "PatZilla application configuration ({})".format(kind) in config_payload
 
     config = ConfigParser()
-    config.readfp(fp=six.StringIO(config_payload), filename="{}.ini".format(kind))
+    config.read_string(string=config_payload, source="{}.ini".format(kind))
     assert config.get("main", "include") == "vendors.ini"
     assert config.get("ip_navigator", "vendors") == "patzilla"
     assert config.get("ip_navigator", "datasources") == "ops, depatisnet"
