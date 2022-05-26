@@ -70,6 +70,32 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: false
 
+  tests-docs:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+
+    name: Build documentation
+    steps:
+
+    - name: Acquire sources
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '2.7'
+        architecture: 'x64'
+        cache: 'pip'
+        cache-dependency-path: 'requirements-docs.txt'
+
+    - name: Invoke Sphinx
+      run: |
+        pip install virtualenv
+        make docs-html
+
   tests-ui:
     runs-on: ${{ matrix.os }}
     strategy:

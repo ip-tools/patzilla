@@ -150,13 +150,17 @@ clear-cache:
 
 docs-virtualenv:
 	$(eval venvpath := ".venv_sphinx")
-	@test -e $(venvpath)/bin/python || `command -v virtualenv` --python=`command -v python` --no-site-packages $(venvpath)
+	@test -e $(venvpath)/bin/python || `command -v virtualenv` --python=`command -v python2` $(venvpath)
 	@$(venvpath)/bin/pip --quiet install --requirement requirements-docs.txt
 
 docs-html: docs-virtualenv
 	$(eval venvpath := ".venv_sphinx")
 	touch docs/index.rst
 	export SPHINXBUILD="`pwd`/$(venvpath)/bin/sphinx-build"; cd docs; make html
+
+docs-linkcheck: docs-virtualenv
+	$(eval venvpath := ".venv_sphinx")
+	export SPHINXBUILD="`pwd`/$(venvpath)/bin/sphinx-build"; cd docs; make linkcheck
 
 pdf-EP666666:
 	/usr/local/bin/wkhtmltopdf \
