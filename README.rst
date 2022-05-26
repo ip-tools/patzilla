@@ -31,7 +31,7 @@ building arbitrary vendor solutions.
 
   .. image:: https://img.shields.io/pypi/l/patzilla.svg
 
-  .. image:: https://img.shields.io/pypi/dm/patzilla.svg
+  .. image:: https://pepy.tech/badge/patzilla/month
 
 - **Code status**:
 
@@ -116,17 +116,18 @@ Auxiliary data sources:
 
 Getting started
 ===============
-Getting started with the software or deploying it yourself is quite easy if you are familiar with Python.
-We will only cover development here, see the `install documentation`_ page about how to install, configure
-and run an instance.
-The software should work on any other Linux or BSD distribution, but this is beyond the scope of the README.
 
-It runs on Python 2.7, but is not ready for Python 3.6 yet. Contributions are welcome!
+Getting started with the software or deploying it yourself is quite easy if
+you are familiar with Python or Docker. See the `install documentation`_ page
+about how to install, configure and run PatZilla.
 
 
 Project information
 ===================
-The source code of »PatZilla IP Navigator« is available under an open source license using the brand name »PatZilla«.
+
+The source code of »PatZilla IP Navigator« is available under an open source
+license using the brand name »PatZilla«.
+
 For further details, please visit:
 
 - `PatZilla on GitHub <https://github.com/ip-tools/patzilla>`_
@@ -138,11 +139,16 @@ History
 =======
 The software got some applause from professional researchers for its unique user
 interface and rich feature set when it was released to the first audience in 2014.
-We hear from our users they are still having a great pleasure working with it on a daily basis.
+We hear from our users they are still having a great pleasure working with it on
+a daily basis.
 
 After four years of development, the source code finally gets released under an
 open source license in 2017. We are looking forward to opening up the development
 process as well, every kind of participation and support is very much welcome.
+
+After a project hiatus from 2020 to 2022, the code base is getting a refresh,
+many software tests have been added, and the aim is to finish migration to
+Python 3 within the end of the year.
 
 
 Contributing
@@ -174,18 +180,17 @@ Elmyra UG. `Elmyra UG`_ is the software development company that’s
 spearheading the ongoing development and as such will ensure
 continuity for the project.
 
-If you’re using PatZilla in your company and you need support or custom
-development or support, feel free to get in touch with us. We are happy
-to receive respective inquiries at info@elmyra.de.
+If you are using PatZilla in your company, and you need support or custom
+development, feel free to get in touch with us by sending corresponding
+inquiries to info@elmyra.de.
 
 In this way, you are contributing to the ongoing maintenance and further
-development of PatZilla. As it still is a reasonably young project, it
-needs all support it can get.
+development of PatZilla.
 
 
 .. _GNU-AGPL-3.0: https://docs.ip-tools.org/patzilla/_static/license/GNU-AGPL-3.0.txt
 .. _EUPL-1.2: https://docs.ip-tools.org/patzilla/_static/license/EUPL-1.2.txt
-.. _notices about licenses of third-party components: https://docs.ip-tools.org/patzilla/license/THIRD-PARTY-NOTICES.html
+.. _notices about licenses of third-party components: https://github.com/ip-tools/patzilla/blob/main/THIRD-PARTY-NOTICES.rst
 .. _install documentation: https://docs.ip-tools.org/patzilla/install/
 
 .. _Elmyra UG: https://elmyra.de/

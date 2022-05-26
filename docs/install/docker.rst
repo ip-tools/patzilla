@@ -15,8 +15,8 @@ This part of the documentation covers the building of Docker images
 and running PatZilla within a Docker container.
 
 The provided ``Dockerfile`` is meant to build Docker images for official
-releases of PatZilla. The ``patzilla`` package will be installed from
-`PatZilla on PyPI`_, so this is not meant for development purposes.
+releases of PatZilla. Because the ``patzilla`` package will be installed from
+`PatZilla on PyPI`_, this setup is not suitable for development purposes.
 
 
 ********

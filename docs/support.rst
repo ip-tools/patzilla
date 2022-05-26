@@ -1,4 +1,5 @@
 .. _support:
+.. _contact:
 
 #######
 Support

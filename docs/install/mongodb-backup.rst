@@ -1,3 +1,5 @@
+.. include:: ../resources.rst
+
 .. _mongodb-backup:
 
 ##############
