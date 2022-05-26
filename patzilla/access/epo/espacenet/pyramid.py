@@ -4,7 +4,7 @@ from __future__ import absolute_import
 import logging
 from cornice.service import Service
 from pyramid.httpexceptions import HTTPBadRequest, HTTPNotFound
-from patzilla.access.epo.espacenet.client import espacenet_claims, espacenet_description
+from patzilla.access.epo.espacenet.api import espacenet_claims, espacenet_description
 
 logger = logging.getLogger(__name__)
 
