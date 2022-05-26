@@ -10,7 +10,7 @@ import warnings
 
 def boot_logging(options=None):
     log_level = logging.INFO
-    if options and options.get('--debug'):
+    if options and (options.get('--debug', False) or options.get('debug', False)):
         log_level = logging.DEBUG
     setup_logging(level=log_level)
 

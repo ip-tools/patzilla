@@ -1,9 +1,13 @@
 import sys
 
+from configparser import ConfigParser
+
+import pytest
+
 import patzilla.commands
 
 
-def test_command_mkconfig(capsys):
+def test_command_make_config(capsys):
     """
     Proof that `patzilla make-config ... --flavor=docker-compose` works as intended.
 
@@ -12,8 +16,16 @@ def test_command_mkconfig(capsys):
     provided within the repository.
     """
 
+    # Invoke cli command.
     sys.argv = ["patzilla", "make-config", "production", "--flavor=docker-compose"]
-    patzilla.commands.run()
+    with pytest.raises(SystemExit) as ex:
+        patzilla.commands.cli()
+    assert ex.value.code == 0
 
-    result = capsys.readouterr()
-    assert "mongodb.patzilla.uri = mongodb://mongodb:27017/patzilla" in result.out
+    # Read configuration file content from STDOUT.
+    config_payload = capsys.readouterr().out
+
+    # Parse and verify configuration details.
+    config = ConfigParser()
+    config.read_string(string=config_payload, source="{}.ini".format("production"))
+    assert config.get("app:main", "mongodb.patzilla.uri") == "mongodb://mongodb:27017/patzilla"

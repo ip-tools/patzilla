@@ -124,6 +124,7 @@ requires = [
     #   Console and system interfaces
     # ----------------------------------------------
     'docopt==0.6.2',
+    'click>=7,<8',
     'envoy==0.0.3',
     'where==1.0.2',
     'tqdm==4.23.4',             # 4.64.0
@@ -227,7 +228,7 @@ setup(name='patzilla',
         #    ],
 
         'console_scripts': [
-            'patzilla      = patzilla.commands:run',
+            'patzilla      = patzilla.commands:cli',
             'patzilla-user = patzilla.commands:usercmd',
             'dpmaregister  = patzilla.access.dpma.dpmaregister:run',
             'patzilla-sip  = patzilla.access.sip.commands:run',
