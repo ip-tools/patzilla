@@ -34,7 +34,7 @@ Development
 - [mw] Honour ``fulltext_enabled`` setting of data source
 - [mw] Disable acquisition of PDF documents from DPMA/DEPATISconnect
 - [mw] EPO/OPS: Unlock inquiry of image information for documents without kind code
-- [mw] EPO/Espacenet: Repair access layer
+- [mw] EPO/Espacenet: Repair access layer. Thanks, @aghster!
 - [ui] EPO/Espacenet: Repair "external sources" links
 - [mw] EPO/Espacenet: Acquire "abstract" text
 - [mw] EPO/Espacenet: Make access layer production ready
@@ -42,6 +42,7 @@ Development
 - [ui] Adjust JavaScript dependencies for ``bootbox``
 - [infra] Don't use designated port 9999 to avoid confusion
 - [infra] Rework the Docker setup
+- [doc] Various documentation updates across the board
 
 
 2019-11-01 0.169.3
@@ -2387,15 +2388,12 @@ Bug fixes and minor updates
 2013-10-24 0.0.7
 ================
 
-feature:
 - backpropagate current basket entries into checkbox state
 - display "inventor" attribute
 - add portfolio demo frameset
 - add ship-mode=single-bibdata
 - fix: be more graceful if applicants or inventors are missing from data
-- renamed ingress query parameters "ship_*" to "ship-*"
-
-tech:
+- renamed ingress query parameters ``ship_*`` to ``ship-*``
 - route refactoring
 - ui refactoring: more responsive through "twitter bootstrap responsive css"
 
