@@ -59,7 +59,7 @@ application's dependencies::
     # Yes it's outdated but c'est la vie.
     export NODEJS_VERSION=11.15.0
     export NPM_VERSION=6.14.15
-    export YARN_VERSION=1.22.18
+    export YARN_VERSION=1.22.19
     source /dev/stdin <<<"$(curl -s https://raw.githubusercontent.com/cicerops/supernode/main/supernode)"
 
     # Install all module dependencies.
