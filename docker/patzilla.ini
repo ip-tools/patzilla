@@ -229,7 +229,7 @@ cache.static.expire = 2592000
 [server:main]
 use = egg:waitress#main
 host = 0.0.0.0
-port = 9999
+port = 6543
 
 ###
 # logging configuration

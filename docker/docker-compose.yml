@@ -5,7 +5,6 @@ services:
     build: .
     image: aghster/patzilla
     ports:
-      - 9999:9999
       - 6543:6543
     volumes:
       - ./patzilla.ini:/patzilla.ini:ro
