@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# (c) 2017 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2017-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import os
 import sys
 import csv
@@ -16,10 +16,11 @@ logger = logging.getLogger(__name__)
 
 APP_NAME = 'patzilla'
 
+
 def run():
     """
     Usage:
-      {program} make-config <config-kind>
+      {program} make-config <config-kind> [--flavor=<flavor>]
       {program} info
       {program} --version
       {program} (-h | --help)
@@ -28,6 +29,9 @@ def run():
       make-config               Will dump configuration file content to STDOUT,
                                 suitable for redirecting into a configuration file
       <config-kind>             One of "development" or "production"
+      --flavor=<flavor>         Use `--flavor=docker-compose` for generating a
+                                configuration file suitable for use within the
+                                provided Docker Compose environment.
 
     Miscellaneous options:
       --debug                   Enable debug messages
@@ -52,6 +56,16 @@ def run():
     if options['make-config']:
         kind = options['<config-kind>']
         payload = get_configuration(kind)
+
+        if "--flavor" in options and options["--flavor"]:
+            flavor = options["--flavor"]
+            # When flavor=docker-compose is requested, adjust the
+            # `mongodb.patzilla.uri` and `cache.url` settings.
+            if flavor == "docker-compose":
+                payload = payload.replace("mongodb://localhost", "mongodb://mongodb")
+            else:
+                raise ValueError("Unknown configuration file flavor {}".format(flavor))
+
         print(payload)
 
 
