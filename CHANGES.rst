@@ -45,6 +45,7 @@ Development
 - [doc] Various documentation updates across the board
 - [doc] Fix building the documentation
 - [mw] Fix logging. Thanks, @think-nice-things!
+- [cli] Start using the ``Click`` command line parser
 
 
 2019-11-01 0.169.3

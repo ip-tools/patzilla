@@ -4,6 +4,8 @@ import os
 import sys
 import csv
 import logging
+
+import click
 from docopt import docopt
 from patzilla.config import get_configuration
 from patzilla.util.config import read_list, normalize_docopt_options
@@ -17,56 +19,53 @@ logger = logging.getLogger(__name__)
 APP_NAME = 'patzilla'
 
 
-def run():
+@click.group()
+@click.version_option()
+@click.option("--verbose", is_flag=True, required=False, help="Increase log verbosity.")
+@click.option("--debug", is_flag=True, required=False, help="Enable debug messages.")
+@click.pass_context
+def cli(ctx, verbose, debug):
+    # Start logging subsystem.
+    boot_logging(dict(debug=debug))
+
+
+@click.command()
+@click.argument("kind", type=str, required=True)
+@click.option("--flavor", type=str, required=False,
+              help="Use `--flavor=docker-compose` for generating a configuration file suitable "
+                   "for use within the provided Docker Compose environment.")
+@click.pass_context
+def make_config(ctx, kind, flavor):
     """
-    Usage:
-      {program} make-config <config-kind> [--flavor=<flavor>]
-      {program} info
-      {program} --version
-      {program} (-h | --help)
+    Dump blueprint for a configuration file to STDOUT,
+    suitable for redirecting into a configuration file.
 
-    Configuration file options:
-      make-config               Will dump configuration file content to STDOUT,
-                                suitable for redirecting into a configuration file
-      <config-kind>             One of "development" or "production"
-      --flavor=<flavor>         Use `--flavor=docker-compose` for generating a
-                                configuration file suitable for use within the
-                                provided Docker Compose environment.
+    The KIND argument takes one of `development` or `production`.
 
-    Miscellaneous options:
-      --debug                   Enable debug messages
-      --version                 Show version information
-      -h --help                 Show this screen
+    Examples::
 
+        \b
+        # Dump configuration blueprint into target file.
+        patzilla make-config production > /path/to/patzilla.ini
 
+        \b
+        # Dump configuration blueprint suitable for Docker Compose setup.
+        patzilla make-config production --flavor=docker-compose
     """
+    payload = get_configuration(kind)
 
-    # Use generic commandline options schema and amend with current program name
-    commandline_schema = run.__doc__.format(program=APP_NAME)
+    if flavor:
+        # When flavor=docker-compose is requested, adjust the
+        # `mongodb.patzilla.uri` and `cache.url` settings.
+        if flavor == "docker-compose":
+            payload = payload.replace("mongodb://localhost", "mongodb://mongodb")
+        else:
+            raise ValueError("Unknown configuration file flavor {}".format(flavor))
 
-    # Read commandline options
-    options = docopt(commandline_schema, version=APP_NAME + ' ' + __version__)
+    print(payload)
 
-    # Start logging subsystem
-    boot_logging(options)
 
-    # Debugging
-    #print('options: {}'.format(options))
-
-    if options['make-config']:
-        kind = options['<config-kind>']
-        payload = get_configuration(kind)
-
-        if "--flavor" in options and options["--flavor"]:
-            flavor = options["--flavor"]
-            # When flavor=docker-compose is requested, adjust the
-            # `mongodb.patzilla.uri` and `cache.url` settings.
-            if flavor == "docker-compose":
-                payload = payload.replace("mongodb://localhost", "mongodb://mongodb")
-            else:
-                raise ValueError("Unknown configuration file flavor {}".format(flavor))
-
-        print(payload)
+cli.add_command(cmd=make_config, name="make-config")
 
 
 def usercmd():
