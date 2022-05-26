@@ -55,7 +55,7 @@
     "backbone.marionette": "1.8.8",
     "backbone.babysitter": "0.1.12",
     "blobjs": "1.1.1",
-    "bootbox": "https://github.com/makeusabrew/bootbox#8d843602",
+    "bootbox": "https://github.com/makeusabrew/bootbox#v4.x",
     "bootstrap-2.3.2": "https://github.com/ip-tools/bootstrap-2.3.2#2.0.0",
     "bootstrap-slider": "9.1.1",
     "classie": "1.0.0",

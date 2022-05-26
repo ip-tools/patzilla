@@ -38,6 +38,7 @@ Development
 - [mw] EPO/Espacenet: Acquire "abstract" text
 - [mw] EPO/Espacenet: Make access layer production ready
 - [mw] EPO/Espacenet: Acquire "abstract" text from OPS API
+- [ui] Adjust JavaScript dependencies for ``bootbox``
 
 
 2019-11-01 0.169.3
