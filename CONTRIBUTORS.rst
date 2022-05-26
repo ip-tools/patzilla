@@ -19,6 +19,7 @@ the people who contributed to this software:
 * Frank Heider <https://github.com/frankheider>
 * Gaby Strauß <http://www.patentberichterstatter-muenchen.de/>
 * Johannes Steimel <https://www.festool.com/>
+* Johannes Zellner <johannes@zellner.org>
 * Klaus Hager <http://www.patentberichterstatter-muenchen.de/>
 * Lars Witte <https://www.patentfamily.com/>
 * Luca Martinuzzi <http://www.patentberichterstatter-muenchen.de/>
