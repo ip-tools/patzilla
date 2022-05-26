@@ -142,7 +142,10 @@ sloccount:
 genlicenses:
 	$(pip) install third-party-license-file-generator
 	$(pip) freeze > /tmp/requirements.txt
-	$(python) -m third_party_license_file_generator --requirements-path /tmp/requirements.txt --python-path $(python) --output-file licenses-backend.txt
+	$(python) -m third_party_license_file_generator \
+	    --requirements-path /tmp/requirements.txt --python-path $(python) \
+	    --permit-gpl --permit-commercial \
+	    --output-file licenses-backend.txt
 	npx yarn licenses generate-disclaimer > licenses-frontend.txt
 
 clear-cache:
