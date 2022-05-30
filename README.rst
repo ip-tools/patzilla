@@ -84,6 +84,32 @@ A picture says a thousand words.
     :alt: PatZilla
     :target: https://github.com/ip-tools/patzilla
 
+Command line interface
+======================
+
+The CLI interface offers access to the machinery of PatZilla on your fingertips.
+
+Note that most of the following commands will need appropriate configuration of
+corresponding access credentials. For more information, please follow up reading
+the `cli documentation`_.
+
+Examples using EPO/OPS::
+
+    # Display usage information of EPO/OPS in JSON format.
+    patzilla ops usage
+
+    # Submit search query to EPO/OPS, within "title" and "abstract" texts.
+    patzilla ops search "txt=(wind or solar) and energy"
+
+    # Inquire information about pages and images of full document.
+    patzilla ops image-info --document EP0666666B1
+
+    # Acquire first page of patent document in PDF format.
+    patzilla ops image --document EP0666666B1 --page 1 > EP0666666B1-page1.pdf
+
+    # Acquire first drawing of patent document in PDF format.
+    patzilla ops image --document EP0666666B1 --page 1 --kind FullDocumentDrawing > EP0666666B1-drawing1.pdf
+
 
 *****
 Demos

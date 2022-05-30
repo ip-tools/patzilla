@@ -47,6 +47,7 @@ Development
 - [mw] Fix logging. Thanks, @think-nice-things!
 - [cli] Start using the ``Click`` command line parser
 - [mw] Improve "minimal" application framework bootstrapping
+- [mw] Add CLI interface for basic operations on EPO/OPS
 
 
 2019-11-01 0.169.3
