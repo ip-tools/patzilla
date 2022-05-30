@@ -31,7 +31,8 @@ def pyramid_setup(configfile=None, bootconfiguration=None):
     if configfile is None:
         configfile = os.environ.get('PATZILLA_CONFIG')
 
-    sys.stderr.write('Loading configuration file: {}\n'.format(configfile))
+    if configfile is not None:
+        sys.stderr.write('Loading configuration file: {}\n'.format(configfile))
 
     # Use given configuration file or create on demand.
     configfile_logging = configfile
