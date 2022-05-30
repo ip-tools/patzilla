@@ -7,6 +7,8 @@ import logging
 
 import click
 from docopt import docopt
+
+from patzilla.access.epo.ops.commands import ops_cli
 from patzilla.boot.cache import configure_cache_backend
 from patzilla.config import get_configuration
 from patzilla.util.config import read_list, normalize_docopt_options
@@ -68,6 +70,7 @@ def make_config(ctx, kind, flavor):
 
 
 cli.add_command(cmd=make_config)
+cli.add_command(cmd=ops_cli)
 
 
 def usercmd():
