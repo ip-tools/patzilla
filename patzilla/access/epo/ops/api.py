@@ -647,7 +647,7 @@ def get_ops_image_pdf(document, page):
     return payload
 
 
-def get_ops_image(document, page, kind, format):
+def get_ops_image(document, page, kind, format=None):
 
     # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
     # http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1

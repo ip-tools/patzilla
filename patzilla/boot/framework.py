@@ -44,7 +44,8 @@ def pyramid_setup(configfile=None, bootconfiguration=None):
         configfile_application = bootconfiguration.for_application
 
     # Setup logging.
-    logging.config.fileConfig(configfile_logging)
+    if "PYTEST_CURRENT_TEST" not in os.environ:
+        logging.config.fileConfig(configfile_logging, disable_existing_loggers=False)
     logger.setLevel(logging.DEBUG)
     logger.info("Logging configuration file:    {}".format(configfile_logging))
 
