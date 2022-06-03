@@ -25,7 +25,7 @@ def app_environment():
     """
     Provide and configure a Pyramid environment at runtime, a minimal application flavor.
     """
-    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="minimal", datasources=["ops"]))
+    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="minimal", datasources=["ops", "ificlaims"]))
 
 
 @pytest.fixture(scope="function")
@@ -48,7 +48,7 @@ def web_environment():
     """
     Provide and configure a Pyramid environment at runtime, this time the full web application flavor.
     """
-    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="web", datasources=["ops"]))
+    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="web", datasources=["ops", "ificlaims"]))
 
 
 @pytest.fixture(scope='session', autouse=True)

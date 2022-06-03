@@ -110,6 +110,10 @@ Examples using EPO/OPS::
     # Acquire first drawing of patent document in PDF format.
     patzilla ops image --document EP0666666B1 --page 1 --kind FullDocumentDrawing > EP0666666B1-drawing1.pdf
 
+Example using IFI CLAIMS::
+
+    patzilla ificlaims search "text:(wind or solar) and energy"
+
 
 *****
 Demos

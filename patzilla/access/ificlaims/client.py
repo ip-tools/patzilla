@@ -184,6 +184,7 @@ class IFIClaimsClient(GenericSearchClient):
                     else:
                         raise self.search_failed(
                             user_info=message,
+                            message=message,
                             response=response)
 
                 # Mogrify search response

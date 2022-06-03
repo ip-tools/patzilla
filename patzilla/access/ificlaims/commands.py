@@ -12,13 +12,12 @@ Direct mode, without configuration file::
     export IFICLAIMS_API_URI=https://cdws21.ificlaims.com
     export IFICLAIMS_API_USERNAME=acme
     export IFICLAIMS_API_PASSWORD=10f8GmWTz
-    python -m patzilla.access.ificlaims.commands
+    patzilla ificlaims search "text:(wind or solar) and energy"
 
 Use configuration file::
 
-    python -m patzilla.access.ificlaims.commands patzilla/config/development-local.ini
-    python -m patzilla.access.ificlaims.commands patzilla/config/development-local.ini | jq .
-    python -m patzilla.access.ificlaims.commands patzilla/config/development-local.ini | xmllint --format -
+    export PATZILLA_CONFIG=patzilla/config/development-local.ini
+    patzilla ificlaims search "text:(wind or solar) and energy"
 
 Todo
 ====
@@ -26,13 +25,62 @@ Todo
 
 """
 import json
+import logging
+
+import click
 
 from patzilla.access.ificlaims import get_ificlaims_client
 from patzilla.boot.cache import configure_cache_backend
 from patzilla.boot.config import BootConfiguration
 from patzilla.util.config import get_configfile_from_commandline
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartBunch, jd
 from patzilla.boot.framework import pyramid_setup
+
+
+logger = logging.getLogger(__name__)
+
+
+@click.group(name="ificlaims")
+@click.pass_context
+def ificlaims_cli(ctx):
+    """
+    Access the IFI CLAIMS data source adapter.
+    """
+
+    # Create a Pyramid runtime environment.
+    env = pyramid_setup(
+        configfile=get_configfile_from_commandline(),
+        bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
+    )
+
+    # Propagate reference to the environment to the Click context.
+    ctx.meta["pyramid_env"] = env
+
+
+@click.command(name="search")
+@click.argument("expression", type=str, required=True)
+@click.option('--json', "request_json", is_flag=True, type=bool, default=False, required=False,
+              help="Request/return data as JSON, otherwise use XML")
+@click.pass_context
+def search(ctx, expression, request_json):
+    """
+    Access the IFICLAIMS bibliographic- and fulltext-search API.
+
+    The `expression` argument accepts the search expression in Solr search syntax.
+
+    TODO: Currently, only the first 100 hits will be displayed. Extend range by implementing "crawling".
+    """
+
+    # Get hold of data source client utility.
+    client = get_ificlaims_client()
+
+    # Invoke API and output result.
+    logger.warning("Only the first 100 hits will be displayed. The CLI currently does not employ paging.")
+    results = client.search(SmartBunch({'expression': expression}), SmartBunch({'offset': 0, 'limit': 100}))
+    print(jd(results))
+
+
+ificlaims_cli.add_command(cmd=search)
 
 
 def make_request(client):
