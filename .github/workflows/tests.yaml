@@ -28,6 +28,9 @@ jobs:
     env:
       OPS_API_CONSUMER_KEY: ${{ secrets.OPS_API_CONSUMER_KEY }}
       OPS_API_CONSUMER_SECRET: ${{ secrets.OPS_API_CONSUMER_SECRET }}
+      IFICLAIMS_API_URI: ${{ secrets.IFICLAIMS_API_URI }}
+      IFICLAIMS_API_USERNAME: ${{ secrets.IFICLAIMS_API_USERNAME }}
+      IFICLAIMS_API_PASSWORD: ${{ secrets.IFICLAIMS_API_PASSWORD }}
 
     name: Python ${{ matrix.python-version }} on OS ${{ matrix.os }}
     steps:
