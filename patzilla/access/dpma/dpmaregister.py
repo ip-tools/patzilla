@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# (c) 2011-2018 Andreas Motl <andreas.motl@ip-tools.org>
+# (c) 2011-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 import sys
+from datetime import date
+
 import attr
 import json
 import time
@@ -19,6 +21,7 @@ from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
 from patzilla.util.config import to_list
 from patzilla.boot.logging import boot_logging
+from patzilla.util.network.browser import regular_user_agent
 from patzilla.util.xml.format import BadgerFishNoNamespace
 from patzilla.version import __version__
 
@@ -47,7 +50,8 @@ class UnknownFormat(Exception):
 class Document(object):
     """An intermediary object holding information from accessing DPMAregister on the container level"""
     meta = attr.ib(default=None)
-    url = attr.ib(default=None)
+    url_html = attr.ib(default=None)
+    url_pdf = attr.ib(default=None)
     response = attr.ib(default=None)
 
 @attr.s
@@ -55,6 +59,7 @@ class ResultEntry(object):
     """An intermediary object holding information from accessing DPMAregister on the result level"""
     label = attr.ib(default=None)
     reference = attr.ib(default=None)
+
 
 class DpmaRegisterAccess:
     """
@@ -72,6 +77,7 @@ class DpmaRegisterAccess:
     - Use MongoDB database cache
     """
 
+    hosturl = 'https://register.dpma.de/'
     baseurl = 'https://register.dpma.de/DPMAregister/pat/'
 
     def __init__(self):
@@ -89,17 +95,18 @@ class DpmaRegisterAccess:
         self.browser = mechanicalsoup.StatefulBrowser()
 
         # Set custom user agent header
-        self.browser.set_user_agent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36')
+        self.browser.set_user_agent(regular_user_agent)
 
-        self.searchurl = self.baseurl + 'einsteiger' #?lang={language}'
+        self.searchurl = self.baseurl + 'basis'
         self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ={number}&lang={language}'
+        self.pdfurl = self.baseurl + 'register/PAT_{number}_{today}?AKZ={number}&VIEW=pdf'
 
         self.reference_pattern = re.compile('.*\?AKZ=(.+?)&.*')
 
     def start_http_session(self):
         if not self.http_session_valid:
             # 1. Open search url to initialize HTTP session
-            response = self.browser.open(self.searchurl)
+            response = self.browser.open(self.searchurl + "?lang=en")
             self.http_session_valid = True
 
     @cache.cache_on_arguments()
@@ -118,6 +125,10 @@ class DpmaRegisterAccess:
 
     @cache.cache_on_arguments()
     def fetch_st36xml(self, patent, language='en'):
+        """
+        Example:
+        https://register.dpma.de/DPMAregister/pat/register?AKZ=196308771&VIEW=st36
+        """
 
         # Fetch main HTML resource of document.
         result = self.search_and_fetch(patent, language)
@@ -135,7 +146,9 @@ class DpmaRegisterAccess:
             soup.find("a", {'href': re.compile('VIEW=st36$')})
         st36xml_href = st36xml_anchor['href']
 
-        if st36xml_href.startswith('./'):
+        if st36xml_href.startswith('/'):
+            st36xml_href = self.hosturl + st36xml_href
+        elif st36xml_href.startswith('./'):
             st36xml_href = self.baseurl + st36xml_href
 
         # Download ST.36 XML document and return response body.
@@ -205,8 +218,9 @@ class DpmaRegisterAccess:
         results = self.search_patent(patent)
         #print results
 
-        # reduce result list by applying certain rules for guessing the right one
-        # just gets applied when getting multiple results
+        # When multiple results are returned, apply some rules for picking the right one.
+        # TODO: Revisit this logic. The best thing would be to extend the interface to return
+        #       multiple results and then have the downstream code sort it out.
         if results and len(results) > 1:
             if patent.startswith('DE'):
                 results = [result for result in results if not result.reference.startswith('E')]
@@ -235,13 +249,16 @@ class DpmaRegisterAccess:
         # 2017-12-18: The DPMA seems to have put a throttling machinery in place by
         # means of the "reg.check" cookie, e.g. "reg.check1239723693=-853246121".
         # Let's honor this by also throttling the client. Otherwise, the response
-        # might contain a valid result list but containing zero results.
-        time.sleep(0.75)
+        # might contain a valid result list but has zero results.
+        # time.sleep(0.75)
+
+        # 2022-06-01: The DPMA seems to have increased throttling, so the wait time
+        # has to be adjusted.
+        time.sleep(1.0)
 
         # Debugging
-        #self.dump_response(response, dump_metadata=True)
-        #sys.exit()
-
+        # self.dump_response(response, dump_metadata=True)
+        # sys.exit()
 
         # 2. Send inquiry
 
@@ -252,17 +269,12 @@ class DpmaRegisterAccess:
         # Aktenzeichen or publication number
         self.browser['akzPn'] = patent
 
-        # Simulate another form field set by Tapestry in Javascript
-        self.browser.new_control('text', 't:submit', {})
-        self.browser['t:submit'] = '["rechercheStarten","rechercheStarten"]'
-
         # Submit form
         response = self.browser.submit_selected()
 
         # Debugging
-        #self.dump_response(response, dump_metadata=True)
-        #sys.exit()
-
+        # self.dump_response(response, dump_metadata=True)
+        # sys.exit()
 
         # 3. Evaluate response
 
@@ -277,25 +289,20 @@ class DpmaRegisterAccess:
             return [entry]
 
         # Sanity checks
-        if 'div class="error"' in response.content:
+        if "<span>0 result/s</span>" in response.content:
             msg = 'No search results for "{}"'.format(patent)
             logger.warning(msg)
             raise NoResults(msg)
 
-
         # 4. Parse result table
+        #    When multiple results have been found, the page at
+        #    `/DPMAregister/pat/trefferliste` enumerates them.
         results = []
-
-        result_table = response.soup.find("table")
-        for row in result_table.findAll('tr'):
-            columns = row.findAll('td')
-            if not columns: continue
-            link_column = columns[2]
-            if not link_column: continue
-            link = link_column.find('a')
-
+        items = response.soup.findAll("div", {"class": "dpma-ansichtcontainer"})
+        for item in items:
+            link = item.find("a")
             reference, label = self.parse_reference_link(link, patent)
-            entry = ResultEntry(reference = reference, label = label)
+            entry = ResultEntry(reference=reference, label=label)
             results.append(entry)
 
         logger.info("Searching for %s yielded %s results" % (patent, len(results)))
@@ -319,10 +326,11 @@ class DpmaRegisterAccess:
         # 1. Open search url to initialize HTTP session
         self.start_http_session()
 
-        url = self.accessurl.format(number=result.reference, language=language)
-        logger.info('Accessing URL {}'.format(url))
-        response = self.browser.open(url)
-        return Document(meta=result, url=url, response=response)
+        url_html = self.accessurl.format(number=result.reference, language=language)
+        url_pdf = self.pdfurl.format(number=result.reference, today=date.today().isoformat())
+        logger.info('Accessing URL {}'.format(url_html))
+        response = self.browser.open(url_html)
+        return Document(meta=result, url_html=url_html, url_pdf=url_pdf, response=response)
 
     def dump_response(self, response, dump_metadata = False):
         """
@@ -339,11 +347,12 @@ class DpmaRegisterHtmlDocument(object):
     Decode information from DPMAregister HTML response.
     """
 
-    def __init__(self, identifier, html=None, url=None):
+    def __init__(self, identifier, html=None, url_html=None, url_pdf=None):
 
         self.identifier = identifier
         self.html = html
-        self.url = url
+        self.url_html = url_html
+        self.url_pdf = url_pdf
 
         self.biblio = None
         self.events = None
@@ -353,7 +362,7 @@ class DpmaRegisterHtmlDocument(object):
 
     @classmethod
     def from_result_document(cls, doc):
-        return cls(doc.meta.reference, html=doc.response.content, url=doc.url)
+        return cls(doc.meta.reference, html=doc.response.content, url_html=doc.url_html, url_pdf=doc.url_pdf)
 
     def __str__(self):
         return str(self.identifier) + ':\n' + pformat(self.events)
@@ -368,14 +377,7 @@ class DpmaRegisterHtmlDocument(object):
 
         soup = BeautifulSoup(self.html)
 
-        # propagate Content-Type
-        soup_content_type = soup.find('meta', {'http-equiv': 'Content-Type'})
-
-        # FIX for BeautifulSoup
-        if soup_content_type['content'] == 'Content-Type':
-            soup_content_type['content'] = 'text/html; charset=UTF-8'
-
-        soup_content = soup.find('div', {'id': 'inhalt'})
+        soup_content = soup.find('table', {'id': 'verfahrensdaten_tabelle'})
 
         # remove some tags
         remove_stuff = [
@@ -404,13 +406,15 @@ class DpmaRegisterHtmlDocument(object):
             if link.contents:
                 link.replaceWith(link.contents[0])
 
-        document_source_link = str(self.url)
+        document_source_link = str(self.url_html)
+        document_pdf_link = str(self.url_pdf)
         css_local_link = self.link_css
 
+        # TODO: Fix link to PDF document. Example:
+        #       https://register.dpma.de/DPMAregister/pat/register/PAT_E954800058_2022-06-02?AKZ=E954800058&VIEW=pdf
         tpl = """
 <html>
     <head>
-        %(soup_content_type)s
         <link type="text/css" rel="stylesheet" href="%(css_local_link)s"/>
         <style type="text/css"><!-- ins {background: #bfb} del{background: #fcc} ins,del {text-decoration: none} --></style>
     </head>
@@ -418,7 +422,7 @@ class DpmaRegisterHtmlDocument(object):
         <div id="sourcelinkbox" align="left" style="padding: 10px">
             Quelle:
             <a href="%(document_source_link)s" target="_blank">HTML</a>,
-            <a href="%(document_source_link)s&VIEW=pdf" target="_blank">PDF</a>
+            <a href="%(document_pdf_link)s" target="_blank">PDF</a>
         </div>
         %(soup_content)s
     </body>
@@ -441,7 +445,7 @@ class DpmaRegisterHtmlDocument(object):
         return payload
 
     def asjson(self):
-        return json.dumps(self.asdict(), indent=4)
+        return json.dumps(self.asdict(), indent=2)
 
     def parse_html(self):
         """
@@ -452,36 +456,26 @@ class DpmaRegisterHtmlDocument(object):
         soup_table_basicdata = soup.find("table")
         soup_table_legaldata = soup_table_basicdata.findNextSibling("table")
 
-        self.biblio = self.soup_parse_table(soup_table_basicdata, header_row_index = 1)
-        self.events = self.soup_parse_table(soup_table_legaldata, header_row_index = 1)
+        self.biblio = self.soup_parse_table(soup_table_basicdata)
+        self.events = self.soup_parse_table(soup_table_legaldata)
 
-    def soup_parse_table(self, soup_table, contains_header = True, header_row_index = 0, header_tag = 'th'):
+    def soup_parse_table(self, soup_table):
 
-        table = []
-        header_columns = []
-
-        rows = soup_table.findAll('tr')
-
-        # 1. find header columns
-        if contains_header:
-            header_row = rows[header_row_index]
-            #header_columns = [header_column.contents[0] for header_column in header_row.findAll(header_tag)]
-            header_columns = header_row.findAll(header_tag, text=True)
-            rows = rows[header_row_index+1:]
-            #print rows
-
-        #print header_columns
-
-        # 2. grep data area
+        # Represent a single cell when parsing the result table.
         Cell = namedtuple('Cell', ['name', 'value'])
+
+        # Read whole table.
+        table = []
+        rows = soup_table.findAll('tr')
         for soup_data_row in rows:
             data_row = []
-            for index, values in enumerate(soup_data_row.findAll('td')):
-                #print index, value
-                name = header_columns[index]
-                cell = Cell(name, [value.replace('&nbsp;', '').strip() for value in values.findAll(text=True)])
+            for td in soup_data_row.findAll("td"):
+                name = td["data-th"]
+                value = td.getText()
+                cell = Cell(name, value)
                 data_row.append(cell)
-            table.append(data_row)
+            if data_row:
+                table.append(data_row)
 
         return table
 
@@ -720,7 +714,6 @@ def run():
     # Debugging
     #print('options: {}'.format(options))
 
-
     if options['fetch']:
         document_number = options['<document-number>']
         output_format = options['--format']
@@ -728,6 +721,7 @@ def run():
             payload = access_register(document_number, output_format, 'en')
             print(payload)
         except NoResults as ex:
+            logger.warning("No results for document {}".format(document_number))
             sys.exit(1)
 
 
@@ -756,7 +750,7 @@ def access_register(document_number, output_format, language='en'):
     elif output_format == 'html-compact':
         document = register.fetch(document_number, language)
         if not document:
-            sys.exit(1)
+            raise NoResults("No result for document {}".format(document_number))
         payload = document.html_compact()
 
     elif output_format == 'pdf':
@@ -772,41 +766,55 @@ def access_register(document_number, output_format, language='en'):
     return payload
 
 
-if __name__ == '__main__':
+def display_document(document):
+    if not document:
+        raise KeyError("No response or empty document")
 
-    logging.basicConfig(level=logging.INFO)
+    logger.info("Type:       %s", type(document))
+    logger.info("Identifier: %s", document.identifier)
+    logger.info("URL HTML:   %s", document.url_html)
+    logger.info("URL PDF:   %s", document.url_pdf)
+    print(document.html_compact())
+    #print(document.asdict())
+    print(document.asjson())
+
+
+if __name__ == '__main__':
+    """
+    Workbench program.
+
+    Synopsis::
+
+        python -m patzilla.access.dpma.dpmaregister
+    """
+
+    logging.basicConfig(level=logging.INFO, stream=sys.stderr)
 
     register = DpmaRegisterAccess()
 
-    document = None
-    if len(sys.argv) > 1:
-        document = register.fetch(sys.argv[1])
+    #document = register.fetch('10001499.2')     # Has two results, pick the first one, not prefixed with `E`.
+    #document = register.fetch('DE3831719')      # Has two results, pick `P 38 31 719.2`, the second one.
+    #document = register.fetch('WO2007037298')   # Worked with DPINFO only?
+    #document = register.fetch('WO2008034638')   # Has two results, pick `50 2007 015 885.2`, the first one.
+    #document = register.fetch('DE102006006014') # Has just one result, directly redirects to detail page.
 
-    else:
-        document = register.fetch('10001499.2')     # leads to two results, take the non-"E" one
-        #document = register.fetch('DE3831719')      # search and follow to 3831719.2
-        #document = register.fetch('WO2007037298')   # worked with DPINFO only
-        #document = register.fetch('WO2008034638')   # leads to two results, take the non-"E" one
-        #document = register.fetch('DE102006006014') # just one result, directly redirects to detail page
+    #document = register.fetch('DE19630877')
+    #document = register.fetch('DE102012009645')
+    document = register.fetch('EP666666')
 
-        #document = register.fetch('DE19630877')
-        #document = register.fetch('DE102012009645')
-        #document = register.fetch('EP666666')
+    display_document(document)
 
-        #print register.get_document_url('10001499.2')
-        #print register.get_document_url('DE10001499.2')
-        #print register.get_document_url('DE10001499')
-        #print register.get_document_url('DE102012009645')
-        #print register.get_document_url('EP666666')
+    #print register.get_document_url('10001499.2')
+    #print register.get_document_url('DE10001499.2')
+    #print register.get_document_url('DE10001499')
+    #print register.get_document_url('DE102012009645')
+    #print register.get_document_url('EP666666')
 
-        #print register.fetch_st36xml('DE10001499')
-        #print register.fetch_st36xml('EP666666')
-        #print register.fetch_st36xml('10001499.2')
+    #response = register.fetch_st36xml('DE10001499')
+    #response = register.fetch_st36xml('EP666666')
+    #response = register.fetch_st36xml('10001499.2')
+    #response = register.fetch_st36xml('DE19630877')
 
-        #print register.fetch_pdf('10001499.2')
-        #print register.fetch_pdf('DE10001499')
-
-    if document:
-        print document.html_compact()
-        #print document.asdict()
-        #print document.asjson()
+    #response = register.fetch_pdf('10001499.2')
+    #response = register.fetch_pdf('DE10001499')
+    #print(response.content)
