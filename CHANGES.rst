@@ -48,6 +48,7 @@ Development
 - [mw] Improve "minimal" application framework bootstrapping
 - [mw] Add CLI interface for basic operations on EPO/OPS
 - [mw] Fix access to DPMAregister due to upstream changes
+- [mw] Add CLI interface for search operation on IFI CLAIMS
 
 
 2019-11-01 0.169.3

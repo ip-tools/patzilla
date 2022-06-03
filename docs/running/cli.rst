@@ -36,7 +36,7 @@ essential options configuring access to data sources on the command line::
     export IFICLAIMS_API_URI=https://cdws21.ificlaims.com
     export IFICLAIMS_API_USERNAME=acme
     export IFICLAIMS_API_PASSWORD=10f8GmWTz
-    patzilla ificlaims lalala
+    patzilla ificlaims search "text:(wind or solar) and energy"
 
     # For accessing "depa.tech".
     export DEPATECH_API_URI=https://api.depa.tech
