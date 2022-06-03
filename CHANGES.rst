@@ -47,6 +47,7 @@ Development
 - [cli] Start using the ``Click`` command line parser
 - [mw] Improve "minimal" application framework bootstrapping
 - [mw] Add CLI interface for basic operations on EPO/OPS
+- [mw] Fix access to DPMAregister due to upstream changes
 
 
 2019-11-01 0.169.3
