@@ -174,7 +174,7 @@ u'TI=(DVB(W)T)'
 u'Bi=(personalcomputer ODER (personal(W)computer))'
 
 
-Searches in the fields "Applicant/Owner", "Inventor"
+Searches in the fields "Applicant/owner", "Inventor"
 ----------------------------------------------------
 >>> CQL('PA = ( Anna(L)Huber )').dumps()
 u'PA=(Anna(L)Huber)'

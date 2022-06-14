@@ -116,7 +116,7 @@ class DpmaDepatisnetAccess:
         #self.browser['DocId'] = ['on']      # Publication number
         self.browser['Ti'] = ['on']         # Title
         self.browser['In'] = ['on']         # Inventor
-        self.browser['Pa'] = ['on']         # Applicant/Owner
+        self.browser['Pa'] = ['on']         # Applicant/owner
         self.browser['Pub'] = ['on']        # Publication date
         self.browser['Ad'] = ['on']         # Application date
         #self.browser['Icp'] = ['on']        # IPC search file
@@ -254,7 +254,7 @@ class DpmaDepatisnetAccess:
                         'pubdate': row['Publication date'] and date_iso(from_german(row['Publication date'])) or None,
                         'appdate': row['Application date'] and date_iso(from_german(row['Application date'])) or None,
                         'title': row['Title'],
-                        'applicant': row['Applicant/Owner'],
+                        'applicant': row['Applicant/owner'],
                         'inventor': row['Inventor'],
                     }
                 except KeyError as ex:
@@ -372,6 +372,13 @@ def excel_to_dict(payload):
 
 
 if __name__ == '__main__':
+    """
+    DEPATISnet inquiry demo program.
+
+    Synopsis::
+
+        python -m patzilla.access.dpma.depatisnet
+    """
 
     logging.basicConfig()
 
