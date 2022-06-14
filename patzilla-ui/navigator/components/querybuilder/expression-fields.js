@@ -106,7 +106,7 @@ var DEPATISNET_CQL_FIELDS = [
             { id: 'pc', text: _field_text('Country of publication', ['pc'], '(19)') },
             { id: 'pub', text: _field_text('Publication date', ['pub'], '(40)') },
             { id: 'py', text: _field_text('Publication year', ['py'], '(40)') },
-            { id: 'pa', text: _field_text('Applicant/Owner', ['pa'], '(71, 73)') },
+            { id: 'pa', text: _field_text('Applicant/owner', ['pa'], '(71, 73)') },
             { id: 'in', text: _field_text('Inventor', ['in'], '(72)') },
             { id: 'pcod', text: _field_text('Kind code', ['pcod'], '(12)') },
         ],
