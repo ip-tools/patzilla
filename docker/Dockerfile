@@ -24,8 +24,11 @@ RUN \
     pdftk \
     poppler-utils \
     imagemagick \
+    libtiff-tools \
     libreoffice \
     unoconv \
+    phantomjs \
+    fontconfig libfontconfig libfreetype6 ttf-xfree86-nonfree ttf-mscorefonts-installer \
     && \
     wget https://bootstrap.pypa.io/pip/2.7/get-pip.py && \
     python2 get-pip.py && \
