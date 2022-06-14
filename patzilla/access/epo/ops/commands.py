@@ -92,6 +92,8 @@ def search(ctx, expression, request_json):
     Access the OPS bibliographic search API, see OPS handbook section 3.1.
 
     The `expression` argument accepts the search expression in OPS CQL syntax.
+
+    TODO: Currently, only the first 100 hits will be displayed. Extend range by implementing "crawling".
     """
     verbose = ctx.find_root().params.get("verbose", False)
     url = '{baseuri}/published-data/search/biblio'.format(baseuri=OPS_API_URI, **locals())
