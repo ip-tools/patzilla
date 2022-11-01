@@ -63,8 +63,8 @@ class ResultEntry(object):
 
 class DpmaRegisterAccess:
     """
-    Screen scraper for DPMAregister "beginner's search" web interface
-    https://register.dpma.de/DPMAregister/pat/einsteiger?lang=en
+    Screen scraper for DPMAregister "basic search" web interface
+    https://register.dpma.de/DPMAregister/pat/basis?lang=en
 
     Alternative direct link, e.g.
     https://register.dpma.de/DPMAregister/pat/experte/autoRecherche/de?queryString=AKZ%3D2020131020184
@@ -95,7 +95,7 @@ class DpmaRegisterAccess:
         self.browser = mechanicalsoup.StatefulBrowser()
 
         # Set custom user agent header
-        self.browser.set_user_agent(regular_user_agent)
+        # self.browser.set_user_agent(regular_user_agent)
 
         self.searchurl = self.baseurl + 'basis'
         self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ={number}&lang={language}'
