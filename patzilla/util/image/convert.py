@@ -7,7 +7,7 @@ import tempfile
 import where
 import logging
 import datetime
-import StringIO
+from io import StringIO
 import subprocess
 from six import BytesIO
 from tempfile import NamedTemporaryFile
@@ -176,7 +176,7 @@ def png_resize(png_payload, width):
     #size = (int(width), int(image_height * aspect))
     size = (int(width), int(image_height / scale_factor))
     #print "size:", size
-    print "Resizing image from %s to %s" % (image.size, size)
+    print("Resizing image from %s to %s" % (image.size, size))
 
     image.thumbnail(size, Image.ANTIALIAS)
     #image.resize(size, Image.ANTIALIAS)

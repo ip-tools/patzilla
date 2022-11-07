@@ -663,16 +663,16 @@ def normalization_example():  # pragma: nocover
         'JP3657641B2',
     ]
 
-    print "-" * 30
-    print '{0}{1}'.format("original".ljust(20), "normalized")
-    print "-" * 30
+    print("-" * 30)
+    print('{0}{1}'.format("original".ljust(20), "normalized"))
+    print("-" * 30)
     for number in numbers:
         if number.find('---') != -1:
-            print number
+            print(number)
             continue
         result = normalize_patent(number)
         #result = join_patent(patch_patent_old_archive(patent))
-        print "{0}{1}".format(number.ljust(20), result)
+        print("{0}{1}".format(number.ljust(20), result))
 
 
 if __name__ == "__main__":  # pragma: nocover

@@ -1421,6 +1421,6 @@ def ops_service_usage(date_begin, date_end):
 
 if __name__ == '__main__':  # pragma: nocover
     data = ops_service_usage('06/11/2014', '09/12/2014')
-    print 'Time range:    {0}'.format(data['time-range'])
-    print 'Response size: {0}G'.format(data['response-size'] / float(10**9))
-    print 'Message count: {0}'.format(data['message-count'])
+    print('Time range:    {0}'.format(data['time-range']))
+    print('Response size: {0}G'.format(data['response-size'] / float(10**9)))
+    print('Message count: {0}'.format(data['message-count']))

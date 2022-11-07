@@ -12,7 +12,7 @@ from mongoengine.document import Document
 from mongoengine.fields import StringField, ListField, DateTimeField, DictField
 from mongoengine.errors import NotUniqueError
 from pyramid.threadlocal import get_current_request
-from zope.interface.declarations import implements
+from zope.interface.declarations import implements, implementer
 from zope.interface.interface import Interface
 
 log = logging.getLogger(__name__)
@@ -133,9 +133,9 @@ class UserMetrics(Document):
 class IUserMetricsManager(Interface):
     pass
 
-class UserMetricsManager(object):
 
-    implements(IUserMetricsManager)
+@implementer(IUserMetricsManager)
+class UserMetricsManager(object):
 
     def measure_upstream(self, upstream, volume):
 

@@ -4,7 +4,10 @@ import os
 import logging
 import sys
 from glob import glob
-from ConfigParser import ConfigParser
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
 
 logger = logging.getLogger(__name__)
 
