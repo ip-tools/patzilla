@@ -1,8 +1,12 @@
 import os
+import sys
+
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.rst')).read()
+
+IS_PYTHON2 = sys.version_info < (3,)
 
 requires = [
 
@@ -18,8 +22,8 @@ requires = [
 
     # Pyramid core
     'pyramid==1.9.1',           # 1.9.4, 1.10.8, 2.0
-    'hupper==1.10.2',           # 1.10.3
-    'watchdog==0.10.7',         # 2.1.7
+    'hupper<2',
+    'watchdog<1',               # 2.1.9
     'pyramid-debugtoolbar==4.3',  # 4.9
     'Pygments==2.5.2',          # 2.11.2
     'pyramid-mako==1.0.2',      # 1.1.0
@@ -32,19 +36,10 @@ requires = [
     'PasteScript==2.0.2',       # 3.2.1
 
     # Caching
-    'Beaker==1.9.0',            # 1.11.0
+    'Beaker<2',
     'pyramid_beaker==0.8',
-    'dogpile.cache==0.6.4',     # 0.6.8, 0.7.1, 0.8.0, 0.9.2, 1.1.5
+    'dogpile.cache<2',
     'appdirs>=1,<2',
-
-    # Database and storage
-    # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
-    # usage in "mongodb_gridfs_beaker" module.
-    'pymongo==2.9.5',           # 3.12.3, 4.1.1
-    'mongodb_gridfs_beaker==0.5.4',
-    'mongoengine==0.13.0',      # 0.24.1
-    'minio==4.0.14',            # 7.1.6
-    'python-magic==0.4.15',     # 0.4.25
 
     # Web services
     'cornice==2.4.1',           # 3.4.0, 3.6.1, 4.0.1, 5.2.0, 6.0.1
@@ -61,8 +56,9 @@ requires = [
 
     # HTTP
     'python-epo-ops-client==3.1.3',     # 4.0.0
-    'requests<=2.27.1',
-    'mechanize==0.3.6',         # 0.4.8
+    'patent-client==3.0.4',
+    'requests<3',
+    'mechanize<1',
     'MechanicalSoup==1.0.0',    # 1.1.0
     'beautifulsoup4==4.9.3',    # 4.11.1
 
@@ -71,10 +67,6 @@ requires = [
     'cryptography>=3.2,<3.4',   # 36.0.2
     'pyasn1==0.4.5',            # 0.4.8
     'ndg-httpsclient==0.5.1',
-
-    # HTML
-    'BeautifulSoup==3.2.1',     # 3.2.2
-    'html2text==2016.9.19',     # 2020.1.16
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
@@ -93,21 +85,22 @@ requires = [
     # Data handling
     'attrs',
     'Bunch==1.0.1',             # Maybe switch to "Munch"
-    'pyparsing==2.0.2',         # 2.2.2, 2.3.1, 2.4.7, 3.0.8
-    'python-dateutil==2.6.1',   # 2.7.7, 2.8.2
+    'pyparsing<4',
+    'python-dateutil<3',
+    'rfc3339',
     'ago==0.0.9',               # 0.0.93
     'arrow==0.10.0',            # 0.12.1
     'validate_email==1.3',
-    'numpy==1.16.6',            # 1.22.3
-    'pandas==0.18.1',           # 0.22.0, 0.25.3, 1.4.2
+    'numpy<2',
+    'pandas<2',
 
     # Data formatting
-    'openpyxl==2.1.0',          # 2.1.5, 2.6.4, 3.0.9
+    'openpyxl<4',
     'xlrd==0.9.3',              # 0.9.4, 1.2.0, 2.0.1
     'XlsxWriter==0.9.3',        # 1.4.5, 2.0.0, 3.0.3
 
     # Data conversion
-    'Pillow>=6,<7',             # 9.1.0
+    'Pillow<10',
 
     # Does not work from within virtualenv?
     # 'unoconv==0.8.2',          # 0.9.0
@@ -124,12 +117,36 @@ requires = [
     #   Console and system interfaces
     # ----------------------------------------------
     'docopt==0.6.2',
-    'click>=7,<8',
+    'click<9',
     'envoy==0.0.3',
     'where==1.0.2',
-    'tqdm==4.23.4',             # 4.64.0
+    'tqdm<5',
 
 ]
+
+
+if IS_PYTHON2:
+    requires += [
+        # Database and storage
+        # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
+        # usage in "mongodb_gridfs_beaker" module.
+        'pymongo==2.9.5',           # 3.12.3, 4.1.1
+        'mongodb_gridfs_beaker==0.5.4',
+        'mongoengine==0.13.0',      # 0.24.1
+        'minio==4.0.14',            # 7.1.6
+        'python-magic==0.4.15',     # 0.4.25
+
+        # HTML
+        'BeautifulSoup<4',
+        'html2text==2016.9.19',     # 2020.1.16
+    ]
+else:
+    requires += [
+        # Database and storage
+        'pymongo<5',
+        'mongoengine<1',
+    ]
+
 
 test_requires = [
     # -----------
