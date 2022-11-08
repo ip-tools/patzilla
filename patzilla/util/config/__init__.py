@@ -84,7 +84,7 @@ def read_list(string, separator=u','):
         return []
     elif isinstance(string, list):
         return string
-    result = map(unicode.strip, string.split(separator))
+    result = list(map(str.strip, string.split(separator)))
     if len(result) == 1 and not result[0]:
         result = []
     return result

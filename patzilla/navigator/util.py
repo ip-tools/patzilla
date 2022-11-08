@@ -35,7 +35,7 @@ def dict_subset(bigdict, *wanted_keys):
 def dict_prefix_key(d, prefix):
     # prefix keys in dictionary
     new = {}
-    for key, value in d.iteritems():
+    for key, value in d.items():
         key = prefix + key
         new[key] = value
     return new

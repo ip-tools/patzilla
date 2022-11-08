@@ -88,7 +88,7 @@ class GlobalSettings(object):
             datasource_info.setdefault('fulltext_countries', read_list(ds_settings.get('fulltext_countries', '')))
             datasource_info.setdefault('details_enabled', asbool(ds_settings.get('details_enabled', False)))
             datasource_info.setdefault('details_countries', read_list(ds_settings.get('details_countries', '')))
-            for key, value in ds_settings.iteritems():
+            for key, value in ds_settings.items():
                 datasource_info.setdefault(key, value)
 
             datasource_settings.datasource[datasource] = SmartBunch.bunchify(datasource_info)
@@ -122,7 +122,7 @@ class GlobalSettings(object):
                     vendor=vendor, configfile=self.configfile))
 
             vendor_info = self.application_settings.get(settings_key, {})
-            for key, value in vendor_info.iteritems():
+            for key, value in vendor_info.items():
                 vendor_info[key] = value.decode('utf-8')
 
             if 'hostname_matches' in vendor_info:
@@ -286,7 +286,7 @@ class RuntimeSettings(object):
 
         # Transfer all properties having designated prefixes 1:1
         prefixes = ['ui.', 'feature.']
-        for key, value in vendor.iteritems():
+        for key, value in vendor.items():
             for prefix in prefixes:
                 if key.startswith(prefix):
                     if key.endswith('.enabled'):
@@ -307,7 +307,7 @@ class RuntimeSettings(object):
         datasource_settings = SmartBunch.bunchify(request.registry.datasource_settings)
         if 'protected_fields' in datasource_settings:
             for fieldname in datasource_settings.protected_fields:
-                for name, settings in datasource_settings.datasource.iteritems():
+                for name, settings in datasource_settings.datasource.items():
                     if fieldname in settings:
                         del settings[fieldname]
             del datasource_settings['protected_fields']
@@ -363,7 +363,7 @@ class RuntimeSettings(object):
         isviewer = 'patentview' in host or 'viewer' in host or 'patview' in host
 
         # 1. don't allow "query" from outside on view-only domains
-        if request_params.has_key('query') and isviewer:
+        if 'query' in request_params and isviewer:
             log.warning('Parameter "query=%s" not allowed on host "%s", purging it', request_params['query'], host)
             del request_params['query']
 
@@ -388,7 +388,7 @@ class RuntimeSettings(object):
         # C. parameter firewall, OUTPUT
 
         # remove "opaque parameter"
-        if params.has_key('op'):
+        if 'op' in params:
             del params['op']
 
 
@@ -409,7 +409,7 @@ class RuntimeSettings(object):
                 params['datasources_enabled'].append(datasource)
 
         # E. backward-compat amendments
-        for key, value in params.iteritems():
+        for key, value in params.items():
             if key.startswith('ship_'):
                 newkey = key.replace('ship_', 'ship-')
                 params[newkey] = value

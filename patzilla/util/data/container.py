@@ -24,7 +24,7 @@ class SmartBunch(Bunch):
         Generic "bunchify", also works with descendants of Bunch.
         """
         if isinstance(x, dict):
-            return cls( (k, cls.bunchify(v)) for k,v in x.iteritems() )
+            return cls( (k, cls.bunchify(v)) for k,v in x.items() )
         elif isinstance(x, (list, tuple)):
             return type(x)( cls.bunchify(v) for v in x )
         else:
