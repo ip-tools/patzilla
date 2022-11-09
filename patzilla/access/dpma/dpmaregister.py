@@ -339,7 +339,7 @@ class DpmaRegisterAccess:
         if dump_metadata:
             print('url:', response.url)
             print('headers:', response.headers)
-        print response.content
+        print(response.content)
 
 
 class DpmaRegisterHtmlDocument(object):

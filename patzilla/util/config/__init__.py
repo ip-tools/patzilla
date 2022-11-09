@@ -7,7 +7,7 @@ from glob import glob
 try:
     from configparser import ConfigParser
 except ImportError:
-    from ConfigParser import ConfigParser
+    from ConfigParser import ConfigParser  # type: ignore
 
 logger = logging.getLogger(__name__)
 

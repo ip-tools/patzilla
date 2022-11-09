@@ -1,0 +1,31 @@
+[tool.black]
+line-length = 120
+
+[tool.isort]
+profile = "black"
+extend_skip = [".cache", ".coverage-reports", ".github", ".pytest_cache", ".ruff_cache", ".vagrant", ".venv*", "tmp", "var"]
+extend_skip_glob = ["**/site-packages/**"]
+
+[tool.mypy]
+# strict = true
+# ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+ignore_missing_imports = true
+module = [
+  "ago",
+  "arrow.*",
+  "bunch",
+  "ConfigParser",
+  "cornice.*",
+  "cryptography",
+  "jsonpointer",
+  "json_stream.*",
+  "lxml.*",
+  "patent_client.*",
+  "pyramid.*",
+  "rfc3339",
+  "tqdm.*",
+  "xmljson",
+  "xmltodict",
+]

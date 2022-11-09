@@ -42,7 +42,7 @@ def parse_date(value):
 @dataclasses.dataclass
 class JsonDocument:
     data: t.Dict
-    usdoc: t.Optional[USApplication] = None
+    usdoc: USApplication = None
 
     def to_json(self):
         return json.dumps(self.data, cls=JSONStreamEncoder)

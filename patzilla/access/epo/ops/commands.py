@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 @click.pass_context
 def ops_cli(ctx):
     """
-    Access the EPO/OPS data source adapter.
+    Access the EPO OPS data source adapter.
     """
 
     # Create a Pyramid runtime environment.

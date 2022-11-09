@@ -235,8 +235,8 @@ def ificlaims_download_single(number, format, options=None):
     try:
         response = ificlaims_download(number, format, options)
 
-    except IFIClaimsException, ex:
-        logger.warn('IFI: IFIClaimsException for number={number}, format={format}, options={options}: {ex}'.format(**locals()))
+    except IFIClaimsException as ex:
+        logger.warning('IFI: IFIClaimsException for number={number}, format={format}, options={options}: {ex}'.format(**locals()))
 
     if response.payload:
         return response

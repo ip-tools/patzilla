@@ -18,6 +18,8 @@ from patent_client import USApplication
 from patent_client.uspto.peds.manager import USApplicationManager
 from patent_client.util.json_encoder import JsonEncoder
 
+from patzilla.boot.logging import setup_logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -108,7 +110,7 @@ class UsptoPedsResponse:
     def get_transactions(
         item: USApplication, codes: t.List[UsptoPedsTransactionEventType] = None
     ) -> t.List[TransactionDictType]:
-
+        codes = codes or []
         codes_real: t.List[UsptoPedsTransactionEvent] = []
         for code in codes:
             if isinstance(code, str):
@@ -216,6 +218,9 @@ def main():
       to allowance and issuance information.
 
     """
+
+    setup_logging()
+
     peds = UsptoPedsClient()
 
     # Last 7 days, in reverse-chronological order.
