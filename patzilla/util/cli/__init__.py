@@ -19,7 +19,7 @@ class EnumChoice(click.Choice):
         self.enum_type = enum_type
 
     def convert(
-        self, value: t.Any, param: t.Optional["Parameter"], ctx: t.Optional["Context"]
+        self, value: t.Any, param: t.Optional["click.Parameter"], ctx: t.Optional["click.Context"]
     ) -> t.Any:
         value = super().convert(value=value, param=param, ctx=ctx)
         if value is None:
