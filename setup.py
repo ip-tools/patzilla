@@ -73,6 +73,7 @@ requires = [
     #'lxml==3.4.1',             # 4.2.0
     'lxml>=4.6.5,<5',
     'xmljson==0.1.9',           # 0.2.1
+    'xmltodict<1',
 
     # JSON
     'jsonpointer==1.14',        # 2.3

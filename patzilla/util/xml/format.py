@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 # (c) 2015 Andreas Motl, Elmyra UG
-from lxml import etree
-
-# https://stackoverflow.com/questions/749796/pretty-printing-xml-in-python/12940014#12940014
 import re
+
+from lxml import etree, objectify
 from xmljson import BadgerFish
 
+
 def etree_indent(elem, level=0, more_sibs=False):
+    """
+    Pretty printing XML in Python.
+
+    https://stackoverflow.com/questions/749796/pretty-printing-xml-in-python/12940014#12940014
+    """
     i = "\n"
     spacing = '    '
     if level:
@@ -60,14 +65,59 @@ class BadgerFishNoNamespace(BadgerFish):
         """Convert etree.Element into a dictionary while completely ignoring xml namespaces"""
 
         # Clean tag name of root element
-        self.clean_tag(root)
+        self.eliminate_namespaces(root)
 
         # Clean tag name of all child elements
         for node in root:
-            self.clean_tag(node)
+            self.eliminate_namespaces(node)
 
         return super(BadgerFishNoNamespace, self).data(root)
 
-    def clean_tag(self, node):
-        if isinstance(node.tag, basestring):
-            node.tag = re.sub('{.*}', '', node.tag)
+    def eliminate_namespaces(self, node):
+        if isinstance(node.tag, str):
+            node.tag = self.replace_namespace(node.tag)
+
+        for attr in node.attrib:
+            value = node.attrib.get(attr)
+            if attr.startswith("{"):
+                node.attrib.pop(attr)
+            attr_name = self.replace_namespace(attr)
+            node.attrib.update({attr_name: value})
+
+    def replace_namespace(self, data):
+        return re.sub(r'{.*}', '', data)
+
+
+def lxml_eliminate_namespaces(target, nsmap):
+    """
+    Eliminate all namespaces from XML DOM.
+    """
+    for nsname, namespace in nsmap.items():
+        lxml_remove_namespace(target, namespace)
+        del target.nsmap[nsname]
+    target.nsmap.clear()
+    objectify.deannotate(target, xsi_nil=True, cleanup_namespaces=True)
+    return target
+
+
+def lxml_remove_namespace(doc, namespace):
+    """
+    Remove namespace in the obtained document in-place.
+    """
+    ns = "{%s}" % namespace
+    nsl = len(ns)
+    for elem in doc.getiterator():
+        if elem.tag.startswith(ns):
+            elem.tag = elem.tag[nsl:]
+
+
+def purge_dict_keys(data, prefix: str):
+    """
+    Purge all items whose keys start with `@xmlns`.
+    """
+    for key, value in data.copy().items():
+        if key.startswith(prefix):
+            del data[key]
+        if isinstance(value, dict):
+            data[key] = purge_dict_keys(value, prefix)
+    return data
