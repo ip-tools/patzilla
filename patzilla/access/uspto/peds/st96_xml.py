@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 # (c) 2022 Andreas Motl <andreas.motl@ip-tools.org>
 """
-Access the USPTO PEDS archive files in ST.96 XML format.
+Access the USPTO PEDS archive files in WIPO ST.96 XML format.
 
 https://ped.uspto.gov/
 """
 import dataclasses
 import json
+import logging
 import re
 from collections import OrderedDict
 from enum import Enum
@@ -14,12 +15,16 @@ from enum import Enum
 import xmltodict
 from lxml.etree import iterparse, tounicode
 from tqdm import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
+from patzilla.boot.logging import setup_logging
 from patzilla.util.xml.format import (
     BadgerFishNoNamespace,
     lxml_eliminate_namespaces,
     purge_dict_keys,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class XmlNodeType(Enum):
@@ -41,7 +46,7 @@ class XmlDeserializerType(Enum):
 
 class XmlReader:
     """
-    Read USPTO PEDS archive files in XML format.
+    Read USPTO PEDS archive files in WIPO ST.96 XML format.
 
     Example files:
 
@@ -64,10 +69,10 @@ class XmlReader:
 
     def read(self):
         """
-        Read ST.96 XML from file, filter, and return records as nested dictionaries,
+        Read WIPO ST.96 XML from file, filter, and return records as nested dictionaries,
         converted from XML using `xmltodict`.
         """
-        data = self.read_st96_xml()
+        data = tqdm(self.read_st96_xml())
         filtered = self.filter_by_status(data)
         # output = to_json(filtered)
         return self.to_dict(filtered)
@@ -76,6 +81,7 @@ class XmlReader:
         """
         Split `<uspat:PatentBulkData>` into `<uspat:PatentData>` elements.
         """
+        logger.info(f"Reading WIPO ST.96 XML from {self.filepath}")
         f = open(self.filepath, mode="rb")
         iter_elems = iterparse(f, events=("start", "end"), resolve_entities=True)
         for event, element in iter_elems:
@@ -147,16 +153,21 @@ class XmlReader:
 
 
 def main():
-    reader = XmlReader(filepath="/Users/amo/Downloads/pairbulk-delta-20221107-xml/2022.xml")
-    for record in tqdm(reader.read()):
-        # print("=" * 42)
-        print(json.dumps(record))
+
+    # WIPO ST.96 XML files.
+    resource = "/Users/amo/Downloads/pairbulk-delta-20221107-xml/2022.xml"
+
+    reader = XmlReader(filepath=resource)
+    with logging_redirect_tqdm():
+        for record in reader.read():
+            print(json.dumps(record))
 
 
 if __name__ == "__main__":
     """
     Synopsis::
 
-        python -m patzilla.access.uspto.peds.rawdata | jq
+        python -m patzilla.access.uspto.peds.st96_xml | jq
     """
+    setup_logging()
     main()
