@@ -18,6 +18,13 @@ from patent_client import USApplication
 from patent_client.uspto.peds.manager import USApplicationManager
 from patent_client.util.json_encoder import JsonEncoder
 
+from patzilla.access.uspto.peds.model import (
+    ResultDictType,
+    TransactionDictType,
+    UsptoPedsTransactionEvent,
+    UsptoPedsTransactionEventType,
+    resolve_transaction_codes,
+)
 from patzilla.boot.logging import setup_logging
 
 logger = logging.getLogger(__name__)
@@ -35,48 +42,6 @@ class UsptoPedsAppStatus(Enum):
 
 
 @dataclasses.dataclass
-class UsptoPedsTransactionEventDefinition:
-    code: str
-    description: str
-
-
-class UsptoPedsTransactionEvent(Enum):
-    """
-    - code: N/=.
-      Notice of Allowance Data Verification Completed
-
-    - code: MN/=.
-      Mail Notice of Allowance
-
-    - code: PILS
-      Application Is Considered Ready for Issue
-
-    - code: WPIR
-      Issue Notification Mailed
-
-    """
-
-    ALLOWANCE_NOTICE_VERIFICATION_COMPLETED = UsptoPedsTransactionEventDefinition(
-        code="N/=.", description="Notice of Allowance Data Verification Completed"
-    )
-    ALLOWANCE_NOTICE_MAILED = UsptoPedsTransactionEventDefinition(code="MN/=.", description="Mail Notice of Allowance")
-    ISSUANCE_CONSIDERED_READY = UsptoPedsTransactionEventDefinition(
-        code="PILS", description="Application Is Considered Ready for Issue"
-    )
-    ISSUANCE_NOTIFICATION_MAILED = UsptoPedsTransactionEventDefinition(
-        code="WPIR", description="Issue Notification Mailed"
-    )
-
-    def __eq__(self, other):
-        return self.value == other or self.value.code == other
-
-
-ResultDictType = t.OrderedDict[str, t.Union[str, t.List]]
-TransactionDictType = t.Dict[str, str]
-UsptoPedsTransactionEventType = t.Union[UsptoPedsTransactionEvent, str]
-
-
-@dataclasses.dataclass
 class UsptoPedsResponse:
     count: int
     items: t.Generator[USApplication, None, None]
@@ -91,7 +56,7 @@ class UsptoPedsResponse:
             output: ResultDictType = self.get_attributes(item, attributes=attributes)
 
             # Apply transaction events filter, or use all transaction events.
-            output["transactions"] = self.get_transactions(item, codes=transaction_codes)
+            output["transactions"] = list(self.get_transactions(item, codes=transaction_codes))
 
             yield output
 
@@ -109,27 +74,17 @@ class UsptoPedsResponse:
     @staticmethod
     def get_transactions(
         item: USApplication, codes: t.List[UsptoPedsTransactionEventType] = None
-    ) -> t.List[TransactionDictType]:
-        codes = codes or []
-        codes_real: t.List[UsptoPedsTransactionEvent] = []
-        for code in codes:
-            if isinstance(code, str):
-                try:
-                    value = getattr(UsptoPedsTransactionEvent, code)
-                    codes_real.append(value)
-                except AttributeError:
-                    raise AttributeError(
-                        f"Unknown transaction event code '{code}'. "
-                        f"Use one of {UsptoPedsTransactionEvent._member_names_}"
-                    )
-            else:
-                codes_real.append(code)
+    ) -> t.Generator[TransactionDictType, None, None]:
 
-        results: t.List[TransactionDictType] = []
+        # Prepare list of events codes.
+        codes = codes or []
+        codes_real: t.List[UsptoPedsTransactionEvent] = resolve_transaction_codes(codes=codes)
+
+        # Filter list of transactions.
         for transaction in item.transactions:
-            if not codes or transaction.code in codes_real:
-                results.append(transaction.to_dict())
-        return results
+            if codes and transaction.code not in codes_real:
+                continue
+            yield transaction.to_dict()
 
     @staticmethod
     def to_json(data, limit: int = None) -> str:
