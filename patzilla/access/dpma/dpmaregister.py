@@ -106,7 +106,7 @@ class DpmaRegisterAccess:
     def start_http_session(self):
         if not self.http_session_valid:
             # 1. Open search url to initialize HTTP session
-            response = self.browser.open(self.searchurl + "?lang=en")
+            self.response = self.browser.open(self.searchurl + "?lang=en")
             self.http_session_valid = True
 
     @cache.cache_on_arguments()
@@ -256,8 +256,11 @@ class DpmaRegisterAccess:
         # has to be adjusted.
         time.sleep(1.0)
 
+        if "/TSPD" in self.response.content:
+            raise ValueError("Site is protected by F5 Advanced WAF")
+
         # Debugging
-        # self.dump_response(response, dump_metadata=True)
+        # self.dump_response(self.response, dump_metadata=True)
         # sys.exit()
 
         # 2. Send inquiry
@@ -339,7 +342,7 @@ class DpmaRegisterAccess:
         if dump_metadata:
             print('url:', response.url)
             print('headers:', response.headers)
-        print response.content
+        print(response.content)
 
 
 class DpmaRegisterHtmlDocument(object):
