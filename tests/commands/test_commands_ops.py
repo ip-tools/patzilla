@@ -1,40 +1,20 @@
 # -*- coding: utf-8 -*-
 # (c) 2022 Andreas Motl <andreas.motl@ip-tools.org>
 import json
-import sys
 
 from click.testing import CliRunner
-from configparser import ConfigParser
 
 import pytest
 from pyramid.httpexceptions import HTTPNotFound
 
-from patzilla.access.generic.exceptions import SearchException
+from patzilla.access.epo.ops.client import OpsCredentialsGetter
 from patzilla.commands import cli
 
 
-def test_command_make_config(capsys):
-    """
-    Proof that `patzilla make-config ... --flavor=docker-compose` works as intended.
-
-    It should yield a configuration which contains `mongodb` as host name
-    for connecting to MongoDB. That fits the Docker Compose configuration
-    provided within the repository.
-    """
-
-    # Invoke cli command.
-    sys.argv = ["patzilla", "make-config", "production", "--flavor=docker-compose"]
-    with pytest.raises(SystemExit) as ex:
-        cli()
-    assert ex.value.code == 0
-
-    # Read configuration file content from STDOUT.
-    config_payload = capsys.readouterr().out
-
-    # Parse and verify configuration details.
-    config = ConfigParser()
-    config.read_string(string=config_payload, source="{}.ini".format("production"))
-    assert config.get("app:main", "mongodb.patzilla.uri") == "mongodb://mongodb:27017/patzilla"
+try:
+    OpsCredentialsGetter.from_environment()
+except KeyError:
+    pytestmark = pytest.mark.skip(reason="No OPS credentials provided")
 
 
 def test_command_ops_search_success():
@@ -134,32 +114,3 @@ def test_command_ops_image_failure():
     with pytest.raises(HTTPNotFound) as ex:
         runner.invoke(cli, "ops image --document=EP123A2 --page=1", catch_exceptions=False)
     ex.match("No image information for document=EP123A2")
-
-
-def test_command_ificlaims_search_success():
-    """
-    Proof that `patzilla ificlaims search` works as intended.
-    """
-    runner = CliRunner()
-
-    result = runner.invoke(cli, "--verbose ificlaims search pn:EP0666666", catch_exceptions=False)
-    assert result.exit_code == 0
-
-    data = json.loads(result.stdout)
-    assert data["meta"]["navigator"]["count_total"] == 3
-    assert data["meta"]["upstream"]["status"] == "success"
-    assert data["meta"]["upstream"]["params"]["q"] == "pn:EP0666666"
-    assert data["numbers"] == ["EP0666666B1", "EP0666666A3", "EP0666666A2"]
-    assert len(data["details"]) == 3
-
-
-def test_command_ificlaims_search_failure():
-    """
-    Proof that bad input to `patzilla ificlaims search` croaks as intended.
-    """
-    runner = CliRunner()
-
-    with pytest.raises(SearchException) as ex:
-        runner.invoke(cli, "ificlaims search foo:bar", catch_exceptions=False)
-    ex.match("Response status code: 400")
-    ex.match("undefined field foo")
