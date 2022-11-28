@@ -102,6 +102,7 @@ requires = [
     'validate_email==1.3',
     'numpy==1.16.6',            # 1.22.3
     'pandas==0.18.1',           # 0.22.0, 0.25.3, 1.4.2
+    'pathlib2<3',
 
     # Data formatting
     'openpyxl==2.1.0',          # 2.1.5, 2.6.4, 3.0.9
