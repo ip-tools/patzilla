@@ -10,12 +10,13 @@ from bunch import Bunch
 from pyramid.httpexceptions import HTTPNotFound
 
 from patzilla.access.uspto.image import fetch_first_drawing
-from patzilla.access.uspto.pdf import fetch_pdf, document_viewer_url, pdf_index, pdf_url, fetch_url, get_reference_type, \
-    UsptoPdfReferenceType
+from patzilla.access.uspto.pdf import fetch_pdf, document_viewer_url, png_url, fetch_url, get_reference_type, \
+    UsptoPdfReferenceType, UsptoPdfSection, UsptoDocumentAccess
 from patzilla.util.numbers.common import split_patent_number
 
 
 PDF_HEADER = b"%PDF"
+PNG_HEADER = b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR"
 TIFF_HEADER_LITTLE_ENDIAN = b"\x49\x49\x2a\x00"
 
 
@@ -27,8 +28,7 @@ class TestFetchResourceValid:
 
     @pytest.mark.slow
     def test_full_pdf_application(self):
-        # TODO: Find a smaller application document.
-        pdf = fetch_pdf("US2022110447A1")
+        pdf = fetch_pdf("US20140071638A1")
         assert pdf.startswith(PDF_HEADER)
 
     @pytest.mark.slow
@@ -39,90 +39,119 @@ class TestFetchResourceValid:
 
     @pytest.mark.slow
     def test_first_drawing_application(self):
-        # TODO: Find a smaller application document.
-        drawing = fetch_first_drawing("US2022110447A1")
-        assert drawing.startswith(TIFF_HEADER_LITTLE_ENDIAN)
+        drawing = fetch_first_drawing("US20140071638A1")
+        assert drawing.startswith(PNG_HEADER)
 
     @pytest.mark.slow
     def test_first_drawing_publication_patent(self):
         # US2548918 has only 240k, which is great for testing.
         drawing = fetch_first_drawing(split_patent_number("US2548918"))
-        assert drawing.startswith(TIFF_HEADER_LITTLE_ENDIAN)
+        assert drawing.startswith(PNG_HEADER)
 
     @pytest.mark.slow
     def test_first_drawing_publication_design(self):
         # USD283349S has only 65k, which is great for testing.
         drawing = fetch_first_drawing(split_patent_number("USD283349S"))
-        assert drawing.startswith(TIFF_HEADER_LITTLE_ENDIAN)
+        assert drawing.startswith(PNG_HEADER)
 
 
 class TestFetchResourceInvalid:
 
     @pytest.mark.slow
-    def test_full_pdf_application_notfound(self):
+    def test_full_pdf_application_notfound_zero(self):
         with pytest.raises(HTTPNotFound) as ex:
             fetch_pdf("US0000000000")
-        assert ex.match("Resource at .+ not found")
+        assert ex.match("Resource .+ not found")
 
     @pytest.mark.slow
-    def test_full_pdf_publication_notfound(self):
+    def test_full_pdf_publication_notfound_zero(self):
         with pytest.raises(HTTPNotFound) as ex:
             fetch_pdf("US0000000")
-        assert ex.match("Resource at .+ not found")
+        assert ex.match("Resource .+ not found")
+
+    @pytest.mark.slow
+    def test_full_pdf_application_notfound_one(self):
+        with pytest.raises(HTTPNotFound) as ex:
+            fetch_pdf("US0000000001")
+        assert ex.match("Resource .+ not found")
+
+    @pytest.mark.slow
+    def test_full_pdf_publication_notfound_one(self):
+        with pytest.raises(HTTPNotFound) as ex:
+            fetch_pdf("US0000001")
+        assert ex.match("Resource .+ not found")
 
 
 class TestDocumentViewerUrlValid:
 
     @pytest.mark.slow
-    def test_application_validated(self):
-        assert document_viewer_url("US2022110447A1") == {'origin': 'USPTO', 'location': 'https://pdfaiw.uspto.gov/.aiw?docid=20220110447'}
+    def test_application(self):
+        assert document_viewer_url("US2022110447A1") == {
+            'origin': 'USPTO',
+            'location': 'https://ppubs.uspto.gov/dirsearch-public/image-conversion/convert?url=us-pgpub/US/2022/0110/447/00000001.tif',
+        }
 
     @pytest.mark.slow
-    def test_publication_validated(self):
-        assert document_viewer_url("US2548918") == {'origin': 'USPTO', 'location': 'https://pdfpiw.uspto.gov/.piw?docid=02548918'}
-
-    def test_application_unvalidated(self):
-        assert document_viewer_url("US2022110447A1", validate=False) == {'origin': 'USPTO', 'location': 'https://pdfaiw.uspto.gov/.aiw?docid=20220110447'}
-
-    def test_publication_unvalidated(self):
-        assert document_viewer_url("US2548918", validate=False) == {'origin': 'USPTO', 'location': 'https://pdfpiw.uspto.gov/.piw?docid=02548918'}
+    def test_publication(self):
+        assert document_viewer_url("US2548918") == {
+            'origin': 'USPTO',
+            'location': 'https://ppubs.uspto.gov/dirsearch-public/image-conversion/convert?url=uspat/US/02/548/918/00000001.tif',
+        }
 
 
 class TestDocumentViewerUrlInvalid:
 
     @pytest.mark.slow
-    def test_application_validated(self):
+    def test_application_zeros(self):
         with pytest.raises(HTTPNotFound) as ex:
             document_viewer_url("US0000000000")
-        ex.match("Resource at .+ not found")
+        ex.match("Resource .+ not found")
 
     @pytest.mark.slow
-    def test_publication_validated(self):
+    def test_publication_zeros(self):
         with pytest.raises(HTTPNotFound) as ex:
             document_viewer_url("US0000000")
-        ex.match("Resource at .+ not found")
+        ex.match("Resource .+ not found")
 
-    def test_application_unvalidated(self):
-        assert document_viewer_url("US0000000000", validate=False) == {'origin': 'USPTO', 'location': 'https://pdfaiw.uspto.gov/.aiw?docid=00000000000'}
+    @pytest.mark.slow
+    def test_application_one(self):
+        with pytest.raises(HTTPNotFound) as ex:
+            document_viewer_url("US0000000001")
+        ex.match("Resource .+ not found")
 
-    def test_publication_unvalidated(self):
-        assert document_viewer_url("US0000000", validate=False) == {'origin': 'USPTO', 'location': 'https://pdfpiw.uspto.gov/.piw?docid=00000000'}
+    @pytest.mark.slow
+    def test_publication_one(self):
+        with pytest.raises(HTTPNotFound) as ex:
+            document_viewer_url("US0000001")
+        ex.match("Resource .+ not found")
 
 
-def test_pdf_index_unknown_application(caplog):
-    section_url_map = pdf_index("US2022110447A1", include=-99)
+def test_pdf_index_application_valid(caplog):
+    section_url_map = UsptoDocumentAccess("US20140071638A1").pdf_index()
+    assert section_url_map[UsptoPdfSection.DRAWINGS] == \
+           "https://ppubs.uspto.gov/dirsearch-public/image-conversion/convert?url=us-pgpub/US/2014/0071/638/00000002.tif"
+
+
+def test_pdf_index_publication_valid(caplog):
+    section_url_map = UsptoDocumentAccess("US2548918").pdf_index()
+    assert section_url_map[UsptoPdfSection.DRAWINGS] == \
+           "https://ppubs.uspto.gov/dirsearch-public/image-conversion/convert?url=uspat/US/02/548/918/00000001.tif"
+
+
+def test_pdf_index_application_unknown(caplog):
+    section_url_map = UsptoDocumentAccess("US2022110447A1").pdf_index(include=-99)
     assert not section_url_map
     assert "Unable to compute PDF section map for document US2022110447A1" in caplog.messages
 
 
-def test_pdf_index_unknown_publication(caplog):
-    section_url_map = pdf_index("US2548918", include=-99)
+def test_pdf_index_publication_unknown(caplog):
+    section_url_map = UsptoDocumentAccess("US2548918").pdf_index(include=-99)
     assert not section_url_map
     assert "Unable to compute PDF section map for document US2548918" in caplog.messages
 
 
 def test_pdf_url_invalid():
-    assert pdf_url(None) is None
+    assert png_url(None) is None
 
 
 def test_fetch_url_failure():

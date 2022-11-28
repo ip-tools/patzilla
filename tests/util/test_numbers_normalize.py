@@ -568,6 +568,10 @@ uspto_cases = [
      "output": "US02548918"},
     {"input": {'number': 'US2548918', 'provider': 'others'},
      "output": "US2548918"},
+    {"input": {'number': 'US02548918', 'provider': 'uspto-ng'},
+     "output": "US2548918"},
+    {"input": {'number': 'US2007231208A1', 'provider': 'uspto-ng'},
+     "output": "US20070231208A1"},
 ]
 
 
@@ -586,7 +590,7 @@ def from_list(data, fun):
 def normalize_patent_us_smart(input):
     number = input["number"]
     provider = input["provider"]
-    return normalize_patent_us(patent=normalize_patent(number, as_dict=True), provider=provider).serialize()
+    return normalize_patent(number, as_dict=True, provider=provider).serialize()
 
 
 class TestNumberNormalization:

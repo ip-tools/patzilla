@@ -461,6 +461,14 @@ def normalize_patent_us(patent, provider=None):
         else:
             patched['number'] = patched['number'].lstrip('0')
 
+    elif provider == 'uspto-ng':
+
+        if length == 9 or length == 10:
+            padding = '0' * (11 - length)
+            patched['number'] = patched['number'][0:4] + padding + patched['number'][4:]
+
+        patched['number'] = patched['number'].lstrip("0")
+
     else:
 
         # US patents: Handle document numbers with character prefixes

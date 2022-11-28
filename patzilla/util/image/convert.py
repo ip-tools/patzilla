@@ -192,7 +192,7 @@ def png_resize(png_payload, width):
     return png_payload_resized
 
 
-def pdf_join(pages):
+def pdf_join(pages, use_filenames=False):
     # pdftk in1.pdf in2.pdf cat output out1.pdf
     # pdftk in.pdf dump_data output report.txt
     # pdftk in.pdf update_info in.info output out.pdf
@@ -209,12 +209,15 @@ def pdf_join(pages):
     command = [pdftk]
     tmpfiles = []
     for page in pages:
-        tmpfile = NamedTemporaryFile()
-        tmpfile.write(page)
-        tmpfile.flush()
 
-        tmpfiles.append(tmpfile)
-        command.append(tmpfile.name)
+        if use_filenames:
+            command.append(page)
+        else:
+            tmpfile = NamedTemporaryFile()
+            tmpfile.write(page)
+            tmpfile.flush()
+            tmpfiles.append(tmpfile)
+            command.append(tmpfile.name)
 
     command += ['cat', 'output', '-']
 
