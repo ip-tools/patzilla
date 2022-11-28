@@ -28,8 +28,9 @@ requires = [
     'MarkupSafe==1.1.1',        # 2.1.1
     'Akhet==2.0',
     'waitress>=1,<2',           # 2.1.1
-    'Paste==2.0.3',             # 3.5.0
-    'PasteScript==2.0.2',       # 3.2.1
+    'Paste<3',                  # 3.5.2
+    'PasteDeploy<3',            # 3.0.1
+    'PasteScript<3',            # 3.2.1
 
     # Caching
     'Beaker==1.9.0',            # 1.11.0
