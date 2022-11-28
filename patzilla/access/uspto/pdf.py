@@ -55,7 +55,6 @@ import logging
 import os
 import socket
 import sys
-import tempfile
 from collections import OrderedDict
 from datetime import timedelta
 
@@ -65,7 +64,7 @@ from pyramid.httpexceptions import HTTPNotFound
 from repoze.lru import lru_cache
 
 from patzilla.util.config import to_list
-from patzilla.util.image.convert import pdf_join
+from patzilla.util.image.convert import pdf_join, to_pdf
 from patzilla.util.network.browser import regular_user_agent
 from patzilla.util.numbers.normalize import normalize_patent
 
@@ -151,13 +150,7 @@ def url_to_pdf(url):
     """
     Acquire page as PNG, and convert to PDF, cached.
     """
-    tmpname = tempfile.mktemp(suffix=".pdf")
-    command = "convert '{}' '{}'".format(url, tmpname)
-    os.system(command)
-    with open(tmpname, mode="rb") as f:
-        payload = f.read()
-    os.unlink(tmpname)
-    return payload
+    return to_pdf(url).read()
 
 
 @cache_region('static')

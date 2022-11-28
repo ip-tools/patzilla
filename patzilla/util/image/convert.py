@@ -3,7 +3,9 @@
 import os
 import shutil
 import tempfile
+from pathlib2 import Path
 
+import requests
 import where
 import logging
 import datetime
@@ -89,6 +91,30 @@ def to_png(tiff, width=None, height=None):
         make -j6 && make install
 
     """
+    return run_convert(tiff, "png", width=width, height=height)
+
+
+def run_convert(resource, target_format, width=None, height=None):
+    """
+    Invoke ImageMagick's `convert` program. Accept `resource` as buffer, filename, or URL.
+    """
+
+    if not target_format:
+        raise ValueError("Unknown target format: {}".format(target_format))
+
+    payload = None
+    if hasattr(resource, "read"):
+        payload = resource.read()
+
+    elif isinstance(resource, str):
+        if resource.startswith("http://") or resource.startswith("https://"):
+            payload = requests.get(resource).content
+        elif Path(resource).exists():
+            with open(resource, "rb") as f:
+                payload = f.read()
+
+    if payload is None:
+        raise ValueError("Unable to acquire resource for media conversion. type={}".format(type(resource)))
 
     more_args = []
 
@@ -132,21 +158,28 @@ def to_png(tiff, width=None, height=None):
         # Convert from specific format
         #'{0}:-'.format(format),
 
-        # Convert from any format
+        # Convert from any format.
         '-',
 
-        # Convert to PNG format
-        'png:-',
+        # Convert to given format.
+        '{}:-'.format(target_format),
     ]
 
     command_string = ' '.join(command)
     try:
         logger.debug('Converting image using "{}"'.format(command_string))
-        return run_imagemagick(command, tiff.read())
+        return run_imagemagick(command, payload)
 
     except Exception as ex:
         logger.error('Image conversion using ImageMagicks "convert" program failed: {}'.format(ex))
         raise
+
+
+def to_pdf(resource):
+    """
+    Convert input image to PDF, optionally downloading it.
+    """
+    return run_convert(resource, "pdf")
 
 
 def run_imagemagick(command, input=None):
@@ -454,7 +487,7 @@ def find_convert():
     # Find location of "convert" program
     convert_path = find_program_candidate(candidates)
 
-    logger.info('Found "convert" program at {}'.format(convert_path))
+    logger.debug('Found "convert" program at {}'.format(convert_path))
     return convert_path
 
 
