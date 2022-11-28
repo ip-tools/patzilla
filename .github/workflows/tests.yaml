@@ -55,6 +55,13 @@ jobs:
       run: |
         brew install poppler
 
+    - name: Configure policy for ImageMagick
+      # https://stackoverflow.com/q/52998331
+      # https://stackoverflow.com/a/57721936
+      if: runner.os == 'Linux'
+      run: |
+        sudo rm /etc/ImageMagick-6/policy.xml
+
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
