@@ -100,8 +100,8 @@ install-nginx-auth:
 
 test:
 	@$(pytest) \
-		-vvv \
-		$(options)
+		$(options) \
+		patzilla tests
 
 test-coverage:
 	@$(MAKE) test options="$(options) --cov"
