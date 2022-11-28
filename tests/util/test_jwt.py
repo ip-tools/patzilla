@@ -90,9 +90,9 @@ def test_signer_unsign_invalid_token():
         signer.unsign("foo")
     value = ex.value.args[0]
     assert value == {
-        'description': 'need more than 1 value to unpack',
+        'description': 'invalid JWT format',
         'location': 'JSON Web Signature',
-        'name': 'ValueError',
+        'name': '_JWTError',
     }
 
 

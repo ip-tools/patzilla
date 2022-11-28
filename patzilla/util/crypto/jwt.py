@@ -70,7 +70,7 @@ class JwtSigner(object):
         token = str(token)
         try:
             header_future, payload_future = python_jwt.process_jwt(token)
-        except (ValueError, TypeError) as ex:
+        except (ValueError, TypeError, python_jwt._JWTError) as ex:
             error_payload = {
                 'location': 'JSON Web Signature',
                 'name': ex.__class__.__name__,

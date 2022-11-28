@@ -52,7 +52,7 @@ requires = [
 
     # Authorization
     'pycryptodome>=3,<4',
-    'python-jwt>=3.3.2,<4',
+    'python-jwt>=3.3.4,<4',
     'pbkdf2==1.3',
 
 
