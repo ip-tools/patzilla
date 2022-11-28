@@ -31,8 +31,7 @@ Resources
 import logging
 import sys
 
-from patzilla.access.uspto.pdf import fetch_pdf, UsptoPdfSection, run_examples
-from patzilla.util.image.convert import pdf_extract_image
+from patzilla.access.uspto.pdf import fetch_png, run_examples, UsptoPdfSection
 
 log = logging.getLogger(__name__)
 
@@ -45,9 +44,7 @@ def fetch_first_drawing(patent):
         docnumber = patent
 
     log.info('Fetching first drawing of document {docnumber}'.format(docnumber=docnumber))
-    drawing_pdf = fetch_pdf(docnumber, section=UsptoPdfSection.DRAWINGS)
-    drawing_tiff = pdf_extract_image(drawing_pdf)
-    return drawing_tiff
+    return fetch_png(docnumber, section=UsptoPdfSection.DRAWINGS)
 
 
 if __name__ == '__main__':  # pragma: nocover

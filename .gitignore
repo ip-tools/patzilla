@@ -16,3 +16,4 @@ coverage.xml
 o-*.min.js
 o-*.min.map
 yarn-error.log
+patzilla-uspto-cache.sqlite
