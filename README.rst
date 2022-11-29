@@ -25,23 +25,35 @@ Status
 
 - **Project status**:
 
-  .. image:: https://img.shields.io/badge/Python-2.7-green.svg
-
   .. image:: https://img.shields.io/pypi/status/patzilla.svg
+        :target: https://pypi.org/project/patzilla/
+        :alt: Project status (alpha, beta, stable)
+
+  .. image:: https://img.shields.io/badge/Python-2.7-green.svg
+        :target: https://pypi.org/project/patzilla/
+        :alt: Supported Python versions
 
   .. image:: https://img.shields.io/pypi/v/patzilla.svg
+        :target: https://pypi.org/project/patzilla/
+        :alt: Package version on PyPI
 
   .. image:: https://img.shields.io/pypi/l/patzilla.svg
+        :target: https://pypi.org/project/patzilla/
+        :alt: Project license
 
   .. image:: https://pepy.tech/badge/patzilla/month
+        :target: https://pepy.tech/project/patzilla
+        :alt: PyPI downloads per month
 
 - **Code status**:
 
   .. image:: https://github.com/ip-tools/patzilla/workflows/Tests/badge.svg
-     :target: https://github.com/ip-tools/patzilla/actions?workflow=Tests
+        :target: https://github.com/ip-tools/patzilla/actions?workflow=Tests
+        :alt: CI outcome
 
   .. image:: https://codecov.io/gh/ip-tools/patzilla/branch/main/graph/badge.svg
-     :target: https://codecov.io/gh/ip-tools/patzilla
+        :target: https://codecov.io/gh/ip-tools/patzilla
+        :alt: Test suite code coverage
 
 
 ********
@@ -251,7 +263,7 @@ development of PatZilla.
 .. _notices about licenses of third-party components: https://github.com/ip-tools/patzilla/blob/main/THIRD-PARTY-NOTICES.rst
 .. _Elmyra UG: https://elmyra.de/
 .. _EUPL-1.2: https://docs.ip-tools.org/patzilla/_static/license/EUPL-1.2.txt
-.. _Europatent PATOffice Navigator: https://www.europatent.net/software/patofficenavigator/
+.. _Europatent PATOffice Navigator: https://web.archive.org/web/20210613132912/https://www.europatent.net/software/patofficenavigator/
 .. _Serviva PATselect 4.0: https://serviva.com/ps-4-0/
 
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
