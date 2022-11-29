@@ -55,6 +55,7 @@ Development
 - [mw] Update Beaker, openpyxl, Mako, and pyramid-mako
 - [ui] Update loader-utils
 - [mw] Switch from appdirs to platformdirs
+- [mw] Update a few more dependencies across the board
 
 
 2019-11-01 0.169.3
