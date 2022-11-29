@@ -22,8 +22,8 @@ requires = [
     'watchdog==0.10.7',         # 2.1.7
     'pyramid-debugtoolbar==4.3',  # 4.9
     'Pygments==2.5.2',          # 2.11.2
-    'pyramid-mako==1.0.2',      # 1.1.0
-    'Mako==1.0.0',              # 1.2.0
+    'pyramid-mako<2',
+    'Mako<2',
     'Jinja2>=2.11.3,<3',        # 3.1.1
     'MarkupSafe==1.1.1',        # 2.1.1
     'Akhet==2.0',
@@ -33,7 +33,7 @@ requires = [
     'PasteScript<3',            # 3.2.1
 
     # Caching
-    'Beaker==1.9.0',            # 1.11.0
+    'Beaker<2',
     'pyramid_beaker==0.8',
     'dogpile.cache==0.6.4',     # 0.6.8, 0.7.1, 0.8.0, 0.9.2, 1.1.5
     'appdirs>=1,<2',
@@ -104,7 +104,7 @@ requires = [
     'pathlib2<3',
 
     # Data formatting
-    'openpyxl==2.1.0',          # 2.1.5, 2.6.4, 3.0.9
+    'openpyxl>=2.4.2,<3',
     'xlrd==0.9.3',              # 0.9.4, 1.2.0, 2.0.1
     'XlsxWriter==0.9.3',        # 1.4.5, 2.0.0, 3.0.3
 
