@@ -9,8 +9,8 @@ import json
 import time
 import logging
 import operator
-import dogpile.cache
 import mechanicalsoup
+from beaker.cache import cache_region
 from bunch import bunchify
 from docopt import docopt
 from pprint import pformat
@@ -19,6 +19,7 @@ from xml.etree.ElementTree import fromstring
 from BeautifulSoup import BeautifulSoup
 from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
+from patzilla.boot.cache import configure_cache_backend
 from patzilla.util.config import to_list
 from patzilla.boot.logging import boot_logging
 from patzilla.util.network.browser import regular_user_agent
@@ -27,20 +28,10 @@ from patzilla.version import __version__
 
 logger = logging.getLogger(__name__)
 
-# Cache responses for 24 hours
-cache = dogpile.cache.make_region().configure(
-    "dogpile.cache.dbm",
-    expiration_time=3600 * 24,
-    arguments={
-        # TODO: Prefer to put this into ``/var/cache/patzilla``.
-        #       However, we have to ensure it still works reliable
-        #       with any installation flavor.
-        "filename": "/var/tmp/dpmaregister-cache.dbm"
-    }
-)
 
 class NoResults(Exception):
     pass
+
 
 class UnknownFormat(Exception):
     pass
@@ -109,21 +100,21 @@ class DpmaRegisterAccess:
             self.response = self.browser.open(self.searchurl + "?lang=en")
             self.http_session_valid = True
 
-    @cache.cache_on_arguments()
+    @cache_region('search')
     def get_document_url(self, patent, language='en'):
         file_reference = self.resolve_file_reference(patent)
         url = self.accessurl.format(number=file_reference.reference, language=language)
         logger.info('Document URL for {} is {}'.format(patent, url))
         return url
 
-    @cache.cache_on_arguments()
+    @cache_region('medium')
     def fetch(self, patent, language='en'):
         document_intermediary = self.search_and_fetch(patent, language)
         if document_intermediary:
             document = DpmaRegisterHtmlDocument.from_result_document(document_intermediary)
             return document
 
-    @cache.cache_on_arguments()
+    @cache_region('medium')
     def fetch_st36xml(self, patent, language='en'):
         """
         Example:
@@ -154,7 +145,7 @@ class DpmaRegisterAccess:
         # Download ST.36 XML document and return response body.
         return self.browser.open(st36xml_href)
 
-    @cache.cache_on_arguments()
+    @cache_region('medium')
     def fetch_pdf(self, patent, language='en'):
 
         # Fetch main HTML resource of document
@@ -792,6 +783,8 @@ if __name__ == '__main__':
     """
 
     logging.basicConfig(level=logging.INFO, stream=sys.stderr)
+
+    configure_cache_backend("filesystem")
 
     register = DpmaRegisterAccess()
 
