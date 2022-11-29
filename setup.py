@@ -138,6 +138,7 @@ test_requires = [
     # -----------
     'pytest>=4,<5',             # 5.4.3, 6.2.5, 7.1.1
     'pytest-cov>=2,<3',         # 3.0.0
+    'pytest-xdist<2',           # 3.0.2
     'coverage>=5.3.1,<6',       # 6.3.2
     'testfixtures>=6,<7',
     'pytest-forked>=1,<2',
