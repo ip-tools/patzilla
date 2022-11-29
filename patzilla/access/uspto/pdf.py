@@ -56,9 +56,8 @@ import os
 import socket
 import sys
 from collections import OrderedDict
-from datetime import timedelta
 
-import requests_cache
+import requests
 from beaker.cache import cache_region
 from pyramid.httpexceptions import HTTPNotFound
 from repoze.lru import lru_cache
@@ -70,12 +69,7 @@ from patzilla.util.numbers.normalize import normalize_patent
 
 logger = logging.getLogger(__name__)
 
-http = requests_cache.CachedSession(
-    "patzilla-uspto-cache",
-    cache_control=False,  # Use Cache-Control headers for expiration, if available
-    expire_after=timedelta(days=1),  # Otherwise expire responses after one day
-    match_headers=False,
-)
+http = requests.Session()
 http.headers["User-Agent"] = regular_user_agent
 
 
