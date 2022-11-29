@@ -54,6 +54,7 @@ Development
 - [mw] Generalize image format conversion
 - [mw] Update Beaker, openpyxl, Mako, and pyramid-mako
 - [ui] Update loader-utils
+- [mw] Switch from appdirs to platformdirs
 
 
 2019-11-01 0.169.3

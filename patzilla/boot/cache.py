@@ -5,7 +5,7 @@ import logging
 import os
 import shutil
 
-import appdirs
+import platformdirs
 from beaker.cache import CacheManager
 from beaker.util import parse_cache_config_options
 
@@ -16,7 +16,7 @@ def get_cache_directory(testing=False):
     appname = "patzilla"
     if testing:
         appname += "-testing"
-    cache_directory = os.path.join(appdirs.user_cache_dir(appname=appname), "cache")
+    cache_directory = os.path.join(platformdirs.user_cache_dir(appname=appname), "cache")
     if not os.path.exists(cache_directory):
         os.makedirs(cache_directory)
     return cache_directory

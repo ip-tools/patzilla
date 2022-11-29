@@ -101,7 +101,7 @@ def pytest_addoption(parser):
                            Default: memory.
 
     --app-cache-directory: Choose application cache directory (when `filesystem` is selected).
-                           Default: `${appdirs.user_cache_dir}/patzilla/cache`
+                           Default: `${platformdirs.user_cache_dir}/patzilla/cache`
 
     --app-cache-clear:     Clear the application cache before invoking the test suite.
                            Default: false.
