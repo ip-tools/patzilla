@@ -2773,7 +2773,7 @@ fast-json-stable-stringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
 
-fastparse@^1.1.1:
+fastparse@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.2.tgz#91728c5a5942eced8531283c79441ee4122c35a9"
   integrity sha512-483XLLxTVIwWK3QTrMGRqUfUpoOs/0hbQrl2oz4J0pAcm3A3bu84wxTFqGqkJzewCLdME38xJLJAxBABfQT8sQ==
@@ -4117,7 +4117,7 @@ loader-runner@^2.4.0:
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.4.0.tgz#ed47066bfe534d7e84c4c7b9998c2a75607d9357"
   integrity sha512-Jsmr89RcXGIwivFY21FcRrisYZfvLMTWx5kOLc+JTxtpBOG6xML0vzbc6SEQG2FO9/4Fc3wW4LVcB5DmGflaRw==
 
-loader-utils@^0.2.11, loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0, loader-utils@^1.4.2:
+loader-utils@^1.0.1, loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4.0, loader-utils@^1.4.2, loader-utils@^2.0.0:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.4.2.tgz#29a957f3a63973883eb684f10ffd3d151fec01a3"
   integrity sha512-I5d00Pd/jwMD2QCduo657+YM/6L3KZu++pmX9VFncxaxvHcru9jx1lBaFft+r4Mt2jK0Yhp41XlRAihzPxHNCg==
@@ -6596,13 +6596,13 @@ uglifyjs-webpack-plugin@^2.2.0:
     webpack-sources "^1.4.0"
     worker-farm "^1.7.0"
 
-underscore-template-loader@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/underscore-template-loader/-/underscore-template-loader-1.0.0.tgz#e0853ee4850d22e00897c4638f36036ac08c0d7e"
-  integrity sha512-4tzm3DY8nLD6mKCQmPk51vu5HW8T61fSGpfkUrlrwF0oOPTinL8Zk7W08xHOmCZ2Sh9bZHVMzVgr/DUM+10iUA==
+underscore-template-loader@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/underscore-template-loader/-/underscore-template-loader-1.2.0.tgz#16e77199aba6b69aa43e9dab16fa6601f02ad830"
+  integrity sha512-PSlJNJRlF0YtxnipqMVckZMkjxG3dDnGbDWc1G7UrSWI02iFQGGNEVOAgrgGbOhswXVx1frzA9b6Uyxs627ojg==
   dependencies:
-    fastparse "^1.1.1"
-    loader-utils "^0.2.11"
+    fastparse "^1.1.2"
+    loader-utils "^2.0.0"
 
 underscore.string@^3.3.6:
   version "3.3.6"
