@@ -6,7 +6,7 @@ import logging
 from tqdm import tqdm
 from csv import DictReader
 from openpyxl.reader.excel import load_workbook
-from openpyxl.exceptions import InvalidFileException
+from openpyxl.utils.exceptions import InvalidFileException
 from pymongo.uri_parser import parse_uri
 from mongoengine import connect as mongoengine_connect
 from mongoengine.document import Document

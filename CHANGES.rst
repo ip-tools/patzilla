@@ -52,6 +52,7 @@ Development
 - [mw] Add CLI interface for search operation on IFI CLAIMS
 - [mw] Fix access to USPTO documents using USPTO PPUBS, PatFT and AppFT are deprecated
 - [mw] Generalize image format conversion
+- [mw] Update Beaker, openpyxl, Mako, and pyramid-mako
 
 
 2019-11-01 0.169.3
