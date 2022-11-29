@@ -53,6 +53,7 @@ Development
 - [mw] Fix access to USPTO documents using USPTO PPUBS, PatFT and AppFT are deprecated
 - [mw] Generalize image format conversion
 - [mw] Update Beaker, openpyxl, Mako, and pyramid-mako
+- [ui] Update loader-utils
 
 
 2019-11-01 0.169.3
