@@ -58,6 +58,7 @@ Development
 - [mw] Update a few more dependencies across the board
 - [ui] Fix build by upgrading to underscore-template-loader 1.2.0
 - [mw] Fix access to DEPATISnet due to upstream changes
+- [qa] Speed up testing using ``pytest-xdist``
 
 
 2019-11-01 0.169.3

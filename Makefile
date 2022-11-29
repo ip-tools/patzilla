@@ -101,6 +101,7 @@ install-nginx-auth:
 test:
 	@$(pytest) \
 		$(options) \
+		--numprocesses=auto \
 		patzilla tests
 
 test-coverage:
