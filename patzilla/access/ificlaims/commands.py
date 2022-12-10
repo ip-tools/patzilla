@@ -66,9 +66,12 @@ def search(ctx, expression, request_json):
     """
     Access the IFICLAIMS bibliographic- and fulltext-search API.
 
-    The `expression` argument accepts the search expression in Solr search syntax.
+    The `expression` argument accepts the search expression in Lucene Query Syntax.
 
-    TODO: Currently, only the first 100 hits will be displayed. Extend range by implementing "crawling".
+    - https://www.lucenetutorial.com/lucene-query-syntax.html
+    - https://lucene.apache.org/core/9_4_2/queryparser/org/apache/lucene/queryparser/classic/package-summary.html
+
+    FIXME: Currently, only the first 100 hits will be displayed. Extend range by implementing "crawling".
     """
 
     # Get hold of data source client utility.
@@ -159,7 +162,7 @@ if __name__ == '__main__':
         bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
     )
 
-    # The IFI CLAIMS data source relies heavily on caching.
+    # Configure caching subsystem.
     configure_cache_backend("filesystem")
 
     # Get hold of data source client utility.
