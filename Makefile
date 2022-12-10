@@ -105,7 +105,7 @@ test:
 		patzilla tests
 
 test-coverage:
-	@$(MAKE) test options="$(options) --cov --cov-report=term-missing --cov-report=xml"
+	@$(MAKE) test options="$(options) --cov --no-cov-on-fail --cov-report=term-missing --cov-report=xml"
 
 # --all-modules
 # --traverse-namespace
