@@ -18,4 +18,5 @@ def get_ificlaims_client():
         logger.debug("IFI CLAIMS request with username: {}".format(client.username))
         return client
     else:
-        raise HTTPBadGateway("IFI CLAIMS: Data source not enabled or not configured")
+        raise HTTPBadGateway("IFI CLAIMS: Data source not enabled or not configured. "
+                             "Please configure corresponding data source settings and credentials.")
