@@ -11,7 +11,9 @@ import typing as t
 from collections import OrderedDict
 from copy import copy
 from datetime import datetime
+from pathlib import Path
 
+import click
 import jsonpointer
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
@@ -25,6 +27,7 @@ from patzilla.access.uspto.peds.model import (
 )
 from patzilla.boot.logging import setup_logging
 from patzilla.util.config import to_list
+from patzilla.util.data.processor import AbstractProcessorHandler, Processor
 from patzilla.util.xml.reader import GenericXmlReader, XmlNodeDefinition, XmlNodeType
 
 logger = logging.getLogger(__name__)
@@ -102,8 +105,8 @@ class XmlReader(GenericXmlReader):
         # ),
     }
 
-    def __init__(self, filepath: str, request: XmlRequest):
-        super().__init__(filepath=filepath)
+    def __init__(self, resource: str, request: XmlRequest):
+        super().__init__(resource=resource)
         self.request = request
 
     def read(self):
@@ -125,9 +128,9 @@ class XmlReader(GenericXmlReader):
 
     def read_st96_xml(self):
         """
-        Split `<uspat:PatentBulkData>` into `<uspat:PatentData>` elements.
+        Read `<uspat:PatentData>` elements from input.
         """
-        logger.info(f"Reading WIPO ST.96 XML from {self.filepath}")
+        logger.info(f"Reading WIPO ST.96 XML from {self.resource}")
         return self.read_xml(tag="{urn:us:gov:doc:uspto:patent}PatentData")
 
     def filter_by_status(self, data):
@@ -375,66 +378,108 @@ class XmlDecoder:
             return values
 
 
-def main():
+class CompactCsvConverter(AbstractProcessorHandler):
+    """
+    Convert ST.96 `uspat:PatentData` records to compact CSV representation.
+    """
 
-    # WIPO ST.96 XML files.
-    # resource = "/Users/amo/Downloads/pairbulk-delta-20221107-xml/2020.xml"
-    # resource = "/Users/amo/Downloads/pairbulk-delta-20221107-xml/2021.xml"
-    # resource = "/Users/amo/Downloads/pairbulk-delta-20221107-xml/2022.xml"
-    # resource = "/Users/amo/dev/ip-tools/sources/patzilla/29792448.xml"
-    # resource = "/Users/amo/dev/ip-tools/sources/patzilla/17588027.xml"
-    # resource = "/Users/amo/dev/ip-tools/sources/patzilla/17567714.xml"
+    @property
+    def suffix(self):
+        return ".csv"
 
-    resource = "/Users/amo/Downloads/2020-2022-pairbulk-full-20221113-xml/2020.xml"
-    # resource = "/Users/amo/Downloads/2020-2022-pairbulk-full-20221113-xml/2021.xml"
-    # resource = "/Users/amo/Downloads/2020-2022-pairbulk-full-20221113-xml/2022.xml"
+    def handle(self, resource, outstream: t.IO[str]):
+        """
+        Convert single ST.96 XML document from file or stream to CSV format.
+        """
 
-    request = XmlRequest(
-        # Select requested attributes.
-        attributes=[
-            "app_type",
-            "appl_id",
-            # "app_filing_date",
-            "app_entity_status",
-            # "app_early_pub_number",
-            # "app_early_pub_date",
-            # "app_status",
-            # "app_status_date",
-            "patent_number",
-            "patent_issue_date",
-            # "patent_title",
-            "applicants",
-            # "inventors",
-            # "assignees",
-            # "correspondents",
-            "transactions",
-        ],
-        # Select requested transaction event types.
-        transaction_codes=[
-            # UsptoPedsTransactionEvent.ALLOWANCE_NOTICE_VERIFICATION_COMPLETED,
-            UsptoPedsTransactionEvent.ALLOWANCE_NOTICE_MAILED,
-            # UsptoPedsTransactionEvent.ISSUANCE_CONSIDERED_READY,
-            UsptoPedsTransactionEvent.ISSUANCE_NOTIFICATION_MAILED,
-        ],
-    )
-    reader = XmlReader(filepath=resource, request=request)
+        request = XmlRequest(
+            # Select requested attributes.
+            attributes=[
+                "app_type",
+                "appl_id",
+                # "app_filing_date",
+                "app_entity_status",
+                # "app_early_pub_number",
+                # "app_early_pub_date",
+                # "app_status",
+                # "app_status_date",
+                "patent_number",
+                "patent_issue_date",
+                # "patent_title",
+                "applicants",
+                # "inventors",
+                # "assignees",
+                # "correspondents",
+                "transactions",
+            ],
+            # Select requested transaction event types.
+            transaction_codes=[
+                # UsptoPedsTransactionEvent.ALLOWANCE_NOTICE_VERIFICATION_COMPLETED,
+                UsptoPedsTransactionEvent.ALLOWANCE_NOTICE_MAILED,
+                # UsptoPedsTransactionEvent.ISSUANCE_CONSIDERED_READY,
+                UsptoPedsTransactionEvent.ISSUANCE_NOTIFICATION_MAILED,
+            ],
+        )
+        reader = XmlReader(resource=resource, request=request)
 
-    with logging_redirect_tqdm():
+        with logging_redirect_tqdm():
 
-        # JSON
-        # for record in reader.read():
-        #    print(json.dumps(record))
+            # JSON
+            # for record in reader.read():
+            #    print(json.dumps(record))
 
-        # CSV
-        for record in reader.to_csv(reader.read()):
-            print(record)
+            # CSV
+            for record in reader.to_csv(reader.read()):
+                outstream.write(record)
+                outstream.write("\n")
+
+
+@click.command(name="process")
+@click.option("--resource", type=str, required=True)
+@click.option("--outdir", envvar="PATZILLA_OUTDIR", type=Path, required=False)
+@click.option("--format", "output_format", type=click.Choice(["csv-compact"]), default="csv-compact", required=True)
+def process_cli(resource: str, outdir: Path, output_format: str):
+
+    # Sanity checks.
+    if output_format == "csv-compact":
+        handler = CompactCsvConverter()
+    else:
+        raise KeyError(f"Output format '{output_format}' is not supported")
+
+    # Invoke processing pipeline.
+    logger.info(f"Input file:  {resource}")
+
+    # Process one or multiple ST.96 XML documents from XML or ZIP files.
+    processor = Processor(handler=handler, outdir=outdir, outprefix="uspto-peds-compact_")
+    processor.process(resource)
+
+    logger.info("Ready.")
 
 
 if __name__ == "__main__":
     """
-    Synopsis::
+    Acquire data::
+    
+        alias fetch='aria2c --max-connection-per-server=8 --split=8 --continue=true'
+        fetch "https://ped.uspto.gov/api/full-download?fileName=2000-2019-pairbulk-full-20221204-xml"
+        fetch "https://ped.uspto.gov/api/full-download?fileName=2020-2022-pairbulk-full-20221204-xml"
+        
+    Run program::
 
-        python -m patzilla.access.uspto.peds.st96_xml
+        # Process single ST.96 XML file.
+        python -m patzilla.access.uspto.peds.st96_xml \
+            --resource /path/to/16629552.st96.xml
+
+        # Process PAIRBULK XML file for particular year.
+        python -m patzilla.access.uspto.peds.st96_xml \
+            --resource /path/to/2020-2022-pairbulk-full-20221113-xml/2020.xml \
+            --outdir tmp/peds-output
+
+        # Process all XML files in PAIRBULK zip archive file.
+        export PATZILLA_OUTDIR=tmp/peds-output
+        python -m patzilla.access.uspto.peds.st96_xml \
+            --resource /path/to/2020-2022-pairbulk-full-20221113-xml.zip
+
     """
     setup_logging()
-    main()
+    process_cli()

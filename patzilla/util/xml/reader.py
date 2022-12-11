@@ -3,7 +3,9 @@
 import dataclasses
 import json
 import logging
+import pathlib
 import re
+import typing as t
 from collections import OrderedDict
 from enum import Enum
 
@@ -38,8 +40,9 @@ class GenericXmlReader:
     ATTRIBUTES = {}
     DESERIALIZER = XmlDeserializerType.XMLTODICT
 
-    def __init__(self, filepath: str):
-        self.filepath = filepath
+    def __init__(self, resource: t.Union[str, pathlib.Path] = None, stream: t.TextIO = None):
+        self.resource = resource
+        self.stream = stream
         self.nsmap = None
 
     def read_xml(self, tag=None):
@@ -47,15 +50,14 @@ class GenericXmlReader:
         Incrementally parse XML file, emitting node 'end' events.
         When given a 'tag', it will only emit events for elements that match the given tag.
         """
-        with open(self.filepath, mode="rb") as f:
-            context = iterparse(f, tag=tag, events=("end",), resolve_entities=True)
-            for event, element in fast_iter(context):
+        context = iterparse(self.resource, tag=tag, events=("end",), resolve_entities=True)
+        for event, element in fast_iter(context):
 
-                # Memorize namespaces from root element.
-                if self.nsmap is None:
-                    self.nsmap = element.nsmap
+            # Memorize namespaces from root element.
+            if self.nsmap is None:
+                self.nsmap = element.nsmap
 
-                yield element
+            yield element
 
     def _get_xml_field(self, element, fieldname: str):
         """
