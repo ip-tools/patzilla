@@ -480,6 +480,11 @@ if __name__ == "__main__":
         python -m patzilla.access.uspto.peds.st96_xml \
             --resource /path/to/2020-2022-pairbulk-full-20221113-xml.zip
 
+    Todo:
+
+    - Skip over existing output files, unless `--overwrite` is given.
+    - Option for including or excluding files per name pattern, also within archive files.
+      For example, when reading files from `2000-2019-pairbulk-full-xml.zip`, process only years 2010-.
     """
     setup_logging()
     process_cli()
