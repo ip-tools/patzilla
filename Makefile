@@ -101,11 +101,16 @@ install-nginx-auth:
 test:
 	@$(pytest) \
 		$(options) \
-		--numprocesses=auto \
 		patzilla tests
 
 test-coverage:
 	@$(MAKE) test options="$(options) --cov --no-cov-on-fail --cov-report=term-missing --cov-report=xml"
+
+test-parallel:
+	@$(pytest) \
+		$(options) \
+	    --numprocesses=auto \
+		patzilla tests
 
 # --all-modules
 # --traverse-namespace
