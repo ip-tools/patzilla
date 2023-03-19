@@ -1,7 +1,7 @@
 #VERSION := $(shell cat patzilla/version.py | awk '{ print $$3 }' | tr -d "'")
 #$(error VERSION=$(VERSION))
 
-$(eval venvpath     := .venv2)
+$(eval venvpath     := .venv3)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
@@ -9,10 +9,8 @@ $(eval pserve       := $(venvpath)/bin/pserve)
 $(eval pytest       := $(venvpath)/bin/pytest)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
-
-$(eval venv3path     := .venv)
-$(eval yarn          := $(venv3path)/bin/yarn)
-$(eval npx           := $(venv3path)/bin/npx)
+$(eval yarn         := $(venvpath)/bin/yarn)
+$(eval npx          := $(venvpath)/bin/npx)
 
 
 setup: setup-py
@@ -65,7 +63,7 @@ upload-pypi:
 
 # Setup Python virtualenv.
 setup-virtualenv:
-	@test -e $(python) || virtualenv --python=python2 $(venvpath)
+	@test -e $(python) || virtualenv --python=python3 $(venvpath)
 
 setup-py: setup-virtualenv
 	$(pip) install --editable=.[test]
