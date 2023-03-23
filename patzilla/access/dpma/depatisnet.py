@@ -9,7 +9,7 @@ import mechanize
 import regex as re
 import http.cookiejar
 from bs4 import BeautifulSoup
-from xlrd import open_workbook
+from xlrd3 import open_workbook
 from patzilla.access.generic.search import GenericSearchResponse
 from patzilla.util.date import from_german, date_iso
 from patzilla.util.network.browser import regular_user_agent
@@ -197,7 +197,7 @@ class DpmaDepatisnetAccess:
                 results = self.read_xls_response(xls_response)
             except Exception as ex:
                 logger.error('Problem downloading results in XLS format: {}'.format(ex))
-                ex.http_response = ex.read()
+                #ex.http_response = ex.read()
                 raise
 
             # debugging

@@ -104,7 +104,7 @@ requires = [
 
     # Data formatting
     'openpyxl>=2.4.2,<3',
-    'xlrd==0.9.3',              # 0.9.4, 1.2.0, 2.0.1
+    'xlrd3',
     'XlsxWriter==0.9.3',        # 1.4.5, 2.0.0, 3.0.3
 
     # Data conversion
