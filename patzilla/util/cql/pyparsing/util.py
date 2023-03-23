@@ -2,14 +2,6 @@
 # (c) 2014-2016 Andreas Motl, Elmyra UG
 from pyparsing import ParseResults
 
-def get_literals(*elements):
-    literals = []
-    for element in elements:
-        for literal in element:
-            literal = str(literal).strip('"').strip("'")
-            literals.append(literal)
-    return literals
-
 def walk_token_results(tokens, *args, **kwargs):
 
     for token in tokens:
