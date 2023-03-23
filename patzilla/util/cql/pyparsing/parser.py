@@ -21,11 +21,10 @@ from pyparsing import \
     Keyword, CaselessKeyword, \
     Regex, \
     alphas, nums, alphanums, quotedString, \
-    oneOf, upcaseTokens, delimitedList, restOfLine, \
+    oneOf, common, delimitedList, restOfLine, \
     Forward, Group, Combine, Optional, ZeroOrMore, OneOrMore, \
     NotAny, Suppress, FollowedBy, StringEnd, \
     ParseResults, ParseException, removeQuotes
-from patzilla.util.cql.pyparsing.util import get_literals
 
 
 log = logging.getLogger(__name__)
@@ -98,10 +97,11 @@ class CQLGrammar(object):
 
         # Boolean operators
         # TODO: Configure german operators with DPMAGrammar only
-        self.and_ = CaselessKeyword("and") | CaselessKeyword("UND")
-        self.or_ = CaselessKeyword("or") | CaselessKeyword("ODER")
-        self.not_ = CaselessKeyword("not") | CaselessKeyword("NICHT")
-        self.prox_ = CaselessKeyword("prox") | CaselessKeyword("NAHE")
+        self.booleans = ("and", "UND", "or", "ODER", "not", "NICHT", "prox", "NAHE")
+        self.and_ = CaselessKeyword(self.booleans[0]) | CaselessKeyword(self.booleans[1])
+        self.or_ = CaselessKeyword(self.booleans[2]) | CaselessKeyword(self.booleans[3])
+        self.not_ = CaselessKeyword(self.booleans[4]) | CaselessKeyword(self.booleans[5])
+        self.prox_ = CaselessKeyword(self.booleans[6]) | CaselessKeyword(self.booleans[7])
 
         # Neighbourhood term operators
         self.neighbourhood_symbols = '(W) (NOTW) (#W) (A) (#A) (P) (L)'.split()
@@ -112,7 +112,6 @@ class CQLGrammar(object):
         self.binop_symbols = self.cmp_single + self.cmp_perl + self.cmp_cql
 
         # Boolean operators
-        self.booleans    = get_literals(self.and_, self.or_, self.not_, self.prox_)
         self.booleans_or = ( self.and_ | self.or_ | self.not_ | self.prox_ )
 
         # Neighbourhood term operators
@@ -134,7 +133,7 @@ class CQLGrammar(object):
         # ------------------------------------------
         #   C. building blocks
         # ------------------------------------------
-        self.termop = Regex( "|".join(self.neighbourhood_symbols), re.IGNORECASE ).setParseAction( upcaseTokens ).setName("termop")
+        self.termop = Regex( "|".join(self.neighbourhood_symbols), re.IGNORECASE ).setParseAction( common.upcase_tokens ).setName("termop")
         termword = Word(self.unicode_printables + self.separators + self.wildcards).setName("term")
         termword_termop = (termword + OneOrMore( self.termop + termword ))
 
