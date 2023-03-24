@@ -11,7 +11,7 @@ import logging
 import operator
 import mechanicalsoup
 from beaker.cache import cache_region
-from bunch import bunchify
+from munch import munchify
 from docopt import docopt
 from pprint import pformat
 from jsonpointer import JsonPointer, JsonPointerException
@@ -567,7 +567,7 @@ class DpmaRegisterXmlDocument(object):
         # Citations
         self.references_cited = list(map(
             operator.attrgetter('document_id.doc_number'),
-            bunchify(self.convert_list(self.query_data(self.pointer_references_cited)))))
+            munchify(self.convert_list(self.query_data(self.pointer_references_cited)))))
 
         # office-specific-bib-data
         self.office_specific_bibdata = self.convert_dict(self.query_data(self.pointer_office_specific_bibdata))

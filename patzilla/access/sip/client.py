@@ -9,7 +9,7 @@ from requests.exceptions import ConnectionError, ConnectTimeout
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
 from patzilla.access.sip import get_sip_client
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 
 """
 
@@ -98,7 +98,7 @@ class SipClient(GenericSearchClient):
 
     def search(self, expression, options=None):
 
-        options = options or SmartBunch()
+        options = options or SmartMunch()
 
         options.setdefault('offset', 0)
         options.setdefault('limit', self.pagesize)
@@ -329,15 +329,15 @@ class SipSearchResponse(GenericSearchResponse):
             # TODO: Reference from IFI CLAIMS, fill up/unify.
             #'time': self.input['time'],
             #'status': self.input['status'],
-            #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
-            #'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+            #'params': SmartMunch.munchify(self.input['content']['responseHeader']['params']),
+            #'pager': SmartMunch.munchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
         self.meta.navigator.count_total = int(self.meta.upstream.MemCount)
         self.meta.navigator.count_page  = len(self.input['results'])
         self.meta.navigator.offset      = int(self.meta.upstream.Offset)
         self.meta.navigator.limit       = int(self.meta.upstream.Limit)
-        self.meta.navigator.postprocess = SmartBunch()
+        self.meta.navigator.postprocess = SmartMunch()
 
         # Read content
         """

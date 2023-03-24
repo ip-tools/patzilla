@@ -16,7 +16,7 @@ from patzilla.util.image.convert import to_png
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
 from patzilla.access.ificlaims import get_ificlaims_client
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
@@ -73,7 +73,7 @@ class IFIClaimsClient(GenericSearchClient):
 
         query.setdefault('filter', '')
 
-        options = options or SmartBunch()
+        options = options or SmartMunch()
         options.setdefault('offset', 0)
         options.setdefault('limit', self.pagesize)
 
@@ -522,15 +522,15 @@ class IFIClaimsSearchResponse(GenericSearchResponse):
             'name': 'ifi',
             'time': self.input['time'],
             'status': self.input['status'],
-            'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
-            'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+            'params': SmartMunch.munchify(self.input['content']['responseHeader']['params']),
+            'pager': SmartMunch.munchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
         self.meta.navigator.count_total = int(self.meta.upstream.pager.totalEntries)
         self.meta.navigator.count_page  = int(self.meta.upstream.pager.entriesOnThisPage)
         self.meta.navigator.offset      = int(self.meta.upstream.params.start)
         self.meta.navigator.limit       = int(self.meta.upstream.params.rows)
-        self.meta.navigator.postprocess = SmartBunch()
+        self.meta.navigator.postprocess = SmartMunch()
 
         # Read content
         self.documents = self.input['content']['response']['docs']
@@ -550,7 +550,7 @@ class IFIClaimsSearchResponse(GenericSearchResponse):
 
 
 def ificlaims_client(options=None):
-    options = options or SmartBunch()
+    options = options or SmartMunch()
     if 'vendor' in options and options.vendor == 'serviva':
         client = get_serviva_client()
     else:
@@ -578,7 +578,7 @@ def ificlaims_fetch(resource, format, options=None):
 @cache_region('search')
 def ificlaims_search(query, options=None):
 
-    options = options or SmartBunch()
+    options = options or SmartMunch()
 
     client = ificlaims_client(options=options)
     try:

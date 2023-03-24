@@ -3,7 +3,7 @@
 import re
 import types
 import logging
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.helper import strip_spaces
 
 """
@@ -13,7 +13,7 @@ Common lowlevel functions
 log = logging.getLogger(__name__)
 
 
-class DocumentIdentifierBunch(SmartBunch):
+class DocumentIdentifierBunch(SmartMunch):
 
     def __str__(self):
         return self.dump()

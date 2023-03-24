@@ -13,7 +13,7 @@ from requests import RequestException
 from patzilla.access.depatech import get_depatech_client
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ class DepaTechClient(GenericSearchClient):
         return self.search_real(query, options=options)
 
     def search_real(self, query, options=None):
-        options = options or SmartBunch()
+        options = options or SmartMunch()
 
         options.setdefault('offset', 0)
         options.setdefault('limit', self.pagesize)
@@ -298,8 +298,8 @@ class DepaTechSearchResponse(GenericSearchResponse):
             'name': 'depatech',
             'time': self.input['took'],
             'status': 'success',
-            #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
-            #'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+            #'params': SmartMunch.munchify(self.input['content']['responseHeader']['params']),
+            #'pager': SmartMunch.munchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
         self.meta.navigator.count_total = int(self.input['hits']['total'])
@@ -307,7 +307,7 @@ class DepaTechSearchResponse(GenericSearchResponse):
         self.meta.navigator.offset      = int(self.options.offset)
         self.meta.navigator.limit       = int(self.options.limit)
         self.meta.navigator.max_hits   = int(self.options.max_hits)
-        self.meta.navigator.postprocess = SmartBunch()
+        self.meta.navigator.postprocess = SmartMunch()
 
         # Read content
         self.documents = self.input['hits']['hits']
@@ -326,7 +326,7 @@ class DepaTechSearchResponse(GenericSearchResponse):
 
 def depatech_search(query, options=None):
 
-    options = options or SmartBunch()
+    options = options or SmartMunch()
 
     client = get_depatech_client()
     try:

@@ -309,8 +309,8 @@ class DPMADepatisnetSearchResponse(GenericSearchResponse):
             # TODO: Reference from IFI CLAIMS, fill up/unify.
             #'time': self.input['time'],
             #'status': self.input['status'],
-            #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
-            #'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+            #'params': SmartMunch.munchify(self.input['content']['responseHeader']['params']),
+            #'pager': SmartMunch.munchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
         self.meta.navigator.count_total = int(self.input['hits'])
@@ -319,7 +319,7 @@ class DPMADepatisnetSearchResponse(GenericSearchResponse):
         # TODO: Fill up?
         #self.meta.navigator.offset      = int(self.meta.upstream.Offset)
         #self.meta.navigator.limit       = int(self.meta.upstream.Limit)
-        #self.meta.navigator.postprocess = SmartBunch()
+        #self.meta.navigator.postprocess = SmartMunch()
 
 
         # Propagate user message
