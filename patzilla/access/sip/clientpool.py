@@ -4,7 +4,7 @@ import logging
 import os
 
 from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.declarations import implements
+from zope.interface import implementer
 from zope.interface.interface import Interface
 from zope.interface import implementer
 
@@ -81,12 +81,11 @@ class ISipClientPool(Interface):
     pass
 
 
+@implementer(ISipClientPool)
 class SipClientPool(object):
     """
     SIP client pool as Pyramid utility implementation.
     """
-
-# py27    implements(ISipClientPool)
 
     def __init__(self, api_uri):
         logger.info("Creating upstream client pool for SIP")

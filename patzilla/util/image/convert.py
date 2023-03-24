@@ -3,7 +3,7 @@
 import os
 import shutil
 import tempfile
-from pathlib2 import Path
+from pathlib import Path
 
 import requests
 import where

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2016 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-# py27 import re
-import regex as re
+import re
 import logging
 import requests
-# py27 from BeautifulSoup import BeautifulSoup
 from bs4 import BeautifulSoup
 from patzilla.util.numbers.common import split_patent_number
 
