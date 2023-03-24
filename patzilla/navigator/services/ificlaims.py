@@ -18,7 +18,7 @@ from patzilla.access.generic.exceptions import NoResultsException, SearchExcepti
 from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
 from patzilla.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl, ificlaims_client
 from patzilla.access.ificlaims.expression import should_be_quoted, IFIClaimsParser
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.data.zip import zip_multi
 from patzilla.util.python import _exception_traceback
 
@@ -51,7 +51,7 @@ status_upstream_ificlaims = Service(
 @status_upstream_ificlaims.get()
 def status_upstream_ificlaims_handler(request):
     client = ificlaims_client()
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': 'pn:EP0666666',
     })
     data = client.search_real(query)
@@ -138,7 +138,7 @@ def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI CLAIMS Direct"""
 
     # Get hold of query expression and filter
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
     })
@@ -162,7 +162,7 @@ def ificlaims_published_data_search_handler(request):
     # - limit
     # - sorting
     # - whether to remove family members
-    options = SmartBunch()
+    options = SmartMunch()
     options.update({
         'limit': limit,
         'offset': offset_remote,
@@ -209,7 +209,7 @@ def ificlaims_published_data_crawl_handler(request):
     """Crawl published-data at IFI CLAIMS Direct"""
 
     # Get hold of query expression and filter
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
         })

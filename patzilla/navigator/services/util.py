@@ -5,7 +5,7 @@ import json
 import logging
 import mimetypes
 from pprint import pprint
-from bunch import bunchify
+from munch import munchify
 from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
@@ -13,7 +13,7 @@ from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
 from patzilla.navigator.export import Dossier, DossierXlsx
 from patzilla.util.config import read_list
 from patzilla.util.cql.util import pair_to_cql
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.expression.keywords import keywords_from_boolean_expression
 from patzilla.util.numbers.numberlists import parse_numberlist, normalize_numbers
 from patzilla.util.python import exception_traceback
@@ -288,7 +288,7 @@ def export_util_handler(request):
     elif output_kind == 'dossier':
 
         log.info('Starting dossier export to format "{format}"'.format(format=output_format))
-        data = bunchify(json.loads(request.params.get('json')))
+        data = munchify(json.loads(request.params.get('json')))
 
         # Debugging
         #print 'dossier-data:'; pprint(data.toDict())
@@ -350,7 +350,7 @@ def issue_reporter_handler(request):
 
     report_data = request.json
     report_data.setdefault('application', {})
-    report = SmartBunch.bunchify(report_data)
+    report = SmartMunch.munchify(report_data)
 
     # Add user information to issue report
     user = request.user
@@ -361,7 +361,7 @@ def issue_reporter_handler(request):
         user.upstream_credentials = None
 
         # Serialize user object and attach to report
-        report.application.user = SmartBunch(json.loads(user.to_json()))
+        report.application.user = SmartMunch(json.loads(user.to_json()))
 
     # Send the whole beast to the standard application log
     log.error('Issue report [{targets}]:\n{report}'.format(

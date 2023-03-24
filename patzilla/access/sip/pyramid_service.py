@@ -12,7 +12,7 @@ from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.access.sip.client import sip_published_data_search, sip_published_data_crawl, SearchException
 from patzilla.access.sip.client import LoginException
 from patzilla.util.cql.util import should_be_quoted
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ def sip_published_data_search_handler(request):
     # - sorting
     # - whether to remove family members
     # - whether to return all family members
-    options = SmartBunch()
+    options = SmartMunch()
     options.update({
         'limit':  limit,
         'offset': offset_remote,
