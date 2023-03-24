@@ -885,7 +885,7 @@ def handle_error(response, location):
 
     # Compute name
     name = 'http-response'
-    body = response_dict['content']
+    body = str(response_dict['content'],'UTF-8')
     if 'CLIENT.CQL' in body:
         name = 'expression'
 

@@ -4,7 +4,7 @@ import logging
 import os
 
 from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.declarations import implements
+from zope.interface import implementer
 from zope.interface.interface import Interface
 
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
@@ -81,12 +81,12 @@ class IIFIClaimsClientPool(Interface):
     pass
 
 
+@implementer(IIFIClaimsClientPool)
 class IFIClaimsClientPool(object):
     """
     IFI CLAIMS client pool as Pyramid utility implementation.
     """
 
-# py27    implements(IIFIClaimsClientPool)
 
     def __init__(self, api_uri, api_uri_json):
         logger.info("Creating upstream client pool for IFI CLAIMS")

@@ -7,7 +7,7 @@ import epo_ops
 from mock import mock
 from pyramid.httpexceptions import HTTPUnauthorized
 from pyramid.threadlocal import get_current_registry
-from zope.interface.declarations import implements
+from zope.interface import implementer
 from zope.interface.interface import Interface
 from zope.interface.interfaces import ComponentLookupError
 
@@ -72,13 +72,11 @@ def attach_ops_client(event):
 class IOpsClientPool(Interface):
     pass
 
-
+@implementer(IOpsClientPool)
 class OpsClientPool(object):
     """
     EPO/OPS client pool as Pyramid utility implementation.
     """
-
-# py27    implements(IOpsClientPool)
 
     def __init__(self):
         logger.info("Creating upstream client pool for EPO/OPS")

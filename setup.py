@@ -41,9 +41,9 @@ requires = [
     # Database and storage
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
-    'pymongo<3',                # 3.13.0, 4.3.3
+    'pymongo',                # 3.13.0, 4.3.3
     'mongodb_gridfs_beaker==0.6.0dev1',
-    'mongoengine==0.13.0',      # 0.24.1
+    'mongoengine',      # 0.24.1
     'python-magic<1',
 
     # Web services
@@ -92,8 +92,8 @@ requires = [
 
     # Data handling
     'attrs',
-    'Bunch==1.0.1',             # Maybe switch to "Munch"
-    'pyparsing==2.0.2',         # 2.2.2, 2.3.1, 2.4.7, 3.0.8
+    'Bunch',             # Maybe switch to "Munch"
+    'pyparsing',
     'python-dateutil<3',
     'ago==0.0.9',               # 0.0.93
     'arrow==0.10.0',            # 0.12.1
@@ -216,7 +216,7 @@ setup(name='patzilla',
           'test': test_requires,
       },
       dependency_links=[
-          'https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker-0.6.0dev1',
+          'https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker',
           'https://github.com/ip-tools/mechanize/archive/v0.4.3dev2.tar.gz#egg=mechanize-0.4.3dev2',
           #'https://github.com/dagwieers/unoconv/archive/master.tar.gz#egg=unoconv-0.8.2',
       ],

@@ -6,7 +6,7 @@ import types
 import logging
 import urllib.request, urllib.error, urllib.parse
 import mechanize
-import regex as re
+import re
 import http.cookiejar
 from bs4 import BeautifulSoup
 from xlrd3 import open_workbook

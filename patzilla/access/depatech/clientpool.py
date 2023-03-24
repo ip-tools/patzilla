@@ -3,7 +3,6 @@
 import logging
 import os
 from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.declarations import implements
 from zope.interface.interface import Interface
 from zope.interface import implementer
 from patzilla.access.depatech.client import DepaTechClient
@@ -79,12 +78,11 @@ class IDepaTechClientPool(Interface):
     pass
 
 
+@implementer(IDepaTechClientPool)
 class DepaTechClientPool(object):
     """
     depa.tech client pool as Pyramid utility implementation.
     """
-
-# py27    implements(IDepaTechClientPool)
 
     def __init__(self, api_uri):
         logger.info("Creating upstream client pool for depa.tech")

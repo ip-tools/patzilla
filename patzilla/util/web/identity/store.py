@@ -12,7 +12,6 @@ from mongoengine.document import Document
 from mongoengine.fields import StringField, ListField, DateTimeField, DictField
 from mongoengine.errors import NotUniqueError
 from pyramid.threadlocal import get_current_request
-from zope.interface.declarations import implements
 from zope.interface.interface import Interface
 from zope.interface import implementer
 
