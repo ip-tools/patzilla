@@ -4,7 +4,6 @@ import json
 import logging
 from copy import deepcopy
 from email.utils import parseaddr
-from munch import Munch, munchify
 
 from pyramid.exceptions import ConfigurationError
 from pyramid.threadlocal import get_current_request, get_current_registry
@@ -14,6 +13,7 @@ from patzilla.navigator.util import dict_prefix_key
 from patzilla.util.config import read_list, asbool, get_configuration
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
+from patzilla.util.data.container import SmartBunch
 
 
 log = logging.getLogger(__name__)
@@ -68,8 +68,8 @@ class GlobalSettings(object):
         # Container for datasource settings.
         datasource_settings = SmartBunch({
             'datasources': [],
-            'datasource': Munch(),
-            'total': munchify({'fulltext_countries': [], 'details_countries': []}),
+            'datasource': SmartBunch(),
+            'total': SmartBunch.bunchify({'fulltext_countries': [], 'details_countries': []}),
         })
 
         # Read datasource settings from configuration.
@@ -88,7 +88,7 @@ class GlobalSettings(object):
             datasource_info.setdefault('fulltext_countries', read_list(ds_settings.get('fulltext_countries', '')))
             datasource_info.setdefault('details_enabled', asbool(ds_settings.get('details_enabled', False)))
             datasource_info.setdefault('details_countries', read_list(ds_settings.get('details_countries', '')))
-            for key, value in ds_settings.iteritems():
+            for key, value in ds_settings.items():
                 datasource_info.setdefault(key, value)
 
             datasource_settings.datasource[datasource] = SmartBunch.bunchify(datasource_info)
@@ -101,9 +101,9 @@ class GlobalSettings(object):
     def get_vendor_settings(self):
 
         # Container for vendor settings
-        vendor_settings = Munch({
+        vendor_settings = SmartBunch({
             'vendors': [],
-            'vendor': Munch(),
+            'vendor': SmartBunch(),
         })
 
         # Read vendor settings from configuration
@@ -146,9 +146,9 @@ class GlobalSettings(object):
         """
 
         # Container for email settings
-        email_settings = Munch({
+        email_settings = SmartBunch({
             'addressbook': [],
-            'content': Munch(),
+            'content': SmartBunch(),
         })
 
         for setting_name in ['addressbook', 'content']:
@@ -304,7 +304,7 @@ class RuntimeSettings(object):
         Return datasource settings while accounting for sensible settings like API URI and credentials.
         """
         request = get_current_request()
-        datasource_settings = munchify(request.registry.datasource_settings)
+        datasource_settings = SmartBunch.bunchify(request.registry.datasource_settings)
         if 'protected_fields' in datasource_settings:
             for fieldname in datasource_settings.protected_fields:
                 for name, settings in datasource_settings.datasource.items():
