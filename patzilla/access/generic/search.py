@@ -4,7 +4,7 @@ import time
 import logging
 from pprint import pprint
 from collections import defaultdict
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.access.generic.exceptions import SearchException
 
@@ -50,7 +50,7 @@ class GenericSearchClient(object):
 
         # fetch first chunk (1-chunksize) from upstream
         #first_chunk = self.search(expression, 0, chunksize)
-        first_chunk = self.search_method(expression, SmartBunch({'offset': 0, 'limit': chunksize}))
+        first_chunk = self.search_method(expression, SmartMunch({'offset': 0, 'limit': chunksize}))
         #print first_chunk
 
         #total_count = int(first_chunk['meta'].get('pager', {}).get('totalEntries', 0))
@@ -82,7 +82,7 @@ class GenericSearchClient(object):
             time.sleep(1)
 
             log.info(self.lm('Crawling from offset {offset}'.format(offset=offset)))
-            chunk = self.search_method(expression, SmartBunch({'offset': offset, 'limit': chunksize}))
+            chunk = self.search_method(expression, SmartMunch({'offset': offset, 'limit': chunksize}))
             chunks.append(chunk)
 
 
@@ -128,7 +128,7 @@ class GenericSearchResponse(object):
 
         # Input data and options
         self.input = input
-        self.options = options and SmartBunch.bunchify(options) or SmartBunch()
+        self.options = options and SmartMunch.munchify(options) or SmartMunch()
 
         # Setup data structures
         self.setup()
@@ -146,13 +146,13 @@ class GenericSearchResponse(object):
         self.documents = []
 
         # Metadata information, upstream (raw) and downstream (unified)
-        self.meta = SmartBunch.bunchify({
+        self.meta = SmartMunch.munchify({
             'navigator': {},
             'upstream': {},
         })
 
         # Output information, upstream (raw) and downstream (unified)
-        self.output = SmartBunch.bunchify({
+        self.output = SmartMunch.munchify({
             'meta': {},
             'numbers': [],
             'details': [],
@@ -209,7 +209,7 @@ class GenericSearchResponse(object):
         seen = {}
         removed = []
         removed_map = defaultdict(list)
-        stats = SmartBunch(removed = 0)
+        stats = SmartMunch(removed = 0)
         def family_remover(item):
 
             fam = self.document_to_family_id(item)

@@ -15,7 +15,7 @@ import tempfile
 from io import BytesIO
 from textwrap import dedent
 from lxml import etree as ET
-from bunch import bunchify, Bunch
+from munch import munchify, Munch
 from json.encoder import JSONEncoder
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
@@ -53,7 +53,7 @@ class Dossier(object):
         """).strip()
 
     def __init__(self, data):
-        self.data = bunchify(data)
+        self.data = munchify(data)
         self.prepare_dataframes()
         self.make_metadata()
 
@@ -189,7 +189,7 @@ class Dossier(object):
         # TODO: Text representations for biblio, register, family
         # TODO: PDF Extracts
 
-        options = options or bunchify({'report': {}, 'media': {}})
+        options = options or munchify({'report': {}, 'media': {}})
 
 
         # Remove entries with empty/undefined document numbers
@@ -584,7 +584,7 @@ class DossierXlsx(Dossier):
             if type(first) in (str,):
                 df = pandas.DataFrame(entries, columns=['PN'])
 
-            elif isinstance(first, (dict, Bunch)):
+            elif isinstance(first, (dict, Munch)):
                 df = pandas.DataFrame(entries, columns=['number', 'score', 'timestamp', 'url'])
                 df.rename(columns={'number': 'document', 'url': 'display'}, inplace=True)
 
@@ -717,10 +717,11 @@ class DossierXlsx(Dossier):
         #print 'out:', process.std_out
         #print 'err:', process.std_err
         log.info('STDERR:\n{}'.format(process.std_err))
+        print(f"PDF name: {pdf_path}")
 
         if process.status_code == 0:
             #pdf_name = os.path.join(pdf_path, os.path.basename(xlsx_file.name).replace('.xlsx', '.pdf'))
-            payload = file(pdf_path, 'r').read()
+            payload = open(pdf_path, 'rb').read()
             #shutil.rmtree(pdf_path)
             os.unlink(pdf_path)
             return payload
@@ -810,8 +811,8 @@ class EmphasizingFormatterGenerator(string.Formatter):
                 obj = self.convert_field(obj, conversion)
 
                 # expand the format spec, if needed
-                format_spec = self._vformat(format_spec, args, kwargs,
-                    used_args, recursion_depth-1)
+                #format_spec = self._vformat(format_spec, args, kwargs,
+                    #used_args, recursion_depth-1)
 
                 # format the object and append to the result
                 if 'emphasis' in kwargs:

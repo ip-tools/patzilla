@@ -51,7 +51,7 @@ requires = [
 
     # Authorization
     'pycryptodome>=3,<4',
-    'python-jwt>=3.3.4,<4',
+    'python-jwt',
     'pbkdf2==1.3',
 
 
@@ -92,7 +92,7 @@ requires = [
 
     # Data handling
     'attrs',
-    'Bunch',             # Maybe switch to "Munch"
+    'Munch',
     'pyparsing',
     'python-dateutil<3',
     'ago==0.0.9',               # 0.0.93
