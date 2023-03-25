@@ -6,7 +6,7 @@ Validate PDF document acquisition from USPTO servers.
 import re
 
 import pytest
-from bunch import Bunch
+from munch import Munch
 from pyramid.httpexceptions import HTTPNotFound
 
 from patzilla.access.uspto.image import fetch_first_drawing
@@ -161,9 +161,9 @@ def test_fetch_url_failure():
 
 
 def test_get_reference_type_valid():
-    assert get_reference_type(Bunch(number="2022110447")) == UsptoPdfReferenceType.APPLICATION
-    assert get_reference_type(Bunch(number="2548918")) == UsptoPdfReferenceType.PUBLICATION
-    assert get_reference_type(Bunch(number=1)) == UsptoPdfReferenceType.PUBLICATION
+    assert get_reference_type(Munch(number="2022110447")) == UsptoPdfReferenceType.APPLICATION
+    assert get_reference_type(Munch(number="2548918")) == UsptoPdfReferenceType.PUBLICATION
+    assert get_reference_type(Munch(number=1)) == UsptoPdfReferenceType.PUBLICATION
 
 
 def test_get_reference_type_invalid():
@@ -172,9 +172,9 @@ def test_get_reference_type_invalid():
     assert ex.match(re.escape("Unknown document reference type: None"))
 
     with pytest.raises(ValueError) as ex:
-        get_reference_type(Bunch())
+        get_reference_type(Munch())
     assert ex.match(re.escape("Unknown document reference type:"))
 
     with pytest.raises(ValueError) as ex:
-        get_reference_type(Bunch(number=None))
+        get_reference_type(Munch(number=None))
     assert ex.match(re.escape("Unknown document reference type:"))

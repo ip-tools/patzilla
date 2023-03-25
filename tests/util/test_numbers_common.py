@@ -27,11 +27,11 @@ def generate(data):
 
 class TestNumberDecoding:
 
-    @pytest.mark.parametrize("number,expected,computed", generate(good), ids=good.keys())
+    @pytest.mark.parametrize("number,expected,computed", generate(good), ids=list(good.keys()))
     def testDecodeOK(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 
-    @pytest.mark.parametrize("number,expected,computed", generate(bad), ids=bad.keys())
+    @pytest.mark.parametrize("number,expected,computed", generate(bad), ids=list(bad.keys()))
     def testDecodeBAD(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 
