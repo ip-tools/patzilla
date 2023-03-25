@@ -247,7 +247,7 @@ class DpmaRegisterAccess:
         # has to be adjusted.
         time.sleep(1.0)
 
-        if "/TSPD" in self.response.content:
+        if b"/TSPD" in self.response.content:
             raise ValueError("Site is protected by F5 Advanced WAF")
 
         # Debugging
@@ -283,7 +283,7 @@ class DpmaRegisterAccess:
             return [entry]
 
         # Sanity checks
-        if "<span>0 result/s</span>" in response.content:
+        if b"<span>0 result/s</span>" in response.content:
             msg = 'No search results for "{}"'.format(patent)
             logger.warning(msg)
             raise NoResults(msg)
@@ -311,7 +311,7 @@ class DpmaRegisterAccess:
             msg = "Could not parse document reference from link '%s' (patent='%s')" % (link, patent)
             logger.error(msg)
             raise Exception(msg)
-        label = link.find(text=True)
+        label = link.find(string=True)
         return reference, label
 
     def fetch_reference(self, result, language):
@@ -369,7 +369,7 @@ class DpmaRegisterHtmlDocument(object):
         <a shape="rect" class="button" target="_blank" href="register?AKZ=100068189&amp;VIEW=pdf">PDF-Download</a>
         """
 
-        soup = BeautifulSoup(self.html)
+        soup = BeautifulSoup(self.html, "lxml")
 
         soup_content = soup.find('table', {'id': 'verfahrensdaten_tabelle'})
 

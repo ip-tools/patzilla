@@ -6,17 +6,14 @@ https://github.com/astraw/stdeb/blob/master/stdeb/transport.py
 
 Usage:
 
-    >>> import xmlrpclib
+    >>> import xmlrpc.client
     >>> #from transport import RequestsTransport
-    >>> s = xmlrpclib.ServerProxy('http://yoursite.com/xmlrpc', transport=RequestsTransport())
+    >>> s = xmlrpc.client.ServerProxy('http://yoursite.com/xmlrpc', transport=RequestsTransport())
     >>> #s.demo.sayHello()
     Hello!
 """
-try:
-    import xmlrpc.client as xmlrpc
-except ImportError:
-    import xmlrpc.client as xmlrpc
 
+import xmlrpc.client as xmlrpc
 import requests
 
 class RequestsTransport(xmlrpc.Transport):

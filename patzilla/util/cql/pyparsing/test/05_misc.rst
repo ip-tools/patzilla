@@ -15,14 +15,14 @@ Queries with UTF-8 characters
 
 Try parsing a query containing utf-8 characters.
 
->>> CQL(u'title=molécules').dumps()
-u'title=mol\xe9cules'
+>>> CQL('title=molécules').dumps()
+'title=mol\xe9cules'
 
->>> CQL(u'inventor="CEGARRA SERRANO JOSÉ MARIANO"').dumps()
-u'inventor="CEGARRA SERRANO JOS\xc9 MARIANO"'
+>>> CQL('inventor="CEGARRA SERRANO JOSÉ MARIANO"').dumps()
+'inventor="CEGARRA SERRANO JOS\xc9 MARIANO"'
 
->>> CQL(u'ab=radaufstandskraft or ab=radaufstandskräfte?').dumps()
-u'ab=radaufstandskraft or ab=radaufstandskr\xe4fte?'
+>>> CQL('ab=radaufstandskraft or ab=radaufstandskräfte?').dumps()
+'ab=radaufstandskraft or ab=radaufstandskr\xe4fte?'
 
 # TODO: use more esoteric utf-8 characters, e.g. special chars et al.
 
@@ -30,7 +30,7 @@ Queries using wildcards
 =======================
 
 >>> CQL('txt=footw or txt=footw? or txt=footw# or txt=footw! and txt=footw*re').dumps()
-u'txt=footw or txt=footw? or txt=footw# or txt=footw! and txt=footw*re'
+'txt=footw or txt=footw? or txt=footw# or txt=footw! and txt=footw*re'
 
 
 Query with comments
@@ -41,16 +41,16 @@ Query with comments
 ...        (baz or qux))   -- comment 2
 ...
 ...    """).dumps()
-u'foo=(bar and (baz or qux))'
+'foo=(bar and (baz or qux))'
 
 
 Weird queries
 =============
 >>> CQL('   foobar   ').dumps()
-u'foobar'
+'foobar'
 
 >>> CQL('(((foobar)))').dumps()
-u'(((foobar)))'
+'(((foobar)))'
 
 
 Queries with errors
@@ -61,7 +61,7 @@ Nonsense
 >>> CQL('foo bar', logging=False).dumps()
 Traceback (most recent call last):
     ...
-ParseException: Expected end of text (at char 4), (line:1, col:5)
+ParseException: Expected end of text, found 'bar'  (at char 4), (line:1, col:5)
 
 Lacking terms
 -------------
@@ -92,12 +92,12 @@ Unknown binops
 >>> CQL('foo % bar', logging=False).dumps()
 Traceback (most recent call last):
     ...
-ParseException: Expected end of text (at char 4), (line:1, col:5)
+ParseException: Expected end of text, found 'bar'  (at char 4), (line:1, col:5)
 
 Error explanation
 -----------------
 >>> try:
-...     CQL(u'foo bar', logging=False).dumps()
+...     CQL('foo bar', logging=False).dumps()
 ... except Exception as ex:
 ...     ex.explanation
-u'foo bar\n    ^\n\nExpected end of text (at char 4), (line:1, col:5)'
+'foo bar\n    ^\n\nExpected end of text, found 'bar'  (at char 4), (line:1, col:5)'
