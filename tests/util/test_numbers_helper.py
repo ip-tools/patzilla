@@ -18,6 +18,6 @@ EP666668;
 
 """
     # TODO: Need to adjust for Python 3, see https://stackoverflow.com/a/34677735.
-    with patch("__builtin__.open", mock_open(read_data=data)) as mock_file:
+    with patch("builtins.open", mock_open(read_data=data)) as mock_file:
         numbers = read_numbersfile(None)
     assert numbers == ['EP666666', 'EP666667', 'EP666668', 'EP666669']
