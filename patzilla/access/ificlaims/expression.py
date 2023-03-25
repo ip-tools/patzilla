@@ -258,7 +258,7 @@ class IFIClaimsExpression(object):
 
             except Exception as ex:
                 message = 'IFI CLAIMS query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
-                logger.warn(message + '\nException was:\n{0}'.format(_exception_traceback()))
+                logger.warning(message + '\nException was:\n{0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
         elif key == 'inventor' or key == 'applicant':

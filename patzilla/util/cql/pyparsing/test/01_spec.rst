@@ -20,52 +20,52 @@ Simple queries
 ==============
 
 >>> CQL('dinosaur').dumps()
-u'dinosaur'
+'dinosaur'
 
 >>> CQL('"complete dinosaur"').dumps()
-u'"complete dinosaur"'
+'"complete dinosaur"'
 
 >>> CQL('title = "complete dinosaur"').dumps()
-u'title="complete dinosaur"'
+'title="complete dinosaur"'
 
 >>> CQL('title exact "the complete dinosaur"').dumps()
-u'title exact "the complete dinosaur"'
+'title exact "the complete dinosaur"'
 
 
 Queries using Boolean logic
 ===========================
 
 >>> CQL('dinosaur or bird').dumps()
-u'dinosaur or bird'
+'dinosaur or bird'
 
 .. note:: **FIXME: enhance grammar**
 
 >>> #CQL('Palomar assignment and "ice age"').dumps()
 
 >>> CQL('dinosaur not reptile').dumps()
-u'dinosaur not reptile'
+'dinosaur not reptile'
 
 >>> CQL('dinosaur and bird or dinobird').dumps()
-u'dinosaur and bird or dinobird'
+'dinosaur and bird or dinobird'
 
 >>> CQL('(bird or dinosaur) and (feathers or scales)').dumps()
-u'(bird or dinosaur) and (feathers or scales)'
+'(bird or dinosaur) and (feathers or scales)'
 
 >>> CQL('"feathered dinosaur" and (yixian or jehol)').dumps()
-u'"feathered dinosaur" and (yixian or jehol)'
+'"feathered dinosaur" and (yixian or jehol)'
 
 
 Queries accessing publication indexes
 =====================================
 
 >>> CQL('publicationYear < 1980').dumps()
-u'publicationYear < 1980'
+'publicationYear < 1980'
 
 >>> CQL('lengthOfFemur > 2.4').dumps()
-u'lengthOfFemur > 2.4'
+'lengthOfFemur > 2.4'
 
 >>> CQL('bioMass >= 100').dumps()
-u'bioMass >= 100'
+'bioMass >= 100'
 
 
 Queries based on the proximity of words to each other in a document
@@ -82,17 +82,17 @@ Queries across multiple dimensions
 ==================================
 
 >>> CQL('date within "2002 2005"').dumps()
-u'date within "2002 2005"'
+'date within "2002 2005"'
 
 >>> CQL('dateRange encloses 2003').dumps()
-u'dateRange encloses 2003'
+'dateRange encloses 2003'
 
 
 Queries based on relevance
 ==========================
 
 >>> CQL('subject any/relevant "fish frog"').dumps()
-u'subject any/relevant "fish frog"'
+'subject any/relevant "fish frog"'
 
 >>> CQL('subject any/rel.lr "fish frog"').dumps()
-u'subject any/rel.lr "fish frog"'
+'subject any/rel.lr "fish frog"'

@@ -249,7 +249,7 @@ class DepaTechExpression(object):
 
             except Exception as ex:
                 message = 'depatech query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
-                logger.warn(message + ' Exception was: {0}'.format(_exception_traceback()))
+                logger.warning(message + ' Exception was: {0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
         elif key == 'inventor' or key == 'applicant':
