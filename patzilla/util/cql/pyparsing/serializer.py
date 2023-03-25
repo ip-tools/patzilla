@@ -29,7 +29,7 @@ def tokens_to_cql(tokens):
 
     >>> tokens = parse_cql('foo=bar and baz=(qux or quux)')
     >>> tokens_to_cql(tokens)
-    u'foo=bar and baz=(qux or quux)'
+    'foo=bar and baz=(qux or quux)'
 
     """
     buffer = io.StringIO()
@@ -77,7 +77,7 @@ def normalize_patentnumbers(tokens):
     >>> tokens = parse_cql('pn=EP666666')
     >>> normalize_patentnumbers(tokens)
     >>> tokens_to_cql(tokens)
-    u'pn=EP0666666'
+    'pn=EP0666666'
 
     """
     def action(token, index, binop, term):
@@ -99,15 +99,15 @@ def get_keywords(triples, whitelist_indexes=None):
 
     >>> triples = []; get_triples(parse_cql('txt=foo or (bi=bar or bi=baz)'), triples)
     >>> get_keywords(triples)
-    [u'foo', u'bar', u'baz']
+    ['foo', 'bar', 'baz']
 
     >>> triples = []; get_triples(parse_cql('pa all "central, intelligence, agency"'), triples)
     >>> get_keywords(triples)
-    [u'central', u'intelligence', u'agency']
+    ['central', 'intelligence', 'agency']
 
     >>> triples = []; get_triples(parse_cql('foo=bar and baz=qux'), triples)
     >>> get_keywords(triples, ['baz'])
-    [u'qux']
+    ['qux']
 
     """
     keywords = []
@@ -143,11 +143,11 @@ def trim_keywords(keywords):
       keywords and a list of keyword elements for multi-term keywords
 
     Example:
-    >>> trim_keywords([u'!!!daimler?', u'Misch?(P)?wasser'])
-    [u'daimler', [u'Misch', u'wasser']]
+    >>> trim_keywords(['!!!daimler?', 'Misch?(P)?wasser'])
+    ['daimler', ['Misch', 'wasser']]
 
-    >>> trim_keywords([u'"foo"', u'"   bar   "'])
-    [u'foo', u'bar']
+    >>> trim_keywords(['"foo"', '"   bar   "'])
+    ['foo', 'bar']
 
     """
     keywords_trimmed = []
@@ -164,7 +164,7 @@ def get_triples(tokens, triples):
 
     >>> triples = []; get_triples(parse_cql('foo=bar and baz=(qux or quux)'), triples)
     >>> triples
-    [['foo', u'=', 'bar'], ['qux'], ['quux']]
+    [['foo', '=', 'bar'], ['qux'], ['quux']]
 
     """
     for token in tokens:
@@ -184,7 +184,7 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
     >>> tokens = parse_cql('foo=bar and baz=(qux or quux)')
     >>> expand_shortcut_notation(tokens)
     >>> tokens_to_cql(tokens)
-    u'foo=bar and (baz=qux or baz=quux)'
+    'foo=bar and (baz=qux or baz=quux)'
 
     """
     for token in tokens:

@@ -717,7 +717,6 @@ class DossierXlsx(Dossier):
         #print 'out:', process.std_out
         #print 'err:', process.std_err
         log.info('STDERR:\n{}'.format(process.std_err))
-        print(f"PDF name: {pdf_path}")
 
         if process.status_code == 0:
             #pdf_name = os.path.join(pdf_path, os.path.basename(xlsx_file.name).replace('.xlsx', '.pdf'))

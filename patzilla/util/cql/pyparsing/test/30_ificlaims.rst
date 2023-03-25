@@ -29,16 +29,16 @@ Test some logic operators localized to german.
 Getting started
 ---------------
 >>> CQL('pnctry:EP AND text:vibrat*').dumps()
-u'pnctry : EP and text : vibrat*'
+'pnctry : EP and text : vibrat*'
 
 Made up
 -------
 Try to understand the query.
 
->>> CQL(u'(pnctry:EP and (pnctry:EP AND text:vibrat* AND (ic:G01F000184 OR cpc:G01F000184)))').dumps()
-u'(pnctry : EP and (pnctry : EP and text : vibrat* and (ic : G01F000184 or cpc : G01F000184)))'
+>>> CQL('(pnctry:EP and (pnctry:EP AND text:vibrat* AND (ic:G01F000184 OR cpc:G01F000184)))').dumps()
+'(pnctry : EP and (pnctry : EP and text : vibrat* and (ic : G01F000184 or cpc : G01F000184)))'
 
 Extract keywords from query.
 
->>> CQL(u'(pnctry:EP and (pnctry:EP AND text:vibrat* AND (ic:G01F000184 OR cpc:G01F000184)))').polish().keywords()
-[u'vibrat', u'G01F000184', u'G01F000184']
+>>> CQL('(pnctry:EP and (pnctry:EP AND text:vibrat* AND (ic:G01F000184 OR cpc:G01F000184)))').polish().keywords()
+['vibrat', 'G01F000184', 'G01F000184']

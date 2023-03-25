@@ -572,7 +572,6 @@ class CQLshlex(shlex):
         shlex.__init__(self, thing)
         self.wordchars += "!@#$%^&*-+{}[];,.?|~`:\\"
         # self.wordchars += ''.join(map(chr, range(128,254)))
-        self.wordchars = self.wordchars.decode('utf-8')
 
     def read_token(self):
         "Read a token from the input stream (no pushback or inclusions)"
@@ -914,12 +913,6 @@ class CQLParser:
 
 def parse(query):
     """Return a searchClause/triple object from CQL string"""
-
-    if type(query) == str:
-        try:
-            query = query.decode("utf-8")
-        except Exception as e:
-            raise
 
     q = StringIO(query)
     lexer = CQLshlex(q)
