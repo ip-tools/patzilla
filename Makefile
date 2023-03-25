@@ -99,11 +99,16 @@ install-nginx-auth:
 test:
 	@$(pytest) \
 		$(options) \
-		--numprocesses=auto \
 		patzilla tests
 
 test-coverage:
 	@$(MAKE) test options="$(options) --cov --no-cov-on-fail --cov-report=term-missing --cov-report=xml"
+
+test-parallel:
+	@$(pytest) \
+		$(options) \
+	    --numprocesses=auto \
+		patzilla tests
 
 # --all-modules
 # --traverse-namespace
@@ -119,7 +124,7 @@ nginx-start: nginx
 
 mongodb:
 	mkdir -p ./var/lib/mongodb
-	mongod --dbpath=./var/lib/mongodb
+	docker run -it --rm --publish=27017:27017 --volume ${PWD}/var/lib/mongodb:/data/db mongo:5
 
 mongodb-start: mongodb
 
