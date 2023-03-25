@@ -22,11 +22,11 @@ def strip_spaces(number):
     number = r_invalid.sub('', number)
     return number
 
-def read_numbersfile(file):
-    fh = open(file, 'r')
+def read_numbersfile(_file):
+    fh = open(_file, 'r')
     numbers_raw = fh.readlines()
     fh.close()
-    numbers = [number.replace("\n", '').replace(' ', '') for number in numbers_raw]
+    numbers = [number.strip(" ;\"'\t\n\r") for number in numbers_raw]
     numbers = [number for number in numbers if number and not number.startswith('#')]
     return numbers
 
