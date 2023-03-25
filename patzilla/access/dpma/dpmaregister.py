@@ -247,7 +247,7 @@ class DpmaRegisterAccess:
         # has to be adjusted.
         time.sleep(1.0)
 
-        if b"/TSPD" in self.response.content:
+        if "/TSPD" in self.response.text:
             raise ValueError("Site is protected by F5 Advanced WAF")
 
         # Debugging
@@ -283,7 +283,7 @@ class DpmaRegisterAccess:
             return [entry]
 
         # Sanity checks
-        if b"<span>0 result/s</span>" in response.content:
+        if "<span>0 result/s</span>" in response.text:
             msg = 'No search results for "{}"'.format(patent)
             logger.warning(msg)
             raise NoResults(msg)
@@ -333,7 +333,7 @@ class DpmaRegisterAccess:
         if dump_metadata:
             print('url:', response.url)
             print('headers:', response.headers)
-        print(response.content)
+        print(response.text)
 
 
 class DpmaRegisterHtmlDocument(object):
@@ -356,7 +356,7 @@ class DpmaRegisterHtmlDocument(object):
 
     @classmethod
     def from_result_document(cls, doc):
-        return cls(doc.meta.reference, html=doc.response.content, url_html=doc.url_html, url_pdf=doc.url_pdf)
+        return cls(doc.meta.reference, html=doc.response.text, url_html=doc.url_html, url_pdf=doc.url_pdf)
 
     def __str__(self):
         return str(self.identifier) + ':\n' + pformat(self.events)
@@ -725,16 +725,16 @@ def access_register(document_number, output_format, language='en'):
 
     if output_format == 'xml':
         response = register.fetch_st36xml(document_number, language)
-        payload = response.content
+        payload = response.text
 
     elif output_format == 'json-raw':
         response = register.fetch_st36xml(document_number, language)
-        document = DpmaRegisterXmlDocument(response.content).decode_badgerfish()
+        document = DpmaRegisterXmlDocument(response.text).decode_badgerfish()
         payload = json.dumps(document._data, indent=4)
 
     elif output_format == 'json':
         response = register.fetch_st36xml(document_number, language)
-        document = DpmaRegisterXmlDocument(response.content).decode()
+        document = DpmaRegisterXmlDocument(response.text).decode()
         payload = json.dumps(document.asdict(), indent=4)
 
     elif output_format == 'html':
@@ -749,7 +749,7 @@ def access_register(document_number, output_format, language='en'):
 
     elif output_format == 'pdf':
         response = register.fetch_pdf(document_number, language)
-        payload = response.content
+        payload = response.text
 
     elif output_format == 'url':
         payload = register.get_document_url(document_number, language)
@@ -813,4 +813,4 @@ if __name__ == '__main__':
 
     #response = register.fetch_pdf('10001499.2')
     #response = register.fetch_pdf('DE10001499')
-    #print(response.content)
+    #print(response.text)
