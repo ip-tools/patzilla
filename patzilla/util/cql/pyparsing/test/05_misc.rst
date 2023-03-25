@@ -68,7 +68,7 @@ Lacking terms
 >>> CQL('foo=', logging=False).dumps()
 Traceback (most recent call last):
     ...
-ParseException: Expected term (at char 4), (line:1, col:5)
+ParseException: Expected end of text, found 'bar'  (at char 9), (line:1, col:10)
 
 >>> CQL('foo= and bar=', logging=False).dumps()
 Traceback (most recent call last):
