@@ -133,7 +133,7 @@ def results_swap_family_members(response):
     def match_filter(item, filter):
         if callable(filter):
             patent = split_patent_number(item)
-            outcome = list(filter(patent))
+            outcome = filter(patent)
         else:
             outcome = item.startswith(filter)
         return outcome
@@ -167,7 +167,7 @@ def results_swap_family_members(response):
         original_publication_numbers += representation_pubrefs_docdb
 
         # Debugging
-        #print 'representation_pubref_epodoc:', representation_pubref_epodoc
+        #print( 'representation_pubref_epodoc:', representation_pubref_epodoc)
         #print 'representation_pubrefs_docdb:', representation_pubrefs_docdb
 
         # Fetch family members. When failing, use first cycle as representation.
@@ -901,7 +901,7 @@ def handle_error(response, location):
     response_json.status = response.status_code
 
     # countermeasure against "_JSONError: <unprintable _JSONError object>" or the like
-    response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.content
+    response_json.detail = str(response.status_code) + ' ' + str(response.reason) + ': ' + str(response.content)
 
     #print "response:", response
     if len(request.errors) == 1:
@@ -911,19 +911,19 @@ def handle_error(response, location):
             url = error_info.get('url')
             status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
 
-            if 'CLIENT.InvalidCountryCode' in error_content:
+            if b'CLIENT.InvalidCountryCode' in error_content:
                 ops_code = 'CLIENT.InvalidCountryCode'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
                 return response_json
 
-            if 'SERVER.EntityNotFound' in error_content:
+            if b'SERVER.EntityNotFound' in error_content:
                 ops_code = 'SERVER.EntityNotFound'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.warning(message)
                 return response_json
 
-            if 'OPS - 404' in error_content or 'Page not found' in error_content:
+            if b'OPS - 404' in error_content or b'Page not found' in error_content:
                 ops_code = '404 OPS Page not found'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
@@ -931,7 +931,7 @@ def handle_error(response, location):
                 response_json.status_code = 502
                 return response_json
 
-            if 'This API version is not supported' in error_content:
+            if b'This API version is not supported' in error_content:
                 ops_code = '404 API version not supported'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
