@@ -76,7 +76,7 @@ def test_command_ops_image_fulldocument_pdf_success():
     result = runner.invoke(cli, "ops image --document=EP0666666B1 --page=1", catch_exceptions=False)
     assert result.exit_code == 0
 
-    assert result.stdout.startswith("%PDF-1.4")
+    assert result.stdout.startswith("b'%PDF-1.4")
     assert 30000 < len(result.stdout) < 50000
 
 
@@ -89,7 +89,7 @@ def test_command_ops_image_fulldocument_tiff_success():
     result = runner.invoke(cli, "ops image --document=EP0666666B1 --page=1 --format=tiff", catch_exceptions=False)
     assert result.exit_code == 0
 
-    assert result.stdout.startswith(b"\x4d\x4d\x00\x2a")
+    assert result.stdout.startswith("b'\x4d\x4d\x00\x2a")
 
 
 def test_command_ops_image_drawing_pdf_success():
@@ -101,7 +101,7 @@ def test_command_ops_image_drawing_pdf_success():
     result = runner.invoke(cli, "ops image --document=EP0666666B1 --kind=FullDocumentDrawing --page=1", catch_exceptions=False)
     assert result.exit_code == 0
 
-    assert result.stdout.startswith("%PDF-1.4")
+    assert result.stdout.startswith("b'%PDF-1.4")
     assert 10000 < len(result.stdout) < 20000
 
 
