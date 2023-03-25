@@ -140,7 +140,7 @@ def test_search_swap_family(app_request):
     total_result_count = int(jpath('/ops:world-patent-data/ops:biblio-search/@total-result-count', results.data))
     assert total_result_count == 2
 
-    assert results.selected_numbers == [u'DE69534171T2', u'EP0666667A2']
+    assert results.selected_numbers == ['DE69534171T2', 'EP0666667A2']
 
 
 def test_crawl(app_request):
@@ -188,13 +188,13 @@ def test_biblio_data_json_success(app_request):
     assert len(documents) == 3
     assert kindcodes == ["A2", "A3", "B1"]
     assert attributes == [
-        u'@country',
-        u'@doc-number',
-        u'@family-id',
-        u'@kind',
-        u'@system',
-        u'abstract',
-        u'bibliographic-data',
+        '@country',
+        '@doc-number',
+        '@family-id',
+        '@kind',
+        '@system',
+        'abstract',
+        'bibliographic-data',
     ]
 
 
@@ -275,31 +275,31 @@ def test_family_members(app_request):
     pubnumbers = sorted([item["publication"]["number-docdb"] for item in members.items])
 
     assert appnumbers == [
-        u'CA2142029A',
-        u'CA2142029A',
-        u'DE69534171T',
-        u'DE69534171T',
-        u'EP95480005A',
-        u'EP95480005A',
-        u'EP95480005A',
-        u'JP29020894A',
-        u'JP29020894A',
-        u'US19288494A',
-        u'US47157195A',
+        'CA2142029A',
+        'CA2142029A',
+        'DE69534171T',
+        'DE69534171T',
+        'EP95480005A',
+        'EP95480005A',
+        'EP95480005A',
+        'JP29020894A',
+        'JP29020894A',
+        'US19288494A',
+        'US47157195A',
     ]
 
     assert pubnumbers == [
-        u'CA2142029A1',
-        u'CA2142029C',
-        u'DE69534171D1',
-        u'DE69534171T2',
-        u'EP0666666A2',
-        u'EP0666666A3',
-        u'EP0666666B1',
-        u'JP2613027B2',
-        u'JPH07231328A',
-        u'US5467352A',
-        u'US5572526A',
+        'CA2142029A1',
+        'CA2142029C',
+        'DE69534171D1',
+        'DE69534171T2',
+        'EP0666666A2',
+        'EP0666666A3',
+        'EP0666666B1',
+        'JP2613027B2',
+        'JPH07231328A',
+        'US5467352A',
+        'US5572526A',
     ]
 
 

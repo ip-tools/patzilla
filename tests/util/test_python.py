@@ -8,11 +8,11 @@ from patzilla.util.python.system import run_command
 
 
 def test_run_command_success_basic():
-    assert run_command(["echo", "foo"]).read().strip() == "foo"
+    assert run_command(["echo", "foo"]).read().strip() == b"foo"
 
 
 def test_run_command_success_input():
-    assert run_command(["cat"], input="foo").read().strip() == "foo"
+    assert run_command(["cat"], input=b"foo").read().strip() == b"foo"
 
 
 def test_run_command_failure_not_found():
@@ -29,8 +29,8 @@ def test_run_command_failure_program_error():
 
 def test_run_command_failure_input_error():
     with pytest.raises(RuntimeError) as ex:
-        run_command(["true"], input={"abc": "def"})
-    assert ex.match('Command "true" failed, returncode=None, exception=unhashable type, stderr=')
+        run_command(["true"], input={b"abc": b"def"})
+    assert ex.match('Command "true" failed, returncode=None, exception=memoryview: a bytes-like object is required, not \'dict\', stderr=')
 
 
 def test_memoize():
@@ -49,4 +49,4 @@ def test_exception_traceback(capsys):
         output = exception_traceback()
 
     assert "Traceback (most recent call last)" in output
-    assert "NameError: global name 'foobar' is not defined" in output
+    assert "NameError: name \'foobar\' is not defined" in output
