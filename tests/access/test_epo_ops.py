@@ -50,7 +50,7 @@ def test_baseurl(app_request):
     response = client._make_request(
         OPS_BASE_URI, data={}, extra_headers={"Accept": "*"}, use_get=True,
     )
-    assert "<title>EPO - Open Patent Services (OPS)</title>" in response.content
+    assert b"<title>EPO - Open Patent Services (OPS)</title>" in response.content
 
 
 def test_search_full_success(app_request):
@@ -218,7 +218,7 @@ def test_biblio_data_xml_success(app_request):
     Proof getting bibliographic for a specific document in XML format works.
     """
     results = get_ops_biblio_data("publication", "EP0666666", xml=True)
-    assert results.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert results.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
 
 
 def test_document_kindcodes_success(app_request):
@@ -435,8 +435,8 @@ def test_description_xml_success(app_request):
     Acquire full text "description" in XML format.
     """
     data = ops_description("EP666666A2", xml=True)
-    assert data.startswith('<?xml version="1.0" encoding="UTF-8"?>')
-    assert "The present invention generally relates to multi-node communication systems with shared resources." in data
+    assert data.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
+    assert b"The present invention generally relates to multi-node communication systems with shared resources." in data
 
 
 def test_description_failure(app_request):
@@ -485,8 +485,8 @@ def test_claims_xml_success(app_request):
     Acquire full text "claims" in XML format.
     """
     data = ops_claims("EP666666A2", xml=True)
-    assert data.startswith('<?xml version="1.0" encoding="UTF-8"?>')
-    assert "1. In a communication system having a plurality of nodes" in data
+    assert data.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
+    assert b"1. In a communication system having a plurality of nodes" in data
 
 
 def test_claims_failure(app_request):
@@ -531,7 +531,7 @@ def test_family_docdb_xml_success(app_request):
         document_number="EP0666666A2",
         constituents="biblio",
     )
-    assert response.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert response.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
 
 
 def test_family_docdb_xml_not_found_failure(app_request):
@@ -558,7 +558,7 @@ def test_register_json_success(app_request):
 
 def test_register_xml_success(app_request):
     response = ops_register(reference_type="publication", document_number="EP0666666A2", xml=True)
-    assert response.startswith('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
+    assert response.startswith(b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
 
 
 def test_register_not_found_failure(app_request):
