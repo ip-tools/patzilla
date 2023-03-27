@@ -99,18 +99,13 @@ install-nginx-auth:
 	fab upload_nginx_auth
 
 test:
-	@$(pytest) \
-		$(options) \
-		patzilla tests
+	@$(pytest) $(options)
 
 test-coverage:
 	@$(MAKE) test options="$(options) --cov --no-cov-on-fail --cov-report=term-missing --cov-report=xml"
 
 test-parallel:
-	@$(pytest) \
-		$(options) \
-	    --numprocesses=auto \
-		patzilla tests
+	@$(pytest) $(options) --numprocesses=auto
 
 # --all-modules
 # --traverse-namespace

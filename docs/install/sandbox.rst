@@ -112,6 +112,11 @@ Run all tests::
 
     make test
 
+Run tests in parallel
+=====================
+This will cut down execution time by factor 2::
+
+    make test-parallel
 
 Run tests, advanced
 ===================
