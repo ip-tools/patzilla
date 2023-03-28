@@ -62,6 +62,7 @@ from beaker.cache import cache_region
 from pyramid.httpexceptions import HTTPNotFound
 from repoze.lru import lru_cache
 
+from patzilla.access.generic.exceptions import SearchException
 from patzilla.util.config import to_list
 from patzilla.util.image.convert import pdf_join, to_pdf
 from patzilla.util.network.browser import regular_user_agent
@@ -70,7 +71,8 @@ from patzilla.util.numbers.normalize import normalize_patent
 logger = logging.getLogger(__name__)
 
 http = requests.Session()
-http.headers["User-Agent"] = regular_user_agent
+#http.headers["User-Agent"] = regular_user_agent
+http.headers["User-Agent"] = "Python Patent Clientbot/{__version__} (parkerhancock@users.noreply.github.com)"
 
 
 # Timeout for HTTP requests.
@@ -162,11 +164,11 @@ def fetch_url(url, method="get"):
         "PYTEST_CURRENT_TEST" in os.environ and \
         "sink" in socket.gethostname()
     if system_under_test:  # pragma: nocover
-        timeout = 0.8
+        timeout = 1.8
 
     # Invoke HTTP request with specified method.
     fun = getattr(http, method)
-    response = fun(url, headers={'User-Agent': regular_user_agent}, timeout=timeout)
+    response = fun(url, timeout=timeout)
 
     # Handle the response.
     if response.status_code == 200:
@@ -231,6 +233,7 @@ class UsptoDocumentAccess:
         # `07270540` would be an invalid query, so strip leading zeros.
         logger.info("Inquiring document: {}".format(self.document.number))
         query = '("{}").pn.'.format(self.document.number)
+        query = '@PD>=20100101<=20101231 AND "tennis".TTL.'
 
         data = {
             "start": 0,
@@ -246,7 +249,9 @@ class UsptoDocumentAccess:
             "queryId": 0,
             "tagDocSearch": False,
             "query": {
-                # "caseId": 1623140,
+                #"caseId": 1623140,
+                #"caseId": 16885434,
+                "caseId": None,
                 "hl_snippets": "2",
                 "op": "OR",
                 "q": query,
@@ -269,6 +274,9 @@ class UsptoDocumentAccess:
         }
 
         response = http.post("https://ppubs.uspto.gov/dirsearch-public/searches/searchWithBeFamily", json=data)
+        response.raise_for_status()
+        if response.status_code == 202:
+            raise SearchException("Empty response from USPTO, most probably caused by WAF blocking")
         data = response.json()
 
         # print(json.dumps(data, indent=2))
@@ -351,6 +359,9 @@ class UsptoDocumentAccess:
 
 
 def _get_image_url(patent_data, page=1):
+    """
+    https://ppubs.uspto.gov/dirsearch-public/image-conversion/convert?url=uspat/US/02/548/918/00000001.tif
+    """
     address = "{}/{}.tif".format(patent_data["imageLocation"], str(page).zfill(8))
     url = "https://ppubs.uspto.gov/dirsearch-public/image-conversion/convert?url={}".format(address)
     logger.debug("Computed URL: {}".format(url))
