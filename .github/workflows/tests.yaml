@@ -25,7 +25,7 @@ jobs:
           # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
           # 'macos-latest',
         ]
-        python-version: ['2.7']
+        python-version: ['3.8']
 
     defaults:
       run:
@@ -98,7 +98,7 @@ jobs:
     - name: Setup Python
       uses: MatteoH2O1999/setup-python@v6
       with:
-        python-version: '2.7'
+        python-version: '3.8'
         architecture: 'x64'
         cache: 'pip'
         cache-dependency-path: 'requirements-docs.txt'
