@@ -21,7 +21,7 @@ logger.setLevel(logging.INFO)
 class DepaTechGrammar(CQLGrammar):
     def preconfigure(self):
         CQLGrammar.preconfigure(self)
-        self.cmp_single = u':'.split()
+        self.cmp_single = ':'.split()
 
 
 class DepaTechParser(object):
@@ -161,7 +161,7 @@ class DepaTechExpression(object):
             return
 
         expression = None
-        format = u'{0}:{1}'
+        format = '{0}:{1}'
 
 
         # ------------------------------------------
@@ -184,20 +184,20 @@ class DepaTechExpression(object):
                 patent = patent_normalized
 
             if patent:
-                subexpression = u'PC:{country} AND DE:{number}'.format(**patent)
+                subexpression = 'PC:{country} AND DE:{number}'.format(**patent)
                 if patent['kind']:
-                    subexpression += u' AND KI:{kind}'.format(**patent)
-                expression_parts.append(u'({})'.format(subexpression))
+                    subexpression += ' AND KI:{kind}'.format(**patent)
+                expression_parts.append('({})'.format(subexpression))
 
             # Application number
-            subexpression = u'AN:{}'.format(value)
+            subexpression = 'AN:{}'.format(value)
             expression_parts.append(subexpression)
-            expression = u' OR '.join(expression_parts)
+            expression = ' OR '.join(expression_parts)
 
             # Priority number
-            subexpression = u'NP:{}'.format(value)
+            subexpression = 'NP:{}'.format(value)
             expression_parts.append(subexpression)
-            expression = u' OR '.join(expression_parts)
+            expression = ' OR '.join(expression_parts)
 
         elif key == 'pubdate':
 
@@ -212,7 +212,7 @@ class DepaTechExpression(object):
 
                 # e.g. 1991
                 if len(value) == 4 and value.isdigit():
-                    value = u'within {}0101,{}1231'.format(value, value)
+                    value = 'within {}0101,{}1231'.format(value, value)
 
                 # e.g. 1990-2014, 1990 - 2014
                 value = year_range_to_within(value)
@@ -249,12 +249,12 @@ class DepaTechExpression(object):
 
             except Exception as ex:
                 message = 'depatech query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
-                logger.warn(message + ' Exception was: {0}'.format(_exception_traceback()))
+                logger.warning(message + ' Exception was: {0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
         elif key == 'inventor' or key == 'applicant':
             if not has_booleans(value) and should_be_quoted(value):
-                value = u'"{0}"'.format(value)
+                value = '"{0}"'.format(value)
 
         elif key == 'class':
 
@@ -268,7 +268,7 @@ class DepaTechExpression(object):
 
                 # Put value into parenthesis, to properly capture expressions
                 if value:
-                    value = u'({value})'.format(value=value)
+                    value = '({value})'.format(value=value)
 
                 # Parse value as simple query expression
                 query_object = CQL(cql=value)
@@ -290,7 +290,7 @@ class DepaTechExpression(object):
         # ------------------------------------------
         if key in ['fulltext', 'inventor', 'applicant', 'country', 'citation']:
             if has_booleans(value) and not should_be_quoted(value):
-                value = u'({0})'.format(value)
+                value = '({0})'.format(value)
 
         # ------------------------------------------
         #   expression formatter
@@ -358,15 +358,15 @@ def rewrite_classes_ops(query_object):
 
 def format_expression(format, fieldname, value):
     expression = None
-    if type(fieldname) in types.StringTypes:
+    if type(fieldname) in (str,):
         expression = format.format(fieldname, value)
-    elif type(fieldname) is types.ListType:
+    elif type(fieldname) is list:
         subexpressions = []
         for fieldname in fieldname:
             subexpressions.append(format.format(fieldname, value))
         expression = ' or '.join(subexpressions)
         # surround with parentheses
-        expression = u'({0})'.format(expression)
+        expression = '({0})'.format(expression)
     return expression
 
 def lucene_convert_class(value):
@@ -395,4 +395,4 @@ def should_be_quoted(value):
 
 
 if __name__ == '__main__':
-    print DepaTechParser('IC:G01F000184').keywords
+    print(DepaTechParser('IC:G01F000184').keywords)

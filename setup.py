@@ -10,7 +10,7 @@ requires = [
     #   Environment
     # ----------------------------------------------
     'six>=1.10.0',
-    'mock>=3,<4',  # 4.0.3
+    'mock',
 
     # ----------------------------------------------
     #   Backend
@@ -41,9 +41,9 @@ requires = [
     # Database and storage
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
-    'pymongo<3',                # 3.13.0, 4.3.3
-    'mongodb_gridfs_beaker==0.5.4',
-    'mongoengine==0.13.0',      # 0.24.1
+    'pymongo',                  # 3.13.0, 4.3.3
+    'mongodb_gridfs_beaker@https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker',
+    'mongoengine==0.20.0',      # 0.27.0
     'python-magic<1',
 
     # Web services
@@ -51,7 +51,7 @@ requires = [
 
     # Authorization
     'pycryptodome>=3,<4',
-    'python-jwt>=3.3.4,<4',
+    'python-jwt',
     'pbkdf2==1.3',
 
 
@@ -73,8 +73,8 @@ requires = [
     'ndg-httpsclient<1',
 
     # HTML
-    'BeautifulSoup<4',
-    'html2text==2016.9.19',     # 2020.1.16
+    'beautifulsoup4',
+    'html2text', 
 
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
@@ -92,19 +92,19 @@ requires = [
 
     # Data handling
     'attrs',
-    'Bunch==1.0.1',             # Maybe switch to "Munch"
-    'pyparsing==2.0.2',         # 2.2.2, 2.3.1, 2.4.7, 3.0.8
+    'Munch',
+    'pyparsing<4',              # 3.0.9
     'python-dateutil<3',
     'ago==0.0.9',               # 0.0.93
     'arrow==0.10.0',            # 0.12.1
     'validate_email<2',
-    'numpy==1.16.6',            # 1.22.3
-    'pandas==0.18.1',           # 0.22.0, 0.25.3, 1.4.2
-    'pathlib2<3',
+    'numpy>=1.16.6',            # 1.22.3
+    'pandas',           # 0.22.0, 0.25.3, 1.4.2
+    'pathlib',
 
     # Data formatting
-    'openpyxl>=2.4.2,<3',
-    'xlrd==0.9.3',              # 0.9.4, 1.2.0, 2.0.1
+    'openpyxl',
+    'xlrd3',
     'XlsxWriter==0.9.3',        # 1.4.5, 2.0.0, 3.0.3
 
     # Data conversion
@@ -215,8 +215,6 @@ setup(name='patzilla',
       extras_require={
           'test': test_requires,
       },
-      dependency_links=[
-      ],
 
       entry_points={
         'paste.app_factory': [

@@ -54,13 +54,13 @@ class TestCheshire3CqlParser(unittest.TestCase):
             self.do_parse('ti=(foo and bar baz) and pc=qux')
         self.assertEqual(
             str(cm.exception),
-            "info:srw/diagnostic/1/10 [Malformed Query]: Expected Boolean or closing parenthesis but got: u'baz'")
+            "info:srw/diagnostic/1/10 [Malformed Query]: Expected Boolean or closing parenthesis but got: 'baz'")
 
     def test_boolean_german(self):
         self.assertEqual(self.do_parse('bi=foo und bi=bar'), '(bi = "foo" und bi = "bar")')
 
     def test_utf8(self):
-        self.assertEqual(self.do_parse('ab=radaufstandskraft or ab=radaufstandskräfte?'), u'(ab = "radaufstandskraft" or ab = "radaufstandskr\xe4fte?")')
+        self.assertEqual(self.do_parse('ab=radaufstandskraft or ab=radaufstandskräfte?'), '(ab = "radaufstandskraft" or ab = "radaufstandskr\xe4fte?")')
 
 if __name__ == '__main__':
     unittest.main()

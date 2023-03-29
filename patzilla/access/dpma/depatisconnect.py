@@ -4,9 +4,9 @@ import os
 import json
 import logging
 import requests
-import xmlrpclib
-from StringIO import StringIO
-from ConfigParser import NoOptionError
+import xmlrpc.client
+from io import StringIO
+from configparser import NoOptionError
 from lxml import etree as ET
 from lxml.builder import E
 from cornice.util import to_list
@@ -72,7 +72,7 @@ def run_acquisition(document_number, doctypes=None):
     url = archive_service_baseurl + '/RPC2'
     transport = RequestsTransport(session=get_client(), timeout=(2, 17))
     transport.use_https = use_https
-    server = xmlrpclib.ServerProxy(url, transport=transport)
+    server = xmlrpc.client.ServerProxy(url, transport=transport)
     return server.runAcquisition(numbers, doctypes)
 
 def fetch_xml(number):
@@ -313,4 +313,4 @@ if __name__ == '__main__':
     # Failed on 2018-04-23
     #response = depatisconnect_claims('USD813591S')
 
-    print json.dumps(response)
+    print(json.dumps(response))

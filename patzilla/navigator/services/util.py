@@ -5,7 +5,7 @@ import json
 import logging
 import mimetypes
 from pprint import pprint
-from bunch import bunchify
+from munch import munchify
 from cornice.service import Service
 from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
@@ -13,7 +13,7 @@ from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
 from patzilla.navigator.export import Dossier, DossierXlsx
 from patzilla.util.config import read_list
 from patzilla.util.cql.util import pair_to_cql
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.expression.keywords import keywords_from_boolean_expression
 from patzilla.util.numbers.numberlists import parse_numberlist, normalize_numbers
 from patzilla.util.python import exception_traceback
@@ -55,9 +55,9 @@ def query_expression_util_handler(request):
     # TODO: improve error handling
 
     data = request.json
-    log.info(u'[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
+    log.info('[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
     expression_data = make_expression_filter(data)
-    log.info(u'[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
+    log.info('[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
     return expression_data
 
 
@@ -100,7 +100,7 @@ def make_expression_filter(data):
         else:
 
             # Bring criteria in order: Process "fulltext" first
-            keys = criteria.keys()
+            keys = list(criteria.keys())
             if 'fulltext' in keys:
                 keys.remove('fulltext')
                 keys.insert(0, 'fulltext')
@@ -132,7 +132,7 @@ def make_expression_filter(data):
                 elif datasource == 'sip':
                     expression_part = SipExpression.pair_to_sip_xml(key, value, modifiers)
                     if expression_part:
-                        if expression_part.has_key('keywords'):
+                        if 'keywords' in expression_part:
                             keywords += expression_part['keywords']
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
@@ -147,7 +147,7 @@ def make_expression_filter(data):
                     else:
                         expression_part = IFIClaimsExpression.pair_to_solr(key, value, modifiers)
                         if expression_part:
-                            if expression_part.has_key('keywords'):
+                            if 'keywords' in expression_part:
                                 keywords += expression_part['keywords']
                             else:
                                 keywords += keywords_from_boolean_expression(key, value)
@@ -157,13 +157,13 @@ def make_expression_filter(data):
 
                     expression_part = DepaTechExpression.pair_to_elasticsearch(key, value, modifiers)
                     if expression_part:
-                        if expression_part.has_key('keywords'):
+                        if 'keywords' in expression_part:
                             keywords += expression_part['keywords']
                         else:
                             keywords += keywords_from_boolean_expression(key, value)
 
                 # Accumulate expression part
-                error_tpl = u'Criteria "{0}: {1}" has invalid format, datasource={2}.'
+                error_tpl = 'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
                     log.warn(message)
@@ -171,7 +171,7 @@ def make_expression_filter(data):
 
                 elif 'error' in expression_part:
                     message = error_tpl.format(key, value, datasource)
-                    message += u'<br/>' + expression_part['message']
+                    message += '<br/>' + expression_part['message']
                     log.warn(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
@@ -181,12 +181,12 @@ def make_expression_filter(data):
                         expression_parts.append(query)
 
                 # Accumulate filter part
-                error_tpl = u'Filter "{0}: {1}" has invalid format, datasource={2}.'
+                error_tpl = 'Filter "{0}: {1}" has invalid format, datasource={2}.'
                 if filter_part:
 
                     if 'error' in filter_part:
                         message = error_tpl.format(key, value, datasource)
-                        message += u'<br/>' + filter_part['message']
+                        message += '<br/>' + filter_part['message']
                         log.warn(message)
                         request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
@@ -251,8 +251,8 @@ def request_to_options(request, options):
         options.update({'feature_family_replace': True})
 
     # this is awful, switch to JSON POST
-    for key, value in request.params.iteritems():
-        if key.startswith(u'query_data[sorting]'):
+    for key, value in request.params.items():
+        if key.startswith('query_data[sorting]'):
             key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
             options.setdefault('sorting', {})
             options['sorting'][key] = value
@@ -288,7 +288,7 @@ def export_util_handler(request):
     elif output_kind == 'dossier':
 
         log.info('Starting dossier export to format "{format}"'.format(format=output_format))
-        data = bunchify(json.loads(request.params.get('json')))
+        data = munchify(json.loads(request.params.get('json')))
 
         # Debugging
         #print 'dossier-data:'; pprint(data.toDict())
@@ -314,10 +314,10 @@ def export_util_handler(request):
                 payload = dossier.to_zip(request=request, options=data.get('options'))
 
             else:
-                return HTTPBadRequest(u'Export format "{format}" is unknown.'.format(format=output_format))
+                return HTTPBadRequest('Export format "{format}" is unknown.'.format(format=output_format))
 
         except Exception as ex:
-            message = u'Exporting format "{format}" failed.'.format(format=output_format)
+            message = 'Exporting format "{format}" failed.'.format(format=output_format)
             log.error('{message}. Exception:\n{trace}'.format(message=message, trace=exception_traceback()))
             return HTTPServerError(message)
 
@@ -350,7 +350,7 @@ def issue_reporter_handler(request):
 
     report_data = request.json
     report_data.setdefault('application', {})
-    report = SmartBunch.bunchify(report_data)
+    report = SmartMunch.munchify(report_data)
 
     # Add user information to issue report
     user = request.user
@@ -361,7 +361,7 @@ def issue_reporter_handler(request):
         user.upstream_credentials = None
 
         # Serialize user object and attach to report
-        report.application.user = SmartBunch(json.loads(user.to_json()))
+        report.application.user = SmartMunch(json.loads(user.to_json()))
 
     # Send the whole beast to the standard application log
     log.error('Issue report [{targets}]:\n{report}'.format(

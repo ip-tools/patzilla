@@ -1,4 +1,7 @@
+import pickle
+import logging as log
 from mongodb_gridfs_beaker import MongoDBGridFSNamespaceManager, log, pickle
+
 
 def includeme(config):
 

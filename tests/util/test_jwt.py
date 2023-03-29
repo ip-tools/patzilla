@@ -59,7 +59,7 @@ def test_signer_sign_invalid_expiration(jwt_signer):
     """
     with pytest.raises(ValueError) as ex:
         jwt_signer.sign("foo", ttl="bar")
-    assert ex.match("value=bar, type=<type 'str'> is an invalid JWT expiration date")
+    assert ex.match("value=bar, type=<class 'str'> is an invalid JWT expiration date, use `datetime.datetime` or `datetime.timedelta")
 
 
 def test_signer_unsign_expired_token():
@@ -77,7 +77,7 @@ def test_signer_unsign_expired_token():
         'location': 'JSON Web Token',
         'name': '_JWTError',
         'jwt_expiry': 1640995200,
-        'jwt_header': {u'alg': u'RS256', u'typ': u'JWT'},
+        'jwt_header': {'alg': 'RS256', 'typ': 'JWT'},
     }
 
 
@@ -117,8 +117,8 @@ def test_signer_unsign_invalid_payload(jwt_signer):
 
     assert value == {
         'location': 'JSON Web Token',
-        'jwt_header': {u'alg': u'RS256', u'typ': u'JWT'},
+        'jwt_header': {'alg': 'RS256', 'typ': 'JWT'},
         'description': 'No "data" attribute in payload/claims',
         'name': 'JwtSigner',
-        'jwt_payload': {u'foo': u'bar', u'exp': 2145916800},
+        'jwt_payload': {'foo': 'bar', 'exp': 2145916800},
     }

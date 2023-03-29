@@ -14,7 +14,7 @@ from patzilla.navigator.services import handle_generic_exception
 from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException, SearchException
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.python import _exception_traceback
 
 log = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ status_upstream_depatech = Service(
 @status_upstream_depatech.get()
 def status_upstream_depatech_handler(request):
     client = get_depatech_client()
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': '(PC:DE AND DE:212016000074 AND KI:U1) OR AN:DE212016000074U1 OR NP:DE212016000074U1',
     })
     data = client.search_real(query)
@@ -53,7 +53,7 @@ def depatech_published_data_search_handler(request):
     # Get hold of query expression and filter
     expression = request.params.get('expression', '')
     filter = request.params.get('filter', '')
-    query = SmartBunch({
+    query = SmartMunch({
         'syntax':     'lucene',
         'expression': expression,
         'filter':     filter,
@@ -84,7 +84,7 @@ def depatech_published_data_search_handler(request):
     # - limit
     # - sorting
     # - whether to remove family members
-    options = SmartBunch()
+    options = SmartMunch()
     options.update({
         'limit': limit,
         'offset': offset_remote,
@@ -103,7 +103,7 @@ def depatech_published_data_search_handler(request):
         log.warn(request.errors)
 
     except SyntaxError as ex:
-        request.errors.add('depatech-search', 'expression', unicode(ex.msg))
+        request.errors.add('depatech-search', 'expression', str(ex.msg))
         log.warn(request.errors)
 
     except SearchException as ex:
@@ -117,7 +117,7 @@ def depatech_published_data_search_handler(request):
         return ex.data
 
     except OperationFailure as ex:
-        message = unicode(ex)
+        message = str(ex)
         request.errors.add('depatech-search', 'internals', message)
         log.error(request.errors)
 
@@ -131,7 +131,7 @@ def depatech_published_data_crawl_handler(request):
     """Crawl published-data at MTC depa.tech"""
 
     # Get hold of query expression and filter
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
         })
@@ -151,6 +151,6 @@ def depatech_published_data_crawl_handler(request):
         return result
 
     except Exception as ex:
-        request.errors.add('depatech-crawl', 'crawl', unicode(ex))
+        request.errors.add('depatech-crawl', 'crawl', str(ex))
         log.error(request.errors)
-        log.error(u'query="{0}", exception:\n{1}'.format(query, _exception_traceback()))
+        log.error('query="{0}", exception:\n{1}'.format(query, _exception_traceback()))

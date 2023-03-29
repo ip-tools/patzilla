@@ -5,7 +5,7 @@ from email.utils import formataddr
 from validate_email import validate_email
 from pyramid.threadlocal import get_current_request
 from patzilla.util.config import read_config, read_list, to_list
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.email.message import EmailMessage
 
 log = logging.getLogger(__name__)
@@ -68,23 +68,23 @@ def email_issue_report(report, recipients):
     recipients = to_list(recipients)
 
     identifier = None
-    if isinstance(report, SmartBunch):
+    if isinstance(report, SmartMunch):
         identifier = report.meta.id
 
     # Build reasonable subject
-    subject = u'Product issue'
+    subject = 'Product issue'
     if 'dialog' in report and 'what' in report.dialog:
-        subject = u'[{}] '.format(report.dialog.what) + subject
+        subject = '[{}] '.format(report.dialog.what) + subject
     if identifier:
-        subject += u' #' + identifier
+        subject += ' #' + identifier
 
     # Build reasonable message
-    message = u''
+    message = ''
     if 'dialog' in report and 'remark' in report.dialog:
         message = report.dialog.remark
 
     # Add JSON report as attachment
-    files = {u'report.json': report.pretty()}
+    files = {'report.json': report.pretty()}
 
     email = message_factory(recipients=recipients)
     email.send(

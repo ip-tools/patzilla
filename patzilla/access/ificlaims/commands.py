@@ -33,7 +33,7 @@ from patzilla.access.ificlaims import get_ificlaims_client
 from patzilla.boot.cache import configure_cache_backend
 from patzilla.boot.config import BootConfiguration
 from patzilla.util.config import get_configfile_from_commandline
-from patzilla.util.data.container import SmartBunch, jd
+from patzilla.util.data.container import SmartMunch, jd
 from patzilla.boot.framework import pyramid_setup
 
 
@@ -79,7 +79,7 @@ def search(ctx, expression, request_json):
 
     # Invoke API and output result.
     logger.warning("Only the first 100 hits will be displayed. The CLI currently does not employ paging.")
-    results = client.search(SmartBunch({'expression': expression}), SmartBunch({'offset': 0, 'limit': 100}))
+    results = client.search(SmartMunch({'expression': expression}), SmartMunch({'offset': 0, 'limit': 100}))
     print(jd(results))
 
 
@@ -95,11 +95,12 @@ def make_request(client):
     #results = client.search('pa:siemens OR pa:bosch', 0, 10)
     #results = client.search('pa:(siemens OR bosch)', 0, 10)
     #results = client.search('text:"solar energy"', 0, 10)
-    results = client.search(SmartBunch({'expression': 'text:solar energy'}), SmartBunch({'offset': 0, 'limit': 10}))
-    #results = client.search(SmartBunch({'expression': '{!complexphrase inOrder=true}"siemen* *haus"'}), SmartBunch({'offset': 0, 'limit': 10}))
+    results = client.search(SmartMunch({'expression': 'text:solar energy'}), SmartMunch({'offset': 0, 'limit': 10}))
+    #results = client.search(SmartMunch({'expression': '{!complexphrase inOrder=true}"siemen* *haus"'}), SmartMunch({'offset': 0, 'limit': 10}))
     #results = client.search(u'text:抑血管生成素的药物用途', 0, 10)
     #results = client.search(u'text:放射線を照射する放射線源と', 0, 10)
-    #results = client.search(SmartBunch({'expression': 'pnctry:(de OR ep OR wo OR cn OR jp OR tw) AND pa:"taiwan paiho" AND pd:[20170101 TO 20170731]'}), SmartBunch({'offset': 0, 'limit': 50}))
+    #results = client.search(SmartMunch({'expression': 'pnctry:(de OR ep OR wo OR cn OR jp OR tw) AND pa:"taiwan paiho" AND pd:[20170101 TO 20170731]'}), SmartMunch({'offset': 0, 'limit': 50}))
+
 
     #results = client.text_fetch('US-20100077592-A1')
     #results = client.text_fetch('CN-1055497-A')

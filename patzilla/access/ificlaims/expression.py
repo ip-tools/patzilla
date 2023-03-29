@@ -22,7 +22,7 @@ logger.setLevel(logging.INFO)
 class IFIClaimsGrammar(CQLGrammar):
     def preconfigure(self):
         CQLGrammar.preconfigure(self)
-        self.cmp_single = u':'.split()
+        self.cmp_single = ':'.split()
 
 
 class IFIClaimsParser(object):
@@ -60,8 +60,8 @@ class IFIClaimsParser(object):
         after:                  text:((parallel* AND schalt*) AND (antrieb* AND stufe*))
         """
         #print >>sys.stderr, 'expression-before:', self.expression
-        self.expression = re.sub(u'"(.+?)"~\d+', u'(\\1)', self.expression)
-        self.expression = self.expression.replace(u'{!complexphrase}', '')
+        self.expression = re.sub('"(.+?)"~\d+', '(\\1)', self.expression)
+        self.expression = self.expression.replace('{!complexphrase}', '')
         #print >>sys.stderr, 'expression-after :', self.expression
 
     @property
@@ -192,7 +192,7 @@ class IFIClaimsExpression(object):
             return
 
         expression = None
-        format = u'{0}:{1}'
+        format = '{0}:{1}'
 
 
         # ------------------------------------------
@@ -230,7 +230,7 @@ class IFIClaimsExpression(object):
                 # within 2009-08-20,2011-03-03
                 if 'within' in value:
                     within_dates = parse_date_within(value)
-                    elements_are_years = all([len(value) == 4 and value.isdigit() for value in within_dates.values()])
+                    elements_are_years = all([len(value) == 4 and value.isdigit() for value in list(within_dates.values())])
                     if elements_are_years:
                         fieldname = 'pdyear'
 
@@ -258,12 +258,12 @@ class IFIClaimsExpression(object):
 
             except Exception as ex:
                 message = 'IFI CLAIMS query: Invalid date or range expression "{0}". Reason: {1}.'.format(value, ex)
-                logger.warn(message + '\nException was:\n{0}'.format(_exception_traceback()))
+                logger.warning(message + '\nException was:\n{0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
         elif key == 'inventor' or key == 'applicant':
             if not has_booleans(value) and should_be_quoted(value):
-                value = u'"{0}"'.format(value)
+                value = '"{0}"'.format(value)
 
         elif key == 'class':
 
@@ -277,7 +277,7 @@ class IFIClaimsExpression(object):
 
                 # Put value into parenthesis, to properly capture expressions
                 if value:
-                    value = u'({value})'.format(value=value)
+                    value = '({value})'.format(value=value)
 
                 # Parse value as simple query expression
                 query_object = CQL(cql=value)
@@ -297,7 +297,7 @@ class IFIClaimsExpression(object):
         # ------------------------------------------
         if key in ['fulltext', 'inventor', 'applicant', 'country', 'citation']:
             if has_booleans(value) and not should_be_quoted(value) and not '{!complexphrase' in value:
-                value = u'({0})'.format(value)
+                value = '({0})'.format(value)
 
         # ------------------------------------------
         #   expression formatter
@@ -368,15 +368,15 @@ def rewrite_classes_ops(query_object):
 
 def format_expression(format, fieldname, value):
     expression = None
-    if type(fieldname) in types.StringTypes:
+    if type(fieldname) in (str,):
         expression = format.format(fieldname, value)
-    elif type(fieldname) is types.ListType:
+    elif type(fieldname) is list:
         subexpressions = []
         for fieldname in fieldname:
             subexpressions.append(format.format(fieldname, value))
         expression = ' or '.join(subexpressions)
         # surround with parentheses
-        expression = u'({0})'.format(expression)
+        expression = '({0})'.format(expression)
     return expression
 
 def ifi_convert_class(value):
@@ -406,5 +406,5 @@ def should_be_quoted(value):
 
 
 if __name__ == '__main__':
-    print IFIClaimsParser('{!complexphrase}text:"(aussto* OR eject* OR pusher*) AND (verriegel* OR lock* OR sperr*)"~6').keywords
-    print IFIClaimsParser('{!complexphrase}text:"parallel* AND schalt*"~6 AND ((ic:F16H006104 OR cpc:F16H006104))').keywords
+    print(IFIClaimsParser('{!complexphrase}text:"(aussto* OR eject* OR pusher*) AND (verriegel* OR lock* OR sperr*)"~6').keywords)
+    print(IFIClaimsParser('{!complexphrase}text:"parallel* AND schalt*"~6 AND ((ic:F16H006104 OR cpc:F16H006104))').keywords)

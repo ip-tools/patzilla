@@ -137,7 +137,7 @@ def navigator_quick(request):
 
     # Compute query expression
     expression = compute_expression(field, value, value2, parameters=request.params)
-    print 'quick expression:', expression
+    print('quick expression:', expression)
 
     #return get_redirect_query(request, expression, query_args=query_args)
     return get_redirect_query(request, expression)
@@ -150,7 +150,7 @@ def compute_expression(field, value, value2=None, **kwargs):
         field = 'pn'
 
     if field in ['cl', 'ipc', 'ic', 'cpc', 'cpci', 'cpca']:
-        value = value.replace(u'-', u'/')
+        value = value.replace('-', '/')
 
     quotable = True
     if field in ['pa', 'applicant']:
@@ -159,38 +159,38 @@ def compute_expression(field, value, value2=None, **kwargs):
 
             # apply blacklist
             blacklist = [
-                u'GmbH & Co. KG',
-                u'GmbH',
-                u' KG',
-                u' AG',
-                u'& Co.',
+                'GmbH & Co. KG',
+                'GmbH',
+                ' KG',
+                ' AG',
+                '& Co.',
             ]
             replacements = {
-                u' and ': u' ',
-                u' or ':  u' ',
-                u' not ': u' ',
+                ' and ': ' ',
+                ' or ':  ' ',
+                ' not ': ' ',
             }
             for black in blacklist:
                 pattern = re.compile(re.escape(black), re.IGNORECASE)
-                value = pattern.sub(u'', value).strip()
-            for replacement_key, replacement_value in replacements.iteritems():
+                value = pattern.sub('', value).strip()
+            for replacement_key, replacement_value in replacements.items():
                 #value = value.replace(replacement_key, replacement_value)
                 pattern = re.compile(replacement_key, re.IGNORECASE)
                 value = pattern.sub(replacement_value, value).strip()
 
             # make query expression
-            parts_raw = re.split(u'[ -]*', value)
+            parts_raw = re.split('[ -]*', value)
             umlaut_map = {
-                u'ä': u'ae',
-                u'ö': u'oe',
-                u'ü': u'ue',
-                u'Ä': u'Ae',
-                u'Ö': u'Oe',
-                u'Ü': u'Ue',
-                u'ß': u'ss',
+                'ä': 'ae',
+                'ö': 'oe',
+                'ü': 'ue',
+                'Ä': 'Ae',
+                'Ö': 'Oe',
+                'Ü': 'Ue',
+                'ß': 'ss',
             }
             def replace_parts(thing):
-                for umlaut, replacement in umlaut_map.iteritems():
+                for umlaut, replacement in umlaut_map.items():
                     thing = thing.replace(umlaut, replacement)
                 return thing
 
@@ -198,22 +198,22 @@ def compute_expression(field, value, value2=None, **kwargs):
             for part in parts_raw:
 
                 # "Alfred H. Schütte" => Alfred Schütte
-                if re.match(u'^(\w\.)+$', part):
+                if re.match('^(\w\.)+$', part):
                     continue
 
                 part_normalized = replace_parts(part)
                 if part != part_normalized:
-                    part = u'({} or {})'.format(part, part_normalized)
+                    part = '({} or {})'.format(part, part_normalized)
                 parts.append(part)
 
-            value = u' and '.join(parts)
+            value = ' and '.join(parts)
             #value = u'({})'.format(value)
 
 
-    if quotable and u' ' in value:
-        value = u'"{0}"'.format(value)
+    if quotable and ' ' in value:
+        value = '"{0}"'.format(value)
 
-    query = u'{field}={value}'.format(**locals())
+    query = '{field}={value}'.format(**locals())
 
     if field in ['pd', 'publicationdate']:
         if 'W' in value:

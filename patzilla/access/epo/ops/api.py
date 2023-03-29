@@ -167,7 +167,7 @@ def results_swap_family_members(response):
         original_publication_numbers += representation_pubrefs_docdb
 
         # Debugging
-        #print 'representation_pubref_epodoc:', representation_pubref_epodoc
+        #print( 'representation_pubref_epodoc:', representation_pubref_epodoc)
         #print 'representation_pubrefs_docdb:', representation_pubrefs_docdb
 
         # Fetch family members. When failing, use first cycle as representation.
@@ -310,7 +310,7 @@ def ops_published_data_search_real(constituents, query, range):
     ops = get_ops_client()
 
     # Send request to OPS.
-    range_begin, range_end = map(int, range.split('-'))
+    range_begin, range_end = list(map(int, range.split('-')))
     response = ops.published_data_search(
         query, range_begin=range_begin, range_end=range_end, constituents=to_list(constituents))
 
@@ -461,7 +461,7 @@ def image_representative_from_family(patent, countries, func_filter=None):
     # Compute alternative family members sorted by given countries
     alternatives = family.publications_by_country(exclude=[document], countries=countries)
     if func_filter:
-        alternatives = filter(func_filter, alternatives)
+        alternatives = list(filter(func_filter, alternatives))
 
     if alternatives:
         # TODO: Currently using first item as representative. This might change.
@@ -583,7 +583,7 @@ def inquire_images(document):
 
 
 def is_fulldocument(node):
-    return '@desc' in node and node['@desc'] == u'FullDocument'
+    return '@desc' in node and node['@desc'] == 'FullDocument'
 
 
 def is_amendment_only(node):
@@ -602,7 +602,7 @@ def is_amendment_only(node):
     """
     if is_fulldocument(node):
         sections = to_list(node.get('ops:document-section', []))
-        if len(sections) == 1 and sections[0]['@name'] == u'AMENDMENT':
+        if len(sections) == 1 and sections[0]['@name'] == 'AMENDMENT':
             return True
 
     return False
@@ -659,7 +659,7 @@ def get_ops_image(document, page, kind, format=None):
     # 1. Inquire images to compute url to image resource
     image_info = inquire_images(document)
     if image_info:
-        if image_info.has_key(kind):
+        if kind in image_info:
             drawing_node = image_info.get(kind)
             link = drawing_node['@link']
 
@@ -670,7 +670,7 @@ def get_ops_image(document, page, kind, format=None):
                     page = page + start_page - 1
 
         # fallback chain, if no drawings are available
-        elif image_info.has_key('JapaneseAbstract'):
+        elif 'JapaneseAbstract' in image_info:
             drawing_node = image_info.get('JapaneseAbstract')
             link = drawing_node['@link']
             page = 1
@@ -885,7 +885,7 @@ def handle_error(response, location):
 
     # Compute name
     name = 'http-response'
-    body = response_dict['content']
+    body = str(response_dict['content'],'UTF-8')
     if 'CLIENT.CQL' in body:
         name = 'expression'
 
@@ -901,44 +901,44 @@ def handle_error(response, location):
     response_json.status = response.status_code
 
     # countermeasure against "_JSONError: <unprintable _JSONError object>" or the like
-    response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.content
+    response_json.detail = str(response.status_code) + ' ' + str(response.reason) + ': ' + str(response.content)
 
     #print "response:", response
     if len(request.errors) == 1:
         error_info = request.errors[0].get('description')
         if error_info.get('status_code') == 404:
-            error_content = error_info.get('content', '')
+            error_content = error_info.get('content', b'')
             url = error_info.get('url')
             status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
 
-            if 'CLIENT.InvalidCountryCode' in error_content:
+            if b'CLIENT.InvalidCountryCode' in error_content:
                 ops_code = 'CLIENT.InvalidCountryCode'
-                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
                 return response_json
 
-            if 'SERVER.EntityNotFound' in error_content:
+            if b'SERVER.EntityNotFound' in error_content:
                 ops_code = 'SERVER.EntityNotFound'
-                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.warning(message)
                 return response_json
 
-            if 'OPS - 404' in error_content or 'Page not found' in error_content:
+            if b'OPS - 404' in error_content or b'Page not found' in error_content:
                 ops_code = '404 OPS Page not found'
-                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
-                log.error(u'OPS API errors:\n{}'.format(pformat(request.errors)))
+                log.error('OPS API errors:\n{}'.format(pformat(request.errors)))
                 response_json.status_code = 502
                 return response_json
 
-            if 'This API version is not supported' in error_content:
+            if b'This API version is not supported' in error_content:
                 ops_code = '404 API version not supported'
-                message = u'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
                 response_json.status_code = 502
                 return response_json
 
-    log.error(u'OPS API errors:\n{}'.format(pformat(request.errors)))
+    log.error('OPS API errors:\n{}'.format(pformat(request.errors)))
 
     return response_json
 
@@ -972,7 +972,7 @@ def pdf_document_build(patent):
 
     # 3. add pdf metadata
     page_sections = None
-    if resource_info.has_key('ops:document-section'):
+    if 'ops:document-section' in resource_info:
         page_sections = resource_info['ops:document-section']
         #pprint(page_sections)
 
@@ -1028,7 +1028,7 @@ def ops_document_kindcodes(patent):
     for document in documents:
 
         # TODO: check whether a single occurrance of "not found" should really raise this exception
-        if document.has_key('@status') and document['@status'] == 'not found':
+        if '@status' in document and document['@status'] == 'not found':
             error = HTTPNotFound(error_msg_access)
             raise error
 
@@ -1080,7 +1080,7 @@ def analytics_family(query):
 
     # B. Enrich all family representatives
     # http://ops.epo.org/3.1/rest-services/family/application/docdb/US19288494.xml
-    for family_id, document_number in family_representatives.iteritems():
+    for family_id, document_number in family_representatives.items():
 
         payload.setdefault(family_id, {})
 
@@ -1246,7 +1246,7 @@ class OPSFamilyMembers(object):
         self.items = []
 
     def __repr__(self):
-        return u'<{name} object at 0x{id}>\nitems:\n{items}'.format(name=self.__class__.__name__, id=id(self), items=pformat(self.items))
+        return '<{name} object at 0x{id}>\nitems:\n{items}'.format(name=self.__class__.__name__, id=id(self), items=pformat(self.items))
 
     def publications_by_country(self, exclude=None, countries=None):
         exclude = exclude or []
@@ -1290,13 +1290,13 @@ def _find_publication_number_by_prio_number():
 
 
 def _format_title(title):
-    return u'[{0}] {1}'.format(title.get(u'@lang', u'').upper() or u'', title[u'$'] or u'')
+    return '[{0}] {1}'.format(title.get('@lang', '').upper() or '', title['$'] or '')
 
 def _format_abstract(abstract):
     if not abstract: return
     lines = to_list(abstract['p'])
-    lines = map(lambda line: line['$'], lines)
-    return u'[{0}] {1}'.format(abstract.get(u'@lang', u'').upper() or u'', '\n'.join(lines))
+    lines = [line['$'] for line in lines]
+    return '[{0}] {1}'.format(abstract.get('@lang', '').upper() or '', '\n'.join(lines))
 
 def _mogrify_parties(partylist, name):
     results = []
@@ -1307,9 +1307,9 @@ def _mogrify_parties(partylist, name):
         parties[key][party['@data-format']] = party[name]['name']['$']
 
     for key in sorted(parties.keys()):
-        name_epodoc = parties[key]['epodoc'].replace(u'\u2002', u' ')
+        name_epodoc = parties[key]['epodoc'].replace('\u2002', ' ')
         name_original = parties[key]['original']
-        entry = u'{0}; {1}'.format(name_epodoc, name_original)
+        entry = '{0}; {1}'.format(name_epodoc, name_original)
         results.append(entry)
 
     return results
@@ -1338,13 +1338,13 @@ def _result_list_compact(response):
 
         try:
             titles = to_list(pointer_invention_title.resolve(result))
-            titles = map(_format_title, titles)
+            titles = list(map(_format_title, titles))
         except JsonPointerException:
             titles = None
 
         try:
             abstracts = to_list(pointer_abstract.resolve(result))
-            abstracts = map(_format_abstract, abstracts)
+            abstracts = list(map(_format_abstract, abstracts))
         except JsonPointerException:
             abstracts = None
 
@@ -1382,10 +1382,10 @@ def _summarize_metrics(payload, kind):
     except KeyError:
         return 'error while computing value'
 
-    total_response_size_entries = filter(lambda item: item['name'] == kind, metrics)[0]['values']
+    total_response_size_entries = [item for item in metrics if item['name'] == kind][0]['values']
     #print total_response_size_entries
 
-    total_response_sizes = map(lambda item: float(item['value']), total_response_size_entries)
+    total_response_sizes = [float(item['value']) for item in total_response_size_entries]
     #print total_response_sizes
 
     total = sum(total_response_sizes)
@@ -1421,6 +1421,6 @@ def ops_service_usage(date_begin, date_end):
 
 if __name__ == '__main__':  # pragma: nocover
     data = ops_service_usage('06/11/2014', '09/12/2014')
-    print 'Time range:    {0}'.format(data['time-range'])
-    print 'Response size: {0}G'.format(data['response-size'] / float(10**9))
-    print 'Message count: {0}'.format(data['message-count'])
+    print('Time range:    {0}'.format(data['time-range']))
+    print('Response size: {0}G'.format(data['response-size'] / float(10**9)))
+    print('Message count: {0}'.format(data['message-count']))

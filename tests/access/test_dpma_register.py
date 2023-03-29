@@ -37,10 +37,10 @@ def test_dpmaregister_url_de():
 def test_dpmaregister_xml():
     with F5WafWrapper():
         xml = access_register("WO2008034638", output_format="xml")
-        assert '<?xml version="1.0" encoding="UTF-8"?>' in xml
-        assert "<dpma-patent-document" in xml
-        assert "<bibliographic-data>" in xml
-        assert "<events>" in xml
+        assert b'<?xml version="1.0" encoding="UTF-8"?>' in xml
+        assert b"<dpma-patent-document" in xml
+        assert b"<bibliographic-data>" in xml
+        assert b"<events>" in xml
 
 
 def test_dpmaregister_json():
@@ -72,12 +72,12 @@ def test_dpmaregister_html_compact_de():
 def test_dpmaregister_pdf_compact_en():
     with F5WafWrapper():
         pdf = access_register("EP666666", output_format="pdf")
-        assert "File number 695 34 171.5" in pdf
-        assert "Most recent update in DPMAregister on Jan 7, 2017" in pdf
+        assert b"File number 695 34 171.5" in pdf
+        assert b"Most recent update in DPMAregister on Jan 7, 2017" in pdf
 
 
 def test_dpmaregister_pdf_compact_de():
     with F5WafWrapper():
         pdf = access_register("EP666666", output_format="pdf", language="de")
-        assert "Aktenzeichen 695 34 171.5" in pdf
-        assert "letzte Aktualisierung in DPMAregister am 07.01.2017" in pdf
+        assert b"Aktenzeichen 695 34 171.5" in pdf
+        assert b"letzte Aktualisierung in DPMAregister am 07.01.2017" in pdf

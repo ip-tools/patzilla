@@ -20,7 +20,7 @@ Date range
 Test date range condition used when extrapolating from vanity url, e.g. /publicationdate/2014W10.
 
 >>> CQL('publicationdate within 2014-03-10,2014-03-16').dumps()
-u'publicationdate within 2014-03-10,2014-03-16'
+'publicationdate within 2014-03-10,2014-03-16'
 
 
 Examples from OPS reference guide
@@ -37,23 +37,23 @@ CQL examples
 Original CQL examples from reference guide.
 
 >>> CQL('ti all "green, energy"').dumps()
-u'ti all "green, energy"'
+'ti all "green, energy"'
 
 .. note:: **FIXME: enhance grammar**
 
 >>> #CQL('ti=green prox/unit=world ti=energy').dumps()
 
 >>> CQL('pd within "20051212 20051214"').dumps()
-u'pd within "20051212 20051214"'
+'pd within "20051212 20051214"'
 
 >>> CQL('pd="20051212 20051214"').dumps()
-u'pd="20051212 20051214"'
+'pd="20051212 20051214"'
 
 >>> CQL('ia any "John, Smith"').dumps()
-u'ia any "John, Smith"'
+'ia any "John, Smith"'
 
 >>> CQL('pn=EP and pr=GB').dumps()
-u'pn=EP and pr=GB'
+'pn=EP and pr=GB'
 
 .. note:: **FIXME: enhance grammar**
 
@@ -62,19 +62,19 @@ u'pn=EP and pr=GB'
 >>> #CQL('(ta=green prox/distance<=3 ta=energy) or (ta=renewable prox/distance<=3 ta=energy)').dumps()
 
 >>> CQL('pa all "central, intelligence, agency" and US').dumps()
-u'pa all "central, intelligence, agency" and US'
+'pa all "central, intelligence, agency" and US'
 
 >>> CQL('pa all "central, intelligence, agency" and US and pd>2000').dumps()
-u'pa all "central, intelligence, agency" and US and pd > 2000'
+'pa all "central, intelligence, agency" and US and pd > 2000'
 
 >>> CQL('pd < 18000101').dumps()
-u'pd < 18000101'
+'pd < 18000101'
 
 >>> CQL('ta=synchroni#ed').dumps()
-u'ta=synchroni#ed'
+'ta=synchroni#ed'
 
 >>> CQL('EP and 2009 and Smith').dumps()
-u'EP and 2009 and Smith'
+'EP and 2009 and Smith'
 
 
 .. note:: **FIXME: enhance grammar**
@@ -91,23 +91,23 @@ Shortcut notation expansion
 All these should not be affected by any query manipulation. Prove that.
 
 >>> CQL('pa all "central, intelligence, agency" and US').polish().dumps()
-u'pa all "central, intelligence, agency" and US'
+'pa all "central, intelligence, agency" and US'
 
 >>> CQL('pa all "central, intelligence, agency" and US and pd>2000').polish().dumps()
-u'pa all "central, intelligence, agency" and US and pd > 2000'
+'pa all "central, intelligence, agency" and US and pd > 2000'
 
 >>> CQL('EP and 2009 and Smith').polish().dumps()
-u'EP and 2009 and Smith'
+'EP and 2009 and Smith'
 
 
 Keyword extraction
 ------------------
 
 >>> CQL('pa all "central, intelligence, agency" and US').polish().keywords()
-[u'central', u'intelligence', u'agency']
+['central', 'intelligence', 'agency']
 
 >>> CQL('pa all "central intelligence agency" and US').polish().keywords()
-[u'central', u'intelligence', u'agency']
+['central', 'intelligence', 'agency']
 
 .. note:: **FIXME: enhance parser smartness: follow rules outlined on p. 148, section 4.2. CQL index catalogue**
 

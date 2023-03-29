@@ -12,17 +12,17 @@ Synopsis::
 
 def purge_titles(data):
     # Purge "title" attributes from BasketEntry objects
-    for name, entity in data['database'].iteritems():
+    for name, entity in data['database'].items():
         if name.startswith('BasketEntry'):
             if 'title' in entity:
                 del entity['title']
             if 'number' in entity:
-                entity['number'] = entity['number'].strip(u'★ ')
+                entity['number'] = entity['number'].strip('★ ')
 
 def purge_numbers_seen(data):
     # Purge all BasketEntry objects with "seen==true"
     keys = []
-    for name, item in data['database'].iteritems():
+    for name, item in data['database'].items():
         if name.startswith('BasketEntry/'):
             if 'seen' in item and item['seen'] == True:
                 keys.append(name)
@@ -32,7 +32,7 @@ def purge_numbers_seen(data):
 
 def purge_projects(data):
     # Purge "project" attributes from all "Query/..." objects
-    for name, item in data['database'].iteritems():
+    for name, item in data['database'].items():
         if name.startswith('Query/'):
             if 'project' in item:
                 del item['project']
@@ -51,7 +51,7 @@ def main():
     #purge_projects(data)
 
     # Save database file
-    print json.dumps(data, indent=4)
+    print(json.dumps(data, indent=4))
 
 
 if __name__ == '__main__':

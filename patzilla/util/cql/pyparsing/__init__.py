@@ -45,7 +45,7 @@ class CQL(object):
 
         >>> tokens = parse_cql('foo=bar')
         >>> tokens
-        ([(['foo', u'=', 'bar'], {'triple': [((['foo', u'=', 'bar'], {}), 0)]})], {})
+        ParseResults([ParseResults(['foo', '=', 'bar'], {'triple': ['foo', '=', 'bar']})], {})
 
         """
 
@@ -60,13 +60,13 @@ class CQL(object):
             #if self.logging:
             #    log.info(u'tokens: %s', tokens.pformat())
 
-        except pyparsing.ParseException as ex:
-            ex.explanation = u'%s\n%s\n%s' % (ex.pstr, u' ' * ex.loc + u'^\n', ex)
+        except pyparsing.exceptions.ParseException as ex:
+            ex.explanation = '%s\n%s\n%s' % (ex.pstr, ' ' * ex.loc + '^\n', ex)
             #if self.logging:
             #    log.error('\n%s', ex.explanation)
-            log.warning(u'Query expression "{query}" is invalid. ' \
-                        u'Reason: {reason}\n{location}'.format(
-                query=self.cql, reason=unicode(ex), location=ex.explanation))
+            log.warning('Query expression "{query}" is invalid. ' \
+                        'Reason: {reason}\n{location}'.format(
+                query=self.cql, reason=str(ex), location=ex.explanation))
             raise
 
         return tokens

@@ -11,12 +11,12 @@ import logging
 import operator
 import mechanicalsoup
 from beaker.cache import cache_region
-from bunch import bunchify
+from munch import munchify
 from docopt import docopt
 from pprint import pformat
 from jsonpointer import JsonPointer, JsonPointerException
 from xml.etree.ElementTree import fromstring
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from collections import namedtuple, OrderedDict
 from patzilla.access.dpma.util import dpma_file_number
 from patzilla.boot.cache import configure_cache_backend
@@ -247,7 +247,7 @@ class DpmaRegisterAccess:
         # has to be adjusted.
         time.sleep(1.0)
 
-        if "/TSPD" in self.response.content:
+        if b"/TSPD" in self.response.content:
             raise ValueError("Site is protected by F5 Advanced WAF")
 
         # Debugging
@@ -283,7 +283,7 @@ class DpmaRegisterAccess:
             return [entry]
 
         # Sanity checks
-        if "<span>0 result/s</span>" in response.content:
+        if b"<span>0 result/s</span>" in response.content:
             msg = 'No search results for "{}"'.format(patent)
             logger.warning(msg)
             raise NoResults(msg)
@@ -311,7 +311,7 @@ class DpmaRegisterAccess:
             msg = "Could not parse document reference from link '%s' (patent='%s')" % (link, patent)
             logger.error(msg)
             raise Exception(msg)
-        label = link.find(text=True)
+        label = link.find(string=True)
         return reference, label
 
     def fetch_reference(self, result, language):
@@ -369,7 +369,7 @@ class DpmaRegisterHtmlDocument(object):
         <a shape="rect" class="button" target="_blank" href="register?AKZ=100068189&amp;VIEW=pdf">PDF-Download</a>
         """
 
-        soup = BeautifulSoup(self.html)
+        soup = BeautifulSoup(self.html, "lxml")
 
         soup_content = soup.find('table', {'id': 'verfahrensdaten_tabelle'})
 
@@ -528,13 +528,13 @@ class DpmaRegisterXmlDocument(object):
         self.decode_badgerfish()
 
         # Document numbers
-        self.application_reference = map(
+        self.application_reference = list(map(
             operator.itemgetter('document_id'),
-            self.convert_list(self.query_data(self.pointer_application_reference)))
+            self.convert_list(self.query_data(self.pointer_application_reference))))
 
-        self.publication_reference = map(
+        self.publication_reference = list(map(
             operator.itemgetter('document_id'),
-            self.convert_list(self.query_data(self.pointer_publication_reference)))
+            self.convert_list(self.query_data(self.pointer_publication_reference))))
 
         # Classifications
         self.classifications['ipcr'] = self.convert_list(self.query_data(self.pointer_classifications_ipcr))
@@ -565,9 +565,9 @@ class DpmaRegisterXmlDocument(object):
         self.designated_states = self.convert_list(self.query_data(self.pointer_designated_states))
 
         # Citations
-        self.references_cited = map(
+        self.references_cited = list(map(
             operator.attrgetter('document_id.doc_number'),
-            bunchify(self.convert_list(self.query_data(self.pointer_references_cited))))
+            munchify(self.convert_list(self.query_data(self.pointer_references_cited)))))
 
         # office-specific-bib-data
         self.office_specific_bibdata = self.convert_dict(self.query_data(self.pointer_office_specific_bibdata))
@@ -590,7 +590,7 @@ class DpmaRegisterXmlDocument(object):
         things = []
         for thing in to_list(things_raw):
             if not thing: continue
-            if nested_element in thing and len(thing.keys()) == 1:
+            if nested_element in thing and len(list(thing.keys())) == 1:
                 thing = thing[nested_element]
             if isinstance(thing, dict):
                 thing = cls.convert_dict(thing)
@@ -606,7 +606,7 @@ class DpmaRegisterXmlDocument(object):
             return {}
 
         newdata = OrderedDict()
-        for key, value in data.items():
+        for key, value in list(data.items()):
 
             # Decode nested text or recurse
             if '$' in value:

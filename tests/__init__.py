@@ -11,7 +11,7 @@ def suppress_warnings():
     """
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore", category=DeprecationWarning)
-        import pandas.util.nosetester
+        import numpy.testing
 
 
 suppress_warnings()

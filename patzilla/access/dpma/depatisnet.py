@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-import re
 import sys
 import json
 import types
 import logging
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 import mechanize
-import cookielib
-from BeautifulSoup import BeautifulSoup
-from xlrd import open_workbook
+import re
+import http.cookiejar
+from bs4 import BeautifulSoup
+from xlrd3 import open_workbook
 from patzilla.access.generic.search import GenericSearchResponse
 from patzilla.util.date import from_german, date_iso
 from patzilla.util.network.browser import regular_user_agent
@@ -44,7 +44,7 @@ class DpmaDepatisnetAccess:
     ]
 
     def __init__(self):
-        print 'DpmaDepatisnetAccess.__init__'
+        print('DpmaDepatisnetAccess.__init__')
         self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
         self.searchurl_cql    = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
         self.searchurl_ikofax = self.baseurl + '/depatisnet?action=ikofax&switchToLang=en'
@@ -65,7 +65,7 @@ class DpmaDepatisnetAccess:
         # http://wwwsearch.sourceforge.net/mechanize/
         # https://github.com/python-mechanize/mechanize
         self.browser = mechanize.Browser()
-        self.browser.set_cookiejar(cookielib.LWPCookieJar())
+        self.browser.set_cookiejar(http.cookiejar.LWPCookieJar())
         self.browser.addheaders = [('User-Agent', regular_user_agent)]
         # ignore robots.txt
         self.browser.set_handle_robots(False)
@@ -85,7 +85,7 @@ class DpmaDepatisnetAccess:
         limit = options.get('limit')
         max_hits = options.get('max_hits')
 
-        logger.info(u'Searching documents. query="%s", options=%s' % (query, options))
+        logger.info('Searching documents. query="%s", options=%s' % (query, options))
 
         # 0. create browser instance
         if not self.browser:
@@ -97,7 +97,7 @@ class DpmaDepatisnetAccess:
             search_url = self.searchurl_ikofax
         try:
             self.browser.open(search_url)
-        except urllib2.HTTPError as ex:
+        except urllib.error.HTTPError as ex:
             logger.critical('Hard error with DEPATISnet: {}'.format(ex))
             self.logout()
             raise
@@ -107,7 +107,7 @@ class DpmaDepatisnetAccess:
         self.browser.select_form(nr=0)
         #self.browser.select_form(name='form')
 
-        self.browser['query'] = query.encode('iso-8859-1')
+        self.browser['query'] = query
         self.browser['hitsPerPage'] = [str(limit)]
         self.browser['maxHitsUser'] = [str(max_hits)]
 
@@ -127,7 +127,7 @@ class DpmaDepatisnetAccess:
         #self.browser['so'] = ['desc']
 
         # sort by user selection
-        if 'sorting' in options and type(options['sorting']) is types.DictionaryType:
+        if 'sorting' in options and type(options['sorting']) is dict:
             self.browser['sf'] = [options['sorting']['field']]
             self.browser['so'] = [options['sorting']['order']]
 
@@ -197,7 +197,7 @@ class DpmaDepatisnetAccess:
                 results = self.read_xls_response(xls_response)
             except Exception as ex:
                 logger.error('Problem downloading results in XLS format: {}'.format(ex))
-                ex.http_response = ex.read()
+                #ex.http_response = ex.read()
                 raise
 
             # debugging
@@ -225,22 +225,24 @@ class DpmaDepatisnetAccess:
                               'otherwise don\'t hesitate to report this problem to us.')
 
         # Check for error messages
-        soup = BeautifulSoup(body)
+        soup = BeautifulSoup(body, 'lxml')
         error_message = soup.find('div', {'id': 'errormsg'})
         if error_message:
             parts = []
             [s.extract() for s in error_message('a')]
             [parts.append(s.extract()) for s in error_message('p', {'class': 'headline'})]
             reason = ', '.join([part.getText() for part in parts])
-            error_message = u'{}\n{}'.format(reason, str(error_message))
+            error_message = '{}\n{}'.format(reason, str(error_message))
         else:
             error_message = ''
 
-        if u'An error has occurred' in body:
-            error_message = error_message.replace('\t', '').replace('\r\n', '\n').strip()
+        # Compute error message.
+        prefix = 'Upstream service: '
+        if 'An error has occurred' in body:
+            error_message = prefix + error_message.replace('\t', '').replace('\r\n', '\n').strip()
             raise SyntaxError(error_message)
 
-        return error_message
+        return prefix + error_message
 
     def read_xls_response(self, xls_response):
         data = excel_to_dict(xls_response.read())
@@ -307,8 +309,8 @@ class DPMADepatisnetSearchResponse(GenericSearchResponse):
             # TODO: Reference from IFI CLAIMS, fill up/unify.
             #'time': self.input['time'],
             #'status': self.input['status'],
-            #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
-            #'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+            #'params': SmartMunch.munchify(self.input['content']['responseHeader']['params']),
+            #'pager': SmartMunch.munchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
         self.meta.navigator.count_total = int(self.input['hits'])
@@ -317,7 +319,7 @@ class DPMADepatisnetSearchResponse(GenericSearchResponse):
         # TODO: Fill up?
         #self.meta.navigator.offset      = int(self.meta.upstream.Offset)
         #self.meta.navigator.limit       = int(self.meta.upstream.Limit)
-        #self.meta.navigator.postprocess = SmartBunch()
+        #self.meta.navigator.postprocess = SmartMunch()
 
 
         # Propagate user message
@@ -355,17 +357,17 @@ def excel_to_dict(payload):
     start_row = 0
 
     # upstream added new status line to first row, e.g. "Search query: pn=(EP666666) Status: 25.09.2015"
-    if u'Search query' in sheet.cell(0, 0).value:
+    if 'Search query' in sheet.cell(0, 0).value:
         start_row = 1
 
     # read header values
-    keys = [sheet.cell(start_row, col_index).value for col_index in xrange(sheet.ncols)]
+    keys = [sheet.cell(start_row, col_index).value for col_index in range(sheet.ncols)]
 
     # read sheet content
     dict_list = []
-    for row_index in xrange(start_row + 1, sheet.nrows):
+    for row_index in range(start_row + 1, sheet.nrows):
         d = {keys[col_index]: sheet.cell(row_index, col_index).value
-             for col_index in xrange(sheet.ncols)}
+             for col_index in range(sheet.ncols)}
         dict_list.append(d)
 
     return dict_list
@@ -390,4 +392,4 @@ if __name__ == '__main__':
     else:
         data = depatisnet.search_patents('BI=bagger and PC=DE')
 
-    print json.dumps(data)
+    print(json.dumps(data))

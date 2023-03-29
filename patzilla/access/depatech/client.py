@@ -13,7 +13,7 @@ from requests import RequestException
 from patzilla.access.depatech import get_depatech_client
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 
 log = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ class DepaTechClient(GenericSearchClient):
         return self.search_real(query, options=options)
 
     def search_real(self, query, options=None):
-        options = options or SmartBunch()
+        options = options or SmartMunch()
 
         options.setdefault('offset', 0)
         options.setdefault('limit', self.pagesize)
@@ -73,7 +73,7 @@ class DepaTechClient(GenericSearchClient):
             transport = 'json'
             query.expression = self.translate_deparom_query(query.expression)
 
-        log.info(u"{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}; user={username}".format(
+        log.info("{backend_name}: searching documents, expression='{0}', offset={1}, limit={2}; user={username}".format(
             query.expression, offset, limit, **self.__dict__))
 
         starttime = timeit.default_timer()
@@ -92,7 +92,7 @@ class DepaTechClient(GenericSearchClient):
             'from': offset, 'size': limit,
         }
 
-        log.info(u'{backend_name}: query={query}, uri={uri}, params={params}, options={options}'.format(
+        log.info('{backend_name}: query={query}, uri={uri}, params={params}, options={options}'.format(
             query=query, uri=uri, params=params, options=options.dump(), backend_name=self.backend_name))
 
         # Perform search request
@@ -164,10 +164,10 @@ class DepaTechClient(GenericSearchClient):
                 if 'reason' not in upstream_error:
                     upstream_error['reason'] = 'Reason unknown'
 
-                message = u'Response status code: {code}\n\n{reason}'.format(**upstream_error)
+                message = 'Response status code: {code}\n\n{reason}'.format(**upstream_error)
 
                 raise self.search_failed(
-                    user_info=u'Error searching depa.tech.',
+                    user_info='Error searching depa.tech.',
                     message=message,
                     response=response)
 
@@ -180,7 +180,7 @@ class DepaTechClient(GenericSearchClient):
 
         expression = expression.replace(upstream_prefix, '').replace('deparom:', '')
 
-        log.info(u'{backend_name}: Translate DEPAROM query expression={expression}, uri={uri}'.format(
+        log.info('{backend_name}: Translate DEPAROM query expression={expression}, uri={uri}'.format(
             expression=expression, uri=uri, backend_name=self.backend_name))
 
         expression = upstream_prefix + expression
@@ -212,7 +212,7 @@ class DepaTechClient(GenericSearchClient):
 
         elif response.status_code >= 400:
 
-            message = u'Reason unknown'
+            message = 'Reason unknown'
 
             if response.headers.get('Content-Type', '').startswith('application/json'):
 
@@ -224,15 +224,15 @@ class DepaTechClient(GenericSearchClient):
                     upstream_error['code'] = response_data['status']
 
                     if 'reason' not in upstream_error:
-                        upstream_error['reason'] = u'Reason unknown'
+                        upstream_error['reason'] = 'Reason unknown'
 
-                    message = u'Response status code: {code}\n\n{reason}'.format(**upstream_error)
+                    message = 'Response status code: {code}\n\n{reason}'.format(**upstream_error)
 
             else:
                 message = response.content
 
             raise self.search_failed(
-                user_info=u'Translating DEPAROM query expression failed',
+                user_info='Translating DEPAROM query expression failed',
                 message=message,
                 response=response)
 
@@ -298,8 +298,8 @@ class DepaTechSearchResponse(GenericSearchResponse):
             'name': 'depatech',
             'time': self.input['took'],
             'status': 'success',
-            #'params': SmartBunch.bunchify(self.input['content']['responseHeader']['params']),
-            #'pager': SmartBunch.bunchify(self.input['content']['responseHeader'].get('pager', {})),
+            #'params': SmartMunch.munchify(self.input['content']['responseHeader']['params']),
+            #'pager': SmartMunch.munchify(self.input['content']['responseHeader'].get('pager', {})),
         })
 
         self.meta.navigator.count_total = int(self.input['hits']['total'])
@@ -307,14 +307,14 @@ class DepaTechSearchResponse(GenericSearchResponse):
         self.meta.navigator.offset      = int(self.options.offset)
         self.meta.navigator.limit       = int(self.options.limit)
         self.meta.navigator.max_hits   = int(self.options.max_hits)
-        self.meta.navigator.postprocess = SmartBunch()
+        self.meta.navigator.postprocess = SmartMunch()
 
         # Read content
         self.documents = self.input['hits']['hits']
         self.read_documents()
 
     def document_to_number(self, document):
-        _id = document[u'_id']
+        _id = document['_id']
         cc, docno, kindcode = _id.split('.')
         publication_number = cc + docno + kindcode
         number = normalize_patent(publication_number)
@@ -326,7 +326,7 @@ class DepaTechSearchResponse(GenericSearchResponse):
 
 def depatech_search(query, options=None):
 
-    options = options or SmartBunch()
+    options = options or SmartMunch()
 
     client = get_depatech_client()
     try:

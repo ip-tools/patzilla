@@ -18,7 +18,7 @@ from patzilla.access.generic.exceptions import NoResultsException, SearchExcepti
 from patzilla.access.ificlaims.api import ificlaims_download, ificlaims_download_multi
 from patzilla.access.ificlaims.client import IFIClaimsException, IFIClaimsFormatException, LoginException, ificlaims_search, ificlaims_crawl, ificlaims_client
 from patzilla.access.ificlaims.expression import should_be_quoted, IFIClaimsParser
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.data.zip import zip_multi
 from patzilla.util.python import _exception_traceback
 
@@ -51,7 +51,7 @@ status_upstream_ificlaims = Service(
 @status_upstream_ificlaims.get()
 def status_upstream_ificlaims_handler(request):
     client = ificlaims_client()
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': 'pn:EP0666666',
     })
     data = client.search_real(query)
@@ -71,7 +71,7 @@ def ificlaims_download_handler(request):
     try:
         response = ificlaims_download(resource, format, options)
 
-    except IFIClaimsException, ex:
+    except IFIClaimsException as ex:
         if type(ex) is IFIClaimsFormatException:
             raise HTTPNotFound(ex)
         else:
@@ -102,16 +102,16 @@ def ificlaims_deliver_handler(request):
     """Deliver resources from IFI CLAIMS Direct in bulk"""
 
     kind = request.matchdict['kind']
-    formats = map(unicode.strip, request.params.get('formats', u'').lower().split(u','))
-    numberlist = filter(lambda item: bool(item), map(unicode.strip, re.split('[\n,]', request.params.get('numberlist', u''))))
+    formats = list(map(str.strip, request.params.get('formats', '').lower().split(',')))
+    numberlist = [item for item in map(str.strip, re.split('[\n,]', request.params.get('numberlist', ''))) if bool(item)]
 
     if kind == 'zip':
         multi = ificlaims_download_multi(numberlist, formats)
 
         #for entry in multi['results']:
         #    print 'entry:', entry
-        print 'report:'
-        print json.dumps(multi['report'], indent=4)
+        print('report:')
+        print(json.dumps(multi['report'], indent=4))
 
         payload = zip_multi(multi)
 
@@ -138,7 +138,7 @@ def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI CLAIMS Direct"""
 
     # Get hold of query expression and filter
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
     })
@@ -162,7 +162,7 @@ def ificlaims_published_data_search_handler(request):
     # - limit
     # - sorting
     # - whether to remove family members
-    options = SmartBunch()
+    options = SmartMunch()
     options.update({
         'limit': limit,
         'offset': offset_remote,
@@ -181,7 +181,7 @@ def ificlaims_published_data_search_handler(request):
         log.warn(request.errors)
 
     except SyntaxError as ex:
-        request.errors.add('ificlaims-search', 'expression', unicode(ex.msg))
+        request.errors.add('ificlaims-search', 'expression', str(ex.msg))
         log.warn(request.errors)
 
     except SearchException as ex:
@@ -195,7 +195,7 @@ def ificlaims_published_data_search_handler(request):
         return ex.data
 
     except OperationFailure as ex:
-        message = unicode(ex)
+        message = str(ex)
         request.errors.add('ificlaims-search', 'internals', message)
         log.error(request.errors)
 
@@ -209,7 +209,7 @@ def ificlaims_published_data_crawl_handler(request):
     """Crawl published-data at IFI CLAIMS Direct"""
 
     # Get hold of query expression and filter
-    query = SmartBunch({
+    query = SmartMunch({
         'expression': request.params.get('expression', ''),
         'filter':     request.params.get('filter', ''),
         })
@@ -229,6 +229,6 @@ def ificlaims_published_data_crawl_handler(request):
         return result
 
     except Exception as ex:
-        request.errors.add('ificlaims-crawl', 'crawl', unicode(ex))
+        request.errors.add('ificlaims-crawl', 'crawl', str(ex))
         log.error(request.errors)
-        log.error(u'query="{0}", exception:\n{1}'.format(query, _exception_traceback()))
+        log.error('query="{0}", exception:\n{1}'.format(query, _exception_traceback()))

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-import parser as cheshire3_parser
-from parser import SearchClause, CQLParser, Diagnostic
+from . import parser as cheshire3_parser
+from .parser import SearchClause, CQLParser, Diagnostic
 from patzilla.util.numbers.normalize import normalize_patent
 
 
@@ -14,7 +14,7 @@ class SmartSearchClause(SearchClause):
     def toCQL(self):
 
         text = []
-        for p in self.prefixes.keys():
+        for p in list(self.prefixes.keys()):
             if (p != ''):
                 text.append('>%s="%s"' % (p, self.prefixes[p]))
             else:

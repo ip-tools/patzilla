@@ -3,8 +3,8 @@
 import logging
 import os
 from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.declarations import implements
 from zope.interface.interface import Interface
+from zope.interface import implementer
 from patzilla.access.depatech.client import DepaTechClient
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 
@@ -43,6 +43,8 @@ class DepaTechCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["DEPATECH_API_USERNAME"] or not os.environ["DEPATECH_API_PASSWORD"]:
+            raise KeyError("DEPATECH_API_USERNAME or DEPATECH_API_PASSWORD is empty")
         return {
             "api_username": os.environ["DEPATECH_API_USERNAME"],
             "api_password": os.environ["DEPATECH_API_PASSWORD"],
@@ -78,12 +80,11 @@ class IDepaTechClientPool(Interface):
     pass
 
 
+@implementer(IDepaTechClientPool)
 class DepaTechClientPool(object):
     """
     depa.tech client pool as Pyramid utility implementation.
     """
-
-    implements(IDepaTechClientPool)
 
     def __init__(self, api_uri):
         logger.info("Creating upstream client pool for depa.tech")

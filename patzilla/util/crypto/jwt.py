@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2022 Andreas Motl <andreas.motl@ip-tools.org>
-from __future__ import absolute_import
+
+# (c) 2014 Andreas Motl, Elmyra UG
+
 import logging
 from datetime import datetime, timedelta
 
 import python_jwt
 from jwcrypto import jwk
 from zope.interface.interface import Interface
-from zope.interface.declarations import implements
+#from zope.interface.declarations import implements
+from zope.interface import implementer
 
 log = logging.getLogger(__name__)
 
@@ -16,6 +18,7 @@ class ISigner(Interface):
     pass
 
 
+@implementer(ISigner)
 class JwtSigner(object):
     """
     Generate and verify JSON Web Tokens.
@@ -26,7 +29,7 @@ class JwtSigner(object):
     - https://jwcrypto.readthedocs.io/
     """
 
-    implements(ISigner)
+# py27  implements(ISigner)
 
     def __init__(self, key=None, ttl=None):
         self.key = key
@@ -86,7 +89,7 @@ class JwtSigner(object):
                 iat_skew=timedelta(minutes=5),
             )
 
-            if not payload.has_key('data'):
+            if 'data' not in payload:
                 error_payload = {
                     'location': 'JSON Web Token',
                     'name': self.__class__.__name__,

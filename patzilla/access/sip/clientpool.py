@@ -4,8 +4,9 @@ import logging
 import os
 
 from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.declarations import implements
+from zope.interface import implementer
 from zope.interface.interface import Interface
+from zope.interface import implementer
 
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.access.sip.client import SipClient
@@ -45,6 +46,8 @@ class SipCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["SIP_API_USERNAME"] or not os.environ["SIP_API_PASSWORD"]:
+            raise KeyError("SIP_API_USERNAME or SIP_API_PASSWORD is empty")
         return {
             "api_username": os.environ["SIP_API_USERNAME"],
             "api_password": os.environ["SIP_API_PASSWORD"],
@@ -80,12 +83,11 @@ class ISipClientPool(Interface):
     pass
 
 
+@implementer(ISipClientPool)
 class SipClientPool(object):
     """
     SIP client pool as Pyramid utility implementation.
     """
-
-    implements(ISipClientPool)
 
     def __init__(self, api_uri):
         logger.info("Creating upstream client pool for SIP")
@@ -103,3 +105,4 @@ class SipClientPool(object):
                 uri=self.api_uri, username=credentials['api_username'], password=credentials['api_password'])
 
         return self.clients.get(identifier)
+

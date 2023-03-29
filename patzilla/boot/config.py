@@ -90,7 +90,7 @@ format = %(asctime)s %(levelname)-8.8s [%(name)-40s] %(message)s
         """
         Create a temporary file with given content.
         """
-        tmp = tempfile.NamedTemporaryFile(suffix=suffix)
+        tmp = tempfile.NamedTemporaryFile(mode='w+', suffix=suffix)
         self._tmpfiles.append(tmp)
         tmp.write(payload)
         tmp.flush()

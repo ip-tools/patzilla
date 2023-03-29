@@ -4,7 +4,7 @@ import time
 import logging
 from pprint import pprint
 from collections import defaultdict
-from patzilla.util.data.container import SmartBunch
+from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.access.generic.exceptions import SearchException
 
@@ -13,27 +13,27 @@ log = logging.getLogger(__name__)
 class GenericSearchClient(object):
 
     def lm(self, message):
-        message = u'{backend_name}: {message}'.format(message=message, **self.__dict__)
+        message = '{backend_name}: {message}'.format(message=message, **self.__dict__)
         return message
 
     def search_failed(self, message=None, response=None, user_info=None, ex=None, meta=None):
 
         # Compute user info
-        user_info = user_info or u'Search failed with unknown reason, please report this error to us.'
+        user_info = user_info or 'Search failed with unknown reason, please report this error to us.'
         meta = meta or {}
 
         # Compute reason and status
-        message = message or u'unknown'
+        message = message or 'unknown'
         if ex:
-            message = u'{}: {}'.format(ex.__class__.__name__, ex.message)
+            message = '{}: {}'.format(ex.__class__.__name__, ex.message)
 
         # Compute and emit log message
-        log_message = u'{backend_name}: Search failed. message={message}'.format(message=message, **self.__dict__)
+        log_message = '{backend_name}: Search failed. message={message}'.format(message=message, **self.__dict__)
         if meta:
-            log_message += u', meta=' + unicode(meta)
+            log_message += ', meta=' + str(meta)
         if response:
-            status = unicode(response.status_code) + u' ' + response.reason
-            log_message += u', status={status}, response=\n{response}'.format(status=status, response=response.content.decode('utf-8'))
+            status = str(response.status_code) + ' ' + response.reason
+            log_message += ', status={status}, response=\n{response}'.format(status=status, response=response.content.decode('utf-8'))
         log.error(log_message)
 
         # Return exception object
@@ -50,7 +50,7 @@ class GenericSearchClient(object):
 
         # fetch first chunk (1-chunksize) from upstream
         #first_chunk = self.search(expression, 0, chunksize)
-        first_chunk = self.search_method(expression, SmartBunch({'offset': 0, 'limit': chunksize}))
+        first_chunk = self.search_method(expression, SmartMunch({'offset': 0, 'limit': chunksize}))
         #print first_chunk
 
         #total_count = int(first_chunk['meta'].get('pager', {}).get('totalEntries', 0))
@@ -82,7 +82,7 @@ class GenericSearchClient(object):
             time.sleep(1)
 
             log.info(self.lm('Crawling from offset {offset}'.format(offset=offset)))
-            chunk = self.search_method(expression, SmartBunch({'offset': offset, 'limit': chunksize}))
+            chunk = self.search_method(expression, SmartMunch({'offset': offset, 'limit': chunksize}))
             chunks.append(chunk)
 
 
@@ -128,7 +128,7 @@ class GenericSearchResponse(object):
 
         # Input data and options
         self.input = input
-        self.options = options and SmartBunch.bunchify(options) or SmartBunch()
+        self.options = options and SmartMunch.munchify(options) or SmartMunch()
 
         # Setup data structures
         self.setup()
@@ -146,13 +146,13 @@ class GenericSearchResponse(object):
         self.documents = []
 
         # Metadata information, upstream (raw) and downstream (unified)
-        self.meta = SmartBunch.bunchify({
+        self.meta = SmartMunch.munchify({
             'navigator': {},
             'upstream': {},
         })
 
         # Output information, upstream (raw) and downstream (unified)
-        self.output = SmartBunch.bunchify({
+        self.output = SmartMunch.munchify({
             'meta': {},
             'numbers': [],
             'details': [],
@@ -177,8 +177,8 @@ class GenericSearchResponse(object):
             if number_normalized:
                 number = number_normalized
 
-            document[u'publication_number'] = number
-            document[u'upstream_provider'] = self.meta.upstream.name
+            document['publication_number'] = number
+            document['upstream_provider'] = self.meta.upstream.name
 
     def render(self):
 
@@ -209,14 +209,14 @@ class GenericSearchResponse(object):
         seen = {}
         removed = []
         removed_map = defaultdict(list)
-        stats = SmartBunch(removed = 0)
+        stats = SmartMunch(removed = 0)
         def family_remover(item):
 
             fam = self.document_to_family_id(item)
 
             # Sanity checks on family id
             # Do not remove documents without valid family id
-            if not fam or fam in [u'0', u'-1']:
+            if not fam or fam in ['0', '-1']:
                 return True
 
             # "Seen" filtering logic
@@ -233,7 +233,7 @@ class GenericSearchResponse(object):
         # Update metadata and content
 
         # 1. Apply family cleansing filter to main documents response
-        self.documents = filter(family_remover, self.documents)
+        self.documents = list(filter(family_remover, self.documents))
         #print 'removed_map:'; pprint(removed_map)
 
         # 2. Add list of removed family members to output

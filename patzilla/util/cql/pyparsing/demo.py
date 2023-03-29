@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG
 from . import CQL
-from serializer import tokens_to_cql, expand_shortcut_notation, get_triples, get_keywords, normalize_patentnumbers
+from .serializer import tokens_to_cql, expand_shortcut_notation, get_triples, get_keywords, normalize_patentnumbers
 
 def parse_cql(cql):
     c = CQL(cql)
@@ -24,9 +24,9 @@ def enrich_cql(cql):
 
 def dump_results(tokens):
     cql = tokens_to_cql(tokens)
-    print "=" * 42
-    print "tokens:", tokens
-    print "cql:", cql
+    print("=" * 42)
+    print("tokens:", tokens)
+    print("cql:", cql)
 
 
 def rundemo():
@@ -80,11 +80,11 @@ def rundemo():
         # B.3. dump all triples
         triples = []
         get_triples(tokens, triples)
-        print "triples:", triples
+        print("triples:", triples)
 
         # B.4. dump all keywords
         keywords = get_keywords(triples)
-        print "keywords:", keywords
+        print("keywords:", keywords)
 
 
 if __name__ == '__main__':

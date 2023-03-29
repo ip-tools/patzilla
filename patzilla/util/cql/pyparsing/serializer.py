@@ -3,7 +3,7 @@
 import re
 import types
 import logging
-import StringIO
+import io
 from pyparsing import ParseResults
 from patzilla.util.cql.pyparsing.parser import CQLGrammar
 from patzilla.util.cql.pyparsing.util import walk_token_results, token_to_triple
@@ -29,10 +29,10 @@ def tokens_to_cql(tokens):
 
     >>> tokens = parse_cql('foo=bar and baz=(qux or quux)')
     >>> tokens_to_cql(tokens)
-    u'foo=bar and baz=(qux or quux)'
+    'foo=bar and baz=(qux or quux)'
 
     """
-    buffer = StringIO.StringIO()
+    buffer = io.StringIO()
     tokens_to_cql_buffer(tokens, buffer)
     buffer.seek(0)
     return buffer.read()
@@ -51,23 +51,23 @@ def tokens_to_cql_buffer(tokens, buffer):
 
                     # surround binop with spaces for all operators but equality (=)
                     if binop != '=':
-                        triple[1] = u' {0} '.format(binop)
+                        triple[1] = ' {0} '.format(binop)
 
-                    payload = u''.join(triple)
+                    payload = ''.join(triple)
 
                 else:
-                    payload = u''.join(token)
+                    payload = ''.join(token)
 
                 buffer.write(payload)
 
             elif name.startswith('subquery'):
                 tokens_to_cql_buffer(token, buffer)
 
-        elif tokentype in types.StringTypes:
+        elif tokentype in (str,):
             out = token
             # surround all boolean operators with whitespace
             if token in grammar.booleans:
-                out = u' {0} '.format(token)
+                out = ' {0} '.format(token)
             buffer.write(out)
 
 def normalize_patentnumbers(tokens):
@@ -77,7 +77,7 @@ def normalize_patentnumbers(tokens):
     >>> tokens = parse_cql('pn=EP666666')
     >>> normalize_patentnumbers(tokens)
     >>> tokens_to_cql(tokens)
-    u'pn=EP0666666'
+    'pn=EP0666666'
 
     """
     def action(token, index, binop, term):
@@ -99,15 +99,15 @@ def get_keywords(triples, whitelist_indexes=None):
 
     >>> triples = []; get_triples(parse_cql('txt=foo or (bi=bar or bi=baz)'), triples)
     >>> get_keywords(triples)
-    [u'foo', u'bar', u'baz']
+    ['foo', 'bar', 'baz']
 
     >>> triples = []; get_triples(parse_cql('pa all "central, intelligence, agency"'), triples)
     >>> get_keywords(triples)
-    [u'central', u'intelligence', u'agency']
+    ['central', 'intelligence', 'agency']
 
     >>> triples = []; get_triples(parse_cql('foo=bar and baz=qux'), triples)
     >>> get_keywords(triples, ['baz'])
-    [u'qux']
+    ['qux']
 
     """
     keywords = []
@@ -143,11 +143,11 @@ def trim_keywords(keywords):
       keywords and a list of keyword elements for multi-term keywords
 
     Example:
-    >>> trim_keywords([u'!!!daimler?', u'Misch?(P)?wasser'])
-    [u'daimler', [u'Misch', u'wasser']]
+    >>> trim_keywords(['!!!daimler?', 'Misch?(P)?wasser'])
+    ['daimler', ['Misch', 'wasser']]
 
-    >>> trim_keywords([u'"foo"', u'"   bar   "'])
-    [u'foo', u'bar']
+    >>> trim_keywords(['"foo"', '"   bar   "'])
+    ['foo', 'bar']
 
     """
     keywords_trimmed = []
@@ -164,7 +164,7 @@ def get_triples(tokens, triples):
 
     >>> triples = []; get_triples(parse_cql('foo=bar and baz=(qux or quux)'), triples)
     >>> triples
-    [['foo', u'=', 'bar'], ['qux'], ['quux']]
+    [['foo', '=', 'bar'], ['qux'], ['quux']]
 
     """
     for token in tokens:
@@ -184,7 +184,7 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
     >>> tokens = parse_cql('foo=bar and baz=(qux or quux)')
     >>> expand_shortcut_notation(tokens)
     >>> tokens_to_cql(tokens)
-    u'foo=bar and (baz=qux or baz=quux)'
+    'foo=bar and (baz=qux or baz=quux)'
 
     """
     for token in tokens:
@@ -200,7 +200,7 @@ def expand_shortcut_notation(tokens, index=None, binop=None):
                 # If it does, put term inside parenthesis, which got lost while performing shortcut expansion.
                 if token:
                     if re.match('.*(?:' + grammar.termop.pattern + ').*', token[0], flags=grammar.termop.flags):
-                        token[0] = u'({0})'.format(token[0])
+                        token[0] = '({0})'.format(token[0])
 
                 # Process triple in value shortcut notation (contains only the single term).
                 # Take action: Insert index and binop from subquery context.

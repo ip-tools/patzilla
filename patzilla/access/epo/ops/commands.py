@@ -13,6 +13,7 @@ Direct mode, without configuration file::
     export OPS_API_CONSUMER_SECRET=rrXdr5WA7x9tudmP
     patzilla ops search "txt=(wind or solar) and energy"
 
+
 Use configuration file::
 
     export PATZILLA_CONFIG=patzilla/config/development-local.ini
@@ -20,6 +21,7 @@ Use configuration file::
 """
 import json
 import logging
+import sys
 from datetime import date, timedelta
 
 import click
@@ -132,7 +134,7 @@ def image(ctx, document, page, kind, format):
     Access the OPS image acquisition API, see OPS handbook section 3.1.3.
     """
     payload = get_ops_image(document, page, kind, format)
-    print(payload)
+    sys.stdout.buffer.write(payload)
 
 
 ops_cli.add_command(cmd=usage)

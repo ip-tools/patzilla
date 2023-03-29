@@ -50,7 +50,7 @@ def test_baseurl(app_request):
     response = client._make_request(
         OPS_BASE_URI, data={}, extra_headers={"Accept": "*"}, use_get=True,
     )
-    assert "<title>EPO - Open Patent Services (OPS)</title>" in response.content
+    assert b"<title>EPO - Open Patent Services (OPS)</title>" in response.content
 
 
 def test_search_full_success(app_request):
@@ -74,15 +74,15 @@ def test_search_biblio_compact_success(app_request):
     assert jpath('/0/pubdate', compact) == "1995-08-09"
     assert jpath('/1/pubnumber', compact) == "EP0666667"
     assert jpath('/1/pubdate', compact) == "1995-08-09"
-    assert compact[0].keys() == compact[1].keys() == [
+    assert sorted(compact[0].keys()) == sorted(compact[1].keys()) == [
+        'abstract',
         'appdate',
         'applicant',
-        'pubdate',
         'appnumber',
-        'title',
-        'abstract',
-        'pubnumber',
         'inventor',
+        'pubdate',
+        'pubnumber',
+        'title',
     ]
 
 
@@ -140,7 +140,7 @@ def test_search_swap_family(app_request):
     total_result_count = int(jpath('/ops:world-patent-data/ops:biblio-search/@total-result-count', results.data))
     assert total_result_count == 2
 
-    assert results.selected_numbers == [u'DE69534171T2', u'EP0666667A2']
+    assert results.selected_numbers == ['DE69534171T2', 'EP0666667A2']
 
 
 def test_crawl(app_request):
@@ -188,13 +188,13 @@ def test_biblio_data_json_success(app_request):
     assert len(documents) == 3
     assert kindcodes == ["A2", "A3", "B1"]
     assert attributes == [
-        u'@country',
-        u'@doc-number',
-        u'@family-id',
-        u'@kind',
-        u'@system',
-        u'abstract',
-        u'bibliographic-data',
+        '@country',
+        '@doc-number',
+        '@family-id',
+        '@kind',
+        '@system',
+        'abstract',
+        'bibliographic-data',
     ]
 
 
@@ -218,7 +218,7 @@ def test_biblio_data_xml_success(app_request):
     Proof getting bibliographic for a specific document in XML format works.
     """
     results = get_ops_biblio_data("publication", "EP0666666", xml=True)
-    assert results.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert results.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
 
 
 def test_document_kindcodes_success(app_request):
@@ -275,31 +275,31 @@ def test_family_members(app_request):
     pubnumbers = sorted([item["publication"]["number-docdb"] for item in members.items])
 
     assert appnumbers == [
-        u'CA2142029A',
-        u'CA2142029A',
-        u'DE69534171T',
-        u'DE69534171T',
-        u'EP95480005A',
-        u'EP95480005A',
-        u'EP95480005A',
-        u'JP29020894A',
-        u'JP29020894A',
-        u'US19288494A',
-        u'US47157195A',
+        'CA2142029A',
+        'CA2142029A',
+        'DE69534171T',
+        'DE69534171T',
+        'EP95480005A',
+        'EP95480005A',
+        'EP95480005A',
+        'JP29020894A',
+        'JP29020894A',
+        'US19288494A',
+        'US47157195A',
     ]
 
     assert pubnumbers == [
-        u'CA2142029A1',
-        u'CA2142029C',
-        u'DE69534171D1',
-        u'DE69534171T2',
-        u'EP0666666A2',
-        u'EP0666666A3',
-        u'EP0666666B1',
-        u'JP2613027B2',
-        u'JPH07231328A',
-        u'US5467352A',
-        u'US5572526A',
+        'CA2142029A1',
+        'CA2142029C',
+        'DE69534171D1',
+        'DE69534171T2',
+        'EP0666666A2',
+        'EP0666666A3',
+        'EP0666666B1',
+        'JP2613027B2',
+        'JPH07231328A',
+        'US5467352A',
+        'US5572526A',
     ]
 
 
@@ -435,8 +435,8 @@ def test_description_xml_success(app_request):
     Acquire full text "description" in XML format.
     """
     data = ops_description("EP666666A2", xml=True)
-    assert data.startswith('<?xml version="1.0" encoding="UTF-8"?>')
-    assert "The present invention generally relates to multi-node communication systems with shared resources." in data
+    assert data.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
+    assert b"The present invention generally relates to multi-node communication systems with shared resources." in data
 
 
 def test_description_failure(app_request):
@@ -485,8 +485,8 @@ def test_claims_xml_success(app_request):
     Acquire full text "claims" in XML format.
     """
     data = ops_claims("EP666666A2", xml=True)
-    assert data.startswith('<?xml version="1.0" encoding="UTF-8"?>')
-    assert "1. In a communication system having a plurality of nodes" in data
+    assert data.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
+    assert b"1. In a communication system having a plurality of nodes" in data
 
 
 def test_claims_failure(app_request):
@@ -531,7 +531,7 @@ def test_family_docdb_xml_success(app_request):
         document_number="EP0666666A2",
         constituents="biblio",
     )
-    assert response.startswith('<?xml version="1.0" encoding="UTF-8"?>')
+    assert response.startswith(b'<?xml version="1.0" encoding="UTF-8"?>')
 
 
 def test_family_docdb_xml_not_found_failure(app_request):
@@ -558,7 +558,7 @@ def test_register_json_success(app_request):
 
 def test_register_xml_success(app_request):
     response = ops_register(reference_type="publication", document_number="EP0666666A2", xml=True)
-    assert response.startswith('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
+    assert response.startswith(b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>')
 
 
 def test_register_not_found_failure(app_request):
@@ -573,4 +573,4 @@ def test_register_not_found_failure(app_request):
 
 def test_service_usage(app_request):
     response = ops_service_usage("01/01/2022", "02/01/2022")
-    assert response.keys() == ["response-size", "time-range", "message-count"]
+    assert sorted(response.keys()) == ["message-count", "response-size", "time-range"]

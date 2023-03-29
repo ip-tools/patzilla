@@ -184,235 +184,194 @@ Because this is cache data, it shouldn't be a big deal.  We recommend dropping o
 before upgrading to 0.5+ and be aware that it will generate new caches.
 
 
-
+A part of this code is a copy of https://raw.githubusercontent.com/bbangert/beaker/master/beaker/ext/mongodb.py 2023-03-22
 """
 
 
-import logging
-from beaker.container import NamespaceManager, Container
-from beaker.exceptions import InvalidCacheBackendError, MissingCacheParameter
-from beaker.synchronization import null_synchronizer
-from beaker.util import verify_directory, SyncDict
-
-from StringIO import StringIO
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
+import datetime
+import os
+import threading
+import time
+import pickle
 
 try:
-    from pymongo.connection import Connection
+    import pymongo
+    import pymongo.errors
     import bson
-    import bson.errors
 except ImportError:
-    raise InvalidCacheBackendError("Unable to load the pymongo driver.")
+    pymongo = None
+    bson = None
 
-log = logging.getLogger(__name__)
-#log.setLevel(logging.DEBUG)
+from beaker.container import NamespaceManager
+from beaker.synchronization import SynchronizerImpl
+from beaker.util import SyncDict, machine_identifier
+from beaker.crypto.util import sha1
+from beaker._compat import string_type, PY2
 
-class MongoDBNamespaceManager(NamespaceManager):
+
+class MongoNamespaceManager(NamespaceManager):
+    """Provides the :class:`.NamespaceManager` API over MongoDB.
+
+    Provided ``url`` can be both a mongodb connection string or
+    an already existing MongoClient instance.
+
+    The data will be stored into ``beaker_cache`` collection of the
+    *default database*, so make sure your connection string or
+    MongoClient point to a default database.
+    """
+    MAX_KEY_LENGTH = 1024
+
     clients = SyncDict()
-    _pickle = True
-    _sparse = False
 
-    # TODO _- support write concern / safe
-    def __init__(self, namespace, url=None, data_dir=None, skip_pickle=False,
-                 sparse_collection=False, **params):
-        NamespaceManager.__init__(self, namespace)
+    def __init__(self, namespace, url, **kw):
+        super(MongoNamespaceManager, self).__init__(namespace)
+        self.lock_dir = None  # MongoDB uses mongo itself for locking.
 
-        if not url:
-            raise MissingCacheParameter("MongoDB url is required")
+        if pymongo is None:
+            raise RuntimeError('pymongo3 is not available')
 
-        if skip_pickle:
-            log.info("Disabling pickling for namespace: %s" % self.namespace)
-            self._pickle = False
-
-        if sparse_collection:
-            log.info("Separating data to one row per key (sparse collection) for ns %s ." % self.namespace)
-            self._sparse = True
-
-        # Temporarily uses a local copy of the functions until pymongo upgrades to new parser code
-        (host_list, database, username, password, collection, options) = _parse_uri(url)
-
-        if database and host_list:
-            data_key = "mongodb:%s" % (database)
+        if isinstance(url, string_type):
+            self.client = MongoNamespaceManager.clients.get(url, pymongo.MongoClient, url)
         else:
-            raise MissingCacheParameter("Invalid Cache URL.  Cannot parse.")
+            self.client = url
+        self.db = self.client.get_default_database()
 
-        def _create_mongo_conn():
-            host_uri = 'mongodb://'
-            for x in host_list:
-                host_uri += '%s:%s' % x
-            log.info("Host URI: %s" % host_uri)
-            conn = Connection(host_uri, slave_okay=options.get('slaveok', False))
-
-            db = conn[database]
-
-            if username:
-                log.info("Attempting to authenticate %s/%s " % (username, password))
-                if not db.authenticate(username, password):
-                    raise InvalidCacheBackendError('Cannot authenticate to '
-                                                   ' MongoDB.')
-            return db[collection]
-
-        self.mongo = MongoDBNamespaceManager.clients.get(data_key,
-            _create_mongo_conn)
+    def _format_key(self, key):
+        if not isinstance(key, str):
+            key = key.decode('ascii')
+        if len(key) > (self.MAX_KEY_LENGTH - len(self.namespace) - 1):
+            if not PY2:
+                key = key.encode('utf-8')
+            key = sha1(key).hexdigest()
+        return '%s:%s' % (self.namespace, key)
 
     def get_creation_lock(self, key):
-        """@TODO - stop hitting filesystem for this...
-        I think mongo can properly avoid dog piling for us.
-        """
-        return null_synchronizer()
-
-    def do_remove(self):
-        """Clears the entire filesystem (drops the collection)"""
-        log.debug("[MongoDB] Remove namespace: %s" % self.namespace)
-        q = {}
-        if self._sparse:
-            q = {'_id.namespace': self.namespace}
-        else:
-            q = {'_id': self.namespace}
-
-        log.debug("[MongoDB] Remove Query: %s" % q)
-        self.mongo.remove(q)
-
+        return MongoSynchronizer(self._format_key(key), self.client)
 
     def __getitem__(self, key):
-        log.debug("[MongoDB %s] Get Key: %s" % (self.mongo,
-                                                key))
-
-        _id = {}
-        fields = {}
-        if self._sparse:
-            _id = {
-                'namespace': self.namespace,
-                'key': key
-            }
-            fields['data'] = True
-        else:
-            _id = self.namespace
-            fields['data.' + key] = True
-
-        log.debug("[MongoDB] Get Query: id == %s Fields: %s", _id, fields)
-        result = self.mongo.find_one({'_id': _id}, fields=fields)
-        log.debug("[MongoDB] Get Result: %s", result)
-
-        if result:
-            """Running into instances in which mongo is returning
-            -1, which causes an error as __len__ should return 0
-            or positive integers, hence the check of size explicit"""
-            log.debug("Result: %s", result)
-            data = result.get('data', None)
-            log.debug("Data: %s", data)
-            if self._sparse:
-                value = data
-            else:
-                value = data.get(key, None)
-
-            if not value:
-                return None
-
-            if self._pickle or key == 'session':
-                value = _depickle(value)
-            else:
-                if value['pickled']:
-                    value = (value['stored'], value['expires'], _depickle(value['value']))
-                else:
-                    value = (value['stored'], value['expires'], value['value'])
-
-            log.debug("[key: %s] Value: %s" % (key, value))
-
-            return value
-        else:
-            return None
-
+        self._clear_expired()
+        entry = self.db.backer_cache.find_one({'_id': self._format_key(key)})
+        if entry is None:
+            raise KeyError(key)
+        return pickle.loads(entry['value'])
 
     def __contains__(self, key):
-        def _has():
-            result = self.__getitem__(key)
-            if result:
-                log.debug("[MongoDB] %s == %s" % (key, result))
-                return result is not None
-            else:
-                return False
-
-        log.debug("[MongoDB] Has '%s'? " % key)
-        ret = _has()
-
-
-        return ret
+        self._clear_expired()
+        entry = self.db.backer_cache.find_one({'_id': self._format_key(key)})
+        return entry is not None
 
     def has_key(self, key):
         return key in self
 
     def set_value(self, key, value, expiretime=None):
-        log.debug("[MongoDB %s] Set Key: %s (Expiry: %s) ... " %
-                  (self.mongo, key, expiretime))
+        self._clear_expired()
 
-        _id = {}
-        doc = {}
+        expiration = None
+        if expiretime is not None:
+            expiration = time.time() + expiretime
 
-        if self._pickle or key == 'session':
-            try:
-                value = pickle.dumps(value)
-            except:
-                log.exception("Failed to pickle value.")
-        else:
-            value = {
-                'stored': value[0],
-                'expires': value[1],
-                'value': value[2],
-                'pickled': False
-            }
-            try:
-                bson.BSON.encode(value)
-            except:
-                log.warning("Value is not bson serializable, pickling inner value.")
-                value['value'] = pickle.dumps(value['value'])
-                value['pickled'] = True
-
-
-
-        if self._sparse:
-            _id = {
-                'namespace': self.namespace,
-                'key': key
-            }
-
-            doc['data'] = bson.Binary(value)
-            doc['_id'] = _id
-            if expiretime:
-                # TODO - What is the datatype of this? it should be instantiated as a datetime instance
-                doc['valid_until'] = expiretime
-        else:
-            _id = self.namespace
-            doc['$set'] = {'data.' + key: bson.Binary(value)}
-            if expiretime:
-                # TODO - What is the datatype of this? it should be instantiated as a datetime instance
-                doc['$set']['valid_until'] = expiretime
-
-        log.debug("Upserting Doc '%s' to _id '%s'" % (doc, _id))
-        self.mongo.update({"_id": _id}, doc, upsert=True, safe=True)
+        value = pickle.dumps(value)
+        self.db.backer_cache.update_one({'_id': self._format_key(key)},
+                                        {'$set': {'value': bson.Binary(value),
+                                                  'expiration': expiration}},
+                                        upsert=True)
 
     def __setitem__(self, key, value):
         self.set_value(key, value)
 
     def __delitem__(self, key):
-        """Delete JUST the key, by setting it to None."""
-        if self._sparse:
-            self.mongo.remove({'_id.namespace': self.namespace})
-        else:
-            self.mongo.update({'_id': self.namespace},
-                    {'$unset': {'data.' + key: True}}, upsert=False)
+        self._clear_expired()
+        self.db.backer_cache.delete_many({'_id': self._format_key(key)})
+
+    def do_remove(self):
+        self.db.backer_cache.delete_many({'_id': {'$regex': '^%s' % self.namespace}})
 
     def keys(self):
-        if self._sparse:
-            return [row['_id']['field'] for row in self.mongo.find({'_id.namespace': self.namespace}, {'_id': True})]
-        else:
-            return self.mongo.find_one({'_id': self.namespace}, {'data': True}).get('data', {})
+        return [e['key'].split(':', 1)[-1] for e in self.db.backer_cache.find_all(
+            {'_id': {'$regex': '^%s' % self.namespace}}
+        )]
 
-class MongoDBContainer(Container):
-    namespace_class = MongoDBNamespaceManager
+    def _clear_expired(self):
+        now = time.time()
+        self.db.backer_cache.delete_many({'_id': {'$regex': '^%s' % self.namespace},
+                                          'expiration': {'$ne': None, '$lte': now}})
+
+
+class MongoSynchronizer(SynchronizerImpl):
+    """Provides a Writer/Reader lock based on MongoDB.
+
+    Provided ``url`` can be both a mongodb connection string or
+    an already existing MongoClient instance.
+
+    The data will be stored into ``beaker_locks`` collection of the
+    *default database*, so make sure your connection string or
+    MongoClient point to a default database.
+
+    Locks are identified by local machine, PID and threadid, so
+    are suitable for use in both local and distributed environments.
+    """
+    # If a cache entry generation function can take a lot,
+    # but 15 minutes is more than a reasonable time.
+    LOCK_EXPIRATION = 900
+    MACHINE_ID = machine_identifier()
+
+    def __init__(self, identifier, url):
+        super(MongoSynchronizer, self).__init__()
+        self.identifier = identifier
+        if isinstance(url, string_type):
+            self.client = MongoNamespaceManager.clients.get(url, pymongo.MongoClient, url)
+        else:
+            self.client = url
+        self.db = self.client.get_default_database()
+
+    def _clear_expired_locks(self):
+        now = datetime.datetime.utcnow()
+        expired = now - datetime.timedelta(seconds=self.LOCK_EXPIRATION)
+        self.db.beaker_locks.delete_many({'_id': self.identifier, 'timestamp': {'$lte': expired}})
+        return now
+
+    def _get_owner_id(self):
+        return '%s-%s-%s' % (self.MACHINE_ID, os.getpid(), threading.current_thread().ident)
+
+    def do_release_read_lock(self):
+        owner_id = self._get_owner_id()
+        self.db.beaker_locks.update_one({'_id': self.identifier, 'readers': owner_id},
+                                        {'$pull': {'readers': owner_id}})
+
+    def do_acquire_read_lock(self, wait):
+        now = self._clear_expired_locks()
+        owner_id = self._get_owner_id()
+        while True:
+            try:
+                self.db.beaker_locks.update_one({'_id': self.identifier, 'owner': None},
+                                                {'$set': {'timestamp': now},
+                                                 '$push': {'readers': owner_id}},
+                                                upsert=True)
+                return True
+            except pymongo.errors.DuplicateKeyError:
+                if not wait:
+                    return False
+                time.sleep(0.2)
+
+    def do_release_write_lock(self):
+        self.db.beaker_locks.delete_one({'_id': self.identifier, 'owner': self._get_owner_id()})
+
+    def do_acquire_write_lock(self, wait):
+        now = self._clear_expired_locks()
+        owner_id = self._get_owner_id()
+        while True:
+            try:
+                self.db.beaker_locks.update_one({'_id': self.identifier, 'owner': None,
+                                                 'readers': []},
+                                                {'$set': {'owner': owner_id,
+                                                          'timestamp': now}},
+                                                upsert=True)
+                return True
+            except pymongo.errors.DuplicateKeyError:
+                if not wait:
+                    return False
+                time.sleep(0.2)
+
 
 def _partition(source, sub):
     """Our own string partitioning method.
@@ -499,6 +458,6 @@ def _parse_uri(uri, default_port=27017):
 def _depickle(value):
     try:
         return pickle.loads(value)
-    except Exception, e:
+    except Exception as e:
         log.exception("Failed to unpickle value '{0}'.".format(e))
         return None

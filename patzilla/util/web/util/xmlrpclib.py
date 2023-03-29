@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2015 Andreas Motl, Elmyra UG
-from __future__ import absolute_import
+
 import sys
 import socket
-import xmlrpclib
+import xmlrpc.client
 import ssl
 
 # https://stackoverflow.com/questions/372365/set-timeout-for-xmlrpclib-serverproxy/14397619#14397619
@@ -24,7 +24,7 @@ class XmlRpcTimeoutServer:
             if self.__timeout:
                 self.__prevDefaultTimeout = socket.getdefaulttimeout()
                 socket.setdefaulttimeout(self.__timeout)
-            proxy = xmlrpclib.Server(self.__url, allow_none=True)
+            proxy = xmlrpc.client.Server(self.__url, allow_none=True)
 
         except Exception as ex:
             raise Exception("Unable create XMLRPC-proxy for url '%s': %s" % (self.__url, ex))

@@ -35,12 +35,11 @@ def handle_generic_exception(request, ex, backend_name, query):
 
     module_name = ex.__class__.__module__
     class_name = ex.__class__.__name__
-    reason = u'{}.{}: {}'.format(module_name, class_name, ex.message)
+    reason = '{}.{}: {}'.format(module_name, class_name, str(ex))
 
-    logger.critical(u'{backend_name} error: query="{query}", reason={reason}\nresponse:\n{http_response}\nexception:\n{exception}'.format(
-        exception=_exception_traceback(), **locals()))
+    logger.exception('{backend_name} error: query="{query}", reason={reason}\nresponse:\n{http_response}'.format(**locals()))
 
-    message = u'An exception occurred while processing your query.<br/>\nReason: {}<br/><br/>\n'.format(reason)
+    message = 'An exception occurred while processing your query.<br/>\nReason: {}<br/><br/>\n'.format(reason)
     if module_name == 'pymongo.errors':
         message += 'Error connecting to cache database. Please report this problem to us.'
 

@@ -7,7 +7,7 @@ import epo_ops
 from mock import mock
 from pyramid.httpexceptions import HTTPUnauthorized
 from pyramid.threadlocal import get_current_registry
-from zope.interface.declarations import implements
+from zope.interface import implementer
 from zope.interface.interface import Interface
 from zope.interface.interfaces import ComponentLookupError
 
@@ -38,6 +38,8 @@ class OpsCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["OPS_API_CONSUMER_KEY"] or not os.environ["OPS_API_CONSUMER_SECRET"]:
+            raise KeyError("OPS_API_CONSUMER_KEY or OPS_API_CONSUMER_SECRET is empty")
         return {
             "consumer_key": os.environ["OPS_API_CONSUMER_KEY"],
             "consumer_secret": os.environ["OPS_API_CONSUMER_SECRET"],
@@ -72,13 +74,11 @@ def attach_ops_client(event):
 class IOpsClientPool(Interface):
     pass
 
-
+@implementer(IOpsClientPool)
 class OpsClientPool(object):
     """
     EPO/OPS client pool as Pyramid utility implementation.
     """
-
-    implements(IOpsClientPool)
 
     def __init__(self):
         logger.info("Creating upstream client pool for EPO/OPS")

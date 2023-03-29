@@ -19,8 +19,8 @@ import types
 
 from shlex import shlex
 from xml.sax.saxutils import escape
-from StringIO import StringIO
-from __builtin__ import isinstance
+from io import StringIO
+from builtins import isinstance
 
 serverChoiceRelation = "="
 serverChoiceIndex = "cql.serverchoice"
@@ -75,7 +75,7 @@ class PrefixableObject:
     def toXCQL(self, depth=0):
         space = "  " * depth
         xml = ['{s}<prefixes>\n']
-        for p in self.prefixes.keys():
+        for p in list(self.prefixes.keys()):
             xml.extend(["{s}  <prefix>\n",
                         "{s}    <name>{name}</name>\n",
                         "{s}    <identifier>{ident}</identifier>\n",
@@ -221,7 +221,7 @@ class Triple (PrefixableObject):
         txt = []
         if (self.prefixes):
             ptxt = []
-            for p in self.prefixes.keys():
+            for p in list(self.prefixes.keys()):
                 if p != '':
                     ptxt.append('>%s="%s"' % (p, self.prefixes[p]))
                 else:
@@ -236,7 +236,7 @@ class Triple (PrefixableObject):
             txt.append("sortBy")
             for sk in self.sortKeys:
                 txt.append(sk.toCQL())
-        return u"({0})".format(u" ".join(txt))
+        return "({0})".format(" ".join(txt))
 
     def getResultSetId(self, top=None):
         if (
@@ -315,7 +315,7 @@ class SearchClause (PrefixableObject):
 
     def toCQL(self):
         text = []
-        for p in self.prefixes.keys():
+        for p in list(self.prefixes.keys()):
             if p != '':
                 text.append('>%s="%s"' % (p, self.prefixes[p]))
             else:
@@ -406,7 +406,7 @@ class Relation(PrefixedObject, ModifiableObject):
 
     def toCQL(self):
         txt = [self.value]
-        txt.extend(map(str, self.modifiers))
+        txt.extend(list(map(str, self.modifiers)))
         return '/'.join(txt)
 
 
@@ -572,7 +572,6 @@ class CQLshlex(shlex):
         shlex.__init__(self, thing)
         self.wordchars += "!@#$%^&*-+{}[];,.?|~`:\\"
         # self.wordchars += ''.join(map(chr, range(128,254)))
-        self.wordchars = self.wordchars.decode('utf-8')
 
     def read_token(self):
         "Read a token from the input stream (no pushback or inclusions)"
@@ -774,7 +773,7 @@ class CQLParser:
                 left.sortKeys = self.sortQuery()
             else:
                 break
-        for p in prefs.keys():
+        for p in list(prefs.keys()):
             left.addPrefix(p, prefs[p])
         return left
 
@@ -812,7 +811,7 @@ class CQLParser:
             prefs = self.prefixes()
             if (prefs):
                 object = self.query()
-                for p in prefs.keys():
+                for p in list(prefs.keys()):
                     object.addPrefix(p, prefs[p])
             else:
                 object = self.clause()
@@ -847,7 +846,7 @@ class CQLParser:
         elif self.currentToken == ">":
             prefs = self.prefixes()
             object = self.clause()
-            for p in prefs.keys():
+            for p in list(prefs.keys()):
                 object.addPrefix(p, prefs[p])
             return object
 
@@ -914,12 +913,6 @@ class CQLParser:
 
 def parse(query):
     """Return a searchClause/triple object from CQL string"""
-
-    if type(query) == str:
-        try:
-            query = query.decode("utf-8")
-        except Exception, e:
-            raise
 
     q = StringIO(query)
     lexer = CQLshlex(q)
