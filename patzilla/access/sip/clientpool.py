@@ -46,6 +46,8 @@ class SipCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["SIP_API_USERNAME"] or not os.environ["SIP_API_PASSWORD"]:
+            raise KeyError("SIP_API_USERNAME or SIP_API_PASSWORD is empty")
         return {
             "api_username": os.environ["SIP_API_USERNAME"],
             "api_password": os.environ["SIP_API_PASSWORD"],

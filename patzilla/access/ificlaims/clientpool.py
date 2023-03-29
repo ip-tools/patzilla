@@ -46,6 +46,8 @@ class IfiClaimsCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["IFICLAIMS_API_USERNAME"] or not os.environ["IFICLAIMS_API_PASSWORD"]:
+            raise KeyError("IFICLAIMS_API_USERNAME or IFICLAIMS_API_PASSWORD is empty")
         return {
             "api_username": os.environ["IFICLAIMS_API_USERNAME"],
             "api_password": os.environ["IFICLAIMS_API_PASSWORD"],
