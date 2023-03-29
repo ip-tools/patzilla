@@ -74,15 +74,15 @@ def test_search_biblio_compact_success(app_request):
     assert jpath('/0/pubdate', compact) == "1995-08-09"
     assert jpath('/1/pubnumber', compact) == "EP0666667"
     assert jpath('/1/pubdate', compact) == "1995-08-09"
-    assert compact[0].keys() == compact[1].keys() == [
+    assert sorted(compact[0].keys()) == sorted(compact[1].keys()) == [
+        'abstract',
         'appdate',
         'applicant',
-        'pubdate',
         'appnumber',
-        'title',
-        'abstract',
-        'pubnumber',
         'inventor',
+        'pubdate',
+        'pubnumber',
+        'title',
     ]
 
 
@@ -573,4 +573,4 @@ def test_register_not_found_failure(app_request):
 
 def test_service_usage(app_request):
     response = ops_service_usage("01/01/2022", "02/01/2022")
-    assert response.keys() == ["response-size", "time-range", "message-count"]
+    assert sorted(response.keys()) == ["message-count", "response-size", "time-range"]

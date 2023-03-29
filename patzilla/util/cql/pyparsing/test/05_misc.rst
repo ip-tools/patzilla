@@ -100,4 +100,4 @@ Error explanation
 ...     CQL('foo bar', logging=False).dumps()
 ... except Exception as ex:
 ...     ex.explanation
-'foo bar\n    ^\n\nExpected end of text, found 'bar'  (at char 4), (line:1, col:5)'
+"foo bar\n    ^\n\nExpected end of text, found 'bar'  (at char 4), (line:1, col:5)"

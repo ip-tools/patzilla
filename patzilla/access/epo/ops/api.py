@@ -907,7 +907,7 @@ def handle_error(response, location):
     if len(request.errors) == 1:
         error_info = request.errors[0].get('description')
         if error_info.get('status_code') == 404:
-            error_content = error_info.get('content', '')
+            error_content = error_info.get('content', b'')
             url = error_info.get('url')
             status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
 
