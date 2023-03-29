@@ -43,6 +43,8 @@ class DepaTechCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["DEPATECH_API_USERNAME"] or not os.environ["DEPATECH_API_PASSWORD"]:
+            raise KeyError("DEPATECH_API_USERNAME or DEPATECH_API_PASSWORD is empty")
         return {
             "api_username": os.environ["DEPATECH_API_USERNAME"],
             "api_password": os.environ["DEPATECH_API_PASSWORD"],
