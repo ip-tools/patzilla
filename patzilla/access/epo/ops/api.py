@@ -696,6 +696,8 @@ def get_ops_image(document, page, kind, format=None):
     document_format = 'application/tiff'
     if format == 'pdf':
         document_format = 'application/pdf'
+    elif format == 'png':
+        document_format = 'image/png'
 
     # Acquire image from OPS.
     ops = get_ops_client()
