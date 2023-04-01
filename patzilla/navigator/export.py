@@ -17,17 +17,20 @@ from cornice.renderer import JSONError
 from lxml import etree as ET
 from munch import munchify, Munch
 from json.encoder import JSONEncoder
+from tempfile import NamedTemporaryFile
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
 from xlsxwriter.worksheet import Worksheet
-from pyramid.httpexceptions import HTTPError
+from pyramid.httpexceptions import HTTPError, HTTPNotFound
 from patzilla.access.generic.pdf import pdf_ziparchive_add
-from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
+from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, get_ops_image, ops_register, ops_claims, ops_family_inpadoc
 from patzilla.access.generic.exceptions import ignored
-from patzilla.util.date import humanize_date_english
+from patzilla.util.date import humanize_date_english, date_iso, parse_date_universal
 from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number
 from patzilla.util.python import exception_traceback
 from patzilla.util.python.system import find_program_candidate
+from odfdo import Document, Paragraph, Section, Style, Text, Header, Element, Frame
+from PIL import Image
 
 log = logging.getLogger(__name__)
 
@@ -104,9 +107,6 @@ class Dossier:
             entries = self.data.collections[collection_name]
             df = pandas.DataFrame(entries, columns=['number', 'score', 'dismiss', 'seen', 'timestamp', 'url'])  # ty: ignore[invalid-argument-type,unused-ignore-comment,unused-ignore-comment]
             df.rename(columns={'number': 'document'}, inplace=True)
-
-            # Aggregate all DateFrame items
-            # FIXME: `lst` is never used?
             lst.append(df)
         self.df_documents = pandas.concat(lst)
 
@@ -236,6 +236,7 @@ class Dossier:
                 zipfile.writestr('report/csv/01-queries.csv', self.to_csv(self.df_queries))
                 zipfile.writestr('report/csv/02-documents.csv', self.to_csv(self.df_documents))
                 zipfile.writestr('report/csv/03-comments.csv', self.to_csv(self.df_comments))
+
 
             # Add JSON
             if options.report.json:
@@ -746,6 +747,225 @@ class DossierXlsx(Dossier):
         candidates += where.where('unoconv')
         return find_program_candidate(candidates)
 
+
+class DossierText(Dossier):
+
+    def __init__(self, data):
+        super(DossierText, self).__init__(data)
+        self.writer = Document('text')
+        self.section_counter = 1
+
+
+    def create(self):
+
+        # A memory buffer as storage backend
+        buffer = BytesIO()
+        self.filename = buffer
+
+        # Create "cover" sheet
+        self.write_cover_sheet()
+
+        # Create "queries" sheet
+        self.write_queries_sheet()
+
+        # Create numberlist sheets
+        self.write_numberlist_sheets()
+
+        # Create "comments" sheet
+        self.write_cards()
+
+        # Save
+        self.writer.save(buffer)
+
+        # Get hold of buffer content
+        payload = buffer.getvalue()
+        return payload
+
+
+    def write_cover_sheet(self):
+
+        title = 'Dossier »{name}«'.format(name=self.data.project.name)
+        subtitle = self.get_metadata()
+        summary = self.generate_with_metadata(self.summary_template)        
+        self.writer.body.append(Paragraph(title))
+        for line in subtitle.split('\n'):
+            self.writer.body.append(Paragraph(line))     
+        #self.writer.body.append(Paragraph(summary))
+
+    def write_numberlist_sheets(self):
+        pass
+
+    def write_queries_sheet(self):
+
+        # TODO: Add direct url links to queries
+
+        self.writer.body.append(Paragraph("Queries", style="Biblio"))
+        for query in self.data.get('queries', []):
+            self.writer.body.append(Paragraph(query['query_expression'] + " at " + query['created'] + " (" + query['datasource'] + ")"))
+
+
+    def write_cards(self):
+        #self.df_documents.dropna(subset=['document'], inplace=True)
+        
+        #Create style for the section : two columns
+        section_style =  Element.from_tag(
+            (   '<style:style style:name="Sect1" style:family="section"><style:section-properties style:editable="false"><style:columns fo:column-count="2" fo:column-gap="0.497cm"><style:column style:rel-width="32767*" fo:start-indent="0cm" fo:end-indent="0.248cm"/><style:column style:rel-width="32768*" fo:start-indent="0.248cm" fo:end-indent="0cm"/></style:columns></style:section-properties></style:style>'
+                )
+            )
+            
+        self.writer.insert_style(section_style, automatic=True)
+        # Add page break before each new document
+        style_header = self.writer.get_style(family="paragraph", name_or_element="Heading_20_1")
+        style_header.set_properties(properties={
+            "style:page-number":"auto",
+            "fo:break-before":"page"},
+            area="paragraph")
+        style_header.set_properties(properties={
+            "fo:font-size":"115%",
+            "fo:font-weight":"bold"},
+            area="text")
+        # Style for bibliographic properties
+        style_biblio = Element.from_tag(
+            (   '<style:style style:name="Biblio" style:family="paragraph" style:parent-style-name="Text_20_body" style:master-page-name=""><style:paragraph-properties style:page-number="auto"/><style:text-properties fo:font-size="115%" fo:font-weight="bold"/></style:style>'
+                )
+            )
+        self.writer.insert_style(style_biblio)
+        style_horiz =  Element.from_tag(
+            (   '<style:style style:name="Horizontal_20_Line" style:display-name="Horizontal Line" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="html" style:master-page-name=""><style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.2cm" style:contextual-spacing="false" style:page-number="auto" fo:padding="0.05cm" fo:border-left="none" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.74pt solid #000000" text:number-lines="false" text:line-number="0" style:join-border="false"/><style:text-properties fo:font-size="6pt" style:font-size-asian="6pt" style:font-size-complex="6pt"/></style:style>'
+                )
+            )
+        self.writer.insert_style(style_horiz)
+        for document in self.data.collections.rated:
+            self.writer.body.append(Header(1, document.number))
+
+            log.info('Data acquisition for document {document}'.format(document=document.number))
+
+            patent = decode_patent_number(document.number)
+
+            # Recover "bibliographic" data (full-cycle)
+            try:
+                biblio_payload = get_ops_biblio_data('publication', document.number, xml=True)
+
+            except Exception as ex:
+                self.handle_exception(ex, 'biblio', document.number)
+                continue
+
+            namespace = "http://www.epo.org/exchange"
+            self.u = len(namespace) + 2
+            tree = ET.parse(BytesIO(biblio_payload))
+
+            # Titles
+            for title in self.get_from_xml("invention-title", tree, parent="bibliographic-data"):
+                self.writer.body.append(Paragraph("{} ({})".format(title.text, title.get("lang").upper())))
+
+            section = Section(name=f"Section{self.section_counter}", style = "Sect1")
+            self.section_counter += 1
+            self.writer.body.append(Paragraph("", style="Horizontal_20_Line"))
+
+            # Parties
+            info = []
+            xpath_search = f'//{{http://www.epo.org/exchange}}applicant[@data-format="epodoc"]/{{http://www.epo.org/exchange}}applicant-name/{{http://www.epo.org/exchange}}name'
+            for name in tree.findall(xpath_search):
+                info.append(name.text)
+            if len(info) > 0:
+                section.append(Paragraph("Applicant:", style="Biblio"))
+                for name in info:
+                    section.append(Paragraph(name))
+            info = []
+            xpath_search = f'//{{http://www.epo.org/exchange}}inventor[@data-format="epodoc"]/{{http://www.epo.org/exchange}}inventor-name/{{http://www.epo.org/exchange}}name'
+            for name in tree.findall(xpath_search):
+                info.append(name.text)
+            if len(info) > 0:
+                section.append(Paragraph("Inventor:", style="Biblio"))
+                for name in info:
+                    section.append(Paragraph(name))
+
+            #Priorities
+            info = []
+            for node in self.get_from_xml("document-id", tree, parent="priority-claim", attr='document-id-type="epodoc"'):
+                info.append(node)
+            if len(info) > 0:
+                self.print_document_id("Priority:", info, section)
+
+            # Application number
+            info = []
+            for node in self.get_from_xml("document-id", tree, parent="application-reference", attr='document-id-type="epodoc"'):
+                #if node['document-id-type'] == "epodoc":
+                    info.append(node)
+            if len(info) > 0:
+                self.print_document_id("Filing:", info, section)
+                
+            # Publication number
+            info = []
+            for node in self.get_from_xml("document-id", tree, parent="publication-reference", attr='document-id-type="epodoc"'):
+                info.append(node)
+            if len(info) > 0:
+                self.print_document_id("Publication:", info, section)
+                
+            info = []
+            for node in self.get_from_xml("patent-classification", tree, parent="patent-classifications"):
+                info.append(node)
+            if len(info) > 0:
+                self.print_classification("Classification:", info, section)
+
+            self.writer.body.append(section)
+            self.writer.body.append(Paragraph("", style="Horizontal_20_Line"))
+
+            # Abstract text and image
+            for node in self.get_from_xml("p", tree, parent="abstract"):
+                self.writer.body.append(Paragraph( "Abstract:", style="Biblio"))
+                self.writer.body.append(Paragraph(f"({node.getparent().get('lang').upper()}) " + node.text))
+
+            try:
+                image_payload = get_ops_image(patent, 1, 'FirstPageClipping', 'png')
+            except HTTPNotFound:
+                try:
+                    image_payload = get_ops_image(patent, 1, 'Drawing')
+                except HTTPNotFound:
+                    continue
+            # Use "Drawing" for thumbnail
+            tmpfile = NamedTemporaryFile(suffix='.png', delete=False)
+            drawing = Image.open(BytesIO(image_payload))
+            drawing.save(tmpfile, format='png')
+            tmpfile.flush()
+            self.writer.add_file(tmpfile) 
+            w, h = drawing.size
+            ratio = max(w / 10.0, h / 10.0)
+            p = Paragraph("Abstract image:")
+            p.append(Frame.image_frame(tmpfile.name, size=( f"{w / ratio:.2f}cm", f"{h / ratio:.2f}cm"), anchor_type='paragraph'))
+            self.writer.body.append(p)
+
+
+    def get_from_xml(self, tag, tree, parent="*", attr=None):
+        attr_query = ""
+        parent_attr_query = ""
+        if attr:
+            attr_query = f"[@{attr}]"
+        xpath_search = f"//{{http://www.epo.org/exchange}}{parent}/{{http://www.epo.org/exchange}}{tag}{attr_query}"
+        return tree.findall(xpath_search)
+    
+    def print_document_id(self, title, info, section):
+        section.append(Paragraph(title, style="Biblio"))
+        for node in info:
+            element_dict = { "date":"", "doc-number":"" }
+            for element in node.iter():
+                # remove namespace from the start string
+                if element.tag[self.u:] == "date":
+                    element_dict["date"] = date_iso(parse_date_universal(element.text))
+                else:
+                    element_dict[element.tag[self.u:]] = element.text
+            section.append(Paragraph("No {} ({})".format(element_dict["doc-number"],
+                        element_dict["date"])))
+
+    
+    def print_classification(self, title, info, section):
+        section.append(Paragraph(title, style="Biblio"))
+        for node in info:
+            element_dict = { "section":"", "class":"", "subclass":"", "main-group":"", "subgroup":"", "generating-office":"" }
+            for element in node.iter():
+                # remove namespace from the start string
+                element_dict[element.tag[self.u:]] = element.text
+            section.append(Paragraph(f'- {element_dict["section"]}{element_dict["class"]}{element_dict["subclass"]}{element_dict["main-group"]}/{element_dict["subgroup"]} ({element_dict["generating-office"]})'))
 
 class ReportMetadata(OrderedDict):
 
