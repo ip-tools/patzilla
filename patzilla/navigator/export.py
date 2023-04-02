@@ -960,12 +960,37 @@ class DossierText(Dossier):
     
     def print_classification(self, title, info, section):
         section.append(Paragraph(title, style="Biblio"))
+        collection = {}
         for node in info:
-            element_dict = { "section":"", "class":"", "subclass":"", "main-group":"", "subgroup":"", "generating-office":"" }
+            element_dict = { "classification-schme":"", 
+                            "section":"", 
+                            "class":"",
+                            "subclass":"",
+                            "main-group":"",
+                            "subgroup":"",
+                            "generating-office":"",
+                            "classification-symbol":"",
+                            "office":"",
+                            }
             for element in node.iter():
                 # remove namespace from the start string
-                element_dict[element.tag[self.u:]] = element.text
-            section.append(Paragraph(f'- {element_dict["section"]}{element_dict["class"]}{element_dict["subclass"]}{element_dict["main-group"]}/{element_dict["subgroup"]} ({element_dict["generating-office"]})'))
+                if element.tag[self.u:] != "classification-scheme":
+                    element_dict[element.tag[self.u:]] = element.text
+                else:
+                    element_dict[element.tag[self.u:]] = element.get("scheme")
+                    element_dict["office"] = element.get("office")
+            if element_dict["classification-scheme"] in ("CPCI", "CPC", "CPCNO"):
+                symbol = f'{element_dict["section"]}{element_dict["class"]}{element_dict["subclass"]}{element_dict["main-group"]}/{element_dict["subgroup"]}'
+                office = element_dict["generating-office"]
+            else:
+                symbol = element_dict["classification-symbol"]
+                office = element_dict["office"]
+            if symbol in collection.keys():
+                collection[symbol].append(office)
+            else:
+                collection[symbol] = [office,]
+        for symbol in collection.keys():
+            section.append(Paragraph(f'- {symbol} ({", ".join(collection[symbol])})'))
 
 class ReportMetadata(OrderedDict):
 
