@@ -23,13 +23,13 @@ from collections import OrderedDict
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError, HTTPNotFound
 from patzilla.access.generic.pdf import pdf_ziparchive_add
-from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, get_ops_image, ops_register, ops_claims, ops_family_inpadoc
+from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, get_ops_image, ops_register, ops_claims, ops_family_members
 from patzilla.access.generic.exceptions import ignored
 from patzilla.util.date import humanize_date_english, date_iso, parse_date_universal
 from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number
 from patzilla.util.python import exception_traceback
 from patzilla.util.python.system import find_program_candidate
-from odfdo import Document, Paragraph, Section, Style, Text, Header, Element, Frame, TOC
+from odfdo import Document, Paragraph, Section, Style, Text, Header, Element, Frame, TOC, Link
 from PIL import Image
 
 log = logging.getLogger(__name__)
@@ -905,13 +905,25 @@ class DossierText(Dossier):
                 info.append(node)
             if len(info) > 0:
                 self.print_document_id("Publication:", info, section)
-                
+
+            # Classifications
             info = []
             for node in self.get_from_xml("patent-classification", tree, parent="patent-classifications"):
                 info.append(node)
             if len(info) > 0:
                 self.print_classification("Classification:", info, section)
 
+            # Other publications
+            # Recover "family" data
+            family = ops_family_members(document.number)
+            #if len(family) != 0:
+            section.append(Paragraph("Other publications", style="Biblio"))
+            for member in family.items:
+                if member['publication']['number-docdb'] != document.number:
+                    link = Link(url=f"https://worldwide.espacenet.com/patent/search/publication/{member['publication']['number-docdb']}",
+                            text=f"{member['publication']['number-docdb']}",
+                            )
+                    section.append(Paragraph(link))
             self.writer.body.append(section)
             self.writer.body.append(Paragraph("", style="Horizontal_20_Line"))
 
