@@ -29,7 +29,7 @@ from patzilla.util.date import humanize_date_english, date_iso, parse_date_unive
 from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number
 from patzilla.util.python import exception_traceback
 from patzilla.util.python.system import find_program_candidate
-from odfdo import Document, Paragraph, Section, Style, Text, Header, Element, Frame
+from odfdo import Document, Paragraph, Section, Style, Text, Header, Element, Frame, TOC
 from PIL import Image
 
 log = logging.getLogger(__name__)
@@ -773,7 +773,9 @@ class DossierText(Dossier):
 
         # Create "comments" sheet
         self.write_cards()
-
+        
+        # Update the TOC
+        self.toc.fill()
         # Save
         self.writer.save(buffer)
 
@@ -791,6 +793,8 @@ class DossierText(Dossier):
         for line in subtitle.split('\n'):
             self.writer.body.append(Paragraph(line))     
         #self.writer.body.append(Paragraph(summary))
+        self.toc = TOC("List of documents")
+        self.writer.body.append(self.toc)
 
     def write_numberlist_sheets(self):
         pass
