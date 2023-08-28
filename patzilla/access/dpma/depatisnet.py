@@ -66,7 +66,8 @@ class DpmaDepatisnetAccess:
         # https://github.com/python-mechanize/mechanize
         self.browser = mechanize.Browser()
         self.browser.set_cookiejar(cookielib.LWPCookieJar())
-        self.browser.addheaders = [('User-Agent', regular_user_agent)]
+        # 2023-07: WAF penalty for wrong user agent.
+        # self.browser.addheaders = [('User-Agent', regular_user_agent)]
         # ignore robots.txt
         self.browser.set_handle_robots(False)
 
