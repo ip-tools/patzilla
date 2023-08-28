@@ -60,6 +60,7 @@ Development
 - [mw] Fix access to DEPATISnet due to upstream changes
 - [qa] Speed up testing using ``pytest-xdist``
 - [mw] Improve caching configuration for ``patzilla.access.dpma.dpmaregister``
+- [mw] Fix access to DPMA DEPATISnet
 
 
 2019-11-01 0.169.3
