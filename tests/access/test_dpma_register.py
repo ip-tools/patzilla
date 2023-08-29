@@ -24,19 +24,19 @@ class F5WafWrapper:
 
 def test_dpmaregister_url_en():
     with F5WafWrapper():
-        url = access_register("WO2008034638", output_format="url")
-        assert url == "https://register.dpma.de/DPMAregister/pat/register:showalleverfahrenstabellen?AKZ=EP2007008279&lang=en"
+        url = access_register("EP666666", output_format="url")
+        assert url == "https://register.dpma.de/DPMAregister/pat/register:showalleverfahrenstabellen?AKZ=E954800058&lang=en"
 
 
 def test_dpmaregister_url_de():
     with F5WafWrapper():
-        url = access_register("WO2008034638", output_format="url", language="de")
-        assert url == "https://register.dpma.de/DPMAregister/pat/register:showalleverfahrenstabellen?AKZ=EP2007008279&lang=de"
+        url = access_register("EP666666", output_format="url", language="de")
+        assert url == "https://register.dpma.de/DPMAregister/pat/register:showalleverfahrenstabellen?AKZ=E954800058&lang=de"
 
 
 def test_dpmaregister_xml():
     with F5WafWrapper():
-        xml = access_register("WO2008034638", output_format="xml")
+        xml = access_register("EP666666", output_format="xml")
         assert '<?xml version="1.0" encoding="UTF-8"?>' in xml
         assert "<dpma-patent-document" in xml
         assert "<bibliographic-data>" in xml
