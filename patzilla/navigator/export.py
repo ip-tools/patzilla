@@ -771,7 +771,7 @@ class DossierText(Dossier):
         # Create numberlist sheets
         self.write_numberlist_sheets()
 
-        # Create "comments" sheet
+        # Create  sheet
         self.write_cards()
         
         # Update the TOC
@@ -806,7 +806,6 @@ class DossierText(Dossier):
         self.writer.body.append(Paragraph("Queries", style="Biblio"))
         for query in self.data.get('queries', []):
             self.writer.body.append(Paragraph(query['query_expression'] + " at " + query['created'] + " (" + query['datasource'] + ")"))
-
 
     def write_cards(self):
         #self.df_documents.dropna(subset=['document'], inplace=True)
@@ -845,7 +844,6 @@ class DossierText(Dossier):
             log.info('Data acquisition for document {document}'.format(document=document.number))
 
             patent = decode_patent_number(document.number)
-
             # Recover "bibliographic" data (full-cycle)
             try:
                 biblio_payload = get_ops_biblio_data('publication', document.number, xml=True)
@@ -853,7 +851,6 @@ class DossierText(Dossier):
             except Exception as ex:
                 self.handle_exception(ex, 'biblio', document.number)
                 continue
-
             namespace = "http://www.epo.org/exchange"
             self.u = len(namespace) + 2
             tree = ET.parse(BytesIO(biblio_payload))
@@ -861,6 +858,11 @@ class DossierText(Dossier):
             # Titles
             for title in self.get_from_xml("invention-title", tree, parent="bibliographic-data"):
                 self.writer.body.append(Paragraph("{} ({})".format(title.text, title.get("lang").upper())))
+
+            comment_index = next(iter(self.df_comments[self.df_comments['document']==document.number].index), -1)
+            if comment_index >= 0:
+                self.writer.body.append(Paragraph("Comment:", style="Biblio"))
+                self.writer.body.append(Paragraph(self.df_comments['comment'][comment_index]))
 
             section = Section(name=f"Section{self.section_counter}", style = "Sect1")
             self.section_counter += 1
