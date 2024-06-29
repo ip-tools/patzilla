@@ -8,7 +8,7 @@ from patzilla.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
 
-cipo_baseurl = 'http://brevets-patents.ic.gc.ca'
+cipo_baseurl = 'https://brevets-patents.ic.gc.ca'
 
 def fetch_first_drawing(patent):
     log.info('CIPO: Fetching first drawing of "{patent}"'.format(patent=patent))
