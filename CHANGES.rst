@@ -11,6 +11,8 @@ Development
 - [mw] Fixed DEPATISnet connectivity
 - [mw] Validated support for MongoDB up to 9.x
 - [mw] Fixed URLs to CIPO. Thanks, @papoteur-mga.
+- [mw] Improved management of failing access to image from OPS.
+  Thanks, @papoteur-mga.
 
 2026-10-20 0.170.0
 ==================
