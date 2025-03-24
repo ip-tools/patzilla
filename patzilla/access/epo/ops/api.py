@@ -709,6 +709,9 @@ def get_ops_image(document, page, kind, format=None):
         payload = response.content
         return payload
 
+    elif response.status_code == 404:
+        msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
+        raise HTTPNotFound(msg)
     else:
         msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
         log.error('[{code}] {message}'.format(code=response.status_code, message=msg))
