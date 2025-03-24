@@ -924,15 +924,12 @@ class DossierText(Dossier):
                 except HTTPNotFound:
                     continue
             # Use "Drawing" for thumbnail
-            tmpfile = NamedTemporaryFile(suffix='.png', delete=False)
-            drawing = Image.open(BytesIO(image_payload))
-            drawing.save(tmpfile, format='png')
-            tmpfile.flush()
-            self.writer.add_file(tmpfile) 
-            w, h = drawing.size
-            ratio = max(w / 10.0, h / 10.0)
-            p = Paragraph("Abstract image:")
-            p.append(Frame.image_frame(tmpfile.name, size=( f"{w / ratio:.2f}cm", f"{h / ratio:.2f}cm"), anchor_type='paragraph'))
+            drawing = BytesIO(image_payload)
+            uri = self.writer.add_file(drawing) 
+            w, h = Image.open(drawing).size
+            ratio = max(w / 20.0, h / 20.0)
+            p = Paragraph("")
+            p.append(Frame.image_frame(uri, size=( f"{w / ratio:.2f}cm", f"{h / ratio:.2f}cm"), anchor_type='paragraph'))
             self.writer.body.append(p)
 
 
