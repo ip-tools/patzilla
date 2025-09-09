@@ -268,7 +268,7 @@ development of PatZilla.
 .. _Elmyra UG: https://elmyra.de/
 .. _EUPL-1.2: https://docs.ip-tools.org/patzilla/_static/license/EUPL-1.2.txt
 .. _Europatent PATOffice Navigator: https://web.archive.org/web/20210613132912/https://www.europatent.net/software/patofficenavigator/
-.. _Serviva PATselect 4.0: https://serviva.com/ps-4-0/
+.. _Serviva PATselect 4.0: https://serviva.com/software/patselect-4-0/
 
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
 .. _nasa-public-domain demo: https://patentview.ip-tools.io/?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiTFFoQzMxbjBzalpLZlU5QUNmRVNMQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAiTkFTQSBQdWJsaWMgRG9tYWluIiwgIm51bWJlcmxpc3QiOiAiVVM1Njg5MDA0LFVTNzAwODYwNSxVUzcwMjMxMTgsVVM3NDM4MDMwLFVTNzc3MzM2MixVUzc3OTAxMjgsVVM3ODA4MzUzLFVTNzkwMDQzNixVUzc5MzMwMjcsVVM4MjEyMTM4LFVTODI1OTEwNCxVUzg0MDc5NzksVVM4NzYzMzYyLFVTODkzODk3NCxVUzkwMTY2MzIsVVM5MDIxNzgyLFVTOTA5MTQ5MCxVUzkxOTQzMzQsVVM5MTk0MzM0QjEiLCAiY29udGV4dCI6ICJ2aWV3ZXIiLCAidHRsIjogIjE1Nzg1MjgwMCIsICJtb2RlIjogImxpdmV2aWV3IiwgImRhdGFzb3VyY2UiOiAicmV2aWV3In0sICJuYmYiOiAxNTUzMDM2MDgxLCAiZXhwIjogMTcxMDg4ODg4MSwgImlhdCI6IDE1NTMwMzYwODF9.gejftmq0JiHZEyjBQbQy0QSsKpjDd0TsGl0Zp8BVhH9IrxPi4YT5sxxXjWOU46I3OASzAANodttMJydzgP2DjeIF7VJnjMA9ZrHeqAL30gk8WOmbEIse7l2ciOfhJtyT
