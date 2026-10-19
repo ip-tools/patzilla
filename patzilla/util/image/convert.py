@@ -394,7 +394,7 @@ BookmarkPageNumber: {start_page}
 
         metadata += bookmark_tpl.format(**locals())
 
-    return metadata
+    return metadata.encode("utf-8")
 
 
 def pdf_now():
