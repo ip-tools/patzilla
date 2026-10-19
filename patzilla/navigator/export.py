@@ -97,9 +97,8 @@ class Dossier(object):
     def prepare_dataframes(self):
 
         # Main DataFrame for aggregating sub results
-        self.df_documents = pandas.DataFrame()
-
         # Aggregate all results
+        lst = []
         for collection_name in ['rated', 'dismissed', 'seen']:
 
             # Wrap entries into DataFrame
@@ -108,7 +107,8 @@ class Dossier(object):
             df.rename(columns={'number': 'document'}, inplace=True)
 
             # Aggregate all DateFrame items
-            self.df_documents = self.df_documents.append(df)
+            lst.append(df)
+        self.df_documents = pandas.DataFrame(df)
 
         # Amend "NaN" boolean values to "False"
         self.df_documents['seen'].fillna(value=False, inplace=True)
@@ -504,7 +504,7 @@ class DossierXlsx(Dossier):
         self.write_comments_sheet()
 
         # Save/persist ExcelWriter model
-        self.writer.save()
+        self.writer.close()
 
         # Get hold of buffer content
         payload = buffer.getvalue()
