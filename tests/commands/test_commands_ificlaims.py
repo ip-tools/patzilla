@@ -11,6 +11,8 @@ from patzilla.access.ificlaims.clientpool import IfiClaimsCredentialsGetter
 from patzilla.commands import cli
 
 
+pytest.skip("IFI CLAIMS testing defunct (2026)", allow_module_level=True)
+
 try:
     IfiClaimsCredentialsGetter.from_environment()
 except KeyError:
