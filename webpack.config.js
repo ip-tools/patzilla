@@ -187,9 +187,7 @@ const config = {
                     {
                         loader: "sass-loader",
                         options: {
-                            sassOptions: {
-                                includePaths: ['./node_modules'],
-                            }
+                            includePaths: ['./node_modules'],
                         }
                     },
 
