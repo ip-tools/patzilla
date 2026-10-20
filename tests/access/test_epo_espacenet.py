@@ -4,6 +4,8 @@ import pytest
 
 from patzilla.access.epo.espacenet.api import espacenet_description, espacenet_claims, espacenet_abstract
 
+pytest.skip("Espacenet per web no longer works? (2026)", allow_module_level=True)
+
 
 def test_espacenet_abstract_success(app_request):
     """
