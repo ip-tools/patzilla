@@ -151,17 +151,17 @@ clear-cache:
 	mongo beaker --eval 'db.dropDatabase();'
 
 docs-virtualenv:
-	$(eval venvpath := ".venv_sphinx")
+	$(eval venvpath := ".venv")
 	@test -e $(venvpath)/bin/python || `command -v virtualenv` --python=`command -v python2` $(venvpath)
 	@$(venvpath)/bin/pip --quiet install --requirement requirements-docs.txt
 
 docs-html: docs-virtualenv
-	$(eval venvpath := ".venv_sphinx")
+	$(eval venvpath := ".venv")
 	touch docs/index.rst
 	export SPHINXBUILD="`pwd`/$(venvpath)/bin/sphinx-build"; cd docs; make html
 
 docs-linkcheck: docs-virtualenv
-	$(eval venvpath := ".venv_sphinx")
+	$(eval venvpath := ".venv")
 	export SPHINXBUILD="`pwd`/$(venvpath)/bin/sphinx-build"; cd docs; make linkcheck
 
 pdf-EP666666:
