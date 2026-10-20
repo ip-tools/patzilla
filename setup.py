@@ -9,6 +9,7 @@ requires = [
     # ----------------------------------------------
     #   Environment
     # ----------------------------------------------
+    'setuptools<81',
     'six>=1.10.0',
     'mock',
 
@@ -17,31 +18,31 @@ requires = [
     # ----------------------------------------------
 
     # Pyramid core
-    'pyramid<1.10',             # 1.10.8, 2.0
+    'pyramid<2',
     'hupper<2',
-    'watchdog<1',               # 2.1.9
-    'pyramid-debugtoolbar==4.3',  # 4.9
-    'Pygments==2.5.2',          # 2.13.0
+    'watchdog<2',               # 2.1.9
+    'pyramid-debugtoolbar<5',
+    'Pygments<3',
     'pyramid-mako<2',
     'Mako<2',
-    'Jinja2>=2.11.3,<3',        # 3.1.2
-    'MarkupSafe<2',             # 2.1.1
-    'Akhet==2.0',
-    'waitress>=1,<2',           # 2.1.2
-    'Paste<3',                  # 3.5.2
-    'PasteDeploy<3',            # 3.0.1
-    'PasteScript<3',            # 3.2.1
+    'Jinja2>=2.11.3,<4',
+    'MarkupSafe<4',
+    'Akhet<3',
+    'waitress>=1,<4',
+    'Paste<3',                  # 3.10.1
+    'PasteDeploy<4',
+    'PasteScript<3',            # 3.7.0
 
     # Caching
     'Beaker<2',
     'pyramid_beaker==0.8',
     'dogpile.cache<1',          # 1.1.8
-    'platformdirs<3',
+    'platformdirs<5',
 
     # Database and storage
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
-    'pymongo',                  # 3.13.0, 4.3.3
+    'pymongo<5',
     'mongodb_gridfs_beaker@https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker',
     'mongoengine==0.20.0',      # 0.27.0
     'python-magic<1',
@@ -79,7 +80,7 @@ requires = [
     # XML
     # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
     #'lxml==3.4.1',             # 4.2.0
-    'lxml>=4.6.5,<5',
+    'lxml>=4.6.5,<7',
     'xmljson<1',
 
     # JSON
@@ -108,7 +109,7 @@ requires = [
     'XlsxWriter==0.9.3',        # 1.4.5, 2.0.0, 3.0.3
 
     # Data conversion
-    'Pillow>=6,<7',             # 9.1.0
+    'Pillow>=6,<14',
 
     # Does not work from within virtualenv?
     # 'unoconv==0.8.2',          # 0.9.0
@@ -136,11 +137,10 @@ test_requires = [
     # -----------
     #   Testing
     # -----------
-    'pytest>=4,<5',             # 5.4.3, 6.2.5, 7.1.1
-    'pytest-cov>=2,<3',         # 3.0.0
-    'pytest-xdist<2',           # 3.0.2
-    'coverage>=5.3.1,<6',       # 6.3.2
-    'testfixtures>=6,<7',
+    'pytest>=4,<10',
+    'pytest-cov>=2,<8',
+    'pytest-xdist<4',
+    'testfixtures>=6,<13',
     'pytest-forked>=1,<2',
 ]
 
