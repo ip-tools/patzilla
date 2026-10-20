@@ -38,6 +38,8 @@ class OpsCredentialsGetter(AbstractCredentialsGetter):
 
     @staticmethod
     def from_environment():
+        if not os.environ["OPS_API_CONSUMER_KEY"] or not os.environ["OPS_API_CONSUMER_SECRET"]:
+            raise KeyError("One of the OPS credential environment variable is set but empty")
         return {
             "consumer_key": os.environ["OPS_API_CONSUMER_KEY"],
             "consumer_secret": os.environ["OPS_API_CONSUMER_SECRET"],
