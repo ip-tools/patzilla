@@ -51,8 +51,8 @@ Status
 
 - **Code status**:
 
-  .. image:: https://github.com/ip-tools/patzilla/workflows/Tests/badge.svg
-        :target: https://github.com/ip-tools/patzilla/actions?workflow=Tests
+  .. image:: https://github.com/ip-tools/patzilla/actions/workflows/tests.yaml/badge.svg?branch=main
+        :target: https://github.com/ip-tools/patzilla/actions/workflows/tests.yaml
         :alt: CI outcome
 
   .. image:: https://codecov.io/gh/ip-tools/patzilla/branch/main/graph/badge.svg
