@@ -77,13 +77,12 @@ jobs:
     - name: Run tests
       run: make test-coverage options="--app-cache-backend=memory"
 
+    # https://github.com/codecov/codecov-action
     - name: Upload coverage results to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v7
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       with:
-        file: ./coverage.xml
-        flags: unittests
-        env_vars: OS,PYTHON
-        name: codecov-umbrella
         fail_ci_if_error: true
 
   tests-docs:
