@@ -72,12 +72,12 @@ def test_dpmaregister_html_compact_de():
 def test_dpmaregister_pdf_compact_en():
     with F5WafWrapper():
         pdf = access_register("EP666666", output_format="pdf")
-        assert b"File number 695 34 171.5" in pdf
-        assert b"Most recent update in DPMAregister on Jan 7, 2017" in pdf
+        assert "File number 695 34 171.5" in pdf
+        assert "Most recent update in DPMAregister on Jan 7, 2017" in pdf
 
 
 def test_dpmaregister_pdf_compact_de():
     with F5WafWrapper():
         pdf = access_register("EP666666", output_format="pdf", language="de")
-        assert b"Aktenzeichen 695 34 171.5" in pdf
-        assert b"letzte Aktualisierung in DPMAregister am 07.01.2017" in pdf
+        assert "Aktenzeichen 695 34 171.5" in pdf
+        assert "letzte Aktualisierung in DPMAregister am 07.01.2017" in pdf

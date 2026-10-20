@@ -140,7 +140,7 @@ test_requires = [
     'pytest>=4,<10',
     'pytest-cov>=2,<8',
     'pytest-xdist<4',
-    'testfixtures>=6,<13',
+    'testfixtures>=6,<8',
     'pytest-forked>=1,<2',
 ]
 
