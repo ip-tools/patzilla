@@ -29,7 +29,7 @@ Status
         :target: https://pypi.org/project/patzilla/
         :alt: Project status (alpha, beta, stable)
 
-  .. image:: https://img.shields.io/badge/Python-2.7-green.svg
+  .. image:: https://img.shields.io/pypi/pyversions/patzilla.svg
         :target: https://pypi.org/project/patzilla/
         :alt: Supported Python versions
 
