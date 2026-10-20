@@ -68,7 +68,7 @@ class DpmaRegisterAccess:
     - Use MongoDB database cache
     """
 
-    hosturl = 'https://register.dpma.de/'
+    hosturl = 'https://register.dpma.de'
     baseurl = 'https://register.dpma.de/DPMAregister/pat/'
 
     def __init__(self):
@@ -134,7 +134,7 @@ class DpmaRegisterAccess:
         soup = result.response.soup
         st36xml_anchor = \
             soup.find("a", {'name': 'st36xml'}) or \
-            soup.find("a", {'href': re.compile('VIEW=st36$')})
+            soup.find("a", {'href': re.compile('VIEW=st36')})
         st36xml_href = st36xml_anchor['href']
 
         if st36xml_href.startswith('/'):
@@ -258,7 +258,7 @@ class DpmaRegisterAccess:
 
         # Fill form fields
         # http://wwwsearch.sourceforge.net/ClientForm/
-        self.browser.select_form(selector='form')
+        self.browser.select_form(selector='#form')
 
         # Aktenzeichen or publication number
         self.browser['akzPn'] = patent
