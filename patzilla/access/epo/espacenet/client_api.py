@@ -48,7 +48,7 @@ def espacenet_fetch_json(document_number, section):
 
     else:
 
-        if "SERVER.EntityNotFound" in response.content:
+        if "SERVER.EntityNotFound" in response.text:
             raise KeyError(message_404)
         else:
             raise ValueError(message_fail)
