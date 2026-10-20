@@ -1,7 +1,7 @@
 #VERSION := $(shell cat patzilla/version.py | awk '{ print $$3 }' | tr -d "'")
 #$(error VERSION=$(VERSION))
 
-$(eval venvpath     := .venv2)
+$(eval venvpath     := .venv)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
@@ -41,7 +41,7 @@ js-release: js
 	@echo Bundling Javascript/CSS resources.
 	@echo This might take a while, please stay patient...
 	@echo ------------------------------------------
-	npx yarn release
+	NODE_OPTIONS=--openssl-legacy-provider npx yarn release
 
 
 sdist:
