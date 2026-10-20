@@ -90,7 +90,7 @@
     "modernizr": "^3.12.0",
     "modernizr-loader": "1.0.1",
     "moment": "^2.29",
-    "node-sass": "^9.0.0",
+    "node-sass": "^4.14.1",
     "notificationfx": "https://github.com/ip-tools/notificationFx#0.0.2",
     "promise": "8.0.1",
     "purl": "https://github.com/allmarkedup/purl",
@@ -143,6 +143,6 @@
     "autonumeric@2.0.13": true,
     "core-js@2.6.12": true,
     "fsevents@1.2.13": true,
-    "node-sass@9.0.0": true
+    "node-sass@4.14.1": true
   }
 }
