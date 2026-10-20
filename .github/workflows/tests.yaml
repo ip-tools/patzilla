@@ -133,12 +133,10 @@ jobs:
     - name: Acquire sources
       uses: actions/checkout@v3
 
-    - name: Setup Python
-      uses: MatteoH2O1999/setup-python@v6
+    - name: Set up Python
+      uses: LizardByte/actions/actions/setup_python@master
       with:
         python-version: '2.7'
-        architecture: 'x64'
-        cache: 'pip'
 
     - name: Setup Node.js
       uses: actions/setup-node@v3
