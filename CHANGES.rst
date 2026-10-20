@@ -5,6 +5,9 @@ PatZilla CHANGES
 
 Development
 ===========
+
+2026-10-20 0.170.0
+==================
 - [mw] Fix dependencies for Python 2 compatibility
 - [mw] Update dependencies to resolve security warnings
 - [ui] Update dependencies to resolve security warnings
