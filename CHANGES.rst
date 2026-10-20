@@ -61,6 +61,7 @@ Development
 - [qa] Speed up testing using ``pytest-xdist``
 - [mw] Improve caching configuration for ``patzilla.access.dpma.dpmaregister``
 - [mw] Fix access to DPMA DEPATISnet
+- [mw] Fix access to DPMA DPMAregister
 
 
 2019-11-01 0.169.3
