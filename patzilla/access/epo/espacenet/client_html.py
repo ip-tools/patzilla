@@ -97,7 +97,7 @@ def espacenet_fetch_html(document_number, section, element_id=None, element_clas
 
     else:
 
-        if b'Entity not found' in response.content:
+        if 'Entity not found' in response.text:
             raise KeyError(message_404)
         else:
             raise ValueError(message_fail)
