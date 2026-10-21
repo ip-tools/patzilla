@@ -28,7 +28,7 @@ jobs:
         ]
         python-version:
           - '3.10'
-          - '3.14'
+          - '3.15'
 
     defaults:
       run:
@@ -107,7 +107,7 @@ jobs:
       with:
         activate-environment: true
         enable-cache: true
-        python-version: 3.14
+        python-version: 3.15
         version: 'latest'
 
     - name: Invoke Sphinx
