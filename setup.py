@@ -20,7 +20,7 @@ requires = [
     # Pyramid core
     'pyramid<2',
     'hupper<2',
-    'watchdog<2',               # 2.1.9
+    'watchdog<7',
     'pyramid-debugtoolbar<5',
     'Pygments<3',
     'pyramid-mako<2',
@@ -35,8 +35,8 @@ requires = [
 
     # Caching
     'Beaker<2',
-    'pyramid_beaker==0.8',
-    'dogpile.cache<1',          # 1.1.8
+    'pyramid_beaker<0.10',
+    'dogpile.cache<2',
     'platformdirs<5',
     'repoze-lru<0.9',
 
@@ -44,17 +44,17 @@ requires = [
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
     'pymongo<5',
-    'mongodb_gridfs_beaker@https://github.com/ip-tools/mongodb_gridfs_beaker/archive/0.6.0dev1.tar.gz#egg=mongodb_gridfs_beaker',
-    'mongoengine==0.20.0',      # 0.27.0
+    'mongodb_gridfs_beaker @ git+https://github.com/loucash/mongodb_gridfs_beaker@master',
+    'mongoengine==0.20.0',      # 0.29.3
     'python-magic<1',
 
     # Web services
-    'cornice<3',                # 3.4.4, 3.6.1, 4.0.1, 5.2.0, 6.0.1
+    'cornice<3',                # 6.1.0
 
     # Authorization
     'pycryptodome>=3,<4',
-    'python-jwt',
-    'pbkdf2==1.3',
+    'python-jwt<5',
+    'pbkdf2<1.4',
 
 
     # ----------------------------------------------
@@ -62,30 +62,27 @@ requires = [
     # ----------------------------------------------
 
     # HTTP
-    'python-epo-ops-client<4',  # 4.0.0
+    'python-epo-ops-client<5',
     'requests<3',
     'mechanize<1',
     'MechanicalSoup<2',
-    'beautifulsoup4<5',
 
     # HTTP SNI support
-    'pyOpenSSL==19.0.0',        # 22.0.0
-    'cryptography>=3.2,<3.4',   # 36.0.2
+    'pyOpenSSL',
+    'cryptography<43',
     'pyasn1<1',
     'ndg-httpsclient<1',
 
     # HTML
-    'beautifulsoup4',
+    'beautifulsoup4<5',
     'html2text', 
 
     # XML
-    # Remark: Both lxml 3.8.0 and 4.0.0 will segfault on Debian Wheezy (7.11)
-    #'lxml==3.4.1',             # 4.2.0
     'lxml>=4.6.5,<7',
     'xmljson<1',
 
     # JSON
-    'jsonpointer<3',
+    'jsonpointer<4',
 
 
     # ----------------------------------------------
@@ -93,21 +90,21 @@ requires = [
     # ----------------------------------------------
 
     # Data handling
-    'attrs',
-    'Munch',
-    'pyparsing<4',              # 3.0.9
+    'attrs<27',
+    'munch<5',
+    'pyparsing<4',
     'python-dateutil<3',
-    'ago==0.0.9',               # 0.0.93
-    'arrow==0.10.0',            # 0.12.1
+    'ago<0.2',
+    'arrow<2',
     'validate_email<2',
-    'numpy>=1.16.6',            # 1.22.3
-    'pandas',           # 0.22.0, 0.25.3, 1.4.2
-    'pathlib',
+    'numpy>=1.16.6,<3',
+    'pandas<3.1',
+    'pathlib2',
 
     # Data formatting
-    'openpyxl',
-    'xlrd3',
-    'XlsxWriter==0.9.3',        # 1.4.5, 2.0.0, 3.0.3
+    'openpyxl<4',
+    'xlrd3<2',
+    'XlsxWriter<4',
 
     # Data conversion
     'Pillow>=6,<14',
@@ -126,10 +123,10 @@ requires = [
     # ----------------------------------------------
     #   Console and system interfaces
     # ----------------------------------------------
-    'docopt<1',
+    'docopt-ng<1',
     'click>=7,<8',
-    'envoy==0.0.3',
-    'where==1.0.2',
+    'envoy<0.1',
+    'where<2',
     'tqdm<5',
 
 ]
