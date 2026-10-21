@@ -267,7 +267,7 @@ development of PatZilla.
 .. _notices about licenses of third-party components: https://github.com/ip-tools/patzilla/blob/main/THIRD-PARTY-NOTICES.rst
 .. _Elmyra UG: https://elmyra.de/
 .. _EUPL-1.2: https://docs.ip-tools.org/patzilla/_static/license/EUPL-1.2.txt
-.. _Europatent PATOffice Navigator: https://web.archive.org/web/20210613132912/https://www.europatent.net/software/patofficenavigator/
+.. _Europatent PATOffice Navigator: https://www.patoffice.de/features-research
 .. _Serviva PATselect 4.0: https://serviva.com/software/patselect-4-0/
 
 .. _document view demo: https://patentview.ip-tools.io/view/pn/EP0666666A2
