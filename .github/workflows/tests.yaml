@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [
-          'ubuntu-22.04',
+          'ubuntu-latest',
 
           # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
           # 'macos-latest',
@@ -90,7 +90,7 @@ jobs:
         fail_ci_if_error: true
 
   tests-docs:
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
 
     defaults:
       run:
@@ -120,7 +120,7 @@ jobs:
     strategy:
       matrix:
         os: [
-          'ubuntu-22.04',
+          'ubuntu-latest',
 
           # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
           # 'macos-latest',
