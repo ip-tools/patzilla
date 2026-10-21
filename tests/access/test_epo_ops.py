@@ -50,7 +50,7 @@ def test_baseurl(app_request):
     response = client._make_request(
         OPS_BASE_URI, data={}, extra_headers={"Accept": "*"}, use_get=True,
     )
-    assert "<title>EPO - Open Patent Services (OPS)</title>" in response.text
+    assert "<title>Open Patent Services (OPS) | epo.org</title>" in response.text
 
 
 def test_search_full_success(app_request):
@@ -70,10 +70,10 @@ def test_search_biblio_compact_success(app_request):
     """
     results = ops_published_data_search(constituents="biblio", query="pn=(EP666666 or EP666667)", range="1-10")
     compact = _result_list_compact(results)
-    assert jpath('/0/pubnumber', compact) == "EP0666666"
-    assert jpath('/0/pubdate', compact) == "1995-08-09"
-    assert jpath('/1/pubnumber', compact) == "EP0666667"
+    assert jpath('/1/pubnumber', compact) == "EP0666666"
     assert jpath('/1/pubdate', compact) == "1995-08-09"
+    assert jpath('/0/pubnumber', compact) == "EP0666667"
+    assert jpath('/0/pubdate', compact) == "1995-08-09"
     assert sorted(compact[0].keys()) == sorted(compact[1].keys()) == [
         'abstract',
         'appdate',
@@ -122,8 +122,8 @@ def test_search_failure(app_request):
     assert jpath('/errors/0/description/reason', error_data) == "Bad Request"
     assert jpath('/errors/0/description/url',
                  error_data) == "https://ops.epo.org/3.2/rest-services/published-data/search/full-cycle"
-    assert jpath('/errors/0/description/headers/X-API', error_data) == "ops-v3.2"
-    assert jpath('/errors/0/description/headers/Content-Type', error_data).startswith("application/xml")
+    assert jpath('/errors/0/description/headers/x-api', error_data) == "ops-v3.2"
+    assert jpath('/errors/0/description/headers/content-type', error_data).startswith("application/xml")
 
 
 def test_search_swap_family(app_request):
@@ -140,7 +140,7 @@ def test_search_swap_family(app_request):
     total_result_count = int(jpath('/ops:world-patent-data/ops:biblio-search/@total-result-count', results.data))
     assert total_result_count == 2
 
-    assert results.selected_numbers == ['DE69534171T2', 'EP0666667A2']
+    assert results.selected_numbers == ['EP0666667A2', 'DE69534171T2']
 
 
 def test_crawl(app_request):
@@ -261,8 +261,8 @@ def assert_404_not_found(ex, location=None, url=None):
     assert jpath('/errors/0/description/status_code', error_data) == 404
     assert jpath('/errors/0/description/reason', error_data) == "Not Found"
     assert jpath('/errors/0/description/url', error_data) == url
-    assert jpath('/errors/0/description/headers/X-API', error_data) == "ops-v3.2"
-    assert jpath('/errors/0/description/headers/Content-Type', error_data).startswith("application/xml")
+    assert jpath('/errors/0/description/headers/x-api', error_data) == "ops-v3.2"
+    assert jpath('/errors/0/description/headers/content-type', error_data).startswith("application/xml")
 
 
 def test_family_members(app_request):

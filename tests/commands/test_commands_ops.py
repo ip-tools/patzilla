@@ -28,7 +28,7 @@ def test_command_ops_search_success():
 
     stdout = result.stdout
     assert "<ops:world-patent-data" in stdout
-    assert '<ops:biblio-search total-result-count="1">' in stdout
+    assert '<ops:biblio-search total-result-count="1"' in stdout
 
 
 def test_command_ops_search_failure():
