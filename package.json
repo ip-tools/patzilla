@@ -116,7 +116,7 @@
     "waypoints": "4.0.1",
     "webpack": "^4.46",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11",
+    "webpack-dev-server": "^5.2",
     "webpack-notifier": "^1.15.0",
     "x-editable": "1.5.1",
     "zeroclipboard": "2.3.0"
