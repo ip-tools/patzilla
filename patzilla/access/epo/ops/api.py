@@ -530,7 +530,7 @@ def inquire_images(document):
             error.status_code = response.status_code
 
         else:
-            log.error(error_msg_access + '\n' + str(response) + '\n' + str(response.content))
+            log.error(error_msg_access + '\n' + str(response) + '\n' + response.text)
             error = HTTPError(error_msg_access)
             error.status_code = response.status_code
 
@@ -859,7 +859,7 @@ def handle_response(response, api_location):
             return response.json()
 
         elif content_type.startswith('application/xml') or content_type.startswith('text/xml'):
-            return response.content
+            return response.text
 
         else:
             message = 'OPS service responded with unknown content type "{}"'.format(content_type)
@@ -881,16 +881,16 @@ def measure_response(response):
 
 def handle_error(response, location):
     request = get_current_request()
-    response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content'])
+    response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content', 'text'])
 
     # Compute name
     name = 'http-response'
-    body = str(response_dict['content'],'UTF-8')
+    body = response_dict['text']
     if 'CLIENT.CQL' in body:
         name = 'expression'
 
     if 'SERVER.DomainAccess' in body or 'EpoqueCommand short-circuited and fallback disabled' in body:
-        response_dict['content'] += \
+        response_dict['text'] += \
             "<br/><br/>" \
             "The OPS API might be in maintenance mode, this happens regularly at 05:00 a.m. <br/>" \
             "and usually does not last longer than 30 minutes."
@@ -901,29 +901,29 @@ def handle_error(response, location):
     response_json.status = response.status_code
 
     # countermeasure against "_JSONError: <unprintable _JSONError object>" or the like
-    response_json.detail = str(response.status_code) + ' ' + str(response.reason) + ': ' + str(response.content)
+    response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.text
 
     #print "response:", response
     if len(request.errors) == 1:
         error_info = request.errors[0].get('description')
         if error_info.get('status_code') == 404:
-            error_content = error_info.get('content', b'')
+            error_content = error_info.get('text', '')
             url = error_info.get('url')
             status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
 
-            if b'CLIENT.InvalidCountryCode' in error_content:
+            if 'CLIENT.InvalidCountryCode' in error_content:
                 ops_code = 'CLIENT.InvalidCountryCode'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
                 return response_json
 
-            if b'SERVER.EntityNotFound' in error_content:
+            if 'SERVER.EntityNotFound' in error_content:
                 ops_code = 'SERVER.EntityNotFound'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.warning(message)
                 return response_json
 
-            if b'OPS - 404' in error_content or b'Page not found' in error_content:
+            if 'OPS - 404' in error_content or 'Page not found' in error_content:
                 ops_code = '404 OPS Page not found'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
@@ -931,7 +931,7 @@ def handle_error(response, location):
                 response_json.status_code = 502
                 return response_json
 
-            if b'This API version is not supported' in error_content:
+            if 'This API version is not supported' in error_content:
                 ops_code = '404 API version not supported'
                 message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
                 log.error(message)
