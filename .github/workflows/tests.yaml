@@ -131,6 +131,9 @@ jobs:
       run:
         shell: bash
 
+    env:
+      NODE_OPTIONS: --openssl-legacy-provider
+
     name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
 
@@ -149,6 +152,7 @@ jobs:
       run: yarn install
 
     - name: Run build
-      env:
-        NODE_OPTIONS: --openssl-legacy-provider
       run: yarn build
+
+    - name: Run release
+      run: yarn release
