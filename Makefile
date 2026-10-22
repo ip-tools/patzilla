@@ -119,7 +119,7 @@ nginx-start: nginx
 
 mongodb:
 	mkdir -p ./var/lib/mongodb
-	docker run -it --rm --publish=27017:27017 --volume ${PWD}/var/lib/mongodb:/data/db mongo:5
+	docker run -it --rm --publish=27017:27017 --volume ${PWD}/var/lib/mongodb:/data/db docker.io/mongo:9
 
 mongodb-start: mongodb
 

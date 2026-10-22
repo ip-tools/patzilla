@@ -33,7 +33,7 @@ Status
         :target: https://pypi.org/project/patzilla/
         :alt: Supported Python versions
 
-  .. image:: https://img.shields.io/badge/MongoDB-2.x%20--%205.x-blue.svg
+  .. image:: https://img.shields.io/badge/MongoDB-2.x%20--%209.x-blue.svg
         :target: https://github.com/mongodb/mongo
         :alt: Supported MongoDB versions
 
