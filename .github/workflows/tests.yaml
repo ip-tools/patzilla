@@ -124,7 +124,7 @@ jobs:
           #- 'macos-latest'
           #- 'windows-latest'
         node-version:
-          - '24'
+          - '26'
 
     defaults:
       run:

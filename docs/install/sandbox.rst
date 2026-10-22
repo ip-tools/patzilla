@@ -56,7 +56,7 @@ JavaScript sandbox
 Create a Node.js environment using specific software versions and install the
 application's dependencies::
 
-    export NODEJS_VERSION=24.22.0
+    export NODEJS_VERSION=26.12.1
     export NPM_VERSION=8.19.4
     export YARN_VERSION=1.22.22
     source /dev/stdin <<<"$(curl -s https://raw.githubusercontent.com/cicerops/supernode/main/supernode)"
