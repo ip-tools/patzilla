@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('select2/select2.js');
-require('select2/select2.css');
+require('select2/dist/js/select2.js');
+require('select2/dist/css/select2.css');
 require('jquery-caret-plugin/dist/jquery.caret.js');
 var bootbox = require('bootbox');
 
