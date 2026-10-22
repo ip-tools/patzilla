@@ -10,6 +10,7 @@ Development
 - [mw] Switch to Python 3
 - [ui] Updated UI dependencies
 - [mw] Fixed DEPATISnet connectivity
+- [mw] Validated support for MongoDB up to 9.x
 
 
 2026-10-20 0.170.0

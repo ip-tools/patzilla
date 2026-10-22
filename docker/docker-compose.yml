@@ -15,7 +15,7 @@ services:
       - mongodb
     restart: unless-stopped
   mongodb:
-    image: mongo:4-focal
+    image: docker.io/mongo:9
     ports:
       - 27017:27017
     networks:
