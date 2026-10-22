@@ -5,10 +5,9 @@ PatZilla CHANGES
 
 Development
 ===========
-- [qa] Tests with Python 3
-- [mw] Replace Bunch with Munch
-- [mw] Switch to Python 3
-- [ui] Updated UI dependencies
+- [mw] Migrated to Python 3
+- [mw] Updated backend dependency packages
+- [ui] Updated UI dependency packages
 - [mw] Fixed DEPATISnet connectivity
 - [mw] Validated support for MongoDB up to 9.x
 
