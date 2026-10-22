@@ -215,6 +215,9 @@ After a project hiatus from 2020 to 2022, the code base is getting a refresh,
 many software tests have been added, and the aim is to finish migration to
 Python 3 within the end of the year.
 
+In 2026, migration to Python 3 was completed, now supporting all versions
+up to Python 3.15.
+
 
 ************
 Contributing
