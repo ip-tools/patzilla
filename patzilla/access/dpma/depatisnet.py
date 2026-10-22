@@ -2,18 +2,16 @@
 # (c) 2014-2015 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import sys
 import json
-import types
 import logging
 import urllib.request, urllib.error, urllib.parse
+from http.cookiejar import LWPCookieJar
+
 import mechanize
 import re
-import http.cookiejar
 from bs4 import BeautifulSoup
 from xlrd3 import open_workbook
 from patzilla.access.generic.search import GenericSearchResponse
-from patzilla.util.date import from_german, date_iso
-from patzilla.util.network.browser import regular_user_agent
-from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.date import date_iso, from_english
 from patzilla.util.python import _exception_traceback
 
 
@@ -65,7 +63,7 @@ class DpmaDepatisnetAccess:
         # http://wwwsearch.sourceforge.net/mechanize/
         # https://github.com/python-mechanize/mechanize
         self.browser = mechanize.Browser()
-        self.browser.set_cookiejar(cookielib.LWPCookieJar())
+        self.browser.set_cookiejar(LWPCookieJar())
         # 2023-07: WAF penalty for wrong user agent.
         # self.browser.addheaders = [('User-Agent', regular_user_agent)]
         # ignore robots.txt
@@ -254,8 +252,8 @@ class DpmaDepatisnetAccess:
                 try:
                     item = {
                         'pubnumber': row['Publication number'],
-                        'pubdate': row['Publication date'] and date_iso(from_german(row['Publication date'])) or None,
-                        'appdate': row['Application date'] and date_iso(from_german(row['Application date'])) or None,
+                        'pubdate': row['Publication date'] and date_iso(from_english(row['Publication date'])) or None,
+                        'appdate': row['Application date'] and date_iso(from_english(row['Application date'])) or None,
                         'title': row['Title'],
                         'applicant': row['Applicant/owner'],
                         'inventor': row['Inventor'],

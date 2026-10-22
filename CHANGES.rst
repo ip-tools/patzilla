@@ -9,6 +9,7 @@ Development
 - [mw] Replace Bunch with Munch
 - [mw] Switch to Python 3
 - [ui] Updated UI dependencies
+- [mw] Fixed DEPATISnet connectivity
 
 
 2026-10-20 0.170.0
