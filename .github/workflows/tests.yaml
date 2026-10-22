@@ -20,12 +20,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [
-          'ubuntu-latest',
-
-          # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
-          # 'macos-latest',
-        ]
+        os:
+          - 'ubuntu-latest'
+          #- 'macos-latest'
+          # When installing packages: `PermissionError: [WinError 5] Access is denied`
+          # - 'windows-latest'
         python-version:
           - '3.10'
           - '3.15'
@@ -40,6 +39,7 @@ jobs:
       IFICLAIMS_API_URI: ${{ secrets.IFICLAIMS_API_URI }}
       IFICLAIMS_API_USERNAME: ${{ secrets.IFICLAIMS_API_USERNAME }}
       IFICLAIMS_API_PASSWORD: ${{ secrets.IFICLAIMS_API_PASSWORD }}
+      UV_LINK_MODE: copy
 
     name: Python ${{ matrix.python-version }} on ${{ matrix.os }}
     steps:
@@ -119,13 +119,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [
-          'ubuntu-latest',
-
-          # Don't use macOS for now, it is currently unstable, otherwise slow. -- 2022-04-19, amo
-          # 'macos-latest',
-        ]
-        node-version: ['24']
+        os:
+          - 'ubuntu-latest'
+          #- 'macos-latest'
+          #- 'windows-latest'
+        node-version:
+          - '24'
 
     defaults:
       run:
