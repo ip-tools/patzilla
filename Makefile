@@ -16,7 +16,7 @@ $(eval npx          := $(venvpath)/bin/npx)
 setup: setup-py
 
 jswatch:
-	npx yarn watch
+	NODE_OPTIONS=--openssl-legacy-provider npx yarn watch
 
 pywatch:
 	HUPPER_DEFAULT_MONITOR=hupper.watchdog.WatchdogFileMonitor $(pserve) --reload patzilla/config/development-local.ini
