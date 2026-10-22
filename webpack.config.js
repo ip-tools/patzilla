@@ -181,7 +181,10 @@ const config = {
                     "style-loader",
 
                     // Translate CSS into CommonJS
-                    "css-loader",
+                    {
+                        loader: "css-loader",
+                        options: {}
+                    },
 
                     // Compile Sass to CSS, using Node Sass by default
                     {
