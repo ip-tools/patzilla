@@ -8,6 +8,7 @@ Development
 - [qa] Tests with Python 3
 - [mw] Replace Bunch with Munch
 - [mw] Switch to Python 3
+- [ui] Updated UI dependencies
 
 
 2026-10-20 0.170.0
