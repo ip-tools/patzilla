@@ -37,7 +37,7 @@ const styles: (theme: Theme) => Record<string, CSSProperties> = (theme) => ({
 
 // Define animation.
 const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} />;
 });
 
 
