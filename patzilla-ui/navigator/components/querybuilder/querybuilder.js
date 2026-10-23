@@ -700,21 +700,33 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Get knowledge about fields
         var fields_knowledge = FIELDS_KNOWLEDGE[datasource] || {};
 
-        // Setup "select" widget
-        $('#cql-field-chooser').select2({
+        var cql_field_chooser_widget = $('#cql-field-chooser');
+
+        // Reset widget.
+        // https://github.com/select2/select2/issues/2830
+        if (cql_field_chooser_widget.hasClass("select2-hidden-accessible")) {
+            cql_field_chooser_widget.select2('destroy');
+            cql_field_chooser_widget.html('');
+        }
+
+        // Set up widget.
+        cql_field_chooser_widget.select2({
             placeholder: 'Field symbols' + ' (' + datasource + ')',
-            data: { results: fields_knowledge.fields },
+            data: fields_knowledge.fields,
             dropdownCssClass: "bigdrop",
             escapeMarkup: function(text) { return text; },
             width: '100%',
         });
 
+        // Part of reset widget.
+        cql_field_chooser_widget.val(null).trigger('change');
+
         // Setup "onselect" event handler
-        $('#cql-field-chooser').off('change');
-        $('#cql-field-chooser').on('change', function(event) {
+        cql_field_chooser_widget.off('select2:select');
+        cql_field_chooser_widget.on('select2:select', function(event) {
 
             // Only apply to "added" events, skip all others
-            if (!event.added) return;
+            //if (!event.added) return;
 
             // Get field metadata
             var fields_metadata  = fields_knowledge.meta || {};
@@ -763,7 +775,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             }
 
             // Reset select widget
-            $(this).data('select2').clear();
+            $(this).val(null).trigger('change');
 
         });
 
@@ -788,16 +800,23 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         element_field_chooser.select2({
             placeholder: '<i class="icon-sort"></i> Sorting',
-            data: { results: fields_knowledge.sorting },
+            data: fields_knowledge.sorting,
             dropdownCssClass: "bigdrop",
             escapeMarkup: function(text) { return text; },
+            allowClear: true,
         });
 
-        element_field_chooser.off('change');
-        element_field_chooser.on('change', function(event) {
+        // Clear all selections.
+        element_field_chooser.val(null).trigger('change');
 
-            var value = $(this).val();
+        // Register selection event.
+        element_field_chooser.off('select2:select');
+        element_field_chooser.on('select2:select', function(event) {
+
+            var data = event.params.data;
+            var value = data.id;
             if (!value) return;
+            log('Selected sort column:', value);
 
             var sort_order = element_order_chooser.data('value');
             if (!sort_order) {
@@ -1189,7 +1208,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         chooser_widget.select2({
             dropdownCssClass: "bigdrop history-dropdown",
             escapeMarkup: function(text) { return text; },
-            data: (data || { results: [] }),
+            data: (data || [] ),
         });
     },
 
@@ -1495,11 +1514,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // populate sorting state to user interface
         if (data && data.sorting) {
             //log('data.sorting:', data.sorting);
-            $('#sort-field-chooser').select2("val", data.sorting.field);
+            $('#sort-field-chooser').val(data.sorting.field).trigger('change');
             $('#sort-order-chooser').data('value', data.sorting.order);
             this.setup_sorting_chooser();
         } else {
-            $('#sort-field-chooser').select2("val", null);
+            $('#sort-field-chooser').val(null).trigger('change');
             $('#sort-order-chooser').data('value', null);
             this.setup_sorting_chooser();
         }
