@@ -151,9 +151,8 @@
     "yargs-parser": "^13.1.2"
   },
   "allowScripts": {
-    "autonumeric@2.0.13": true,
-    "core-js@2.6.12": true,
-    "fsevents@1.2.13": true,
-    "node-sass@4.14.1": true
+    "autonumeric": true,
+    "core-js": true,
+    "fsevents": true
   }
 }
