@@ -196,7 +196,7 @@ license using the brand name »PatZilla«.
 For further details, please visit:
 
 - `PatZilla on GitHub <https://github.com/ip-tools/patzilla>`_
-- `PatZilla documentation <https://docs.ip-tools.org/patzilla/>`_
+- `PatZilla documentation <https://patzilla.readthedocs.io/>`_
 - `PatZilla on the Python Package Index (PyPI) <https://pypi.org/project/patzilla/>`_
 
 
@@ -264,14 +264,14 @@ In this way, you are contributing to the ongoing maintenance and further
 development of PatZilla.
 
 
-.. _cli documentation: https://docs.ip-tools.org/patzilla/running/cli.html
-.. _GNU-AGPL-3.0: https://docs.ip-tools.org/patzilla/_static/license/GNU-AGPL-3.0.txt
-.. _install documentation: https://docs.ip-tools.org/patzilla/install/
+.. _cli documentation: https://patzilla.readthedocs.io/running/cli.html
+.. _GNU-AGPL-3.0: https://patzilla.readthedocs.io/_static/license/GNU-AGPL-3.0.txt
+.. _install documentation: https://patzilla.readthedocs.io/install/
 .. _issue: https://github.com/ip-tools/patzilla/issues
 .. _Public Domain NASA technologies: https://web.archive.org/web/20210620125651/https://technology.nasa.gov/publicdomain
 .. _notices about licenses of third-party components: https://github.com/ip-tools/patzilla/blob/main/THIRD-PARTY-NOTICES.rst
 .. _Elmyra UG: https://elmyra.de/
-.. _EUPL-1.2: https://docs.ip-tools.org/patzilla/_static/license/EUPL-1.2.txt
+.. _EUPL-1.2: https://patzilla.readthedocs.io/_static/license/EUPL-1.2.txt
 .. _Europatent PATOffice Navigator: https://www.patoffice.de/features-research
 .. _Serviva PATselect 4.0: https://serviva.com/software/patselect-4-0/
 

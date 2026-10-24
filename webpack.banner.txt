@@ -24,7 +24,7 @@ you are welcome to join us on our community forum.
   https://github.com/ip-tools/patzilla
 
 - Documentation
-  https://docs.ip-tools.org/patzilla/
+  https://patzilla.readthedocs.io/
 
 - Community Forum
   https://meta.ip-tools.org/
