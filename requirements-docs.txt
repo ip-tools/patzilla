@@ -1,3 +1,9 @@
-sphinx>=1,<10
-sphinx_rtd_theme>=1,<4
-pygments>=2,<3
+furo
+myst-parser[linkify]>=0.18,<6
+roman-numerals-py<5
+sphinx<10
+sphinx-copybutton
+sphinx-design-elements<1
+sphinx-sitemap<3
+sphinxcontrib-mermaid<3
+sphinxext-opengraph<1
