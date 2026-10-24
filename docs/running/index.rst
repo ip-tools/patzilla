@@ -29,3 +29,10 @@ Start the web server using the :ref:`configuration` file created before::
 Then, open http://localhost:6543/navigator/
 
 Have fun!
+
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    cli

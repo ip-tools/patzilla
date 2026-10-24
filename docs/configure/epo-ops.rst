@@ -1,3 +1,5 @@
+.. include:: ../resources.rst
+
 .. _epo-ops-setup:
 
 ##############################

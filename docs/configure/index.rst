@@ -88,3 +88,12 @@ User database
 To provision user accounts, please refer to the :ref:`user-model`.
 
 .. hint:: When running PatZilla in development mode, you might want to skip this step.
+
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    epo-ops
+    ifi-claims
+    mtc-depatech
