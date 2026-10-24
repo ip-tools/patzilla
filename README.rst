@@ -217,8 +217,8 @@ After a project hiatus from 2020 to 2022, the code base is getting a refresh,
 many software tests have been added, and the aim is to finish migration to
 Python 3 within the end of the year.
 
-In 2026, migration to Python 3 was completed, now supporting all versions
-up to Python 3.15.
+In 2026, migration to Python 3 and other modernizations were completed, now
+supporting all versions up to Python 3.15, and Node.js up to v24.
 
 
 ************
@@ -237,7 +237,7 @@ Thanks in advance for your efforts, we really appreciate any help or feedback.
 License
 *******
 
-This software is copyright © 2013-2022 The PatZilla authors. All rights reserved.
+This software is copyright © 2013-2026 The PatZilla authors. All rights reserved.
 
 It is and will always be **free and open source software**.
 
