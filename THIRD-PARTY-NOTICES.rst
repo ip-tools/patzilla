@@ -15,7 +15,7 @@ These notices are provided for information only.
 
 In the event that we accidentally failed to list a required notice,
 please bring it to our attention through any of the ways detailed at
-https://docs.ip-tools.org/patzilla/license/.
+https://patzilla.readthedocs.io/license/.
 
 
 .. _licenses-backend: https://github.com/ip-tools/patzilla/blob/main/licenses-backend.txt
