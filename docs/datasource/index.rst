@@ -37,3 +37,11 @@ Some primary data sources are obligatory, some are optional.
       -  :ref:`mtc-depatech-setup`
       -  Optional
 
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    epo-ops
+    ifi-claims
+    mtc-depatech
