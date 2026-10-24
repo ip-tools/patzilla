@@ -23,19 +23,19 @@ Currently, PatZilla powers `Europatent PATOffice Navigator`_ and
 Status
 ******
 
-- **Project status**:
+:**Status**:
 
   .. image:: https://img.shields.io/pypi/status/patzilla.svg
         :target: https://pypi.org/project/patzilla/
         :alt: Project status (alpha, beta, stable)
 
-  .. image:: https://img.shields.io/pypi/pyversions/patzilla.svg
-        :target: https://pypi.org/project/patzilla/
-        :alt: Supported Python versions
+  .. image:: https://github.com/ip-tools/patzilla/actions/workflows/tests.yaml/badge.svg?branch=main
+        :target: https://github.com/ip-tools/patzilla/actions/workflows/tests.yaml
+        :alt: CI outcome
 
-  .. image:: https://img.shields.io/badge/MongoDB-2.x%20--%209.x-blue.svg
-        :target: https://github.com/mongodb/mongo
-        :alt: Supported MongoDB versions
+  .. image:: https://codecov.io/gh/ip-tools/patzilla/branch/main/graph/badge.svg
+        :target: https://codecov.io/gh/ip-tools/patzilla
+        :alt: Code coverage
 
   .. image:: https://img.shields.io/pypi/v/patzilla.svg
         :target: https://pypi.org/project/patzilla/
@@ -45,19 +45,21 @@ Status
         :target: https://pypi.org/project/patzilla/
         :alt: Project license
 
-  .. image:: https://pepy.tech/badge/patzilla/month
+:**Usage**:
+
+  .. image:: https://static.pepy.tech/personalized-badge/patzilla?period=month&left_text=PyPI%20downloads%20%2F%20month&left_color=gray&right_color=blue
         :target: https://pepy.tech/project/patzilla
         :alt: PyPI downloads per month
 
-- **Code status**:
+:**Compatibility**:
 
-  .. image:: https://github.com/ip-tools/patzilla/actions/workflows/tests.yaml/badge.svg?branch=main
-        :target: https://github.com/ip-tools/patzilla/actions/workflows/tests.yaml
-        :alt: CI outcome
+  .. image:: https://img.shields.io/badge/MongoDB-2.x%20--%209.x-blue.svg
+        :target: https://github.com/mongodb/mongo
+        :alt: Supported MongoDB versions
 
-  .. image:: https://codecov.io/gh/ip-tools/patzilla/branch/main/graph/badge.svg
-        :target: https://codecov.io/gh/ip-tools/patzilla
-        :alt: Test suite code coverage
+  .. image:: https://img.shields.io/pypi/pyversions/patzilla.svg
+        :target: https://pypi.org/project/patzilla/
+        :alt: Supported Python versions
 
 
 ********
