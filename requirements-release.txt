@@ -1,3 +1,4 @@
 bump2version<2
 twine==1.9.1
 keyring==10.5.1
+sphinx-autobuild

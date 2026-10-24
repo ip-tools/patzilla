@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PatZilla'
-copyright = '2013-2023, The PatZilla authors'
+copyright = '2013-2026, The PatZilla authors'
 author = 'The PatZilla authors'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -86,13 +86,22 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "furo"
+
+# Theme options are theme-specific and customize the look and feel of a theme
+# further.  For a list of options available for each theme, see the
+# documentation.
+
+html_title = "PatZilla"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
+html_theme_options = {
+    "sidebar_hide_name": False,
+    # https://github.com/pradyunsg/furo/blob/main/src/furo/assets/styles/variables/_colors.scss
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -105,14 +114,9 @@ html_static_path = ['_static']
 # This is required for the alabaster theme
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
 html_sidebars = {
-    '**': [
-        'about.html',
-        'navigation.html',
-        'relations.html',  # needs 'show_related': True theme option to display
-        'searchbox.html',
-        'donate.html',
-    ]
 }
+
+html_show_sourcelink = True
 
 
 # -- Options for HTMLHelp output ------------------------------------------
