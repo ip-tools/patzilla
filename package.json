@@ -123,6 +123,7 @@
     "zeroclipboard": "^2.3"
   },
   "resolutions": {
+    "@types/minimatch": "^2",
     "ansi-html": "^0.0.9",
     "async": "^3.2",
     "braces": "^3",
@@ -146,6 +147,7 @@
     "tar": "^7",
     "terser": "^4.8.1",
     "trim-newlines": "^3.0.1",
+    "uglify-js": "3.15.3",
     "underscore": "^1.13.2",
     "uuid": "^11",
     "yargs-parser": "^13.1.2"
