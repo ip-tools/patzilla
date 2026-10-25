@@ -140,7 +140,7 @@
     "picomatch": "^2.3.2",
     "postcss": "^8.5",
     "postcss-selector-parser": "^7",
-    "serialize-javascript": "^7.0.3",
+    "serialize-javascript": "^7.1.4",
     "sockjs": "^0.3.24",
     "sockjs-client": "1.5.2",
     "tar": "^7",
