@@ -50,6 +50,7 @@ jobs:
     - name: Install dependencies for Linux
       if: runner.os == 'Linux'
       run: |
+        sudo apt update
         sudo apt install --yes pdftk poppler-utils
 
     - name: Install dependencies for macOS
