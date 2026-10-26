@@ -75,7 +75,7 @@ indexchars = alphanums + '{}!'
 #   B. symbols
 # ------------------------------------------
 
-class CQLGrammar(object):
+class CQLGrammar:
 
     # Various sets of characters
     wildcards  = wildcards

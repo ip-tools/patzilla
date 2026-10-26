@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 
 
 @attr.s
-class PDFResponse(object):
+class PDFResponse:
     pdf = attr.ib(default=None)
     datasource = attr.ib(default=None)
     meta = attr.ib(default=attr.Factory(dict))

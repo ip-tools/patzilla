@@ -19,7 +19,7 @@ class ISigner(Interface):  # ty: ignore[unsupported-base]
 
 
 @implementer(ISigner)
-class JwtSigner(object):
+class JwtSigner:
     """
     Generate and verify JSON Web Tokens.
 

@@ -25,7 +25,7 @@ class IFIClaimsGrammar(CQLGrammar):
         self.cmp_single = ':'.split()
 
 
-class IFIClaimsParser(object):
+class IFIClaimsParser:
 
     def __init__(self, expression: str, modifiers: Optional[Dict]=None):
         self.expression = expression
@@ -90,7 +90,7 @@ class IFIClaimsParser(object):
         return 'lucene'
 
 
-class IFIClaimsExpression(object):
+class IFIClaimsExpression:
 
     """
     Translate discrete comfort form field values to Solr Query Syntax, as convenient as possible.

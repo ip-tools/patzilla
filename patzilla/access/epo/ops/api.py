@@ -1243,7 +1243,7 @@ def ops_family_members(document_number):
     return family_members
 
 
-class OPSFamilyMembers(object):
+class OPSFamilyMembers:
 
     def __init__(self):
         self.raw = []

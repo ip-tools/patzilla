@@ -84,7 +84,7 @@ class IIFIClaimsClientPool(Interface):  # ty: ignore[unsupported-base]
 
 
 @implementer(IIFIClaimsClientPool)
-class IFIClaimsClientPool(object):
+class IFIClaimsClientPool:
     """
     IFI CLAIMS client pool as Pyramid utility implementation.
     """

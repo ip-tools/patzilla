@@ -17,7 +17,7 @@ from patzilla.util.python import exception_traceback
 try:
     from patzilla.util.web.uwsgi.uwsgidecorators import postfork
 except ImportError:
-    class postfork(object):
+    class postfork:
         def __init__(self, f):
             pass
         def __call__(self, *args, **kwargs):

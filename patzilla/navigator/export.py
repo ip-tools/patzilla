@@ -30,7 +30,7 @@ from patzilla.util.python.system import find_program_candidate
 
 log = logging.getLogger(__name__)
 
-class Dossier(object):
+class Dossier:
 
     summary_template = dedent("""
         Summary

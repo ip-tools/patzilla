@@ -5,13 +5,13 @@ import simplejson as json
 def json_pretty_renderer(helper):
     return _JsonPrettyRenderer()
 
-class _JsonPrettyRenderer(object):
+class _JsonPrettyRenderer:
     def __call__(self, data, context):
         response = context['request'].response
         response.content_type = 'application/json'
         return json.dumps(data, use_decimal=True, sort_keys=True, indent=4)
 
-class XmlRendererTest(object):
+class XmlRendererTest:
     def __call__(self, data, context):
         acceptable = ('application/json', 'text/json', 'text/plain')
         response = context['request'].response
@@ -22,7 +22,7 @@ class XmlRendererTest(object):
         return 'hello'
         #return json.dumps(data, use_decimal=True)
 
-class XmlRenderer(object):
+class XmlRenderer:
 
     def __init__(self, info):
         pass
@@ -34,7 +34,7 @@ class XmlRenderer(object):
             response.content_type = 'text/xml'
         return data
 
-class PngRenderer(object):
+class PngRenderer:
 
     def __init__(self, info):
         pass
@@ -46,7 +46,7 @@ class PngRenderer(object):
             response.content_type = 'image/png'
         return data
 
-class PdfRenderer(object):
+class PdfRenderer:
 
     def __init__(self, info):
         pass
@@ -58,7 +58,7 @@ class PdfRenderer(object):
             response.content_type = 'application/pdf'
         return data
 
-class NullRenderer(object):
+class NullRenderer:
 
     def __init__(self, info):
         pass

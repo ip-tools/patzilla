@@ -8,7 +8,7 @@ from .parser import CQLGrammar
 
 log = logging.getLogger(__name__)
 
-class CQL(object):
+class CQL:
 
     def __init__(self, cql='', grammar=None, logging=True, keyword_fields=None):
         self.cql = cql.strip()
