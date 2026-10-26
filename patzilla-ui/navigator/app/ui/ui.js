@@ -5,11 +5,6 @@ var urljoin = require('url-join');
 var bootbox = require('bootbox');
 var screenfull = require('screenfull');
 
-// NotificationFx
-require('notificationfx/css/ns-default');
-require('notificationfx/css/ns-style-attached');
-require('notificationfx/js/notificationFx');
-
 // Material Design Snackbar
 import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 
@@ -357,6 +352,11 @@ const UiController = Backbone.Marionette.ItemView.extend({
 
     // Notifications using the "NotificationFx" component.
     notify_fx: function(message, options) {
+
+        // NotificationFx
+        // require('notificationfx/css/ns-default');
+        // require('notificationfx/css/ns-style-attached');
+        // require('notificationfx/js/notificationFx');
 
         options = options || {};
         options.wrapper = options.wrapper || document.body;
