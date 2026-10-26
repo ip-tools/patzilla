@@ -39,7 +39,7 @@ NavigatorConfiguration = Backbone.Model.extend({
 
     update_baseurl: function() {
         var url = this.uri;
-        var baseurl = url.protocol + '://' + url.hostname;
+        var baseurl = url.protocol + '//' + url.hostname;
         var path = url.pathname;
         if (url.port) baseurl += ':' + url.port;
 

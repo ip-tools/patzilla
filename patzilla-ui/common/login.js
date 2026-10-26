@@ -50,7 +50,7 @@ $(document).ready(function() {
     $('#visit-demo').off('click');
     $('#visit-demo').on('click', function() {
 
-        var demourl = url.protocol + '://' + url.hostname;
+        var demourl = url.protocol + '//' + url.hostname;
         if (url.port) demourl += ':' + url.port;
         if (_.string.contains(demourl, 'patentsearch')) {
             demourl = demourl.replace('patentsearch', 'patentview');
