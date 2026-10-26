@@ -2,10 +2,11 @@
 # (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
 import logging
+from typing import Optional, List, Any, Type
 
 import attr
 
-from patzilla.util.cql.pyparsing import CQL
+from patzilla.util.cql.pyparsing import CQL, CQLGrammar
 from patzilla.util.cql.util import should_be_quoted
 from patzilla.util.python import _exception_traceback
 from patzilla.util.data.container import unique_sequence
@@ -14,22 +15,23 @@ from patzilla.util.expression.keywords import clean_keyword, compute_keywords
 logger = logging.getLogger(__name__)
 
 
-@attr.s
-class SearchExpression(object):
+@attr.define
+class SearchExpression:
 
-    syntax = attr.ib(default='cql')
-    grammar = attr.ib(default=None)
-    keyword_fields = attr.ib(default=None)
+    syntax: str = attr.ib(default='cql')
+    grammar: Optional[Type[CQLGrammar]] = attr.ib(default=None)
+    keyword_fields: Optional[List[str]] = attr.ib(factory=list)
 
-    expression = attr.ib(default=None)
+    expression: Optional[str] = attr.ib(default=None)
     cql_parser = attr.ib(default=None)
-    keywords = attr.ib(default=attr.Factory(list))
-    keywords_origin = attr.ib(default=None)
+    keywords: Optional[List[str]] = attr.ib(default=attr.Factory(list))
+    keywords_origin: Optional[str] = attr.ib(default=None)
 
     def parse_expression(self, query):
 
+        grammar_name = self.grammar and self.grammar.__name__ or 'default'
         logger.info('Parsing search expression "{query}" with syntax "{syntax}" and grammar "{grammar}"'.format(
-            query=query, syntax=self.syntax, grammar=self.grammar and self.grammar.__name__ or 'default'))
+            query=query, syntax=self.syntax, grammar=grammar_name))
 
         if self.syntax == 'cql':
             self.parse_expression_cql(query)
@@ -63,7 +65,7 @@ class SearchExpression(object):
 
         except Exception as ex:
             # TODO: Can we get more details from diagnostic information to just stop here w/o propagating obviously wrong query to OPS?
-            logger.warn('CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(expression, ex, _exception_traceback()))
+            logger.warning('CQL parse error: query="{0}", reason={1}, Exception was:\n{2}'.format(expression, ex, _exception_traceback()))
 
         self.cql_parser = query_object
         self.expression = expression

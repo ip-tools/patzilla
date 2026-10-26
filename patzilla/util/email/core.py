@@ -12,7 +12,7 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.audio import MIMEAudio
 from email.mime.image import MIMEImage
-from email._parseaddr import AddressList
+from email._parseaddr import AddressList  # ty: ignore[unresolved-import]
 
 log = logging.getLogger(__name__)
 
@@ -163,10 +163,11 @@ def send_email(mail_to, message, smtp_settings=None, mail_from='test@example.org
         raise ValueError('"message" must not be empty')
 
     # setup mailserver session
-    smtp = smtplib.SMTP(
-        host=smtp_settings.get('hostname'),
-        port=smtp_settings.get('port'))
-
+    host = smtp_settings.get('hostname')
+    port = smtp_settings.get('port')
+    if host is None or port is None:
+        raise ValueError('"hostname" and "port" must not be None')
+    smtp = smtplib.SMTP(host=host, port=port)
     # debug smtp protocol conversation
     #pprint(smtp_settings)
     #smtp.set_debuglevel(1)

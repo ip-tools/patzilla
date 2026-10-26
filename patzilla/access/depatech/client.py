@@ -7,8 +7,11 @@
 import json
 import timeit
 import logging
+from typing import Optional, Dict, Union
+
 import requests
 from beaker.cache import cache_region
+from munch import Munch
 from requests import RequestException
 from patzilla.access.depatech import get_depatech_client
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
@@ -33,8 +36,6 @@ class DepaTechClient(GenericSearchClient):
 
         self.backend_name = 'depatech'
 
-        self.search_method = depatech_search
-
         self.search_max_hits = 10000
         self.crawl_max_count = 50000
 
@@ -50,11 +51,16 @@ class DepaTechClient(GenericSearchClient):
 
         self.tls_verify = True
 
+    def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
+        if isinstance(query, str):
+            raise TypeError("Query must be a dictionary-like object")
+        return depatech_search(query=query, options=options)
+
     @cache_region('search')
-    def search(self, query, options=None):
+    def search(self, query: Munch, options=None):
         return self.search_real(query, options=options)
 
-    def search_real(self, query, options=None):
+    def search_real(self, query: Munch, options=None):
         options = options or SmartMunch()
 
         options.setdefault('offset', 0)
@@ -98,20 +104,23 @@ class DepaTechClient(GenericSearchClient):
         # Perform search request
         headers = {}
         headers.update({'Accept': 'application/json'})
+        auth = None
+        if self.username and self.password:
+            auth = (self.username, self.password)
         try:
             if transport == 'querystring':
                 response = requests.get(
                     uri,
                     params=params,
                     headers=headers,
-                    auth=(self.username, self.password),
+                    auth=auth,
                     verify=self.tls_verify)
             else:
                 response = requests.post(
                     uri,
                     data=query.expression,
                     headers=headers,
-                    auth=(self.username, self.password),
+                    auth=auth,
                     verify=self.tls_verify)
         except RequestException as ex:
             raise self.search_failed(
@@ -141,7 +150,7 @@ class DepaTechClient(GenericSearchClient):
                     duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
                 if not result['numbers']:
-                    log.warn('{backend_name}: Search had empty results. duration={duration}s, meta=\n{meta}'.format(
+                    log.warning('{backend_name}: Search had empty results. duration={duration}s, meta=\n{meta}'.format(
                         duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
                 return result
@@ -188,12 +197,15 @@ class DepaTechClient(GenericSearchClient):
         # Perform search request
         headers = {}
         headers.update({'Accept': 'application/json'})
+        auth = None
+        if self.username and self.password:
+            auth = (self.username, self.password)
         try:
             response = requests.post(
                 uri,
                 data=expression,
                 headers=headers,
-                auth=(self.username, self.password),
+                auth=auth,
                 verify=self.tls_verify,
             )
         except RequestException as ex:
@@ -324,7 +336,7 @@ class DepaTechSearchResponse(GenericSearchResponse):
         return document['fam']
 
 
-def depatech_search(query, options=None):
+def depatech_search(query: Munch, options: Optional[Dict]) -> SmartMunch:
 
     options = options or SmartMunch()
 
@@ -347,5 +359,5 @@ def depatech_crawl(constituents, query, chunksize, options=None):
     try:
         return client.crawl(constituents, query, chunksize)
     except SyntaxError as ex:
-        log.warn('Invalid query for depa.tech: %s' % ex.msg)
+        log.warning('Invalid query for depa.tech: %s' % ex.msg)
         raise

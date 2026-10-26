@@ -2,9 +2,12 @@
 # (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import timeit
 import logging
+from typing import Optional, Dict, Union
+
 import requests
 from lxml import etree
 from beaker.cache import cache_region
+from munch import Munch
 from requests.exceptions import ConnectionError, ConnectTimeout
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
@@ -46,7 +49,6 @@ class SipClient(GenericSearchClient):
 
         self.backend_name = 'sip'
 
-        self.search_method = sip_published_data_search
         self.crawl_max_count = 5000
 
         self.uri = uri
@@ -64,9 +66,9 @@ class SipClient(GenericSearchClient):
 
         except (ConnectionError, ConnectTimeout) as ex:
             log.error('SIP login for user "{username}" at "{uri}" failed. Reason: {0} {1}.'.format(
-                ex.__class__, ex.message, username=self.username, uri=self.uri))
+                ex.__class__, str(ex), username=self.username, uri=self.uri))
             self.logout()
-            error = LoginException(ex.message)
+            error = LoginException(str(ex))
             error.sip_info = 'Error or timeout while connecting to upstream database. Database might be offline.'
             raise error
 
@@ -78,7 +80,7 @@ class SipClient(GenericSearchClient):
                 return True
             except Exception as ex:
                 log.error('SIP login for user "{username}" failed. Reason: {0} {1}. status_code={2}, response={3}'.format(
-                    ex.__class__, ex.message, response.status_code, response.content, username=self.username))
+                    ex.__class__, str(ex), response.status_code, response.content, username=self.username))
                 self.logout()
                 raise
         else:
@@ -95,6 +97,9 @@ class SipClient(GenericSearchClient):
     def logout(self):
         log.info('Logging out user "{username}"'.format(username=self.username))
         self.stale = True
+
+    def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
+        return sip_published_data_search(query=query, options=options)
 
     def search(self, expression, options=None):
 
@@ -117,9 +122,9 @@ class SipClient(GenericSearchClient):
             response = requests.post(self.uri + '/search/new', data={'session': self.sessionid, 'searchtree': expression})
         except (ConnectionError, ConnectTimeout) as ex:
             log.error('SIP search for user "{username}" at "{uri}" failed. Reason: {0} {1}.'.format(
-                ex.__class__, ex.message, username=self.username, uri=self.uri))
+                ex.__class__, str(ex), username=self.username, uri=self.uri))
             self.logout()
-            raise SearchException(ex.message,
+            raise SearchException(str(ex),
                 sip_info='Error or timeout while connecting to upstream database. Database might be offline.')
 
         # Process search response
@@ -163,7 +168,7 @@ class SipClient(GenericSearchClient):
                         duration=duration, meta=result['meta'].prettify(), **self.__dict__))
 
                     if not result['numbers']:
-                        log.warn('{backend_name} search from "{user}" for "{expression}" had empty results.'.format(
+                        log.warning('{backend_name} search from "{user}" for "{expression}" had empty results.'.format(
                             user=self.username, expression=expression, **self.__dict__
                         ))
 
@@ -175,7 +180,7 @@ class SipClient(GenericSearchClient):
 
             except Exception as ex:
                 log.error('Search failed. {name}: {message}. expression={expression}, response={response}'.format(
-                    name=ex.__class__.__name__, message=ex.message, response=response.text, expression=expression))
+                    name=ex.__class__.__name__, message=str(ex), response=response.text, expression=expression))
                 raise
 
         else:
@@ -215,7 +220,7 @@ class SipClient(GenericSearchClient):
 
             except Exception as ex:
                 message = 'SIP getresults failed. Unknown exception. Reason: {0} {1}'.format(
-                    ex.__class__, ex.message)
+                    ex.__class__, str(ex))
                 logmessage = '{}. response={}'.format(message, response.text)
                 log.error(logmessage)
                 raise SearchException(message)
@@ -279,7 +284,13 @@ class SipXmlResponse(object):
         }
 
     def get_childvalue(self, tagname):
-        value = self.tree.find('dc-search:{0}'.format(tagname), namespaces=self.xml_namespaces).text
+        if not self.tree:
+            raise ValueError("Tree element is empty")
+        element_name = 'dc-search:{0}'.format(tagname)
+        element = self.tree.find(element_name, namespaces=self.xml_namespaces)
+        if not element:
+            raise ValueError("Unable to find element: {0}".format(element_name))
+        value = element.text
         return value
 
     def get_childdict(self, node=None):
@@ -373,7 +384,7 @@ def sip_published_data_search(query, options):
         return data
 
     except SyntaxError as ex:
-        log.warn('Invalid query for SIP: %s' % ex.msg)
+        log.warning('Invalid query for SIP: %s' % ex.msg)
         raise
 
     except SearchException as ex:
@@ -388,7 +399,7 @@ def sip_published_data_crawl(constituents, query, chunksize):
     try:
         return sip.crawl(constituents, query, chunksize)
     except SyntaxError as ex:
-        log.warn('Invalid query for SIP: %s' % ex.msg)
+        log.warning('Invalid query for SIP: %s' % ex.msg)
         raise
 
 

@@ -48,7 +48,7 @@ def get_drawing_png(document, page, kind):
     # 3. Croak if no image available
     if not payload:
         msg = 'No image available for document={document}, kind={kind}, page={page}'.format(**locals())
-        log.warn(msg)
+        log.warning(msg)
         raise HTTPNotFound(msg)
 
     # 4. Convert image from TIFF to PNG format

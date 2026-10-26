@@ -115,7 +115,7 @@ def usercmd():
     """
 
     # Use generic commandline options schema and amend with current program name
-    commandline_schema = usercmd.__doc__.format(program='patzilla-user')
+    commandline_schema = usercmd.__doc__.format(program='patzilla-user')  # ty: ignore[unresolved-attribute]
 
     # Read commandline options
     options = docopt(commandline_schema, version=APP_NAME + ' ' + __version__)

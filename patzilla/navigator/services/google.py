@@ -7,10 +7,12 @@ from patzilla.access.google.search import GooglePatentsAccess
 
 log = logging.getLogger(__name__)
 
+
 google_published_data_search_service = Service(
     name='google-published-data-search',
     path='/api/google/published-data/search',
     description="Google Patents search interface")
+
 
 @cache_region('search')
 def google_published_data_search(query, offset, limit):
@@ -18,10 +20,11 @@ def google_published_data_search(query, offset, limit):
     try:
         return google.search(query, offset, limit)
     except SyntaxError as ex:
-        log.warn('Invalid query for Google Patents: %s' % ex.msg)
+        log.warning('Invalid query for Google Patents: %s' % ex.msg)
         raise
 
-@google_published_data_search_service.get(accept="application/json")
+
+@google_published_data_search_service.decorator("get", accept="application/json")
 def google_published_data_search_handler(request):
     """Search for published-data at Google Patents"""
 

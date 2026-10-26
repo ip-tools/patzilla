@@ -3,6 +3,7 @@
 import re
 import sys
 from datetime import date
+from typing import List, Optional, Tuple, cast
 
 import attr
 import json
@@ -17,7 +18,11 @@ from pprint import pformat
 from jsonpointer import JsonPointer, JsonPointerException
 from xml.etree.ElementTree import fromstring
 from bs4 import BeautifulSoup
+from bs4._typing import _StrainableAttributes
 from collections import namedtuple, OrderedDict
+
+from requests import Response
+
 from patzilla.access.dpma.util import dpma_file_number
 from patzilla.boot.cache import configure_cache_backend
 from patzilla.util.config import to_list
@@ -37,19 +42,20 @@ class UnknownFormat(Exception):
     pass
 
 
-@attr.s
-class Document(object):
+@attr.define
+class Document:
     """An intermediary object holding information from accessing DPMAregister on the container level"""
-    meta = attr.ib(default=None)
-    url_html = attr.ib(default=None)
-    url_pdf = attr.ib(default=None)
-    response = attr.ib(default=None)
+    meta: Optional[str] = attr.ib(default=None)
+    url_html: Optional[str] = attr.ib(default=None)
+    url_pdf: Optional[str] = attr.ib(default=None)
+    response: Optional[Response] = attr.ib(default=None)
 
-@attr.s
-class ResultEntry(object):
+
+@attr.define
+class ResultEntry:
     """An intermediary object holding information from accessing DPMAregister on the result level"""
-    label = attr.ib(default=None)
-    reference = attr.ib(default=None)
+    label: Optional[str] = attr.ib(default=None)
+    reference: Optional[str] = attr.ib(default=None)
 
 
 class DpmaRegisterAccess:
@@ -78,9 +84,10 @@ class DpmaRegisterAccess:
 
         # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
         # https://bugs.python.org/issue22417
+        # FIXME: Please review.
         if sys.hexversion >= 0x02070900:
             import ssl
-            ssl._create_default_https_context = ssl._create_unverified_context
+            ssl._create_default_https_context = ssl._create_unverified_context  # ty: ignore[invalid-assignment]
 
         # https://mechanicalsoup.readthedocs.io/
         self.browser = mechanicalsoup.StatefulBrowser()
@@ -369,12 +376,17 @@ class DpmaRegisterHtmlDocument(object):
         <a shape="rect" class="button" target="_blank" href="register?AKZ=100068189&amp;VIEW=pdf">PDF-Download</a>
         """
 
+        if not self.html:
+            raise ValueError("No HTML document provided")
+
         soup = BeautifulSoup(self.html, "lxml")
 
         soup_content = soup.find('table', {'id': 'verfahrensdaten_tabelle'})
+        if not soup_content:
+            raise ValueError("Unable to extract table content `verfahrensdaten_tabelle`")
 
         # remove some tags
-        remove_stuff = [
+        remove_stuff: List[Tuple[str, _StrainableAttributes]] = [
             ('div', {'class': 'objektblaettern'}),
             ('a', {'class': 'button'}),
             ('br', {'clear': 'none'}),
@@ -385,18 +397,18 @@ class DpmaRegisterHtmlDocument(object):
             ('a', {'href': re.compile('^./register:hideverfahrenstabelle.*')}),
             ('a', {'class': 'hidden'}),
         ]
-        [[tag.extract() for tag in soup_content.findAll(item[0], item[1])] for item in remove_stuff]
+        [[tag.extract() for tag in soup_content.find_all(name=item[0], attrs=item[1])] for item in remove_stuff]
 
         # <a href="./PatSchrifteneinsicht
         # <a shape="rect" href="./register:sortVerfahrensUebersicht
 
         # manipulate some links
-        for link in soup.findAll('a', {'href': re.compile('^./PatSchrifteneinsicht.*')}):
-            link['href'] = DpmaRegisterAccess.baseurl + link['href']
+        for link in soup.find_all('a', attrs={'href': re.compile('^./PatSchrifteneinsicht.*')}):
+            link['href'] = DpmaRegisterAccess.baseurl + cast(str, link['href'])
             if link.img:
                 link.img.extract()
 
-        for link in soup.findAll('a', {'href': re.compile('^./register.*')}):
+        for link in soup.find_all('a', attrs={'href': re.compile('^./register.*')}):
             if link.contents:
                 link.replaceWith(link.contents[0])
 
@@ -446,9 +458,13 @@ class DpmaRegisterHtmlDocument(object):
         parse document results from html tables
         FIXME: unfinished!
         """
+        if not self.html:
+            raise ValueError("No HTML document provided")
         soup = BeautifulSoup(self.html)
         soup_table_basicdata = soup.find("table")
-        soup_table_legaldata = soup_table_basicdata.findNextSibling("table")
+        if not soup_table_basicdata:
+            raise ValueError("No table found in HTML document")
+        soup_table_legaldata = soup_table_basicdata.find_next_sibling("table")
 
         self.biblio = self.soup_parse_table(soup_table_basicdata)
         self.events = self.soup_parse_table(soup_table_legaldata)
@@ -474,14 +490,14 @@ class DpmaRegisterHtmlDocument(object):
         return table
 
 
-@attr.s
-class DpmaRegisterXmlDocument(object):
+@attr.define
+class DpmaRegisterXmlDocument:
     """
     Decode information from DPMAregister ST.36 XML document.
     """
 
-    _xml = attr.ib()
-    _data = attr.ib(default=None)
+    _xml: str = attr.ib()
+    _data: Optional[str] = attr.ib(default=None)
 
     application_reference = attr.ib(default=attr.Factory(list))
     publication_reference = attr.ib(default=attr.Factory(list))
@@ -697,7 +713,7 @@ def run():
     """
 
     # Use generic commandline options schema and amend with current program name
-    commandline_schema = run.__doc__.format(program=APP_NAME)
+    commandline_schema = run.__doc__.format(program=APP_NAME)  # ty: ignore[unresolved-attribute]
 
     # Read commandline options
     options = docopt(commandline_schema, version=APP_NAME + ' ' + __version__)

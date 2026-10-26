@@ -14,7 +14,7 @@ from zope.interface import implementer
 log = logging.getLogger(__name__)
 
 
-class ISigner(Interface):
+class ISigner(Interface):  # ty: ignore[unsupported-base]
     pass
 
 

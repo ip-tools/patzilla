@@ -34,7 +34,7 @@ status_upstream_depatech = Service(
     description="Checks MTC depa-tech upstream for valid response")
 
 
-@status_upstream_depatech.get()
+@status_upstream_depatech.decorator("get")
 def status_upstream_depatech_handler(request):
     client = get_depatech_client()
     query = SmartMunch({
@@ -45,8 +45,8 @@ def status_upstream_depatech_handler(request):
     return "OK"
 
 # TODO: implement as JSON POST
-@depatech_published_data_search_service.get(accept="application/json")
-@depatech_published_data_search_service.post(accept="application/json")
+@depatech_published_data_search_service.decorator("get", accept="application/json")
+@depatech_published_data_search_service.decorator("post", accept="application/json")
 def depatech_published_data_search_handler(request):
     """Search for published-data at MTC depa.tech"""
 
@@ -99,17 +99,17 @@ def depatech_published_data_search_handler(request):
         return data
 
     except LoginException as ex:
-        request.errors.add('depatech-search', 'login', ex.details)
-        log.warn(request.errors)
+        request.errors.add('depatech-search', 'login', ex.get_message())
+        log.warning(request.errors)
 
     except SyntaxError as ex:
         request.errors.add('depatech-search', 'expression', str(ex.msg))
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except SearchException as ex:
         message = ex.get_message()
         request.errors.add('depatech-search', 'search', message)
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except NoResultsException as ex:
         # Forward response to let the frontend recognize zero hits
@@ -125,8 +125,8 @@ def depatech_published_data_search_handler(request):
         message = handle_generic_exception(request, ex, 'depatech-search', query)
         request.errors.add('depatech-search', 'search', message)
 
-@depatech_published_data_crawl_service.get(accept="application/json")
-@depatech_published_data_crawl_service.post(accept="application/json")
+@depatech_published_data_crawl_service.decorator("get", accept="application/json")
+@depatech_published_data_crawl_service.decorator("post", accept="application/json")
 def depatech_published_data_crawl_handler(request):
     """Crawl published-data at MTC depa.tech"""
 

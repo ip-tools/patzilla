@@ -5,6 +5,7 @@ import shutil
 import tempfile
 from pathlib import Path
 
+import PIL.Image
 import requests
 import where
 import logging
@@ -42,6 +43,7 @@ def to_png(tiff, width=None, height=None):
     """
     try:
         from PIL import Image
+        from PIL.Image import Resampling
 
         # Read image
         image = Image.open(tiff)
@@ -52,7 +54,7 @@ def to_png(tiff, width=None, height=None):
             image = image.convert('L')
 
             # Resize image
-            image.thumbnail((width, height), Image.LANCZOS)
+            image.thumbnail((width, height), Resampling.LANCZOS)
 
         # Save image into a stream buffer
         png = BytesIO()
@@ -195,7 +197,9 @@ def run_imagemagick(command, input=None):
 
 def png_resize(png_payload, width):
 
-    image = Image.open(io.StringIO(png_payload)).convert('RGB')
+    from PIL import Image
+
+    image = Image.open(io.BytesIO(png_payload)).convert('RGB')
 
     image_width = image.size[0]
     image_height = image.size[1]
@@ -211,11 +215,11 @@ def png_resize(png_payload, width):
     #print "size:", size
     print("Resizing image from %s to %s" % (image.size, size))
 
-    image.thumbnail(size, Image.ANTIALIAS)
+    image.thumbnail(size, resample=PIL.Image.Resampling.LANCZOS)
     #image.resize(size, Image.ANTIALIAS)
     #print "thumbnail done"
 
-    png = io.StringIO()
+    png = io.BytesIO()
     image.save(png, 'PNG')
     #print "image saved to memory"
 
@@ -281,7 +285,7 @@ def pdf_join(pages, use_filenames=False):
             try:
                 tmpfile.close()
             except Exception as ex:
-                logger.warn('Unable to delete temporary file "%s": %s', tmpfile.name, ex)
+                logger.warning('Unable to delete temporary file "%s": %s', tmpfile.name, ex)
 
     return stdout
 

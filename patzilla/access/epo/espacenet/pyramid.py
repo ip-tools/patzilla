@@ -13,7 +13,7 @@ status_upstream_espacenet = Service(
     path='/api/status/upstream/epo/espacenet',
     description="Checks EPO espacenet upstream for valid response")
 
-@status_upstream_espacenet.get()
+@status_upstream_espacenet.decorator("get")
 def status_upstream_espacenet_handler(request):
     data = espacenet_claims_handler('EP666666')
     assert data, 'Empty response from Espacenet'

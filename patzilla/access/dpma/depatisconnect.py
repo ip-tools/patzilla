@@ -22,8 +22,9 @@ log = logging.getLogger(__name__)
 # ------------------------------------------
 #   bootstrapping
 # ------------------------------------------
-use_https = False
-archive_service_baseurl = None
+use_https: bool = False
+archive_service_baseurl: str = ""
+
 def includeme(config):
     global use_https
     global archive_service_baseurl
@@ -166,7 +167,7 @@ def get_claims_or_description(document_number, xpath):
     try:
         element = tree.xpath(xpath)[0]
         content = ET.tostring(element)
-        content = content.strip(' \n')
+        content = content.strip(b' \n')
     except IndexError:
         element = None
         content = ''
@@ -192,11 +193,11 @@ def get_abstracts(document_number, xpath):
     xml = get_xml(document_number)
     tree = ET.parse(StringIO(xml))
 
-    content = ''
+    content = b''
     elements = tree.xpath(xpath)
     for element in elements:
         content += ET.tostring(element)
-    content = content.strip(' \n')
+    content = content.strip(b' \n')
 
     languages = tree.xpath(xpath + '/@lancode')
     languages = [item.upper() for item in languages]

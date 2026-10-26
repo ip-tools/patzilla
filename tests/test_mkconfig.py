@@ -24,7 +24,7 @@ def test_mkconfig(kind):
 
     expected_keys = ['main', 'ip_navigator', 'vendor:patzilla', 'datasource:ops', 'datasource:depatisconnect',
                      'datasource:ificlaims', 'datasource:depatech', 'smtp', 'email_addressbook', 'email_content']
-    effective_keys = config._sections.keys()
+    effective_keys = config.sections()
 
     for expected_key in expected_keys:
         assert expected_key in effective_keys

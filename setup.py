@@ -140,6 +140,7 @@ test_requires = [
     'pytest-xdist<4',
     'testfixtures>=6,<8',
     'pytest-forked>=1,<2',
+    'types-lxml',
 ]
 
 setup(name='patzilla',

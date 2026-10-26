@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
-import types
 import logging
+from abc import abstractmethod, ABC
+from typing import Dict, List, Union
+
 import pyparsing
 from copy import deepcopy
 from lxml import etree
@@ -25,30 +27,30 @@ logger.setLevel(logging.INFO)
 
 class SipExpression(object):
 
-    modifier_defaults = {
+    modifier_defaults: Dict[str, Dict[str, bool]] = {
         'fulltext': {
             'title': True,
             'abstract': True,
             'claim': True,
             'description': True,
-            },
-        }
+        },
+    }
 
-    fulltext_field_modifier_map = {
+    fulltext_field_modifier_map: Dict[str, Union[str, List[str]]] = {
         'ti': 'title',
         'ab': 'abstract',
         'cl': 'claim',
         'de': 'description',
         'bi': ['title', 'abstract', 'claim', 'description'],
-        }
-    fulltext_modifiers_off = {
+    }
+    fulltext_modifiers_off: Dict[str, str] = {
         'title': 'false',
         'abstract': 'false',
         'claim': 'false',
         'description': 'false',
-        }
+    }
 
-    sip_xml_expression_templates = {
+    sip_xml_expression_templates: Dict[str, Union[str, Dict[str, str]]] = {
         'patentnumber': '<patentnumber>{value}</patentnumber>',
         'fulltext':     '<text searchintitle="{title}" searchinabstract="{abstract}" searchinclaim="{claim}" searchindescription="{description}" fullfamily="false">{value}</text>',
         #'applicant':    u'<applicant type="epo,inpadoc,original">{value}</applicant>',
@@ -62,7 +64,7 @@ class SipExpression(object):
             }
     }
 
-    xml_tag_fullfamily_capability = [
+    xml_tag_fullfamily_capability: List[str] = [
 
         'patentnumber',
         'text',
@@ -93,7 +95,12 @@ class SipExpression(object):
         xml_part = None
         keywords = None
 
+        tpl_container = cls.sip_xml_expression_templates[key]
+
         if key == 'pubdate':
+
+            if not isinstance(tpl_container, dict):
+                raise ValueError('SIP query: Invalid date expression "{0}"'.format(tpl_container))
 
             try:
 
@@ -116,12 +123,12 @@ class SipExpression(object):
                         within_dates['enddate'] = within_dates['enddate'] + '-12-31'
 
                     if all(within_dates.values()):
-                        template = cls.sip_xml_expression_templates[key]['both']
+                        template = tpl_container['both']
                     elif within_dates['startdate']:
-                        template = cls.sip_xml_expression_templates[key]['startdate']
+                        template = tpl_container['startdate']
                     # API not capable of handling "enddate"-only attribute
                     #elif within_dates['enddate']:
-                    #    template = cls.sip_xml_expression_templates[key]['enddate']
+                    #    template = tpl_container['enddate']
                     else:
                         raise ValueError('SIP cannot handle date ranges with end date only')
 
@@ -130,14 +137,14 @@ class SipExpression(object):
                         enddate=iso_to_german(within_dates['enddate']))
 
                 else:
-                    template = cls.sip_xml_expression_templates[key]['both']
+                    template = tpl_container['both']
                     xml_part = template.format(
                         startdate=iso_to_german(value),
                         enddate=iso_to_german(value))
 
             except Exception as ex:
                 message = 'SIP query: Invalid date or range expression "{0}". Reason: {1}'.format(value, ex)
-                logger.warn(message + ' Exception was: {0}'.format(_exception_traceback()))
+                logger.warning(message + ' Exception was: {0}'.format(_exception_traceback()))
                 return {'error': True, 'message': message}
 
 
@@ -145,7 +152,7 @@ class SipExpression(object):
 
             if ' and ' in value.lower():
                 message = 'SIP query: Concatenating offices with "AND" would yield zero results'
-                logger.warn(message)
+                logger.warning(message)
                 return {'error': True, 'message': message}
 
             entries = re.split(' or ', value, flags=re.IGNORECASE)
@@ -153,13 +160,13 @@ class SipExpression(object):
             ccids = []
             for country in entries:
                 country = country.upper()
-                sip_country = SipCountry.objects(cc=country).first()
+                sip_country = SipCountry.objects(cc=country).first()  # ty: ignore[unresolved-attribute]
                 if sip_country:
                     sip_ccid = sip_country.ccid
                     ccids.append(sip_ccid)
                 else:
                     message = 'SIP query: Country "{0}" could not be resolved'.format(country)
-                    logger.warn(message)
+                    logger.warning(message)
                     return {'error': True, 'message': message}
 
             if ccids:
@@ -180,7 +187,7 @@ class SipExpression(object):
                 return {'error': True, 'message': str(ex)}
 
             except pyparsing.ParseException as ex:
-                return {'error': True, 'message': '<pre>' + str(ex.explanation) + '</pre>'}
+                return {'error': True, 'message': '<pre>' + str(ex.explain()) + '</pre>'}
 
 
         elif key == 'fulltext':
@@ -201,13 +208,16 @@ class SipExpression(object):
                 return {'error': True, 'message': str(ex)}
 
             except pyparsing.ParseException as ex:
-                return {'error': True, 'message': '<pre>' + ex.explanation + '</pre>'}
+                return {'error': True, 'message': '<pre>' + ex.explain() + '</pre>'}
 
             except SyntaxError as ex:
                 return {'error': True, 'message': '<pre>' + str(ex) + '</pre>'}
 
         elif key in cls.sip_xml_expression_templates:
-            template = cls.sip_xml_expression_templates[key]
+            template = tpl_container
+
+            if not isinstance(template, str):
+                raise TypeError('SIP query: Invalid template type "{0}"'.format(type(template)))
 
             if key == 'patentnumber':
                 value = value.upper()
@@ -215,7 +225,7 @@ class SipExpression(object):
             xml_part = template.format(key=key, value=value.strip(), **modifiers.get(key, {}))
 
         else:
-            logger.warn('SIP query: Could not handle pair {0}={1}'.format(key, value))
+            logger.warning('SIP query: Could not handle pair {0}={1}'.format(key, value))
 
 
         response = {}
@@ -273,7 +283,7 @@ class FulltextDecodingError(Exception):
     pass
 
 
-class SipCqlBase(object):
+class SipCqlBase(ABC):
 
     def __init__(self, expression=None, modifiers=None):
 
@@ -285,6 +295,10 @@ class SipCqlBase(object):
 
         if expression:
             self.loads(expression)
+
+    @abstractmethod
+    def parse(self):
+        raise NotImplementedError("Must be implemented in subclass")
 
     def loads(self, expression):
         self.expression = expression
@@ -313,8 +327,7 @@ class SipCqlBase(object):
             result = self.parser._parser(expression, parseAll=True)
 
         except pyparsing.ParseException as ex:
-            ex.explanation = '%s\n%s\n%s' % (expression, ' ' * ex.loc + '^\n', ex)
-            logger.error('\n%s', ex.explanation)
+            logger.error('\n%s', ex.explain())
             raise
 
         #print 'result:', result, type(result), dir(result)
@@ -415,7 +428,7 @@ class SipCqlClass(SipCqlBase):
 
         except:
             message = 'SIP query: Class "{0}" could not be decoded.'.format(ipc_raw_stripped)
-            logger.warn(message)
+            logger.warning(message)
             raise ClassDecodingError(message)
 
 
@@ -424,11 +437,11 @@ class SipCqlClass(SipCqlBase):
         else:
             modifier = 'SmartSelect="false"'
 
-        sip_ipc = SipIpcClass.objects(ipc=ipc_ops).first()
-        sip_cpc = SipCpcClass.objects(cpc=ipc_ops).first()
+        sip_ipc = SipIpcClass.objects(ipc=ipc_ops).first()  # ty: ignore[unresolved-attribute]
+        sip_cpc = SipCpcClass.objects(cpc=ipc_ops).first()  # ty: ignore[unresolved-attribute]
         if not sip_ipc and not sip_cpc:
             message = 'SIP query: Class "{0}" could not be resolved.'.format(ipc_ops)
-            logger.warn(message)
+            logger.warning(message)
             raise ClassDecodingError(message)
 
         ipc_expression = None
@@ -701,7 +714,7 @@ class SipCqlFulltext(SipCqlBase):
 
             else:
                 #msg = 'Encountered unknown tag "{0}" in "convert_boolean_nodes"'.format(element.tag)
-                #logger.warn(msg)
+                #logger.warning(msg)
                 #print msg
                 pass
 
@@ -754,18 +767,20 @@ class SipCqlFulltext(SipCqlBase):
                 ft_modifier = SipExpression.fulltext_field_modifier_map[ft_field]
             except KeyError:
                 message = 'SIP expression "{0}" contains unknown index "{1}".'.format(origin, ft_field)
-                logger.warn(message)
+                logger.warning(message)
                 raise FulltextDecodingError(message)
 
             ft_modifiers = SipExpression.fulltext_modifiers_off.copy()
 
-            if type(ft_modifier) in (str,):
-                ft_modifiers.update({ft_modifier: 'true'})
-            elif type(ft_modifier) is list:
+            if isinstance(ft_modifier, str):
+                ft_modifiers.update({str(ft_modifier): 'true'})
+            elif isinstance(ft_modifier, list):
                 for ft_mod_item in ft_modifier:
                     ft_modifiers.update({ft_mod_item: 'true'})
 
         template = SipExpression.sip_xml_expression_templates['fulltext']
+        if not isinstance(template, str):
+            raise TypeError("SIP query: Invalid 'fulltext' template type: {0}".format(type(template)))
         xml = template.format(key=ft_field, value=ft_value.strip(), **ft_modifiers)
         return xml
 

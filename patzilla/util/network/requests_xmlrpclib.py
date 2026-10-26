@@ -37,7 +37,7 @@ class RequestsTransport(xmlrpc.Transport):
             del kwargs['timeout']
         return xmlrpc.Transport.__init__(self, *args, **kwargs)
 
-    def request(self, host, handler, request_body, verbose):
+    def request(self, host, handler, request_body, verbose):  # ty: ignore[invalid-method-override]
         """
         Make an xmlrpc request.
         """
@@ -57,16 +57,16 @@ class RequestsTransport(xmlrpc.Transport):
                 resp.raise_for_status()
             except requests.RequestException as e:
                 raise xmlrpc.ProtocolError(url, resp.status_code,
-                    str(e), resp.headers)
+                    str(e), dict(resp.headers))
             else:
                 return self.parse_response(resp)
 
-    def parse_response(self, resp):
+    def parse_response(self, response):
         """
         Parse the xmlrpc response.
         """
         p, u = self.getparser()
-        p.feed(resp.text)
+        p.feed(response.text)
         p.close()
         return u.close()
 

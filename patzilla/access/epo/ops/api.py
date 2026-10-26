@@ -8,6 +8,7 @@ from pprint import pformat
 from contextlib import contextmanager
 
 import epo_ops
+import epo_ops.models
 from cornice.util import json_error, to_list
 from beaker.cache import cache_region
 from simplejson.scanner import JSONDecodeError
@@ -231,6 +232,9 @@ def results_swap_family_members(response):
 
                 representation = bibdata
                 #print 'representation:'; pprint(representation)
+
+                if not representation:
+                    raise ValueError('No bibliographic data for %s', representation_pubref_epodoc)
 
                 representation[0].setdefault('__meta__', {})
                 representation[0]['__meta__']['swapped'] = {
@@ -525,7 +529,7 @@ def inquire_images(document):
     if response.status_code != 200:
 
         if response.status_code == 404:
-            log.warn(error_msg_access)
+            log.warning(error_msg_access)
             error = HTTPNotFound(error_msg_access)
             error.status_code = response.status_code
 
@@ -677,13 +681,13 @@ def get_ops_image(document, page, kind, format=None):
 
         else:
             msg = 'No image information for document={0}, kind={1}'.format(document, kind)
-            log.warn(msg)
+            log.warning(msg)
             # TODO: respond with proper json error
             raise HTTPNotFound(msg)
 
     else:
         msg = 'No image information for document={0}'.format(document)
-        #log.warn(msg)
+        #log.warning(msg)
         # TODO: respond with proper json error
         raise HTTPNotFound(msg)
 
@@ -713,7 +717,7 @@ def get_ops_image(document, page, kind, format=None):
     """
     else:
         msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
-        log.warn('[{code}] {message}'.format(code=response.status_code, message=msg))
+        log.warning('[{code}] {message}'.format(code=response.status_code, message=msg))
         error = HTTPError()
         error.explanation = msg
         error.status_code = response.status_code
@@ -1092,7 +1096,7 @@ def analytics_family(query):
         except Exception as ex:
             request = get_current_request()
             del request.errors[:]
-            log.warn('Could not fetch OPS family for {0}'.format(document_number))
+            log.warning('Could not fetch OPS family for {0}'.format(document_number))
             continue
 
         # B.2 Use first active priority
@@ -1134,7 +1138,7 @@ def analytics_family(query):
                     except Exception as ex:
                         request = get_current_request()
                         del request.errors[:]
-                        log.warn('Could not fetch OPS claims for {0}'.format(pubref_number))
+                        log.warning('Could not fetch OPS claims for {0}'.format(pubref_number))
 
                     # B.3.2 get data about description
                     try:
@@ -1150,7 +1154,7 @@ def analytics_family(query):
                     except Exception as ex:
                         request = get_current_request()
                         del request.errors[:]
-                        log.warn('Could not fetch OPS description for {0}'.format(pubref_number))
+                        log.warning('Could not fetch OPS description for {0}'.format(pubref_number))
 
 
                     if statistics:
@@ -1184,7 +1188,7 @@ def analytics_family(query):
                     except:
                         request = get_current_request()
                         del request.errors[:]
-                        log.warn('Could not fetch OPS register information for {0}'.format(pubref_number))
+                        log.warning('Could not fetch OPS register information for {0}'.format(pubref_number))
                         continue
 
                     designated_states_list = pointer_designated_states.resolve(reginfo_payload)

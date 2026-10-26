@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
-import types
 import logging
+from typing import Dict, List, Union
+
 import pyparsing
 from patzilla.navigator.services import cql_prepare_query
 from patzilla.util.cql.pyparsing import CQL
@@ -53,6 +54,8 @@ class DepaTechParser(object):
 
     def dumps(self):
         self.parse()
+        if not self.query_object:
+            raise ValueError("Query object is None")
         return self.query_object.dumps()
 
     @property
@@ -105,7 +108,7 @@ class DepaTechExpression(object):
     # "DE": "9407879",
 
     # map canonical field names to datasource-specific ones
-    datasource_indexnames = {
+    datasource_indexnames: Dict[str, Union[str, List[str], None]] = {
 
         # Will be transformed by custom logic into distinct fields PC, DE, KI
         'patentnumber': None,
@@ -124,7 +127,7 @@ class DepaTechExpression(object):
         #'citation':     None,
     }
 
-    fieldnames = [
+    fieldnames: List[str] = [
 
         # Parties
         'PA',
@@ -280,7 +283,7 @@ class DepaTechExpression(object):
                 expression = query_object.dumps()
 
             except pyparsing.ParseException as ex:
-                return {'error': True, 'message': '<pre>' + str(ex.explanation) + '</pre>'}
+                return {'error': True, 'message': '<pre>' + str(ex.explain()) + '</pre>'}
 
         elif key == 'country':
             value = value.upper()

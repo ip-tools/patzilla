@@ -4,6 +4,7 @@ from __future__ import absolute_import
 import logging
 import os
 import shutil
+from typing import Dict, Union
 
 import platformdirs
 from beaker.cache import CacheManager
@@ -29,6 +30,7 @@ def configure_cache_backend(kind="memory", cache_directory=None, clear_cache=Fal
     Currently, it supports "memory", "filesystem" and "mongodb".
     """
 
+    cache_opts: Dict[str, Union[str, bool, int]]
     cache_location = None
 
     # Cache backend: memory.

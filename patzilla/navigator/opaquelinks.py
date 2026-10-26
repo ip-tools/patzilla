@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2016 Andreas Motl, Elmyra UG
 import logging
+from typing import cast, Dict
+
 import Crypto
+import Crypto.Random
 import datetime
 from pkg_resources import resource_filename
 from simplejson import JSONDecodeError
@@ -83,17 +86,19 @@ def create_request_interceptor(event):
             log.error('metadata of opaque parameter token is empty. meta=%s, token=%s', meta, op_token)
 
     except JwtExpiryError as ex:
-        expiry_unixtime = ex.message['jwt_expiry']
+        info: Dict = cast(dict, ex.args[0])
+        expiry_unixtime = info['jwt_expiry']
         expiry_iso = datetime_iso(unixtime_to_datetime(expiry_unixtime))
-        ex.message['jwt_expiry_iso'] = expiry_iso
-        log.error('Opaque parameter token expired: expiry=%s, message=%s', expiry_iso, ex.message)
-        request.opaque_meta.update({'status': 'error', 'errors': [ex.message]})
+
+        msg = info['jwt_expiry_iso'] = expiry_iso
+        log.error('Opaque parameter token expired: expiry=%s, message=%s', expiry_iso, msg)
+        request.opaque_meta.update({'status': 'error', 'errors': [msg]})
         # TODO: log/send full stacktrace
         log.error(exception_traceback())
 
     except JwtVerifyError as ex:
-        log.error('Error while decoding opaque parameter token: %s', ex.message)
-        request.opaque_meta.update({'status': 'error', 'errors': [ex.message]})
+        log.error('Error while decoding opaque parameter token: %s', ex)
+        request.opaque_meta.update({'status': 'error', 'errors': [str(ex)]})
         # TODO: log/send full stacktrace
         log.error(exception_traceback())
 
@@ -115,7 +120,7 @@ opaquelinks_verify_service = Service(
 # ------------------------------------------
 #   service handlers
 # ------------------------------------------
-@opaquelinks_token_service.post(accept="application/json")
+@opaquelinks_token_service.decorator("post", accept="application/json")
 def opaquelinks_token_handler(request):
     """Generate an opaquelinks token"""
     payload = request_payload(request)
@@ -129,7 +134,7 @@ def opaquelinks_token_handler(request):
     return signer.sign(payload, ttl=ttl)
 
 
-@opaquelinks_verify_service.post(accept="application/json")
+@opaquelinks_verify_service.decorator("post", accept="application/json")
 def opaquelinks_verify_handler(request):
     """Verify an opaquelinks token"""
 

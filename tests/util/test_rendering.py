@@ -30,7 +30,7 @@ class TestPhantomJS(TestCase):
 
         # Define mock for `NamedTemporaryFile`.
         ntf = mock.MagicMock()
-        type(ntf).name = PropertyMock(return_value="/tmp/foo.pdf")
+        type(ntf).name = PropertyMock(return_value="/tmp/foo.pdf")  # ty: ignore[unresolved-attribute]
         ntf.read.return_value = b"out"
         ntf_factory.return_value = ntf
 
@@ -47,7 +47,7 @@ class TestPhantomJS(TestCase):
 
         # Define mock for `NamedTemporaryFile`.
         ntf = mock.MagicMock()
-        type(ntf).name = PropertyMock(return_value="/tmp/foo.pdf")
+        type(ntf).name = PropertyMock(return_value="/tmp/foo.pdf")  # ty: ignore[unresolved-attribute]
         ntf.read.return_value = b"out"
         ntf_factory.return_value = ntf
 

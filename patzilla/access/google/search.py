@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2014 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import json
+import re
+from typing import cast
+
 from pyramid.encode import urlencode
 # py27 import re
 import sys
@@ -57,21 +60,21 @@ class GooglePatentsAccess(object):
         response = requests.get(url, headers={'User-Agent': self.user_agent})
 
         #print "google status:", response.status_code
-        #print "google response:", response.content
+        #print "google response:", response.text
 
         payload = {
             'query': expression,
         }
         if response.status_code == 200:
-            payload.update(self.parse_response(response.content))
+            payload.update(self.parse_response(response.text))
 
-        elif response.status_code == 503 and 'CaptchaRedirect' in response.content:
-            payload['message'] = self.tweak_captcha_response(response.content)
+        elif response.status_code == 503 and 'CaptchaRedirect' in response.text:
+            payload['message'] = self.tweak_captcha_response(response.text)
 
         else:
             message = 'Accessing Google Patent Search failed with status={0} for url {1}'.format(
                 str(response.status_code) + ' ' + response.reason, url)
-            logger.error(message + ' body:\n' + response.content)
+            logger.error(message + ' body:\n' + response.text)
             raise ValueError(message)
 
         return payload
@@ -82,12 +85,16 @@ class GooglePatentsAccess(object):
         baseurl = 'https://ipv4.google.com'
 
         captcha_image = soup.find('img')
+        if not captcha_image:
+            raise ValueError("No image found in HTML document")
         #print dir(head)
         #head.append(Tag(soup, 'base', [('href', 'https://ipv4.google.com')]))
-        captcha_image['src'] = baseurl + captcha_image['src']
+        captcha_image['src'] = baseurl + cast(str, captcha_image['src'])
 
         captcha_form = soup.find('form')
-        captcha_form['action'] = baseurl + '/' + captcha_form['action']
+        if not captcha_form:
+            raise ValueError("No form found in HTML document")
+        captcha_form['action'] = baseurl + '/' + cast(str, captcha_form['action'])
 
         newbody = str(soup)
         print(newbody)
@@ -130,14 +137,18 @@ class GooglePatentsAccess(object):
         results = []
         # <h3 class="r"><a href="https://www.google.com/patents/US351065?dq=matrix&amp;hl=en&amp;sa=X&amp;ei=TrJaVJfSNYbWPcyPgLAI&amp;ved=0CO8CEOgBMDA">Dental matrix</a></h3>
         href_pattern = re.compile('https://www.google.com/patents/(.+?)\?.*')
-        entries = soup.findAll('h3', {'class': 'r'})
+        entries = soup.find_all('h3', attrs={'class': 'r'})
         for entry in entries:
-            anchor = entry.findChild('a')
+            anchor = entry.find('a')
+            if not anchor:
+                raise ValueError("No anchor found in HTML element")
 
             # https://www.google.com/patents/US4912874?dq=matrix&hl=en&sa=X&ei=lLhaVLXEIcftO7CEgLAM&ved=0CB8Q6AEwAA
             href = anchor['href']
+            if not href:
+                raise ValueError("Unable to extract href from HTML element")
 
-            m = href_pattern.match(href)
+            m = href_pattern.match(cast(str, href))
             if m:
                 number = m.group(1)
                 results.append(number)
@@ -150,13 +161,18 @@ class GooglePatentsAccess(object):
             hits = 0
 
             #print dir(soup)
-            ucs_node = soup.find('div', {'id': 'ucs'}).getText()
-            res_node = soup.find('div', {'id': 'res'}).find('div', {'class': 'med card-section'})
+            ucs_element = soup.find('div', {'id': 'ucs'})
+            res_element = soup.find('div', {'id': 'res'})
 
-            message = ''
-            if ucs_node:
-                message += str(ucs_node) + '<br/>'
-            message += str(res_node)
+            if ucs_element and res_element:
+
+                ucs_node = ucs_element.get_text()
+                res_node = res_element.find('div', {'class': 'med card-section'})
+
+                message = ''
+                if ucs_node:
+                    message += str(ucs_node) + '<br/>'
+                message += str(res_node)
 
         payload = {
             'numbers': results,
@@ -164,8 +180,6 @@ class GooglePatentsAccess(object):
             'page': page,
             'message': message,
         }
-
-        print(payload)
 
         return payload
 

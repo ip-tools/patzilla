@@ -44,8 +44,9 @@ def pyramid_setup(configfile=None, bootconfiguration=None):
         configfile_application = bootconfiguration.for_application
 
     # Setup logging.
-    if "PYTEST_CURRENT_TEST" not in os.environ:
-        logging.config.fileConfig(configfile_logging, disable_existing_loggers=False)
+    if configfile_logging:
+        if "PYTEST_CURRENT_TEST" not in os.environ:
+            logging.config.fileConfig(configfile_logging, disable_existing_loggers=False)
     logger.setLevel(logging.DEBUG)
     logger.info("Logging configuration file:    {}".format(configfile_logging))
 
@@ -54,7 +55,7 @@ def pyramid_setup(configfile=None, bootconfiguration=None):
 
     # When booting a minimal application, there is some additional work needed
     # to dispatch all context / request events.
-    if bootconfiguration.flavor == "minimal":
+    if bootconfiguration and bootconfiguration.flavor == "minimal":
         pyramid_dispatch_events(env)
 
     return env

@@ -5,6 +5,8 @@ import re
 _slugify_strip_re = re.compile(rb'[^\w\s-]')
 _slugify_strip_wo_equals_re = re.compile(rb'[^\w\s=-]')
 _slugify_hyphenate_re = re.compile(rb'[-\s]+')
+
+
 def slugify(value, strip_equals=True, lowercase=True):
     """
     Normalizes string, converts to lowercase, removes non-alpha characters,
@@ -17,14 +19,14 @@ def slugify(value, strip_equals=True, lowercase=True):
     import unicodedata
     if not isinstance(value, str):
         value = str(value)
-    value = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
+    value: bytes = unicodedata.normalize('NFKD', value).encode('ascii', 'ignore')
 
     _strip_re = _slugify_strip_re
     if not strip_equals:
         _strip_re = _slugify_strip_wo_equals_re
     
-    if  isinstance(value, str):
-        value = _strip_re.sub('', value).strip()
+    if isinstance(value, str):
+        value = _strip_re.sub('', value).strip()  # ty: ignore[no-matching-overload]
     else:
         value = _strip_re.sub(b'', value).strip()
 

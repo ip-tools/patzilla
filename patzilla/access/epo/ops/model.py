@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 # (c) 2022 Andreas Motl <andreas.motl@ip-tools.org>
+from typing import List
+
 import attr
 
 
-@attr.s
-class OpsFamilyAwareSearchResult(object):
+@attr.define
+class OpsFamilyAwareSearchResult:
     """
     Result model for function `patzilla.access.epo.ops.api:results_swap_family_members`.
     """
-    data = attr.ib(type=list)
-    selected_numbers = attr.ib(type=list)
-    original_numbers = attr.ib(type=list)
+    data: List
+    selected_numbers: List
+    original_numbers: List

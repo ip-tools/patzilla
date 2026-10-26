@@ -74,13 +74,13 @@ status_upstream_ops = Service(
     description="Checks EPO OPS upstream for valid response")
 
 
-@status_upstream_ops.get()
+@status_upstream_ops.decorator("get")
 def status_upstream_ops_handler(request):
     data = ops_published_data_search_real('full-cycle', 'pn=EP666666', '1-10')
     assert data, 'Empty response from OPS'
     return "OK"
 
-@ops_published_data_search_service.get(accept="application/json")
+@ops_published_data_search_service.decorator("get", accept="application/json")
 def ops_published_data_search_handler(request):
     """Search for published-data at OPS"""
 
@@ -127,7 +127,7 @@ def ops_published_data_search_handler(request):
     log.info('query finished')
 
 
-@ops_published_data_crawl_service.get(accept="application/json")
+@ops_published_data_crawl_service.decorator("get", accept="application/json")
 def ops_published_data_crawl_handler(request):
     """Crawl published-data at OPS"""
 
@@ -158,14 +158,14 @@ def ops_published_data_crawl_handler(request):
         request.errors.add('ops-published-data-crawl', 'query', str(ex))
 
 
-@ops_image_info_service.get()
+@ops_image_info_service.decorator("get")
 def ops_image_info_handler(request):
     patent = request.matchdict['patent']
     info = inquire_images(patent)
     return info
 
 
-@ops_fullimage_service.get(renderer='pdf')
+@ops_fullimage_service.decorator("get", renderer='pdf')
 def ops_fullimage_handler(request):
     """request full image as pdf"""
     # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/A1/fullimage.pdf?Range=1
@@ -178,7 +178,7 @@ def ops_fullimage_handler(request):
     return pdf
 
 
-@ops_family_inpadoc_service.get(accept='application/json')
+@ops_family_inpadoc_service.decorator("get", accept='application/json')
 def ops_family_inpadoc_json_handler(request):
     # constituents: biblio, legal
 
@@ -190,7 +190,7 @@ def ops_family_inpadoc_json_handler(request):
     return ops_family_inpadoc(reference_type, patent, constituents)
 
 
-@ops_family_inpadoc_service.get(accept='text/xml', renderer='xml')
+@ops_family_inpadoc_service.decorator("get", accept='text/xml', renderer='xml')
 def ops_family_publication_xml_handler(request):
     # constituents: biblio, legal
 
@@ -202,7 +202,7 @@ def ops_family_publication_xml_handler(request):
     return ops_family_publication_docdb_xml(reference_type, patent, constituents)
 
 
-@ops_pdf_service.get(renderer='pdf')
+@ops_pdf_service.decorator("get", renderer='pdf')
 def ops_pdf_handler(request):
     """request full document as pdf from OPS"""
     # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/A1/fullimage.pdf?Range=1
@@ -221,7 +221,7 @@ def ops_pdf_handler(request):
     return pdf_payload
 
 
-@ops_claims_service.get()
+@ops_claims_service.decorator("get")
 def ops_claims_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     patent = request.matchdict['patent']
@@ -229,7 +229,7 @@ def ops_claims_handler(request):
     return description
 
 
-@ops_description_service.get()
+@ops_description_service.decorator("get")
 def ops_description_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     patent = request.matchdict['patent']
@@ -237,7 +237,7 @@ def ops_description_handler(request):
     return description
 
 
-@ops_kindcode_service.get()
+@ops_kindcode_service.decorator("get")
 def ops_kindcode_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     patent = request.matchdict['patent']
@@ -245,12 +245,12 @@ def ops_kindcode_handler(request):
     return kindcodes
 
 
-@ops_register_service.get(accept='application/json')
+@ops_register_service.decorator("get", accept='application/json')
 def ops_register_handler_json(request):
     return ops_register_handler_real(request)
 
 
-@ops_register_service.get(accept=['text/xml', 'application/xml'], renderer='xml')
+@ops_register_service.decorator("get", accept=['text/xml', 'application/xml'], renderer='xml')
 def ops_register_handler_xml(request):
     return ops_register_handler_real(request, xml=True)
 

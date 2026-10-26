@@ -36,7 +36,7 @@ def unique_sequence(seq):
     seen = set()
     seen_add = seen.add
     unhashable_types = (list, dict)
-    return [x for x in seq if type(x) in unhashable_types or not (x in seen or seen_add(x))]
+    return [x for x in seq if type(x) in unhashable_types or not (x in seen or seen_add(x))]  # ty: ignore[redundant-condition]
 
 
 def jpath(path, doc):

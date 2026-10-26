@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+from typing import List, Optional, Type
+
 import cornice
 
+from patzilla.util.cql.pyparsing import CQLGrammar
 from patzilla.util.expression import SearchExpression
-from patzilla.util.python import _exception_traceback
 from patzilla.access.epo.ops.api import ops_keyword_fields
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
 
 logger = logging.getLogger(__name__)
 
 
-def cql_prepare_query(query, grammar=None, keyword_fields=None):
+def cql_prepare_query(query, grammar: Optional[Type[CQLGrammar]] = None, keyword_fields: Optional[List[str]] = None):
     keyword_fields = keyword_fields or ops_keyword_fields + DpmaDepatisnetAccess.keyword_fields
     se = SearchExpression(syntax='cql', grammar=grammar, keyword_fields=keyword_fields)
     se.parse_expression(query)

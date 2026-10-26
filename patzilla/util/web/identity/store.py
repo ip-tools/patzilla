@@ -130,7 +130,7 @@ class UserMetrics(Document):
 # ------------------------------------------
 #   utilities
 # ------------------------------------------
-class IUserMetricsManager(Interface):
+class IUserMetricsManager(Interface):  # ty: ignore[unsupported-base]
     pass
 
 @implementer(IUserMetricsManager)
@@ -156,7 +156,7 @@ class UserMetricsManager(object):
         # mongoengine 0.13.0
         # http://docs.mongoengine.org/guide/querying.html?highlight=get_or_create#retrieving-unique-results
         try:
-            metrics = UserMetrics.objects.get(userid=userid, date=date)
+            metrics = UserMetrics.objects.get(userid=userid, date=date)  # ty: ignore[unresolved-attribute]
         except DoesNotExist:
             metrics = UserMetrics(userid=userid, date=date)
             metrics.save()
@@ -232,7 +232,7 @@ class UserManager:
 
         # Build dictionary of proper object attributes from kwargs
         data = {}
-        for field in User._fields:
+        for field in User._fields:  # ty: ignore[unresolved-attribute]
             if field == 'id': continue
             if field in kwargs and kwargs[field] is not None:
                 data[field] = kwargs[field]

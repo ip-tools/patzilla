@@ -79,7 +79,7 @@ def attach_sip_client(event):
     request.sip_client = pool.get(credentials_source, credentials_data)
 
 
-class ISipClientPool(Interface):
+class ISipClientPool(Interface):  # ty: ignore[unsupported-base]
     pass
 
 

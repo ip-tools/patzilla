@@ -11,6 +11,8 @@ $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
 $(eval yarn         := $(venvpath)/bin/yarn)
 $(eval npx          := $(venvpath)/bin/npx)
+$(eval ty           := $(venvpath)/bin/ty)
+$(eval pyproject-fmt := $(venvpath)/bin/pyproject-fmt)
 
 
 setup: setup-py
@@ -67,6 +69,7 @@ setup-virtualenv:
 
 setup-py: setup-virtualenv
 	$(pip) install --editable=.[test]
+	$(pip) install --requirement requirements-dev.txt
 
 setup-test: setup-py
 
@@ -96,6 +99,11 @@ release: setup-release js-release bumpversion push sdist upload-pypi
 install-nginx-auth:
 	fab upload_nginx_auth
 
+check: lint test
+
+lint:
+	@$(ty) check
+
 test:
 	@$(pytest) $(options)
 
@@ -104,6 +112,9 @@ test-coverage:
 
 test-parallel:
 	@$(pytest) $(options) --numprocesses=auto
+
+format:
+	@$(pyproject-fmt) --keep-full-version pyproject.toml
 
 # --all-modules
 # --traverse-namespace

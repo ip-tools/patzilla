@@ -76,7 +76,7 @@ def attach_depatech_client(event):
     request.depatech_client = pool.get(credentials_source, credentials_data)
 
 
-class IDepaTechClientPool(Interface):
+class IDepaTechClientPool(Interface):  # ty: ignore[unsupported-base]
     pass
 
 

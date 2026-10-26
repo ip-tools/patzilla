@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2022 The PatZilla Developers
 import logging
-from io import StringIO
+from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 import attr
@@ -154,7 +154,7 @@ def pdf_universal_real(patent, response):
 
 
 def pdf_ziparchive(patents):
-    buffer = StringIO()
+    buffer = BytesIO()
     with ZipFile(buffer, 'w', ZIP_DEFLATED) as archive:
         pdf_ziparchive_add(archive, patents)
     buffer.seek(0)

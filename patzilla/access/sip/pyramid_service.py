@@ -29,8 +29,8 @@ sip_published_data_crawl_service = Service(
 
 
 # TODO: implement as JSON POST
-@sip_published_data_search_service.get(accept="application/json")
-@sip_published_data_search_service.post(accept="application/json")
+@sip_published_data_search_service.decorator("get", accept="application/json")
+@sip_published_data_search_service.decorator("post", accept="application/json")
 def sip_published_data_search_handler(request):
     """Search for published-data at SIP"""
 
@@ -81,7 +81,7 @@ def sip_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('sip-search', 'expression', str(ex.msg))
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except SearchException as ex:
         message = ex.get_message()
@@ -100,8 +100,8 @@ def sip_published_data_search_handler(request):
         log.error(request.errors)
 
 
-@sip_published_data_crawl_service.get(accept="application/json")
-@sip_published_data_crawl_service.post(accept="application/json")
+@sip_published_data_crawl_service.decorator("get", accept="application/json")
+@sip_published_data_crawl_service.decorator("post", accept="application/json")
 def sip_published_data_crawl_handler(request):
     """Crawl published-data at SIP"""
 

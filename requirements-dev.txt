@@ -1,0 +1,3 @@
+pyproject-fmt<3
+sphinx-autobuild<=2025.8.25
+ty==0.0.91

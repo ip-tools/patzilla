@@ -23,7 +23,7 @@ analytics_family_service = Service(
     renderer='prettyjson',
     description="Family analytics interface")
 
-@analytics_family_service.get()
+@analytics_family_service.decorator("get")
 def analytics_family_handler(request):
     # TODO: respond with proper 4xx codes if something fails
 
@@ -47,7 +47,7 @@ analytics_daterange_service = Service(
     renderer='prettyjson',
     description="Daterange analytics interface")
 
-@analytics_daterange_service.get()
+@analytics_daterange_service.decorator("get")
 def analytics_daterange_handler(request):
     # TODO: respond with proper 4xx codes if something fails
 
@@ -69,7 +69,7 @@ def _decode_expression_from_query(request):
     decoded.update({'criteria': params})
     return decoded
 
-class QueryDateRangeNarrower(object):
+class QueryDateRangeNarrower:
 
     states = ['init', 'whole', 'left', 'right', 'finished', 'asleep']
     OLDEST = 1
@@ -120,7 +120,7 @@ class QueryDateRangeNarrower(object):
             raise ValueError('kind must be self.OLDEST or self.NEWEST')
 
         self.delta = (self.date_to - self.date_from) / 2
-
+        self.state = ""
 
     def runquery(self):
         criteria = self.criteria.copy()
@@ -205,7 +205,7 @@ class QueryDateRangeNarrower(object):
                 print('querycount:', self.querycount)
             if self.state == 'finished' or self.querycount > 15:
                 break
-            self.step()
+            # self.step()
 
 
 def analytics_daterange(datasource, kind, criteria):
@@ -215,7 +215,7 @@ def analytics_daterange(datasource, kind, criteria):
         fsm_kind = QueryDateRangeNarrower.OLDEST
 
     fsm = QueryDateRangeNarrower(datasource, criteria, fsm_kind)
-    fsm.start()
+    # fsm.start()
 
     #print 'state:', fsm.state
     #print 'hits:', fsm.hits
@@ -277,14 +277,14 @@ analytics_applicants_distinct_service = Service(
     renderer='prettyjson',
     description='Applicants distinct analytics interface')
 
-@analytics_applicants_distinct_service.get()
+@analytics_applicants_distinct_service.decorator("get")
 def analytics_applicants_distinct_handler(request):
     # TODO: respond with proper 4xx codes if something fails
 
     # decode query parameters into datasource and criteria
     expression_data = _decode_expression_from_query(request)
 
-    query = make_expression({
+    query = make_expression_filter({
         'datasource': 'sip',
         'format': 'comfort',
         'criteria': expression_data['criteria'],
@@ -298,7 +298,7 @@ def analytics_applicants_distinct_handler(request):
     for item in results['details']:
         applicant = item.get('applicant')
         if applicant:
-            applicant = htmlparser.unescape(applicant)
+            applicant = html.unescape(applicant)
         applicants.setdefault(applicant, 0)
         applicants[applicant] += 1
 

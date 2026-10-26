@@ -18,7 +18,7 @@ def attach_user(event):
     #context = request.context
     userid = request.headers.get('X-User-Id')
     if userid:
-        request.user = User.objects(userid=userid).first()
+        request.user = User.objects(userid=userid).first()  # ty: ignore[unresolved-attribute]
     else:
         request.user = User()
 
@@ -48,7 +48,7 @@ identity_user_password = Service(
 # ------------------------------------------
 #   handlers
 # ------------------------------------------
-@identity_auth.post(accept="application/json")
+@identity_auth.decorator("post", accept="application/json")
 def identity_auth_handler(request):
     """Authenticate a user"""
 
@@ -71,7 +71,7 @@ def identity_auth_handler(request):
     User.crypt500(password)
 
     # find user
-    user = User.objects(username__iexact=username).first()
+    user = User.objects(username__iexact=username).first()  # ty: ignore[unresolved-attribute]
     if user is not None:
 
         # check password
@@ -89,7 +89,7 @@ def identity_auth_handler(request):
     request.errors.add('identity subsystem', 'authentication-failed', 'Authentication failed')
 
 
-@identity_pwhash.get(accept="application/json")
+@identity_pwhash.decorator("get", accept="application/json")
 def identity_pwhash_handler(request):
     """Hash a password"""
 
