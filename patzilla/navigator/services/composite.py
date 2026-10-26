@@ -20,7 +20,7 @@ pdf_service = Service(
     description="Retrieve patent document PDF files")
 
 
-@drawing_service.get(renderer='png')
+@drawing_service.decorator("get", renderer='png')
 def drawing_handler(request):
     """request drawing, convert from tiff to png"""
 
@@ -32,7 +32,7 @@ def drawing_handler(request):
     return png
 
 
-@pdf_service.get(renderer='null')
+@pdf_service.decorator("get", renderer='null')
 def pdf_handler(request):
     """request full document as pdf, universal datasource"""
 

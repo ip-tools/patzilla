@@ -1,6 +1,6 @@
 #!/home/frank/DATA/Envs/env1/bin/python3
 # -*- coding: utf-8 -*-
-import regex as re
+import re
 import sys
 
 from pyramid.scripts.pserve import main

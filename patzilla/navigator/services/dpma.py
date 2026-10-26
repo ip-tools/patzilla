@@ -60,19 +60,19 @@ status_upstream_dpmaregister = Service(
     path='/api/status/upstream/dpma/dpmaregister',
     description="Checks DPMA dpmaregister upstream for valid response")
 
-@status_upstream_depatisnet.get()
+@status_upstream_depatisnet.decorator("get")
 def status_upstream_depatisnet_handler(request):
     data = dpma_published_data_search_real('pn=EP666666', None)
     assert data, 'Empty response from depatisnet'
     return "OK"
 
-@status_upstream_depatisconnect.get()
+@status_upstream_depatisconnect.decorator("get")
 def status_upstream_depatisconnect_handler(request):
     data = depatisconnect_claims_handler_real('DE212016000074U1')
     assert data['xml'], 'Empty response from depatisconnect'
     return "OK"
 
-@status_upstream_dpmaregister.get()
+@status_upstream_dpmaregister.decorator("get")
 def status_upstream_dpmaregister_handler(request):
     data = dpmaregister.access_register('DE212016000074', 'json')
     assert data, 'Empty response from dpmaregister'
@@ -121,8 +121,8 @@ def prepare_search(request):
 
 
 # TODO: implement as JSON POST
-@depatisnet_published_data_search_service.get(accept="application/json")
-@depatisnet_published_data_search_service.post(accept="application/json")
+@depatisnet_published_data_search_service.decorator("get", accept="application/json")
+@depatisnet_published_data_search_service.decorator("post", accept="application/json")
 def depatisnet_published_data_search_handler(request):
     """Search for published-data at DEPATISnet"""
 
@@ -134,7 +134,7 @@ def depatisnet_published_data_search_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('depatisnet-search', 'expression', str(ex.msg))
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except NoResultsException as ex:
         # Forward response to let the frontend recognize zero hits
@@ -146,8 +146,8 @@ def depatisnet_published_data_search_handler(request):
         request.errors.add('depatisnet-search', 'search', message)
 
 
-@depatisnet_published_data_crawl_service.get(accept="application/json")
-@depatisnet_published_data_crawl_service.post(accept="application/json")
+@depatisnet_published_data_crawl_service.decorator("get", accept="application/json")
+@depatisnet_published_data_crawl_service.decorator("post", accept="application/json")
 def depatisnet_published_data_crawl_handler(request):
     """Crawl published-data at DEPATISnet"""
 
@@ -159,14 +159,14 @@ def depatisnet_published_data_crawl_handler(request):
 
     except SyntaxError as ex:
         request.errors.add('depatisnet-search', 'expression', str(ex.msg))
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except Exception as ex:
         http_response = None
         if hasattr(ex, 'http_response'):
             http_response = ex.http_response
         log.error('DEPATISnet crawler error: query="{0}", reason={1}\nresponse:\n{2}\nexception:\n{3}'.format(
-            query, ex, http_response, _exception_traceback()))
+            search.expression, ex, http_response, _exception_traceback()))
 
         message = 'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
         request.errors.add('depatisnet-search', 'crawl', message)
@@ -188,7 +188,7 @@ def dpma_published_data_search_real(query, options):
 
     return data
 
-@depatisconnect_claims_service.get()
+@depatisconnect_claims_service.decorator("get")
 def depatisconnect_claims_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
@@ -218,7 +218,7 @@ def depatisconnect_claims_handler_real(patent):
 
     return claims
 
-@depatisconnect_description_service.get()
+@depatisconnect_description_service.decorator("get")
 def depatisconnect_description_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
@@ -251,7 +251,7 @@ def depatisconnect_description_handler_real(patent):
     return description
 
 
-@depatisconnect_abstract_service.get()
+@depatisconnect_abstract_service.decorator("get")
 def depatisconnect_abstract_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
@@ -270,7 +270,7 @@ def depatisconnect_abstract_handler(request):
     return abstract
 
 
-@dpma_register_service.get(renderer='null')
+@dpma_register_service.decorator("get", renderer='null')
 def dpma_register_handler(request):
 
     type = request.matchdict['type']

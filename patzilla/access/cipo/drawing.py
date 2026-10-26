@@ -63,16 +63,20 @@ def get_first_drawing_url(patent):
             break
 
     if not images_index_url:
-        return
-
+        return None
 
     # 2. fetch and parse images index page
     images_index_html = fetch_images_index(images_index_url)
     soup = BeautifulSoup(images_index_html)
     # <img src="/opic-cipo/cpd/page/141597_20130713_drawings_page1_scale25_rotate0.gif?page=3&amp;section=drawings&amp;scale=25&amp;rotation=0&amp;type=" alt="Canadian Patent Document 141597. Drawings page. Image 1 of 3" />
-    first_drawing_url = cipo_baseurl + soup.find('img', src=re.compile(r'/opic-cipo/cpd/page'))['src']
+    first_drawing_element = soup.find('img', src=re.compile(r'/opic-cipo/cpd/page'))
+    if first_drawing_element:
+        first_drawing_path = first_drawing_element['src']
+        if first_drawing_path:
+            return cipo_baseurl + str(first_drawing_path)
 
-    return first_drawing_url
+    return None
+
 
 if __name__ == '__main__':
 

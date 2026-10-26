@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+from typing import cast
 
 from pyramid.config import Configurator
+from pyramid.registry import Registry
 
 from patzilla.boot.logging import suppress_warnings
 from patzilla.navigator.settings import GlobalSettings
@@ -33,12 +35,12 @@ def configure(global_config, **settings):
 
     # Propagate global settings to application registry.
     registry = config.registry
-    registry.global_settings = global_settings
+    registry.global_settings = global_settings  # ty: ignore[invalid-assignment]
 
     # Propagate specific configuration topics to application registry.
-    registry.application_settings = global_settings.application_settings
-    registry.datasource_settings = global_settings.datasource_settings
-    registry.vendor_settings = global_settings.vendor_settings
+    registry.application_settings = global_settings.application_settings  # ty: ignore[invalid-assignment]
+    registry.datasource_settings = global_settings.datasource_settings  # ty: ignore[invalid-assignment]
+    registry.vendor_settings = global_settings.vendor_settings  # ty: ignore[invalid-assignment]
 
     return config
 

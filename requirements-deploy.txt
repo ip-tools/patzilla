@@ -1,2 +1,2 @@
-Fabric==1.8.5          # 1.14.0
-cuisine==0.7.13
+cuisine @ git+https://github.com/SweetProcess/cuisine@a7f597f
+fabric<2

@@ -2,15 +2,26 @@
 # (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import time
 import logging
+from abc import abstractmethod, ABC
 from pprint import pprint
 from collections import defaultdict
+from typing import Dict, Optional, Union
+
+from munch import Munch
+
 from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.access.generic.exceptions import SearchException
 
 log = logging.getLogger(__name__)
 
-class GenericSearchClient(object):
+class GenericSearchClient(ABC):
+
+    crawl_max_count: int
+
+    @abstractmethod
+    def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
+        raise NotImplementedError("Must be implemented in subclass")
 
     def lm(self, message):
         message = '{backend_name}: {message}'.format(message=message, **self.__dict__)
@@ -122,7 +133,7 @@ class GenericSearchClient(object):
         return response
 
 
-class GenericSearchResponse(object):
+class GenericSearchResponse(ABC):
 
     def __init__(self, input, options=None):
 
@@ -139,6 +150,18 @@ class GenericSearchResponse(object):
         # Run data munging actions
         if 'feature_family_remove' in self.options and self.options.feature_family_remove:
             self.remove_family_members()
+
+    @abstractmethod
+    def read(self) -> None:
+        raise NotImplementedError("Must be implemented in subclass")
+
+    @abstractmethod
+    def document_to_number(self, document: Dict[str, str]) -> str:
+        raise NotImplementedError("Must be implemented in subclass")
+
+    @abstractmethod
+    def document_to_family_id(self, document: Dict[str, str]) -> str:
+        raise NotImplementedError("Must be implemented in subclass")
 
     def setup(self):
 

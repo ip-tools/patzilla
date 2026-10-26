@@ -107,9 +107,9 @@ Go to http://localhost:6544
 Software tests
 ==============
 
-Run all tests::
+Run all linters and software tests::
 
-    make test
+    make check
 
 Run tests in parallel
 =====================

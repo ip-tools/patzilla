@@ -79,7 +79,7 @@ def attach_ificlaims_client(event):
     request.ificlaims_client = pool.get(credentials_source, credentials_data)
 
 
-class IIFIClaimsClientPool(Interface):
+class IIFIClaimsClientPool(Interface):  # ty: ignore[unsupported-base]
     pass
 
 

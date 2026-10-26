@@ -3,6 +3,7 @@
 # (c) 2015-2017 Andreas Motl, Elmyra UG
 import sys
 import json
+
 """
 Synopsis::
 
@@ -44,7 +45,7 @@ def main():
     jsonfile = sys.argv[1]
 
     # Load database file
-    data = json.load(file(jsonfile))
+    data = json.load(open(jsonfile))
 
     #purge_titles(data)
     purge_numbers_seen(data)

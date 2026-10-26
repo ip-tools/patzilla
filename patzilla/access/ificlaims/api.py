@@ -236,10 +236,10 @@ def ificlaims_download_single(number, format, options=None):
         response = ificlaims_download(number, format, options)
 
     except IFIClaimsException as ex:
-        logger.warn('IFI: IFIClaimsException for number={number}, format={format}, options={options}: {ex}'.format(**locals()))
+        logger.warning('IFI: IFIClaimsException for number={number}, format={format}, options={options}: {ex}'.format(**locals()))
 
     if response.payload:
         return response
 
     else:
-        logger.warn('IFI: Empty response for number={number}, format_real={format}'.format(**locals()))
+        logger.warning('IFI: Empty response for number={number}, format_real={format}'.format(**locals()))

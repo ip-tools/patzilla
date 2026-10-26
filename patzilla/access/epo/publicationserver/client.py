@@ -52,13 +52,13 @@ def fetch_pdf(document_number):
         else:
             msg = 'No PDF document returned from European ' \
                   'publication server for "{document_number}".'.format(**locals())
-            logger.warn(msg)
+            logger.warning(msg)
             raise HTTPNotFound(msg)
 
     else:
         msg = 'No document found at European publication ' \
               'server for "{document_number}"'.format(**locals())
-        logger.warn(msg)
+        logger.warning(msg)
         raise HTTPNotFound(msg)
 
 

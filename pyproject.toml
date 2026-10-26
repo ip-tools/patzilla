@@ -1,0 +1,2 @@
+[tool.ty]
+src.exclude = [ "patzilla/util/cql/**" ]

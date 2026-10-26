@@ -13,7 +13,7 @@ publicationserver_pdf_service = Service(
     description="EPO publication server pdf interface")
 
 
-@publicationserver_pdf_service.get(renderer='pdf')
+@publicationserver_pdf_service.decorator("get", renderer='pdf')
 def publicationserver_pdf_handler(request):
     """request pdf from EPO publication server"""
     # https://data.epo.org/publication-server/pdf-document?cc=EP&pn=nnnnnn&ki=nn

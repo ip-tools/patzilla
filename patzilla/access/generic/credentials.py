@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
+from typing import Type
 
 import attr
 
 logger = logging.getLogger(__name__)
 
 
-class AbstractCredentialsGetter(object):
+class AbstractCredentialsGetter:
 
     @staticmethod
     def from_settings(datasource_settings):
@@ -18,8 +19,8 @@ class AbstractCredentialsGetter(object):
         pass
 
 
-@attr.s
-class DatasourceCredentialsManager(object):
+@attr.define
+class DatasourceCredentialsManager:
     """
     Progressively discover data source credentials by probing different locations.
     The contexts probed, in this very order, are: user, vendor, system, machine.
@@ -29,8 +30,8 @@ class DatasourceCredentialsManager(object):
     credentials associated with her account.
     """
 
-    identifier = attr.ib(type=str)
-    credentials_getter = attr.ib(type=AbstractCredentialsGetter)
+    identifier: str
+    credentials_getter: Type[AbstractCredentialsGetter]
 
     def resolve(self, request):
 

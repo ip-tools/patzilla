@@ -8,9 +8,12 @@ import re
 import json
 import timeit
 import logging
+from typing import Optional, Dict, Union
+
 import requests
 from pprint import pprint
 from beaker.cache import cache_region
+from munch import Munch
 from requests.exceptions import RequestException
 from patzilla.util.image.convert import to_png
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
@@ -36,7 +39,6 @@ class IFIClaimsClient(GenericSearchClient):
 
         self.backend_name = 'ificlaims'
 
-        self.search_method = ificlaims_search
         self.crawl_max_count = 50000
 
         self.path_search            = '/search/query'
@@ -65,11 +67,14 @@ class IFIClaimsClient(GenericSearchClient):
         headers = {'X-User': self.username, 'X-Password': self.password}
         return headers
 
+    def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
+        return ificlaims_search(query=query, options=options)
+
     @cache_region('search')
     def search(self, query, options=None):
         return self.search_real(query, options=options)
 
-    def search_real(self, query, options=None):
+    def search_real(self, query: Munch, options: Optional[Munch] = None):
 
         query.setdefault('filter', '')
 
@@ -198,7 +203,7 @@ class IFIClaimsClient(GenericSearchClient):
                     duration=duration, meta=result['meta'], **self.__dict__))
 
                 if not result['numbers']:
-                    log.warn('{backend_name}: Search had empty results. duration={duration}s, meta=\n{meta}'.format(
+                    log.warning('{backend_name}: Search had empty results. duration={duration}s, meta=\n{meta}'.format(
                         duration=duration, meta=result['meta'], **self.__dict__))
 
                 return result
@@ -223,9 +228,9 @@ class IFIClaimsClient(GenericSearchClient):
             self.logout()
 
             # Strip HTML from response body
-            response_content = response.content
+            response_content = response.text
             if response.headers.get('Content-Type', '').startswith('text/html'):
-                response_content = re.sub('<[^<]+?>', '', response_content).strip().replace('\r\n', ', ')
+                response_content = re.sub(r'<[^<]+?>', '', response_content).strip().replace('\r\n', ', ')
 
             # Build alternative basic error structure
             upstream_error = {
@@ -255,6 +260,8 @@ class IFIClaimsClient(GenericSearchClient):
         log.info("{backend_name}: text_fetch, ucid={ucid}, format={format}; user={username}".format(
             ucid=ucid, format=format, **self.__dict__))
 
+        if not self.uri_json:
+            raise ValueError('JSON URI not defined')
 
         starttime = timeit.default_timer()
 
@@ -552,7 +559,7 @@ class IFIClaimsSearchResponse(GenericSearchResponse):
 def ificlaims_client(options=None):
     options = options or SmartMunch()
     if 'vendor' in options and options.vendor == 'serviva':
-        client = get_serviva_client()
+        client = get_serviva_client()  # ty: ignore[unresolved-reference]
     else:
         client = get_ificlaims_client()
     return client
@@ -576,7 +583,7 @@ def ificlaims_fetch(resource, format, options=None):
 
 
 @cache_region('search')
-def ificlaims_search(query, options=None):
+def ificlaims_search(query, options: Optional[Munch]=None):
 
     options = options or SmartMunch()
 
@@ -599,7 +606,7 @@ def ificlaims_crawl(constituents, query, chunksize, options=None):
     try:
         return client.crawl(constituents, query, chunksize)
     except SyntaxError as ex:
-        log.warn('Invalid query for IFI: %s' % ex.msg)
+        log.warning('Invalid query for IFI: %s' % ex.msg)
         raise
 
 

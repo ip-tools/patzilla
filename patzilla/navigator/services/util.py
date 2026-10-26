@@ -4,7 +4,8 @@ import re
 import json
 import logging
 import mimetypes
-from pprint import pprint
+from typing import Dict, List, Union
+
 from munch import munchify
 from cornice.service import Service
 from pyramid.settings import asbool
@@ -48,7 +49,7 @@ void_service = Service(
     description="Void service")
 
 
-@query_expression_util_service.post()
+@query_expression_util_service.decorator("post")
 def query_expression_util_handler(request):
 
     # TODO: split functionality between ops/depatisnet, google and sip
@@ -83,10 +84,10 @@ def make_expression_filter(data):
     if datasource == 'sip':
         modifiers = SipExpression.compute_modifiers(modifiers)
 
-    expression = ''
-    expression_parts = []
-    filter_parts = []
-    keywords = []
+    expression: str = ''
+    expression_parts: List[str] = []
+    filter_parts: List[str] = []
+    keywords: List[str] = []
 
     #if data['format'] == 'comfort':
     if True:
@@ -122,8 +123,8 @@ def make_expression_filter(data):
                     entries = [entry.strip() for entry in entries]
                     value = ' or '.join(entries)
 
-                expression_part = None
-                filter_part = None
+                expression_part: Dict[str, Union[str, bool]] = {}
+                filter_part: Dict[str, str] = {}
 
                 if datasource in ['ops', 'depatisnet']:
                     expression_part = pair_to_cql(datasource, key, value)
@@ -166,19 +167,21 @@ def make_expression_filter(data):
                 error_tpl = 'Criteria "{0}: {1}" has invalid format, datasource={2}.'
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
-                    log.warn(message)
+                    log.warning(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
                 elif 'error' in expression_part:
                     message = error_tpl.format(key, value, datasource)
-                    message += '<br/>' + expression_part['message']
-                    log.warn(message)
+                    message += '<br/>' + str(expression_part.get('message', ''))
+                    log.warning(message)
                     request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
                 else:
                     query = expression_part.get('query')
-                    if query:
+                    if query and isinstance(query, str):
                         expression_parts.append(query)
+                    else:
+                        raise ValueError("Query is not a string or invalid: %s" % query)
 
                 # Accumulate filter part
                 error_tpl = 'Filter "{0}: {1}" has invalid format, datasource={2}.'
@@ -187,11 +190,13 @@ def make_expression_filter(data):
                     if 'error' in filter_part:
                         message = error_tpl.format(key, value, datasource)
                         message += '<br/>' + filter_part['message']
-                        log.warn(message)
+                        log.warning(message)
                         request.errors.add('query-expression-utility-service', 'comfort-form', message)
 
                     else:
-                        filter_part.get('query') and filter_parts.append(filter_part.get('query'))
+                        filter_item = filter_part.get('query')
+                        if filter_item:
+                            filter_parts.append(filter_item)
 
 
     log.info("Propagating keywords from comfort form: {keywords}".format(keywords=keywords))
@@ -226,7 +231,7 @@ def make_expression_filter(data):
     return payload
 
 
-@numberlist_util_service.post()
+@numberlist_util_service.decorator("post")
 def numberlist_util_handler(request):
     response = {}
     numberlist = None
@@ -258,7 +263,7 @@ def request_to_options(request, options):
             options['sorting'][key] = value
 
 
-@export_util_service.post(renderer='null')
+@export_util_service.decorator("post", renderer='null')
 def export_util_handler(request):
 
     #print 'request.matchdict:', request.matchdict
@@ -270,7 +275,8 @@ def export_util_handler(request):
     if output_kind == 'numberlist':
         numberlist = parse_numberlist(request.params.get('numberlist'))
 
-        payload = create_xlsx({'numberlist': numberlist})
+        # FIXME: `create_xlsx` does not exist.
+        payload = create_xlsx({'numberlist': numberlist})  # ty: ignore[unresolved-reference]
 
         # Export buffer to HTTP response
         filename = '{0}.xlsx'.format('numberlist')
@@ -343,7 +349,7 @@ def export_util_handler(request):
 
 
 
-@issue_reporter_service.post()
+@issue_reporter_service.decorator("post")
 def issue_reporter_handler(request):
 
     targets = request.params.get('targets')

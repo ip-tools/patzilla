@@ -65,7 +65,7 @@ jobs:
       run: |
         sudo rm /etc/ImageMagick-6/policy.xml
 
-    - name: Set up uv
+    - name: Install uv
       uses: astral-sh/setup-uv@v10.3.0
       with:
         activate-environment: true
@@ -74,10 +74,16 @@ jobs:
         python-version: ${{ matrix.python-version }}
         version: 'latest'
 
-    - name: Setup project
+    - name: Install project
       run: |
         uv pip install pip virtualenv
         make setup-test
+
+    - name: Run linters
+      run: |
+        uv pip install -r requirements-deploy.txt
+        uv pip install -r requirements-dev.txt
+        ty check
 
     - name: Run tests
       run: make test-coverage options="--app-cache-backend=memory"

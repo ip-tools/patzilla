@@ -5,6 +5,7 @@ import json
 import logging
 import urllib.request, urllib.error, urllib.parse
 from http.cookiejar import LWPCookieJar
+from typing import Dict
 
 import mechanize
 import re
@@ -42,7 +43,7 @@ class DpmaDepatisnetAccess:
     ]
 
     def __init__(self):
-        print('DpmaDepatisnetAccess.__init__')
+        logger.info('DpmaDepatisnetAccess.__init__')
         self.baseurl = 'https://depatisnet.dpma.de/DepatisNet'
         self.searchurl_cql    = self.baseurl + '/depatisnet?action=experte&switchToLang=en'
         self.searchurl_ikofax = self.baseurl + '/depatisnet?action=ikofax&switchToLang=en'
@@ -50,19 +51,19 @@ class DpmaDepatisnetAccess:
         self.xlsurl = self.baseurl + '/jsp2/downloadtrefferlistexls.jsp?&firstdoc=1'
         self.hits_per_page = 250      # one of: 25, 50, 100, 250. [default: 50]
         self.search_max_hits = 10000  # one of: 100, 250, 500, 1000, 5000, 10000. [default: 1000]
-        self.setup_browser()
 
-    def setup_browser(self):
+        # Set up browser.
 
         # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
         # https://bugs.python.org/issue22417
+        # FIXME: Please review.
         if sys.hexversion >= 0x02070900:
             import ssl
-            ssl._create_default_https_context = ssl._create_unverified_context
+            ssl._create_default_https_context = ssl._create_unverified_context  # ty: ignore[invalid-assignment]
 
         # http://wwwsearch.sourceforge.net/mechanize/
         # https://github.com/python-mechanize/mechanize
-        self.browser = mechanize.Browser()
+        self.browser: mechanize.Browser = mechanize.Browser()
         self.browser.set_cookiejar(LWPCookieJar())
         # 2023-07: WAF penalty for wrong user agent.
         # self.browser.addheaders = [('User-Agent', regular_user_agent)]
@@ -70,7 +71,7 @@ class DpmaDepatisnetAccess:
         self.browser.set_handle_robots(False)
 
     def logout(self):
-        self.browser = None
+        self.browser.close()
 
     def search_patents(self, query, options=None):
 
@@ -86,16 +87,14 @@ class DpmaDepatisnetAccess:
 
         logger.info('Searching documents. query="%s", options=%s' % (query, options))
 
-        # 0. create browser instance
-        if not self.browser:
-            self.setup_browser()
-
         # 1. Open search url
         search_url = self.searchurl_cql
         if options.get('syntax') == 'ikofax':
             search_url = self.searchurl_ikofax
+        if not search_url:
+            raise ValueError("Unable to discover or compute search URL")
         try:
-            self.browser.open(search_url)
+            self.browser.open(search_url)  # ty: ignore[invalid-argument-type,missing-argument]
         except urllib.error.HTTPError as ex:
             logger.critical('Hard error with DEPATISnet: {}'.format(ex))
             self.logout()
@@ -103,7 +102,7 @@ class DpmaDepatisnetAccess:
 
         # 2. submit form
         # http://wwwsearch.sourceforge.net/ClientForm/
-        self.browser.select_form(nr=0)
+        self.browser.select_form(nr=0)  # ty: ignore[missing-argument,unused-ignore-comment,unused-ignore-comment]
         #self.browser.select_form(name='form')
 
         self.browser['query'] = query
@@ -131,7 +130,7 @@ class DpmaDepatisnetAccess:
             self.browser['so'] = [options['sorting']['order']]
 
         # submit form
-        response = self.browser.submit()
+        response = self.browser.submit()  # ty: ignore[missing-argument,unused-ignore-comment,unused-ignore-comment]
 
         # decode response
         body = response.read().decode('iso-8859-1')
@@ -149,7 +148,7 @@ class DpmaDepatisnetAccess:
         if 'feature_family_remove' in options:
 
             # push the button
-            response = self.browser.follow_link(url_regex=re.compile("content=removefam"))
+            response = self.browser.follow_link(url_regex=re.compile("content=removefam"))  # ty: ignore[missing-argument,unused-ignore-comment,unused-ignore-comment]
 
             # decode response
             body = response.read().decode('iso-8859-1')
@@ -161,7 +160,7 @@ class DpmaDepatisnetAccess:
         elif 'feature_family_replace' in options:
 
             # push the button
-            response = self.browser.follow_link(url_regex=re.compile("content=replacefam"))
+            response = self.browser.follow_link(url_regex=re.compile("content=replacefam"))  # ty: ignore[missing-argument,unused-ignore-comment,unused-ignore-comment]
 
             # decode response
             body = response.read().decode('iso-8859-1')
@@ -190,9 +189,12 @@ class DpmaDepatisnetAccess:
         else:
             logger.debug('DEPATISnet xlsurl: %s' % self.xlsurl)
 
+            if not self.xlsurl:
+                raise ValueError("Unable to discover or compute XLS URL")
+
             # Retrieve results via csv
             try:
-                xls_response = self.browser.open(self.xlsurl)
+                xls_response = self.browser.open(self.xlsurl)  # ty: ignore[missing-argument,invalid-argument-type]
                 results = self.read_xls_response(xls_response)
             except Exception as ex:
                 logger.error('Problem downloading results in XLS format: {}'.format(ex))
@@ -268,6 +270,9 @@ class DpmaDepatisnetAccess:
 
 
 class DPMADepatisnetSearchResponse(GenericSearchResponse):
+
+    def document_to_family_id(self, document: Dict[str, str]) -> str:
+        raise NotImplementedError("Method not available for DPMADepatisnetSearchResponse: document_to_family_id")
 
     def read(self):
 

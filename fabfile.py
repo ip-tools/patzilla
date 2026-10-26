@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2018 Andreas Motl, Elmyra UG
 import os
-from distutils.core import run_setup
+from distutils.core import run_setup  # ty: ignore[unresolved-import,unused-ignore-comment,unused-ignore-comment]
 from fabric.contrib.project import rsync_project
 from fabric.decorators import task, hosts
 from fabric.colors import yellow, red

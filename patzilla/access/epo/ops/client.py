@@ -71,8 +71,9 @@ def attach_ops_client(event):
     request.ops_client = pool.get(credentials_source, credentials_data)
 
 
-class IOpsClientPool(Interface):
+class IOpsClientPool(Interface):  # ty: ignore[unsupported-base]
     pass
+
 
 @implementer(IOpsClientPool)
 class OpsClientPool(object):
@@ -104,9 +105,10 @@ def ops_client_factory(key, secret):
 
     # Attach metrics manager object to ops client instance.
     registry = get_current_registry()
+    # TODO: Find another place how to propagate the utility, NOT using the OPS Client instance?
     try:
-        ops.metrics_manager = registry.getUtility(IUserMetricsManager)
+        ops.metrics_manager = registry.getUtility(IUserMetricsManager)  # ty: ignore[unresolved-attribute]
     except ComponentLookupError:
-        ops.metrics_manager = mock.Mock()
+        ops.metrics_manager = mock.Mock()  # ty: ignore[unresolved-attribute]
 
     return ops

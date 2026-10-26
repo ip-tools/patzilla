@@ -48,7 +48,7 @@ status_upstream_ificlaims = Service(
     description="Checks IFI CLAIMS upstream for valid response")
 
 
-@status_upstream_ificlaims.get()
+@status_upstream_ificlaims.decorator("get")
 def status_upstream_ificlaims_handler(request):
     client = ificlaims_client()
     query = SmartMunch({
@@ -58,7 +58,7 @@ def status_upstream_ificlaims_handler(request):
     assert data, 'Empty response from IFI CLAIMS'
     return "OK"
 
-@ificlaims_download_service.get(renderer='null')
+@ificlaims_download_service.decorator("get", renderer='null')
 def ificlaims_download_handler(request):
     """Download resources from IFI CLAIMS Direct"""
 
@@ -97,7 +97,7 @@ def ificlaims_download_handler(request):
         raise HTTPNotFound(msg)
 
 
-@ificlaims_deliver_service.get(renderer='null')
+@ificlaims_deliver_service.decorator("get", renderer='null')
 def ificlaims_deliver_handler(request):
     """Deliver resources from IFI CLAIMS Direct in bulk"""
 
@@ -132,8 +132,8 @@ def ificlaims_deliver_handler(request):
 
 
 # TODO: implement as JSON POST
-@ificlaims_published_data_search_service.get(accept="application/json")
-@ificlaims_published_data_search_service.post(accept="application/json")
+@ificlaims_published_data_search_service.decorator("get", accept="application/json")
+@ificlaims_published_data_search_service.decorator("post", accept="application/json")
 def ificlaims_published_data_search_handler(request):
     """Search for published-data at IFI CLAIMS Direct"""
 
@@ -177,17 +177,17 @@ def ificlaims_published_data_search_handler(request):
         return data
 
     except LoginException as ex:
-        request.errors.add('ificlaims-search', 'login', ex.details)
-        log.warn(request.errors)
+        request.errors.add('ificlaims-search', 'login', ex.get_message())
+        log.warning(request.errors)
 
     except SyntaxError as ex:
         request.errors.add('ificlaims-search', 'expression', str(ex.msg))
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except SearchException as ex:
         message = ex.get_message()
         request.errors.add('ificlaims-search', 'search', message)
-        log.warn(request.errors)
+        log.warning(request.errors)
 
     except NoResultsException as ex:
         # Forward response to let the frontend recognize zero hits
@@ -203,8 +203,8 @@ def ificlaims_published_data_search_handler(request):
         message = handle_generic_exception(request, ex, 'ificlaims-search', query)
         request.errors.add('ificlaims-search', 'search', message)
 
-@ificlaims_published_data_crawl_service.get(accept="application/json")
-@ificlaims_published_data_crawl_service.post(accept="application/json")
+@ificlaims_published_data_crawl_service.decorator("get", accept="application/json")
+@ificlaims_published_data_crawl_service.decorator("post", accept="application/json")
 def ificlaims_published_data_crawl_handler(request):
     """Crawl published-data at IFI CLAIMS Direct"""
 

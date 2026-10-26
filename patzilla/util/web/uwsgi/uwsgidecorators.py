@@ -8,7 +8,7 @@ try:
 except:
     import pickle
 
-import uwsgi
+import uwsgi  # ty: ignore[unresolved-import]
 
 if uwsgi.masterpid() == 0:
     raise Exception(
@@ -217,7 +217,7 @@ class mule_brain(object):
                 self.f()
             except:
                 exc = sys.exc_info()
-                sys.excepthook(exc[0], exc[1], exc[2])
+                sys.excepthook(exc[0], exc[1], exc[2])  # ty: ignore[invalid-argument-type]
                 sys.exit(1)
 
 
@@ -230,7 +230,7 @@ class mule_brainloop(mule_brain):
                     self.f()
                 except:
                     exc = sys.exc_info()
-                    sys.excepthook(exc[0], exc[1], exc[2])
+                    sys.excepthook(exc[0], exc[1], exc[2])  # ty: ignore[invalid-argument-type]
                     sys.exit(1)
 
 

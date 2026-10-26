@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # (c) 2016-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
-import cgi
+import html
 import json
 import logging
 from contextlib import contextmanager
@@ -8,6 +8,7 @@ from pyramid.httpexceptions import HTTPError
 from pyramid.response import Response
 
 log = logging.getLogger(__name__)
+
 
 class GenericAdapterException(Exception):
 
@@ -28,11 +29,13 @@ class GenericAdapterException(Exception):
         message_parts = []
         if hasattr(self, 'user_info'):
             #message_parts.append(ex.user_info)
-            message['user'] = cgi.escape(self.user_info)
+            message['user'] = html.escape(self.user_info)
         if hasattr(self, 'message'):
-            message_parts.append(self.__class__.__name__ + ': ' + '<pre>{message}</pre>'.format(message=cgi.escape(self.message)))
+            val = str(getattr(self, 'message'))
+            message_parts.append(self.__class__.__name__ + ': ' + '<pre>{message}</pre>'.format(message=html.escape(val)))
         if hasattr(self, 'details'):
-            message_parts.append('<pre>{message}</pre>'.format(message=cgi.escape(self.details)))
+            val = str(getattr(self, 'details'))
+            message_parts.append('<pre>{message}</pre>'.format(message=html.escape(val)))
 
         message['details'] = '<br/>'.join(message_parts)
 

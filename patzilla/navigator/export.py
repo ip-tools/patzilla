@@ -2,7 +2,6 @@
 # (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import os
 import json
-import types
 import string
 import logging
 import pandas
@@ -10,7 +9,6 @@ import numpy
 import html2text
 import where
 import envoy
-import shutil
 import tempfile
 from io import BytesIO
 from textwrap import dedent
@@ -103,7 +101,7 @@ class Dossier(object):
 
             # Wrap entries into DataFrame
             entries = self.data.collections[collection_name]
-            df = pandas.DataFrame(entries, columns=['number', 'score', 'dismiss', 'seen', 'timestamp', 'url'])
+            df = pandas.DataFrame(entries, columns=['number', 'score', 'dismiss', 'seen', 'timestamp', 'url'])  # ty: ignore[invalid-argument-type,unused-ignore-comment,unused-ignore-comment]
             df.rename(columns={'number': 'document'}, inplace=True)
 
             # Aggregate all DateFrame items
@@ -121,12 +119,12 @@ class Dossier(object):
 
         # Queries
         queries = list(map(self.query_criteria_smoother, self.data.get('queries', [])))
-        self.df_queries = pandas.DataFrame(queries, columns=['criteria', 'query_expression', 'result_count', 'datasource', 'created'])
+        self.df_queries = pandas.DataFrame(queries, columns=['criteria', 'query_expression', 'result_count', 'datasource', 'created'])  # ty: ignore[invalid-argument-type,unused-ignore-comment,unused-ignore-comment]
         self.df_queries.rename(columns={'query_expression': 'expression', 'result_count': 'hits', 'created': 'timestamp'}, inplace=True)
 
 
         # Comments
-        self.df_comments = pandas.DataFrame(self.data.get('comments'), columns=['parent', 'text', 'modified'])
+        self.df_comments = pandas.DataFrame(self.data.get('comments'), columns=['parent', 'text', 'modified'])  # ty: ignore[invalid-argument-type,unused-ignore-comment,unused-ignore-comment]
         self.df_comments.rename(columns={'parent': 'document', 'text': 'comment', 'modified': 'timestamp'}, inplace=True)
 
 
@@ -439,8 +437,8 @@ class Dossier(object):
         #print 'lang:', lang
 
         elements = tree.xpath(xpath_content, namespaces=namespaces)
-        if elements:
-            return html2text.html2text(ET.tostring(elements[0]))
+        if elements and elements[0]:
+            return html2text.html2text(ET.tostring(elements[0]).decode('utf-8'))
 
 
 class PandasJSONEncoder(JSONEncoder):
@@ -582,10 +580,10 @@ class DossierXlsx(Dossier):
 
             # Create pandas DataFrame
             if type(first) in (str,):
-                df = pandas.DataFrame(entries, columns=['PN'])
+                df = pandas.DataFrame(entries, columns=['PN'])  # ty: ignore[invalid-argument-type,unused-ignore-comment,unused-ignore-comment]
 
             elif isinstance(first, (dict, Munch)):
-                df = pandas.DataFrame(entries, columns=['number', 'score', 'timestamp', 'url'])
+                df = pandas.DataFrame(entries, columns=['number', 'score', 'timestamp', 'url'])  # ty: ignore[invalid-argument-type,unused-ignore-comment,unused-ignore-comment]
                 df.rename(columns={'number': 'document', 'url': 'display'}, inplace=True)
 
             # Export DataFrame to Excel
@@ -757,7 +755,8 @@ class ReportMetadata(OrderedDict):
 # to deduce a link title from the url automatically using ``os.path.basename(url)``.
 
 # Save vanilla method
-Worksheet.write_url_dist = Worksheet.write_url
+# TODO: Use different variable than an unknown attribute on the object itself.
+Worksheet.write_url_dist = Worksheet.write_url  # ty: ignore[unresolved-attribute]
 
 def write_url_deduce_title(self, row, col, url, cell_format=None, string=None, tip=None):
     if string is None:
@@ -789,7 +788,7 @@ class EmphasizingFormatterGenerator(string.Formatter):
         if recursion_depth < 0:
             raise ValueError('Max string recursion exceeded')
 
-        for literal_text, field_name, format_spec, conversion in\
+        for literal_text, field_name, format_spec, conversion in \
         self.parse(format_string):
 
             # output the literal text
@@ -817,5 +816,5 @@ class EmphasizingFormatterGenerator(string.Formatter):
                 if 'emphasis' in kwargs:
                     yield kwargs['emphasis']
 
-                yield self.format_field(obj, format_spec)
+                yield self.format_field(obj, format_spec or "")
 

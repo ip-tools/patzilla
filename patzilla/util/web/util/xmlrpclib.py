@@ -17,7 +17,7 @@ class XmlRpcTimeoutServer:
         # PEP 476: verify HTTPS certificates by default (implemented from Python 2.7.9)
         # https://bugs.python.org/issue22417
         if sys.hexversion >= 0x02070900:
-            ssl._create_default_https_context = ssl._create_unverified_context
+            ssl._create_default_https_context = ssl._create_unverified_context  # ty: ignore[invalid-assignment]
 
     def __enter__(self):
         try:

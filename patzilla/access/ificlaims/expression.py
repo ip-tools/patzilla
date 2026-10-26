@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import re
-import sys
-import types
 import logging
+from typing import Optional, Dict
+
 import pyparsing
 from patzilla.navigator.services import cql_prepare_query
 from patzilla.util.cql.pyparsing import CQL
@@ -27,7 +27,7 @@ class IFIClaimsGrammar(CQLGrammar):
 
 class IFIClaimsParser(object):
 
-    def __init__(self, expression=None, modifiers=None):
+    def __init__(self, expression: str, modifiers: Optional[Dict]=None):
         self.expression = expression
         self.search = None
         self.query_object = None
@@ -51,6 +51,8 @@ class IFIClaimsParser(object):
 
     def dumps(self):
         self.parse()
+        if not self.query_object:
+            raise ValueError("Query object is None")
         return self.query_object.dumps()
 
     def trim_complexphrase(self):
@@ -289,7 +291,7 @@ class IFIClaimsExpression(object):
                 expression = query_object.dumps()
 
             except pyparsing.ParseException as ex:
-                return {'error': True, 'message': '<pre>' + str(ex.explanation) + '</pre>'}
+                return {'error': True, 'message': '<pre>' + str(ex.explain()) + '</pre>'}
 
 
         # ------------------------------------------

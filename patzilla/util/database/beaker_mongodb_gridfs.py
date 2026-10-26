@@ -4,7 +4,7 @@ from mongodb_gridfs_beaker import MongoDBGridFSNamespaceManager, log, pickle
 def includeme(config):
 
     # Monkey patch 3rd party class to fix runtime error
-    MongoDBGridFSNamespaceManager.lock_dir = None
+    MongoDBGridFSNamespaceManager.lock_dir = None  # ty: ignore[invalid-attribute-access]
 
     # Monkey patch "set_value" method after upgrade to Beaker-1.9.0 to accept the "expiretime" argument.
     def set_value(self, key, value, expiretime=None):

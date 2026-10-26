@@ -41,7 +41,7 @@ def run():
     """
 
     # Use generic commandline options schema and amend with current program name
-    commandline_schema = run.__doc__.format(program=APP_NAME)
+    commandline_schema = run.__doc__.format(program=APP_NAME)  # ty: ignore[unresolved-attribute]
 
     # Read commandline options
     options = docopt(commandline_schema, version=APP_NAME + ' ' + __version__)

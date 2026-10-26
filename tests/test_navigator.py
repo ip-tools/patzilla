@@ -50,7 +50,7 @@ class TestNavigatorStandalone:
     def test_identity_auth_failure(self, user_history_mock, user_mock):
 
         request = testing.DummyRequest(json={"username": "foo", "password": "bar"})
-        request.errors = mock.Mock()
+        request.errors = mock.Mock()  # ty: ignore[unresolved-attribute]
 
         user_data_mock = mock.Mock()
         user_data_mock.check_password.return_value = False
@@ -61,7 +61,7 @@ class TestNavigatorStandalone:
 
         response = identity_auth_handler(request)
 
-        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Authentication failed')
+        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Authentication failed')  # ty: ignore[unresolved-attribute]
 
         assert response is None
 
@@ -75,16 +75,16 @@ class TestNavigatorStandalone:
                              ids=["empty-payload", "username-null", "username-empty", "password-missing"])
     def test_identity_auth_incomplete_credentials(self, payload):
         request = testing.DummyRequest(json=payload)
-        request.errors = mock.Mock()
+        request.errors = mock.Mock()  # ty: ignore[unresolved-attribute]
         response = identity_auth_handler(request)
-        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')
+        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')  # ty: ignore[unresolved-attribute]
         assert response is None
 
     def test_identity_auth_invalid_payload(self):
         request = testing.DummyRequest(post={})
-        request.errors = mock.Mock()
+        request.errors = mock.Mock()  # ty: ignore[unresolved-attribute]
         response = identity_auth_handler(request)
-        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')
+        request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')  # ty: ignore[unresolved-attribute]
         assert response is None
 
 @pytest.mark.forked

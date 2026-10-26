@@ -77,7 +77,7 @@ def import_countries(xlsfile, force=False):
 
     log.info('SIP country map: Starting import')
 
-    count = SipCountry.objects().count()
+    count = SipCountry.objects().count()  # ty: ignore[unresolved-attribute]
     if count > 0:
         if force:
             log.info('SIP country map: Dropping collection because of "--force"')
@@ -90,7 +90,7 @@ def import_countries(xlsfile, force=False):
     try:
         wb = load_workbook(filename=xlsfile)
     except InvalidFileException as ex:
-        log.error('SIP country map: Import failed, exception is ' + ex.message)
+        log.error('SIP country map: Import failed, exception is %s', ex)
         return
 
     ws = wb.active
@@ -102,7 +102,7 @@ def import_countries(xlsfile, force=False):
         country = SipCountry(ccid=ccid, cc=cc)
         country.save()
 
-    count = SipCountry.objects().count()
+    count = SipCountry.objects().count()  # ty: ignore[unresolved-attribute]
     log.info('SIP country map: Imported {0} entries'.format(count))
 
 
@@ -110,7 +110,7 @@ def import_ipc_classes(xlsfile, force=False):
 
     log.info('SIP IPC class map: Starting import, this might take some time')
 
-    count = SipIpcClass.objects().count()
+    count = SipIpcClass.objects().count()  # ty: ignore[unresolved-attribute]
     if count > 0:
         if force:
             log.info('SIP IPC class map: Dropping collection because of "--force"')
@@ -125,7 +125,7 @@ def import_ipc_classes(xlsfile, force=False):
     try:
         wb = load_workbook(filename=xlsfile)
     except InvalidFileException as ex:
-        log.error('SIP IPC class map: Reading XLSX file {} failed: {}'.format(xlsfile, ex.message))
+        log.error('SIP IPC class map: Reading XLSX file {} failed: {}'.format(xlsfile, ex))
         return
 
     log.info('SIP IPC class map: Importing data')
@@ -158,7 +158,7 @@ def import_ipc_classes(xlsfile, force=False):
         ipc_class = SipIpcClass(itid=itid, ipc=ipc_docdb)
         ipc_class.save()
 
-    count = SipIpcClass.objects().count()
+    count = SipIpcClass.objects().count()  # ty: ignore[unresolved-attribute]
     log.info('SIP IPC class map: Imported {0} entries'.format(count))
 
 
@@ -170,7 +170,7 @@ def import_cpc_classes(filename, force=False):
 
     log.info('SIP CPC class map: Starting import, this might take some time')
 
-    count = SipCpcClass.objects().count()
+    count = SipCpcClass.objects().count()  # ty: ignore[unresolved-attribute]
     if count > 0:
         if force:
             log.info('SIP CPC class map: Dropping collection because of "--force"')
@@ -204,7 +204,7 @@ def import_cpc_classes(filename, force=False):
             stream = DictReader(csvfile)
             print(stream.fieldnames)
         except Exception as ex:
-            log.error('SIP CPC class map: Reading CSV file {} failed: {}'.format(filename, ex.message))
+            log.error('SIP CPC class map: Reading CSV file {} failed: {}'.format(filename, ex))
             return
 
     elif filename.endswith('.xlsx'):
@@ -221,7 +221,7 @@ def import_cpc_classes(filename, force=False):
         try:
             wb = load_workbook(filename=filename)
         except InvalidFileException as ex:
-            log.error('SIP IPC class map: Reading XLSX file {} failed: {}'.format(filename, ex.message))
+            log.error('SIP IPC class map: Reading XLSX file {} failed: {}'.format(filename, ex))
             return
 
         ws = wb.active
@@ -261,5 +261,5 @@ def import_cpc_classes(filename, force=False):
         ipc_class = SipCpcClass(cpcid=cpcid, cpc=ipc_docdb)
         ipc_class.save()
 
-    count = SipCpcClass.objects().count()
+    count = SipCpcClass.objects().count()  # ty: ignore[unresolved-attribute]
     log.info('SIP CPC class map: Imported {0} entries'.format(count))

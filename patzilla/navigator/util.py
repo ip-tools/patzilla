@@ -2,6 +2,8 @@
 # (c) 2013-2016 Andreas Motl, Elmyra UG
 import traceback
 import collections
+from typing import Dict
+
 from cornice.util import _JSONError
 
 def get_exception_message(ex, add_traceback=False):
@@ -55,7 +57,7 @@ def dict_merge(dct, merge_dct):
     """
     for k, v in merge_dct.items():
         if (k in dct and isinstance(dct[k], dict)
-            and isinstance(merge_dct[k], collections.Mapping)):
+            and isinstance(merge_dct[k], Dict)):
             dict_merge(dct[k], merge_dct[k])
         else:
             dct[k] = merge_dct[k]

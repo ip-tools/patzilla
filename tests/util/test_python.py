@@ -44,7 +44,7 @@ def test_memoize():
 
 def test_exception_traceback(capsys):
     try:
-        foobar
+        foobar  # ty: ignore[unresolved-reference]
     except NameError:
         output = exception_traceback()
 

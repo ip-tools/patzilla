@@ -16,10 +16,10 @@ admin_users_emails_service = Service(
     path='/api/admin/users/emails',
     description="Responds with email addresses of all customers")
 
-@admin_users_emails_service.get()
+@admin_users_emails_service.decorator("get")
 def admin_users_emails_handler(request):
     tag = request.params.get('tag')
-    users = User.objects()
+    users = User.objects()  # ty: ignore[unresolved-attribute]
     user_emails = []
     for user in users:
         if '@' not in user.username:
@@ -41,7 +41,7 @@ ops_usage_service = Service(
     renderer='prettyjson',
     description="OPS usage interface")
 
-@ops_usage_service.get()
+@ops_usage_service.decorator("get")
 def ops_usage_handler(request):
     # TODO: respond with proper 4xx codes if something fails
     kind = request.matchdict['kind']
