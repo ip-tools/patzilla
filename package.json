@@ -156,7 +156,6 @@
     "uglify-js": "3.17.4",
     "underscore": "^1.13.2",
     "uuid": "^11",
-    "watchpack": "^2",
     "yargs-parser": "^13.1.2"
   },
   "allowScripts": {
