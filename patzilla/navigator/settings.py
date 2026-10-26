@@ -19,7 +19,7 @@ from patzilla.util.data.container import SmartMunch
 log = logging.getLogger(__name__)
 
 
-class GlobalSettings(object):
+class GlobalSettings:
 
     def __init__(self, configfile):
 
@@ -168,7 +168,7 @@ class GlobalSettings(object):
         return email_settings
 
 
-class RuntimeSettings(object):
+class RuntimeSettings:
     """
     All runtime parameters in one single place
     """
@@ -479,7 +479,7 @@ class RuntimeSettings(object):
         return params
 
 
-class JavascriptParameterFiddler(object):
+class JavascriptParameterFiddler:
 
     def __init__(self, name, runtime_settings):
         self.name = name

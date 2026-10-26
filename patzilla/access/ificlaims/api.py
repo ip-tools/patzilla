@@ -13,7 +13,7 @@ from patzilla.util.xml.format import pretty_print
 
 logger = logging.getLogger(__name__)
 
-class IFIClaimsDocumentIdentifier(object):
+class IFIClaimsDocumentIdentifier:
 
     def __init__(self, original):
         self.original = original
@@ -44,7 +44,7 @@ class IFIClaimsDocumentIdentifier(object):
         ucid = ''.join([self.document['country'], self.document['number'], self.document['kind']])
         return ucid
 
-class IFIClaimsDocumentResponse(object):
+class IFIClaimsDocumentResponse:
 
     # for wich mimetypes to deliver "Content-Disposition: inline; ..." responses
     inline_mimetypes = [
@@ -68,7 +68,7 @@ class IFIClaimsDocumentResponse(object):
         else:
             return False
 
-class IFIClaimsDocumentRequest(object):
+class IFIClaimsDocumentRequest:
 
     def __init__(self, identifier, format, options=None):
         options = options or {}

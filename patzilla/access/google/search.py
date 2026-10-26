@@ -23,7 +23,7 @@ http://patents.google.com/
 
 logger = logging.getLogger(__name__)
 
-class GooglePatentsAccess(object):
+class GooglePatentsAccess:
 
     def __init__(self):
         self.baseurl = 'https://www.google.com/search?tbo=p&tbm=pts&hl=en'
@@ -184,7 +184,7 @@ class GooglePatentsAccess(object):
         return payload
 
 
-class GooglePatentsExpression(object):
+class GooglePatentsExpression:
 
     """
 

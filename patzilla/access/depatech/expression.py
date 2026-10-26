@@ -25,7 +25,7 @@ class DepaTechGrammar(CQLGrammar):
         self.cmp_single = ':'.split()
 
 
-class DepaTechParser(object):
+class DepaTechParser:
 
     def __init__(self, expression=None, modifiers=None):
         self.expression = expression
@@ -81,7 +81,7 @@ class DepaTechParser(object):
         return 'lucene'
 
 
-class DepaTechExpression(object):
+class DepaTechExpression:
 
     """
     Translate discrete comfort form field values to Elasticsearch Query Syntax, as convenient as possible.

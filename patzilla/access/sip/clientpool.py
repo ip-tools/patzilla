@@ -84,7 +84,7 @@ class ISipClientPool(Interface):  # ty: ignore[unsupported-base]
 
 
 @implementer(ISipClientPool)
-class SipClientPool(object):
+class SipClientPool:
     """
     SIP client pool as Pyramid utility implementation.
     """

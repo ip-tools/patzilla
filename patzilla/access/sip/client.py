@@ -274,7 +274,7 @@ class SipClient(GenericSearchClient):
         return results
 
 
-class SipXmlResponse(object):
+class SipXmlResponse:
 
     def __init__(self, xml):
         self.xml = xml

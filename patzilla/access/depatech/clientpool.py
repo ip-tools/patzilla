@@ -81,7 +81,7 @@ class IDepaTechClientPool(Interface):  # ty: ignore[unsupported-base]
 
 
 @implementer(IDepaTechClientPool)
-class DepaTechClientPool(object):
+class DepaTechClientPool:
     """
     depa.tech client pool as Pyramid utility implementation.
     """

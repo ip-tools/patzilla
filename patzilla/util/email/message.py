@@ -11,7 +11,7 @@ from patzilla.util.config import read_config, to_list
 
 log = logging.getLogger(__name__)
 
-class EmailMessage(object):
+class EmailMessage:
 
     def __init__(self, smtp_settings, email_settings, options=None):
         self.smtp_settings  = dict(smtp_settings)

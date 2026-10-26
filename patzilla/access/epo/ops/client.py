@@ -76,7 +76,7 @@ class IOpsClientPool(Interface):  # ty: ignore[unsupported-base]
 
 
 @implementer(IOpsClientPool)
-class OpsClientPool(object):
+class OpsClientPool:
     """
     EPO/OPS client pool as Pyramid utility implementation.
     """

@@ -343,7 +343,7 @@ class DpmaRegisterAccess:
         print(response.text)
 
 
-class DpmaRegisterHtmlDocument(object):
+class DpmaRegisterHtmlDocument:
     """
     Decode information from DPMAregister HTML response.
     """

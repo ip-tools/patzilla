@@ -134,7 +134,7 @@ class IUserMetricsManager(Interface):  # ty: ignore[unsupported-base]
     pass
 
 @implementer(IUserMetricsManager)
-class UserMetricsManager(object):
+class UserMetricsManager:
 
 # py27    implements(IUserMetricsManager)
 

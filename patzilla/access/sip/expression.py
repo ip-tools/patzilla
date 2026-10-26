@@ -25,7 +25,7 @@ logger.setLevel(logging.INFO)
 #logger.setLevel(logging.DEBUG)
 
 
-class SipExpression(object):
+class SipExpression:
 
     modifier_defaults: Dict[str, Dict[str, bool]] = {
         'fulltext': {
