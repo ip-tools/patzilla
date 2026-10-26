@@ -17,8 +17,8 @@ OpsBaseViewMixin = {
 
             // Add parameters from designated link
             var href = $(this).attr('href');
-            var uri = $.url(href);
-            _(params).extend(uri.param());
+            var uri = URL.parse(href);
+            _(params).extend(Object.fromEntries(uri.entries()));
 
             // Regardless where the query originates from (e.g. datasource=review),
             // requests for query-links need switching to ops.

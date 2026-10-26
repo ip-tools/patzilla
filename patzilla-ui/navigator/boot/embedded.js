@@ -8,13 +8,13 @@ EmbeddingController = Marionette.Controller.extend({
 
         log('Embed options:', this.options);
 
-        this.url = $.url(window.location.href);
+        this.url = URL.parse(window.location.href);
         log('Embed URL:', this.url);
 
         // Use parameters from url first
-        this.type = this.url.param('type');
-        this.mode = this.url.param('mode');
-        this.pubnumber = this.url.param('pn');
+        this.type = this.url.searchParams.get('type');
+        this.mode = this.url.searchParams.get('mode');
+        this.pubnumber = this.url.searchParams.get('pn');
 
         // Parameters from options (ex. embed_options) take precedence
         if (this.options && this.options.matchdict) {

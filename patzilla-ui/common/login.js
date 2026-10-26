@@ -2,7 +2,6 @@
 // (c) 2014-2016 Andreas Motl, Elmyra UG
 require('jquery');
 require('jrumble');
-require('purl/purl');
 require('bootstrap-2.3.2/css/bootstrap.css');
 require('bootstrap-2.3.2/css/bootstrap-responsive.css');
 // Font Awesome 3.2.1; TODO: Upgrade to more recent version
@@ -12,13 +11,13 @@ require('patzilla.navigator.style');
 $(document).ready(function() {
     console.log("document.ready");
 
-    var url = $.url(window.location.href);
-    var domain = url.attr('host');
+    var url = URL.parse(window.location.href);
+    var domain = url.hostname;
 
     $.extend(login_settings, {domain: domain});
 
-    if (url.param('error') == 'true') {
-        console.warn('Login failed (reason=' + url.param('reason') + '). Please check your credentials or contact us for support at ' + login_settings.support_email + '.');
+    if (url.searchParams.get('error') == 'true') {
+        console.warn('Login failed (reason=' + url.searchParams.get('reason') + '). Please check your credentials or contact us for support at ' + login_settings.support_email + '.');
         window.setTimeout(function() {
             $('.login-box').jrumble();
             $('.login-box').trigger('startRumble');
@@ -51,8 +50,8 @@ $(document).ready(function() {
     $('#visit-demo').off('click');
     $('#visit-demo').on('click', function() {
 
-        var demourl = url.attr('protocol') + '://' + url.attr('host');
-        if (url.attr('port')) demourl += ':' + url.attr('port');
+        var demourl = url.protocol + '://' + url.hostname;
+        if (url.port) demourl += ':' + url.port;
         if (_.string.contains(demourl, 'patentsearch')) {
             demourl = demourl.replace('patentsearch', 'patentview');
         } else if (_.string.contains(demourl, 'navigator')) {
@@ -60,7 +59,7 @@ $(document).ready(function() {
         } else if (_.string.contains(demourl, 'patbib')) {
             demourl = demourl.replace('patbib', 'patview');
         } else if (!_.string.contains(demourl, 'localhost')) {
-            demourl = demourl.replace(url.attr('host'), 'patentview.ip-tools.io');
+            demourl = demourl.replace(url.hostname, 'patentview.ip-tools.io');
         }
         demourl += '?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiZDZUT3Ewc3NkRDB6TTVCSGdhOEJrQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAicXVlcnktcGVybWFsaW5rIiwgInF1ZXJ5IjogInR4dD0oU1M3IG9yICh0ZWxlY29tbXVuaWNhdGlvbiBvciBjb21tdW5pY2F0aW9uIG9yIGNvbXVuaWNhY2lcdTAwZjNuKSBvciAobW9iaWxlIG9yIE1vYmlsZnVua25ldHopIG9yIChuZXR3b3JrIG9yIChzZWN1cml0eSBvciBTaWNoZXJ1bmcpKSkgYW5kIHBhPShtb2JpbCBvciBrb21tdW5pa2F0aW9uKSBhbmQgY2w9KEgwNFcxMi8xMiBvciBIMDRMNjMvMDI4MSBvciBIMDRMNjMvMDQxNCkgbm90IHBuPShDTiBvciBDQSBvciBKUCkiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogIm9wcyJ9LCAibmJmIjogMTUwNzgyNjYxNywgImV4cCI6IDE2NjMzNDY2MTcsICJpYXQiOiAxNTA3ODI2NjE3fQ.fCl7I5wPd0r48O48UkVQxzw9QOy5PjFaFecmAoYisbM-Her9Z6R0E2hxc82TSdH68gz379jQe5v9eF6g620aG4odTOXtdhyoDrWcb-GJcfR-0BfpiqPRwzLng53ape69';
 
