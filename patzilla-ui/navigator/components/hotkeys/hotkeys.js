@@ -37,8 +37,8 @@ HotkeysPlugin = Marionette.Controller.extend({
         $('#query').on('keydown', null, 'alt+ctrl+f', function(event) {
             event.preventDefault();
             $('#cql-field-chooser').select2('open');
-            $('#cql-field-chooser').off('select2-close');
-            $('#cql-field-chooser').on('select2-close', function(event) {
+            $('#cql-field-chooser').off('select2:close');
+            $('#cql-field-chooser').on('select2:close', function(event) {
                 window.setTimeout(function() {
                     $('#query').trigger('focus');
                 }, 100);
