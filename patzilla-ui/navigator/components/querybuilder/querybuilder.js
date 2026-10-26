@@ -703,11 +703,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var cql_field_chooser_widget = $('#cql-field-chooser');
 
         // Reset widget.
-        // https://github.com/select2/select2/issues/2830
-        if (cql_field_chooser_widget.hasClass("select2-hidden-accessible")) {
-            cql_field_chooser_widget.select2('destroy');
-            cql_field_chooser_widget.html('');
-        }
+        select2_reset(cql_field_chooser_widget);
 
         // Set up widget.
         cql_field_chooser_widget.select2({
@@ -1088,7 +1084,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             '<div class="row-fluid history-row-2">' + row2_left_side.join('') + this.html_history_labels(row2_right_side.join('')) + '</div>' +
             '</div>';
         var entry = {
-            id: query,
+            id: JSON.stringify(query.attributes),
             text: entry_html,
         };
 
@@ -1128,31 +1124,31 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // When query was selected, put it into cql query input field
         var _this = this;
-        chooser_widget.off('change');
-        chooser_widget.on('change', function(event) {
+        chooser_widget.off('select2:select');
+        chooser_widget.on('select2:select', function(event) {
 
-            $(this).off('change');
+            $(this).off('select2:select');
 
             // This gets the "id" attribute of an entry in select2 `data`
-            var query_object = $(this).val();
+            var query_object = JSON.parse(event.params.data.id);
 
             // Transfer history data to current querybuilder state
             if (query_object) {
 
-                var flavor = query_object.get('flavor');
+                var flavor = query_object.flavor;
                 if (flavor == 'cql') {
                     _this.disable_compute_comfort_query = true;
                 }
                 _this.set_flavor(flavor);
 
-                navigatorApp.set_datasource(query_object.get('datasource'));
+                navigatorApp.set_datasource(query_object.datasource);
 
                 if (flavor == 'comfort') {
 
                     _this.clear_comfort_form();
                     _this.clear_common_form_data();
 
-                    var data = query_object.get('query_data');
+                    var data = query_object.query_data;
                     _this.set_comfort_form_data(data);
                     _this.set_common_form_data(data);
 
@@ -1162,24 +1158,24 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                     _this.clear_comfort_form();
                     _this.clear_common_form_data();
 
-                    var query_expert = query_object.get('query_expert');
+                    var query_expert = query_object.query_expert;
                     if (query_expert && query_expert.expression) {
                         $('#query').val(query_expert.expression);
                         $('#cql-filter').val(query_expert.filter);
                     } else {
                         // Backward compatibility
-                        $('#query').val(query_object.get('query_expression'));
+                        $('#query').val(query_object.query_expression);
                         $('#cql-filter').val('');
                     }
 
-                    var data = query_object.get('query_data');
+                    var data = query_object.query_data;
                     _this.set_common_form_data(data);
                 }
 
             }
 
             // Destroy widget and close dropdown container
-            _this.cql_history_chooser_destroy($(this));
+            _this.cql_history_chooser_destroy();
 
         });
 
@@ -1189,23 +1185,29 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             deferred.resolve();
         }).fail(function(event) {
             deferred.reject();
-            _this.cql_history_chooser_destroy($(chooser_widget));
+            _this.cql_history_chooser_destroy();
         });
 
         return deferred.promise();
 
     },
 
-    cql_history_chooser_destroy: function(element) {
+    cql_history_chooser_destroy: function() {
         // Destroy widget and close dropdown container
-        element.data('select2').destroy();
-        element.dropdown().toggle();
+        var element = $('#cql-history-chooser-select2');
+        element.select2("close");
+        element.dropdown("toggle");
         //element.closest('#cql-history-chooser-container').hide();
     },
 
     cql_history_chooser_load_data: function(data) {
-        var chooser_widget = $('#cql-history-chooser-select2');
-        chooser_widget.select2({
+        var history_widget = $('#cql-history-chooser-select2');
+
+        // Reset widget.
+        select2_reset(history_widget);
+
+        // Initialize widget.
+        history_widget.select2({
             dropdownCssClass: "bigdrop history-dropdown",
             escapeMarkup: function(text) { return text; },
             data: (data || [] ),
@@ -1710,6 +1712,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
 });
 
+function select2_reset(element) {
+    // Reset Select2 widget.
+    // https://github.com/select2/select2/issues/2830
+    if (element.hasClass("select2-hidden-accessible")) {
+        element.select2('destroy');
+        element.html('');
+    }
+}
 
 // setup component
 navigatorApp.addInitializer(function(options) {
