@@ -32,18 +32,18 @@ NavigatorConfiguration = Backbone.Model.extend({
             }
         });
 
-        this.uri = $.url(window.location.href);
+        this.uri = URL.parse(window.location.href);
         this.update_baseurl();
 
     },
 
     update_baseurl: function() {
         var url = this.uri;
-        var baseurl = url.attr('protocol') + '://' + url.attr('host');
-        var path = url.attr('path');
-        if (url.attr('port')) baseurl += ':' + url.attr('port');
+        var baseurl = url.protocol + '://' + url.hostname;
+        var path = url.pathname;
+        if (url.port) baseurl += ':' + url.port;
 
-        if (path == '/') {
+        if (path === '/') {
             // Don't add path if it is the root namespace "/",
             // this would cause anomalies downstream by rendering https://example.org//your/path urls.
         } else if (_.string.startsWith(path, '/view')) {
@@ -62,7 +62,7 @@ NavigatorConfiguration = Backbone.Model.extend({
     history_pushstate: function() {
 
         // get current parameters from url
-        var params = this.uri.param();
+        var params = Object.fromEntries(this.uri.searchParams.entries());
 
         // aggregate parameters comprising viewer state, currently a 4-tuple
         // see also components/permalink.js:PermalinkPlugin.query_parameters_viewstate
@@ -77,7 +77,7 @@ NavigatorConfiguration = Backbone.Model.extend({
         // - parameter does not differ from its default
         // - the current state is not already described by opaque parameters,
         //   i.e. "op" is not in url or config
-        if (!this.uri.param('op')) {
+        if (!this.uri.searchParams.get('op')) {
             _.each(state, function(value, key) {
                 if (this._originalAttributes[key] != value) {
                     params[key] = value;

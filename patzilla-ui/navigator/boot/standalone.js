@@ -7,8 +7,8 @@ $(document).ready(function() {
     console.info("Start application [standalone]");
 
     // process and propagate application ingress parameters
-    //var url = $.url(window.location.href);
-    //var query = url.param('query');
+    //var url = URL.parse(window.location.href);
+    //var query = url.searchParams.get('query');
     //query = 'applicant=IBM';
     //query = 'publicationnumber=US2013255753A1';
 

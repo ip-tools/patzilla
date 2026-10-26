@@ -7,5 +7,5 @@ require('patzilla.navigator.style');
 
 $(document).ready(function() {
     console.log("document.ready");
-    var url = $.url(window.location.href);
+    var url = URL.parse(window.location.href);
 });

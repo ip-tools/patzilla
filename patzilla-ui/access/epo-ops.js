@@ -232,10 +232,10 @@ OpsExchangeMetadata = Backbone.Model.extend({
     },
 
     initialize: function(collection) {
-        var url = $.url(window.location.href);
+        var url = URL.parse(window.location.href);
 
         // propagate page size from url
-        var pagesize = url.param('pagesize');
+        var pagesize = url.searchParams.get('pagesize');
         if (pagesize) {
             this.set('page_size', parseInt(pagesize));
         }

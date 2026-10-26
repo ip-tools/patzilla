@@ -75,7 +75,6 @@
     "moment": "^2.31",
     "notificationfx": "https://github.com/ip-tools/notificationFx#0.0.2",
     "promise": "^8.0",
-    "purl": "https://github.com/allmarkedup/purl",
     "react": "^17",
     "react-dom": "^17",
     "screenfull": "^3",

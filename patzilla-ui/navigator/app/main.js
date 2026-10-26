@@ -48,7 +48,6 @@ require('font-awesome/css/font-awesome.css');
 
 
 // Global utilities
-require('purl/purl');
 require('patzilla.lib.jquery');
 require('patzilla.lib.underscore');
 require('patzilla.lib.backbone');
