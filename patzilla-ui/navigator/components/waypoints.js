@@ -151,7 +151,7 @@ WaypointController = Marionette.Controller.extend({
         // compute current element index
 
         // v1: Naive, doesn't account for placeholder items, which shouldn't advance the reading progress
-        //var element_index = $(source.element).parent('.ops-collection-entry').parent('.row-fluid').index();
+        //var element_index = $(source.element).parent('.ops-collection-entry').parent('.row').index();
 
         // v2: Count ourselves by omitting the placeholder items.
         //     In fact, it should be the even more sophisticated and should count

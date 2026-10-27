@@ -7,8 +7,7 @@
 
 // Foundation
 require('backbone.marionette');
-require('bootstrap-2.3.2/css/bootstrap.css');
-require('bootstrap-2.3.2/css/bootstrap-responsive.css');
+require('bootstrap/dist/css/bootstrap.min.css');
 
 require('patzilla.navigator.style');
 

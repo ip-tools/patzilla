@@ -703,8 +703,8 @@ _.extend(OpsExchangeDocument.prototype, {
                     var priority_original = _this.get_document_id(node, null, 'original');
                     if (!_.isEmpty(priority_epodoc)) {
                         var entry =
-                            '<td class="span2">' + (priority_epodoc.isodate || '--') + '</td>' +
-                            '<td class="span3">' + (priority_epodoc.docnumber && _this.enrich_link(priority_epodoc.docnumber, 'spr') || '--') + '</td>' +
+                            '<td class="col-md-2">' + (priority_epodoc.isodate || '--') + '</td>' +
+                            '<td class="col-md-3">' + (priority_epodoc.docnumber && _this.enrich_link(priority_epodoc.docnumber, 'spr') || '--') + '</td>' +
                             '<td>';
                         if (!_.isEmpty(priority_original.docnumber)) {
                             entry += 'original: ' + priority_original.docnumber;
@@ -732,8 +732,8 @@ _.extend(OpsExchangeDocument.prototype, {
             var appnumber_epodoc = this.get_application_number('epodoc');
             var appnumber_original = this.get_application_number('original');
             var entry =
-                '<td class="span2">' + (this.get_application_date() || '--') + '</td>' +
-                '<td class="span3">' +
+                '<td class="col-md-2">' + (this.get_application_date() || '--') + '</td>' +
+                '<td class="col-md-3">' +
                     (this.enrich_link(appnumber_epodoc, 'sap') || '--') + ' (epodoc)' +
                     '<br/>' +
                     (this.enrich_link(appnumber_docdb, 'ap') || '--') + ' (docdb)' +
@@ -784,7 +784,7 @@ _.extend(OpsExchangeDocument.prototype, {
             if (printmode) {
                 return text;
             } else {
-                text += '&nbsp;&nbsp;<a href="http://search.crossref.org/?q=' + encodeURIComponent(text) + '" target="_blank" class="incognito"><i class="icon-external-link"></i></a>';
+                text += '&nbsp;&nbsp;<a href="http://search.crossref.org/?q=' + encodeURIComponent(text) + '" target="_blank" class="incognito"><i class="glyphicon glyphicon-share"></i></a>';
                 return text;
             }
         },

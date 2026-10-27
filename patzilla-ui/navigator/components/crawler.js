@@ -59,7 +59,7 @@ ResultNumbersView = GenericResultView.extend({
                 this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
             }
         } else {
-            this.user_message('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'icon-search'});
+            this.user_message('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'glyphicon-search'});
         }
 
         var crawler = new crawler_class({constituents: 'pub-number', query: query, query_data: query_data, filter: filter})
@@ -70,11 +70,11 @@ ResultNumbersView = GenericResultView.extend({
     show: function() {
 
         // Sanity check: Don't share dirty queries
-        if (navigatorApp.queryBuilderView.check_data_is_dirty({'icon': 'icon-download'})) { return; }
+        if (navigatorApp.queryBuilderView.check_data_is_dirty({'icon': 'glyphicon-download'})) { return; }
 
         // Sanity check: Do we have valid query criteria
         if (!this.has_criteria()) {
-            navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'icon-download'});
+            navigatorApp.ui.notify('Empty search criteria', {type: 'warning', icon: 'glyphicon-download'});
             return;
         }
 

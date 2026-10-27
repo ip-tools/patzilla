@@ -12,25 +12,25 @@
         <div id="querybuilder-basket-area" class="container-fluid do-not-print non-liveview">
 
             <!-- Query builder -->
-            <div class="row-fluid">
-                <div class="span12" id="querybuilder-region">&nbsp;</div>
+            <div class="row">
+                <div class="col-md-12" id="querybuilder-region">&nbsp;</div>
             </div>
 
             <!-- Project chooser and basket -->
-            <div class="row-fluid">
+            <div class="row">
 
-                <div class="span12">
-                    <div class="row-fluid">
-                        <div class="span12">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
                             <!-- project chooser -->
                             <div id="project-chooser-area"></div>
                         </div>
 
                     </div>
 
-                    <div class="row-fluid">
+                    <div class="row">
                         <% if (config.get('ship-mode') != 'single-bibdata') { %>
-                        <div class="span12" id="basket-region"></div>
+                        <div class="col-md-12" id="basket-region"></div>
                         <% } %>
                     </div>
 

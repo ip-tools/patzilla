@@ -539,8 +539,8 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             // ------------------------------------------
             //   ui tuning
             // ------------------------------------------
-            $('.pagination').removeClass('span10');
-            $('.pagination').addClass('span12');
+            $('.pagination').removeClass('col-md-10');
+            $('.pagination').addClass('col-md-12');
 
             // TODO: selecting page size with DEPATISnet is currently not possible
             //$('.page-size-chooser').parent().remove();
@@ -905,7 +905,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         } else {
             this.ui.notify(
                 "An empty numberlist can't be requested, please add some document numbers.",
-                {type: 'warning', icon: 'icon-align-justify'});
+                {type: 'warning', icon: 'glyphicon-align-justify'});
         }
     },
 

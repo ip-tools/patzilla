@@ -1,8 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('patzilla.navigator.components.storage');
-require('x-editable/dist/bootstrap-editable/js/bootstrap-editable');
-require('x-editable/dist/bootstrap-editable/css/bootstrap-editable');
+require('x-editable-bs4/dist/bootstrap3-editable/js/bootstrap-editable');
+require('x-editable-bs4/dist/bootstrap3-editable/css/bootstrap-editable');
 var slugify = require('slugify');
 
 
@@ -514,7 +514,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
                     navigatorApp.ui.notify(
                         'Project "' + _this.model.get('name') + '" deleted.',
-                        {type: 'success', icon: 'icon-trash'});
+                        {type: 'success', icon: 'glyphicon-trash'});
 
                     // select the next available project
                     var selected = _this.collection.sortByField('modified', 'desc').first();
@@ -537,7 +537,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                         // notify user about the completed action
                         navigatorApp.ui.notify(
                             'Project "' + _this.model.get('name') + '" deleted.<br/>Recreated default project.',
-                            {type: 'success', icon: 'icon-trash'});
+                            {type: 'success', icon: 'glyphicon-trash'});
 
                     }
                 }});
@@ -566,7 +566,7 @@ ProjectChooserView = Backbone.Marionette.ItemView.extend({
                     navigatorApp.trigger('project:load', projectname);
                     navigatorApp.ui.notify(
                         'Project "' + projectname + '" created.',
-                        {type: 'success', icon: 'icon-plus'});
+                        {type: 'success', icon: 'glyphicon-plus'});
                 },
                 validate: function(value) {
                     return _this.projectname_validate(value);

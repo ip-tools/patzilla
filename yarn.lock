@@ -1925,14 +1925,15 @@ bootbox@^4:
   resolved "https://registry.yarnpkg.com/bootbox/-/bootbox-4.4.0.tgz#ff7f898fb87d4527e547feb64158f88450d1a0c9"
   integrity sha512-A07f3gj3XGg/g8esHY1L+mPnjuN9SpbRGA7ZOTe+FtQKV5dOxvh/B9AYVqalROS+MJdBZOMg2Z0bFOqUiCV8zg==
 
-"bootstrap-2.3.2@https://github.com/ip-tools/bootstrap-2.3.2#2.0.0":
-  version "2.0.0"
-  resolved "https://github.com/ip-tools/bootstrap-2.3.2#b111b86fff94351586b026e6fe7f568487828f9a"
-
-bootstrap-slider@^9.1:
+bootstrap-slider@^9:
   version "9.10.0"
   resolved "https://registry.yarnpkg.com/bootstrap-slider/-/bootstrap-slider-9.10.0.tgz#1103d6bc00cfbfa8cfc9a2599ab518c55643da3f"
   integrity sha512-a9MtENtt4r3ttPW5mpIpOFmCaIsm37EGukOgw5cfHlxKvsUSN8AN9JtwKrKuqgEnxs86kUSsMvMn8kqewMorKw==
+
+bootstrap@^3:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.1.tgz#c3a347d419e289ad11f4033e3c4132b87c081d72"
+  integrity sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==
 
 brace-expansion@^1.1.7:
   version "1.1.21"
@@ -2685,9 +2686,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.464:
-  version "1.5.464"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.464.tgz#dd0d56e63f35f2c2a1c36c06efd79fa017587a46"
-  integrity sha512-nRa65aFge40viPAKxMKULIY8tcXKwKboJWNn4RoKwyWXJ6SP7BnrDGKUTzc64818jIciH0PK7LSF8QzZes19GA==
+  version "1.5.465"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.465.tgz#1e264826ad1cf843353861c78e32ae2dfa17fb6c"
+  integrity sha512-zg4iUpbeGw7YNZsswc2xKr2uiBex2d8dELAXo92Icw3but1ULbrvK8USe6wVLaWjgJnKBARv0pchx9Owktx6wQ==
 
 elliptic@^6.5.3, elliptic@^6.6, elliptic@^6.6.1:
   version "6.6.1"
@@ -4802,7 +4803,15 @@ pvutils@^1.1.3, pvutils@^1.2.0:
   resolved "https://registry.yarnpkg.com/pvutils/-/pvutils-1.2.0.tgz#4b5487a9cccd52d275b0538775790a3ca982bc22"
   integrity sha512-BbubeCEyTuQjVMakvJQ/Sxbc93F2pwmbsxONT/ZRrwU7Ua38d8unYTwXpTVLAKJ4BDuH9IGztCjQcd/N/39Dvg==
 
-qs@^6.12.3, qs@~6.16.0:
+qs@^6.12.3:
+  version "6.17.0"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.17.0.tgz#317fa93f17a6a735622718a6a5aa00356e7db673"
+  integrity sha512-5LK5BZ2XDHMvcUJaf0CQ5HL3aVgKbpklvByC7qLSxYkfE8COEEbJg5xCHWCTqzqi0Gs4Jn5Mv5v3R38W6edscA==
+  dependencies:
+    es-define-property "^1.0.1"
+    side-channel "^1.1.1"
+
+qs@~6.16.0:
   version "6.16.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.16.1.tgz#0643e17993e551759c85078e1f0bc4b9fe908020"
   integrity sha512-5Px6J7rfHBAGUhNQ3es4YzcOdBBw0SDcVtThJml4RdnKw4tKs2epA0kPZ+K8X+WiHktT93RHVcQ/3ym5aTCgtg==
@@ -6246,10 +6255,10 @@ wsl-utils@^0.1.0:
   dependencies:
     is-wsl "^3.1.0"
 
-x-editable@^1.5:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/x-editable/-/x-editable-1.5.1.tgz#2edbb8911ef2c5d61f63f06b0cf020be0fcc5849"
-  integrity sha512-eBP10/e6ETIx/TqRmwu6IR/BG0VpFyJzW+eCvAsa8ccJ+UqoYlIPslw7AulpOoym9nv04As8qROtjdU0ij8K2A==
+x-editable-bs4@^1.5:
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/x-editable-bs4/-/x-editable-bs4-1.5.6.tgz#f8c290e062dcaa4aa8f65d834190b85d7b4ab8d4"
+  integrity sha512-swfvmPmzgCYDOGMlHguvOSwV23o4WGjXTcYCwEj7bVKTgqezvLEDXdJ9cM+L+1ylo1cdW97qQbhZfHnJXaS8ag==
 
 "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0:
   version "4.0.2"

@@ -4,7 +4,7 @@
 %>
 
 <div class="row">
-    <div class="span6">
+    <div class="col-md-6">
         <strong>Removed <%= Humanize.intComma(data.count_removed) %> family members</strong>
         from results range <%= data.start %>-<%= data.end %>.
         <br/><br/>
@@ -12,7 +12,7 @@
         when grossed up against the total result count and will
         save on reviewing about <strong><%= Humanize.intComma(data.count_saved_estimated) %></strong> documents.
     </div>
-    <div class="span5">
+    <div class="col-md-5">
         <div class="pull-right">
             <button class="btn btn-default btn-large" role="button" data-toggle="collapse" data-target="#family-members-removed">
                 Display <%= Humanize.intComma(data.count_removed) %> removed family

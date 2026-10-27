@@ -4,7 +4,7 @@
 %>
 
 <div class="row" id="family-members-removed-empty-page">
-    <div class="span6">
+    <div class="col-md-6">
         An empty result page was reached while having "Remove family members" enabled.
         This indicates some family members have actually been removed from the current
         result page.
@@ -13,7 +13,7 @@
         <%= data.chunksize %> items, so the removal of family members leads to gaps
         at the end of each result chunk.
     </div>
-    <div class="span5 text-align-right">
+    <div class="col-md-5 text-align-right">
         <% if (data.recommended_next_page_local) { %>
         You might want to just skip to the next page containing valid result items:
         <br/><br/>

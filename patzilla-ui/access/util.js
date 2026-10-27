@@ -16,7 +16,7 @@ QueryLinkMixin = Backbone.Model.extend({
                 return _this.enrich_link(item, attribute, item, value_modifier, options);
 
                 // v2 use separate icon for link placement
-                //var link = self.enrich_link('<i class="icon-external-link icon-small"></i>', attribute, item, value_modifier);
+                //var link = self.enrich_link('<i class="glyphicon glyphicon-share glyphicon-small"></i>', attribute, item, value_modifier);
                 //return item + '&nbsp;&nbsp;' + link;
 
             } else if (_.isObject(item)) {

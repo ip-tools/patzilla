@@ -231,11 +231,11 @@ IssueReporterGui = Backbone.Model.extend({
             if (what == 'problem') {
                 dialog.toggleClass('modal-warning', true);
                 dialog.toggleClass('modal-success', false);
-                dialog.find('#issue-reporter-label').html('<i class="icon-thumbs-down-alt"></i> Report problem');
+                dialog.find('#issue-reporter-label').html('<i class="glyphicon glyphicon-thumbs-down"></i> Report problem');
             } else if (what == 'feature') {
                 dialog.toggleClass('modal-warning', false);
                 dialog.toggleClass('modal-success', true);
-                dialog.find('#issue-reporter-label').html('<i class="icon-thumbs-up-alt"></i> Request feature');
+                dialog.find('#issue-reporter-label').html('<i class="glyphicon glyphicon-thumbs-up"></i> Request feature');
             }
         };
         setup_header();

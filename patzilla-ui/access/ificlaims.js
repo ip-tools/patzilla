@@ -217,8 +217,8 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
         var appnumber_epodoc = this.get_application_number('epo');
         var appnumber_original = this.get_application_number('original');
         var entry =
-            '<td class="span2">' + (this.get_application_date() || '--') + '</td>' +
-            '<td class="span3">' + (appnumber_epodoc || '--') + '</td>' +
+            '<td class="col-md-2">' + (this.get_application_date() || '--') + '</td>' +
+            '<td class="col-md-3">' + (appnumber_epodoc || '--') + '</td>' +
             '<td>';
         if (!_.isEmpty(appnumber_original)) {
             entry += 'original: ' + appnumber_original;
@@ -238,8 +238,8 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
                 var priority_original = _this.get_document_id(node, null, 'original');
                 if (!_.isEmpty(priority_epodoc)) {
                     var entry =
-                        '<td class="span2">' + (priority_epodoc.isodate || '--') + '</td>' +
-                            '<td class="span3">' + (priority_epodoc.fullnumber && priority_epodoc.fullnumber || '--') + '</td>' +
+                        '<td class="col-md-2">' + (priority_epodoc.isodate || '--') + '</td>' +
+                            '<td class="col-md-3">' + (priority_epodoc.fullnumber && priority_epodoc.fullnumber || '--') + '</td>' +
                             '<td>';
                     if (!_.isEmpty(priority_original.fullnumber)) {
                         entry += 'original: ' + priority_original.fullnumber;

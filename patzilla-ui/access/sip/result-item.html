@@ -9,16 +9,16 @@
 
 <div class="container-fluid ops-collection-entry" data-document-number="<%= publication_number %>" style="page-break-after: always;">
 
-    <div class="ops-collection-entry-heading row-fluid">
+    <div class="ops-collection-entry-heading row">
 
         <!-- publication number -->
-        <div class="span3 container-fluid">
+        <div class="col-md-3 container-fluid">
             <div class="header-compact">
                 <%= enrich_link(publication_number, 'pn') %>
             </div>
         </div>
 
-        <div class="span9 container-fluid">
+        <div class="col-md-9 container-fluid">
             <div class="header-biblio">
                 <% if (is_document_missing) { %>
                 <span class="label label-important label-document-missing pull-right">Document not available</span>
@@ -32,9 +32,9 @@
 
     <div class="ops-collection-entry-inner container-fluid">
 
-        <div class="row-fluid">
+        <div class="row">
 
-            <div class="span12 tab-content document-details">
+            <div class="col-md-12 tab-content document-details">
 
                 <% if (is_document_missing) { %>
                 <div class="alert alert-error">
@@ -60,9 +60,9 @@
                 <table class="table table-condensed">
                     <thead>
                     <tr>
-                        <th class="span1">Symbol</th>
-                        <th class="span2">Name</th>
-                        <th class="span9">Value</th>
+                        <th class="col-md-1">Symbol</th>
+                        <th class="col-md-2">Name</th>
+                        <th class="col-md-9">Value</th>
                     </tr>
                     </thead>
                     <tbody>

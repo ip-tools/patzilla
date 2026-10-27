@@ -18,30 +18,12 @@ $(window).ready(function() {
 });
 
 
-// Twitter Bootstrap 2.3.2
-// TODO: Upgrade to more recent version
-require('bootstrap-2.3.2/css/bootstrap.css');
-require('bootstrap-2.3.2/css/bootstrap-responsive.css');
-require('bootstrap-2.3.2/js/bootstrap-affix.js');
-require('bootstrap-2.3.2/js/bootstrap-alert.js');
-require('bootstrap-2.3.2/js/bootstrap-button.js');
-require('bootstrap-2.3.2/js/bootstrap-carousel.js');
-require('bootstrap-2.3.2/js/bootstrap-collapse.js');
-require('bootstrap-2.3.2/js/bootstrap-dropdown.js');
-require('bootstrap-2.3.2/js/bootstrap-modal.js');
-require('bootstrap-2.3.2/js/bootstrap-scrollspy.js');
+// Twitter Bootstrap
+require('bootstrap/dist/css/bootstrap.min.css');
+require('bootstrap/dist/js/bootstrap.min.js');
 
 // Use bootstrap-tabs from Bootstrap 2.0.0
-//require('bootstrap-2.3.2/js/bootstrap-tab.js');
-//require('bootstrap-tab.js');
 require('bootstrap-tab-button.js');
-
-// Popover derives from Tooltip, so keep them in that order
-require('bootstrap-2.3.2/js/bootstrap-tooltip.js');
-require('bootstrap-2.3.2/js/bootstrap-popover.js');
-
-require('bootstrap-2.3.2/js/bootstrap-transition.js');
-require('bootstrap-2.3.2/js/bootstrap-typeahead.js');
 
 // Font Awesome 3.2.1; TODO: Upgrade to more recent version
 require('font-awesome/css/font-awesome.css');

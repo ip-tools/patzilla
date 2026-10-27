@@ -18,13 +18,13 @@
         <div class="container-fluid">
 
             <!-- Output format -->
-            <div class="row-fluid">
-                <div class="span3">
+            <div class="row">
+                <div class="col-md-3">
                     <div class="lead inline">Output format</div>
                     <br/>
                     <div id="output-format" class="lead inline text-info"></div>
                 </div>
-                <div class="span9">
+                <div class="col-md-9">
 
                     <div class="btn-group" data-toggle="buttons-radio" data-toggle-release="false" data-name="format" data-label-target="#output-format">
 
@@ -126,15 +126,15 @@
 
 
             <!-- Archive content -->
-            <div class="row-fluid hide" id="zip-content">
-                <div class="span3">
+            <div class="row hide" id="zip-content">
+                <div class="col-md-3">
                     <div class="lead inline">Zip content</div>
                     <br/>
                     <div id="report-parts" class="text-info"></div>
                     <br/>
                     <div id="media-parts" class="text-info"></div>
                 </div>
-                <div class="span9">
+                <div class="col-md-9">
 
                     <div class="btn-group" data-toggle="buttons-checkbox" data-name="report" data-label-target="#report-parts">
 
@@ -291,11 +291,11 @@
 
 
             <!-- Link and embed content -->
-            <div class="row-fluid hide" id="link-embed-content">
-                <div class="span3">
+            <div class="row hide" id="link-embed-content">
+                <div class="col-md-3">
                     <div class="lead inline">Link and embed</div>
                 </div>
-                <div class="span9">
+                <div class="col-md-9">
 
                     <div id="link-embed-sections">
 
@@ -365,13 +365,13 @@
 
 
             <!-- Display document numbers -->
-            <div class="row-fluid hide" id="display-content">
+            <div class="row hide" id="display-content">
 
-                <div class="span3">
+                <div class="col-md-3">
                     <div class="lead inline">Display document numbers</div>
                 </div>
 
-                <div class="span4">
+                <div class="col-md-4">
 
                     <div class="lead section">
                         <i class="fa-icon icon-pushpin icon-1x"></i>
@@ -389,7 +389,7 @@
 
                 </div>
 
-                <div class="span4">
+                <div class="col-md-4">
 
                     <div class="lead section">
                         <i class="fa-icon icon-eye-open icon-1x"></i>
@@ -410,8 +410,8 @@
             </div>
 
             <!--
-            <div class="row-fluid">
-                <div class="span12">
+            <div class="row">
+                <div class="col-md-12">
                     <div id="export-dialog-status"></div>
                 </div>
             </div>
@@ -424,15 +424,15 @@
     <div class="modal-footer">
 
         <div class="container-fluid">
-            <div class="row-fluid">
-                <div class="span7 text-left">
+            <div class="row">
+                <div class="col-md-7 text-left">
                     <div id="export-dialog-action-text" class="lead footer"></div>
                 </div>
-                <div class="span5">
-                    <i id="export-dialog-spinner" class="spinner icon-refresh icon-spin icon-large" style="display: none"></i>
+                <div class="col-md-5">
+                    <i id="export-dialog-spinner" class="spinner glyphicon glyphicon-refresh glyphicon-spin glyphicon-large" style="display: none"></i>
                     &nbsp;&nbsp;
                     <button class="btn btn-info btn-large" id="export-dialog-send-button" type="button">
-                        <i class="icon-download icon-large"></i>
+                        <i class="glyphicon glyphicon-download glyphicon-large"></i>
                         &nbsp;
                         Start export
                     </button>

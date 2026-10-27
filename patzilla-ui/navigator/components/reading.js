@@ -49,7 +49,7 @@ ReadingController = Marionette.Controller.extend({
 
         // v2: more sophisticated - didn't work out!
         //var element_in_viewport = navigatorApp.viewport.get_document();
-        //var element_index = element_in_viewport.parent('.row-fluid').index();
+        //var element_index = element_in_viewport.parent('.row').index();
 
         //log('element_index:', element_index);
 

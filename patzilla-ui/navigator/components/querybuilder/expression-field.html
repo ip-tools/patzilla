@@ -3,16 +3,16 @@
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 %>
 
-<div class="row-fluid">
-    <div class="span5 strong">
+<div class="row">
+    <div class="col-md-5 strong">
         <%= label %>
     </div>
-    <div class="span4">
+    <div class="col-md-4">
         <%= _(fields).first() %>
         <br/>
         <small><%= _(fields).rest(1).join('<br/>') %></small>
     </div>
-    <div class="span3">
+    <div class="col-md-3">
         <%= more %>
     </div>
 </div>

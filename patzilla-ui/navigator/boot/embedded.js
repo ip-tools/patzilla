@@ -85,8 +85,8 @@ EmbeddingController = Marionette.Controller.extend({
                 carousel.attr('data-document-number', document_number);
 
                 // massage carousel child elements
-                //carousel.removeClass('span5');
-                carousel.find('.drawing-info').removeClass('span12');
+                //carousel.removeClass('col-md-5');
+                carousel.find('.drawing-info').removeClass('col-md-12');
 
                 $('body').html(carousel);
 

@@ -653,7 +653,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
         // review feature: trigger search from basket content
         $('#basket-review-button').off('click').on('click', function(event) {
             event.preventDefault();
-            if (_this.check_empty({kind: 'review', icon: 'icon-indent-left', seen: false})) { return; }
+            if (_this.check_empty({kind: 'review', icon: 'glyphicon-indent-left', seen: false})) { return; }
 
             // Start review mode
             navigatorApp.metadata.resetSomeDefaults(['pagination_current_page', 'page_size']);
@@ -679,7 +679,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
             if (!navigatorApp.component_enabled('export')) {
                 var message = 'Export feature not enabled.';
                 console.warn(message);
-                navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-save'});
+                navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-save'});
                 return;
             }
 
@@ -856,12 +856,12 @@ BasketView = Backbone.Marionette.ItemView.extend({
             verb = 'exported';
         }
         if (!options.icon) {
-            options.icon = 'icon-external-link';
+            options.icon = 'glyphicon-share';
         }
         if (this.model.empty(options)) {
             navigatorApp.ui.notify(
                 "An empty collection can't be " + verb + ", please add some documents.",
-                {type: 'warning', icon: options.icon + ' icon-large'});
+                {type: 'warning', icon: options.icon + ' glyphicon-large'});
             return true;
         }
         return false;
@@ -994,7 +994,7 @@ BasketListView = GenericResultView.extend({
     start: function() {
 
         this.indicate_activity(true);
-        this.user_message('Computing results, please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
+        this.user_message('Computing results, please stand by. &nbsp; <i class="spinner glyphicon glyphicon-refresh glyphicon-spin"></i>', 'info');
 
         var response = navigatorApp.basketModel.get_numbers(this.options);
 
