@@ -14,7 +14,7 @@ const ModalRegion = Marionette.Region.extend({
         Marionette.Region.prototype.constructor.apply(this, arguments);
 
         this.ensureEl();
-        this.$el.toggleClass('fade hide', true);
+        this.$el.toggleClass('fade', true);
         this.$el.on('hidden', {region:this}, function(event) {
             event.data.region.close();
         });

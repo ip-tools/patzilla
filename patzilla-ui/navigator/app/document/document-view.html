@@ -53,19 +53,19 @@ var abstract_list = data.get_abstract_list();
                  data-toggle="popover" data-trigger="hover" data-placement="top"
                  data-content="Toggle detail view"
                     >
-                <button class="btn active" data-toggle="tab"
+                <button class="btn btn-default active" data-toggle="tab"
                         href="#document-details-biblio-container-<%= patent_number %>">
                     Biblio
                 </button>
                 <% if (data.has_fulltext()) { %>
-                <button class="btn" data-toggle="tab"
+                <button class="btn btn-default" data-toggle="tab"
                         href="#document-details-claims-container-<%= patent_number %>"
                         data-details-title="Claims"
                         data-details-type="claims"
                         >
                     Claims
                 </button>
-                <button class="btn" data-toggle="tab"
+                <button class="btn btn-default" data-toggle="tab"
                         href="#document-details-description-container-<%= patent_number %>"
                         data-details-title="Description"
                         data-details-type="description"
@@ -73,7 +73,7 @@ var abstract_list = data.get_abstract_list();
                     Desc
                 </button>
                 <% } %>
-                <button class="btn" data-toggle="tab"
+                <button class="btn btn-default" data-toggle="tab"
                         id="document-details-family-button-<%= patent_number %>"
                         href="#document-details-family-container-<%= patent_number %>"
                         data-details-type="family"
@@ -106,7 +106,7 @@ var abstract_list = data.get_abstract_list();
 
                     <!--
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number" value="<%= patent_number %>"/>
-                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-popover add-patent-number"
+                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-default btn-popover add-patent-number"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to collection"
                        >
@@ -125,7 +125,7 @@ var abstract_list = data.get_abstract_list();
 
         <!-- Document header: Menu on right side -->
         <span class="btn-group btn-popover do-not-print">
-            <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
                 <i class="fa-icon icon-bars icon-2x"></i>
             </button>
 
@@ -487,7 +487,7 @@ var abstract_list = data.get_abstract_list();
                             <% } %>
                             <br/>
                             <%= data.get_citations_environment_button() %>
-                            <a class="btn btn-small family-citations-shortcut-button do-not-print" role="button">
+                            <a class="btn btn-default btn-small family-citations-shortcut-button do-not-print" role="button">
                                 Family » Citations &nbsp; <i class="glyphicon glyphicon-arrow-right"></i>
                             </a>
                         </dd>
@@ -519,7 +519,7 @@ var abstract_list = data.get_abstract_list();
 
                             <!-- pdf document -->
                             <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="patzilla-pdf"
-                               class="btn btn-small btn-popover anchor-pdf do-not-print" role="button"
+                               class="btn btn-default btn-small btn-popover anchor-pdf do-not-print" role="button"
                                data-toggle="popover" data-trigger="hover" data-placement="top"
                                data-content="PDF document"
                                     >
@@ -575,14 +575,14 @@ var abstract_list = data.get_abstract_list();
                     <strong>Patent family</strong>
                     &nbsp;&nbsp;&nbsp;
                     <div class="btn-group tabs family-chooser">
-                        <button class="btn btn-small active" data-toggle="tab" data-view-type="compact">
+                        <button class="btn btn-default btn-small active" data-toggle="tab" data-view-type="compact">
                             Compact
                         </button>
-                        <button class="btn btn-small" data-toggle="tab" data-view-type="verbose">
+                        <button class="btn btn-default btn-small" data-toggle="tab" data-view-type="verbose">
                             Full
                         </button>
                         <% if (navigatorApp.user_has_module('family-citations')) { %>
-                        <button class="btn btn-small" data-toggle="tab" data-view-type="citations">
+                        <button class="btn btn-default btn-small" data-toggle="tab" data-view-type="citations">
                             Citations
                         </button>
                         <% } %>

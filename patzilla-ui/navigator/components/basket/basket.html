@@ -6,7 +6,7 @@
 <form id="basket-form" name="basket-form" method="post" action="<%= config.get('ship-url') %>" target="<%= config.get('ship-frame') %>">
 
     <!-- basket content -->
-    <div class="row2">
+    <div class="row">
         <div class="col-md-12">
             <textarea id="basket" class="col-md-12 monospace" name="<%= config.get('ship-param') %>" rows="7" placeholder="collection of documents"><%= numbers_display %></textarea>
         </div>
@@ -15,11 +15,11 @@
     <!-- basket controls -->
     <div class="row">
 
-        <div class="col-md-6">
+        <div class="col-md-8">
 
             <!--
             <button id="basket-import-button"
-                    role="button" class="btn btn-popover do-not-print"
+                    role="button" class="btn btn-default btn-popover do-not-print"
                     data-toggle="popover" data-trigger="hover" data-placement="right"
                     data-content="Import numberlist from clipboard, url or filesystem"
                     >
@@ -29,15 +29,16 @@
 
             <div class="btn-group do-not-print">
                 <button id="basket-review-button"
-                        class="btn btn-popover" data-value="review"
+                        class="btn btn-default btn-popover" data-value="review"
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="Review documents"
                         >
-                    <i class="glyphicon glyphicon-indent-left glyphicon-large"></i>
+                    <i class="glyphicon glyphicon-arrow-left glyphicon-large"></i>
+                    &nbsp;
                     Review
                 </button>
                 <button id="basket-entry-count-button"
-                        class="btn btn-popover disabled"
+                        class="btn btn-default btn-popover disabled"
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="Number of rated documents"
                         >
@@ -45,7 +46,7 @@
                     <span class="basket-entry-count"></span>
                 </button>
                 <button id="basket-seen-count-button"
-                        class="btn btn-popover disabled"
+                        class="btn btn-default btn-popover disabled"
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="Number of seen but unrated documents"
                         >
@@ -56,14 +57,14 @@
 
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-4">
 
             <!-- basket actions -->
             <div class="btn-group pull-right do-not-print">
 
                 <button
                         id="basket-submit-button"
-                        type="submit" role="button" class="btn btn-popover"
+                        type="submit" role="button" class="btn btn-default btn-popover"
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="Submit to 3rd-party system"
                         >
@@ -72,22 +73,22 @@
                     Submit
                 </button>
 
-                <a id="dossier-export-button" class="btn btn-popover" role="button"
+                <a id="dossier-export-button" class="btn btn-default btn-popover" role="button"
                    data-toggle="popover" data-trigger="hover" data-placement="top"
                    data-content="Export project in multiple formats"
                         >
-                    <i class="glyphicon glyphicon-save glyphicon-large"></i>
+                    <i class="fa-icon icon-download-alt icon-1x"></i>
                     &nbsp;
                     Export
                 </a>
 
                 <!--
-                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <i class="glyphicon glyphicon-save glyphicon-large"></i>
                     &nbsp;
                     Share
                 </button>
-                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">

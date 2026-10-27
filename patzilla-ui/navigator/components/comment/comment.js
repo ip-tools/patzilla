@@ -106,7 +106,6 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
             var element = _this.get_textarea();
             var is_visible = element.is(":visible");
             if (is_visible) {
-                element.trigger('focus');
 
                 element.off('keydown');
                 element.on('keydown', null, 'meta+return', function() {
@@ -143,6 +142,11 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
         return this.model.save();
     },
 
+    focus_textarea: function() {
+        var element = this.get_textarea();
+        element.trigger('focus');
+    },
+
 });
 
 
@@ -173,7 +177,11 @@ CommentManager = Marionette.Controller.extend({
         // wire events
 
         // show text on button press
-        this.listenTo(this.comment_button, 'toggle', this.toggle_edit);
+        var _this = this;
+        this.listenTo(this.comment_button, 'toggle', function() {
+            _this.toggle_edit();
+            _this.comment_text.focus_textarea();
+        });
 
     },
 
