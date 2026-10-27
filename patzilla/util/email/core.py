@@ -134,7 +134,7 @@ def build_email(mail_to, subject, body_text, mail_from='test@example.org', reply
         #part = MIMEBase(maintype, subtype, _charset='utf-8')
         # replace forward slashes by dashes
         filename_attachment = filename.lstrip('/\\').replace('/', '-')
-        part.add_header('Content-Disposition', 'attachment', filename=filename_attachment.encode('utf-8'))
+        part.add_header('Content-Disposition', 'attachment', filename=filename_attachment)
         #part.set_payload(payload.encode('utf-8'))
         #part.set_charset('utf-8')
 
