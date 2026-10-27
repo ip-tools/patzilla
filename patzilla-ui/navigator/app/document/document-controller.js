@@ -66,7 +66,7 @@ DocumentBaseController = Marionette.Controller.extend({
 
             var document = navigatorApp.document_base.get_document_by_element(this);
 
-            $(this).after('<span class="abstract-acquire-spinner">&nbsp;&nbsp;<i class="icon-refresh icon-spin"></i></span>');
+            $(this).after('<span class="abstract-acquire-spinner">&nbsp;&nbsp;<i class="glyphicon glyphicon-refresh glyphicon-spin"></i></span>');
 
             var ft = navigatorApp.document_details.get_fulltext(document);
             var _this = this;
@@ -261,7 +261,7 @@ DocumentDetailsController = Marionette.Controller.extend({
         } else {
             navigatorApp.ui.notify(
                 'Fulltext of document from country "' + country + '" not available. No appropriate datasource configured.',
-                {type: 'warning', icon: 'icon-file-text-alt'});
+                {type: 'warning', icon: 'glyphicon-text'});
             return;
 
         }

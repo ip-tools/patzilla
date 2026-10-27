@@ -93,7 +93,7 @@ var abstract_list = data.get_abstract_list();
                            data-patent-number="<%= patent_number %>"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Remove document number from collection">
-                            <i class="icon-trash icon-large"></i>
+                            <i class="glyphicon glyphicon-trash glyphicon-large"></i>
                         </a>
                         &nbsp;
                         <span
@@ -110,7 +110,7 @@ var abstract_list = data.get_abstract_list();
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to collection"
                        >
-                        <i class="icon-white icon-plus"></i>
+                        <i class="glyphicon glyphicon-white glyphicon-plus"></i>
                     </a>
                     -->
                 <% } %>
@@ -152,7 +152,7 @@ var abstract_list = data.get_abstract_list();
                 <li class="dropdown-submenu">
 
                     <a tabindex="-1" href="#">
-                        <i class="icon-globe icon-large"></i>
+                        <i class="glyphicon glyphicon-globe glyphicon-large"></i>
                         &nbsp;
                         External sources
                     </a>
@@ -160,7 +160,7 @@ var abstract_list = data.get_abstract_list();
 
                         <!-- bibliographic data -->
                         <li><div style="padding-left: 10px">
-                            <h5><i class="icon-list"></i> &nbsp; Bibliographic data</h5>
+                            <h5><i class="glyphicon glyphicon-list"></i> &nbsp; Bibliographic data</h5>
                         </div>
                         </li>
                         <li>
@@ -248,7 +248,7 @@ var abstract_list = data.get_abstract_list();
 
                         <!-- patent family -->
                         <li><div style="padding-left: 10px">
-                            <h5><i class="icon-group"></i> &nbsp; Patent family information</h5>
+                            <h5><i class="glyphicon glyphicon-group"></i> &nbsp; Patent family information</h5>
                         </div>
                         </li>
                         <li>
@@ -336,19 +336,19 @@ var abstract_list = data.get_abstract_list();
 
     <div class="ops-collection-entry-inner ops-bibliographic-details">
 
-        <div class="row-fluid">
-            <div class="span12 keyword">
+        <div class="row">
+            <div class="col-md-12 keyword">
                 <strong><%= title_list.join('<br/>') %></strong>
             </div>
         </div>
 
-        <div class="row-fluid">
-            <div class="span5">
+        <div class="row">
+            <div class="col-md-5">
 
                 <!-- second header -->
                 <!-- TODO: for letting the drawing follow the text -->
                 <!--
-                <div class="ops-collection-entry-heading-second well span4 hide">second heading</div>
+                <div class="ops-collection-entry-heading-second well col-md-4 hide">second heading</div>
                 -->
 
                 <!-- first drawing only -->
@@ -381,12 +381,12 @@ var abstract_list = data.get_abstract_list();
 
                 </div>
 
-                <div class="drawing-info span12 text-center">
+                <div class="drawing-info col-md-12 text-center">
                     Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"/>
                 </div>
 
             </div>
-            <div class="span7 tab-content document-details">
+            <div class="col-md-7 tab-content document-details">
 
                 <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade in active">
                     <dl class="dl-horizontal dl-horizontal-biblio">
@@ -488,7 +488,7 @@ var abstract_list = data.get_abstract_list();
                             <br/>
                             <%= data.get_citations_environment_button() %>
                             <a class="btn btn-small family-citations-shortcut-button do-not-print" role="button">
-                                Family » Citations &nbsp; <i class="icon-arrow-right"></i>
+                                Family » Citations &nbsp; <i class="glyphicon glyphicon-arrow-right"></i>
                             </a>
                         </dd>
                         <br/>
@@ -562,12 +562,12 @@ var abstract_list = data.get_abstract_list();
                 </div>
 
                 <div id="document-details-claims-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
-                    <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
+                    <i class="document-details-spinner glyphicon glyphicon-refresh glyphicon-spin" style="display: none"></i>
                     <span data-area="fulltext"></span>
                 </div>
 
                 <div id="document-details-description-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
-                    <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
+                    <i class="document-details-spinner glyphicon glyphicon-refresh glyphicon-spin" style="display: none"></i>
                     <span data-area="fulltext"></span>
                 </div>
 
@@ -588,7 +588,7 @@ var abstract_list = data.get_abstract_list();
                         <% } %>
                     </div>
                     &nbsp;&nbsp;&nbsp;
-                    <i class="document-details-spinner icon-refresh icon-spin" style="display: none"></i>
+                    <i class="document-details-spinner glyphicon glyphicon-refresh glyphicon-spin" style="display: none"></i>
                     <br/><br/>
                     <span class="document-details-content keyword"></span>
                 </div>

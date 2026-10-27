@@ -82,7 +82,7 @@ StoragePlugin = Marionette.Controller.extend({
 
         // Write file.
         if (!payload) {
-            navigatorApp.ui.notify('File export failed', {type: 'error', icon: 'icon-save'});
+            navigatorApp.ui.notify('File export failed', {type: 'error', icon: 'glyphicon-save'});
             return;
         }
 
@@ -94,7 +94,7 @@ StoragePlugin = Marionette.Controller.extend({
         var size_kb = parseFloat((blob.size / 1000).toFixed(1))
         navigatorApp.ui.notify(
             'File "' + filename + '" exported successfully, size is ' + size_kb + ' kB.',
-            {type: 'success', icon: 'icon-save'});
+            {type: 'success', icon: 'glyphicon-save'});
 
     },
 
@@ -196,7 +196,7 @@ StoragePlugin = Marionette.Controller.extend({
 
             navigatorApp.ui.notify(
                 'File imported successfully',
-                {type: 'success', icon: 'icon-folder-open-alt'});
+                {type: 'success', icon: 'glyphicon-folder-open-alt'});
 
             final_deferred.resolve();
 
@@ -365,7 +365,7 @@ StoragePlugin = Marionette.Controller.extend({
                 // notify user about the completed action
                 navigatorApp.ui.notify(
                     'Database wiped successfully. You should create a new project before starting over.',
-                    {type: 'success', icon: 'icon-trash'});
+                    {type: 'success', icon: 'glyphicon-trash'});
 
             });
 

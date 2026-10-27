@@ -6,7 +6,7 @@ OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
 
     template: require('./biblio-family-verbose-member.html'),
     tagName: 'tr',
-    //className: 'row-fluid',
+    //className: 'row',
     //style: 'margin-bottom: 10px',
 
 });
@@ -35,7 +35,7 @@ OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
     template: require('./biblio-family-compact-member.html'),
     tagName: 'tr',
     //tagName: 'div',
-    //className: 'row-fluid',
+    //className: 'row',
     //style: 'margin-bottom: 10px',
 
 });

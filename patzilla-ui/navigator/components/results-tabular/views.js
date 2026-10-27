@@ -4,7 +4,7 @@
 ResultItemView = Backbone.Marionette.ItemView.extend({
 
     tagName: 'div',
-    className: 'row-fluid',
+    className: 'row',
 
     // make additional data available in templateHelpers
     // https://stackoverflow.com/questions/12058610/backbone-marionette-templatehelpers-and-itemviewoptions/12065756#12065756

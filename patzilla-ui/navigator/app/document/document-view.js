@@ -10,7 +10,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
     template: require('./document-view.html'),
     tagName: 'div',
-    className: 'row-fluid',
+    className: 'row',
 
     regions: {
         region_comment_button: '#region-comment-button',
@@ -144,7 +144,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
             // We don't have any bibliographic data to display, so swap to informational message
             var details = $(container).find('.ops-bibliographic-details').find('.document-details');
-            var info = $('<div class="span7"></div>');
+            var info = $('<div class="col-md-7"></div>');
             details.replaceWith(info);
 
             //log('model:', this.model);
@@ -155,7 +155,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
                     '<br/><br/>' +
                     'However, a drawing was found in one of the upstream patent databases. ' +
                     'Please consider checking with the appropriate domestic office by selecting the ' +
-                    '<a class="btn"><i class="icon-globe icon-large"></i></a> icon in the header bar of this document.' +
+                    '<a class="btn"><i class="glyphicon glyphicon-globe glyphicon-large"></i></a> icon in the header bar of this document.' +
                     '<br/><br/>' +
                     'If the document is not available in any form which satisfies your needs, ' +
                     'do not hesitate to report this problem to us!';

@@ -66,7 +66,7 @@ OpsBaseViewMixin = {
                 event.stopPropagation();
                 navigatorApp.ui.notify(
                     'List is capped to the first 10 cited references. Sorry for this limitation.',
-                    {type: 'warning', icon: 'icon-cut'});
+                    {type: 'warning', icon: 'glyphicon-cut'});
                 var _this = this;
                 setTimeout(function() {
                     open($(_this).attr("href"));

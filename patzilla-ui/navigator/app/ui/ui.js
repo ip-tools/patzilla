@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+require('glyphicon-spin');
 require('jquery.shorten.1.0');
 var urljoin = require('url-join');
 var bootbox = require('bootbox');
@@ -362,7 +363,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
         options.wrapper = options.wrapper || document.body;
 
         if (options.icon) {
-            message = '<span class="icon ' + options.icon + ' icon-large"></span>' + '<p>' + message + '</p>';
+            message = '<span class="glyphicon ' + options.icon + ' glyphicon-large"></span>' + '<p>' + message + '</p>';
         }
         if (!options.type) {
             options.type = 'notice';
@@ -484,7 +485,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
 
             if (_.isEmpty(event.text)) {
                 var message = "Empty content, nothing copied to clipboard.";
-                navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-copy', wrapper: options.wrapper});
                 return;
             }
             var size_value = event.text.length;
@@ -494,7 +495,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                 var size_label = 'kB';
             }
             var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
-            navigatorApp.ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
+            navigatorApp.ui.notify(message, {type: 'success', icon: 'glyphicon-copy', wrapper: options.wrapper});
             if (options.callback) {
                 options.callback();
             }
@@ -504,7 +505,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
         clipboard.on('error', function(event) {
             var message = "Error copying content to clipboard.";
             console.error(message, event.action, event.trigger);
-            navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+            navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-copy', wrapper: options.wrapper});
         });
 
     },
@@ -524,7 +525,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                 var message =
                     'Copying data to clipboard not possible, Adobe Flash Player plugin is required.<br/>' +
                     '<a href="https://get.adobe.com/flashplayer/" target="_blank">Install Adobe Flash Player</a>.';
-                navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-copy', wrapper: options.wrapper});
             });
             return;
         }
@@ -548,7 +549,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                 //event.target.style.display = "none";
                 if (_.isEmpty(event.data)) {
                     var message = "Empty content, nothing copied to clipboard.";
-                    navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-copy', wrapper: options.wrapper});
+                    navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-copy', wrapper: options.wrapper});
                     return;
                 }
                 var size_value = event.data[mimetype].length;
@@ -558,7 +559,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                     var size_label = 'kB';
                 }
                 var message = "Copied content to clipboard, size is " + size_value + ' ' + size_label + '.';
-                navigatorApp.ui.notify(message, {type: 'success', icon: 'icon-copy', wrapper: options.wrapper});
+                navigatorApp.ui.notify(message, {type: 'success', icon: 'glyphicon-copy', wrapper: options.wrapper});
                 if (options.callback) {
                     options.callback();
                 }
@@ -585,7 +586,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
 
     notify_module_locked: function(modulename) {
         var message = 'The module "' + modulename + '" is not available to your account. Please subscribe to this feature.';
-        this.notify(message, {type: 'warning', icon: 'icon-lock'});
+        this.notify(message, {type: 'warning', icon: 'glyphicon-lock'});
     },
 
     open_email: function(recipient, subject, body) {

@@ -44,12 +44,12 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
         var basket_button = this.$el.find('#result-to-basket-button');
         basket_button.off('click');
         basket_button.on('click', function(event) {
-            $('#result-to-basket-indicator').removeClass('icon-plus').addClass('icon-spinner icon-spin');
+            $('#result-to-basket-indicator').removeClass('glyphicon-plus').addClass('glyphicon glyphicon-spinner glyphicon-spin');
             setTimeout(function() {
                 $.when(navigatorApp.basketModel.add_multi(numberlist, {reset_seen: true})).then(function() {
-                    $('#result-to-basket-indicator').removeClass('icon-spinner icon-spin').addClass('icon-plus');
+                    $('#result-to-basket-indicator').removeClass('glyphicon glyphicon-spinner glyphicon-spin').addClass('glyphicon-plus');
                     var message = 'Added ' + numberlist.length + ' patent numbers to document collection.';
-                    navigatorApp.ui.notify(message, {type: 'success', icon: 'icon-plus', wrapper: _this.el});
+                    navigatorApp.ui.notify(message, {type: 'success', icon: 'glyphicon-plus', wrapper: _this.el});
                 });
             }, 50);
         });
@@ -76,7 +76,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
         this.indicate_activity(true);
         this.user_message(
             'Fetching results from data source "' + _this.model.get('datasource') + '", ' +
-                'please stand by. &nbsp; <i class="spinner icon-refresh icon-spin"></i>', 'info');
+                'please stand by. &nbsp; <i class="spinner glyphicon-refresh glyphicon-spin"></i>', 'info');
 
         var fetcher = this.fetcher_factory();
         if (!fetcher) return;

@@ -4,8 +4,8 @@
 %>
 
 <!--
-<div class="row-fluid" id="pagination-info">
-    <div class="span12 pagination-centered">
+<div class="row" id="pagination-info">
+    <div class="col-md-12 pagination-centered">
         &nbsp;&nbsp;
         current = <span class="badge badge-info"><%= data.result_range %></span>
     </div>
@@ -23,12 +23,12 @@ if ($.isNumeric(data.result_count)) {
 
 <div class="container-fluid ops-collection-meta" id="pagination-info">
 
-    <div class="row-fluid">
+    <div class="row">
 
-        <div class="span8">
+        <div class="col-md-8">
 
             <!-- total result count -->
-            <div class="span3">
+            <div class="col-md-3">
                 Total:
                 <br/>
                 <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
@@ -42,14 +42,14 @@ if ($.isNumeric(data.result_count)) {
             </div>
 
             <!-- current display range -->
-            <div class="span3">
+            <div class="col-md-3">
                 Range:
                 <br/>
                 <span style="font-size: x-large"><%= data.result_range != null ? data.result_range : '--' %></span>
             </div>
 
             <!-- current cql query string -->
-            <div class="span6">
+            <div class="col-md-6">
                 Query:
                 <br/>
                     <span style="font-size: small" class="cql-query">
@@ -107,10 +107,10 @@ if ($.isNumeric(data.result_count)) {
 
         </div>
 
-        <div class="span4 do-not-print non-liveview">
+        <div class="col-md-4 do-not-print non-liveview">
 
             <% if (data.searchmode == 'subsearch' && !data.reviewmode && data.datasource_info && data.datasource_info.has_resultview) { %>
-            <div class="span6">
+            <div class="col-md-6">
 
                 <div class="btn-group btn-popover tabs content-chooser"
                      data-toggle="popover" data-trigger="hover" data-placement="top"
@@ -130,13 +130,13 @@ if ($.isNumeric(data.result_count)) {
             <% if (false) { %>
 
             <% if (data.config.get('mode') != 'liveview') { %>
-            <div class="span6 pull-right">
+            <div class="col-md-6 pull-right">
 
                 <% if (navigatorApp.component_enabled('basket')) { %>
                 <a id="basket-add-all-documents" role="button" class="btn btn-popover"
                    data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add all documents of current result page to collection"
                         >
-                    <i class="icon-white icon-plus"></i> Add visible
+                    <i class="glyphicon glyphicon-white glyphicon-plus"></i> Add visible
                 </a>
                 <% } %>
 
@@ -146,12 +146,12 @@ if ($.isNumeric(data.result_count)) {
             <!-- result list actions -->
             <!-- PDF export and print view -->
             <!--
-            <div class="btn-group btn-popover result-actions span5 pull-right"
+            <div class="btn-group btn-popover result-actions col-md-5 pull-right"
                  data-toggle="popover" data-trigger="hover" data-placement="top"
                  data-content="Export results"
                     >
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-download-alt icon-large2"></i> &nbsp; Export
+                    <i class="glyphicon glyphicon-save glyphicon-large"></i> &nbsp; Export
                 </button>
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
@@ -162,7 +162,7 @@ if ($.isNumeric(data.result_count)) {
                             <img src="/static/img/icons/pdf.svg" class="pdf-svg"/> PDF
                         </a>
                         <a href="<%= data.get_url_print() %>" target="_blank">
-                            <i class="icon-print icon-large"></i> Print
+                            <i class="glyphicon glyphicon-print glyphicon-large"></i> Print
                         </a>
                     </li>
                 </ul>

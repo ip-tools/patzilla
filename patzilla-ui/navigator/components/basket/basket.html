@@ -6,16 +6,16 @@
 <form id="basket-form" name="basket-form" method="post" action="<%= config.get('ship-url') %>" target="<%= config.get('ship-frame') %>">
 
     <!-- basket content -->
-    <div class="row-fluid2">
-        <div class="span12">
-            <textarea id="basket" class="span12 monospace" name="<%= config.get('ship-param') %>" rows="7" placeholder="collection of documents"><%= numbers_display %></textarea>
+    <div class="row2">
+        <div class="col-md-12">
+            <textarea id="basket" class="col-md-12 monospace" name="<%= config.get('ship-param') %>" rows="7" placeholder="collection of documents"><%= numbers_display %></textarea>
         </div>
     </div>
 
     <!-- basket controls -->
-    <div class="row-fluid">
+    <div class="row">
 
-        <div class="span6">
+        <div class="col-md-6">
 
             <!--
             <button id="basket-import-button"
@@ -33,7 +33,7 @@
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="Review documents"
                         >
-                    <i class="icon-indent-left icon-large"></i>
+                    <i class="glyphicon glyphicon-indent-left glyphicon-large"></i>
                     Review
                 </button>
                 <button id="basket-entry-count-button"
@@ -56,7 +56,7 @@
 
         </div>
 
-        <div class="span6">
+        <div class="col-md-6">
 
             <!-- basket actions -->
             <div class="btn-group pull-right do-not-print">
@@ -67,7 +67,7 @@
                         data-toggle="popover" data-trigger="hover" data-placement="top"
                         data-content="Submit to 3rd-party system"
                         >
-                    <i class="icon-random icon-large"></i>
+                    <i class="glyphicon glyphicon-random glyphicon-large"></i>
                     &nbsp;
                     Submit
                 </button>
@@ -76,14 +76,14 @@
                    data-toggle="popover" data-trigger="hover" data-placement="top"
                    data-content="Export project in multiple formats"
                         >
-                    <i class="icon-save icon-large"></i>
+                    <i class="glyphicon glyphicon-save glyphicon-large"></i>
                     &nbsp;
                     Export
                 </a>
 
                 <!--
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-save icon-large"></i>
+                    <i class="glyphicon glyphicon-save glyphicon-large"></i>
                     &nbsp;
                     Share
                 </button>
@@ -95,21 +95,21 @@
                     <li>
 
                         <div class="dropdown-section-header">
-                            <i class="icon-archive icon-large"></i>
+                            <i class="glyphicon glyphicon-archive glyphicon-large"></i>
                             &nbsp;
                             Database
                         </div>
 
                         <a class="permalink-review-liveview">
-                            <i class="icon-external-link"></i>
+                            <i class="glyphicon glyphicon-share"></i>
                             &nbsp;
                             Review project, permalink
                         </a>
                         <a class="permalink-review-liveview-ttl">
-                            <i class="icon-external-link"></i>
+                            <i class="glyphicon glyphicon-share"></i>
                             &nbsp;
                             Review project, with expiration time
-                            <i class="icon-time"></i>
+                            <i class="glyphicon glyphicon-time"></i>
                         </a>
 
                         <hr class="divider"/>

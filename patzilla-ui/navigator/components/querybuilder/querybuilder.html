@@ -14,7 +14,7 @@
                 <button class="btn active" data-toggle="tab"
                         href="#querybuilder-comfort-tab"
                         data-value="comfort">
-                    <i class="icon-list"></i> Comfort
+                    <i class="glyphicon glyphicon-list"></i> Comfort
                 </button>
                 <!--
                 <button class="btn" data-toggle="tab"
@@ -26,12 +26,12 @@
                 <button class="btn" data-toggle="tab"
                         href="#querybuilder-cql-tab"
                         data-value="cql">
-                    <i class="icon-edit"></i> Expert
+                    <i class="glyphicon glyphicon-edit"></i> Expert
                 </button>
                 <button class="btn" data-toggle="tab"
                         href="#querybuilder-numberlist-tab"
                         data-value="numberlist">
-                    <i class="icon-align-justify"></i> Numberlist
+                    <i class="glyphicon glyphicon-align-justify"></i> Numberlist
                 </button>
 
                 <!-- history -->
@@ -41,21 +41,21 @@
                             id="btn-query-history"
                             class="btn dropdown-toggle" data-toggle="dropdown"
                             >
-                        <i class="icon-time btn-popover"
+                        <i class="glyphicon glyphicon-time btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Query history"
                                 ></i>
                     </button>
 
                     <div id="cql-history-chooser-container" class="dropdown-menu">
-                        <div id="cql-history-chooser-select2" class="span12"></div>
+                        <div id="cql-history-chooser-select2" class="col-md-12"></div>
                     </div>
 
                 </div>
 
                 <div class="btn-group">
                     <button class="btn dropdown-toggle" id="querybuilder-comfort-actions" data-toggle="dropdown">
-                        <i class="icon-wrench btn-popover"
+                        <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
@@ -65,12 +65,12 @@
 
                             <!-- display values -->
                             <a id="btn-comfort-display-values">
-                                <i class="icon-list"></i> &nbsp; Display form values
+                                <i class="glyphicon glyphicon-list"></i> &nbsp; Display form values
                             </a>
 
                             <!-- clear -->
                             <a id="btn-comfort-clear">
-                                <i class="icon-trash"></i> &nbsp; Clear form values
+                                <i class="glyphicon glyphicon-trash"></i> &nbsp; Clear form values
                             </a>
 
                         </li>
@@ -79,7 +79,7 @@
 
                 <div class="btn-group">
                     <button class="btn dropdown-toggle hide" id="querybuilder-cql-actions" data-toggle="dropdown">
-                        <i class="icon-wrench btn-popover"
+                        <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
@@ -88,12 +88,12 @@
 
                             <!-- content transformation -->
                             <a id="btn-query-transform">
-                                <i class="icon-exchange"></i> &nbsp; Transform query
+                                <i class="glyphicon glyphicon-exchange"></i> &nbsp; Transform query
                             </a>
 
                             <!-- clear -->
                             <a id="btn-query-clear">
-                                <i class="icon-trash"></i> &nbsp; Clear query
+                                <i class="glyphicon glyphicon-trash"></i> &nbsp; Clear query
                             </a>
 
                         </li>
@@ -102,7 +102,7 @@
 
                 <div class="btn-group">
                     <button class="btn dropdown-toggle hide" id="querybuilder-numberlist-actions" data-toggle="dropdown">
-                        <i class="icon-wrench btn-popover"
+                        <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
@@ -110,13 +110,13 @@
                         <li>
                             <!-- normalize -->
                             <a id="btn-numberlist-normalize">
-                                <i class="icon-exchange"></i> &nbsp; Normalize numbers
+                                <i class="glyphicon glyphicon-exchange"></i> &nbsp; Normalize numbers
                             </a>
                         </li>
                         <li>
                             <!-- strip kindcode -->
                             <a id="btn-numberlist-strip-kindcodes">
-                                <i class="icon-eraser"></i> &nbsp; Strip kindcodes
+                                <i class="glyphicon glyphicon-eraser"></i> &nbsp; Strip kindcodes
                             </a>
                         </li>
                     </ul>
@@ -169,9 +169,9 @@
 
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
 
-        <div class="span12 tab-content">
+        <div class="col-md-12 tab-content">
 
             <!-- trimmed-down user interface -->
             <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
@@ -187,7 +187,7 @@
                                     <div class="input-prepend input-append">
                                         <span class="add-on add-on-label">Full text</span>
                                         <input name="fulltext" class="input-xlarge smaller" placeholder="rohr or tube or circular" type="text"></input>
-                                        <span class="add-on add-on-zoom"><i class="icon-resize-full"></i></span>
+                                        <span class="add-on add-on-zoom"><i class="glyphicon glyphicon-resize-full"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -289,14 +289,14 @@
                         </div>
 
                         <!-- Fulltext modifiers -->
-                        <div id="fulltext-zoomed" class="span12 nomargin field-zoomed hide">
-                            <div class="span11" id="fulltext-textarea-container">
+                        <div id="fulltext-zoomed" class="col-md-12 nomargin field-zoomed hide">
+                            <div class="col-md-11" id="fulltext-textarea-container">
                                 <div class="input-prepend" style="vertical-align: top">
                                     <span class="add-on">Full text</span>
                                 </div>
-                                <textarea class="span10 monospace" data-name="fulltext" rows="6" style="width: 100%"></textarea>
+                                <textarea class="col-md-10 monospace" data-name="fulltext" rows="6" style="width: 100%"></textarea>
                             </div>
-                            <div class="span1" id="fulltext-modifier-chooser">
+                            <div class="col-md-1" id="fulltext-modifier-chooser">
                                 <span class="pull-right">
                                     Search&nbsp;in:
                                 </span>
@@ -325,11 +325,11 @@
 
             <div class="tab-pane fade" id="querybuilder-cql-tab">
 
-                <div class="span12" id="querybuilder-expression-area">
+                <div class="col-md-12" id="querybuilder-expression-area">
 
                     <!-- Query expression -->
                     <div class="" id="expression-text">
-                        <textarea class="span12 monospace" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
+                        <textarea class="col-md-12 monospace" id="query" name="query" placeholder="Query expression" rows="6"></textarea>
                         <span id="cql-filter-container" class="hide">
                             Filter: <input name="cql-filter" id="cql-filter" style="width: 94%" placeholder="Query filter"/>
                             <br/><br/>
@@ -373,7 +373,7 @@
 
             <!-- numberlist -->
             <div class="tab-pane fade" id="querybuilder-numberlist-tab">
-                <textarea class="span12 monospace" id="numberlist" name="numberlist" placeholder="Numberlist" rows="7"></textarea>
+                <textarea class="col-md-12 monospace" id="numberlist" name="numberlist" placeholder="Numberlist" rows="7"></textarea>
             </div>
 
         </div>
@@ -381,7 +381,7 @@
 
         <!-- quick builder -->
         <!--
-        <div class="span1">
+        <div class="col-md-1">
 
             <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
                 <button class="btn-cql-boolean btn btn-mini active" type="button" data-value="OR">OR</button>
@@ -397,10 +397,10 @@
 
     </div>
 
-    <div class="row-fluid" id="cql-field-chooser-row">
+    <div class="row" id="cql-field-chooser-row">
 
         <!-- cql field symbol chooser -->
-        <div class="span12">
+        <div class="col-md-12">
 
             <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
 
@@ -410,7 +410,7 @@
                  data-content="Run analytic queries"
                     >
                 <button class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-cog"></i>
+                    <i class="glyphicon glyphicon-cog"></i>
                     &nbsp;
                     Analytics (beta)
                 </button>
@@ -421,22 +421,22 @@
 
                     <li>
                         <a id="analytics-family-overview-button">
-                            <i class="icon-group"></i>
+                            <i class="glyphicon glyphicon-group"></i>
                             &nbsp;
                             Family members with register data and basic text statistics
                         </a>
                         <a class="analytics-daterange-button" data-kind="newest">
-                            <i class="icon-time"></i>
+                            <i class="glyphicon glyphicon-time"></i>
                             &nbsp;
                             Most recent documents
                         </a>
                         <a class="analytics-daterange-button" data-kind="oldest">
-                            <i class="icon-time"></i>
+                            <i class="glyphicon glyphicon-time"></i>
                             &nbsp;
                             Least recent documents
                         </a>
                         <a class="analytics-applicants-distinct-button">
-                            <i class="icon-user"></i>
+                            <i class="glyphicon glyphicon-user"></i>
                             &nbsp;
                             Unique applicants
                         </a>
@@ -451,9 +451,9 @@
 
     </div>
 
-    <div class="row-fluid">
+    <div class="row">
 
-        <div class="span12 light-panel query-actions">
+        <div class="col-md-12 light-panel query-actions">
 
             <div class="">
 
@@ -462,8 +462,8 @@
 
                     <!-- Activity indicator -->
                     <button type="submit" role="button" class="btn btn-info btn-query-perform">
-                        <i class="idler icon-search"></i>
-                        <i class="spinner icon-refresh icon-spin" style="display: none"></i>
+                        <i class="idler glyphicon glyphicon-search"></i>
+                        <i class="spinner glyphicon glyphicon-refresh glyphicon-spin" style="display: none"></i>
                     </button>
 
                     <!-- Start search action -->
@@ -477,7 +477,7 @@
                     <!-- More utilities -->
                     <button role="button" data-toggle="dropdown" class="btn btn-info dropdown-toggle"
                             style="padding-left: 0.7rem; padding-right: 0.7rem">
-                        <i class="icon-wrench"></i>
+                        <i class="glyphicon glyphicon-wrench"></i>
                     </button>
                     <ul class="dropdown-menu">
 
@@ -487,7 +487,7 @@
                             <a id="btn-query-permalink" href="#" target="_blank"
                                 class="btn-popover" data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                 data-content="Share link to this search with others.">
-                                <i class="icon-external-link"></i> &nbsp; Share this search
+                                <i class="glyphicon glyphicon-share"></i> &nbsp; Share this search
                             </a>
 
                             <!-- Numberlist crawler subsystem -->
@@ -495,13 +495,13 @@
                                 <a id="fetch-result-numbers-action" class="btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results. This is the raw response of the datasource.">
-                                    <i class="icon-download"></i> &nbsp; List of publication numbers
+                                    <i class="glyphicon glyphicon-download"></i> &nbsp; List of publication numbers
                                 </a>
 
                                 <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries.">
-                                    <i class="icon-download"></i> &nbsp; List of publication numbers w/o kindcodes
+                                    <i class="glyphicon glyphicon-download"></i> &nbsp; List of publication numbers w/o kindcodes
                                 </a>
                             <% } %>
 
@@ -516,7 +516,7 @@
 
                 <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
                 <button id="btn-ps-export" role="button" class="btn btn-default btn-larger">
-                    <i class="icon-save icon-large"></i> Transfer to XPAT
+                    <i class="glyphicon glyphicon-save glyphicon-large"></i> Transfer to XPAT
                 </button>
                 <% } %>
 
@@ -534,7 +534,7 @@
                         data-toggle="buttons-checkbox"
                         data-trigger="hover" data-placement="bottom" data-content="Display entire publication cycle for each document"
                         >
-                    <i class="icon-repeat"></i>
+                    <i class="glyphicon glyphicon-repeat"></i>
                     Full cycle
                 </button>
 
@@ -549,7 +549,7 @@
                             data-active-text="First pub."
                             data-trigger="hover" data-placement="bottom" data-content="Select first publication as representative document"
                             >
-                        <i class="icon-sort-by-order"></i>
+                        <i class="glyphicon glyphicon-sort-by-order"></i>
                     </button>
 
                     <!-- toggle mode: recent-pub -->
@@ -561,7 +561,7 @@
                             data-active-text="Recent pub."
                             data-trigger="hover" data-placement="bottom" data-content="Select most recent publication as representative document"
                             >
-                        <i class="icon-sort-by-order-alt"></i>
+                        <i class="glyphicon glyphicon-sort-by-order-alt"></i>
                     </button>
 
                     <!-- label -->
@@ -588,7 +588,7 @@
                         data-toggle="buttons-checkbox"
                         data-trigger="hover" data-placement="bottom" data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
                         >
-                    <i class="icon-exchange"></i>
+                    <i class="glyphicon glyphicon-exchange"></i>
                     Family member by priority
                 </button>
 
@@ -602,7 +602,7 @@
                             data-toggle="buttons-checkbox"
                             data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by removing family members"
                             >
-                        <i class="icon-remove"></i>
+                        <i class="glyphicon glyphicon-remove"></i>
                         Remove family members
                     </button>
 
@@ -614,7 +614,7 @@
                             data-toggle="buttons-checkbox"
                             data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by replacing family members"
                             >
-                        <i class="icon-exchange"></i>
+                        <i class="glyphicon glyphicon-exchange"></i>
                         Replace family members
                     </button>
 
@@ -627,7 +627,7 @@
                         data-toggle="buttons-checkbox"
                         data-trigger="hover" data-placement="bottom" data-content="Expand each hit to all family members"
                         >
-                    <i class="icon-group"></i>
+                    <i class="glyphicon glyphicon-group"></i>
                     Expand family
                 </button>
 
@@ -641,7 +641,7 @@
                             class="btn btn-popover"
                             data-trigger="hover" data-placement="bottom" data-content="Define sort order"
                             >
-                        <i class="icon-sort"></i>
+                        <i class="glyphicon glyphicon-sort"></i>
                     </button>
                 </div>
 

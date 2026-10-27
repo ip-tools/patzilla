@@ -133,9 +133,9 @@ PaginationView = Backbone.Marionette.ItemView.extend({
             _(pagesize_choices).map(function(entry) {
                 var icon = '';
                 if (entry == page_size) {
-                    icon = '<i class="icon-check"></i>';
+                    icon = '<i class="glyphicon glyphicon-check"></i>';
                 } else {
-                    icon = '<i class="icon-check-empty"></i>';
+                    icon = '<i class="glyphicon glyphicon-check-empty"></i>';
                 }
                 var entry_html = _.template('<li><a href="" data-value="<%= entry %>"><%= icon %> <%= entry %></a></li>')({entry: entry, icon: icon});
                 $(self).append(entry_html);

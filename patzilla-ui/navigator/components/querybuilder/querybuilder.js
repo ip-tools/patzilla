@@ -415,7 +415,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-comfort-display-values').off('click');
         $('#btn-comfort-display-values').on('click', function() {
 
-            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn"><i class="icon-copy"></i> &nbsp; Copy to clipboard</a>';
+            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
 
             var entries = _this.get_comfort_form_entries();
             var data = entries.join('\n') + '\n';
@@ -492,10 +492,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             e.stopPropagation();
 
             // Sanity check: Don't share empty queries
-            if (_this.check_query_empty({'icon': 'icon-external-link'})) { return; }
+            if (_this.check_query_empty({'icon': 'glyphicon-share'})) { return; }
 
             // Sanity check: Don't share dirty queries
-            if (_this.check_data_is_dirty({'icon': 'icon-external-link'})) { return; }
+            if (_this.check_data_is_dirty({'icon': 'glyphicon-share'})) { return; }
 
             // Create viewstate context for liveview mode
             var viewstate = navigatorApp.permalink.query_parameters_viewstate();
@@ -557,7 +557,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-numberlist-normalize').off('click');
         $('#btn-numberlist-normalize').on('click', function(e) {
             e.preventDefault();
-            if (_this.check_numberlist_empty({'icon': 'icon-exchange'})) { return; }
+            if (_this.check_numberlist_empty({'icon': 'glyphicon-exchange'})) { return; }
 
             normalize_numberlist($('#numberlist').val()).then(function(response) {
                 var numbers_valid = response['numbers-normalized'] && response['numbers-normalized']['valid'];
@@ -570,7 +570,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 if (_.isEmpty(numbers_invalid)) {
                     navigatorApp.ui.notify(
                         'Patent numbers normalized successfully',
-                        {type: 'success', icon: 'icon-exchange', right: true});
+                        {type: 'success', icon: 'glyphicon-exchange', right: true});
                 } else {
                     var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
                     navigatorApp.ui.user_alert(message, 'warning');
@@ -583,7 +583,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         $('#btn-numberlist-strip-kindcodes').off('click');
         $('#btn-numberlist-strip-kindcodes').on('click', function(e) {
             e.preventDefault();
-            if (_this.check_numberlist_empty({'icon': 'icon-eraser'})) { return; }
+            if (_this.check_numberlist_empty({'icon': 'glyphicon-eraser'})) { return; }
 
             var numberlist = $('#numberlist').val();
             var numbers = numberlist.split('\n');
@@ -592,7 +592,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             navigatorApp.ui.notify(
                 'Stripped patent kind codes',
-                {type: 'success', icon: 'icon-eraser', right: true});
+                {type: 'success', icon: 'glyphicon-eraser', right: true});
 
         });
 
@@ -795,7 +795,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // --------------------
 
         element_field_chooser.select2({
-            placeholder: '<i class="icon-sort"></i> Sorting',
+            placeholder: '<i class="glyphicon glyphicon-sort"></i> Sorting',
             data: fields_knowledge.sorting,
             dropdownCssClass: "bigdrop",
             escapeMarkup: function(text) { return text; },
@@ -834,11 +834,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var value = element_order_chooser.data('value');
 
             // compute and set proper icon class
-            var icon_class = 'icon-sort';
+            var icon_class = 'glyphicon-sort';
             if (value == 'asc') {
-                icon_class = 'icon-sort-down';
+                icon_class = 'glyphicon-sort-down';
             } else if (value == 'desc') {
-                icon_class = 'icon-sort-up';
+                icon_class = 'glyphicon-sort-up';
             }
             element_order_chooser.find('i').attr('class', icon_class);
         }
@@ -879,7 +879,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (!navigatorApp.project) {
             var message = 'Project subsystem not started. Query history not available.';
             console.warn(message);
-            navigatorApp.ui.notify(message, {type: 'warning', icon: 'icon-time'});
+            navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-time'});
             deferred.reject();
             return deferred.promise();
         }
@@ -1080,8 +1080,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var row2_right_side = tags_html;
         var entry_html =
             '<div class="container-fluid history-container">' +
-            '<div class="row-fluid history-row-1">' + row1_left_side.join('') + this.html_history_labels(row1_right_side.join('')) + '</div>' +
-            '<div class="row-fluid history-row-2">' + row2_left_side.join('') + this.html_history_labels(row2_right_side.join('')) + '</div>' +
+            '<div class="row history-row-1">' + row1_left_side.join('') + this.html_history_labels(row1_right_side.join('')) + '</div>' +
+            '<div class="row history-row-2">' + row2_left_side.join('') + this.html_history_labels(row2_right_side.join('')) + '</div>' +
             '</div>';
         var entry = {
             id: JSON.stringify(query.attributes),
@@ -1093,11 +1093,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     },
 
     html_history_expression: function(content) {
-        return '<div class="span6 history-entry-expression">' + content + '</div>';
+        return '<div class="col-md-6 history-entry-expression">' + content + '</div>';
     },
 
     html_history_labels: function(content) {
-        return '<div class="span6 history-entry-labels"><small>' + content + '</small></div>';
+        return '<div class="col-md-6 history-entry-labels"><small>' + content + '</small></div>';
     },
 
     html_history_tag: function(content, options) {
@@ -1357,12 +1357,12 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Conditionally display fulltext-modifier-chooser
         if (datasource_info.querybuilder.enable_fulltext_modifiers) {
             $('#fulltext-modifier-chooser').show();
-            $('#fulltext-textarea-container').removeClass('span12').addClass('span11');
-            $('#fulltext-textarea-container').find('textarea').removeClass('span11').addClass('span10');
+            $('#fulltext-textarea-container').removeClass('col-md-12').addClass('col-md-11');
+            $('#fulltext-textarea-container').find('textarea').removeClass('col-md-11').addClass('col-md-10');
         } else {
             $('#fulltext-modifier-chooser').hide();
-            $('#fulltext-textarea-container').removeClass('span11').addClass('span12');
-            $('#fulltext-textarea-container').find('textarea').removeClass('span10').addClass('span11');
+            $('#fulltext-textarea-container').removeClass('col-md-11').addClass('col-md-12');
+            $('#fulltext-textarea-container').find('textarea').removeClass('col-md-10').addClass('col-md-11');
         }
 
     },

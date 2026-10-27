@@ -138,7 +138,7 @@ body {
 
 
 /* Export dialog */
-#export-dialog .modal-body .row-fluid {
+#export-dialog .modal-body .row {
     margin-bottom: 2em;
 }
 
@@ -212,7 +212,7 @@ ul.breathe li {
 /*
  * Query builder
  */
-#querybuilder-area .row-fluid {
+#querybuilder-area .row {
     margin-bottom: 1rem;
 }
 
@@ -326,7 +326,7 @@ ul.breathe li {
 
 /* Wrap querybuilder form fields more early */
 @media (max-width: 1280px) {
-    [class*="span"], .uneditable-input[class*="span"], .row-fluid [class*="span"] {
+    [class*="span"], .uneditable-input[class*="span"], .row [class*="span"] {
         display: block;
         float: none;
         width: 100%;
