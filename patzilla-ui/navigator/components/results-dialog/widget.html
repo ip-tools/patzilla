@@ -7,9 +7,14 @@
 // ---------------------------------------------
 %>
 
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="result-label">Results</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title" id="result-label">Results</h3>
 </div>
 <div class="modal-body">
     <div id="result-info">
@@ -19,11 +24,14 @@
 
 </div>
 <div class="modal-footer">
-    <a id="result-to-basket-button" role="button" class="btn pull-left">
+    <a id="result-to-basket-button" role="button" class="btn btn-default pull-left">
         <i class="glyphicon glyphicon-plus" id="result-to-basket-indicator"></i> &nbsp; Add to document collection
     </a>
-    <a id="result-to-clipboard-button" role="button" class="btn pull-left">
+    <a id="result-to-clipboard-button" role="button" class="btn btn-default pull-left">
         <i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard
     </a>
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+</div>
+
+</div>
 </div>

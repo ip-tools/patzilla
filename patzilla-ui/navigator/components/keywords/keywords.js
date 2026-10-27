@@ -102,6 +102,7 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
         $('#keyword-editor-save-button').off('click');
         $('#keyword-editor-save-button').on('click', function() {
             $.when(_this.save_models()).then(function() {
+                $("#keyword-editor").modal("removeBackdrop");
                 navigatorApp.keywords.keyword_modal.close();
                 navigatorApp.keywords.unhighlight();
                 navigatorApp.keywords.highlight();
@@ -220,6 +221,7 @@ KeywordsController = Marionette.Controller.extend({
             if (_this.module_available) {
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);
+                $("#keyword-editor").modal("show");
             } else {
                 navigatorApp.ui.notify_module_locked(_this.module_name);
             }

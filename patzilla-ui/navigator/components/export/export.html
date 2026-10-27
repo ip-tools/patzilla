@@ -1,8 +1,13 @@
-<div id="export-dialog" class="modal modal-info modal-wide modal-high modal-not-rounded hide fade" tabindex="-1" role="dialog" aria-labelledby="export-dialog-label" aria-hidden="true">
+<div id="export-dialog" class="modal modal-info modal-wide modal-high modal-not-rounded fade" tabindex="-1" role="dialog" aria-labelledby="export-dialog-label" aria-hidden="true">
+
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
 
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="export-dialog-label">Export »<span id="export_title"></span>«</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title" id="export-dialog-label">Export »<span id="export_title"></span>«</h3>
     </div>
 
     <div class="modal-body">
@@ -29,7 +34,7 @@
                     <div class="btn-group" data-toggle="buttons-radio" data-toggle-release="false" data-name="format" data-label-target="#output-format">
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-format"
+                                class="btn btn-default btn-large btn-symbol export-format"
                                 data-name="format"
                                 data-value="display"
                                 data-label="Display"
@@ -42,7 +47,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-format"
+                                class="btn btn-default btn-large btn-symbol export-format"
                                 data-name="format"
                                 data-value="csv"
                                 data-label="CSV"
@@ -54,7 +59,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-format"
+                                class="btn btn-default btn-large btn-symbol export-format"
                                 data-name="format"
                                 data-value="xlsx"
                                 data-label="XLSX"
@@ -66,7 +71,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-format"
+                                class="btn btn-default btn-large btn-symbol export-format"
                                 data-name="format"
                                 data-value="pdf"
                                 data-label="PDF"
@@ -78,7 +83,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-format"
+                                class="btn btn-default btn-large btn-symbol export-format"
                                 data-name="format"
                                 data-value="zip"
                                 data-label="ZIP"
@@ -91,7 +96,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-format"
+                                class="btn btn-default btn-large btn-symbol export-format"
                                 data-name="format"
                                 data-value="link_embed"
                                 data-label="URL"
@@ -143,7 +148,7 @@
                         </div>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="report"
                                 data-value="xlsx"
                                 data-label="Workbook"
@@ -154,7 +159,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="report"
                                 data-value="pdf"
                                 data-label="PDF Report"
@@ -165,7 +170,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="report"
                                 data-value="csv"
                                 data-label="CSV"
@@ -176,7 +181,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="report"
                                 data-value="json"
                                 data-label="JSON"
@@ -207,7 +212,7 @@
                         </div>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="media"
                                 data-value="pdf"
                                 data-label="Full PDF"
@@ -218,7 +223,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="media"
                                 data-value="biblio"
                                 data-label="Biblio"
@@ -229,7 +234,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="media"
                                 data-value="description"
                                 data-label="Description"
@@ -240,7 +245,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="media"
                                 data-value="claims"
                                 data-label="Claims"
@@ -251,7 +256,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="media"
                                 data-value="register"
                                 data-label="Legal"
@@ -262,7 +267,7 @@
                         </button>
 
                         <button role="button"
-                                class="btn btn-large btn-symbol export-content"
+                                class="btn btn-default btn-large btn-symbol export-content"
                                 data-name="media"
                                 data-value="family"
                                 data-label="Family"
@@ -310,11 +315,11 @@
 
                         <div class="input-append">
                             <input id="share-link-numberlist" class="input-xlarge" type="text" />
-                            <button id="share-link-numberlist-copy" type="button" class="btn has-tooltip"
+                            <button id="share-link-numberlist-copy" type="button" class="btn btn-default has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                 <i class="fa-icon icon-copy icon-1x"></i>
                             </button>
-                            <button id="share-link-numberlist-open" type="button" class="btn has-tooltip"
+                            <button id="share-link-numberlist-open" type="button" class="btn btn-default has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
                                 <i class="fa-icon icon-external-link icon-1x"></i>
                             </button>
@@ -333,11 +338,11 @@
 
                         <div class="input-append">
                             <input id="share-link-external" class="input-xlarge" type="text" />
-                            <button id="share-link-external-copy" type="button" class="btn has-tooltip"
+                            <button id="share-link-external-copy" type="button" class="btn btn-default has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                 <i class="fa-icon icon-copy icon-1x"></i>
                             </button>
-                            <button id="share-link-external-open" type="button" class="btn has-tooltip"
+                            <button id="share-link-external-open" type="button" class="btn btn-default has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
                                 <i class="fa-icon icon-external-link icon-1x"></i>
                             </button>
@@ -383,7 +388,7 @@
                     <br/>
 
                     <textarea id="result-content-rated" rows="11" cols="80" style="width: 90%"></textarea>
-                    <a id="result-content-rated-copy" role="button" class="btn pull-left">
+                    <a id="result-content-rated-copy" role="button" class="btn btn-default pull-left">
                         <i class="icon-copy"></i> &nbsp; Copy to clipboard
                     </a>
 
@@ -401,7 +406,7 @@
                     <br/>
 
                     <textarea id="result-content-seen" rows="11" cols="80" style="width: 90%"></textarea>
-                    <a id="result-content-seen-copy" role="button" class="btn pull-left">
+                    <a id="result-content-seen-copy" role="button" class="btn btn-default pull-left">
                         <i class="icon-copy"></i> &nbsp; Copy to clipboard
                     </a>
 
@@ -436,11 +441,14 @@
                         &nbsp;
                         Start export
                     </button>
-                    <button class="btn btn-large" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <button class="btn btn-default btn-large" data-dismiss="modal" aria-hidden="true">Close</button>
                 </div>
             </div>
         </div>
 
+    </div>
+
+    </div>
     </div>
 
 </div>

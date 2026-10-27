@@ -3,11 +3,16 @@
 // (c) 2016 Andreas Motl, Elmyra UG
 %>
 
-<div id="issue-reporter-dialog" class="modal hide fade modal-not-rounded modal-warning" tabindex="-1" role="dialog" aria-labelledby="issue-reporter-label" aria-hidden="true">
+<div id="issue-reporter-dialog" class="modal modal-warning modal-not-rounded fade" tabindex="-1" role="dialog" aria-labelledby="issue-reporter-label" aria-hidden="true">
+
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
 
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="issue-reporter-label">Feedback</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title" id="issue-reporter-label">Feedback</h3>
     </div>
 
     <div class="modal-body">
@@ -57,4 +62,6 @@
         <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>
 
+  </div>
+  </div>
 </div>

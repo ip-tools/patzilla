@@ -3,9 +3,14 @@
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 %>
 
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-    <h3 id="keyword-editor-label">Keyword editor</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title" id="keyword-editor-label">Keyword editor</h3>
 </div>
 <div class="modal-body">
     Edit keywords for individual highlighting
@@ -22,6 +27,9 @@
     </table>
 </div>
 <div class="modal-footer">
-    <button class="btn" id="keyword-editor-save-button" type="button">Save</button>
-    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-default" id="keyword-editor-save-button" type="button">Save</button>
+    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+</div>
+
+</div>
 </div>
