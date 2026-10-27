@@ -98,7 +98,7 @@ requires = [
     'arrow<2',
     'validate_email<2',
     'numpy>=1.16.6,<3',
-    'pandas<3.1',
+    'pandas<3',
     'pathlib2',
 
     # Data formatting
@@ -108,6 +108,7 @@ requires = [
 
     # Data conversion
     'Pillow>=6,<14',
+    # 'unoconv<1',
 
     # Does not work from within virtualenv?
     # 'unoconv==0.8.2',          # 0.9.0

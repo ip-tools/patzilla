@@ -105,6 +105,7 @@ class Dossier:
             df.rename(columns={'number': 'document'}, inplace=True)
 
             # Aggregate all DateFrame items
+            # FIXME: `lst` is never used?
             lst.append(df)
         self.df_documents = pandas.DataFrame(df)
 
@@ -193,8 +194,12 @@ class Dossier:
         # Remove entries with empty/undefined document numbers
         self.df_documents.dropna(subset=['document'], inplace=True)
 
-        # Reject entries with seen == True
-        filtered = self.df_documents[(self.df_documents.seen == False)]
+        # Reject entries with `seen == True`.
+        #filtered = self.df_documents[(self.df_documents.seen == False)]
+
+        # Use all documents 1:1.
+        filtered = self.df_documents
+
         documents = list(filtered.document)
 
         buffer = BytesIO()
@@ -766,7 +771,7 @@ def write_url_deduce_title(self, row, col, url, cell_format=None, string=None, t
     return self.write_url_dist(row, col, url, cell_format=cell_format, string=string, tip=tip)
 
 def workbook_add_sheet_hook(self, name=None):
-    worksheet = self._add_sheet(name, is_chartsheet=False)
+    worksheet = self._add_sheet(name)
     # Patch "write_url" function
     worksheet.write_url = lambda *args, **kwargs: write_url_deduce_title(worksheet, *args, **kwargs)
     return worksheet
