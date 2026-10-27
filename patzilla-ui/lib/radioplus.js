@@ -47,15 +47,17 @@ RadioPlus = Backbone.Model.extend({
 
             // Simulate exclusive selection (radio behavior)
             } else {
-                $el.parent().find('button').addClass('btn-info').not(element).removeClass('active').removeClass('btn-info');
+                $el.parent().find('button').attr("aria-pressed", true).addClass('btn-info').not(element).removeClass('active').removeClass('btn-info').attr("aria-pressed", false);
             }
 
         }
 
     },
 
-    toggle_element: function($el, state) {
-        $el.toggleClass('active', state);
+    toggle_element: function($el, state, options) {
+        options = options || {};
+        if (options.with_active)
+            $el.toggleClass('active', state);
         $el.toggleClass('btn-info', state);
         this.trigger('toggle');
     },
@@ -85,7 +87,7 @@ RadioPlus = Backbone.Model.extend({
         var modifiers = {};
         _.each(elements, function(element) {
             var name = $(element).data('name');
-            var state = $(element).hasClass('active');
+            var state = $(element).hasClass("active") || $(element).attr('aria-pressed') === "true";
 
             // handle modifier-based storage
             var modifier = $(element).data('modifier') || $(element).data('value');
@@ -129,19 +131,21 @@ RadioPlus = Backbone.Model.extend({
 
                 if (element_state) {
                     // v1 (bs): With class "fade out hide"
-                    //linked_element.removeClass('hide').addClass('in');
+                    linked_element.removeClass('hide').addClass('in');
 
                     // v2: jQuery-based
+                    /*
                     linked_element.fadeIn('fast', function() {
                         $(this).trigger('shown');
                     });
+                    */
 
                 } else {
                     // v1 (bs): With class "fade out hide"
-                    //linked_element.removeClass('in').addClass('hide');
+                    linked_element.removeClass('in').addClass('hide');
 
                     // v2: jQuery-based
-                    linked_element.hide();
+                    //linked_element.hide();
                     //linked_element.fadeOut('fast');
 
                 }
@@ -150,9 +154,7 @@ RadioPlus = Backbone.Model.extend({
 
     },
 
-
-
-    update_selection: function($el) {
+    update_selection: function() {
 
         var _this = this;
         var state = this.get_state();

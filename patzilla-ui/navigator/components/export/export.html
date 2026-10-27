@@ -77,7 +77,7 @@
                                 data-label="PDF"
                                 data-action-text="Download Workbook in PDF format"
                                 >
-                            <img src="/static/img/icons/pdf.svg" class="pdf-svg" style="width: 32.5px; height: 36px"/>
+                            <img src="/static/img/icons/pdf.svg" class="pdf-svg" style="width: 29px; height: 29px"/>
                             <br/>
                             PDF Report
                         </button>
@@ -191,8 +191,11 @@
                             JSON
                         </button>
 
-                        <button role="button" class="btn btn-large" data-toggle="select-all" data-target=".export-content">
-                            <i class="fa-icon icon-all icon-1x"></i>
+                        <button role="button"
+                                class="btn btn-default btn-large btn-symbol"
+                                data-toggle="select-all"
+                                data-target=".export-content">
+                            <i class="fa-icon icon-folder-open-alt icon-1x"></i>
                             All
                         </button>
 
@@ -277,8 +280,11 @@
                             Family
                         </button>
 
-                        <button role="button" class="btn btn-large" data-toggle="select-all" data-target=".export-content">
-                            <i class="fa-icon icon-all icon-1x"></i>
+                        <button role="button"
+                                class="btn btn-default btn-large btn-symbol"
+                                data-toggle="select-all"
+                                data-target=".export-content">
+                            <i class="fa-icon icon-folder-open-alt icon-1x"></i>
                             All
                         </button>
 
@@ -432,6 +438,7 @@
             <div class="row">
                 <div class="col-md-7 text-left">
                     <div id="export-dialog-action-text" class="lead footer"></div>
+                    <div id="export-dialog-status-text" class="footer"></div>
                 </div>
                 <div class="col-md-5">
                     <i id="export-dialog-spinner" class="spinner glyphicon glyphicon-refresh glyphicon-spin glyphicon-large" style="display: none"></i>

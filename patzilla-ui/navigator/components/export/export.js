@@ -63,9 +63,11 @@ ExportPlugin = Backbone.Model.extend({
         var form_elements = this.radios.get('elements');
 
         // Update tooltip text in dialog footer when hovering over buttons
+        /*
         form_elements.off('mouseover').on('mouseover', function(e) {
-            _this.update_hover_text($(this));
+            _this.propagate_action_text($(this));
         });
+        */
 
 
         // Handler for button selection
@@ -75,15 +77,55 @@ ExportPlugin = Backbone.Model.extend({
             _this.radios.button_behaviour(this, event);
 
             // Update selection text
-            _this.radios.update_selection(this);
+            _this.radios.update_selection();
 
             // Toggle view-state for drill-down components
             _this.radios.handle_drilldown();
 
+            // Display tooltip text in footer
+            _this.propagate_action_text($(this));
+            _this.update_status("");
+
+            // Set up detail widgets
+            //_this.setup_screens();
+
         });
 
+    },
 
-        // Select "All" buttons
+    setup_screens: function(options) {
+
+        var _this = this;
+        var dialog = this.dialog;
+
+        // Why is this happening to me?
+        // TODO: Refactor to server-based storage and upgrade to latest Backbone, Marionette and auxiliaries.
+
+        // When taking the basket model from the project - where there should be a valid
+        // reference, actually - it will be "null" after creating a new project. BÄM.
+        //var basket = navigatorApp.project.get('basket');
+
+        // At least, there seems to be a valid reference here, so let's use that one.
+        var basket = navigatorApp.basketModel;
+
+        // ------------------------------------------
+        // "Zip Archive" screen
+        // ------------------------------------------
+
+        // Behaviour for selection buttons
+        dialog.find('[data-name="report"],[data-name="media"]').off('click').on('click', function(event) {
+            // Stop event from triggering other machinery
+            event.stopPropagation();
+            event.preventDefault();
+            // Manually toggle state
+            $(this).toggleClass('active');
+            var active = $(this).hasClass('active');
+            _this.radios.toggle_element($(this), active);
+            // Update selection text
+            _this.radios.update_selection();
+        });
+
+        // Behaviour for "All" buttons
         dialog.find('[data-toggle="select-all"]').off('click').on('click', function(event) {
 
             // Stop event from triggering other machinery
@@ -92,17 +134,53 @@ ExportPlugin = Backbone.Model.extend({
 
             // Manually toggle state
             $(this).toggleClass('active');
+            //$(this).trigger("press");
 
             // Toggle linked elements
             var active = $(this).hasClass('active');
             var target_selector = $(this).data('target');
-            _this.radios.toggle_element($(this).parent().find(target_selector), active);
+            _this.radios.toggle_element($(this).parent().find(target_selector), active, {with_active: true});
 
             // Update selection text
-            _this.radios.update_selection(this);
+            _this.radios.update_selection();
         });
 
+        // ------------------------------------------
+        // "Display" screen
+        // ------------------------------------------
 
+        var numbers_rated = basket.get_numbers({seen: false});
+        var numbers_seen = basket.get_numbers({seen: true});
+        dialog.find('#result-count-rated').html('#' + numbers_rated.length);
+        dialog.find('#result-count-seen').html('#' + numbers_seen.length);
+        dialog.find('#result-content-rated').val(numbers_rated.join('\n'));
+        dialog.find('#result-content-seen').val(numbers_seen.join('\n'));
+
+        // "Copy to clipboard" buttons
+        var notification_wrapper = dialog[0];
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function () {
+            return dialog.find('#result-content-rated').val();
+        }, {element: dialog.find('#result-content-rated-copy'), wrapper: notification_wrapper});
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function () {
+            return dialog.find('#result-content-seen').val();
+        }, {element: dialog.find('#result-content-seen-copy'), wrapper: notification_wrapper});
+
+        // ------------------------------------------
+        // "Link" screen
+        // ------------------------------------------
+
+        // Setup content: System url
+        var url = basket.get_numberlist_url();
+        if (url) {
+            dialog.find('#share-link-numberlist').val(url);
+        } else {
+            console.error('Project collection is empty or link generation failed.');
+        }
+
+        // Update expiration time
+        _this.update_expiration_time();
+
+        // TTL widget
         // Setup content: Public/anonymous url
         //var ttl_element = dialog.find('#expiration-time-slider');
         _this.ttl_element.off('change').on('change', function(slideEvt) {
@@ -115,43 +193,21 @@ ExportPlugin = Backbone.Model.extend({
             _this.update_expiration_time();
         });
 
+        // "Copy to clipboard" buttons
+        var notification_wrapper = dialog[0];
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
+            return dialog.find('#share-link-numberlist').val();
+        }, {element: dialog.find('#share-link-numberlist-copy'), wrapper: notification_wrapper});
+        navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
+            return dialog.find('#share-link-external').val();
+        }, {element: dialog.find('#share-link-external-copy'), wrapper: notification_wrapper});
 
-        // After "Display" page was displayed
-        $('#display-content').off('shown').on('shown', function() {
-            // setup "copy/paste" buttons
-            var notification_wrapper = dialog[0];
-            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
-                return dialog.find('#result-content-rated').val();
-            }, {element: dialog.find('#result-content-rated-copy'), wrapper: notification_wrapper});
-            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', function() {
-                return dialog.find('#result-content-seen').val();
-            }, {element: dialog.find('#result-content-seen-copy'), wrapper: notification_wrapper});
-        });
-
-        // After "Link" page was displayed
-        $('#link-embed-content').off('shown').on('shown', function() {
-
-            // update expiration time
-            _this.update_expiration_time();
-
-            // setup "copy/paste" buttons
-            var notification_wrapper = dialog[0];
-            navigatorApp.ui.copy_to_clipboard('text/plain', function() {
-                return dialog.find('#share-link-numberlist').val();
-            }, {element: dialog.find('#share-link-numberlist-copy'), wrapper: notification_wrapper});
-            navigatorApp.ui.copy_to_clipboard('text/plain', function() {
-                return dialog.find('#share-link-external').val();
-            }, {element: dialog.find('#share-link-external-copy'), wrapper: notification_wrapper});
-
-        });
-
-
-        // Setup input fields: Autoselect on focus
+        // Input fields: Autoselect on focus
         dialog.find('#share-link-numberlist,#share-link-external').off('focus').on('focus', function(event) {
             $(this).trigger('select');
         });
 
-        // Setup "open link" buttons
+        // "Open link" buttons
         dialog.find('#share-link-numberlist-open').off('click').on('click', function() {
             var url = dialog.find('#share-link-numberlist').val();
             if (url) {
@@ -165,59 +221,9 @@ ExportPlugin = Backbone.Model.extend({
             }
         });
 
-
-    },
-
-    open_dialog: function(options) {
-
-        var _this = this;
-        var dialog = this.dialog;
-
-
-        // Why is this happening to me?
-        // TODO: Refactor to server-based storage and upgrade to latest Backbone, Marionette and auxiliaries.
-
-        // When taking the basket model from the project - where there should be a valid
-        // reference, actually - it will be "null" after creating a new project. BÄM.
-        //var basket = navigatorApp.project.get('basket');
-
-        // At least, there seems to be a valid reference here, so let's use that one.
-        var basket = navigatorApp.basketModel;
-
-
         // ------------------------------------------
-        // Setup dialog metadata
+        // Submit button
         // ------------------------------------------
-        // Add project name to dialog header
-        dialog.find('#export_title').html(navigatorApp.project.get('name'));
-
-
-        // ------------------------------------------
-        // Setup "link-embed" screen
-        // ------------------------------------------
-        // Setup content: System url
-        var url = basket.get_numberlist_url();
-        if (url) {
-            dialog.find('#share-link-numberlist').val(url);
-        } else {
-            console.error('Project collection is empty or link generation failed.');
-        }
-
-        // ------------------------------------------
-        // Setup "display" screen
-        // ------------------------------------------
-        var numbers_rated = basket.get_numbers({seen: false});
-        var numbers_seen = basket.get_numbers({seen: true});
-        dialog.find('#result-count-rated').html('#' + numbers_rated.length);
-        dialog.find('#result-count-seen').html('#' + numbers_seen.length);
-        dialog.find('#result-content-rated').val(numbers_rated.join('\n'));
-        dialog.find('#result-content-seen').val(numbers_seen.join('\n'));
-
-
-        // ------------------------------------------
-        // Setup submit button
-        // ------------------------------------------
-        dialog.find('#export-dialog-send-button').show();
         dialog.find('#export-dialog-send-button').off('click');
         dialog.find('#export-dialog-send-button').on('click', function(event) {
 
@@ -235,7 +241,25 @@ ExportPlugin = Backbone.Model.extend({
             */
             _this.submit(options);
         });
+        dialog.find('#export-dialog-send-button').show();
 
+    },
+
+    open_dialog: function(options) {
+
+        var _this = this;
+        var dialog = this.dialog;
+
+        // ------------------------------------------
+        // Setup dialog metadata
+        // ------------------------------------------
+        // Add project name to dialog header
+        dialog.find('#export_title').html(navigatorApp.project.get('name'));
+
+        // ------------------------------------------
+        // Setup dialog screens
+        // ------------------------------------------
+        this.setup_screens(options);
 
         // ------------------------------------------
         // Show dialog
@@ -250,21 +274,30 @@ ExportPlugin = Backbone.Model.extend({
 
     },
 
-    update_hover_text: function($el) {
+    propagate_action_text: function($el) {
         var action_text = $el.data('action-text');
-        this.update_status(action_text);
+        this.update_action(action_text);
+    },
+
+    update_action: function(text, success, failure) {
+        var element = $('#export-dialog-action-text');
+        this.update_footer_text(element, text, success, failure);
     },
 
     update_status: function(text, success, failure) {
-        var status_element = $('#export-dialog-action-text');
-        status_element.removeClass('text-error').removeClass('text-success');
+        var element = $('#export-dialog-status-text');
+        this.update_footer_text(element, text, success, failure);
+    },
+
+    update_footer_text: function(element, text, success, failure) {
+        element.removeClass('text-error').removeClass('text-success');
         if (success) {
-            status_element.addClass('text-success');
+            element.addClass('text-success');
         }
         if (failure) {
-            status_element.addClass('text-error');
+            element.addClass('text-error');
         }
-        status_element.html(text);
+        element.html(text);
     },
 
     get_expiration_time: function() {
@@ -313,14 +346,14 @@ ExportPlugin = Backbone.Model.extend({
 
     submit: function(options) {
 
+        var state = this.radios.get_state();
+
         var _this = this;
         var element = options.element;
 
         var spinner = $(options.element_spinner);
         var status_text = $(options.element_status);
         spinner.show();
-
-        var state = this.radios.get_state();
 
         if (_.any(state.format)) {
             var format = _.invert(state.format)[true];
@@ -339,10 +372,11 @@ ExportPlugin = Backbone.Model.extend({
                 });
             } else if (state.format.link_embed) {
                 spinner.hide();
-                _this.update_status('Please use the HTTP URLs displayed above.', false, true);
+                _this.update_status('Please use the HTTP URLs displayed above.<br>' +
+                    'There is no other export available on this page.', false, true);
             } else {
                 spinner.hide();
-                _this.update_status('Output format "' + format + '" not implemented yet.', false, true);
+                _this.update_status('Output format "' + format + '" is not available for export.', false, true);
             }
         } else {
             spinner.hide();

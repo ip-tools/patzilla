@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+import ClipboardJS from "clipboard";
+
 require('glyphicon-spin');
 require('jquery.shorten.1.0');
 var urljoin = require('url-join');
@@ -458,10 +460,13 @@ const UiController = Backbone.Marionette.ItemView.extend({
         // Sanity checks
         //if (!element) return;
 
-        // clipboard.js
-        var ClipboardJS = require('clipboard');
+        var clipboard;
+        if (element.clipboard) {
+            clipboard = element.clipboard;
+            clipboard.destroy();
+        }
 
-        var clipboard = new ClipboardJS(element, {
+        clipboard = new ClipboardJS(element, {
             text: function(trigger) {
                 if (_.isFunction(payload)) {
                     payload = payload();
@@ -469,6 +474,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                 return payload;
             },
         });
+        element.clipboard = clipboard;
 
         // For use in Bootstrap Modals or with any other library that changes the focus
         // you'll want to set the focused element as the container value.
@@ -478,7 +484,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
         }
 
         // Event handlers
-        clipboard.on('success', function(event) {
+        clipboard.off('success').on('success', function(event) {
             console.info('Action:', event.action);
             console.info('Text:', event.text);
             console.info('Trigger:', event.trigger);
@@ -502,7 +508,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
 
         });
 
-        clipboard.on('error', function(event) {
+        clipboard.off('error').on('error', function(event) {
             var message = "Error copying content to clipboard.";
             console.error(message, event.action, event.trigger);
             navigatorApp.ui.notify(message, {type: 'warning', icon: 'glyphicon-copy', wrapper: options.wrapper});
