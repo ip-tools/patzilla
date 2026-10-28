@@ -87,13 +87,14 @@ class TestNavigatorStandalone:
         request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')  # ty: ignore[unresolved-attribute]
         assert response is None
 
-@pytest.mark.forked
+
+#@pytest.mark.forked
 def test_navigator_app(app_environment):
     registry = app_environment["registry"]
     assert registry.app_flavor == "minimal"
 
 
-@pytest.mark.forked
+#@pytest.mark.forked
 def test_navigator_web(web_environment):
     registry = web_environment["registry"]
     assert registry.app_flavor == "web"
