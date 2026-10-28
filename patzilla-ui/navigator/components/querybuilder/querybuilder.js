@@ -1330,7 +1330,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         _.each(form.find(".input-group"), function(item) {
 
             // Populate field value with placeholder value on demand
-            $(item).find('.input-group-addon.add-on-label').on('click', function(ev) {
+            $(item).find('.input-group-addon.add-on-label').off('click').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 if (!input_element.val()) {
 
@@ -1348,7 +1348,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             });
 
             // Zoom input field to textarea
-            $(item).find('.input-group-addon.add-on-zoom').on('click', function(ev) {
+            $(item).find('.input-group-addon.add-on-zoom').off('click').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 _this.comfort_form_regular_to_zoomed(input_element);
             });
