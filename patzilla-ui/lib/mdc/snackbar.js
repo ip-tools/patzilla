@@ -48,6 +48,7 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
     show(message, options) {
 
         // Compute colors based on ambient.
+        /*
         if ($('.modal-backdrop').exists()) {
             $(this.el).css('background-color', 'lightgray');
             $(this.el).find('.mdc-snackbar__text').css('color', 'black');
@@ -55,6 +56,9 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
             $(this.el).css('background-color', '#323232');
             $(this.el).find('.mdc-snackbar__text').css('color', 'white');
         }
+        */
+        $(this.el).css('background-color', '#323232');
+        $(this.el).find('.mdc-snackbar__text').css('color', 'white');
 
         var timeout = 4000;
         if (message.length >= 30) {
