@@ -21,7 +21,7 @@ from pyparsing import \
     Keyword, CaselessKeyword, \
     Regex, \
     alphas, nums, alphanums, quotedString, \
-    oneOf, common, delimitedList, restOfLine, \
+    one_of, common, delimitedList, restOfLine, \
     Forward, Group, Combine, Optional, ZeroOrMore, OneOrMore, \
     NotAny, Suppress, FollowedBy, StringEnd, \
     ParseResults, ParseException, removeQuotes
@@ -120,11 +120,11 @@ class CQLGrammar:
         # - https://depatisnet.dpma.de/depatisnet/htdocs/prod/en/hilfe/recherchemodi/experten-recherche/
 
         # v1: this would work for simple term operators only
-        #self.termop = oneOf(self.neighbourhood_symbols, caseless=True).setName("termop")
+        #self.termop = one_of(self.neighbourhood_symbols, caseless=True).set_name("termop")
 
         # v2: use regexes for describing term operators like "(10A)"
         self.neighbourhood_symbols = [
-            '\s?' + re.escape(symbol).replace('\#', '\d+') + '\s?'
+            r'\s?' + re.escape(symbol).replace(r'\#', r'\d+') + r'\s?'
             for symbol in self.neighbourhood_symbols
         ]
 
@@ -133,8 +133,8 @@ class CQLGrammar:
         # ------------------------------------------
         #   C. building blocks
         # ------------------------------------------
-        self.termop = Regex( "|".join(self.neighbourhood_symbols), re.IGNORECASE ).setParseAction( common.upcase_tokens ).setName("termop")
-        termword = Word(self.unicode_printables + self.separators + self.wildcards).setName("term")
+        self.termop = Regex( "|".join(self.neighbourhood_symbols), re.IGNORECASE ).set_parse_action( common.upcase_tokens ).set_name("termop")
+        termword = Word(self.unicode_printables + self.separators + self.wildcards).set_name("term")
         termword_termop = (termword + OneOrMore( self.termop + termword ))
 
 
@@ -142,30 +142,30 @@ class CQLGrammar:
         #   D. triple
         # ------------------------------------------
 
-        index = Word(alphanums).setName("index")
+        index = Word(alphanums).set_name("index")
 
-        #index = Word(indexchars).setName("index")
+        #index = Word(indexchars).set_name("index")
         #SolrProximitySuffix = Suppress(Optional(Word('~') + Word(nums)))
 
-        binop = oneOf(self.binop_symbols, caseless=True).setName("binop")
+        binop = one_of(self.binop_symbols, caseless=True).set_name("binop")
         term = (
 
             # Attempt to parse {!complexphrase}text:"((aussto* OR eject* OR pusher*) AND (verriegel* OR lock* OR sperr*))"~6 ...
             # ... but failed.
-            #Combine(quotedString.setParseAction(removeQuotes) + SolrProximitySuffix).setName("term") ^
+            #Combine(quotedString.setParseAction(removeQuotes) + SolrProximitySuffix).set_name("term") ^
 
             # term is a quoted string, easy peasy
-            quotedString.setName("term") ^
+            quotedString.set_name("term") ^
 
             # term is just a termword, easy too
-            termword.setName("term") ^
+            termword.set_name("term") ^
 
             # term contains neighbourhood operators, so should have been wrapped in parenthesis
-            Combine('(' + Suppress(ZeroOrMore(' ')) + termword_termop + Suppress(ZeroOrMore(' ')) + ')').setName("term") ^
+            Combine('(' + Suppress(ZeroOrMore(' ')) + termword_termop + Suppress(ZeroOrMore(' ')) + ')').set_name("term") ^
 
             # convenience/gracefulness: we also allow terms containing
             # neighbourhood operators without being wrapped in parenthesis
-            Combine(termword_termop).setName("term")
+            Combine(termword_termop).set_name("term")
 
         )
 
@@ -179,10 +179,10 @@ class CQLGrammar:
         cqlConditionBase = Group(
 
             # a regular triple
-            ( index + binop + term ).setResultsName("triple") |
+            ( index + binop + term ).set_results_name("triple") |
 
             # a regular subquery
-            ( "(" + cqlStatement + ")" ).setResultsName("subquery")
+            ( "(" + cqlStatement + ")" ).set_results_name("subquery")
         )
 
         # Parse value shortcut notations like 'index=(term)' or 'index=(term1 and term2 or term3)'.
@@ -191,10 +191,10 @@ class CQLGrammar:
             # a triple in value shortcut notation (contains only the single term)
             # "term + NotAny(binop)" helps giving proper error messages like
             # "ParseException: Expected term (at char 4)" for erroneous queries like "foo="
-            ( term + NotAny(binop) ).setResultsName("triple-short") |
+            ( term + NotAny(binop) ).set_results_name("triple-short") |
 
             # a subquery containing values in shortcut notation
-            ( index + binop + "(" + cqlStatement + ")" ).setResultsName("subquery-short")
+            ( index + binop + "(" + cqlStatement + ")" ).set_results_name("subquery-short")
 
         )
 

@@ -595,19 +595,19 @@ def normalize_patent_us_smart(input):
 
 class TestNumberNormalization:
 
-    @pytest.mark.parametrize("number,expected,computed", generate(t, fun=partial(normalize_patent, fix_kindcode=True, for_ops=True)), ids=list(t.keys()))
+    @pytest.mark.parametrize("number,expected,computed", list(generate(t, fun=partial(normalize_patent, fix_kindcode=True, for_ops=True))), ids=list(t.keys()))
     def testDecodeOK(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 
-    @pytest.mark.parametrize("number,expected,computed", generate(depatisconnect_cases, fun=partial(depatisconnect_alternatives)), ids=list(depatisconnect_cases.keys()))
+    @pytest.mark.parametrize("number,expected,computed", list(generate(depatisconnect_cases, fun=partial(depatisconnect_alternatives))), ids=list(depatisconnect_cases.keys()))
     def test_depatisconnect_alternatives(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 
-    @pytest.mark.parametrize("number,expected,computed", from_list(oldarchive_cases, fun=partial(patch_patent_old_archive)))
+    @pytest.mark.parametrize("number,expected,computed", list(from_list(oldarchive_cases, fun=partial(patch_patent_old_archive))))
     def test_patch_patent_old_archive(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 
-    @pytest.mark.parametrize("number,expected,computed", from_list(uspto_cases, fun=partial(normalize_patent_us_smart)))
+    @pytest.mark.parametrize("number,expected,computed", list(from_list(uspto_cases, fun=partial(normalize_patent_us_smart))))
     def test_normalize_patent_us(self, number, expected, computed):
         self.check_ok(number, expected, computed)
 

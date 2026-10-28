@@ -56,7 +56,7 @@ class CQL:
 
         try:
             # make sure the whole query is parsed, otherwise croak
-            tokens = self.grammar().parser.parseString(self.cql, parseAll=True)
+            tokens = self.grammar().parser.parse_string(self.cql, parseAll=True)
             #if self.logging:
             #    log.info(u'tokens: %s', tokens.pformat())
 
