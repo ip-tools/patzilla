@@ -144,3 +144,13 @@ https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-b
     page-break-inside: avoid;
     page-break-after: always;
 }
+
+/*
+Snackbar
+
+Rationale: With BS3, the font size became way too small.
+*/
+.mdc-snackbar__text, .mdc-snackbar__action-button {
+    font-size: unset;
+    line-height: unset;
+}
