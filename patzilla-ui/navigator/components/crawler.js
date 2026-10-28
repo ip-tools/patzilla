@@ -81,6 +81,7 @@ ResultNumbersView = GenericResultView.extend({
         // Display dialog
         var modal = new ModalRegion({el: '#modal-area'});
         modal.show(this);
+        $('#result-view').modal("show");
     },
 
 });

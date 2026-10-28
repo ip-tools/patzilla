@@ -139,10 +139,9 @@ PermalinkPlugin = Marionette.Controller.extend({
 
     popover_switch: function(element, content, options) {
         // destroy original popover and replace with permalink popover
-
         options = options || {};
 
-        var popover = $(element).popover();
+        var popover = element;
         if (popover.data('amended')) return;
 
         popover.data('amended', true);
@@ -165,7 +164,7 @@ PermalinkPlugin = Marionette.Controller.extend({
         $(element).popover('toggle');
 
         // get popover tip, that is the visible overlay
-        var tip = $(element).popover().data('popover').$tip;
+        var tip = $(element).popover().data('bs.popover').$tip;
 
         // check if popover tip is active
         var popover_active = tip.hasClass('in');

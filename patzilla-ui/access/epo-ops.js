@@ -365,7 +365,7 @@ navigatorApp.addInitializer(function(options) {
             extra_fields: ['pubdate', 'citation'],
 
             // Bootstrap color variant used for referencing this data source in a query history entry
-            history_label_color: 'important',
+            history_label_color: 'danger',
 
         },
 

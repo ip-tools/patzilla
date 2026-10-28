@@ -350,7 +350,11 @@ ul.breathe li {
     width: 770px;
 }
 
-.history-dropdown .select2-result {
+.select2-results__options {
+    max-height: 450px !important;
+}
+
+.history-dropdown .select2-results__option {
     min-height: 3.5em;
     border-bottom: 1px solid #a9a9a9;
 }
@@ -454,8 +458,8 @@ ul.breathe li {
 
 
 /* Expression field chooser */
-/* .bigdrop .select2-container .select2-results {max-height: 200px;} */
-.bigdrop .select2-results {max-height: 35em;}
+/* .bigdrop .select2-container .select2-results__option {max-height: 200px;} */
+.bigdrop .select2-results__option {max-height: 35em;}
 /* .bigdrop .select2-choices {max-height: 150px; overflow-y: auto;} */
 
 
