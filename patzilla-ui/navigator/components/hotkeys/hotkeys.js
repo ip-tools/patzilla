@@ -48,7 +48,7 @@ HotkeysPlugin = Marionette.Controller.extend({
         // zoom input field
         $('input').on('keydown', null, 'shift+return', function(event) {
             event.preventDefault();
-            $(this).parent().find('.add-on.add-on-zoom').trigger('click');
+            $(this).parent().find('.input-group-addon.add-on-zoom').trigger('click');
         });
 
         _([document, '#query', '#numberlist', 'input']).each(function (selector) {
