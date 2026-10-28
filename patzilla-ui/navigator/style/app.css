@@ -307,9 +307,9 @@ ul.breathe li {
     margin-bottom: 1px;
 }
 
-#querybuilder-comfort-form .add-on.add-on-label {
-    width: 8rem;
+#querybuilder-comfort-form .input-group-addon.add-on-label {
     margin-left: unset;
+    width: 16rem;
 }
 #querybuilder-comfort-form input::-webkit-input-placeholder {
     color: #DDDDDD;
