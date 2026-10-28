@@ -354,23 +354,21 @@
                             Search&nbsp;syntax:
                         </div>
 
-                        <div class="btn-group" data-toggle="buttons-radio" id="mode-syntax-buttons">
+                        <div class="btn-group" data-toggle="buttons" id="mode-syntax-buttons">
 
-                            <!-- toggle mode: first-pub -->
-                            <button role="button"
-                                    class="btn btn-default btn-popover btn-syntax"
-                                    data-name="syntax-cql"
-                                    data-toggle="button"
-                                    >
-                                CQL
-                            </button>
-                            <button role="button"
-                                    class="btn btn-default btn-popover btn-syntax"
-                                    data-name="syntax-ikofax"
-                                    data-toggle="button"
-                                    >
-                                IKOFAX
-                            </button>
+                            <!-- Toggle CQL vs. IKOFAX -->
+                            <label class="btn btn-default btn-popover btn-syntax active"
+                                   data-name="syntax-cql"
+                                   >
+                              <input type="radio" checked>
+                              CQL
+                            </label>
+                            <label class="btn btn-default btn-popover btn-syntax"
+                                   data-name="syntax-ikofax"
+                                   >
+                              <input type="radio">
+                              IKOFAX
+                            </label>
 
                         </div>
 
@@ -539,44 +537,46 @@
             <!-- First row -->
             <div>
 
-                <!-- toggle mode: full-cycle -->
-                <button role="button"
+                <!-- Toggle: full-cycle -->
+                <button type="button"
                         class="btn btn-default btn-popover btn-full-cycle"
+                        data-toggle="button"
                         data-name="full-cycle"
-                        data-toggle="buttons-checkbox"
-                        data-trigger="hover" data-placement="bottom" data-content="Display entire publication cycle for each document"
+                        aria-pressed="false"
+                        data-content="Display entire publication cycle for each document"
+                        data-trigger="hover" data-placement="bottom"
                         >
-                    <i class="glyphicon glyphicon-repeat"></i>
-                    Full cycle
+                  <i class="glyphicon glyphicon-repeat"></i>
+                  Full cycle
                 </button>
 
-                <div class="btn-group" data-toggle="buttons-radio" id="mode-order-buttons">
+                <div class="btn-group" data-toggle="buttons" id="mode-order-buttons">
 
-                    <!-- toggle mode: first-pub -->
-                    <button role="button"
-                            class="btn btn-default btn-popover btn-mode-order"
-                            data-name="first-pub"
-                            data-toggle="buttons-checkbox"
-                            data-active-target="#mode-order-label"
-                            data-active-text="First pub."
-                            data-trigger="hover" data-placement="bottom" data-content="Select first publication as representative document"
-                            >
-                        <i class="glyphicon glyphicon-sort-by-order"></i>
-                    </button>
+                    <!-- Toggle "First pub." -->
+                    <label class="btn btn-default btn-popover btn-mode-order"
+                           data-name="first-pub"
+                           data-active-target="#mode-order-label"
+                           data-active-text="First pub."
+                           data-content="Select first publication as representative document"
+                           data-trigger="hover" data-placement="bottom"
+                           >
+                      <input type="radio">
+                      <i class="glyphicon glyphicon-sort-by-order"></i>
+                    </label>
 
-                    <!-- toggle mode: recent-pub -->
-                    <button role="button"
-                            class="btn btn-default btn-popover btn-mode-order"
-                            data-name="recent-pub"
-                            data-toggle="buttons-checkbox"
-                            data-active-target="#mode-order-label"
-                            data-active-text="Recent pub."
-                            data-trigger="hover" data-placement="bottom" data-content="Select most recent publication as representative document"
-                            >
-                        <i class="glyphicon glyphicon-sort-by-order-alt"></i>
-                    </button>
+                    <!-- Toggle "Recent pub." -->
+                    <label class="btn btn-default btn-popover btn-mode-order"
+                           data-name="recent-pub"
+                           data-active-target="#mode-order-label"
+                           data-active-text="Recent pub."
+                           data-content="Select most recent publication as representative document"
+                           data-trigger="hover" data-placement="bottom"
+                           >
+                      <input type="radio">
+                      <i class="glyphicon glyphicon-sort-by-order-alt"></i>
+                    </label>
 
-                    <!-- label -->
+                    <!-- Label for First vs. Recent pub. -->
                     <button id="btn-mode-order-label"
                             class="btn btn-default btn-popover disabled"
                             >
@@ -593,51 +593,52 @@
             <!-- Second row -->
             <div>
 
-                <!-- toggle mode: swap family members -->
-                <button role="button"
+                <!-- Toggle "Family member by priority" -->
+                <button type="button"
                         class="btn btn-default btn-popover btn-family-swap-ger"
                         data-name="family-swap-ger"
-                        data-toggle="buttons-checkbox"
-                        data-trigger="hover" data-placement="bottom" data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
+                        data-toggle="button"
+                        data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
+                        data-trigger="hover" data-placement="bottom"
                         >
                     <i class="glyphicon glyphicon-triangle-top"></i>
                     Family member by priority
                 </button>
 
-                <div class="btn-group" data-toggle="buttons-radio" id="family-remove-buttons">
+                <div class="btn-group" data-toggle="buttons" id="family-remove-buttons">
 
-                    <!-- toggle mode: remove family members -->
-                    <button type="button" role="button"
-                            id="btn-family-remove"
-                            class="btn btn-default btn-popover btn-family-remove"
-                            data-name="family-remove"
-                            data-toggle="buttons-checkbox"
-                            data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by removing family members"
-                            >
-                        <i class="glyphicon glyphicon-remove"></i>
-                        Remove family members
-                    </button>
+                    <!-- Toggle "Remove family members" -->
+                    <label class="btn btn-default btn-popover btn-family-remove"
+                           data-name="family-remove"
+                           data-content="Display just one document per patent family by removing family members"
+                           data-trigger="hover" data-placement="bottom"
+                           >
+                      <input type="radio">
+                      <i class="glyphicon glyphicon-remove"></i>
+                      Remove family members
+                    </label>
 
-                    <!-- toggle mode: replace family members -->
-                    <button type="button" role="button"
-                            id="btn-family-replace"
-                            class="btn btn-default btn-popover btn-family-replace"
-                            data-name="family-replace"
-                            data-toggle="buttons-checkbox"
-                            data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by replacing family members"
-                            >
-                        <i class="glyphicon glyphicon-transfer"></i>
-                        Replace family members
-                    </button>
+                    <!-- Toggle "Replace family members" -->
+                    <label class="btn btn-default btn-popover btn-family-replace"
+                           data-name="family-replace"
+                           data-content="Display just one document per patent family by replacing family members"
+                           data-trigger="hover" data-placement="bottom"
+                           >
+                      <input type="radio">
+                      <i class="glyphicon glyphicon-transfer"></i>
+                      Replace family members
+                    </label>
 
                 </div>
 
-                <!-- toggle mode: all family members -->
-                <button role="button" id="btn-family-full"
+                <!-- Toggle "All family members" -->
+                <button type="button"
+                        id="btn-family-full"
                         class="btn btn-default btn-popover btn-family-full"
                         data-name="family-full"
-                        data-toggle="buttons-checkbox"
-                        data-trigger="hover" data-placement="bottom" data-content="Expand each hit to all family members"
+                        data-toggle="button"
+                        data-content="Expand each hit to all family members"
+                        data-trigger="hover" data-placement="bottom"
                         >
                     <i class="glyphicon glyphicon-group"></i>
                     Expand family
@@ -649,9 +650,11 @@
                     <div id="sort-field-chooser" name="sort-field" style="width: 175px" size="1"></div>
 
                     <!-- sorting direction -->
-                    <button role="button" id="sort-order-chooser"
+                    <button type="button"
+                            id="sort-order-chooser"
                             class="btn btn-default btn-popover"
-                            data-trigger="hover" data-placement="bottom" data-content="Define sort order"
+                            data-content="Define sort order"
+                            data-trigger="hover" data-placement="bottom"
                             >
                         <i class="glyphicon glyphicon-resize-vertical"></i>
                     </button>

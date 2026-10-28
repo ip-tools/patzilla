@@ -870,3 +870,9 @@ dl.dl-horizontal-inline {
     z-index: 9999;
 }
 */
+
+
+/* Make tooltips wider */
+.popover[role="tooltip"] {
+    width: 230px;
+}
