@@ -690,9 +690,13 @@
         </div>
     </div>
     <div class="modal-footer">
-        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons-radio">
-            <button class="btn btn-default active" type="button" data-value="OR">OR</button>
-            <button class="btn btn-default"        type="button" data-value="AND">AND</button>
+        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons">
+          <label class="btn btn-default active">
+            <input type="radio" name="options" data-value="OR" checked>OR
+          </label>
+          <label class="btn btn-default">
+            <input type="radio" name="options" data-value="AND">AND
+          </label>
         </div>
         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>

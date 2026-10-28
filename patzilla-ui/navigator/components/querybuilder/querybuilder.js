@@ -531,7 +531,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
             // get field name and operator from dialog
             var modifier = $(this).data('modifier');
-            var operator = $('#clipboard-modifier-operator').find('.btn.active').data('value') || 'OR';
+            var operator = $('#clipboard-modifier-operator').find('.btn.active').find('input').data('value') || 'OR';
 
             // close dialog
             $('#query-transform-dialog').modal('hide');
