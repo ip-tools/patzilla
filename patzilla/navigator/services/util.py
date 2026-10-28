@@ -12,6 +12,7 @@ from pyramid.settings import asbool
 from pyramid.threadlocal import get_current_request
 from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
 from patzilla.navigator.export import Dossier, DossierXlsx
+from patzilla.navigator.services import handle_generic_exception
 from patzilla.util.config import read_list
 from patzilla.util.cql.util import pair_to_cql
 from patzilla.util.data.container import SmartMunch
@@ -53,18 +54,24 @@ void_service = Service(
 def query_expression_util_handler(request):
 
     # TODO: split functionality between ops/depatisnet, google and sip
-    # TODO: improve error handling
+    try:
+        data = request.json
+        log.info('[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
+        expression_data = make_expression_filter(data)
+        log.info('[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
+        return expression_data
 
-    data = request.json
-    log.info('[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
-    expression_data = make_expression_filter(data)
-    log.info('[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
-    return expression_data
+    except Exception as ex:
+        message = handle_generic_exception(request, ex, 'compute-expression', request.text)
+        request.errors.add('util', 'expression-filter', message)
 
 
 def make_expression_filter(data):
 
     request = get_current_request()
+
+    if 'datasource' not in data or not data['datasource']:
+        raise ValueError("Unable to compute expression: Missing datasource")
 
     datasource = data['datasource']
     criteria = data['criteria']
