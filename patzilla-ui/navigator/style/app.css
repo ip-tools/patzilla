@@ -663,7 +663,7 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     top: unset;
 }
 .more-links-menu-container {
-    left: -230px !important;
+    left: -240px !important;
     top: unset !important;
     margin-top: unset !important;
 }

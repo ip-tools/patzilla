@@ -93,6 +93,17 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
             this.enable_verbose_labels();
         }
 
+        // Bootstrap 3 no longer support nested menus, so provide a polyfill.
+        // https://stackoverflow.com/questions/47419550/multi-level-dropdown-in-bootstrap-3-3-4
+        // https://codepen.io/SpielerJ/pen/WEvENo
+        $(container).find('li.dropdown-submenu a[data-toggle="dropdown"]')
+            .off('click').on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $('li.dropdown-submenu').not($(this).parent()).removeClass('open');
+            $(this).parent().toggleClass('open');
+        });
+
     },
 
     find_container_element: function() {

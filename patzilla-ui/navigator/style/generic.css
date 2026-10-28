@@ -154,3 +154,33 @@ Rationale: With BS3, the font size became way too small.
     font-size: unset;
     line-height: unset;
 }
+
+
+/*
+Bootstrap 3 no longer support nested menus, so provide a polyfill.
+
+- https://stackoverflow.com/questions/47419550/multi-level-dropdown-in-bootstrap-3-3-4
+- https://codepen.io/SpielerJ/pen/WEvENo
+*/
+.dropdown-submenu {
+  position: relative;
+  > a::after {
+    display: block;
+    content: "";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 4px 0 4px 4px;
+    border-left-color: #000;
+    margin-top: 6px;
+    margin-right: -10px;
+  }
+  > ul.dropdown-menu {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin-left: 5px;
+  }
+}
