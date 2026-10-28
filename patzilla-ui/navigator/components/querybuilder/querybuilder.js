@@ -226,7 +226,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         common_buttons.on('click', function(e) {
 
             var already_active = $(this).hasClass('active');
-            _this.radios.button_behaviour(this, e);
+            _this.radios.button_behaviour_bs3(this, already_active, e);
 
             // set label text
             _this.radios.label_behaviour(this, already_active);
@@ -1410,7 +1410,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     get_form_modifier_elements: function() {
         var datasource = navigatorApp.get_datasource();
         var datasource_info = navigatorApp.datasource_info(datasource);
-        var modifier_buttons_selector = 'button[data-name="full-cycle"],[data-name="family-swap-ger"]';
+        var modifier_buttons_selector = '[data-name="full-cycle"],[data-name="family-swap-ger"]';
         modifier_buttons_selector += ',[data-name="first-pub"]';
         modifier_buttons_selector += ',[data-name="recent-pub"]';
 

@@ -54,6 +54,28 @@ RadioPlus = Backbone.Model.extend({
 
     },
 
+    button_behaviour_bs3: function(element, is_already_active, event) {
+
+        // Toggle radio button groups.
+        if ($(element).parent().hasClass('btn-group')) {
+            $(element).parent().find('label').removeClass('btn-info');
+
+            // The event will not see the new class on the clicked item, but the previous one.
+            if (is_already_active) {
+                $(element).removeClass('active');
+                $(element).find('input').prop('checked', false);
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                $(element).addClass('btn-info');
+            }
+
+        // Toggle single buttons.
+        } else {
+            $(element).toggleClass('btn-info');
+        }
+    },
+
     toggle_element: function($el, state, options) {
         options = options || {};
         if (options.with_active)
@@ -70,7 +92,7 @@ RadioPlus = Backbone.Model.extend({
             var active_target = $(element).data('active-target');
             var active_text   = $(active_target).data('original-text');
 
-            // switch to state coming from selected button
+        // switch to state coming from selected button
         } else {
             var active_target = $(element).data('active-target');
             var active_text   = $(element).data('active-text');
