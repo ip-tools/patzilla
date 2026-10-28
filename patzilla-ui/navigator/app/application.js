@@ -231,7 +231,11 @@ NavigatorApp = Backbone.Marionette.Application.extend({
             engine.search(search_info, query, options);
 
         } else {
-            this.ui.notify('No data source adapter for "' + datasource + '".', {type: 'error', icon: 'icon-search'});
+            this.ui.notify(`
+            Data source invalid or unknown: ${datasource}.
+            Please select a valid data source.
+            `,
+                {type: 'error', icon: 'icon-search'});
         }
 
     },
