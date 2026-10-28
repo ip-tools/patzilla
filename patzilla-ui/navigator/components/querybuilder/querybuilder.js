@@ -507,7 +507,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             //log('viewstate:', viewstate);
 
             // Create opaque link for propagating viewstate
-            var anchor = this;
+            var anchor = $(this);
             // TODO: Make expiration time configurable
             var expiration = moment.duration(7, 'days');
             navigatorApp.permalink.make_uri_opaque(viewstate, {ttl: expiration.asSeconds()}).then(function(url) {
@@ -569,7 +569,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // display invalid patent numbers
                 if (_.isEmpty(numbers_invalid)) {
                     navigatorApp.ui.notify(
-                        'Patent numbers normalized successfully',
+                        'Successfully normalized patent numbers',
                         {type: 'success', icon: 'glyphicon-exchange', right: true});
                 } else {
                     var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
@@ -591,7 +591,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             $('#numberlist').val(numbers.join('\n'));
 
             navigatorApp.ui.notify(
-                'Stripped patent kind codes',
+                'Successfully stripped patent kind codes',
                 {type: 'success', icon: 'glyphicon-eraser', right: true});
 
         });
@@ -834,11 +834,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             var value = element_order_chooser.data('value');
 
             // compute and set proper icon class
-            var icon_class = 'glyphicon-sort';
+            var icon_class = 'glyphicon glyphicon-resize-vertical';
             if (value == 'asc') {
-                icon_class = 'glyphicon-sort-down';
+                icon_class = 'glyphicon glyphicon-sort-by-alphabet';
             } else if (value == 'desc') {
-                icon_class = 'glyphicon-sort-up';
+                icon_class = 'glyphicon glyphicon-sort-by-alphabet-alt';
             }
             element_order_chooser.find('i').attr('class', icon_class);
         }

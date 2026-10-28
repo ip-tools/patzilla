@@ -14,7 +14,7 @@
                 <button class="btn btn-default active" data-toggle="tab"
                         href="#querybuilder-comfort-tab"
                         data-value="comfort">
-                    <i class="glyphicon glyphicon-list"></i> Comfort
+                    <i class="glyphicon glyphicon-list"></i> Standard
                 </button>
                 <!--
                 <button class="btn btn-default" data-toggle="tab"
@@ -26,16 +26,16 @@
                 <button class="btn btn-default" data-toggle="tab"
                         href="#querybuilder-cql-tab"
                         data-value="cql">
-                    <i class="glyphicon glyphicon-edit"></i> Expert
+                    <i class="glyphicon glyphicon-console"></i> Expert
                 </button>
                 <button class="btn btn-default" data-toggle="tab"
                         href="#querybuilder-numberlist-tab"
                         data-value="numberlist">
-                    <i class="glyphicon glyphicon-align-justify"></i> Numberlist
+                    <i class="glyphicon glyphicon-list-alt"></i> Numberlist
                 </button>
 
                 <!-- history -->
-                <div id="cql-history-chooser" class="hide" style="display: inline">
+                <div id="cql-history-chooser" style="display: inline-block">
 
                     <button
                             id="btn-query-history"
@@ -65,7 +65,7 @@
 
                             <!-- display values -->
                             <a id="btn-comfort-display-values">
-                                <i class="glyphicon glyphicon-list"></i> &nbsp; Display form values
+                                <i class="glyphicon glyphicon-th-list"></i> &nbsp; Display form values
                             </a>
 
                             <!-- clear -->
@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle hide" id="querybuilder-cql-actions" data-toggle="dropdown">
+                    <button class="btn btn-default dropdown-toggle" id="querybuilder-cql-actions" data-toggle="dropdown" style="display: none">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
@@ -88,7 +88,7 @@
 
                             <!-- content transformation -->
                             <a id="btn-query-transform">
-                                <i class="glyphicon glyphicon-exchange"></i> &nbsp; Transform query
+                                <i class="glyphicon glyphicon-transfer"></i> &nbsp; Transform query
                             </a>
 
                             <!-- clear -->
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle hide" id="querybuilder-numberlist-actions" data-toggle="dropdown">
+                    <button class="btn btn-default dropdown-toggle" id="querybuilder-numberlist-actions" data-toggle="dropdown" style="display: none">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
@@ -110,13 +110,13 @@
                         <li>
                             <!-- normalize -->
                             <a id="btn-numberlist-normalize">
-                                <i class="glyphicon glyphicon-exchange"></i> &nbsp; Normalize numbers
+                                <i class="glyphicon glyphicon-resize-horizontal"></i> &nbsp; Normalize numbers
                             </a>
                         </li>
                         <li>
                             <!-- strip kindcode -->
                             <a id="btn-numberlist-strip-kindcodes">
-                                <i class="glyphicon glyphicon-eraser"></i> &nbsp; Strip kindcodes
+                                <i class="glyphicon glyphicon-erase"></i> &nbsp; Strip kindcodes
                             </a>
                         </li>
                     </ul>
@@ -484,9 +484,9 @@
                         <li>
 
                             <!-- Permalink to current search, with expiration time -->
-                            <a id="btn-query-permalink" href="#" target="_blank"
-                                class="btn-popover" data-toggle="popover" data-trigger="hover" data-placement="bottom"
-                                data-content="Share link to this search with others.">
+                            <a tabindex="0" role="button" id="btn-query-permalink"
+                                data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                >
                                 <i class="glyphicon glyphicon-share"></i> &nbsp; Share this search
                             </a>
 
@@ -495,13 +495,13 @@
                                 <a id="fetch-result-numbers-action" class="btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results. This is the raw response of the datasource.">
-                                    <i class="glyphicon glyphicon-download"></i> &nbsp; List of publication numbers
+                                    <i class="glyphicon glyphicon-save"></i> &nbsp; List of publication numbers
                                 </a>
 
                                 <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries.">
-                                    <i class="glyphicon glyphicon-download"></i> &nbsp; List of publication numbers w/o kindcodes
+                                    <i class="glyphicon glyphicon-save"></i> &nbsp; List of publication numbers w/o kindcodes
                                 </a>
                             <% } %>
 
@@ -588,7 +588,7 @@
                         data-toggle="buttons-checkbox"
                         data-trigger="hover" data-placement="bottom" data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
                         >
-                    <i class="glyphicon glyphicon-exchange"></i>
+                    <i class="glyphicon glyphicon-triangle-top"></i>
                     Family member by priority
                 </button>
 
@@ -614,7 +614,7 @@
                             data-toggle="buttons-checkbox"
                             data-trigger="hover" data-placement="bottom" data-content="Display just one document per patent family by replacing family members"
                             >
-                        <i class="glyphicon glyphicon-exchange"></i>
+                        <i class="glyphicon glyphicon-transfer"></i>
                         Replace family members
                     </button>
 
@@ -641,7 +641,7 @@
                             class="btn btn-default btn-popover"
                             data-trigger="hover" data-placement="bottom" data-content="Define sort order"
                             >
-                        <i class="glyphicon glyphicon-sort"></i>
+                        <i class="glyphicon glyphicon-resize-vertical"></i>
                     </button>
                 </div>
 
@@ -658,15 +658,20 @@
 
 
 <!-- modal dialog for choosing clipboard content modifier -->
-<div id="query-transform-dialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="query-transform-dialog-label" aria-hidden="true">
+<div id="query-transform-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="query-transform-dialog-label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  <div class="modal-content">
+
     <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="query-transform-dialog-label">Query transformation</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title" id="query-transform-dialog-label">Query transformation</h3>
     </div>
     <div class="modal-body">
         Transform newline-separated data to syntactically correct query.
         <br/><br/>
-        <div class="btn-group btn-group-vertical">
+        <div class="btn-group btn-group-vertical" style="display: block">
             <button class="btn btn-success btn-large btn-clipboard-modifier" data-modifier="num">
                 <strong>Number: Publication-, application- or priority number</strong>
                 <br/><br/>
@@ -691,4 +696,7 @@
         </div>
         <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
     </div>
+
+  </div>
+  </div>
 </div>
