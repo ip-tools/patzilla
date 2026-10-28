@@ -58,6 +58,7 @@ pre.inline {
 
 .nomargin {
     margin: 0 !important;
+    padding: 0 !important;
 }
 
 hr.no-margin {
