@@ -55,7 +55,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         });
 
         // Capture choosing a datasource
-        $('#datasource button').off('click').on('click', function() {
+        $('#datasource label').off('click').on('click', function() {
             navigatorApp.metadata.dirty(true);
         });
 
@@ -78,10 +78,11 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
         // Switch cql field chooser when selecting datasource
         // TODO: do it properly on the configuration data model
-        $('#datasource').on('click', '.btn', function(event) {
+        $('#datasource').off('click').on('click', '.btn', function(event) {
 
             // Set datasource in model
             var datasource = $(this).data('value');
+            log("Selected data source:", datasource);
 
             var datasource_info = navigatorApp.datasource_info(datasource);
             //log('datasource_info:', datasource_info);
@@ -289,7 +290,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     display_datasource_buttons: function(whitelist) {
 
         // Hide all buttons as we will incrementally enable them.
-        $('#datasource button').hide();
+        $('#datasource label').hide();
 
         // Acquire vendor settings.
         var vendor = navigatorApp.config.get('vendor');
@@ -312,14 +313,14 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var vendor = navigatorApp.config.get('vendor');
 
         // Handle vendor-provided data source button element.
-        var element = $("#datasource > button[data-value='" + datasource + "'][data-vendor='" + vendor + "']");
+        var element = $("#datasource > label[data-value='" + datasource + "'][data-vendor='" + vendor + "']");
         var img = element.find("img");
         if ($(img).exists() && $(img).data("src")) {
             $(img).attr("src", $(img).data("src"));
         }
 
         if (!$(element).exists()) {
-            element = $("#datasource > button[data-value='" + datasource + "']:not([data-vendor])");
+            element = $("#datasource > label[data-value='" + datasource + "']:not([data-vendor])");
         }
         return element;
     },
@@ -779,7 +780,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     setup_sorting_chooser: function() {
 
-        log('setup_sorting_chooser');
+        //log('setup_sorting_chooser');
 
         var datasource = navigatorApp.get_datasource();
 

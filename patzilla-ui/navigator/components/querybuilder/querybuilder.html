@@ -127,43 +127,53 @@
 
         <!-- Data source chooser -->
         <span>
-            <div id="datasource" class="btn-group" data-toggle="buttons-radio">
-                <button class="btn btn-default" data-value="ops">
-                    <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
-                    EPO
-                </button>
-                <button class="btn btn-default" data-value="depatisnet">
-                    <img src="/static/img/icons/dpma-logo-small.svg" class="wider"/>
-                    DPMA
-                </button>
-                <button class="btn btn-default hide" data-value="google">
-                    <img src="/static/img/icons/google-g.svg" class="square"/>
-                    Google
-                </button>
-                <button class="btn btn-default hide" data-value="sip">
-                    <img src="/static/img/icons/pro.svg" class="square"/>
-                    SIP
-                </button>
-                <button class="btn btn-default h-32 hide" data-value="ificlaims">
-                    <span class="icon icon-globe icon-large" style="color: #3781b7;"></span>
-                    IFI CLAIMS
-                </button>
-                <button class="btn btn-default hide" data-value="ificlaims" data-vendor="europatent">
-                    <img data-src="/static/vendor/europatent/europatent_icon.png" style="height: 20px" />
-                    WPS Fulltext
-                </button>
-                <button class="btn btn-default h-32 hide" data-value="depatech">
-                    <img src="/static/img/icons/depatech.png" style="height: 26px" />
-                    depa.tech
-                </button>
-                <button class="btn btn-default h-32 hide" data-value="allpat">
-                    <span class="icon icon-check icon-large" style="color: #0062A1;"></span>
-                    ALLPAT
-                </button>
-                <button class="btn btn-default h-32 hide" data-value="companydb">
-                    <span class="icon icon-group"></span>
-                    Company-DB
-                </button>
+
+            <div id="datasource" class="btn-group" data-toggle="buttons">
+              <label class="btn btn-default h-32" data-value="ops">
+                <input type="radio">
+                <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
+                EPO
+              </label>
+              <label class="btn btn-default h-32" data-value="depatisnet">
+                <input type="radio">
+                <img src="/static/img/icons/dpma-logo-small.svg" class="wider"/>
+                DPMA
+              </label>
+              <label class="btn btn-default h-32" data-value="google">
+                <input type="radio">
+                <img src="/static/img/icons/google-g.svg" class="square"/>
+                Google
+              </label>
+              <label class="btn btn-default h-32" data-value="sip">
+                <input type="radio">
+                <img src="/static/img/icons/pro.svg" class="square"/>
+                SIP
+              </label>
+              <label class="btn btn-default h-32" data-value="ificlaims">
+                <input type="radio">
+                <span class="fa-icon icon-globe fa-2x" style="color: #3781b7;"></span>
+                IFI CLAIMS
+              </label>
+              <label class="btn btn-default h-32" data-value="ificlaims" data-vendor="europatent">
+                <input type="radio">
+                <img data-src="/static/vendor/europatent/europatent_icon.png" style="height: 20px" />
+                WPS Fulltext
+              </label>
+              <label class="btn btn-default h-32" data-value="depatech">
+                <input type="radio">
+                <img src="/static/img/icons/depatech.png" class="square-24" />
+                depa.tech
+              </label>
+              <label class="btn btn-default h-32" data-value="allpat">
+                <input type="radio">
+                <span class="icon icon-check icon-large" style="color: #0062A1;"></span>
+                ALLPAT
+              </label>
+              <label class="btn btn-default h-32" data-value="companydb">
+                <input type="radio">
+                <span class="icon icon-group"></span>
+                Company-DB
+              </label>
             </div>
         </span>
 
