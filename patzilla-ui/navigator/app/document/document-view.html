@@ -373,16 +373,21 @@ var abstract_list = data.get_abstract_list();
                                  onload="var oce_view = $(this).closest('.ops-collection-entry').prop('view'); oce_view && oce_view.signalDrawingLoaded();"/>
                         </div>
                     </div>
-                    <!-- carousel navigation -->
-                    <a class="carousel-control left  do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="prev">&lsaquo;</a>
-                    <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" data-slide="next">&rsaquo;</a>
+                    <!-- Carousel navigation: Left, right, rotate. -->
+                    <a class="carousel-control left do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="prev">
+                      <span class="glyphicon glyphicon-chevron-left"></span>
+                    </a>
+                    <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="next">
+                      <span class="glyphicon glyphicon-chevron-right"></span>
+                    </a>
+                    <a class="carousel-control rotate do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-rotate="right">
+                      <i class="fa-icon icon-repeat icon-2x"></i>
+                    </a>
+                    <!-- Carousel status text, e.g. "Drawing #1/3" -->
+                    <div class="drawing-info col-md-12 text-center">
+                        Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"></span>
+                    </div>
 
-                    <a class="carousel-control rotate do-not-print" href="#" data-rotate="right"><i class="fa-icon icon-repeat icon-2x"></i></a>
-
-                </div>
-
-                <div class="drawing-info col-md-12 text-center">
-                    Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"/>
                 </div>
 
             </div>

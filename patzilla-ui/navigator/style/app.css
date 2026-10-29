@@ -735,6 +735,15 @@ dl.dl-horizontal-inline {
 
 /* Carousel for drawings */
 
+/* Carousel control design/layout */
+.carousel-control {
+    background: transparent !important;
+    color: black;
+}
+.carousel-control:focus, .carousel-control:hover {
+    color: #269abc;
+}
+
 /* Align control arrows at bottom of image */
 .carousel-control {
     position: absolute;
@@ -750,16 +759,18 @@ dl.dl-horizontal-inline {
     display: inline-block;
 }
 
+/* Adjust rotation control element */
 .carousel-control.rotate {
-    left: 50%;
-    right: 50%;
+    position: relative;
+    left: 48%;
+    right: 48%;
     font-size: inherit;
     font-weight: inherit;
-    line-height: 2.8em;
 }
-.carousel-control.rotate>i {
-    margin-top2: 15px;
-    vertical-align: middle;
+
+/* "Drawing #1/3" status text */
+.carousel > .drawing-info {
+    margin-top: 1em;
 }
 
 
