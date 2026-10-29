@@ -118,7 +118,7 @@ hr.no-margin {
   border-radius: 3px;
 }
 
-.btn-group-larger > .btn, .btn-larger {
+.btn-group-larger > .btn, .btn-lg {
   padding: 8px 13px;
   font-size: 16px;
   line-height: 1.2;
