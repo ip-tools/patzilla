@@ -57,8 +57,8 @@ RadioPlus = Backbone.Model.extend({
     button_behaviour_bs3: function(element, is_already_active, event) {
 
         // Toggle radio button groups.
-        if ($(element).parent().hasClass('btn-group')) {
-            $(element).parent().find('label').removeClass('btn-info');
+        if ($(element).parent().hasClass('btn-group') && $(element).find('input[type=radio]').length > 0) {
+            $(element).parent().find('label').attr('aria-pressed', false).removeClass('btn-info');
 
             // The event will not see the new class on the clicked item, but the previous one.
             if (is_already_active) {
@@ -67,12 +67,18 @@ RadioPlus = Backbone.Model.extend({
                 event.preventDefault();
                 event.stopPropagation();
             } else {
-                $(element).addClass('btn-info');
+                $(element).attr('aria-pressed', true).addClass('btn-info');
             }
 
-        // Toggle single buttons.
+        // Toggle single buttons or check boxes.
         } else {
-            $(element).toggleClass('btn-info');
+            // Manually toggle state
+            event.stopPropagation();
+            event.preventDefault();
+            $(element).toggleClass('active');
+
+            var active = $(element).hasClass('active');
+            this.toggle_element(element, active);
         }
     },
 
@@ -81,7 +87,28 @@ RadioPlus = Backbone.Model.extend({
         if (options.with_active)
             $el.toggleClass('active', state);
         $el.toggleClass('btn-info', state);
+        $el.attr("aria-pressed", state);
         this.trigger('toggle');
+    },
+
+    click_handler: function($element, event, options) {
+        options = options || {};
+        var _this = this;
+
+        // Control radio button behaviour.
+        //_this.button_behaviour($element, event);
+
+        var already_active = $element.hasClass('active');
+        _this.button_behaviour_bs3($element, already_active, event);
+
+        // Propagate text to label elements.
+        _this.label_behaviour($element, already_active);
+
+        // Update selection text
+        _this.update_selection();
+
+        // Toggle view-state for drill-down components
+        _this.handle_drilldown();
     },
 
     // set label text
@@ -109,7 +136,7 @@ RadioPlus = Backbone.Model.extend({
         var modifiers = {};
         _.each(elements, function(element) {
             var name = $(element).data('name');
-            var state = $(element).hasClass("active") || $(element).attr('aria-pressed') === "true";
+            var state = $(element).attr('aria-pressed') === "true";
 
             // handle modifier-based storage
             var modifier = $(element).data('modifier') || $(element).data('value');
@@ -178,25 +205,19 @@ RadioPlus = Backbone.Model.extend({
 
     update_selection: function() {
 
+        // Not each widget wants to display its selection.
+        if (!this.get('container')) return;
+
         var _this = this;
         var state = this.get_state();
 
-        var containers = this.get('container').find('.btn-group').filter('[data-toggle="buttons-radio"],[data-toggle="buttons-checkbox"]');
-        //log('containers:', containers);
+        var containers = this.get('container').find('.btn-group');
 
         _.each(containers, function(container, index) {
 
-            //log('container:', container);
-
-            // Update "buttons-radio" elements
-            //var container = this.dialog.find('.btn-group[data-toggle="buttons-radio"]');
-            //log('container:', container);
             var name = $(container).data('name');
-            //log('name:', name);
-
             var data = _this.findKeysOfTruthyValues(state[name]);
             var labels = _this.get_selection_labels(container, name, data);
-            //log('labels:', labels);
             var label_target = $(container).data('label-target');
             $(label_target).text(labels.join(', '));
 

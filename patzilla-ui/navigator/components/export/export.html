@@ -31,82 +31,82 @@
                 </div>
                 <div class="col-md-9">
 
-                    <div class="btn-group" data-toggle="buttons-radio" data-toggle-release="false" data-name="format" data-label-target="#output-format">
+                    <div class="btn-group" data-toggle="buttons" data-toggle-release="false" data-name="format" data-label-target="#output-format">
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-format"
-                                data-name="format"
-                                data-value="display"
-                                data-label="Display"
-                                data-action-text="Display document numbers"
-                                data-drill-down="#display-content"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-format"
+                               data-name="format"
+                               data-value="display"
+                               data-label="Display"
+                               data-action-text="Display document numbers"
+                               data-drill-down="#display-content"
+                               >
+                            <input type="radio">
                             <i class="fa-icon icon-align-left icon-2x"></i>
                             <br/>
                             Display
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-format"
-                                data-name="format"
-                                data-value="csv"
-                                data-label="CSV"
-                                data-action-text="Download CSV file (comma-separated values)"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-format"
+                               data-name="format"
+                               data-value="csv"
+                               data-label="CSV"
+                               data-action-text="Download CSV file (comma-separated values)"
+                               >
+                            <input type="radio">
                             <i class="fa-icon icon-file-text-alt icon-2x"></i>
                             <br/>
                             CSV file
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-format"
-                                data-name="format"
-                                data-value="xlsx"
-                                data-label="XLSX"
-                                data-action-text="Download Office Workbook file"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-format"
+                               data-name="format"
+                               data-value="xlsx"
+                               data-label="XLSX"
+                               data-action-text="Download Office Workbook file"
+                               >
+                            <input type="radio">
                             <i class="fa-icon icon-table icon-2x"></i>
                             <br/>
                             Office Workbook
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-format"
-                                data-name="format"
-                                data-value="pdf"
-                                data-label="PDF"
-                                data-action-text="Download Workbook in PDF format"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-format"
+                               data-name="format"
+                               data-value="pdf"
+                               data-label="PDF"
+                               data-action-text="Download Workbook in PDF format"
+                               >
+                            <input type="radio">
                             <img src="/static/img/icons/pdf.svg" class="pdf-svg" style="width: 29px; height: 29px"/>
                             <br/>
                             PDF Report
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-format"
-                                data-name="format"
-                                data-value="zip"
-                                data-label="ZIP"
-                                data-action-text="Download multi-format zip archive"
-                                data-drill-down="#zip-content"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-format"
+                               data-name="format"
+                               data-value="zip"
+                               data-label="ZIP"
+                               data-action-text="Download multi-format zip archive"
+                               data-drill-down="#zip-content"
+                               >
+                            <input type="radio">
                             <i class="fa-icon icon-archive icon-2x"></i>
                             <br/>
                             Zip archive
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-format"
-                                data-name="format"
-                                data-value="link_embed"
-                                data-label="URL"
-                                data-action-text="Link to and embed resources"
-                                data-drill-down="#link-embed-content"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-format"
+                               data-name="format"
+                               data-value="link_embed"
+                               data-label="URL"
+                               data-action-text="Link to and embed resources"
+                               data-drill-down="#link-embed-content"
+                               >
+                            <input type="radio">
                             <i class="fa-icon icon-link icon-2x"></i>
                             <br/>
                             Link
-                        </button>
+                        </label>
 
 
                         <!--
@@ -141,55 +141,59 @@
                 </div>
                 <div class="col-md-9">
 
-                    <div class="btn-group" data-toggle="buttons-checkbox" data-name="report" data-label-target="#report-parts">
+                    <div class="btn-group" data-toggle="buttons" data-name="report" data-label-target="#report-parts">
 
                         <div class="lead section">
                             Report
                         </div>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="report"
-                                data-value="xlsx"
-                                data-label="Workbook"
-                                data-action-text="Add Office Workbook file"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               data-name="report"
+                               data-value="xlsx"
+                               data-label="Workbook"
+                               data-action-text="Add Office Workbook file"
+                               aria-pressed="false"
+                               >
+                            <input type="checkbox">
                             <i class="fa-icon icon-table icon-1x"></i>
                             Workbook
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="report"
-                                data-value="pdf"
-                                data-label="PDF Report"
-                                data-action-text="Add Workbook in PDF format"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               data-name="report"
+                               data-value="pdf"
+                               data-label="PDF Report"
+                               data-action-text="Add Workbook in PDF format"
+                               aria-pressed="false"
+                               >
+                            <input type="checkbox">
                             <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                             PDF
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="report"
-                                data-value="csv"
-                                data-label="CSV"
-                                data-action-text="Add CSV files (comma-separated values)"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               data-name="report"
+                               data-value="csv"
+                               data-label="CSV"
+                               data-action-text="Add CSV files (comma-separated values)"
+                               aria-pressed="false"
+                               >
+                            <input type="checkbox">
                             <i class="fa-icon icon-list icon-1x"></i>
                             CSV
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="report"
-                                data-value="json"
-                                data-label="JSON"
-                                data-action-text="Add JSON files"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               data-name="report"
+                               data-value="json"
+                               data-label="JSON"
+                               data-action-text="Add JSON files"
+                               aria-pressed="false"
+                               >
+                            <input type="checkbox">
                             <i class="fa-icon icon-envelope icon-1x"></i>
                             JSON
-                        </button>
+                        </label>
 
                         <button role="button"
                                 class="btn btn-default btn-large btn-symbol"
@@ -208,77 +212,83 @@
                     <br/>
 
 
-                    <div class="btn-group" data-toggle="buttons-checkbox" data-name="media" data-label-target="#media-parts">
+                    <div class="btn-group" data-toggle="buttons" data-name="media" data-label-target="#media-parts">
 
                         <div class="lead section">
                             Media
                         </div>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="media"
-                                data-value="pdf"
-                                data-label="Full PDF"
-                                data-action-text="Add full PDF documents"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               aria-pressed="false"
+                               data-name="media"
+                               data-value="pdf"
+                               data-label="Full PDF"
+                               data-action-text="Add full PDF documents"
+                               >
+                            <input type="checkbox">
                             <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                             PDF
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="media"
-                                data-value="biblio"
-                                data-label="Biblio"
-                                data-action-text="Add bibliographic data (XML)"
-                                >
-                            <i class="fa-icon icon-file-text-alt icon-1x"></i>
-                            Biblio
-                        </button>
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               aria-pressed="false"
+                               data-name="media"
+                               data-value="biblio"
+                               data-label="Biblio"
+                               data-action-text="Add bibliographic data (XML)"
+                               >
+                            <input type="checkbox">
+                            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
+                            PDF
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="media"
-                                data-value="description"
-                                data-label="Description"
-                                data-action-text="Add fulltext of description (XML, TXT)"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               aria-pressed="false"
+                               data-name="media"
+                               data-value="description"
+                               data-label="Description"
+                               data-action-text="Add fulltext of description (XML, TXT)"
+                               >
+                            <input type="checkbox">
                             <i class="fa-icon icon-file-text icon-1x"></i>
                             Description
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="media"
-                                data-value="claims"
-                                data-label="Claims"
-                                data-action-text="Add fulltext of claims (XML, TXT)"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               aria-pressed="false"
+                               data-name="media"
+                               data-value="claims"
+                               data-label="Claims"
+                               data-action-text="Add fulltext of claims (XML, TXT)"
+                               >
+                            <input type="checkbox">
                             <i class="fa-icon icon-file-text icon-1x"></i>
                             Claims
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="media"
-                                data-value="register"
-                                data-label="Legal"
-                                data-action-text="Add register data (XML)"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               aria-pressed="false"
+                               data-name="media"
+                               data-value="register"
+                               data-label="Legal"
+                               data-action-text="Add register data (XML)"
+                               >
+                            <input type="checkbox">
                             §
                             Legal
-                        </button>
+                        </label>
 
-                        <button role="button"
-                                class="btn btn-default btn-large btn-symbol export-content"
-                                data-name="media"
-                                data-value="family"
-                                data-label="Family"
-                                data-action-text="Add family data (XML)"
-                                >
+                        <label class="btn btn-default btn-large btn-symbol export-content"
+                               aria-pressed="false"
+                               data-name="media"
+                               data-value="family"
+                               data-label="Family"
+                               data-action-text="Add family data (XML)"
+                               >
+                            <input type="checkbox">
                             <i class="fa-icon icon-group icon-1x"></i>
                             Family
-                        </button>
+                        </label>
 
                         <button role="button"
                                 class="btn btn-default btn-large btn-symbol"

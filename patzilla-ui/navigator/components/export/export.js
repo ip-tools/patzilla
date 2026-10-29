@@ -69,18 +69,11 @@ ExportPlugin = Backbone.Model.extend({
         });
         */
 
-
         // Handler for button selection
         form_elements.off('click').on('click', function(event) {
 
-            // Handle radio button behavior
-            _this.radios.button_behaviour(this, event);
-
-            // Update selection text
-            _this.radios.update_selection();
-
-            // Toggle view-state for drill-down components
-            _this.radios.handle_drilldown();
+            // Control button behaviour, update selection texts, display subcomponents.
+            _this.radios.click_handler($(this), event);
 
             // Display tooltip text in footer
             _this.propagate_action_text($(this));
@@ -112,29 +105,13 @@ ExportPlugin = Backbone.Model.extend({
         // "Zip Archive" screen
         // ------------------------------------------
 
-        // Behaviour for selection buttons
-        dialog.find('[data-name="report"],[data-name="media"]').off('click').on('click', function(event) {
-            // Stop event from triggering other machinery
-            event.stopPropagation();
-            event.preventDefault();
-            // Manually toggle state
-            $(this).toggleClass('active');
-            var active = $(this).hasClass('active');
-            _this.radios.toggle_element($(this), active);
-            // Update selection text
-            _this.radios.update_selection();
-        });
-
         // Behaviour for "All" buttons
         dialog.find('[data-toggle="select-all"]').off('click').on('click', function(event) {
 
-            // Stop event from triggering other machinery
+            // Manually toggle state.
             event.stopPropagation();
             event.preventDefault();
-
-            // Manually toggle state
             $(this).toggleClass('active');
-            //$(this).trigger("press");
 
             // Toggle linked elements
             var active = $(this).hasClass('active');
