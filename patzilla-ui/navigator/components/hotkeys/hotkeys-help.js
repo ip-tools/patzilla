@@ -3,7 +3,6 @@
 require('jquery.shorten.1.0');
 require('keyboarder/keyboarder.js');
 require('keyboarder/keyboarder.css');
-require('bs3-list-group');
 
 HotkeysHelpView = Marionette.ItemView.extend({
 
