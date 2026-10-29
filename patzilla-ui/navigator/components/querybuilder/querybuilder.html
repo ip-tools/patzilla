@@ -354,13 +354,13 @@
         <div class="col-md-1">
 
             <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
-                <button class="btn-cql-boolean btn btn-default btn-mini active" type="button" data-value="OR">OR</button>
-                <button class="btn-cql-boolean btn btn-default btn-mini"        type="button" data-value="AND">AND</button>
+                <button class="btn-cql-boolean btn btn-default btn-xs active" type="button" data-value="OR">OR</button>
+                <button class="btn-cql-boolean btn btn-default btn-xs"        type="button" data-value="AND">AND</button>
             </div>
 
             <a class="btn-cql-field label label-success" data-value="num=">num=</a>
             <a class="btn-cql-field label label-info" data-value="txt=">txt=</a>
-            <a class="btn-cql-field label label-important" data-value="cl=">cl=</a>
+            <a class="btn-cql-field label label-danger" data-value="cl=">cl=</a>
 
         </div>
         -->
@@ -485,7 +485,7 @@
                 </div>
 
                 <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
-                <button id="btn-ps-export" role="button" class="btn btn-default btn-larger">
+                <button id="btn-ps-export" role="button" class="btn btn-default btn-lgr">
                     <i class="glyphicon glyphicon-save glyphicon-large"></i> Transfer to XPAT
                 </button>
                 <% } %>
@@ -647,17 +647,17 @@
         Transform newline-separated data to syntactically correct query.
         <br/><br/>
         <div class="btn-group btn-group-vertical" style="display: block">
-            <button class="btn btn-success btn-large btn-clipboard-modifier" data-modifier="num">
+            <button class="btn btn-success btn-lg btn-clipboard-modifier" data-modifier="num">
                 <strong>Number: Publication-, application- or priority number</strong>
                 <br/><br/>
                 <small>e.g. "num=DE102012220639A1 OR num=EP0666666A2 OR num=..."</small>
             </button>
-            <button class="btn btn-warning btn-large btn-clipboard-modifier" data-modifier="txt">
+            <button class="btn btn-warning btn-lg btn-clipboard-modifier" data-modifier="txt">
                 <strong>Text: Title, abstract, inventor-, or applicant name</strong>
                 <br/><br/>
                 <small>e.g. "txt=siemens OR txt=alstom OR txt=..."</small>
             </button>
-            <button class="btn btn-danger btn-large btn-clipboard-modifier" data-modifier="cl">
+            <button class="btn btn-danger btn-lg btn-clipboard-modifier" data-modifier="cl">
                 <strong>Class: CPC or IPC8 class</strong>
                 <br/><br/>
                 <small>e.g. "cl=H04L12/24 OR cl=H04L12/26 OR cl=..."</small>

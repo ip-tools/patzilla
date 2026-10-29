@@ -267,12 +267,12 @@ ExportPlugin = Backbone.Model.extend({
     },
 
     update_footer_text: function(element, text, success, failure) {
-        element.removeClass('text-error').removeClass('text-success');
+        element.removeClass('text-danger').removeClass('text-success');
         if (success) {
             element.addClass('text-success');
         }
         if (failure) {
-            element.addClass('text-error');
+            element.addClass('text-danger');
         }
         element.html(text);
     },

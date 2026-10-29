@@ -487,7 +487,7 @@ var abstract_list = data.get_abstract_list();
                             <% } %>
                             <br/>
                             <%= data.get_citations_environment_button() %>
-                            <a class="btn btn-default btn-small family-citations-shortcut-button do-not-print" role="button">
+                            <a class="btn btn-default btn-sm family-citations-shortcut-button do-not-print" role="button">
                                 Family » Citations &nbsp; <i class="glyphicon glyphicon-arrow-right"></i>
                             </a>
                         </dd>
@@ -519,7 +519,7 @@ var abstract_list = data.get_abstract_list();
 
                             <!-- pdf document -->
                             <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="patzilla-pdf"
-                               class="btn btn-default btn-small btn-popover anchor-pdf do-not-print" role="button"
+                               class="btn btn-default btn-sm btn-popover anchor-pdf do-not-print" role="button"
                                data-toggle="popover" data-trigger="hover" data-placement="top"
                                data-content="PDF document"
                                     >
@@ -575,14 +575,14 @@ var abstract_list = data.get_abstract_list();
                     <strong>Patent family</strong>
                     &nbsp;&nbsp;&nbsp;
                     <div class="btn-group tabs family-chooser">
-                        <button class="btn btn-default btn-small active" data-toggle="tab" data-view-type="compact">
+                        <button class="btn btn-default btn-sm active" data-toggle="tab" data-view-type="compact">
                             Compact
                         </button>
-                        <button class="btn btn-default btn-small" data-toggle="tab" data-view-type="verbose">
+                        <button class="btn btn-default btn-sm" data-toggle="tab" data-view-type="verbose">
                             Full
                         </button>
                         <% if (navigatorApp.user_has_module('family-citations')) { %>
-                        <button class="btn btn-default btn-small" data-toggle="tab" data-view-type="citations">
+                        <button class="btn btn-default btn-sm" data-toggle="tab" data-view-type="citations">
                             Citations
                         </button>
                         <% } %>
