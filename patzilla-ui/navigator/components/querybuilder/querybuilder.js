@@ -223,13 +223,10 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // https://github.com/twbs/bootstrap/issues/2380#issuecomment-13981357
         var common_buttons = $('.btn-syntax, .btn-full-cycle, .btn-family-swap-ger, .btn-mode-order, .btn-family-remove, .btn-family-replace, .btn-family-full');
         common_buttons.off('click');
-        common_buttons.on('click', function(e) {
+        common_buttons.on('click', function(event) {
 
-            var already_active = $(this).hasClass('active');
-            _this.radios.button_behaviour_bs3(this, already_active, e);
-
-            // set label text
-            _this.radios.label_behaviour(this, already_active);
+            // Control button behaviour, update selection texts, display subcomponents.
+            _this.radios.click_handler($(this), event);
 
             // When clicking a mode button which augments search behavior, recompute upstream query expression
             // for search backends where query_data modifiers already influence the expression building.
