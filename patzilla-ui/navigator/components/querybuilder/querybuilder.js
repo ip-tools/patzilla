@@ -1286,7 +1286,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var optional_fields = ['pubdate', 'appdate', 'priodate', 'citation'];
         _.each(optional_fields, function(fieldname) {
             var field = form.find("input[name='" + fieldname + "']");
-            var container = field.closest("div[class='control-group']");
+            var container = field.closest("div[class='input-group']");
             if (_(extra_fields).contains(fieldname)) {
                 field.prop('disabled', false);
                 container.show();
