@@ -496,7 +496,7 @@ DocumentCarouselController = Marionette.Controller.extend({
         });
 
         // update page numbers after sliding
-        $('.drawings-carousel').on('slid', function(event) {
+        $('.drawings-carousel').on('slid.bs.carousel', function(event) {
             _this.update_carousel_metadata(this);
         });
 
@@ -613,11 +613,9 @@ DocumentCarouselController = Marionette.Controller.extend({
         navigation_controls.show();
 
         // Current drawing number
-        var carousel_data = $(carousel).data('carousel');
-        if (carousel_data) {
-            var page = carousel_data.getActiveIndex() + 1;
-            container.find('.drawing-number').text(page);
-        }
+        // https://stackoverflow.com/a/17841504
+        var current_page = $(carousel).find('div.active').index() + 1;
+        container.find('.drawing-number').text(current_page);
 
         // Total count of all drawings
         var totalcount = $(carousel).data('totalcount');
