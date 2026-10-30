@@ -89,16 +89,20 @@ def create_request_interceptor(event):
         info: Dict = cast(dict, ex.args[0])
         expiry_unixtime = info['jwt_expiry']
         expiry_iso = datetime_iso(unixtime_to_datetime(expiry_unixtime))
+        info['jwt_expiry_iso'] = expiry_iso
 
-        msg = info['jwt_expiry_iso'] = expiry_iso
-        log.error('Opaque parameter token expired: expiry=%s, message=%s', expiry_iso, msg)
+        msg = f'Opaque parameter token expired: expiry={expiry_iso}'
         request.opaque_meta.update({'status': 'error', 'errors': [msg]})
+        # TODO: Propagate error via cornice instead?
+        # request.errors.add('sharing', 'jwt', info)
         # TODO: log/send full stacktrace
         log.error(exception_traceback())
 
     except JwtVerifyError as ex:
-        log.error('Error while decoding opaque parameter token: %s', ex)
-        request.opaque_meta.update({'status': 'error', 'errors': [str(ex)]})
+        msg = f'Decoding opaque parameter token failed: {ex}'
+        request.opaque_meta.update({'status': 'error', 'errors': [msg]})
+        # TODO: Propagate error via cornice instead?
+        # request.errors.add('sharing', 'jwt', info)
         # TODO: log/send full stacktrace
         log.error(exception_traceback())
 
