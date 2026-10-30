@@ -172,9 +172,10 @@ const UiController = Backbone.Marionette.ItemView.extend({
             _.each(response['errors'], function(error) {
 
                 console.error('Backend error:', error);
+                var tpl;
 
                 if (_.isString(error.description)) {
-                    var tpl = require('./error-cornice.html');
+                    tpl = require('./error-cornice.html');
                     //error.description = {content: error.description};
 
                 } else if (_.isObject(error.description)) {
@@ -182,7 +183,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                     // Flavor 1: Handle objects with error.description.content
                     // Convert simple error format to detailed error format
                     if (error.description.content) {
-                        var tpl = require('./error-backend.html');
+                        tpl = require('./error-backend.html');
                         error.description = error.description || {};
                         _(error.description).defaults({headers: {}});
 
@@ -194,7 +195,7 @@ const UiController = Backbone.Marionette.ItemView.extend({
                     // Flavor 2: Handle objects with error.description.details
                     // Unwrap rich description
                     } else {
-                        var tpl = require('./error-cornice.html');
+                        tpl = require('./error-cornice.html');
                         error.details = error.description.details;
                         error.description = error.description.user;
 
@@ -208,6 +209,9 @@ const UiController = Backbone.Marionette.ItemView.extend({
 
                     }
 
+                } else {
+                    tpl = require('./error-cornice.html');
+                    error = {location: 'unknown', name: 'unknown', description: error};
                 }
 
                 // Build error content and display in alert box
