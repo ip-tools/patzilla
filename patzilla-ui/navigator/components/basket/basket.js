@@ -433,6 +433,7 @@ BasketModel = Backbone.RelationalModel.extend({
         // TODO: decouple from referencing the main application object e.g. by using events!?
         navigatorApp.set_datasource('review');
         navigatorApp.metadata.set('reviewmode', true);
+        navigatorApp.metadata.dirty(true);
         navigatorApp.populate_metadata();
         navigatorApp.perform_listsearch(options, undefined, publication_numbers, hits, 'pn', 'OR');
     },
