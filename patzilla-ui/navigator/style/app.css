@@ -885,5 +885,5 @@ dl.dl-horizontal-inline {
 
 /* Make tooltips wider */
 .popover[role="tooltip"] {
-    width: 230px;
+    width: 30rem;
 }

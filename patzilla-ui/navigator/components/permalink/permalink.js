@@ -182,7 +182,7 @@ PermalinkPlugin = Marionette.Controller.extend({
                 // Adjust popover-container
 
                 // Increase width
-                $(tip).css('width', '20rem');
+                //$(tip).css('width', '20rem');
 
                 // Set the uri
                 $(tip).find('#permalink-uri-textinput').val(uri);
