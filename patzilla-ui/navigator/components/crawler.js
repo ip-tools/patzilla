@@ -81,6 +81,7 @@ ResultNumbersView = GenericResultView.extend({
         // Display dialog
         var modal = new ModalRegion({el: '#modal-area'});
         modal.show(this);
+        // Dialog did not display with bs3.
         $('#result-view').modal("show");
     },
 

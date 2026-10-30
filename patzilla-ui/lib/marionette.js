@@ -18,6 +18,9 @@ const ModalRegion = Marionette.Region.extend({
         this.$el.on('hidden', {region:this}, function(event) {
             event.data.region.close();
         });
+        this.$el.on('hidden.bs.modal', {region:this}, function(event) {
+            event.data.region.close();
+        });
     },
 
     onShow: function() {

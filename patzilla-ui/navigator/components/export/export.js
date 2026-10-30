@@ -247,7 +247,7 @@ ExportPlugin = Backbone.Model.extend({
         // https://weblog.west-wind.com/posts/2016/Sep/14/Bootstrap-Modal-Dialog-showing-under-Modal-Background
         dialog.appendTo("body");
 
-        dialog.find('#export-dialog-status').empty();
+        dialog.find('#export-dialog-status-text').empty();
 
     },
 

@@ -56,6 +56,15 @@ RadioPlus = Backbone.Model.extend({
 
     button_behaviour_bs3: function(element, is_already_active, event) {
 
+        // Prevent releasing the selection completely, if desired
+        if ($(element).parent().data('toggle-release') == false) {
+            if (is_already_active) {
+                event.stopPropagation();
+                event.preventDefault();
+                return;
+            }
+        }
+
         // Toggle radio button groups.
         if ($(element).parent().hasClass('btn-group') && $(element).find('input[type=radio]').length > 0) {
             $(element).parent().find('label').attr('aria-pressed', false).removeClass('btn-info');
@@ -69,6 +78,7 @@ RadioPlus = Backbone.Model.extend({
             } else {
                 $(element).attr('aria-pressed', true).addClass('btn-info');
             }
+            this.trigger('toggle');
 
         // Toggle single buttons or check boxes.
         } else {

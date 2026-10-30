@@ -4,10 +4,6 @@ Posted by m00seDrip, modified by community. See post 'Timeline' for change histo
 Retrieved 2026-10-27, License - CC BY-SA 3.0
 */
 
-h4 {
-    font-size:18px;
-    font-weight:bold;
-}
 .fa-spin-custom, .glyphicon-spin {
     -webkit-animation: spin 1000ms infinite linear;
     animation: spin 1000ms infinite linear;
