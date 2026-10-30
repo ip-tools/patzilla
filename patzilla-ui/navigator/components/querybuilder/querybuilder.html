@@ -261,21 +261,18 @@
                         <!-- Fulltext modifiers -->
                         <div id="fulltext-zoomed" class="container-fluid col-md-12 nomargin field-zoomed" style="display: none">
                           <div class="row">
-                            <div class="col-md-11" id="fulltext-textarea-container">
+                            <div class="col-md-10" id="fulltext-textarea-container">
                                 <div class="input-group" style="vertical-align: top">
                                     <span class="input-group-addon">Full text</span>
                                 </div>
                                 <textarea class="col-md-10 monospace" data-name="fulltext" rows="6" style="width: 100%"></textarea>
                             </div>
-                            <div class="col-md-1" id="fulltext-modifier-chooser">
-                                <span class="pull-right">
-                                    Search&nbsp;in:
-                                </span>
-                                <br/>
-                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
-                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
-                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
-                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
+                            <div class="col-md-2" id="fulltext-modifier-chooser" style="display: flex; flex-direction: column">
+                                <span>Search&nbsp;in:</span>
+                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
+                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
+                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
+                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
                             </div>
                           </div>
                         </div>
