@@ -507,7 +507,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             // Create opaque link for propagating viewstate
             var anchor = $(this);
             // TODO: Make expiration time configurable
-            var expiration = moment.duration(7, 'days');
+            //var expiration = moment.duration(7, 'days');
+            var expiration = moment.duration(2, 'years');
             navigatorApp.permalink.make_uri_opaque(viewstate, {ttl: expiration.asSeconds()}).then(function(url) {
 
                 // v1: open url
