@@ -1,4 +1,4 @@
-<div id="export-dialog" class="modal modal-info modal-wide modal-high modal-not-rounded fade" tabindex="-1" role="dialog" aria-labelledby="export-dialog-label" aria-hidden="true">
+<div id="export-dialog" class="modal modal-info modal-wide modal-high modal-not-rounded fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="export-dialog-label">
 
     <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -238,8 +238,8 @@
                                data-action-text="Add bibliographic data (XML)"
                                >
                             <input type="checkbox">
-                            <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
-                            PDF
+                            <i class="fa-icon icon-file-text-alt icon-1x"></i>
+                            Biblio
                         </label>
 
                         <label class="btn btn-default btn-symbol export-content"
@@ -458,7 +458,7 @@
                         &nbsp;
                         Start export
                     </button>
-                    <button class="btn btn-default btn-lg" data-dismiss="modal" aria-hidden="true">Close</button>
+                    <button class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

@@ -1217,8 +1217,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         var datasource_info = this.get_datasource_info();
 
         // Display button "(Remove|Replace) family members" only for certain search backends
-        var button_family_remove         = container.find("button[id='btn-family-remove']");
-        var button_family_remove_replace = container.find("button[id='btn-family-remove'],button[id='btn-family-replace']");
+        var button_family_remove         = container.find(".btn-family-remove");
+        var button_family_remove_replace = container.find(".btn-family-remove,.btn-family-replace");
 
         // Display mode button "Replace family members"
         if (datasource_info.querybuilder.enable_remove_replace_family_members) {
@@ -1233,7 +1233,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         }
 
         // Display mode button "Expand family members"
-        var button_family_full = container.find("button[id='btn-family-full']");
+        var button_family_full = container.find(".btn-family-full");
         if (datasource_info.querybuilder.enable_expand_family_members) {
             button_family_full.show();
         } else {
@@ -1589,11 +1589,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (data['modifiers'] && _.isObject(data['modifiers']['fulltext'])) {
             _.each(data['modifiers']['fulltext'], function(value, key) {
                 var element = $(form).find($('button[data-name="fulltext"][data-modifier="' + key + '"]'));
-                if (value) {
-                    element.addClass('active');
-                } else {
-                    element.removeClass('active');
-                }
+                element.toggleClass('active', Boolean(value));
+                element.attr('aria-pressed', value ? 'true' : 'false');
             });
         }
 

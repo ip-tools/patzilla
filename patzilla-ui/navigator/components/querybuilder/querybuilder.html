@@ -272,10 +272,10 @@
                                     Search&nbsp;in:
                                 </span>
                                 <br/>
-                                <button type="button" class="btn btn-default active pull-right" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
-                                <button type="button" class="btn btn-default active pull-right" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
-                                <button type="button" class="btn btn-default active pull-right" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
-                                <button type="button" class="btn btn-default active pull-right" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
+                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
+                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
+                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
+                                <button type="button" class="btn btn-default active pull-right" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
                             </div>
                           </div>
                         </div>
@@ -391,7 +391,7 @@
 
                     <li>
                         <a id="analytics-family-overview-button">
-                            <i class="glyphicon glyphicon-group"></i>
+                            <i class="fa-icon icon-group"></i>
                             &nbsp;
                             Family members with register data and basic text statistics
                         </a>
@@ -485,7 +485,7 @@
                 </div>
 
                 <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
-                <button id="btn-ps-export" role="button" class="btn btn-default btn-lgr">
+                <button id="btn-ps-export" role="button" class="btn btn-default btn-lg">
                     <i class="glyphicon glyphicon-save glyphicon-large"></i> Transfer to XPAT
                 </button>
                 <% } %>
@@ -600,7 +600,7 @@
                         data-content="Expand each hit to all family members"
                         data-trigger="hover" data-placement="bottom"
                         >
-                    <i class="glyphicon glyphicon-group"></i>
+                    <i class="fa-icon icon-group"></i>
                     Expand family
                 </button>
 
@@ -633,7 +633,7 @@
 
 
 <!-- modal dialog for choosing clipboard content modifier -->
-<div id="query-transform-dialog" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="query-transform-dialog-label" aria-hidden="true">
+<div id="query-transform-dialog" class="modal fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="query-transform-dialog-label">
   <div class="modal-dialog" role="document">
   <div class="modal-content">
 
@@ -673,7 +673,7 @@
             <input type="radio" name="options" data-value="AND">AND
           </label>
         </div>
-        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+        <button class="btn btn-default" data-dismiss="modal">Close</button>
     </div>
 
   </div>

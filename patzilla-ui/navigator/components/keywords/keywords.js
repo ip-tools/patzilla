@@ -221,6 +221,7 @@ KeywordsController = Marionette.Controller.extend({
             if (_this.module_available) {
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);
+                // Dialog did not display with bs3.
                 $("#keyword-editor").modal("show");
             } else {
                 navigatorApp.ui.notify_module_locked(_this.module_name);
