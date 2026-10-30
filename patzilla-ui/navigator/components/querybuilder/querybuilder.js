@@ -382,16 +382,17 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
     data_is_dirty: function() {
         return navigatorApp.metadata.dirty();
     },
-    check_data_is_dirty: function(options) {
+
+    check_validity: function(options) {
         options = options || {};
-        if (this.data_is_dirty()) {
+        if (this.query_empty() || this.data_is_dirty()) {
             navigatorApp.ui.notify(
-                'Search parameters empty, modified or invalid. \n' +
-                'Please submit valid search first.',
+                'Your search parameters are empty, modified, or invalid. \n' +
+                'Please submit a valid search operation before.',
                 {type: 'warning', icon: options.icon});
-            return true;
+            return false;
         }
-        return false;
+        return true;
     },
 
     get_comfort_form_entries: function(options) {
@@ -499,11 +500,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             e.preventDefault();
             e.stopPropagation();
 
-            // Sanity check: Don't share empty queries
-            if (_this.check_query_empty({'icon': 'glyphicon-share'})) { return; }
-
-            // Sanity check: Don't share dirty queries
-            if (_this.check_data_is_dirty({'icon': 'glyphicon-share'})) { return; }
+            // Sanity check: Don't share empty or dirty queries
+            if (!_this.check_validity({'icon': 'glyphicon-share'})) { return; }
 
             // Create viewstate context for liveview mode
             var viewstate = navigatorApp.permalink.query_parameters_viewstate();
@@ -527,7 +525,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
                 // v2: open permalink popover
                 navigatorApp.permalink.popover_show(anchor, url, {
                     title: 'Share search',
-                    intro: 'by sending a link to the current search to third-party users.',
+                    intro: 'Share a link to the current search with third-party users.',
                     ttl: expiration,
                 });
 

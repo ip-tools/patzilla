@@ -70,7 +70,7 @@ ResultNumbersView = GenericResultView.extend({
     show: function() {
 
         // Sanity check: Don't share dirty queries
-        if (navigatorApp.queryBuilderView.check_data_is_dirty({'icon': 'glyphicon-download'})) { return; }
+        if (!navigatorApp.queryBuilderView.check_validity({'icon': 'glyphicon-download'})) { return; }
 
         // Sanity check: Do we have valid query criteria
         if (!this.has_criteria()) {
