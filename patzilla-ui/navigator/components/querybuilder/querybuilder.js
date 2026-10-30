@@ -213,6 +213,16 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
 
         // ------------------------------------------
+        //   Tool dropdown next to "submit search" button
+        // ------------------------------------------
+
+        // When collapsed, make the dropdown menu hide the permalink popover as well.
+        $('.search-more-dropdown').parent().on('hidden.bs.dropdown', function() {
+            $('#btn-query-permalink').popover('hide');
+        });
+
+
+        // ------------------------------------------
         //   common form behavior
         // ------------------------------------------
 
