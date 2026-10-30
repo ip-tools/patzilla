@@ -49,18 +49,21 @@ $(document).ready(function() {
     $('#visit-demo').off('click');
     $('#visit-demo').on('click', function() {
 
-        var demourl = url.protocol + '//' + url.hostname;
-        if (url.port) demourl += ':' + url.port;
-        if (_.string.contains(demourl, 'patentsearch')) {
-            demourl = demourl.replace('patentsearch', 'patentview');
-        } else if (_.string.contains(demourl, 'navigator')) {
-            demourl = demourl.replace('navigator', 'viewer');
-        } else if (_.string.contains(demourl, 'patbib')) {
-            demourl = demourl.replace('patbib', 'patview');
-        } else if (!_.string.contains(demourl, 'localhost')) {
-            demourl = demourl.replace(url.hostname, 'patentview.ip-tools.io');
+        var hostname = url.hostname;
+        if (_.string.contains(hostname, 'patentsearch')) {
+            hostname = hostname.replace('patentsearch', 'patentview');
+        } else if (_.string.contains(hostname, 'navigator')) {
+            hostname = hostname.replace('navigator', 'viewer');
+        } else if (_.string.contains(hostname, 'patbib')) {
+            hostname = hostname.replace('patbib', 'patview');
+        } else if (!_.string.contains(hostname, 'localhost')) {
+            hostname = hostname.replace(url.hostname, 'patentview.ip-tools.io');
         }
-        demourl += '?op=eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJqdGkiOiAiZDZUT3Ewc3NkRDB6TTVCSGdhOEJrQT09IiwgImRhdGEiOiB7InByb2plY3QiOiAicXVlcnktcGVybWFsaW5rIiwgInF1ZXJ5IjogInR4dD0oU1M3IG9yICh0ZWxlY29tbXVuaWNhdGlvbiBvciBjb21tdW5pY2F0aW9uIG9yIGNvbXVuaWNhY2lcdTAwZjNuKSBvciAobW9iaWxlIG9yIE1vYmlsZnVua25ldHopIG9yIChuZXR3b3JrIG9yIChzZWN1cml0eSBvciBTaWNoZXJ1bmcpKSkgYW5kIHBhPShtb2JpbCBvciBrb21tdW5pa2F0aW9uKSBhbmQgY2w9KEgwNFcxMi8xMiBvciBIMDRMNjMvMDI4MSBvciBIMDRMNjMvMDQxNCkgbm90IHBuPShDTiBvciBDQSBvciBKUCkiLCAibW9kZSI6ICJsaXZldmlldyIsICJjb250ZXh0IjogInZpZXdlciIsICJkYXRhc291cmNlIjogIm9wcyJ9LCAibmJmIjogMTUwNzgyNjYxNywgImV4cCI6IDE2NjMzNDY2MTcsICJpYXQiOiAxNTA3ODI2NjE3fQ.fCl7I5wPd0r48O48UkVQxzw9QOy5PjFaFecmAoYisbM-Her9Z6R0E2hxc82TSdH68gz379jQe5v9eF6g620aG4odTOXtdhyoDrWcb-GJcfR-0BfpiqPRwzLng53ape69';
+
+        var demourl = url.protocol + '//' + hostname;
+        if (url.port) demourl += ':' + url.port;
+        if (url.pathname) demourl += url.pathname.replace('login', '');
+        demourl += '?op=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImNvbnRleHQiOiJ2aWV3ZXIiLCJkYXRhc291cmNlIjoib3BzIiwibW9kZSI6ImxpdmV2aWV3IiwicHJvamVjdCI6InF1ZXJ5LXBlcm1hbGluayIsInF1ZXJ5IjoidHh0PSh3aW5kIGFuZCBlbmVyZ2llKSIsInR0bCI6IjE1Nzc2NjQwMCJ9LCJleHAiOjE5NTEwOTE5ODEsImlhdCI6MTc5MzMyNTU4MSwianRpIjoiRERtZ2d6ZU5TRFQ4Y3VzMG9vQVRLZyIsIm5iZiI6MTc5MzMyNTU4MX0.GNdX_sUHdx1lGwz-QejdyFQQyyIpVwr3naolrNJzTULNZm0QClfPmvyK-wpGpO6bp0DJYz2s8INJq-bNAkqBMgH8izyKiJ1VYFMVGE8jUNqT6X-wbWE_WnRevOhqwRCY';
 
         //console.log(demourl);
         $(this).attr('href', demourl);
