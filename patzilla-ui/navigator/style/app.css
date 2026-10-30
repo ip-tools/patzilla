@@ -839,10 +839,10 @@ dl.dl-horizontal-inline {
     z-index: 1050;
     position: fixed;
     top: 10%;
-    left: 38%;
+    left: 35%;
 }
 .login-box {
-    max-width: 350px;
+    width: 500px;
     padding-top: 9px;
     padding-left: 29px;
     padding-right: 29px;
