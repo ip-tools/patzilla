@@ -52,7 +52,6 @@ const config = {
 
     amd: {
         'jquery': true,
-        'backbone': true,
         'backbone.marionette': true,
         'classie': true,
         'localforage.nopromises': true,
@@ -75,7 +74,6 @@ const config = {
             '_.string': 'underscore.string',
             'moment': 'moment',
             'Humanize': 'humanize-plus',
-            'Backbone': 'backbone',
             'Marionette': 'backbone.marionette',
             'Backbone.Marionette': 'backbone.marionette',
         }),

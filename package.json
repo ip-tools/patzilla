@@ -44,8 +44,6 @@
     "@mui/styles": "^5",
     "@mui/icons-material": "^5",
     "autonumeric": "^2",
-    "backbone": "^1.1",
-    "backbone.babysitter": "^0.1",
     "backbone.marionette": "^1.8",
     "blobjs": "^1",
     "bootbox": "^4",
