@@ -73,7 +73,7 @@
     "promise": "^8",
     "react": "^17",
     "react-dom": "^17",
-    "screenfull": "^3",
+    "screenfull": "^5",
     "select2": "^4",
     "slugify": "^1",
     "split-grid": "^1",
