@@ -3,7 +3,7 @@
 
 // TODO: Make ripple effect work.
 //import {MDCRipple} from '@material/ripple';
-const ripple = require('@material/ripple');
+//const ripple = require('@material/ripple');
 
 
 MetadataView = Backbone.Marionette.Layout.extend({

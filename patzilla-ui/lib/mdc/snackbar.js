@@ -3,7 +3,7 @@
 'use strict';
 
 import { classes } from 'patzilla.lib.es6';
-import { MDCSnackbar } from '@material/snackbar';
+import Snackbar from '@mui/material/Snackbar';
 import { DirectRenderMixin } from 'patzilla.lib.marionette';
 
 export { SnackbarWidget };
@@ -27,7 +27,7 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
      * displayed on the first hand.
      *
      * When used, it will show up and disappear at runtime, which is completely
-     * the responsibility of the `MDCSnackbar` controller component.
+     * the responsibility of the `Snackbar` controller component.
      *
     **/
 
@@ -41,7 +41,7 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
     }
 
     onRender() {
-        this.snackbar = new MDCSnackbar(this.el);
+        this.snackbar = new Snackbar(this.el);
         $("body").append(this.el);
     }
 
