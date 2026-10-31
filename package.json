@@ -80,7 +80,7 @@
     "underscore": "^1.13",
     "underscore-template-loader": "^1",
     "underscore.string": "^3",
-    "url-join": "^2",
+    "url-join": "^6",
     "waypoints": "^4",
     "x-editable-bs4": "^1",
     "zeroclipboard": "^2"

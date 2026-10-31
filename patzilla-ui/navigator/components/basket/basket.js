@@ -5,7 +5,7 @@
 require('patzilla.navigator.components.storage');
 require('raty');
 const memoize = require('memoize');
-const urljoin = require('url-join');
+import urlJoin from 'url-join';
 const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");
 const {sanitize_non_ascii} = require("patzilla.lib.util");
 
@@ -395,7 +395,7 @@ export const BasketModel = Backbone.RelationalModel.extend({
             var newentry = entry.toJSON();
             if (!newentry) { return; }
             newentry['number'] = sanitize_non_ascii(newentry['number']);
-            newentry['url'] = urljoin(baseurl, '/view/pn/', newentry['number']);
+            newentry['url'] = urlJoin(baseurl, '/view/pn/', newentry['number']);
             return newentry;
         });
     },

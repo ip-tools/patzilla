@@ -2,11 +2,11 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import urlJoin from 'url-join';
 import ClipboardJS from "clipboard";
 
 require('glyphicon-spin');
 require('jquery.shorten.1.0');
-var urljoin = require('url-join');
 var bootbox = require('bootbox');
 var screenfull = require('screenfull');
 
@@ -67,14 +67,14 @@ const UiController = Backbone.Marionette.ItemView.extend({
         $('.action-help-shortcuts').off('click');
         $('.action-help-shortcuts').on('click', function() {
             var baseurl = navigatorApp.config.get('baseurl');
-            var url = urljoin(baseurl, '/help#hotkeys');
+            var url = urlJoin(baseurl, '/help#hotkeys');
             $(this).attr('href', url);
         });
 
         $('.action-help-ificlaims').off('click');
         $('.action-help-ificlaims').on('click', function() {
             var baseurl = navigatorApp.config.get('baseurl');
-            var url = urljoin(baseurl, '/help#ificlaims');
+            var url = urlJoin(baseurl, '/help#ificlaims');
             $(this).attr('href', url);
         });
 
