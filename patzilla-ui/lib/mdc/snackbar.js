@@ -57,8 +57,8 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
             $(this.el).find('.mdc-snackbar__text').css('color', 'white');
         }
         */
-        $(this.el).css('background-color', '#323232');
-        $(this.el).find('.mdc-snackbar__text').css('color', 'white');
+        //$(this.el).css('background-color', '#323232');
+        $(this.el).find('.mdc-snackbar__text,.mdc-snackbar__action').css('color', 'white');
 
         var timeout = 4000;
         if (message.length >= 30) {
@@ -67,21 +67,10 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
         if (message.length >= 50) {
             timeout = 7000;
         }
-        this.snackbar.show({
-            message: message,
-            multiline: false,
-            timeout: timeout,
-
-            // https://github.com/material-components/material-components-web/issues/1398#issuecomment-391720258
-            actionText: 'Dismiss',
-            actionHandler: function() {},
-            /*
-            actionHandler: function () {
-                snackbarElement.setAttribute('aria-hidden', true);
-                snackbarElement.classList.remove('mdc-snackbar--active');
-            }
-            */
-        });
+        this.snackbar.labelText = message;
+        this.snackbar.timeoutMs = timeout;
+        this.snackbar.actionButtonText = 'Dismiss';
+        this.snackbar.open();
     }
 
 }
