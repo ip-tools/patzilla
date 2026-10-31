@@ -25,8 +25,6 @@ require('bootstrap/dist/js/bootstrap.min.js');
 // Use bootstrap-tabs from Bootstrap 2.0.0
 require('bootstrap-tab-button.js');
 
-// Font Awesome 3.2.1; TODO: Upgrade to more recent version
-require('font-awesome/css/font-awesome.css');
 
 
 // Global utilities

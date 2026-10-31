@@ -3,8 +3,6 @@
 require('jquery');
 require('jrumble');
 require('bootstrap/dist/css/bootstrap.min.css');
-// Font Awesome 3.2.1; TODO: Upgrade to more recent version
-require('font-awesome/css/font-awesome.css');
 require('patzilla.navigator.style');
 
 $(document).ready(function() {
