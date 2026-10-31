@@ -15,13 +15,13 @@ $mdc-typography-font-family: unset;
 /* MDC Styles */
 
 /* https://material-components.github.io/material-components-web-catalog/#/component/button */
-@import "@material/button/mdc-button";
-@import "@material/snackbar/mdc-snackbar";
+@use "@material/button/mdc-button";
+@use "@material/snackbar/mdc-snackbar";
 
 /* https://material.io/develop/web/components/menus/ */
-@import "@material/list/mdc-list";
-@import "@material/menu-surface/mdc-menu-surface";
-@import "@material/menu/mdc-menu";
+@use "@material/list/mdc-list";
+@use "@material/menu-surface/mdc-menu-surface";
+@use "@material/menu/mdc-menu";
 
 
 /* Custom */
