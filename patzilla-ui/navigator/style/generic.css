@@ -151,7 +151,7 @@ Snackbar
 
 Rationale: With BS3, the font size became way too small.
 */
-.mdc-snackbar__text, .mdc-snackbar__action {
+.mdc-snackbar__label, .mdc-snackbar__action {
     font-size: unset;
     line-height: unset;
 }

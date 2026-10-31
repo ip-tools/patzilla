@@ -51,14 +51,14 @@ class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRe
         /*
         if ($('.modal-backdrop').exists()) {
             $(this.el).css('background-color', 'lightgray');
-            $(this.el).find('.mdc-snackbar__text').css('color', 'black');
+            $(this.el).find('.mdc-snackbar__label').css('color', 'black');
         } else {
             $(this.el).css('background-color', '#323232');
-            $(this.el).find('.mdc-snackbar__text').css('color', 'white');
+            $(this.el).find('.mdc-snackbar__label').css('color', 'white');
         }
         */
         //$(this.el).css('background-color', '#323232');
-        $(this.el).find('.mdc-snackbar__text,.mdc-snackbar__action').css('color', 'white');
+        $(this.el).find('.mdc-snackbar__label,.mdc-snackbar__action').css('color', 'white');
 
         var timeout = 4000;
         if (message.length >= 30) {
