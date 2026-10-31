@@ -3,7 +3,7 @@
 'use strict';
 
 import { classes } from 'patzilla.lib.es6';
-import { MDCMenu } from '@material/menu';
+import Menu from '@mui/material/Menu';
 import { MarionetteFuture, DirectRenderMixin } from 'patzilla.lib.marionette';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
@@ -106,7 +106,7 @@ class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, Marione
      * it will be appended to the DOM element obtained via the `container` option
      * when creating an instance of `StackMenuWidget`.
      *
-     * Controlling the element is the responsibility of the `MDCMenu` component.
+     * Controlling the element is the responsibility of the `Menu` component.
      *
     **/
 
@@ -134,7 +134,7 @@ class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, Marione
         this.$el.remove();
         this.container = this.getOption('container') || $('body');
         this.container.append(this.$el);
-        this.menu = new MDCMenu(this.el);
+        this.menu = new Menu(this.el);
         this.bind_mdc_events();
     }
 
@@ -155,7 +155,7 @@ class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, Marione
         var _this = this;
         this.el.addEventListener('MDCMenu:selected', function(event) {
 
-            //log('MDCMenu:selected', event);
+            log('MDCMenu:selected', event);
 
             // Resolve designated action from `mdc-list-item`.
             var detail = event.detail;

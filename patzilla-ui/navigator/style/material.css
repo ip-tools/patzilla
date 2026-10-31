@@ -12,18 +12,6 @@ $mdc-theme-on-secondary: #000000;
 /* https://material-components.github.io/material-components-web-catalog/#/component/typography */
 $mdc-typography-font-family: unset;
 
-/* MDC Styles */
-
-/* https://material-components.github.io/material-components-web-catalog/#/component/button */
-@import "@material/button/mdc-button";
-@import "@material/snackbar/mdc-snackbar";
-
-/* https://material.io/develop/web/components/menus/ */
-@import "@material/list/mdc-list";
-@import "@material/menu-surface/mdc-menu-surface";
-@import "@material/menu/mdc-menu";
-
-
 /* Custom */
 /*
 .foo-button {
