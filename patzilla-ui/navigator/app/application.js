@@ -1156,9 +1156,8 @@ export const NavigatorApp = Backbone.Marionette.Application.extend({
         // TODO: is old view killed properly?
         // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
         if (this.basketView) {
-            this.basketView.close();
             this.stopListening(this.basketView);
-            //this.basketView.destroy();
+            this.basketView.destroy();
             //this.basketView.remove();
             delete this.basketView;
         }

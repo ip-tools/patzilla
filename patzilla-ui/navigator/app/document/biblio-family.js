@@ -21,14 +21,14 @@ _.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateData
 export const OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: require('./biblio-family-verbose-collection.html'),
-    itemView: OpsFamilyVerboseMemberView,
+    childView: OpsFamilyVerboseMemberView,
 
     id: "ops-family-verbose-verbose-collection",
     //tagName: "div",
     //className: "container-fluid",
 
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
+    attachHtml: function(collectionView, childView) {
+        collectionView.$('tbody').append(childView.el);
     }
 
 });
@@ -50,14 +50,14 @@ _.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateData
 export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: require('./biblio-family-compact-collection.html'),
-    itemView: OpsFamilyCompactMemberView,
+    childView: OpsFamilyCompactMemberView,
 
     id: "ops-family-compact-collection",
     //tagName: "div",
     //className: "container-fluid",
 
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
+    attachHtml: function(collectionView, childView) {
+        collectionView.$('tbody').append(childView.el);
     },
 
     onDomRefresh: function() {
@@ -142,10 +142,10 @@ export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeVie
 
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),
-    itemView: OpsFamilyCitationsMemberView,
+    childView: OpsFamilyCitationsMemberView,
 
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
+    attachHtml: function(collectionView, childView) {
+        collectionView.$('tbody').append(childView.el);
     },
 
     // Override and disable add:render event, see also:

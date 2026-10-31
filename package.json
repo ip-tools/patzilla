@@ -44,7 +44,7 @@
     "@mui/styles": "^5",
     "@mui/icons-material": "^5",
     "autonumeric": "^2",
-    "backbone.marionette": "^1.8",
+    "backbone.marionette": "^2",
     "blobjs": "^1",
     "bootbox": "^4",
     "bootstrap": "^3",

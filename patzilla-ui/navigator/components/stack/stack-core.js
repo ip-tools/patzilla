@@ -108,7 +108,7 @@ const StackManager = NamedViewController.extend({
         this.listenTo(this.model, 'change:selected', this.update_sidecar_indicator);
 
         // When model gets destroyed, shutdown the user interface.
-        this.listenTo(this.model, 'destroy', this.close);
+        this.listenTo(this.model, 'destroy', this.destroy);
 
         // Show/hide vertical marker on the document's left side.
         this.update_sidecar_indicator();
@@ -132,7 +132,7 @@ const StackManager = NamedViewController.extend({
         // Shutdown user interface components.
         this.close_checkbox();
 
-        StackManager.__super__.close.apply(this);
+        StackManager.__super__.destroy.apply(this);
 
     },
 
@@ -458,7 +458,7 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 
         // Close menu widget before (re)opening, making this effectively a singleton.
         if (this.menu_widget) {
-            this.menu_widget.close();
+            this.menu_widget.destroy();
         }
 
         // Create menu widget.

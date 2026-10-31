@@ -4,7 +4,7 @@
 
 var Grid = require('split-grid').default;
 
-export const LayoutView = Backbone.Marionette.Layout.extend({
+export const LayoutView = Backbone.Marionette.LayoutView.extend({
 
     template: require('./root.html'),
     regions: {
@@ -97,7 +97,7 @@ const MenuView = Backbone.Marionette.ItemView.extend({
     */
 });
 
-const HeaderView = Backbone.Marionette.Layout.extend({
+const HeaderView = Backbone.Marionette.LayoutView.extend({
 
     regions: {
         menu: "#menu-region",
@@ -131,7 +131,7 @@ const HeaderView = Backbone.Marionette.Layout.extend({
 });
 
 
-const WideHeaderView = Backbone.Marionette.Layout.extend({
+const WideHeaderView = Backbone.Marionette.LayoutView.extend({
 
     regions: {
         menu: "#menu-region",

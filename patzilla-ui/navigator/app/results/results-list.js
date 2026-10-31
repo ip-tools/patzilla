@@ -9,7 +9,7 @@ export const OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeVi
     id: "ops-collection-container",
     className: "",
     template: require('./results-list.html'),
-    itemView: OpsExchangeDocumentView,
+    childView: OpsExchangeDocumentView,
 
     initialize: function(options) {
         console.log('OpsExchangeDocumentCollectionView.initialize');

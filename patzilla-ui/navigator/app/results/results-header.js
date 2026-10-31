@@ -6,7 +6,7 @@
 //import {MDCRipple} from '@material/ripple';
 const ripple = require('@material/ripple');
 
-export const MetadataView = Backbone.Marionette.Layout.extend({
+export const MetadataView = Backbone.Marionette.LayoutView.extend({
     tagName: "div",
     template: require('./results-header.html'),
 

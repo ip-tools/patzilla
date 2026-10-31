@@ -2,6 +2,17 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+// Marionette 2.4.7 uses jQuery Deferreds.
+// Preserve synchronous initializer execution with jQuery 3.
+// https://github.com/ip-tools/patzilla/pull/168#issuecomment-6548579723
+Marionette.Callbacks.prototype.add = function(callback, contextOverride) {
+    this._callbacks.push({cb: callback, ctx: contextOverride});
+
+    this._deferred.done(function(args) {
+        callback.call(contextOverride || args.context, args.options);
+    });
+};
+
 // Widget: Modal container as Marionette region component
 // http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
@@ -10,13 +21,15 @@ export const ModalRegion = Marionette.Region.extend({
     constructor: function() {
         Marionette.Region.prototype.constructor.apply(this, arguments);
 
-        this.ensureEl();
+        // `ensureEl` longer supported with Marionette 2?
+        //this.ensureEl();
+
         this.$el.toggleClass('fade', true);
         this.$el.on('hidden', {region:this}, function(event) {
-            event.data.region.close();
+            event.data.region.destroy();
         });
         this.$el.on('hidden.bs.modal', {region:this}, function(event) {
-            event.data.region.close();
+            event.data.region.destroy();
         });
     },
 
@@ -35,7 +48,8 @@ export const ModalRegion = Marionette.Region.extend({
 
   Backbone.Marionette.Controller.extendEach     =
     Backbone.Marionette.View.extendEach         =
-    Backbone.Marionette.ItemView.extendEach     = Backbone.Model.extendEach;
+    Backbone.Marionette.ItemView.extendEach     =
+    Backbone.Marionette.LayoutView.extendEach   = Backbone.Model.extendEach;
 
 })();
 
