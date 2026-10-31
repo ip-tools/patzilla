@@ -6247,10 +6247,10 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-url-join@^2:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/url-join/-/url-join-2.0.5.tgz#5af22f18c052a000a48d7b82c5e9c2e2feeda728"
-  integrity sha512-c2H1fIgpUdwFRIru9HFno5DT73Ok8hg5oOb5AT3ayIgvCRfxgs2jyt5Slw8kEB7j3QUr6yJmMPDT/odjk7jXow==
+url-join@^6:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/url-join/-/url-join-6.0.0.tgz#7c6366428eb8abd0d83ac02df6a01df2ea11db37"
+  integrity sha512-GrPbZO5/Il4fCWGbvu9nWsanTvCBOPluHf3lzCA+NlfTyObhpt4T6MufVyRj4HAkh3XARV1OTPGHmJfj6LI/jg==
 
 url-parse@^1.5.3:
   version "1.5.10"

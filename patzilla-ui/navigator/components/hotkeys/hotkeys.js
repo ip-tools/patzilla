@@ -2,8 +2,8 @@
 // (c) 2014,2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import urlJoin from 'url-join';
 require('jquery-hotkeys');
-const urljoin = require('url-join');
 
 export const HotkeysPlugin = Marionette.Controller.extend({
 
@@ -211,7 +211,7 @@ export const HotkeysPlugin = Marionette.Controller.extend({
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
             var baseurl = _this.app.config.get('baseurl');
-            var url = urljoin(baseurl, '/help#hotkeys');
+            var url = urlJoin(baseurl, '/help#hotkeys');
             window.open(url);
         });
 
