@@ -56,7 +56,6 @@
     "clipboard": "^2",
     "css-element-queries": "^1.2",
     "file-loader": "^4",
-    "font-awesome": "https://github.com/ip-tools/font-awesome#3.2.1",
     "humanize-plus": "^1.8",
     "jq-pagination": "https://github.com/ip-tools/jqPagination#1.4.2-alpha.2",
     "jquery": "^3.7",
