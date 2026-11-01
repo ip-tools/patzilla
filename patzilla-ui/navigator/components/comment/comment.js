@@ -2,10 +2,13 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-require('patzilla.navigator.components.storage');
-require('backbone-dom-to-view');
+import Marionette from 'backbone.marionette';
 const {DirectRenderMixin} = require("patzilla.lib.marionette");
 const {SmartCollectionMixin} = require("patzilla.lib.backbone");
+
+require('patzilla.navigator.components.storage');
+require('backbone-dom-to-view');
+
 
 const CommentModel = Backbone.RelationalModel.extend({
 

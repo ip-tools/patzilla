@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
-
+'use strict';
 
 /**
  * --------------------
@@ -10,17 +10,11 @@
 
 console.info('Load foundation');
 
-// Patches to make the old Backbone Marionette 1.1.0 work with Webpack
-Backbone.$   = window.jQuery;
-Marionette.$ = window.jQuery;
-
-
 // Application core
 console.info('Load application');
 require('patzilla.navigator.app.main');
 require('patzilla.navigator.app.ui');
 require('patzilla.navigator.app.document');
-
 
 // Application components
 console.info('Load application components');
@@ -46,7 +40,6 @@ require('patzilla.navigator.components.reading');
 require('patzilla.navigator.components.viewport');
 require('patzilla.navigator.components.waypoints');
 require('patzilla.navigator.components.stack');
-
 
 // Bootstrap the application after registering all components
 navigatorApp.addInitializer(function(options) {

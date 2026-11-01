@@ -2,6 +2,8 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 require('blobjs');
 var dataurl = require('dataurl').dataurl;
 var saveAs = require('file-saver').saveAs;

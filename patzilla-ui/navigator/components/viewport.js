@@ -2,6 +2,7 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
 import { StackDisplayMode } from 'patzilla.navigator.components.stack';
 
 require('jquery.viewport');

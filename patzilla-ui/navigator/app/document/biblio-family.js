@@ -2,6 +2,7 @@
 // (c) 2013-2015 Andreas Motl, Elmyra UG
 'use strict';
 
+import Marionette from 'backbone.marionette';
 import {OpsExchangeDocument} from "patzilla.access.epo.ops";
 import {QueryLinkMixin} from "patzilla.access.util";
 import {OpsBaseModel} from "patzilla.access.epo.ops.base";

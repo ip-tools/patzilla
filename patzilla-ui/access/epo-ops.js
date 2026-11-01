@@ -2,6 +2,8 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 const {DatasourceCrawler} = require("./base");
 const {OpsBaseModel} = require("./epo-ops-base");
 const {QueryLinkMixin} = require("./util");

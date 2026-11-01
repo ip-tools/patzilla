@@ -2,6 +2,7 @@
 // (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
 const {DatasourceSearch, DatasourceCrawler, GenericExchangeDocument} = require("./base");
 const {QueryLinkMixin} = require("./util");
 

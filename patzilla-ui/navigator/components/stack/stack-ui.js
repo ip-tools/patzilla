@@ -2,6 +2,7 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
 import { classes } from 'patzilla.lib.es6';
 import { MDCMenu } from '@material/menu';
 import { MarionetteFuture, DirectRenderMixin } from 'patzilla.lib.marionette';

@@ -2,10 +2,11 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-require('jquery.highlight.bartaz');
+import Marionette from 'backbone.marionette';
 const {LinkMaker} = require("patzilla.navigator.util.linkmaker");
 const {TemplateHelperMixin} = require("./util.js");
 
+require('jquery.highlight.bartaz');
 
 // TODO: Rename to DocumentView
 export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
