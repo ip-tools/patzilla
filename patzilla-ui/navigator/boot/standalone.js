@@ -2,7 +2,7 @@
 // (c) 2013-2015 Andreas Motl, Elmyra UG
 require('./loader.js');
 
-$(document).ready(function() {
+$(function() {
 
     console.info("Start application [standalone]");
 

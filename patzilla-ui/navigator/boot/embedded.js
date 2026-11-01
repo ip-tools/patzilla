@@ -106,7 +106,7 @@ EmbeddingController = Marionette.Controller.extend({
 
 });
 
-$(document).ready(function() {
+$(function() {
 
     console.info("Start application [embedded]");
     navigatorApp.config.set('embedded', true);

@@ -71,7 +71,7 @@ const NavigatorHelp = Backbone.Marionette.Application.extend({
 
 const navigatorHelp = new NavigatorHelp({});
 
-$(document).ready(function() {
+$(function() {
     console.log("document.ready");
     navigatorHelp.start();
 });
