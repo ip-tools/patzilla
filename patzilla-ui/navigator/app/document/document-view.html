@@ -512,17 +512,20 @@ var abstract_list = data.get_abstract_list();
                         <dt class="inid-tooltip" data-toggle="tooltip" title="Full publication cycle">
                             (F)
                         </dt>
-                        <dd class="keyword">
-                            <br/>
+                        <dd class="keyword container-fluid">
                             <% _(data.get_full_cycle()).each(function(entry) { %>
 
+                            <div class="row">
+
+                            <div class="col-md-4">
+                            <!-- Document number and publication date -->
                             <%= entry.get_patent_number() %>,
                             <%= entry.get_publication_date() %>
                             <span class="inid-tooltip strong" data-toggle="tooltip" title="Publication date">(45)</span>
+                            </div>
 
-                            &nbsp;&nbsp;
-
-                            <!-- pdf document -->
+                            <div class="col-md-1">
+                            <!-- Link to PDF document -->
                             <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="patzilla-pdf"
                                class="btn btn-default btn-sm btn-popover anchor-pdf do-not-print" role="button"
                                data-toggle="popover" data-trigger="hover" data-placement="top"
@@ -530,8 +533,9 @@ var abstract_list = data.get_abstract_list();
                                     >
                                 <%= navigatorApp.ui.pdf_icon() %>
                             </a>
+                            </div>
 
-                            <br/>
+                            </div>
 
                             <% }); %>
 
