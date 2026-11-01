@@ -6,7 +6,7 @@
 require('jq-pagination/js/jquery.jqpagination.js');
 require('jq-pagination/css/jqpagination.css');
 
-export const PaginationView = Backbone.Marionette.ItemView.extend({
+export const PaginationView = Marionette.ItemView.extend({
     tagName: 'div',
     //template: _.template($('#ops-pagination-template').html(), this.model),
     template: require('./pagination.html'),

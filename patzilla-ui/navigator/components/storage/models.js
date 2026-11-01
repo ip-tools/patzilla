@@ -46,7 +46,7 @@ const ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const ApplicationProfile = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
+const ApplicationProfile = Marionette.Controller.extendEach(MarionetteFuture, {
 
     // We just support a single application profile by now.
     profile_name: 'default',

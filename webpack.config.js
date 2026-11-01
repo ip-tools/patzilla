@@ -75,7 +75,6 @@ const config = {
             'moment': 'moment',
             'Humanize': 'humanize-plus',
             'Marionette': 'backbone.marionette',
-            'Backbone.Marionette': 'backbone.marionette',
         }),
 
         // https://webpack.js.org/plugins/banner-plugin/

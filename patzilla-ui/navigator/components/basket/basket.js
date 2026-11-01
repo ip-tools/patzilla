@@ -585,7 +585,7 @@ const BasketEntryModel = Backbone.RelationalModel.extend({
 Backbone.Relational.store.addModelScope({BasketModel: BasketModel, BasketEntryModel: BasketEntryModel});
 
 
-export const BasketView = Backbone.Marionette.ItemView.extend({
+export const BasketView = Marionette.ItemView.extend({
 
     template: require('./basket.html'),
 

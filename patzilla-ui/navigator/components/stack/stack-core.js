@@ -220,7 +220,7 @@ const StackManager = NamedViewController.extend({
 });
 
 
-const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, {
+const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
 
     manager_class: StackManager,
 

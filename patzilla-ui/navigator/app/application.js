@@ -9,7 +9,7 @@ import {GenericExchangeDocument} from "patzilla.access.base";
  *          main application object
  * ------------------------------------------
  */
-export const NavigatorApp = Backbone.Marionette.Application.extend({
+export const NavigatorApp = Marionette.Application.extend({
 
     setup_ui: function() {
 
