@@ -51,20 +51,22 @@ const ResultNumbersView = GenericResultView.extend({
         var filter = this.model.get('filter');
 
         // Generic data source adapters
+        var crawler_class;
         if (navigatorApp.has_datasource(datasource)) {
             var datasource_info = navigatorApp.datasource_info(datasource);
-            var crawler_class = datasource_info.adapter.crawl;
+            crawler_class = datasource_info.adapter.crawl;
             if (crawler_class) {
                 this.crawler_limit = crawler_class.crawler_limit;
             } else {
                 this.user_message('Fetching publication numbers for datasource "' + datasource + '" not implemented yet.', 'error');
             }
-        } else {
+        }
+        if (!crawler_class) {
             this.user_message('Search provider "' + datasource + '" not implemented.', {type: 'error', icon: 'glyphicon-search'});
+            return;
         }
 
-        var crawler = new crawler_class({constituents: 'pub-number', query: query, query_data: query_data, filter: filter})
-        return crawler;
+        return new crawler_class({constituents: 'pub-number', query: query, query_data: query_data, filter: filter});
 
     },
 
