@@ -2,6 +2,7 @@
 // (c) 2013-2015 Andreas Motl, Elmyra UG
 'use strict';
 
+import Marionette from 'backbone.marionette';
 const {OpsExchangeDocumentView} = require("patzilla.navigator.app.document/document-view");
 
 export const OpsExchangeDocumentCollectionView = Marionette.CompositeView.extend({

@@ -2,6 +2,8 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 // Marionette 2.4.7 uses jQuery Deferreds.
 // Preserve synchronous initializer execution with jQuery 3.
 // https://github.com/ip-tools/patzilla/pull/168#issuecomment-6548579723

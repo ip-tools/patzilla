@@ -2,6 +2,7 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
 import { MarionetteFuture } from 'patzilla.lib.marionette';
 

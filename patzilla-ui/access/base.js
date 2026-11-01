@@ -2,6 +2,8 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 export const DatasourceSearch = Backbone.Model.extend({
     keywords: [],
     perform: function(query, options) {

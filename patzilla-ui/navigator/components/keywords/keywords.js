@@ -2,9 +2,10 @@
 // (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-require('jquery.highlight.bartaz');
+import Marionette from 'backbone.marionette';
 const {ModalRegion} = require("patzilla.lib.marionette");
 
+require('jquery.highlight.bartaz');
 
 const KeywordMapModel = Backbone.RelationalModel.extend({
 

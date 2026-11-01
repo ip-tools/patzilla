@@ -2,6 +2,7 @@
 // (c) 2015 Andreas Motl, Elmyra UG
 'use strict';
 
+import Marionette from 'backbone.marionette';
 import {GenericResultView, make_modal_view} from "patzilla.navigator.components.results-dialog/views";
 
 const AbstractResultFetcher = Marionette.Controller.extend({

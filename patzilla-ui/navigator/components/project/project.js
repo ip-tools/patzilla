@@ -2,6 +2,8 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 require('patzilla.navigator.components.storage');
 require('x-editable-bs4/dist/bootstrap3-editable/js/bootstrap-editable');
 require('x-editable-bs4/dist/bootstrap3-editable/css/bootstrap-editable');

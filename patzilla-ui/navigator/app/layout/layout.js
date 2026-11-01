@@ -2,7 +2,8 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-var Grid = require('split-grid').default;
+import Marionette from 'backbone.marionette';
+const Grid = require('split-grid').default;
 
 export const LayoutView = Marionette.LayoutView.extend({
 

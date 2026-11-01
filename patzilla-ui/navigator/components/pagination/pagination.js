@@ -2,6 +2,8 @@
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 // jqPagination, a jQuery pagination plugin
 require('jq-pagination/js/jquery.jqpagination.js');
 require('jq-pagination/css/jqpagination.css');

@@ -74,7 +74,6 @@ const config = {
             '_.string': 'underscore.string',
             'moment': 'moment',
             'Humanize': 'humanize-plus',
-            'Marionette': 'backbone.marionette',
         }),
 
         // https://webpack.js.org/plugins/banner-plugin/

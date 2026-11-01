@@ -2,9 +2,8 @@
 // (c) 2014-2015 Andreas Motl, Elmyra UG
 'use strict';
 
+import Marionette from 'backbone.marionette';
 import {ModalRegion} from "patzilla.lib.marionette";
-
-require('patzilla.lib.marionette');
 
 export const GenericResultView = Marionette.ItemView.extend({
 

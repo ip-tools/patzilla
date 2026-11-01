@@ -2,6 +2,8 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Marionette from 'backbone.marionette';
+
 // TODO: Make ripple effect work.
 //import {MDCRipple} from '@material/ripple';
 const ripple = require('@material/ripple');

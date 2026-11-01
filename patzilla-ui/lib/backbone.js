@@ -2,6 +2,8 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import Backbone from "backbone";
+
 // Utility: Easy multiple-inheritance in Backbone.js
 // https://gist.github.com/alassek/1227770
 (function () {

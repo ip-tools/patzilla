@@ -2,6 +2,7 @@
 // (c) 2015 Andreas Motl, Elmyra UG
 'use strict';
 
+import Marionette from 'backbone.marionette';
 const ToProgress = require('toprogress');
 
 const ReadingController = Marionette.Controller.extend({

@@ -2,12 +2,15 @@
 // (c) 2013-2017 Andreas Motl, Elmyra UG
 'use strict';
 
-require('patzilla.navigator.components.storage');
-require('raty');
-const memoize = require('memoize');
+import Marionette from 'backbone.marionette';
 import urlJoin from 'url-join';
+const memoize = require('memoize');
 const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");
 const {sanitize_non_ascii} = require("patzilla.lib.util");
+
+require('patzilla.navigator.components.storage');
+require('raty');
+
 
 function BasketError(message) {
     this.name    = 'BasketError';
