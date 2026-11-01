@@ -104,8 +104,6 @@
     "json-loader": "^0.5",
     "license-webpack-plugin": "^4",
     "modernizr-loader": "^1",
-    "postcss": "^8",
-    "postcss-selector-parser": "^7",
     "sass": "^1.107",
     "sass-loader": "^10",
     "script-loader": "^0.7",
@@ -118,9 +116,6 @@
     "webpack-cli": "^3",
     "webpack-dev-server": "^5",
     "webpack-notifier": "^1"
-  },
-  "peerDependencies": {
-    "postcss": "^8"
   },
   "resolutions": {
     "ansi-html": "^0.0.9",
@@ -142,6 +137,7 @@
     "minimist": "^1.2.6",
     "node-forge": "^1.4",
     "picomatch": "^2.3.2",
+    "postcss": "^8.5",
     "rimraf": "^6",
     "serialize-javascript": "^7",
     "sockjs": "^0.3",
