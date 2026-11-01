@@ -527,10 +527,8 @@ var abstract_list = data.get_abstract_list();
                             <div class="col-md-1">
                             <!-- Link to PDF document -->
                             <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="patzilla-pdf"
-                               class="btn btn-default btn-sm btn-popover anchor-pdf do-not-print" role="button"
-                               data-toggle="popover" data-trigger="hover" data-placement="top"
-                               data-content="PDF document"
-                                    >
+                               class="btn btn-default btn-sm anchor-pdf do-not-print" role="button"
+                               >
                                 <%= navigatorApp.ui.pdf_icon() %>
                             </a>
                             </div>
