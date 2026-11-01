@@ -139,7 +139,7 @@ body {
 
 /* Export dialog */
 #export-dialog .modal-body .row {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
 }
 
 .lead.inline {

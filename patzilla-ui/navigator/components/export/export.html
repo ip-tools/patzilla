@@ -316,18 +316,16 @@
                 <div class="col-md-3">
                     <div class="lead inline">Link and embed</div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-7">
 
-                    <div id="link-embed-sections">
+                    <div id="link-embed-sections" style="display: flex; flex-direction: column">
 
-
-                        <!-- Internal url -->
-                        <div class="lead section">Share with authenticated users</div>
-
-                        <small>
-                            A link for other users to review the collected documents per »Numberlist« mode.
-                        </small>
-                        <br/>
+                      <!-- Internal url -->
+                      <div class="row section">
+                        <div class="text-large">Share with authenticated users</div>
+                        <p class="text-smaller">
+                          A link for authenticated users to review the collected documents per »Numberlist« mode.
+                        </p>
 
                         <div class="input-group">
                             <input id="share-link-numberlist" class="input-xlarge" type="text" />
@@ -337,20 +335,18 @@
                             </button>
                             <button id="share-link-numberlist-open" type="button" class="btn btn-default has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
-                                <i class="glyphicon glyphicon-link"></i>
+                                <i class="glyphicon glyphicon-share"></i>
                             </button>
                         </div>
+                      </div>
 
-                        <br/><br/>
-
-
-                        <!-- External url -->
-                        <div class="lead section">Share with external users</div>
-
-                        <small>
-                            A public link for external persons to display the collected documents.
-                        </small>
-                        <br/>
+                      <!-- External url -->
+                      <div class="row section">
+                        <div class="text-large">Share with external users</div>
+                        <p class="text-smaller">
+                          A public link for external users to display the collected documents.
+                          The link is read-only, and has an expiration time.
+                        </p>
 
                         <div class="input-group">
                             <input id="share-link-external" class="input-xlarge" type="text" />
@@ -360,23 +356,25 @@
                             </button>
                             <button id="share-link-external-open" type="button" class="btn btn-default has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
-                                <i class="glyphicon glyphicon-link"></i>
+                                <i class="glyphicon glyphicon-share"></i>
                             </button>
                         </div>
-                        <br/>
 
+                        <div>
                         The link will expire <span id="expiration-time-human">in 24 hours</span>.
-                        <br/><br/>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        </div>
+                        <div>
                         <input id="expiration-time-slider" type="text"/>
+                        </div>
+                      </div>
 
-                        <!-- Footer -->
-                        <br/><br/>
-                        <hr style="margin: 0px; padding: 0px"/>
+                      <!-- Footer -->
+                      <div class="row section">
                         <small>
-                            Remark: Both ways will just transfer the plain document numbers without any rating scores.
+                            Note: Both sharing variants will just transfer the plain
+                            document numbers without any of your rating scores.
                         </small>
-
+                      </div>
 
                     </div>
 
