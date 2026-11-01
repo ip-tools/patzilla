@@ -388,7 +388,8 @@ const QueryBuilderView = Backbone.Marionette.ItemView.extend({
         options = options || {};
         if (this.query_empty() || this.data_is_dirty()) {
             navigatorApp.ui.notify(
-                'Your search parameters are empty, modified, or invalid. \n' +
+                'Your search parameters are empty, invalid, modified, ' +
+                'or yielded zero results. \n' +
                 'Please submit a valid search operation before.',
                 {type: 'warning', icon: options.icon});
             return false;
