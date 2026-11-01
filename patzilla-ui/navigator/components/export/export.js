@@ -84,6 +84,9 @@ export const ExportPlugin = Backbone.Model.extend({
             // Set up detail widgets
             //_this.setup_screens();
 
+            // An element on the "Link" screen needs an update when actually displayed.
+            _this.update_expiration_time();
+
         });
 
     },
@@ -300,13 +303,14 @@ export const ExportPlugin = Backbone.Model.extend({
 
         //log('============ update_expiration_time');
 
-        // Relayout slider widget
-        //this.dialog.find('#expiration-time-slider').slider('relayout');
-        this.ttl_slider.relayout();
-
+        // Update content in slider widget.
         var expiration = this.get_expiration_time();
         var when = expiration.fromNow();
         this.dialog.find('#expiration-time-human').html(when);
+
+        // Relayout slider widget.
+        //this.dialog.find('#expiration-time-slider').slider('relayout');
+        this.ttl_slider.relayout();
 
         var expiration = parseInt(this.get_expiration_time().diff(moment()) / 1000);
         //log('expiration:', expiration);
