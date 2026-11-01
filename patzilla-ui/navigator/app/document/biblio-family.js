@@ -151,7 +151,6 @@ export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeVie
     _initialEvents: function() {
         if (this.collection) {
             //this.listenTo(this.collection, "add", this.addChildView, this);
-            this.listenTo(this.collection, "remove", this.removeItemView, this);
             this.listenTo(this.collection, "reset", this.render, this);
         }
     },

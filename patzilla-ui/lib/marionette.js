@@ -13,6 +13,26 @@ Marionette.Callbacks.prototype.add = function(callback, contextOverride) {
     });
 };
 
+// Marionette 2.4.7 relies on $el.selector, removed in jQuery 3.
+// Restore the configured element so selector-based regions can re-query.
+// https://github.com/ip-tools/patzilla/pull/168#discussion_r4437458622
+Marionette.Region.prototype.reset = function() {
+    this.empty();
+
+    this.el = this.getOption('el');
+    if (this.el instanceof Backbone.$) {
+        this.el = this.el[0];
+    }
+
+    if (_.isObject(this.el)) {
+        this.$el = this.getEl(this.el);
+    } else {
+        delete this.$el;
+    }
+
+    return this;
+};
+
 // Widget: Modal container as Marionette region component
 // http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/

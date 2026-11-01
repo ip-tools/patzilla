@@ -30,8 +30,8 @@ export const ResultCollectionView = Backbone.Marionette.CompositeView.extend({
     //className: "container",
     template: _.template(''),
 
-    getItemView: function(item) {
-        log('ResultCollectionView.getItemView');
+    getChildView: function(item) {
+        log('ResultCollectionView.getChildView');
         var view_class = navigatorApp.current_datasource_info().adapter.result_item_view;
         if (view_class) {
             return view_class;

@@ -40,10 +40,14 @@ export const MetadataView = Backbone.Marionette.LayoutView.extend({
 
             var list_type = $(this).data('list-type');
             if (list_type == 'ops') {
-                navigatorApp.listRegion.show(navigatorApp.collectionView);
+                navigatorApp.listRegion.show(navigatorApp.collectionView, {
+                    preventDestroy: true,
+                });
 
             } else if (list_type == 'upstream') {
-                navigatorApp.listRegion.show(navigatorApp.resultView);
+                navigatorApp.listRegion.show(navigatorApp.resultView, {
+                    preventDestroy: true,
+                });
             }
 
         });
