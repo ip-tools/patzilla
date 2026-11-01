@@ -72,7 +72,7 @@ NavigatorHelp = Backbone.Marionette.Application.extend({
 
 navigatorHelp = new NavigatorHelp({});
 
-$(document).ready(function() {
+$(function() {
     console.log("document.ready");
     navigatorHelp.start();
 });

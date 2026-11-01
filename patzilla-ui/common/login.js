@@ -5,7 +5,7 @@ require('jrumble');
 require('bootstrap/dist/css/bootstrap.min.css');
 require('patzilla.navigator.style');
 
-$(document).ready(function() {
+$(function() {
     console.log("document.ready");
 
     var url = URL.parse(window.location.href);
