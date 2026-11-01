@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2014 Andreas Motl <andreas.motl@ip-tools.org>
-require('./base.js');
+'use strict';
 
-GooglePatentSearch = DatasourceSearch.extend({
+import {DatasourceSearch} from "./base";
+
+export const GooglePatentSearch = DatasourceSearch.extend({
     url: '/api/google/published-data/search',
 
     search: function(search_info, query, options) {

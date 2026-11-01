@@ -1,18 +1,20 @@
 // -*- coding: utf-8 -*-
 // (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('./base.js');
-require('./util.js');
+'use strict';
 
-IFIClaimsSearch = DatasourceSearch.extend({
+const {DatasourceSearch, DatasourceCrawler, GenericExchangeDocument} = require("./base");
+const {QueryLinkMixin} = require("./util");
+
+const IFIClaimsSearch = DatasourceSearch.extend({
     url: '/api/ificlaims/published-data/search',
 });
 
-IFIClaimsResultEntry = Backbone.Model.extend({
+const IFIClaimsResultEntry = Backbone.Model.extend({
     defaults: {
     },
 });
 
-IFIClaimsCrawler = DatasourceCrawler.extend({
+const IFIClaimsCrawler = DatasourceCrawler.extend({
 
     crawler_limit: 50000,
 
@@ -68,7 +70,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 
-IFIClaimsDocument = Backbone.Model.extend({});
+const IFIClaimsDocument = Backbone.Model.extend({});
 
 _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLinkMixin.prototype, {
 
@@ -534,7 +536,7 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
 });
 
 
-IFIClaimsFulltext = Marionette.Controller.extend({
+export const IFIClaimsFulltext = Marionette.Controller.extend({
 
     initialize: function(document_number) {
         log('IFIClaimsFulltext.initialize');

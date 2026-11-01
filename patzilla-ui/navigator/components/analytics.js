@@ -1,7 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2015 Andreas Motl, Elmyra UG
+'use strict';
 
-AbstractResultFetcher = Marionette.Controller.extend({
+import {GenericResultView, make_modal_view} from "patzilla.navigator.components.results-dialog/views";
+
+const AbstractResultFetcher = Marionette.Controller.extend({
 
     initialize: function(options) {
         options = options || {};
@@ -36,7 +39,7 @@ AbstractResultFetcher = Marionette.Controller.extend({
 
 });
 
-AbstractResultView = GenericResultView.extend({
+const AbstractResultView = GenericResultView.extend({
 
     initialize: function() {
         this.fetcher_class = null;
@@ -59,7 +62,7 @@ AbstractResultView = GenericResultView.extend({
 });
 
 
-ResultAnalyticsFamilyFetcher = AbstractResultFetcher.extend({
+const ResultAnalyticsFamilyFetcher = AbstractResultFetcher.extend({
 
     initialize: function(options) {
         log('ResultAnalyticsFamilyFetcher.initialize');
@@ -74,7 +77,7 @@ ResultAnalyticsFamilyFetcher = AbstractResultFetcher.extend({
 
 });
 
-ResultAnalyticsFamilyView = AbstractResultView.extend({
+const ResultAnalyticsFamilyView = AbstractResultView.extend({
 
     initialize: function() {
         console.log('ResultAnalyticsFamilyView.initialize');
@@ -84,7 +87,7 @@ ResultAnalyticsFamilyView = AbstractResultView.extend({
 });
 
 
-ResultAnalyticsDaterangeFetcher = AbstractResultFetcher.extend({
+const ResultAnalyticsDaterangeFetcher = AbstractResultFetcher.extend({
 
     initialize: function(options) {
         log('ResultAnalyticsDaterangeFetcher.initialize');
@@ -100,7 +103,7 @@ ResultAnalyticsDaterangeFetcher = AbstractResultFetcher.extend({
 
 });
 
-ResultAnalyticsDaterangeView = AbstractResultView.extend({
+const ResultAnalyticsDaterangeView = AbstractResultView.extend({
 
     initialize: function(options) {
         console.log('ResultAnalyticsDaterangeView.initialize');
@@ -133,7 +136,7 @@ ResultAnalyticsDaterangeView = AbstractResultView.extend({
 });
 
 
-ResultAnalyticsDistinctApplicantFetcher = AbstractResultFetcher.extend({
+const ResultAnalyticsDistinctApplicantFetcher = AbstractResultFetcher.extend({
 
     get_url: function(data) {
         var url_tpl = _.template('/api/analytics/applicants-distinct?<%= criteria_query %>&datasource=<%= datasource %>');
@@ -143,7 +146,7 @@ ResultAnalyticsDistinctApplicantFetcher = AbstractResultFetcher.extend({
 
 });
 
-ResultAnalyticsDistinctApplicantView = AbstractResultView.extend({
+const ResultAnalyticsDistinctApplicantView = AbstractResultView.extend({
 
     initialize: function() {
         console.log('ResultAnalyticsDistinctApplicantView.initialize');

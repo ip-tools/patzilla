@@ -1,11 +1,16 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 require('jquery.shorten.1.0');
-require('./util.js');
-var Nataraja = require('patzilla.navigator.components.nataraja').Nataraja;
+const {Nataraja} = require("patzilla.navigator.components.nataraja");
+const {OpsFamilyCollection, OpsFulltext} = require("patzilla.access.epo.ops");
+const {DepatisConnectFulltext} = require("patzilla.access.depatisnet");
+const {IFIClaimsFulltext} = require("patzilla.access.ificlaims");
+const {OpsBaseViewMixin, citations_environment_button} = require("./util");
+const {OpsFamilyCompactCollectionView, OpsFamilyVerboseCollectionView, OpsFamilyCitationsCollectionView} = require("./biblio-family");
 
-
-DocumentBaseController = Marionette.Controller.extend({
+const DocumentBaseController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('DocumentBaseController.initialize');
@@ -154,7 +159,7 @@ DocumentBaseController = Marionette.Controller.extend({
 });
 
 
-DocumentDetailsController = Marionette.Controller.extend({
+const DocumentDetailsController = Marionette.Controller.extend({
 
     initialize: function(options) {
         log('DocumentDetailsController.initialize');
@@ -346,7 +351,7 @@ DocumentDetailsController = Marionette.Controller.extend({
 
                         // Render HTML content for single or multiple languages.
                         var template_multi = require('./fulltext-multi.html');
-                        html_content = template_multi({identifier: identifier, items: parts});
+                        var html_content = template_multi({identifier: identifier, items: parts});
                         content_element.html(html_content);
 
                     }
@@ -450,7 +455,7 @@ DocumentDetailsController = Marionette.Controller.extend({
             _this.indicate_activity(container, false);
 
             // indicate family acquistion failed
-            FamilyFailedView = Backbone.Marionette.ItemView.extend({
+            const FamilyFailedView = Backbone.Marionette.ItemView.extend({
                 render : function (){
                     this.$el.append('No family information available.');
                 }
@@ -476,7 +481,7 @@ DocumentDetailsController = Marionette.Controller.extend({
 
 });
 
-DocumentCarouselController = Marionette.Controller.extend({
+const DocumentCarouselController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('DocumentCarouselController.initialize');
@@ -676,7 +681,7 @@ DocumentCarouselController = Marionette.Controller.extend({
 });
 
 
-PdfPanelController = Marionette.Controller.extend({
+const PdfPanelController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('PdfPanelController.initialize');

@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
-require('../document/document-view.js');
+'use strict';
 
-OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
+const {OpsExchangeDocumentView} = require("patzilla.navigator.app.document/document-view");
+
+export const OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
     tagName: "div",
     id: "ops-collection-container",
     className: "",

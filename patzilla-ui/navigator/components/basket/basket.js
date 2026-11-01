@@ -1,17 +1,20 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+'use strict';
+
 require('patzilla.navigator.components.storage');
 require('raty');
-var memoize = require('memoize');
-var urljoin = require('url-join');
-var sanitize_non_ascii = require('patzilla.lib.util').sanitize_non_ascii;
+const memoize = require('memoize');
+const urljoin = require('url-join');
+const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");
+const {sanitize_non_ascii} = require("patzilla.lib.util");
 
 function BasketError(message) {
     this.name    = 'BasketError';
     this.message = message;
 }
 
-BasketModel = Backbone.RelationalModel.extend({
+export const BasketModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Basket'),
 
@@ -558,7 +561,7 @@ BasketModel = Backbone.RelationalModel.extend({
 });
 
 
-BasketEntryModel = Backbone.RelationalModel.extend({
+const BasketEntryModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('BasketEntry'),
 
@@ -582,7 +585,7 @@ BasketEntryModel = Backbone.RelationalModel.extend({
 Backbone.Relational.store.addModelScope({BasketModel: BasketModel, BasketEntryModel: BasketEntryModel});
 
 
-BasketView = Backbone.Marionette.ItemView.extend({
+export const BasketView = Backbone.Marionette.ItemView.extend({
 
     template: require('./basket.html'),
 
@@ -892,7 +895,7 @@ BasketView = Backbone.Marionette.ItemView.extend({
 
 });
 
-BasketController = Marionette.Controller.extend({
+const BasketController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('BasketController.initialize');
@@ -970,7 +973,7 @@ BasketController = Marionette.Controller.extend({
 });
 
 
-BasketListView = GenericResultView.extend({
+export const BasketListView = GenericResultView.extend({
 
     initialize: function(options) {
         console.log('BasketListView.initialize');
@@ -1022,7 +1025,7 @@ BasketListView = GenericResultView.extend({
 });
 
 
-RatingController = Marionette.Controller.extend({
+const RatingController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('RatingController.initialize');

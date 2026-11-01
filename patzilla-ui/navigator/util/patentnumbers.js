@@ -2,7 +2,7 @@
 // (c) 2013-2017 Andreas Motl, Elmyra UG
 
 // strip patent kindcode for the poorest
-function patent_number_strip_kindcode(patent_number) {
+export function patent_number_strip_kindcode(patent_number) {
     var re = /.+\d+(\D)/g;
     var match = re.exec(patent_number);
     if (match && match[1]) {
@@ -18,7 +18,7 @@ function patent_number_strip_kindcode(patent_number) {
 // Also handles DE000B0012324MAZ, IN2012KN00054A.
 var patent_number_pattern = /^(\D\D)(\d*\D{0,2}[\d.]+?)([a-zA-Z].{0,2})?(_.+)?$/;
 var patent_number_pattern_groups = ['country', 'number', 'kind', 'ext'];
-function split_patent_number(patent_number) {
+export function split_patent_number(patent_number) {
 
     var patent = {};
 
@@ -38,7 +38,7 @@ function split_patent_number(patent_number) {
 
 }
 
-function normalize_numberlist(payload) {
+export function normalize_numberlist(payload) {
     var deferred = $.Deferred();
     $.ajax({
             method: 'post',
@@ -62,7 +62,3 @@ function normalize_numberlist(payload) {
         });
     return deferred.promise();
 }
-
-exports.patent_number_strip_kindcode = patent_number_strip_kindcode;
-exports.normalize_numberlist = normalize_numberlist;
-exports.split_patent_number = split_patent_number;

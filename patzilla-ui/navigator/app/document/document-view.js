@@ -1,12 +1,14 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 require('jquery.highlight.bartaz');
-require('patzilla.navigator.util.linkmaker');
-require('./util.js');
+const {LinkMaker} = require("patzilla.navigator.util.linkmaker");
+const {TemplateHelperMixin} = require("./util.js");
 
 
 // TODO: Rename to DocumentView
-OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
+export const OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
 
     template: require('./document-view.html'),
     tagName: 'div',
@@ -73,7 +75,7 @@ OpsExchangeDocumentView = Backbone.Marionette.Layout.extend({
         if (this.model.get('__type__') == 'ops-placeholder') {
 
             // Massage LinkMaker to be suitable for use from placeholder template
-            this.model.linkmaker = new Ipsuite.LinkMaker(this.model);
+            this.model.linkmaker = new LinkMaker(this.model);
 
             // Add placeholder
             var html = require('./document-placeholder.html')({model: this.model});

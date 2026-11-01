@@ -1,10 +1,12 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 require('jquery.highlight.bartaz');
-const ModalRegion = require('patzilla.lib.marionette').ModalRegion;
+const {ModalRegion} = require("patzilla.lib.marionette");
 
 
-KeywordMapModel = Backbone.RelationalModel.extend({
+const KeywordMapModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('KeywordMap'),
     //collection: ProjectCollection,
@@ -24,7 +26,7 @@ KeywordMapModel = Backbone.RelationalModel.extend({
 
 });
 
-KeywordMapCollection = Backbone.Collection.extend({
+const KeywordMapCollection = Backbone.Collection.extend({
     sync: Backbone.localforage.sync('KeywordMap'),
     find: Backbone.localforage.find,
     model: KeywordMapModel,
@@ -37,7 +39,7 @@ KeywordMapCollection = Backbone.Collection.extend({
 });
 
 
-KeywordEditorEntryView = Backbone.Marionette.ItemView.extend({
+const KeywordEditorEntryView = Backbone.Marionette.ItemView.extend({
 
     tagName: "tr",
     template: require('./keyword-editor-item.html'),
@@ -58,7 +60,7 @@ KeywordEditorEntryView = Backbone.Marionette.ItemView.extend({
 
 });
 
-KeywordEditorView = Backbone.Marionette.CompositeView.extend({
+const KeywordEditorView = Backbone.Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "keyword-editor",
@@ -150,7 +152,7 @@ KeywordEditorView = Backbone.Marionette.CompositeView.extend({
 });
 
 
-KeywordsController = Marionette.Controller.extend({
+const KeywordsController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('KeywordsController.initialize');

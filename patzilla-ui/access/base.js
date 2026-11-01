@@ -1,7 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
-DatasourceSearch = Backbone.Model.extend({
+export const DatasourceSearch = Backbone.Model.extend({
     keywords: [],
     perform: function(query, options) {
 
@@ -76,7 +77,7 @@ DatasourceSearch = Backbone.Model.extend({
 });
 
 
-DatasourceCrawler = Marionette.Controller.extend({
+export const DatasourceCrawler = Marionette.Controller.extend({
 
     initialize: function(options) {
         log('DatasourceCrawler.initialize');
@@ -150,7 +151,7 @@ DatasourceCrawler = Marionette.Controller.extend({
 });
 
 
-GenericExchangeDocument = Backbone.Model.extend({});
+export const GenericExchangeDocument = Backbone.Model.extend({});
 
 _.extend(GenericExchangeDocument.prototype,  {
 

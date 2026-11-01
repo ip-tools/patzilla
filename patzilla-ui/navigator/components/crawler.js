@@ -1,11 +1,12 @@
 // -*- coding: utf-8 -*-
 // (c) 2015,2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('patzilla.navigator.components.results-dialog');
+'use strict';
 
-const ModalRegion = require('patzilla.lib.marionette').ModalRegion;
+const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");
+const {ModalRegion} = require("patzilla.lib.marionette");
 
 
-ResultNumbersView = GenericResultView.extend({
+const ResultNumbersView = GenericResultView.extend({
 
     initialize: function() {
         console.log('ResultNumbersView.initialize');

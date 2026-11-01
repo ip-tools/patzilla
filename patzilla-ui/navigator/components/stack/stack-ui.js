@@ -7,15 +7,11 @@ import { MDCMenu } from '@material/menu';
 import { MarionetteFuture, DirectRenderMixin } from 'patzilla.lib.marionette';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
-export { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget };
-
-
 // TODO: Maybe
 //const CheckboxBehavior = require('marionette-checkbox-behavior');
 
-
 // TODO: Use https://github.com/rafeememon/marionette-checkbox-behavior
-const StackCheckboxWidget = CheckboxWidget.extend({
+export const StackCheckboxWidget = CheckboxWidget.extend({
     /*
     Contemporary <input type="checkbox"> elements with bidirectional data binding.
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
@@ -39,7 +35,7 @@ const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
+export const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -92,7 +88,7 @@ const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFutu
 });
 
 
-class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, MarionetteFuture, DirectRenderMixin) {
+export class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, MarionetteFuture, DirectRenderMixin) {
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
      * into a `Marionette.ItemView`.

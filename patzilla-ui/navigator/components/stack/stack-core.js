@@ -6,13 +6,11 @@ import { SmartCollectionMixin } from 'patzilla.lib.backbone';
 import { MarionetteFuture, NamedViewController } from 'patzilla.lib.marionette';
 import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
-export { StackDisplayMode };
-
 require('backbone-dom-to-view');
 require('patzilla.navigator.components.storage');
 
 
-const StackDisplayMode = {
+export const StackDisplayMode = {
     RATING: 'mode-rating',
     STACK:  'mode-stack',
 };

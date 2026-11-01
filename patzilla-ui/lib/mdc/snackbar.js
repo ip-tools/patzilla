@@ -6,10 +6,7 @@ import { classes } from 'patzilla.lib.es6';
 import { MDCSnackbar } from '@material/snackbar';
 import { DirectRenderMixin } from 'patzilla.lib.marionette';
 
-export { SnackbarWidget };
-
-
-class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRenderMixin) {
+export class SnackbarWidget extends classes.many(Backbone.Marionette.ItemView, DirectRenderMixin) {
     /*
      * SnackbarWidget encapsulates the Snackbar Material Design Component (MDC)
      * into a `Marionette.ItemView`.

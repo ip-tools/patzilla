@@ -1,14 +1,15 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 require('select2/dist/js/select2.js');
 require('select2/dist/css/select2.css');
-require('jquery-caret-plugin/dist/jquery.caret.js');
-var bootbox = require('bootbox');
+require('jquery-caret-plugin/dist/jquery.caret');
+const bootbox = require('bootbox');
+const {RadioPlus} = require("patzilla.lib.radioplus");
+const {FIELDS_KNOWLEDGE} = require("./expression-fields.js");
 
-require('patzilla.lib.radioplus');
-var FIELDS_KNOWLEDGE = require('./expression-fields.js').FIELDS_KNOWLEDGE;
-
-QueryBuilderView = Backbone.Marionette.ItemView.extend({
+const QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     template: require('./querybuilder.html'),
 
@@ -31,7 +32,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
 
     get_datasource_info: function() {
         var datasource = navigatorApp.get_datasource();
-        datasource_info = navigatorApp.datasource_info(datasource);
+        var datasource_info = navigatorApp.datasource_info(datasource);
         if (!datasource_info) {
             datasource_info = {
                 'querybuilder': {},
@@ -987,7 +988,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         // Item date
         created = moment(created).fromNow();
 
-        // Search flavor
+        // Search flavour
         var flavor_title = flavor;
         if (flavor == 'comfort') {
             flavor_title = 'Comfort';
@@ -997,7 +998,7 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
             flavor_title = 'Expert';
         }
 
-        // Title and color for data source label
+        // Title and colour for data source label
         var datasource_label_title = datasource;
         var datasource_label_color_class = 'default';
         if (datasource_info) {
@@ -1614,8 +1615,8 @@ QueryBuilderView = Backbone.Marionette.ItemView.extend({
         if (datasource_info.querybuilder.enable_sorting) {
             var field_chooser = $('#querybuilder-area').find('#sort-field-chooser');
             var order_chooser = $('#querybuilder-area').find('#sort-order-chooser');
-            sort_field = field_chooser.val();
-            sort_order = order_chooser.data('value');
+            var sort_field = field_chooser.val();
+            var sort_order = order_chooser.data('value');
             if (sort_field && sort_order) {
                 sort_state = {
                     field: sort_field,

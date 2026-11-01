@@ -1,9 +1,11 @@
 // -*- coding: utf-8 -*-
 // (c) 2014,2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('jquery-hotkeys');
-var urljoin = require('url-join');
+'use strict';
 
-HotkeysPlugin = Marionette.Controller.extend({
+require('jquery-hotkeys');
+const urljoin = require('url-join');
+
+export const HotkeysPlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('HotkeysPlugin.initialize');

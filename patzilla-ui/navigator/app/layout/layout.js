@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 var Grid = require('split-grid').default;
 
-LayoutView = Backbone.Marionette.Layout.extend({
+export const LayoutView = Backbone.Marionette.Layout.extend({
 
     template: require('./root.html'),
     regions: {
@@ -45,7 +47,7 @@ LayoutView = Backbone.Marionette.Layout.extend({
 
 });
 
-ContentView = Backbone.Marionette.ItemView.extend({
+const ContentView = Backbone.Marionette.ItemView.extend({
     template: require('./content.html'),
     initialize: function() {
         //log('ContentView::initialize');
@@ -54,7 +56,7 @@ ContentView = Backbone.Marionette.ItemView.extend({
     templateHelpers: {},
 });
 
-GridContentView = Backbone.Marionette.ItemView.extend({
+const GridContentView = Backbone.Marionette.ItemView.extend({
     template: require('./content_grid.html'),
     initialize: function() {
         //log('GridContentView::initialize');
@@ -82,7 +84,7 @@ GridContentView = Backbone.Marionette.ItemView.extend({
     },
 });
 
-MenuView = Backbone.Marionette.ItemView.extend({
+const MenuView = Backbone.Marionette.ItemView.extend({
     template: require('./menu.html'),
     tagName: 'span',
     initialize: function() {
@@ -95,7 +97,7 @@ MenuView = Backbone.Marionette.ItemView.extend({
     */
 });
 
-HeaderView = Backbone.Marionette.Layout.extend({
+const HeaderView = Backbone.Marionette.Layout.extend({
 
     regions: {
         menu: "#menu-region",
@@ -129,7 +131,7 @@ HeaderView = Backbone.Marionette.Layout.extend({
 });
 
 
-WideHeaderView = Backbone.Marionette.Layout.extend({
+const WideHeaderView = Backbone.Marionette.Layout.extend({
 
     regions: {
         menu: "#menu-region",
@@ -172,7 +174,7 @@ WideHeaderView = Backbone.Marionette.Layout.extend({
 });
 
 
-FooterView = Backbone.Marionette.ItemView.extend({
+const FooterView = Backbone.Marionette.ItemView.extend({
 
     template: require('./footer.html'),
 

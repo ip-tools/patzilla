@@ -1,10 +1,12 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('./base.js');
-require('./util.js');
-require('./epo-ops-base.js');
+'use strict';
 
-OpsPublishedDataSearch = Backbone.Model.extend({
+const {DatasourceCrawler} = require("./base");
+const {OpsBaseModel} = require("./epo-ops-base");
+const {QueryLinkMixin} = require("./util");
+
+export const OpsPublishedDataSearch = Backbone.Model.extend({
     url: '/api/ops/published-data/search',
     keywords: [],
     perform: function(documents, metadata, query, range, more_options) {
@@ -189,7 +191,7 @@ OpsPublishedDataSearch = Backbone.Model.extend({
 });
 
 // TODO: Refactor to generic metadata container object
-OpsExchangeMetadata = Backbone.Model.extend({
+export const OpsExchangeMetadata = Backbone.Model.extend({
 
     defaults: {
 
@@ -325,7 +327,7 @@ OpsExchangeMetadata = Backbone.Model.extend({
 
 });
 
-OpsPublishedDataCrawler = DatasourceCrawler.extend({
+const OpsPublishedDataCrawler = DatasourceCrawler.extend({
 
     crawler_limit: 2000,
 
@@ -343,7 +345,7 @@ OpsPublishedDataCrawler = DatasourceCrawler.extend({
 });
 
 // Register data source adapter with application
-navigatorApp.addInitializer(function(options) {
+window.navigatorApp.addInitializer(function(options) {
     this.register_datasource('ops', {
 
         // The title used when referencing this data source to the user
@@ -374,7 +376,7 @@ navigatorApp.addInitializer(function(options) {
 
 
 
-OpsExchangeDocument = Backbone.Model.extend({});
+export const OpsExchangeDocument = Backbone.Model.extend({});
 
 _.extend(OpsExchangeDocument.prototype, OpsBaseModel.prototype, QueryLinkMixin.prototype, {
 
@@ -832,7 +834,7 @@ _.extend(OpsExchangeDocument.prototype, {
 
 });
 
-OpsExchangeDocumentCollection = Backbone.Collection.extend({
+export const OpsExchangeDocumentCollection = Backbone.Collection.extend({
 
     model: OpsExchangeDocument,
 
@@ -872,7 +874,7 @@ OpsExchangeDocumentCollection = Backbone.Collection.extend({
 });
 
 
-OpsFulltext = Marionette.Controller.extend({
+export const OpsFulltext = Marionette.Controller.extend({
 
     initialize: function(document_number) {
         log('OpsFulltext.initialize');
@@ -950,14 +952,14 @@ OpsFulltext = Marionette.Controller.extend({
 
 
 
-OpsFamilyMember = OpsBaseModel.extend(QueryLinkMixin.prototype, {
+const OpsFamilyMember = OpsBaseModel.extend(QueryLinkMixin.prototype, {
     parse: function(response) {
         response['priority-claim'] = to_list(response['priority-claim']);
         return response;
     }
 });
 
-OpsFamilyCollection = Backbone.Collection.extend({
+export const OpsFamilyCollection = Backbone.Collection.extend({
 
     model: OpsFamilyMember,
 

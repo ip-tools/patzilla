@@ -1,12 +1,14 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 require('patzilla.navigator.components.storage');
 require('x-editable-bs4/dist/bootstrap3-editable/js/bootstrap-editable');
 require('x-editable-bs4/dist/bootstrap3-editable/css/bootstrap-editable');
 var slugify = require('slugify');
 
 
-QueryModel = Backbone.RelationalModel.extend({
+const QueryModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Query'),
 
@@ -37,7 +39,7 @@ QueryModel = Backbone.RelationalModel.extend({
 });
 
 
-ProjectModel = Backbone.RelationalModel.extend({
+const ProjectModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Project'),
     //collection: ProjectCollection,
@@ -252,7 +254,7 @@ ProjectModel = Backbone.RelationalModel.extend({
 Backbone.Relational.store.addModelScope({QueryModel: QueryModel, ProjectModel: ProjectModel});
 
 
-ProjectCollection = Backbone.Collection.extend({
+const ProjectCollection = Backbone.Collection.extend({
     sync: Backbone.localforage.sync('Project'),
     find: Backbone.localforage.find,
     model: ProjectModel,
@@ -367,7 +369,7 @@ ProjectCollection = Backbone.Collection.extend({
 });
 
 
-ProjectChooserView = Backbone.Marionette.ItemView.extend({
+export const ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
     template: require('./project.html'),
 

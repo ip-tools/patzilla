@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 var StackTrace = require('stacktrace-js');
 
-IssueReporter = Backbone.Model.extend({
+const IssueReporter = Backbone.Model.extend({
 
     defaults: {
         api_url: '/api/util/issue/report',
@@ -115,7 +117,7 @@ IssueReporter = Backbone.Model.extend({
 
 });
 
-IssueReport = Backbone.Model.extend({
+const IssueReport = Backbone.Model.extend({
 
     // Default report information
     defaults: {
@@ -159,7 +161,7 @@ IssueReport = Backbone.Model.extend({
 });
 
 
-IssueReporterGui = Backbone.Model.extend({
+export const IssueReporterGui = Backbone.Model.extend({
 
     initialize: function(options) {
         console.log('IssueReporterGui::initialize');
@@ -300,7 +302,7 @@ IssueReporterGui = Backbone.Model.extend({
 
 });
 
-var issueReporter = new IssueReporter();
+const issueReporter = new IssueReporter();
 
 if (PRODUCTION) {
     issueReporter.setup_stacktrace_interceptor({targets: 'log,email:system'});

@@ -1,12 +1,12 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
 // TODO: Make ripple effect work.
 //import {MDCRipple} from '@material/ripple';
 const ripple = require('@material/ripple');
 
-
-MetadataView = Backbone.Marionette.Layout.extend({
+export const MetadataView = Backbone.Marionette.Layout.extend({
     tagName: "div",
     template: require('./results-header.html'),
 
@@ -92,5 +92,3 @@ MetadataView = Backbone.Marionette.Layout.extend({
     },
 
 });
-
-

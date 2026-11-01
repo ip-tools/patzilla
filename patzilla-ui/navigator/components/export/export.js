@@ -1,11 +1,13 @@
 // -*- coding: utf-8 -*-
 // (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('jquery.redirect');
-var Slider = require('bootstrap-slider');
-require('bootstrap-slider/dist/css/bootstrap-slider');
-require('patzilla.lib.radioplus');
+'use strict';
 
-ExportPlugin = Backbone.Model.extend({
+require('jquery.redirect');
+require('bootstrap-slider/dist/css/bootstrap-slider');
+const Slider = require('bootstrap-slider');
+import {RadioPlus} from "patzilla.lib.radioplus";
+
+export const ExportPlugin = Backbone.Model.extend({
 
     initialize: function(options) {
 
