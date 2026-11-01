@@ -1,7 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2016 Andreas Motl <andreas.motl@elmyra.de>
+'use strict';
 
-RadioPlus = Backbone.Model.extend({
+export const RadioPlus = Backbone.Model.extend({
 
     // Machinery for rich button-based radio-/checkbox widgets
 

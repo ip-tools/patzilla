@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
 function _field_text(label, fields, more, options) {
 
@@ -369,7 +370,7 @@ var DEPATECH_FIELDS = [
     },
 ];
 
-var FIELDS_KNOWLEDGE = {
+export const FIELDS_KNOWLEDGE = {
     'ops': {
         'meta': {
             'separator': '=',
@@ -403,5 +404,3 @@ var FIELDS_KNOWLEDGE = {
         'fields': DEPATECH_FIELDS,
     },
 };
-
-exports.FIELDS_KNOWLEDGE = FIELDS_KNOWLEDGE;

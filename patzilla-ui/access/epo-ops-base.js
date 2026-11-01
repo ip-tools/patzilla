@@ -1,7 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+'use strict';
 
-OpsBaseModel = Backbone.Model.extend({
+import {QueryLinkMixin} from "./util";
+
+export const OpsBaseModel = Backbone.Model.extend({
 
         get_unique_key: function() {
             return this.get_document_number();

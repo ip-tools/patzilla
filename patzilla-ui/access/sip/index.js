@@ -1,7 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('./models');
-require('./views');
+'use strict';
+
+const {SipResultView} = require("./views");
+const {SipSearch, SipResultEntry, SipCrawler} = require("./models");
 
 // Register data source adapter with application
 navigatorApp.addInitializer(function(options) {

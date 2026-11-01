@@ -1,7 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
+'use strict';
 
-OpsBaseViewMixin = {
+import {LinkMaker} from "patzilla.navigator.util.linkmaker";
+
+export const OpsBaseViewMixin = {
 
     bind_query_links: function(container) {
 
@@ -78,7 +81,7 @@ OpsBaseViewMixin = {
 };
 
 
-TemplateHelperMixin = {
+export const TemplateHelperMixin = {
 
     templateHelpers: function() {
         var _this = this;
@@ -88,7 +91,7 @@ TemplateHelperMixin = {
             config: navigatorApp.config,
 
             get_linkmaker: function() {
-                return new Ipsuite.LinkMaker(_this.model);
+                return new LinkMaker(_this.model);
             },
 
             get_citations_environment_button: function(options) {
@@ -105,7 +108,7 @@ TemplateHelperMixin = {
 
 };
 
-TemplateDataContextMixin = {
+export const TemplateDataContextMixin = {
 
     // Namespace template variables to "data", also accounting for "templateHelpers".
     serializeData: function() {
@@ -128,7 +131,7 @@ TemplateDataContextMixin = {
 
 };
 
-citations_environment_button = function(model, options) {
+export const citations_environment_button = function(model, options) {
     //log('OpsBaseModel.get_citations_environment_button');
     options = options || {};
     var tpl = require('./biblio-citations-environment.html');

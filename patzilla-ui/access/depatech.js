@@ -1,19 +1,21 @@
 // -*- coding: utf-8 -*-
 // (c) 2017 Andreas Motl, Elmyra UG
-require('./base.js');
+'use strict';
 
-DepaTechSearch = DatasourceSearch.extend({
+const {DatasourceSearch, DatasourceCrawler} = require("./base");
+
+const DepaTechSearch = DatasourceSearch.extend({
     url: '/api/depatech/published-data/search',
 });
 
-DepaTechResultEntry = Backbone.Model.extend({
+const DepaTechResultEntry = Backbone.Model.extend({
 
     defaults: {
     },
 
 });
 
-DepaTechCrawler = DatasourceCrawler.extend({
+const DepaTechCrawler = DatasourceCrawler.extend({
 
     initialize: function(options) {
         log('DepaTechCrawler.initialize');

@@ -1,8 +1,11 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('patzilla.navigator.components.results-tabular');
+'use strict';
 
-SipResultView = ResultItemView.extend({
+const {ResultItemView} = require("patzilla.navigator.components.results-tabular/views");
+const {QueryLinkMixin} = require("../util");
+
+export const SipResultView = ResultItemView.extend({
 
     //template: _.template($('#sip-entry-template').html(), this.model, {variable: 'data'}),
     template: require('./result-item.html'),

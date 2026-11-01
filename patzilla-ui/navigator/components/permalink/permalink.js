@@ -1,9 +1,11 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2016 Andreas Motl, Elmyra UG
-var dataurl = require('dataurl').dataurl;
-var opaque_param = require('patzilla.navigator.components.opaquelinks').opaque_param;
+'use strict';
 
-PermalinkPlugin = Marionette.Controller.extend({
+const {opaque_param} = require("patzilla.navigator.components.opaquelinks");
+const {dataurl} = require("dataurl");
+
+const PermalinkPlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('PermalinkPlugin.initialize');

@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2016 Andreas Motl, Elmyra UG
+'use strict';
 
 // generate opaque token from parameter object
 function opaquetoken(params, options) {
@@ -34,7 +35,7 @@ function opaquetoken_query(params, options) {
     return deferred.promise();
 }
 
-function opaque_param(params, options) {
+export function opaque_param(params, options) {
 
     // serialize state into opaque parameter token
     // TODO: make this idempotent by saving the original "href" contents into a "data" attribute
@@ -58,7 +59,7 @@ function opaque_param(params, options) {
 
 }
 
-function propagate_opaque_errors() {
+export function propagate_opaque_errors() {
 
     // TODO: Decouple from "navigatorApp" instance
 
@@ -93,6 +94,3 @@ function propagate_opaque_errors() {
         });
     }
 }
-
-exports.opaque_param = opaque_param;
-exports.propagate_opaque_errors = propagate_opaque_errors;

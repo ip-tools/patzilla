@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2015 Andreas Motl, Elmyra UG
+'use strict';
+
 require('patzilla.lib.marionette');
 
-GenericResultView = Backbone.Marionette.ItemView.extend({
+export const GenericResultView = Backbone.Marionette.ItemView.extend({
 
     tagName: "div",
     id: "result-view",
@@ -150,7 +152,7 @@ GenericResultView = Backbone.Marionette.ItemView.extend({
 
 });
 
-function make_modal_view(view_class, model, options) {
+export function make_modal_view(view_class, model, options) {
     options = options || {};
     var modal = new ModalRegion({el: '#modal-area'});
 

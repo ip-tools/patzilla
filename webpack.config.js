@@ -290,8 +290,11 @@ const config = {
             'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
             'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
             'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
+            'patzilla.access.epo.ops.base':                  path.resolve(__ui, 'access', 'epo-ops-base'),
             'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),
+            'patzilla.access.ificlaims-help':                path.resolve(__ui, 'access', 'ificlaims-help'),
             'patzilla.access.sip':                           path.resolve(__ui, 'access', 'sip'),
+            'patzilla.access.util':                          path.resolve(__ui, 'access', 'util'),
 
             'patzilla.lib.es6':                              path.resolve(__ui, 'lib', 'es6'),
             'patzilla.lib.util':                             path.resolve(__ui, 'lib', 'util'),

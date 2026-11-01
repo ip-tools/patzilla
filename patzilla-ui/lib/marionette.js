@@ -2,13 +2,10 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-export { ModalRegion, MarionetteFuture, DirectRenderMixin, NamedViewController };
-
-
 // Widget: Modal container as Marionette region component
 // http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
-const ModalRegion = Marionette.Region.extend({
+export const ModalRegion = Marionette.Region.extend({
 
     constructor: function() {
         Marionette.Region.prototype.constructor.apply(this, arguments);
@@ -43,7 +40,7 @@ const ModalRegion = Marionette.Region.extend({
 })();
 
 
-const MarionetteFuture = {
+export const MarionetteFuture = {
     // Modern Marionettes like to enjoy this as `this.getOption(name)`.
     // This is a forward-compat polyfill to satisfy downstream components.
     getOption: function(name) {
@@ -52,7 +49,7 @@ const MarionetteFuture = {
 };
 
 
-const DirectRenderMixin = {
+export const DirectRenderMixin = {
     /*
     Utility: Directly render templates without intermediary wrapper element
     made of `this.tagName`. This effectively makes Marionette views use the
@@ -137,7 +134,7 @@ const DirectRenderMixin = {
 };
 
 
-const NamedViewController = Marionette.Controller.extendEach(MarionetteFuture, {
+export const NamedViewController = Marionette.Controller.extendEach(MarionetteFuture, {
     /*
     In order to deduce the Marionette object currently visible in viewport,
     we needed a way to connect the DOM universe to the Marionette one.

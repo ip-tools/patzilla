@@ -1,12 +1,13 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
 /**
  * ------------------------------------------
  *          main application object
  * ------------------------------------------
  */
-NavigatorApp = Backbone.Marionette.Application.extend({
+export const NavigatorApp = Backbone.Marionette.Application.extend({
 
     setup_ui: function() {
 
@@ -1063,6 +1064,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         if (this.projectChooserView) {
             this.projectChooserView.stopListening();
         }
+        const { ProjectChooserView } = require("patzilla.navigator.components.project/project");
         this.projectChooserView = new ProjectChooserView({
             el: $('#project-chooser-area'),
             model: project,
@@ -1173,6 +1175,7 @@ NavigatorApp = Backbone.Marionette.Application.extend({
         this.basket_deactivate();
 
         // A. model and view
+        const { BasketView } = require("patzilla.navigator.components.basket/basket");
         this.basketModel = basket;
         this.basketView = new BasketView({
             //el: $('#basket-area'),

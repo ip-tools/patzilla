@@ -1,13 +1,13 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
-ResultEntry = Backbone.Model.extend({
+const ResultEntry = Backbone.Model.extend({
     defaults: {
     },
 });
 
-
-ResultCollection = Backbone.Collection.extend({
+export const ResultCollection = Backbone.Collection.extend({
 
     initialize: function(collection) {
         this.document_numbers = [];
@@ -28,3 +28,4 @@ ResultCollection = Backbone.Collection.extend({
     },
 
 });
+

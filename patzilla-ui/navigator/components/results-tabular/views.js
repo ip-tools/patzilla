@@ -1,7 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
-ResultItemView = Backbone.Marionette.ItemView.extend({
+export const ResultItemView = Backbone.Marionette.ItemView.extend({
 
     tagName: 'div',
     className: 'row',
@@ -22,7 +23,7 @@ ResultItemView = Backbone.Marionette.ItemView.extend({
 
 });
 
-ResultCollectionView = Backbone.Marionette.CompositeView.extend({
+export const ResultCollectionView = Backbone.Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "resultcollection",

@@ -2,9 +2,6 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-export { SmartCollectionMixin };
-
-
 // Utility: Easy multiple-inheritance in Backbone.js
 // https://gist.github.com/alassek/1227770
 (function () {
@@ -109,7 +106,7 @@ const SmartModelMixin = {
 };
 
 
-const SmartCollectionMixin = {
+export const SmartCollectionMixin = {
 
     by_key: function(key) {
         //log('SmartCollectionMixin::by_key', key);

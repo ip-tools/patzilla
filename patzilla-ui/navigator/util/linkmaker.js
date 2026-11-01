@@ -1,28 +1,9 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
-
-// Ipsuite.LinkMaker
-(function(){
-
-    // Initial Setup
-    // -------------
-
-    // setup courtesy of Backbone
-
-    // Save a reference to the global object (`window` in the browser, `exports` on the server).
-    var root = this;
-
-    // The top-level namespace. All public Ipsuite classes and modules will
-    // be attached to this. Exported for both the browser and the server.
-    var Ipsuite;
-    if (typeof exports !== 'undefined') {
-        Ipsuite = exports.Ipsuite = {};
-    } else {
-        Ipsuite = root.Ipsuite = {};
-    }
+'use strict';
 
     // constructor
-    var LinkMaker = Ipsuite.LinkMaker = function(document) {
+    export const LinkMaker = function(document) {
 
         if (document) {
             this.document = document;
@@ -277,5 +258,3 @@
         */
 
     });
-
-}).call(this);

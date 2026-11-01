@@ -1,5 +1,6 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
 
 /**
  * --------------------
@@ -25,8 +26,6 @@ require('bootstrap/dist/js/bootstrap.min.js');
 // Use bootstrap-tabs from Bootstrap 2.0.0
 require('bootstrap-tab-button.js');
 
-
-
 // Global utilities
 require('patzilla.lib.jquery');
 require('patzilla.lib.underscore');
@@ -35,19 +34,17 @@ require('patzilla.lib.marionette');
 _(window).extend(require('patzilla.lib.util'));
 
 // Application utilities
-require('patzilla.common.issuereporter');
 _(window).extend(require('patzilla.navigator.util.linkmaker'));
 _(window).extend(require('patzilla.navigator.util.patentnumbers'));
 
 // Application
-require('patzilla.navigator.app.config');
-require('patzilla.navigator.app.application');
-require('patzilla.navigator.app.layout');
-require('patzilla.navigator.app.results');
-require('patzilla.navigator.components.pagination');
-require('patzilla.navigator.components.results-tabular');
-require('patzilla.navigator.components.results-dialog');
-var propagate_opaque_errors = require('patzilla.navigator.components.opaquelinks').propagate_opaque_errors;
+const {propagate_opaque_errors} = require("patzilla.navigator.components.opaquelinks");
+const {NavigatorConfiguration, NavigatorTheme} = require("patzilla.navigator.app.config");
+const {NavigatorApp} = require("patzilla.navigator.app.application");
+const {LayoutView} = require("patzilla.navigator.app.layout/layout");
+const {ResultCollection} = require("patzilla.navigator.components.results-tabular/models");
+const {ResultCollectionView} = require("patzilla.navigator.components.results-tabular/views");
+
 
 // CSS Stylesheets
 require('patzilla.navigator.style');
@@ -85,12 +82,18 @@ var navigatorTheme = new NavigatorTheme(theme_settings);
 console.info('Load application core');
 
 // Main application object
-navigatorApp = new NavigatorApp({config: navigatorConfiguration, theme: navigatorTheme});
+const navigatorApp = window.navigatorApp = new NavigatorApp({config: navigatorConfiguration, theme: navigatorTheme});
 
-// Setup data source adapters
+// Application
+const {OpsExchangeMetadata, OpsExchangeDocumentCollection, OpsPublishedDataSearch} = require("patzilla.access.epo.ops");
+const {IssueReporterGui} = require("patzilla.common.issuereporter");
+const {MetadataView} = require("patzilla.navigator.app.results/results-header");
+const {OpsExchangeDocumentCollectionView} = require("patzilla.navigator.app.results/results-list");
+const {PaginationView} = require("patzilla.navigator.components.pagination/pagination");
+
+// Data source adapters
 require('patzilla.access.depatech');
 require('patzilla.access.depatisnet');
-require('patzilla.access.epo.ops');
 require('patzilla.access.ificlaims');
 require('patzilla.access.sip');
 

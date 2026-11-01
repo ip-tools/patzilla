@@ -1,14 +1,13 @@
 // -*- coding: utf-8 -*-
 // (c) 2014,2017 Andreas Motl, Elmyra UG
+'use strict';
 
 // https://marionette.gitbooks.io/marionette-guides/content/en/approuter/
 // https://marionette.gitbooks.io/marionette-guides/content/en/appendix/approuter/router.html
 // https://marionette.gitbooks.io/marionette-guides/content/en/application/routing.html
 
-// Foundation
 require('backbone.marionette');
 require('bootstrap/dist/css/bootstrap.min.css');
-
 require('patzilla.navigator.style');
 
 // Patches to make the old Backbone Marionette 1.1.0 work with Webpack
@@ -16,7 +15,7 @@ Backbone.$   = window.jQuery;
 Marionette.$ = window.jQuery;
 
 
-var Controller = Marionette.Controller.extend({
+const Controller = Marionette.Controller.extend({
 
     initialize: function() {
         console.log('Controller.initialize');
@@ -25,13 +24,13 @@ var Controller = Marionette.Controller.extend({
     },
 
     hotkeys: function() {
-        require('../components/hotkeys/hotkeys-help.js');
+        const {HotkeysHelpView} = require("patzilla.navigator.components.hotkeys/hotkeys-help");
         var rmanager = Marionette.getOption(this, 'regionManager');
         $('#title-container').html('Hotkeys overview');
         rmanager.get('content').show(new HotkeysHelpView());
     },
     ificlaims: function() {
-        require('../../access/ificlaims-help.js');
+        const {IFIClaimsHandbookView} = require("patzilla.access.ificlaims-help");
         var rmanager = Marionette.getOption(this, 'regionManager');
         $('#title-container').html('Benutzerhandbuch für die Suche bei IFI Claims');
         rmanager.get('content').show(new IFIClaimsHandbookView());
@@ -39,7 +38,7 @@ var Controller = Marionette.Controller.extend({
 });
 
 
-var Router = Marionette.AppRouter.extend({
+const Router = Marionette.AppRouter.extend({
 
     appRoutes: {
         'hotkeys':   'hotkeys',
@@ -57,7 +56,7 @@ var Router = Marionette.AppRouter.extend({
 
 
 // Main
-NavigatorHelp = Backbone.Marionette.Application.extend({
+const NavigatorHelp = Backbone.Marionette.Application.extend({
 
     initialize: function() {
     },
@@ -70,7 +69,7 @@ NavigatorHelp = Backbone.Marionette.Application.extend({
 
 });
 
-navigatorHelp = new NavigatorHelp({});
+const navigatorHelp = new NavigatorHelp({});
 
 $(document).ready(function() {
     console.log("document.ready");

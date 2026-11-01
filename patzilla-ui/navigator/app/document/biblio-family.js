@@ -1,8 +1,13 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2015 Andreas Motl, Elmyra UG
-require('./util.js');
+'use strict';
 
-OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
+import {OpsExchangeDocument} from "patzilla.access.epo.ops";
+import {QueryLinkMixin} from "patzilla.access.util";
+import {OpsBaseModel} from "patzilla.access.epo.ops.base";
+import {OpsBaseViewMixin,TemplateHelperMixin,TemplateDataContextMixin} from "patzilla.navigator.app.document/util";
+
+const OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
 
     template: require('./biblio-family-verbose-member.html'),
     tagName: 'tr',
@@ -13,7 +18,7 @@ OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
 _.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: require('./biblio-family-verbose-collection.html'),
     itemView: OpsFamilyVerboseMemberView,
@@ -30,7 +35,7 @@ OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
 
 
-OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
+const OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
 
     template: require('./biblio-family-compact-member.html'),
     tagName: 'tr',
@@ -42,7 +47,7 @@ OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
 _.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: require('./biblio-family-compact-collection.html'),
     itemView: OpsFamilyCompactMemberView,
@@ -97,7 +102,7 @@ OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 _.extend(OpsFamilyCompactCollectionView.prototype, TemplateDataContextMixin);
 
 
-OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
+const OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
 
     template: require('./biblio-family-citations-member.html'),
     tagName: 'tr',
@@ -133,7 +138,7 @@ OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
 _.extend(OpsFamilyCitationsMemberView.prototype, TemplateDataContextMixin);
 
 
-OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
 
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),

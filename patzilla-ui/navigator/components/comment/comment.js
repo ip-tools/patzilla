@@ -1,12 +1,13 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 require('patzilla.navigator.components.storage');
 require('backbone-dom-to-view');
-const DirectRenderMixin = require('patzilla.lib.marionette').DirectRenderMixin;
-const SmartCollectionMixin = require('patzilla.lib.backbone').SmartCollectionMixin;
+const {DirectRenderMixin} = require("patzilla.lib.marionette");
+const {SmartCollectionMixin} = require("patzilla.lib.backbone");
 
-
-CommentModel = Backbone.RelationalModel.extend({
+const CommentModel = Backbone.RelationalModel.extend({
 
     sync: Backbone.localforage.sync('Comment'),
 
@@ -34,7 +35,7 @@ CommentModel = Backbone.RelationalModel.extend({
 });
 
 
-CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
+const CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
     sync: Backbone.localforage.sync('Comment'),
     find: Backbone.localforage.find,
     model: CommentModel,
@@ -55,7 +56,7 @@ CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-CommentButtonView = Backbone.Marionette.ItemView.extend({
+const CommentButtonView = Backbone.Marionette.ItemView.extend({
     template: require('./comment-button.html'),
     //tagName: null,
 
@@ -68,7 +69,7 @@ CommentButtonView = Backbone.Marionette.ItemView.extend({
 _.extend(CommentButtonView.prototype, DirectRenderMixin);
 
 
-CommentTextView = Backbone.Marionette.ItemView.extend({
+const CommentTextView = Backbone.Marionette.ItemView.extend({
     template: require('./comment-widget.html'),
     tagName: 'span',
 
@@ -150,7 +151,7 @@ CommentTextView = Backbone.Marionette.ItemView.extend({
 });
 
 
-CommentManager = Marionette.Controller.extend({
+const CommentManager = Marionette.Controller.extend({
 
     initialize: function(options) {
 
@@ -198,7 +199,7 @@ CommentManager = Marionette.Controller.extend({
 });
 
 
-CommentsPlugin = Marionette.Controller.extend({
+const CommentsPlugin = Marionette.Controller.extend({
 
     initialize: function(options) {
 

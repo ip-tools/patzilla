@@ -2,12 +2,8 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-require('patzilla.navigator.components.storage');
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
 import { MarionetteFuture } from 'patzilla.lib.marionette';
-
-//export { ApplicationProfile, ProfileRecord, ProfileCollection };
-
 
 const ProfileRecord = Backbone.RelationalModel.extend({
 

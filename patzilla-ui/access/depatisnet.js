@@ -1,12 +1,14 @@
 // -*- coding: utf-8 -*-
 // (c) 2014 Andreas Motl, Elmyra UG
-require('./base.js');
+'use strict';
 
-DepatisnetSearch = DatasourceSearch.extend({
+const {DatasourceSearch, DatasourceCrawler} = require("./base");
+
+const DepatisnetSearch = DatasourceSearch.extend({
     url: '/api/depatisnet/published-data/search',
 });
 
-DepatisnetCrawler = DatasourceCrawler.extend({
+const DepatisnetCrawler = DatasourceCrawler.extend({
 
     crawler_limit: 1000,
 
@@ -59,7 +61,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 
-DepatisConnectFulltext = Marionette.Controller.extend({
+export const DepatisConnectFulltext = Marionette.Controller.extend({
 
     initialize: function(document_number) {
         log('DepatisConnectFulltext.initialize');

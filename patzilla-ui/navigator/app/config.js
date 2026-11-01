@@ -1,7 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2016 Andreas Motl, Elmyra UG
+'use strict';
 
-NavigatorConfiguration = Backbone.Model.extend({
+export const NavigatorConfiguration = Backbone.Model.extend({
 
     defaults: {
         mode: undefined,
@@ -102,7 +103,7 @@ NavigatorConfiguration = Backbone.Model.extend({
 });
 
 
-NavigatorTheme = Backbone.Model.extend({
+export const NavigatorTheme = Backbone.Model.extend({
 
     defaults: {
     },

@@ -1,7 +1,8 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2017 Andreas Motl, Elmyra UG
+'use strict';
 
-QueryLinkMixin = Backbone.Model.extend({
+export const QueryLinkMixin = Backbone.Model.extend({
 
     enrich_links: function(container, attribute, value_modifier, options) {
 

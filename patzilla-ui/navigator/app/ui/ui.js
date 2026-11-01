@@ -1,5 +1,7 @@
 // -*- coding: utf-8 -*-
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
+'use strict';
+
 import ClipboardJS from "clipboard";
 
 require('glyphicon-spin');

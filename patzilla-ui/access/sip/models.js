@@ -1,17 +1,19 @@
 // -*- coding: utf-8 -*-
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
-require('../base.js');
+'use strict';
 
-SipSearch = DatasourceSearch.extend({
+const {DatasourceSearch, DatasourceCrawler} = require("../base");
+
+export const SipSearch = DatasourceSearch.extend({
     url: '/api/sip/published-data/search',
 });
 
-SipResultEntry = Backbone.Model.extend({
+export const SipResultEntry = Backbone.Model.extend({
     defaults: {
     },
 });
 
-SipCrawler = DatasourceCrawler.extend({
+export const SipCrawler = DatasourceCrawler.extend({
 
     crawler_limit: 5000,
 

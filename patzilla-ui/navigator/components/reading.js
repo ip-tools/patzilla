@@ -1,8 +1,10 @@
 // -*- coding: utf-8 -*-
 // (c) 2015 Andreas Motl, Elmyra UG
-var ToProgress = require('toprogress');
+'use strict';
 
-ReadingController = Marionette.Controller.extend({
+const ToProgress = require('toprogress');
+
+const ReadingController = Marionette.Controller.extend({
 
     initialize: function(options) {
         console.log('ReadingController.initialize');
