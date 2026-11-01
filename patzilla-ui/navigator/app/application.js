@@ -1227,7 +1227,7 @@ export const NavigatorApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        // TODO: maybe use an event handler for this, instead of a direct method call (e.g. "item:rendered")
+        // TODO: maybe use an event handler for this, instead of a direct method call (e.g. Marionette's "render")
 
         var _this = this;
 

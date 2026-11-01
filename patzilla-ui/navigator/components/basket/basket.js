@@ -592,8 +592,12 @@ export const BasketView = Backbone.Marionette.ItemView.extend({
     initialize: function() {
         //console.log('BasketView.initialize');
         this.listenTo(this.model, "change", this.render);
-        this.listenTo(this, "item:rendered", this.setup_ui);
         this.templateHelpers.config = navigatorApp.config;
+    },
+
+    // For GUI setup, it was suggested to use `onDomRefresh` instead of the `render` event.
+    onDomRefresh: function() {
+        this.setup_ui();
     },
 
     templateHelpers: {},

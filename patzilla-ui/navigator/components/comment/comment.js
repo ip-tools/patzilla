@@ -208,9 +208,9 @@ const CommentsPlugin = Marionette.Controller.extend({
 
         this.view = options.view;
 
-        // remember the itemviews used for this collection
+        // remember the childviews used for this collection
         // this will get used later for renewing the comment managers when a project switch occurs
-        this.itemviews = [];
+        this.childviews = [];
 
         // Setup the data store
         this.listenTo(navigatorApp, 'localforage:ready', function() {
@@ -230,30 +230,27 @@ const CommentsPlugin = Marionette.Controller.extend({
             // FIXME: nobody currently waits for this to happen
         }});
 
-        // Forward control to a new item-specific CommentManager after itemview got rendered
-        this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
+        // Forward control to a new item-specific CommentManager after childview got rendered
+        this.listenTo(this.view, 'childview:render', function(childview) {
 
-            // place CommentManager inside itemview for external access (e.g. viewport)
-            itemview.comment_manager = this.comment_factory(itemview);
+            // place CommentManager inside childview for external access (e.g. viewport)
+            childview.comment_manager = this.comment_factory(childview);
 
-            // record itemviews for later renewal on project change
-            this.itemviews.push(itemview);
+            // record childviews for later renewal on project change
+            this.childviews.push(childview);
         });
 
-        // clear remembered itemviews
-        this.listenTo(this.view, 'collection:before:render', function() {
-            _.clear(this.itemviews);
-        });
-        this.listenTo(this.view, 'collection:before:close', function() {
-            _.clear(this.itemviews);
+        // clear remembered childviews
+        this.listenTo(this.view, 'before:render before:destroy', function() {
+            _.clear(this.childviews);
         });
 
         // handle switching projects
-        // renew all CommentManagers in remembered itemviews when new project gets ready
+        // renew all CommentManagers in remembered childviews when new project gets ready
         this.listenTo(navigatorApp, 'project:changed', function(project) {
             var _this = this;
-            _(this.itemviews).each(function(itemview) {
-                itemview.comment_manager = _this.comment_factory(itemview);
+            _(this.childviews).each(function(childview) {
+                childview.comment_manager = _this.comment_factory(childview);
             });
         });
 
@@ -262,13 +259,13 @@ const CommentsPlugin = Marionette.Controller.extend({
         this.bind_hotkeys();
     },
 
-    comment_factory: function(itemview) {
+    comment_factory: function(childview) {
         var project = navigatorApp.project;
         //log('comment_factory using project:', project);
         return new CommentManager({
             collection: this.store,
             project: project,
-            view: itemview,
+            view: childview,
         });
     },
 

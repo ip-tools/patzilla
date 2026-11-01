@@ -240,7 +240,7 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
         log('StackPlugin::setup');
 
         // The list view the items are rendered into,
-        // so we are listening to its 'itemview:item:rendered' events.
+        // so we are listening to its 'childview:render' events.
         this.view = this.getOption('view');
 
         // Setup the data store.
@@ -252,11 +252,11 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
             // FIXME: nobody currently waits for this to happen
         }});
 
-        // Attach a new item-specific manager after each itemview got rendered.
-        this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
+        // Attach a new item-specific manager after each childview got rendered.
+        this.listenTo(this.view, 'childview:render', function(childview) {
 
             // This guy will manage the widget to model to environment interactions
-            this.make_stack_manager(itemview);
+            this.make_stack_manager(childview);
 
         });
 
@@ -366,8 +366,8 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 
         // Reset user interface.
         var _this = this;
-        this.view.children.forEach(function(itemview) {
-            _this.make_stack_manager(itemview);
+        this.view.children.forEach(function(childview) {
+            _this.make_stack_manager(childview);
         });
     },
 
@@ -410,8 +410,8 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
         // Iterate list of visible result elements and activate
         // the designated mode on each of them.
         var _this = this;
-        this.view.children.forEach(function(itemview) {
-            _this.activate_by_element(itemview.$el, mode);
+        this.view.children.forEach(function(childview) {
+            _this.activate_by_element(childview.$el, mode);
         });
 
         this.update_opener_view(mode);

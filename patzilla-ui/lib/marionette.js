@@ -140,7 +140,6 @@ export const DirectRenderMixin = {
         this.bindUIElements();
 
         this.triggerMethod("render", this);
-        this.triggerMethod("item:rendered", this);
 
         return this;
     },

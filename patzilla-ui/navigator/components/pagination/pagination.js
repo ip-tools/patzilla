@@ -14,7 +14,7 @@ export const PaginationView = Backbone.Marionette.ItemView.extend({
     initialize: function(options) {
         console.log('PaginationView.initialize');
         this.listenTo(this.model, "commit", this.render);
-        this.listenTo(this, "item:rendered", this.setup_ui);
+        this.listenTo(this, "render", this.setup_ui);
         this.templateHelpers.config = navigatorApp.config;
         this.bottom_pager = options.bottom_pager;
     },
