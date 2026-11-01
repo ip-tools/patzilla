@@ -56,7 +56,7 @@ const Router = Marionette.AppRouter.extend({
 
 
 // Main
-const NavigatorHelp = Backbone.Marionette.Application.extend({
+const NavigatorHelp = Marionette.Application.extend({
 
     initialize: function() {
     },

@@ -79,10 +79,10 @@ export const ModalRegion = Marionette.Region.extend({
 // Utility: Propagate "extendEach" monkeypatch from Backbone to Marionette
 (function () {
 
-  Backbone.Marionette.Controller.extendEach     =
-    Backbone.Marionette.View.extendEach         =
-    Backbone.Marionette.ItemView.extendEach     =
-    Backbone.Marionette.LayoutView.extendEach   = Backbone.Model.extendEach;
+  Marionette.Controller.extendEach     =
+    Marionette.View.extendEach         =
+    Marionette.ItemView.extendEach     =
+    Marionette.LayoutView.extendEach   = Backbone.Model.extendEach;
 
 })();
 
@@ -91,7 +91,7 @@ export const MarionetteFuture = {
     // Modern Marionettes like to enjoy this as `this.getOption(name)`.
     // This is a forward-compat polyfill to satisfy downstream components.
     getOption: function(name) {
-        return Backbone.Marionette.getOption(this, name);
+        return Marionette.getOption(this, name);
     },
 };
 

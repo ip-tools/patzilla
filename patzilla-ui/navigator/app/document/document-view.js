@@ -8,7 +8,7 @@ const {TemplateHelperMixin} = require("./util.js");
 
 
 // TODO: Rename to DocumentView
-export const OpsExchangeDocumentView = Backbone.Marionette.LayoutView.extend({
+export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
 
     template: require('./document-view.html'),
     tagName: 'div',
@@ -43,7 +43,7 @@ export const OpsExchangeDocumentView = Backbone.Marionette.LayoutView.extend({
 
         try {
             var args = Array.prototype.slice.apply(arguments);
-            var result = Backbone.Marionette.LayoutView.prototype.render.apply(this, args);
+            var result = Marionette.LayoutView.prototype.render.apply(this, args);
             return result;
 
         } catch (error) {
@@ -51,7 +51,7 @@ export const OpsExchangeDocumentView = Backbone.Marionette.LayoutView.extend({
             var args = Array.prototype.slice.apply(arguments);
             this.model.set('error_message', error.message);
             this.template = require('./document-error.html');
-            var result = Backbone.Marionette.LayoutView.prototype.render.apply(this, args);
+            var result = Marionette.LayoutView.prototype.render.apply(this, args);
             return result;
         }
 

@@ -427,7 +427,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
 
         // create marionette region at dom element for displaying family information
         var content_element = container.find('.document-details-content');
-        var family_region = new Backbone.Marionette.Region({
+        var family_region = new Marionette.Region({
             el: content_element
         });
 
@@ -456,7 +456,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
             _this.indicate_activity(container, false);
 
             // indicate family acquistion failed
-            const FamilyFailedView = Backbone.Marionette.ItemView.extend({
+            const FamilyFailedView = Marionette.ItemView.extend({
                 render : function (){
                     this.$el.append('No family information available.');
                 }

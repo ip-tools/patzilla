@@ -4,7 +4,7 @@
 
 const {OpsExchangeDocumentView} = require("patzilla.navigator.app.document/document-view");
 
-export const OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsExchangeDocumentCollectionView = Marionette.CompositeView.extend({
     tagName: "div",
     id: "ops-collection-container",
     className: "",
@@ -16,7 +16,7 @@ export const OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeVi
     },
 
     // Override and disable add:render event, see also:
-    // https://github.com/marionettejs/backbone.marionette/issues/640
+    // https://github.com/marionettejs/Marionette/issues/640
     _initialEvents: function() {
         if (this.collection) {
             //this.listenTo(this.collection, "add", this.addChildView, this);

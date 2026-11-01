@@ -39,7 +39,7 @@ const KeywordMapCollection = Backbone.Collection.extend({
 });
 
 
-const KeywordEditorEntryView = Backbone.Marionette.ItemView.extend({
+const KeywordEditorEntryView = Marionette.ItemView.extend({
 
     tagName: "tr",
     template: require('./keyword-editor-item.html'),
@@ -60,7 +60,7 @@ const KeywordEditorEntryView = Backbone.Marionette.ItemView.extend({
 
 });
 
-const KeywordEditorView = Backbone.Marionette.CompositeView.extend({
+const KeywordEditorView = Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "keyword-editor",

@@ -7,7 +7,7 @@ import {QueryLinkMixin} from "patzilla.access.util";
 import {OpsBaseModel} from "patzilla.access.epo.ops.base";
 import {OpsBaseViewMixin,TemplateHelperMixin,TemplateDataContextMixin} from "patzilla.navigator.app.document/util";
 
-const OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
+const OpsFamilyVerboseMemberView = Marionette.ItemView.extend({
 
     template: require('./biblio-family-verbose-member.html'),
     tagName: 'tr',
@@ -18,7 +18,7 @@ const OpsFamilyVerboseMemberView = Backbone.Marionette.ItemView.extend({
 _.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-export const OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsFamilyVerboseCollectionView = Marionette.CompositeView.extend({
 
     template: require('./biblio-family-verbose-collection.html'),
     childView: OpsFamilyVerboseMemberView,
@@ -32,7 +32,7 @@ export const OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.
 _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
 
 
-const OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
+const OpsFamilyCompactMemberView = Marionette.ItemView.extend({
 
     template: require('./biblio-family-compact-member.html'),
     tagName: 'tr',
@@ -44,7 +44,7 @@ const OpsFamilyCompactMemberView = Backbone.Marionette.ItemView.extend({
 _.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsFamilyCompactCollectionView = Marionette.CompositeView.extend({
 
     template: require('./biblio-family-compact-collection.html'),
     childView: OpsFamilyCompactMemberView,
@@ -69,7 +69,7 @@ export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.
         return {
 
             // If your template needs access to the collection, you'll need to pass it via templateHelpers
-            // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
+            // https://github.com/marionettejs/Marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
             items: this.collection.toJSON(),
 
             get_patent_family_member_list: function(id_type) {
@@ -96,7 +96,7 @@ export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.
 _.extend(OpsFamilyCompactCollectionView.prototype, TemplateDataContextMixin);
 
 
-const OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
+const OpsFamilyCitationsMemberView = Marionette.ItemView.extend({
 
     template: require('./biblio-family-citations-member.html'),
     tagName: 'tr',
@@ -132,7 +132,7 @@ const OpsFamilyCitationsMemberView = Backbone.Marionette.ItemView.extend({
 _.extend(OpsFamilyCitationsMemberView.prototype, TemplateDataContextMixin);
 
 
-export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeView.extend({
+export const OpsFamilyCitationsCollectionView = Marionette.CompositeView.extend({
 
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),
@@ -147,7 +147,7 @@ export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeVie
     */
 
     // Override and disable add:render event, see also:
-    // https://github.com/marionettejs/backbone.marionette/issues/640
+    // https://github.com/marionettejs/Marionette/issues/640
     _initialEvents: function() {
         if (this.collection) {
             //this.listenTo(this.collection, "add", this.addChildView, this);
@@ -172,7 +172,7 @@ export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeVie
         helpers = _.extend(helpers, {
 
             // If your template needs access to the collection, you'll need to pass it via templateHelpers
-            // https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
+            // https://github.com/marionettejs/Marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
             items: this.collection.toJSON(),
 
             get_citations_environment_button: function(options) {

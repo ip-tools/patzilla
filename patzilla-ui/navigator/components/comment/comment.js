@@ -56,7 +56,7 @@ const CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const CommentButtonView = Backbone.Marionette.ItemView.extend({
+const CommentButtonView = Marionette.ItemView.extend({
     template: require('./comment-button.html'),
     //tagName: null,
 
@@ -69,7 +69,7 @@ const CommentButtonView = Backbone.Marionette.ItemView.extend({
 _.extend(CommentButtonView.prototype, DirectRenderMixin);
 
 
-const CommentTextView = Backbone.Marionette.ItemView.extend({
+const CommentTextView = Marionette.ItemView.extend({
     template: require('./comment-widget.html'),
     tagName: 'span',
 

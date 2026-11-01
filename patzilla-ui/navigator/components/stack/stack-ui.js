@@ -35,7 +35,7 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-export const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
+export const StackOpenerWidget = Marionette.ItemView.extendEach(MarionetteFuture, DirectRenderMixin, {
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -88,7 +88,7 @@ export const StackOpenerWidget = Backbone.Marionette.ItemView.extendEach(Marione
 });
 
 
-export class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, MarionetteFuture, DirectRenderMixin) {
+export class StackMenuWidget extends classes.many(Marionette.ItemView, MarionetteFuture, DirectRenderMixin) {
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
      * into a `Marionette.ItemView`.

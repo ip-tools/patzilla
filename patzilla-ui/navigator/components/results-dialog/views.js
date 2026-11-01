@@ -6,7 +6,7 @@ import {ModalRegion} from "patzilla.lib.marionette";
 
 require('patzilla.lib.marionette');
 
-export const GenericResultView = Backbone.Marionette.ItemView.extend({
+export const GenericResultView = Marionette.ItemView.extend({
 
     tagName: "div",
     id: "result-view",

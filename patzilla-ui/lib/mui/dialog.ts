@@ -5,11 +5,9 @@
 import _ from 'underscore';
 import { classes } from '../es6';
 
-// Backbone
+// Marionette
 import { DirectRenderMixin } from '../marionette';
-//import { Backbone } from 'backbone.marionette';
-//require('backbone.marionette');
-import Backbone from 'backbone';
+import Marionette from 'backbone.marionette';
 
 // Material-UI
 import React from 'react';
@@ -19,7 +17,7 @@ import FullScreenDialog from './fullscreendialog';
 const log = console.log;
 
 
-export class DialogWidget extends classes.many(Backbone.Marionette.ItemView, DirectRenderMixin) {
+export class DialogWidget extends classes.many(Marionette.ItemView, DirectRenderMixin) {
 
     el: any;
 

@@ -9,7 +9,7 @@ const bootbox = require('bootbox');
 const {RadioPlus} = require("patzilla.lib.radioplus");
 const {FIELDS_KNOWLEDGE} = require("./expression-fields.js");
 
-const QueryBuilderView = Backbone.Marionette.ItemView.extend({
+const QueryBuilderView = Marionette.ItemView.extend({
 
     template: require('./querybuilder.html'),
 
