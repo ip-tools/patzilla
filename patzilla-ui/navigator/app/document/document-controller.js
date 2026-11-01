@@ -9,6 +9,7 @@ const {DepatisConnectFulltext} = require("patzilla.access.depatisnet");
 const {IFIClaimsFulltext} = require("patzilla.access.ificlaims");
 const {OpsBaseViewMixin, citations_environment_button} = require("./util");
 const {OpsFamilyCompactCollectionView, OpsFamilyVerboseCollectionView, OpsFamilyCitationsCollectionView} = require("./biblio-family");
+const {xhr_decode_error} = require("patzilla.lib.util");
 
 const DocumentBaseController = Marionette.Controller.extend({
 
