@@ -108,7 +108,7 @@ const StackManager = NamedViewController.extend({
         this.listenTo(this.model, 'change:selected', this.update_sidecar_indicator);
 
         // When model gets destroyed, shutdown the user interface.
-        this.listenTo(this.model, 'destroy', this.destroy);
+        this.listenTo(this.model, 'destroy', this.close);
 
         // Show/hide vertical marker on the document's left side.
         this.update_sidecar_indicator();

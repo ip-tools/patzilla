@@ -22,14 +22,11 @@ export const OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.
 
     template: require('./biblio-family-verbose-collection.html'),
     childView: OpsFamilyVerboseMemberView,
+    childViewContainer: 'tbody',
 
     id: "ops-family-verbose-verbose-collection",
     //tagName: "div",
     //className: "container-fluid",
-
-    attachHtml: function(collectionView, childView) {
-        collectionView.$('tbody').append(childView.el);
-    }
 
 });
 _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
@@ -51,14 +48,11 @@ export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.
 
     template: require('./biblio-family-compact-collection.html'),
     childView: OpsFamilyCompactMemberView,
+    childViewContainer: 'tbody',
 
     id: "ops-family-compact-collection",
     //tagName: "div",
     //className: "container-fluid",
-
-    attachHtml: function(collectionView, childView) {
-        collectionView.$('tbody').append(childView.el);
-    },
 
     onDomRefresh: function() {
         this.setup_ui();
@@ -143,10 +137,14 @@ export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeVie
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),
     childView: OpsFamilyCitationsMemberView,
+    childViewContainer: 'tbody',
 
+    /*
+    // Manual alternative to `childViewContainer: 'tbody'`.
     attachHtml: function(collectionView, childView) {
         collectionView.$('tbody').append(childView.el);
     },
+    */
 
     // Override and disable add:render event, see also:
     // https://github.com/marionettejs/backbone.marionette/issues/640

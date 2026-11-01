@@ -43,9 +43,9 @@ EmbeddingController = Marionette.Controller.extend({
     },
 
     hide_regions: function() {
-        navigatorApp.queryBuilderRegion.destroy();
-        navigatorApp.basketRegion.destroy();
-        navigatorApp.metadataRegion.destroy();
+        navigatorApp.queryBuilderRegion.empty();
+        navigatorApp.basketRegion.empty();
+        navigatorApp.metadataRegion.empty();
     },
 
     run: function() {
@@ -59,7 +59,7 @@ EmbeddingController = Marionette.Controller.extend({
     },
 
     process_results: function() {
-        navigatorApp.basketRegion.destroy();
+        navigatorApp.basketRegion.empty();
 
         /*
         log('results:', navigatorApp.metadata.get('result_count_received'));

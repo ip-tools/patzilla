@@ -1173,7 +1173,7 @@ export const NavigatorApp = Backbone.Marionette.Application.extend({
         }
 
         // FIXME: Experimentally remove this weird/misplaced call.
-        this.basket_deactivate();
+        //this.basket_deactivate();
 
         // A. model and view
         const { BasketView } = require("patzilla.navigator.components.basket/basket");

@@ -140,8 +140,8 @@ export class StackMenuWidget extends classes.many(Backbone.Marionette.ItemView, 
         this.menu.open = true;
     }
 
-    onClose() {
-        //log('StackMenuWidget::onClose');
+    onDestroy() {
+        log('StackMenuWidget::onDestroy');
         this.menu.destroy();
     }
 
