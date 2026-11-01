@@ -323,6 +323,7 @@ const ProjectCollection = Backbone.Collection.extend({
             console.log('ProjectModel.create');
 
             // create basket for new project
+            const { BasketModel } = require("patzilla.navigator.components.basket/basket");
             var basket = new BasketModel();
 
             // save basket
