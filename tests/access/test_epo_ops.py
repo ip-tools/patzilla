@@ -3,7 +3,7 @@
 import socket
 
 import pytest
-from cornice.util import _JSONError
+from cornice.renderer import JSONError
 from epo_ops.exceptions import MissingRequiredValue
 from pyramid.httpexceptions import HTTPBadGateway, HTTPNotFound
 from pyramid.threadlocal import get_current_request
@@ -90,7 +90,7 @@ def test_search_no_results(app_request):
     """
     Proof a basic search without results has the expected outcome.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_published_data_search(constituents="full-cycle", query="applicant=foobar", range="1-10")
 
     assert_404_not_found(ex,
@@ -102,7 +102,7 @@ def test_search_failure(app_request):
     """
     Proof that submitting an invalid search request fails.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_published_data_search(constituents="full-cycle", query="foo=bar", range="1-10")
 
     json_error = ex.value
@@ -160,7 +160,7 @@ def test_crawl_no_results(app_request):
 
     TODO: It is just a basic test and has to be improved to improve coverage.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_published_data_crawl(constituents="pub-number", query="pn=EP0", chunksize=25)
     assert_404_not_found(
         ex,
@@ -203,7 +203,7 @@ def test_biblio_data_json_failure(app_request):
     """
     Proof getting bibliographic for an invalid document number croaks.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_biblio_documents("EP0")
 
     assert_404_not_found(
@@ -233,7 +233,7 @@ def test_document_kindcodes_failure(app_request):
     """
     Validate acquiring document kind codes.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_document_kindcodes("EP0")
 
     assert_404_not_found(
@@ -443,7 +443,7 @@ def test_description_failure(app_request):
     """
     Full text acquisition for unknown documents should fail appropriately.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_description("EP0")
 
     assert_404_not_found(
@@ -493,7 +493,7 @@ def test_claims_failure(app_request):
     """
     Full text acquisition for unknown documents should fail appropriately.
     """
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_claims("EP0")
 
     assert_404_not_found(
@@ -516,7 +516,7 @@ def test_family_members_invalid_number_failure(app_request):
 
 
 def test_family_members_not_found_failure(app_request):
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_family_members("EP0000001A2")
     assert_404_not_found(
         ex,
@@ -535,7 +535,7 @@ def test_family_docdb_xml_success(app_request):
 
 
 def test_family_docdb_xml_not_found_failure(app_request):
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_family_publication_docdb_xml(
             reference_type="publication",
             document_number="EP0000001A2",
@@ -562,7 +562,7 @@ def test_register_xml_success(app_request):
 
 
 def test_register_not_found_failure(app_request):
-    with pytest.raises(_JSONError) as ex:
+    with pytest.raises(JSONError) as ex:
         ops_register(reference_type="publication", document_number="EP0A2")
     assert_404_not_found(
         ex,

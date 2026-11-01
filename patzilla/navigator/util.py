@@ -4,7 +4,8 @@ import traceback
 import collections
 from typing import Dict
 
-from cornice.util import _JSONError
+from cornice.renderer import JSONError
+
 
 def get_exception_message(ex, add_traceback=False):
     name = ex.__class__.__name__
@@ -14,11 +15,11 @@ def get_exception_message(ex, add_traceback=False):
     return description
 
 def get_safe_traceback(ex):
-    if type(ex) is not _JSONError:
+    if type(ex) is not JSONError:
         tb = traceback.format_exc()
         return tb
     else:
-        return 'traceback not displayed due to _JSONError not being printable'
+        return 'traceback not displayed due to JSONError not being printable'
 
 def safe_value(value):
     """
