@@ -12,6 +12,7 @@ var screenfull = require('screenfull');
 
 // Material Design Snackbar
 import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
+import {xhr_decode_error} from "patzilla.lib.util";
 
 
 const UiController = Backbone.Marionette.ItemView.extend({

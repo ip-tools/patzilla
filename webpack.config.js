@@ -287,6 +287,7 @@ const config = {
             'patzilla.navigator.components.waypoints':       path.resolve(__ui, 'navigator', 'components', 'waypoints'),
             'patzilla.navigator.components.nataraja':        path.resolve(__ui, 'navigator', 'components', 'nataraja'),
 
+            'patzilla.access.base':                          path.resolve(__ui, 'access', 'base'),
             'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
             'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
             'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
