@@ -144,25 +144,25 @@ const UiController = Backbone.Marionette.ItemView.extend({
         $('#alert-area').empty();
         try {
             var response = xhr.responseJSON;
-            return this.propagate_cornice_errors(response);
+            if (response !== undefined) {
+                return this.propagate_cornice_errors(response);
+            }
 
         // Display detailed data from XHR response
         } catch (err) {
-
             console.error('Problem while propagating backend alerts.\nError:', err, '\nResponse:', xhr.responseText);
-
-            // If decoding from JSON fails, make up a JSON error in
-            // cornice-compatible format from XHR response information
-            var error = xhr_decode_error(xhr, options);
-            error.location = 'unknown';
-
-            var response = {
-                'status': 'error',
-                'errors': [error],
-            };
-            return this.propagate_cornice_errors(response);
-
         }
+
+        // If decoding from JSON fails, make up a JSON error in
+        // cornice-compatible format from XHR response information
+        var error = xhr_decode_error(xhr, options);
+        error.location = 'unknown';
+
+        var response = {
+            'status': 'error',
+            'errors': [error],
+        };
+        return this.propagate_cornice_errors(response);
 
     },
 
