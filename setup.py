@@ -18,7 +18,8 @@ requires = [
     # ----------------------------------------------
 
     # Pyramid core
-    'pyramid<2',
+    'pyramid>=2,<2.2',
+    'simplejson<5',
     'hupper<2',
     'watchdog<7',
     'pyramid-debugtoolbar<5',
@@ -49,7 +50,7 @@ requires = [
     'python-magic<1',
 
     # Web services
-    'cornice<3',                # 6.1.0
+    'cornice>=5.2,<6',
 
     # Authorization
     'pycryptodome>=3,<4',

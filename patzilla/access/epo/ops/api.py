@@ -9,7 +9,7 @@ from contextlib import contextmanager
 
 import epo_ops
 import epo_ops.models
-from cornice.util import json_error, to_list
+from cornice.util import to_list
 from beaker.cache import cache_region
 from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
@@ -24,6 +24,7 @@ from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.numbers.common import decode_patent_number, split_patent_number
 from patzilla.util.numbers.common import encode_epodoc_number, encode_docdb_number
 from patzilla.util.numbers.normalize import normalize_patent
+from patzilla.util.web.pyramid.cornice import json_error
 
 log = logging.getLogger(__name__)
 
@@ -904,7 +905,7 @@ def handle_error(response, location):
     response_json = json_error(request)
     response_json.status = response.status_code
 
-    # countermeasure against "_JSONError: <unprintable _JSONError object>" or the like
+    # countermeasure against "JSONError: <unprintable JSONError object>" or the like
     response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.text
 
     #print "response:", response

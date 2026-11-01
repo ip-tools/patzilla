@@ -12,12 +12,13 @@ import envoy
 import tempfile
 from io import BytesIO
 from textwrap import dedent
+
+from cornice.renderer import JSONError
 from lxml import etree as ET
 from munch import munchify, Munch
 from json.encoder import JSONEncoder
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
-from cornice.util import _JSONError
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError
 from patzilla.access.generic.pdf import pdf_ziparchive_add
@@ -411,7 +412,7 @@ class Dossier:
         return payload
 
     def handle_exception(self, ex, service_name, document):
-        if isinstance(ex, (_JSONError, HTTPError)) and hasattr(ex, 'status_int') and ex.status_int == 404:
+        if isinstance(ex, (JSONError, HTTPError)) and hasattr(ex, 'status_int') and ex.status_int == 404:
             log.warning('XML({service_name}, {document}) not found'.format(service_name=service_name, document=document))
 
             # Signal exception has been handled (ignored)

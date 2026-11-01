@@ -28,7 +28,7 @@ def ikofax_prepare_query(query):
 
 def handle_generic_exception(request, ex, backend_name, query):
 
-    if isinstance(ex, cornice.util._JSONError):
+    if isinstance(ex, cornice.renderer.JSONError):
         raise ex
 
     http_response = None
