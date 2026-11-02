@@ -107,7 +107,7 @@ class Dossier:
             # Aggregate all DateFrame items
             # FIXME: `lst` is never used?
             lst.append(df)
-        self.df_documents = pandas.DataFrame(lst)
+        self.df_documents = pandas.concat(lst)
 
         # Amend "NaN" boolean values to "False"
         self.df_documents['seen'].fillna(value=False, inplace=True)
