@@ -127,13 +127,10 @@ class IFIClaimsClient(GenericSearchClient):
                 meta={'username': self.username, 'uri': uri})
         duration = timeit.default_timer() - starttime
 
-        #print "response:", response.content        # debugging
-
         # Process search response
         if response.status_code == 200:
-            #print "response:", response.content        # debugging
 
-            response_data = json.loads(response.content)
+            response_data = response.json()
             if response_data['status'] == 'success':
 
                 # Debugging: Simulate error
@@ -223,8 +220,6 @@ class IFIClaimsClient(GenericSearchClient):
                 raise self.search_failed('Search response could not be parsed', response=response)
 
         else:
-            # print "response:", response.content        # debugging
-
             self.logout()
 
             # Strip HTML from response body
@@ -287,7 +282,7 @@ class IFIClaimsClient(GenericSearchClient):
 
         response_content_type = response.headers['Content-Type']
         if response.status_code == 200 and response_content_type.startswith(mimetype):
-            return response.content
+            return response.text
         else:
             response.raise_for_status()
             raise ValueError('Server responded with wrong data format "{}", we requested "{}"'.format(response_content_type, format))
@@ -314,12 +309,10 @@ class IFIClaimsClient(GenericSearchClient):
         duration = timeit.default_timer() - starttime
 
         if response.status_code == 200:
-            #print response.content
-            data = json.loads(response.content)
-            return data
+            return response.json()
         else:
             log.error("{backend_name}: attachment_list, ucid={ucid}, status={status}, response={response}".format(
-                ucid=ucid, status=response.status_code, response=response.content , **self.__dict__))
+                ucid=ucid, status=response.status_code, response=response.text , **self.__dict__))
 
 
     @cache_region('longer')
@@ -345,12 +338,11 @@ class IFIClaimsClient(GenericSearchClient):
         duration = timeit.default_timer() - starttime
 
         if response.status_code == 200:
-            #print 'response.content:', response.content
             return response.content
 
         else:
             log.error("{backend_name}: attachment_fetch, path={path}, status={status}, response={response}".format(
-                path=path, status=response.status_code, response=response.content , **self.__dict__))
+                path=path, status=response.status_code, response=response.text , **self.__dict__))
 
 
     def pdf_fetch(self, ucid):

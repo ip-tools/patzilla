@@ -51,7 +51,7 @@ def espacenet_fetch_html(document_number, section, element_id=None, element_clas
 
     # https://worldwide.espacenet.com/errorpages/error403.htm?reason=RobotAbuse&ip=89.247.174.135
     if "errorpages" in response.url:
-        soup = BeautifulSoup(response.content, features="lxml")
+        soup = BeautifulSoup(response.text, features="lxml")
         element = soup.find("h1")
         if not element:
             raise ValueError("No h1 element found in HTML document")
@@ -60,12 +60,9 @@ def espacenet_fetch_html(document_number, section, element_id=None, element_clas
         message = "{}. Reason: {}".format(message_fail, details)
         raise ValueError(message)
 
-    # Debugging
-    #print 'response.content:\n', response.content
-
     if response.status_code == 200:
         # TODO: when no result, "Claims not available" appears in response body
-        soup = BeautifulSoup(response.content, features="lxml")
+        soup = BeautifulSoup(response.text, features="lxml")
 
         # Probe element by id.
         element = None

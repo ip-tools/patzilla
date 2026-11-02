@@ -137,11 +137,11 @@ def get_xml_real(number):
     response = fetch_xml(number)
 
     if response.status_code == 200:
-        return response.content
+        return response.text
 
     else:
         msg = 'Retrieving XML document for "{0}" from DPMA failed'.format(number)
-        log.error("{}. Response:\n{}".format(msg, response.content))
+        log.error("{}. Response:\n{}".format(msg, response.text))
         raise ValueError(msg)
 
     """
@@ -151,7 +151,7 @@ def get_xml_real(number):
         if run_acquisition(number):
             response = fetch_xml(number)
             if response.status_code == 200:
-                return response.content
+                return response.text
 
         raise KeyError('No XML document for "{0}" at DPMA'.format(number))
     """

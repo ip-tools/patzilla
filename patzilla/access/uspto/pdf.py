@@ -177,7 +177,7 @@ def fetch_url(url, method="get"):
         msg = 'USPTO [PDF]: Resource at {} not found'.format(url)
     else:
         msg = 'USPTO [PDF]: Accessing resource at {} failed. status={}, response={}'.format(
-            url, response.status_code, response.content)
+            url, response.status_code, response.text)
     raise HTTPNotFound(msg)
 
 

@@ -74,17 +74,17 @@ class SipClient(GenericSearchClient):
 
         if response.status_code == 200:
             try:
-                self.sessionid = self._login_parse_xml(response.content)
+                self.sessionid = self._login_parse_xml(response.text)
                 duration = timeit.default_timer() - starttime
                 log.info('SIP login succeeded. sessionid={0}, duration={1}s'.format(self.sessionid, round(duration, 1)))
                 return True
             except Exception as ex:
                 log.error('SIP login for user "{username}" failed. Reason: {0} {1}. status_code={2}, response={3}'.format(
-                    ex.__class__, str(ex), response.status_code, response.content, username=self.username))
+                    ex.__class__, str(ex), response.status_code, response.text, username=self.username))
                 self.logout()
                 raise
         else:
-            message = 'SIP login failed. status_code={0}, content={1}'.format(response.status_code, response.content)
+            message = 'SIP login failed. status_code={0}, content={1}'.format(response.status_code, response.text)
             log.error(message)
             error = LoginException(message)
             error.sip_info = 'Login to upstream database failed.'
@@ -129,9 +129,9 @@ class SipClient(GenericSearchClient):
 
         # Process search response
         if response.status_code == 200:
-            #print "SIP search response (raw)"; print response.content        # debugging
+            #print "SIP search response (raw)"; print response.text        # debugging
             try:
-                search_response = self._search_parse_xml(response.content)
+                search_response = self._search_parse_xml(response.text)
 
                 if search_response['success'] == 'false':
                     raise SearchException('Search failed', sip_response=search_response['response'])
@@ -201,9 +201,9 @@ class SipClient(GenericSearchClient):
         starttime = timeit.default_timer()
         response = requests.post(self.uri + '/search/getresults', data={'session': self.sessionid, 'resultrequest': request_xml})
         if response.status_code == 200:
-            #print response.content
+            #print response.text
             try:
-                results = self._getresults_parse_xml(response.content)
+                results = self._getresults_parse_xml(response.text)
                 if results:
 
                     if len(results) == 1 and results[0]['docid'] == '0':

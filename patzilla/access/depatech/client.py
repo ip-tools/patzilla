@@ -131,9 +131,8 @@ class DepaTechClient(GenericSearchClient):
 
         # Process search response
         if response.status_code == 200:
-            #print "response:", response.content        # debugging
 
-            response_data = json.loads(response.content)
+            response_data = response.json()
             if True:
 
                 # Debugging: Simulate error
@@ -163,7 +162,7 @@ class DepaTechClient(GenericSearchClient):
 
         elif response.status_code in [400, 500] and response.headers.get('Content-Type', '').startswith('application/json'):
 
-            response_data = json.loads(response.content)
+            response_data = response.json()
 
             # Handle search expression errors
             if 'error' in response_data:
@@ -216,9 +215,7 @@ class DepaTechClient(GenericSearchClient):
 
         # Process search response
         if response.status_code == 200:
-            #print "response:", response.content        # debugging
-
-            response_data = json.loads(response.content)
+            response_data = response.json()
             result = {'query': response_data}
             return json.dumps(result)
 
@@ -228,7 +225,7 @@ class DepaTechClient(GenericSearchClient):
 
             if response.headers.get('Content-Type', '').startswith('application/json'):
 
-                response_data = json.loads(response.content)
+                response_data = response.json()
 
                 # Handle search expression errors
                 if 'error' in response_data:
@@ -241,7 +238,7 @@ class DepaTechClient(GenericSearchClient):
                     message = 'Response status code: {code}\n\n{reason}'.format(**upstream_error)
 
             else:
-                message = response.content
+                message = response.text
 
             raise self.search_failed(
                 user_info='Translating DEPAROM query expression failed',

@@ -44,7 +44,7 @@ class GenericSearchClient(ABC):
             log_message += ', meta=' + str(meta)
         if response:
             status = str(response.status_code) + ' ' + response.reason
-            log_message += ', status={status}, response=\n{response}'.format(status=status, response=response.content.decode('utf-8'))
+            log_message += ', status={status}, response=\n{response}'.format(status=status, response=response.text)
         log.error(log_message)
 
         # Return exception object
