@@ -7,7 +7,7 @@
 // https://marionette.gitbooks.io/marionette-guides/content/en/application/routing.html
 
 require('backbone.marionette');
-require('bootstrap/dist/css/bootstrap.min.css');
+require('bootstrap/dist/css/bootstrap.css');
 require('patzilla.navigator.style');
 
 // Patches to make the old Backbone Marionette 1.1.0 work with Webpack

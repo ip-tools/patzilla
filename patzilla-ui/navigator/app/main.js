@@ -20,11 +20,14 @@ $(function() {
 
 
 // Twitter Bootstrap
-require('bootstrap/dist/css/bootstrap.min.css');
-require('bootstrap/dist/js/bootstrap.min.js');
+require('bootstrap/dist/css/bootstrap.css');
+require('bootstrap/dist/js/bootstrap.js');
 
 // Use bootstrap-tabs from Bootstrap 2.0.0
 require('bootstrap-tab-button.js');
+
+// Glyphicons from Bootstrap 3
+require('@neos21/bootstrap3-glyphicons');
 
 // Global utilities
 require('patzilla.lib.jquery');

@@ -500,7 +500,7 @@ const DocumentCarouselController = Marionette.Controller.extend({
 
         // turn slideshow off
         $('.drawings-carousel').carousel({
-            interval: null
+            //interval: null
         });
 
         // update page numbers after sliding
