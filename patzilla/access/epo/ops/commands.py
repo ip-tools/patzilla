@@ -182,12 +182,12 @@ def send_request(url, parameters=None, use_get=False, accept_json=False, verbose
                 logger.info('body:   ')
             return json.dumps(response.json(), indent=2)
         elif response.headers["content-type"].startswith("text/xml"):
-            return response.content
+            return response.text
     elif response.status_code == 404:
         message = 'Resource not found at EPO/OPS. Parameters={}'.format(url, parameters)
         logger.error(message)
         raise IOError(message)
 
     message = "An error happened while requesting data from EPO/OPS. " \
-              "Status code was: {}. Response was:\n{}".format(response.status_code, response.content)
+              "Status code was: {}. Response was:\n{}".format(response.status_code, response.text)
     raise IOError(message)

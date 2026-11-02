@@ -32,9 +32,6 @@ def fetch_pdf(document_number):
     logger.info('Accessing EPO publication server: {}'.format(url))
     response = requests.get(url, headers={'User-Agent': regular_user_agent})
 
-    # Debugging
-    #print 'response.content:\n', response.content
-
     if response.status_code == 200:
 
         if response.headers['Content-Type'] == 'application/pdf':
