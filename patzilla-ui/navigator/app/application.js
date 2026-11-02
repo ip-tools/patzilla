@@ -1156,9 +1156,8 @@ export const NavigatorApp = Backbone.Marionette.Application.extend({
         // TODO: is old view killed properly?
         // https://stackoverflow.com/questions/14460855/backbone-js-listento-window-resize-throwing-object-object-has-no-method-apply/17472399#17472399
         if (this.basketView) {
-            this.basketView.close();
             this.stopListening(this.basketView);
-            //this.basketView.destroy();
+            this.basketView.destroy();
             //this.basketView.remove();
             delete this.basketView;
         }
@@ -1174,7 +1173,7 @@ export const NavigatorApp = Backbone.Marionette.Application.extend({
         }
 
         // FIXME: Experimentally remove this weird/misplaced call.
-        this.basket_deactivate();
+        //this.basket_deactivate();
 
         // A. model and view
         const { BasketView } = require("patzilla.navigator.components.basket/basket");
@@ -1228,7 +1227,7 @@ export const NavigatorApp = Backbone.Marionette.Application.extend({
             return;
         }
 
-        // TODO: maybe use an event handler for this, instead of a direct method call (e.g. "item:rendered")
+        // TODO: maybe use an event handler for this, instead of a direct method call (e.g. Marionette's "render")
 
         var _this = this;
 

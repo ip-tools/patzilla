@@ -242,7 +242,9 @@ navigatorApp.addInitializer(function(options) {
         // show documents (ops results) in collection view
         // explicitly switch list region to OPS collection view
         if (this.listRegion.currentView !== this.collectionView) {
-            this.listRegion.show(this.collectionView);
+            this.listRegion.show(this.collectionView, {
+                preventDestroy: true,
+            });
         }
 
     });

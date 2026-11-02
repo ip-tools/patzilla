@@ -6,7 +6,7 @@
 //import {MDCRipple} from '@material/ripple';
 const ripple = require('@material/ripple');
 
-export const MetadataView = Backbone.Marionette.Layout.extend({
+export const MetadataView = Backbone.Marionette.LayoutView.extend({
     tagName: "div",
     template: require('./results-header.html'),
 
@@ -40,10 +40,14 @@ export const MetadataView = Backbone.Marionette.Layout.extend({
 
             var list_type = $(this).data('list-type');
             if (list_type == 'ops') {
-                navigatorApp.listRegion.show(navigatorApp.collectionView);
+                navigatorApp.listRegion.show(navigatorApp.collectionView, {
+                    preventDestroy: true,
+                });
 
             } else if (list_type == 'upstream') {
-                navigatorApp.listRegion.show(navigatorApp.resultView);
+                navigatorApp.listRegion.show(navigatorApp.resultView, {
+                    preventDestroy: true,
+                });
             }
 
         });

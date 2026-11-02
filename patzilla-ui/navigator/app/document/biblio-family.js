@@ -21,15 +21,12 @@ _.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateData
 export const OpsFamilyVerboseCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: require('./biblio-family-verbose-collection.html'),
-    itemView: OpsFamilyVerboseMemberView,
+    childView: OpsFamilyVerboseMemberView,
+    childViewContainer: 'tbody',
 
     id: "ops-family-verbose-verbose-collection",
     //tagName: "div",
     //className: "container-fluid",
-
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
-    }
 
 });
 _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
@@ -50,15 +47,12 @@ _.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateData
 export const OpsFamilyCompactCollectionView = Backbone.Marionette.CompositeView.extend({
 
     template: require('./biblio-family-compact-collection.html'),
-    itemView: OpsFamilyCompactMemberView,
+    childView: OpsFamilyCompactMemberView,
+    childViewContainer: 'tbody',
 
     id: "ops-family-compact-collection",
     //tagName: "div",
     //className: "container-fluid",
-
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
-    },
 
     onDomRefresh: function() {
         this.setup_ui();
@@ -142,18 +136,21 @@ export const OpsFamilyCitationsCollectionView = Backbone.Marionette.CompositeVie
 
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),
-    itemView: OpsFamilyCitationsMemberView,
+    childView: OpsFamilyCitationsMemberView,
+    childViewContainer: 'tbody',
 
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
+    /*
+    // Manual alternative to `childViewContainer: 'tbody'`.
+    attachHtml: function(collectionView, childView) {
+        collectionView.$('tbody').append(childView.el);
     },
+    */
 
     // Override and disable add:render event, see also:
     // https://github.com/marionettejs/backbone.marionette/issues/640
     _initialEvents: function() {
         if (this.collection) {
             //this.listenTo(this.collection, "add", this.addChildView, this);
-            this.listenTo(this.collection, "remove", this.removeItemView, this);
             this.listenTo(this.collection, "reset", this.render, this);
         }
     },

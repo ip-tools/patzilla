@@ -432,7 +432,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
         });
 
         if (!family_collection || !view_class) {
-            family_region.close();
+            family_region.empty();
             content_element.empty();
             return;
         }

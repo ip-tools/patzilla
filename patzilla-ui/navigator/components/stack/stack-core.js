@@ -89,6 +89,14 @@ const StackManager = NamedViewController.extend({
 
     },
 
+    create_checkbox: function() {
+        return new StackCheckboxWidget({
+            model: this.model,
+            modelField: this.modelField,
+            textLabel: this.textLabel,
+        });
+    },
+
     setup_ui: function() {
 
         // Find DOM elements
@@ -97,11 +105,7 @@ const StackManager = NamedViewController.extend({
 
         // setup descendant views
         // https://github.com/rafeememon/marionette-checkbox-behavior/blob/master/test/checkbox-behavior-test.js
-        this.checkbox_widget = new StackCheckboxWidget({
-            model: this.model,
-            modelField: this.modelField,
-            textLabel: this.textLabel,
-        });
+        this.checkbox_widget = this.create_checkbox();
 
         // Wire model events to user interface updates
         this.listenTo(this.model, 'change:selected', this.save_model);
@@ -132,7 +136,7 @@ const StackManager = NamedViewController.extend({
         // Shutdown user interface components.
         this.close_checkbox();
 
-        StackManager.__super__.close.apply(this);
+        StackManager.__super__.destroy.apply(this);
 
     },
 
@@ -190,12 +194,15 @@ const StackManager = NamedViewController.extend({
     },
 
     show_checkbox: function() {
+        if (!this.checkbox_widget || this.checkbox_widget.isDestroyed) {
+            this.checkbox_widget = this.create_checkbox();
+        }
         this.view.region_stack_checkbox.show(this.checkbox_widget);
     },
     close_checkbox: function() {
         var region_stack_checkbox = this.view.region_stack_checkbox;
         if (region_stack_checkbox) {
-            region_stack_checkbox.reset();
+            region_stack_checkbox.empty();
         }
     },
 
@@ -240,7 +247,7 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
         log('StackPlugin::setup');
 
         // The list view the items are rendered into,
-        // so we are listening to its 'itemview:item:rendered' events.
+        // so we are listening to its 'childview:render' events.
         this.view = this.getOption('view');
 
         // Setup the data store.
@@ -252,11 +259,11 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
             // FIXME: nobody currently waits for this to happen
         }});
 
-        // Attach a new item-specific manager after each itemview got rendered.
-        this.listenTo(this.view, 'itemview:item:rendered', function(itemview) {
+        // Attach a new item-specific manager after each childview got rendered.
+        this.listenTo(this.view, 'childview:render', function(childview) {
 
             // This guy will manage the widget to model to environment interactions
-            this.make_stack_manager(itemview);
+            this.make_stack_manager(childview);
 
         });
 
@@ -353,6 +360,7 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
     },
 
     reset: function() {
+        var mode = this.get_intent_mode();
 
         // Reset models.
         var buffer = [];
@@ -366,9 +374,12 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 
         // Reset user interface.
         var _this = this;
-        this.view.children.forEach(function(itemview) {
-            _this.make_stack_manager(itemview);
+        this.view.children.forEach(function(childview) {
+            _this.make_stack_manager(childview);
         });
+        if (mode) {
+            this.update_content_view(mode);
+        }
     },
 
     // Activate single element
@@ -410,8 +421,8 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
         // Iterate list of visible result elements and activate
         // the designated mode on each of them.
         var _this = this;
-        this.view.children.forEach(function(itemview) {
-            _this.activate_by_element(itemview.$el, mode);
+        this.view.children.forEach(function(childview) {
+            _this.activate_by_element(childview.$el, mode);
         });
 
         this.update_opener_view(mode);
@@ -451,14 +462,14 @@ const StackPlugin = Backbone.Marionette.Controller.extendEach(MarionetteFuture, 
 
     close_opener: function() {
         // Close menu opener button by shutting down its region.
-        this.application.metadataView.region_stack_opener.reset();
+        this.application.metadataView.region_stack_opener.empty();
     },
 
     open_menu: function(event) {
 
         // Close menu widget before (re)opening, making this effectively a singleton.
         if (this.menu_widget) {
-            this.menu_widget.close();
+            this.menu_widget.destroy();
         }
 
         // Create menu widget.

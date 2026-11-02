@@ -66,11 +66,8 @@ const KeywordEditorView = Backbone.Marionette.CompositeView.extend({
     id: "keyword-editor",
     className: "modal",
     template: require('./keyword-editor.html'),
-    itemView: KeywordEditorEntryView,
-
-    appendHtml: function(collectionView, itemView) {
-        collectionView.$('tbody').append(itemView.el);
-    },
+    childView: KeywordEditorEntryView,
+    childViewContainer: 'tbody',
 
     initialize: function() {
         console.log('KeywordEditorView.initialize');
@@ -104,8 +101,14 @@ const KeywordEditorView = Backbone.Marionette.CompositeView.extend({
         $('#keyword-editor-save-button').off('click');
         $('#keyword-editor-save-button').on('click', function() {
             $.when(_this.save_models()).then(function() {
-                $("#keyword-editor").modal("removeBackdrop");
-                navigatorApp.keywords.keyword_modal.close();
+
+                // Destroy widget and region.
+                navigatorApp.keywords.keyword_modal.destroy();
+                $("#keyword-editor").modal("hide");
+                // Needed for Marionette 2
+                $(".modal-backdrop").remove();
+
+                // Re-apply highlighting.
                 navigatorApp.keywords.unhighlight();
                 navigatorApp.keywords.highlight();
             });

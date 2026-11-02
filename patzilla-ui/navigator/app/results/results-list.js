@@ -9,7 +9,7 @@ export const OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeVi
     id: "ops-collection-container",
     className: "",
     template: require('./results-list.html'),
-    itemView: OpsExchangeDocumentView,
+    childView: OpsExchangeDocumentView,
 
     initialize: function(options) {
         console.log('OpsExchangeDocumentCollectionView.initialize');
@@ -20,7 +20,7 @@ export const OpsExchangeDocumentCollectionView = Backbone.Marionette.CompositeVi
     _initialEvents: function() {
         if (this.collection) {
             //this.listenTo(this.collection, "add", this.addChildView, this);
-            this.listenTo(this.collection, "remove", this.removeItemView, this);
+            this.listenTo(this.collection, "remove", this._onCollectionRemove, this);
             this.listenTo(this.collection, "reset", this.render, this);
         }
     },

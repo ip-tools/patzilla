@@ -381,7 +381,7 @@ export const ProjectChooserView = Backbone.Marionette.ItemView.extend({
 
         // TODO: Optimize this!
         this.listenTo(this.model, "change", this.render);
-        this.listenTo(this, "item:rendered", this.setup_ui);
+        this.listenTo(this, "render", this.setup_ui);
     },
 
     render_attempt: function(item) {

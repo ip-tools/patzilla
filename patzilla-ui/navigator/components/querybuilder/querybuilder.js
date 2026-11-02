@@ -16,7 +16,7 @@ const QueryBuilderView = Backbone.Marionette.ItemView.extend({
     initialize: function() {
         console.log('QueryBuilderView.initialize');
         //this.listenTo(this.model, "change", this.render);
-        //this.listenTo(this, "item:rendered", this.setup_ui);
+        //this.listenTo(this, "render", this.setup_ui);
         this.config = this.templateHelpers.config = navigatorApp.config;
         //this.setup_ui();
         this.radios = new RadioPlus();
