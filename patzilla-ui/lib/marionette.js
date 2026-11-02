@@ -16,10 +16,28 @@ Marionette.Callbacks.prototype.add = function(callback, contextOverride) {
 // Marionette 2.4.7 relies on $el.selector, removed in jQuery 3.
 // Restore the configured element so selector-based regions can re-query.
 // https://github.com/ip-tools/patzilla/pull/168#discussion_r4437458622
+
+
+(function() {
+    var ensureElement = Marionette.Region.prototype._ensureElement;
+    Marionette.Region.prototype._ensureElement = function() {
+        if (!_.has(this, '_resetEl')) {
+            this._resetEl = this.el;
+        }
+        return ensureElement.apply(this, arguments);
+    };
+})();
+
 Marionette.Region.prototype.reset = function() {
+
+    // Also support reset() before the first show().
+    if (!_.has(this, '_resetEl')) {
+        this._resetEl = this.getOption('el');
+    }
+
     this.empty();
 
-    this.el = this.getOption('el');
+    this.el = this._resetEl;
     if (this.el instanceof Backbone.$) {
         this.el = this.el[0];
     }
