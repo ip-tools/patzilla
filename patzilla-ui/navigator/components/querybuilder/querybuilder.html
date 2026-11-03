@@ -59,17 +59,17 @@
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu">
 
                         <li>
 
                             <!-- display values -->
-                            <a id="btn-comfort-display-values">
+                            <a id="btn-comfort-display-values" class="dropdown-item">
                                 <i class="glyphicon glyphicon-th-list"></i> &nbsp; Display form values
                             </a>
 
                             <!-- clear -->
-                            <a id="btn-comfort-clear">
+                            <a id="btn-comfort-clear" class="dropdown-item">
                                 <i class="glyphicon glyphicon-trash"></i> &nbsp; Clear form values
                             </a>
 
@@ -83,16 +83,16 @@
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu">
                         <li>
 
                             <!-- content transformation -->
-                            <a id="btn-query-transform">
+                            <a id="btn-query-transform" class="dropdown-item">
                                 <i class="glyphicon glyphicon-transfer"></i> &nbsp; Transform query
                             </a>
 
                             <!-- clear -->
-                            <a id="btn-query-clear">
+                            <a id="btn-query-clear" class="dropdown-item">
                                 <i class="glyphicon glyphicon-trash"></i> &nbsp; Clear query
                             </a>
 
@@ -106,16 +106,16 @@
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu">
                         <li>
                             <!-- normalize -->
-                            <a id="btn-numberlist-normalize">
+                            <a id="btn-numberlist-normalize" class="dropdown-item">
                                 <i class="glyphicon glyphicon-resize-horizontal"></i> &nbsp; Normalize numbers
                             </a>
                         </li>
                         <li>
                             <!-- strip kindcode -->
-                            <a id="btn-numberlist-strip-kindcodes">
+                            <a id="btn-numberlist-strip-kindcodes" class="dropdown-item">
                                 <i class="glyphicon glyphicon-erase"></i> &nbsp; Strip kindcodes
                             </a>
                         </li>
@@ -453,19 +453,20 @@
                             <!-- Permalink to current search, with expiration time -->
                             <a tabindex="0" role="button" id="btn-query-permalink"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                class="dropdown-item"
                                 >
                                 <i class="glyphicon glyphicon-share"></i> &nbsp; Share this search
                             </a>
 
                             <!-- Numberlist crawler subsystem -->
                             <% if (navigatorApp.component_enabled('crawler')) { %>
-                                <a id="fetch-result-numbers-action" class="btn-popover"
+                                <a id="fetch-result-numbers-action" class="dropdown-item btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results. This is the raw response of the datasource.">
                                     <i class="glyphicon glyphicon-save"></i> &nbsp; List of publication numbers
                                 </a>
 
-                                <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
+                                <a id="fetch-result-numbers-no-kindcodes-action" class="dropdown-item btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries.">
                                     <i class="glyphicon glyphicon-save"></i> &nbsp; List of publication numbers w/o kindcodes

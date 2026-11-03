@@ -138,7 +138,7 @@ var abstract_list = data.get_abstract_list();
 
                 <!-- Open PDF document -->
                 <li>
-                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf">
+                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf" class="dropdown-item anchor-pdf">
                         <%= navigatorApp.ui.pdf_icon() %>
                         &nbsp;
                         Open PDF
@@ -151,7 +151,7 @@ var abstract_list = data.get_abstract_list();
                 <!-- Links to external resources -->
                 <li class="dropdown-submenu">
 
-                    <a tabindex="-1" href="#" data-toggle="dropdown" role="button">
+                    <a tabindex="-1" href="#" data-toggle="dropdown" role="button" class="dropdown-item">
                         <i class="glyphicon glyphicon-globe glyphicon-large"></i>
                         &nbsp;
                         External sources

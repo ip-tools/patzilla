@@ -63,6 +63,8 @@ const CommentButtonView = Marionette.ItemView.extend({
     template: require('./comment-button.html'),
     //tagName: null,
 
+    //className: 'dropdown-item',
+
     // forward the "click" dom event to a "toggle" application event
     triggers: {
         'click': 'toggle',

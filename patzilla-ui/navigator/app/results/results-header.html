@@ -25,10 +25,10 @@ if ($.isNumeric(data.result_count)) {
 
     <div class="row">
 
-        <div class="col-md-8">
+        <div class="row col-md-8">
 
             <!-- total result count -->
-            <div class="col-md-3">
+            <div class="col col-md-3">
                 Total:
                 <br/>
                 <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
@@ -42,14 +42,14 @@ if ($.isNumeric(data.result_count)) {
             </div>
 
             <!-- current display range -->
-            <div class="col-md-3">
+            <div class="col col-md-3">
                 Range:
                 <br/>
                 <span style="font-size: x-large"><%= data.result_range != null ? data.result_range : '--' %></span>
             </div>
 
             <!-- current cql query string -->
-            <div class="col-md-6">
+            <div class="col col-md-6">
                 Query:
                 <br/>
                     <span style="font-size: small" class="cql-query">
@@ -172,29 +172,29 @@ if ($.isNumeric(data.result_count)) {
 
 
             <!-- Collection menu -->
-            <div class="align-right align-middle">
+            <div class="align-right align-middle pull-right">
 
                 <span id="region-stack-opener" class="mdc-menu-surface--anchor" style="margin-right: 1rem"/>
 
-                <span class="btn-group btn-popover do-not-print">
-                    <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
+                <span class="btn-group do-not-print">
+                    <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                         <i class="glyphicon glyphicon-tasks gi-2x"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu dropdown-menu-right">
 
                         <!--
                         <div class="dropdown-section-header">Actions</div>
                         -->
                         <% if (navigatorApp.component_enabled('stack')) { %>
                         <li>
-                            <a class="action-select-documents">
+                            <a class="dropdown-item action-select-documents">
                                 <i class="glyphicon glyphicon-check"></i>
                                 &nbsp;
                                 Select documents
                             </a>
                         </li>
                         <li>
-                            <a class="action-rate-documents">
+                            <a class="dropdown-item action-rate-documents">
                                 <i class="glyphicon glyphicon-star"></i>
                                 &nbsp;
                                 Rate documents
@@ -202,7 +202,7 @@ if ($.isNumeric(data.result_count)) {
                         </li>
                         <% } %>
                         <li>
-                            <a class="action-expand-comments">
+                            <a class="dropdown-item action-expand-comments">
                                 <i class="glyphicon glyphicon-edit"></i>
                                 &nbsp;
                                 Edit tags and comments
