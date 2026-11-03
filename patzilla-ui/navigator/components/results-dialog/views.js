@@ -9,7 +9,7 @@ export const GenericResultView = Marionette.ItemView.extend({
 
     tagName: "div",
     id: "result-view",
-    className: "modal",
+    className: "modal fade",
     template: require('./widget.html'),
 
     indicate_activity: function(active) {

@@ -1,13 +1,13 @@
-<div id="export-dialog" class="modal modal-info modal-wide modal-high modal-not-rounded fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="export-dialog-label">
+<div id="export-dialog" class="modal modal-info modal-not-rounded fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="export-dialog-label">
 
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-wide modal-high" role="document">
     <div class="modal-content">
 
     <div class="modal-header">
+        <h3 class="modal-title" id="export-dialog-label">Export »<span id="export_title"></span>«</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3 class="modal-title" id="export-dialog-label">Export »<span id="export_title"></span>«</h3>
     </div>
 
     <div class="modal-body">
@@ -451,12 +451,12 @@
                 <div class="col-md-5">
                     <i id="export-dialog-spinner" class="spinner glyphicon glyphicon-refresh glyphicon-spin glyphicon-large" style="display: none"></i>
                     &nbsp;&nbsp;
-                    <button class="btn btn-info btn-lg" id="export-dialog-send-button" type="button">
+                    <button class="btn btn-outline-primary btn-lg" id="export-dialog-send-button" type="button">
                         <i class="glyphicon glyphicon-download-alt"></i>
                         &nbsp;
                         Start export
                     </button>
-                    <button class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
+                    <button class="btn btn-outline-secondary btn-lg" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

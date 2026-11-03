@@ -65,7 +65,7 @@ const KeywordEditorView = Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "keyword-editor",
-    className: "modal",
+    className: "modal fade",
     template: require('./keyword-editor.html'),
     childView: KeywordEditorEntryView,
     childViewContainer: 'tbody',
@@ -94,6 +94,9 @@ const KeywordEditorView = Marionette.CompositeView.extend({
 
     onShow: function() {
 
+        // Dialog no longer displays with bs3.
+        this.$el.modal("show");
+
         this.setup_ui();
 
         var _this = this;
@@ -103,8 +106,7 @@ const KeywordEditorView = Marionette.CompositeView.extend({
         $('#keyword-editor-save-button').on('click', function() {
             $.when(_this.save_models()).then(function() {
 
-                // Destroy widget and region.
-                navigatorApp.keywords.keyword_modal.destroy();
+                // Hide modal after saving.
                 $("#keyword-editor").modal("hide");
                 // Needed for Marionette 2
                 $(".modal-backdrop").remove();
@@ -222,13 +224,10 @@ const KeywordsController = Marionette.Controller.extend({
 
         var _this = this;
 
-        $('.action-keyword-editor').off('click');
-        $('.action-keyword-editor').on('click', function() {
+        $('.action-keyword-editor').off('click').on('click', function() {
             if (_this.module_available) {
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);
-                // Dialog did not display with bs3.
-                $("#keyword-editor").modal("show");
             } else {
                 navigatorApp.ui.notify_module_locked(_this.module_name);
             }

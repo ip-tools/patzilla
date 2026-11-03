@@ -631,14 +631,14 @@
 
 <!-- modal dialog for choosing clipboard content modifier -->
 <div id="query-transform-dialog" class="modal fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="query-transform-dialog-label">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-medium" role="document">
   <div class="modal-content">
 
     <div class="modal-header">
+        <h3 class="modal-title" id="query-transform-dialog-label">Query transformation</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3 class="modal-title" id="query-transform-dialog-label">Query transformation</h3>
     </div>
     <div class="modal-body">
         Transform newline-separated data to syntactically correct query.
@@ -661,16 +661,20 @@
             </button>
         </div>
     </div>
-    <div class="modal-footer">
         <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons">
           <label class="btn btn-default active">
+    <div class="modal-footer row justify-content-between">
+      <div class="col-auto">
             <input type="radio" name="options" data-value="OR" checked>OR
           </label>
           <label class="btn btn-default">
             <input type="radio" name="options" data-value="AND">AND
           </label>
         </div>
-        <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
 
   </div>
