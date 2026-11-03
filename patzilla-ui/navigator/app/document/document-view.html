@@ -373,25 +373,29 @@ var abstract_list = data.get_abstract_list();
                     -->
                     <!-- carousel items -->
                     <div class="carousel-inner">
-                        <div class="active item">
+                        <div class="carousel-item active">
                             <img src="<%= linkmaker.drawing_url() %>"
                                  alt="No drawing available."
-                                 onload="var oce_view = $(this).closest('.ops-collection-entry').prop('view'); oce_view && oce_view.signalDrawingLoaded();"/>
+                                 onload="var oce_view = $(this).closest('.ops-collection-entry').prop('view'); oce_view && oce_view.signalDrawingLoaded();"
+                                 class="d-block w-100"
+                            />
                         </div>
                     </div>
+                    <div>
                     <!-- Carousel navigation: Left, right, rotate. -->
-                    <a class="carousel-control left do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="prev">
-                      <span class="glyphicon glyphicon-chevron-left"></span>
+                    <a class="carousel-control-prev carousel-control do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="prev">
+                      <span class="glyphicon glyphicon-chevron-left gi-2x"></span>
                     </a>
-                    <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="next">
-                      <span class="glyphicon glyphicon-chevron-right"></span>
+                    <a class="carousel-control-next carousel-control do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="next">
+                      <span class="glyphicon glyphicon-chevron-right gi-2x"></span>
                     </a>
-                    <a class="carousel-control rotate do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-rotate="right">
+                    <a class="carousel-control-rotate carousel-control do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-rotate="right">
                       <i class="glyphicon glyphicon-repeat gi-2x"></i>
                     </a>
                     <!-- Carousel status text, e.g. "Drawing #1/3" -->
                     <div class="drawing-info col-md-12 text-center">
                         Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"></span>
+                    </div>
                     </div>
 
                 </div>

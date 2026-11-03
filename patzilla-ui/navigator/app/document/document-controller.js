@@ -500,7 +500,7 @@ const DocumentCarouselController = Marionette.Controller.extend({
 
         // turn slideshow off
         $('.drawings-carousel').carousel({
-            //interval: null
+            interval: false
         });
 
         // update page numbers after sliding
@@ -515,7 +515,7 @@ const DocumentCarouselController = Marionette.Controller.extend({
         }
 
         // Navigate to previous drawing
-        $('.drawings-carousel .carousel-control.left').on('click', function(event) {
+        $('.drawings-carousel .carousel-control-prev').off('click').on('click', function(event) {
 
             // Prevent over-navigation to the previous drawing if there's just one item in the collection
             var carousel_items = $(this).closest('.ops-collection-entry').find('.drawings-carousel').find('.carousel-inner');
@@ -531,18 +531,18 @@ const DocumentCarouselController = Marionette.Controller.extend({
         });
 
         // Navigate to next drawing
-        $('.drawings-carousel .carousel-control.right').on('click', function(event) {
+        $('.drawings-carousel .carousel-control-next').off('click').on('click', function(event) {
             drawing_navigate(this, +1);
         });
 
         // Rotate drawings clockwise in steps of 90 degrees
-        $('.carousel-control.rotate').on('click', function(event, direction) {
+        $('.carousel-control-rotate').off('click').on('click', function(event, direction) {
             event.preventDefault();
             event.stopPropagation();
 
             // Find active drawing
             var carousel = $(this).closest('.ops-collection-entry').find('.drawings-carousel');
-            var active_image = carousel.find('.carousel-inner .item.active img').first();
+            var active_image = carousel.find('.carousel-inner .carousel-item.active img').first();
             //log('active_image:', active_image);
 
             // Compute relative rotation
@@ -616,7 +616,7 @@ const DocumentCarouselController = Marionette.Controller.extend({
     update_carousel_metadata: function(carousel) {
 
         var container = $(carousel).closest('.ops-collection-entry');
-        var navigation_controls = $(carousel).find('.carousel-control.left, .carousel-control.right');
+        var navigation_controls = $(carousel).find('.carousel-control-prev, .carousel-control-next');
 
         navigation_controls.show();
 

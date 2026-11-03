@@ -758,7 +758,7 @@ dl.dl-horizontal-inline {
 /* Align control arrows at bottom of image */
 .carousel-control {
     position: absolute;
-    top: 95%;
+    top: 90%;
     margin-top: inherit;
 }
 
@@ -771,12 +771,13 @@ dl.dl-horizontal-inline {
 }
 
 /* Adjust rotation control element */
-.carousel-control.rotate {
+.carousel-control-rotate {
     position: relative;
     left: 48%;
     right: 48%;
     font-size: inherit;
     font-weight: inherit;
+    opacity: 0.5;
 }
 
 /* "Drawing #1/3" status text */
