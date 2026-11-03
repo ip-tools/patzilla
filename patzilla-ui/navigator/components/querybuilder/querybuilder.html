@@ -37,7 +37,8 @@
                 </button>
 
                 <!-- history -->
-                <div id="cql-history-chooser" style="display: inline-block">
+                <div id="cql-history-chooser"
+                     class="input-group-append">
 
                     <button
                             id="btn-query-history"
@@ -55,7 +56,7 @@
 
                 </div>
 
-                <div class="btn-group">
+                <div class="input-group-append">
                     <button id="querybuilder-comfort-actions"
                             class="btn btn-outline-dark dropdown-toggle"
                             data-toggle="dropdown">
@@ -81,7 +82,7 @@
                     </ul>
                 </div>
 
-                <div class="btn-group">
+                <div class="input-group-append">
                     <button id="querybuilder-cql-actions"
                             class="btn btn-outline-dark dropdown-toggle"
                             data-toggle="dropdown"
@@ -107,7 +108,7 @@
                     </ul>
                 </div>
 
-                <div class="btn-group">
+                <div class="input-group-append">
                     <button id="querybuilder-numberlist-actions"
                             class="btn btn-outline-dark dropdown-toggle"
                             data-toggle="dropdown"
@@ -136,7 +137,7 @@
         </span>
 
         <!-- Data source chooser -->
-        <span>
+        <span class="col">
 
             <div id="datasource" class="btn-group btn-group-toggle" data-toggle="buttons">
               <label class="btn btn-outline-dark" data-value="ops">
@@ -203,32 +204,32 @@
 
                             <!-- Full text -->
                             <div class="input-group">
-                              <span class="input-group-addon add-on-label">Full text</span>
+                              <span class="input-group-prepend input-group-text">Full text</span>
                               <input name="fulltext" class="input-xlarge smaller" placeholder="rohr or tube or circular" type="text"></input>
-                              <span class="input-group-addon add-on-zoom"><i class="glyphicon glyphicon-resize-full"></i></span>
+                              <span class="input-group-append add-on-zoom"><button class="btn btn-outline-secondary"><i class="glyphicon glyphicon-resize-full"></i></button></span>
                             </div>
 
                             <!-- Classification -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Classification</span>
+                                <span class="input-group-prepend input-group-text">Classification</span>
                                 <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
                             </div>
 
                             <!-- Applicant -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Applicant</span>
+                                <span class="input-group-prepend input-group-text">Applicant</span>
                                 <input name="applicant" class="input-xlarge" placeholder="Siemens and Bosch" type="text">
                             </div>
 
                             <!-- Inventor -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Inventor</span>
+                                <span class="input-group-prepend input-group-text">Inventor</span>
                                 <input name="inventor" class="input-xlarge" placeholder="&quot;Edison Thomas&quot;" data-placeholder-bosch="&quot;Robert Bosch&quot;" type="text">
                             </div>
 
                             <!-- Country -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Country</span>
+                                <span class="input-group-prepend input-group-text">Country</span>
                                 <input name="country" class="input-xlarge" placeholder="DE or EP or US; DE, EP" data-demo="DE or EP or US" type="text">
                             </div>
 
@@ -238,31 +239,31 @@
 
                             <!-- Publication number -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Publication number</span>
+                                <span class="input-group-prepend input-group-text">Publication number</span>
                                 <input id="patentnumber" name="patentnumber" class="input-xlarge" placeholder="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-dpma="DE102011078918A1" type="text" autofocus="autofocus">
                             </div>
 
                             <!-- Publication date -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Publication date</span>
+                                <span class="input-group-prepend input-group-text">Publication date</span>
                                 <input name="pubdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="within 1978,1986" type="text">
                             </div>
 
                             <!-- Application date -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Application date</span>
+                                <span class="input-group-prepend input-group-text">Application date</span>
                                 <input name="appdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="1980-12-28" type="text">
                             </div>
 
                             <!-- Priority date -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Priority date</span>
+                                <span class="input-group-prepend input-group-text">Priority date</span>
                                 <input name="priodate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="1999" type="text">
                             </div>
 
                             <!-- Citation -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Citations</span>
+                                <span class="input-group-prepend input-group-text">Citations</span>
                                 <input name="citation" class="input-xlarge" placeholder="US5155725 or EP0352041" type="text">
                             </div>
 

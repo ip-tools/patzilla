@@ -1339,9 +1339,8 @@ const QueryBuilderView = Marionette.ItemView.extend({
 
         // Enrich form fields with actions
         _.each(form.find(".input-group"), function(item) {
-
             // Populate field value with placeholder value on demand
-            $(item).find('.input-group-addon.add-on-label').off('click').on('click', function(ev) {
+            $(item).find('.input-group-text').off('click').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 if (!input_element.val()) {
 
@@ -1359,7 +1358,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
             });
 
             // Zoom input field to textarea
-            $(item).find('.input-group-addon.add-on-zoom').off('click').on('click', function(ev) {
+            $(item).find('.add-on-zoom').off('click').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 _this.comfort_form_regular_to_zoomed(input_element);
             });
@@ -1368,12 +1367,8 @@ const QueryBuilderView = Marionette.ItemView.extend({
         // Conditionally display fulltext-modifier-chooser
         if (datasource_info.querybuilder.enable_fulltext_modifiers) {
             $('#fulltext-modifier-chooser').show();
-            $('#fulltext-textarea-container').removeClass('col-md-12').addClass('col-md-11');
-            $('#fulltext-textarea-container').find('textarea').removeClass('col-md-11').addClass('col-md-10');
         } else {
             $('#fulltext-modifier-chooser').hide();
-            $('#fulltext-textarea-container').removeClass('col-md-11').addClass('col-md-12');
-            $('#fulltext-textarea-container').find('textarea').removeClass('col-md-10').addClass('col-md-11');
         }
 
     },
