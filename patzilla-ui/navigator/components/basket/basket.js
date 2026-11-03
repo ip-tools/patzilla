@@ -637,9 +637,9 @@ export const BasketView = Marionette.ItemView.extend({
         // only enable submit button, if ship url is given
         var ship_url = navigatorApp.config.get('ship-url');
         if (ship_url) {
-            $('#basket-submit-button').removeClass('hide');
+            $('#basket-submit-button').show().parent().addClass('btn-group');
         } else {
-            $('#basket-submit-button').addClass('hide');
+            $('#basket-submit-button').hide().parent().removeClass('btn-group');
         }
 
         // import clipboard content by intercepting paste event

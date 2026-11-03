@@ -8,8 +8,10 @@
     <div class="querybuilder-datasource-flavor-chooser">
 
         <!-- Search flavor chooser (comfort/expert/list) -->
-        <span>
-            <div id="querybuilder-flavor-chooser" class="btn-group tabs">
+        <span class="col">
+            <div id="querybuilder-flavor-chooser"
+                 class="btn-group btn-group-toggle tabs input-group"
+                 role="group">
 
                 <button class="btn btn-outline-dark active" data-toggle="tab"
                         href="#querybuilder-comfort-tab"
@@ -136,7 +138,7 @@
         <!-- Data source chooser -->
         <span>
 
-            <div id="datasource" class="btn-group" data-toggle="buttons">
+            <div id="datasource" class="btn-group btn-group-toggle" data-toggle="buttons">
               <label class="btn btn-outline-dark" data-value="ops">
                 <input type="radio">
                 <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
@@ -192,7 +194,7 @@
         <div class="col-md-12 tab-content">
 
             <!-- trimmed-down user interface -->
-            <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
+            <div class="tab-pane in active" id="querybuilder-comfort-tab">
 
                 <form id="querybuilder-comfort-form" target="querybuilder-comfort-form-iframe" action="/api/void">
                     <fieldset class="querybuilder-comfort-form-fieldset">
@@ -319,7 +321,7 @@
                             Search&nbsp;syntax:
                         </div>
 
-                        <div class="btn-group" data-toggle="buttons" id="mode-syntax-buttons">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="mode-syntax-buttons">
 
                             <!-- Toggle CQL vs. IKOFAX -->
                             <label class="btn btn-outline-secondary btn-popover btn-syntax active"
@@ -516,7 +518,7 @@
                   Full cycle
                 </button>
 
-                <div class="btn-group" data-toggle="buttons" id="mode-order-buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="mode-order-buttons">
 
                     <!-- Toggle "First pub." -->
                     <label class="btn btn-outline-info btn-popover btn-mode-order"
@@ -571,7 +573,7 @@
                     Family member by priority
                 </button>
 
-                <div class="btn-group" data-toggle="buttons" id="family-remove-buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="family-remove-buttons">
 
                     <!-- Toggle "Remove family members" -->
                     <label class="btn btn-outline-info btn-popover btn-family-remove"
@@ -670,9 +672,11 @@
             </button>
         </div>
     </div>
-        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons">
     <div class="modal-footer row justify-content-between">
       <div class="col-auto">
+        <div id="clipboard-modifier-operator"
+             class="btn-group btn-group-toggle pull-left"
+             data-toggle="buttons">
           <label class="btn btn-outline-info active">
             <input type="radio" name="options" data-value="OR" checked>OR
           </label>

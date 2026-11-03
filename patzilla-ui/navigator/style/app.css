@@ -256,7 +256,7 @@ ul.breathe li {
 #datasource img[class=square-24] { height/*\**/: 24px; width/*\**/: 24px; }
 
 /* Stick icon and text together; don't wrap. */
-#datasource .btn {
+#datasource,#export-dialog .btn {
     white-space: nowrap !important;
 }
 

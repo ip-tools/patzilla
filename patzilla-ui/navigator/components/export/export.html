@@ -31,7 +31,13 @@
                 </div>
                 <div class="col-md-9">
 
-                    <div class="btn-group" data-toggle="buttons" data-toggle-release="false" data-name="format" data-label-target="#output-format">
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons"
+                         data-toggle-release="false"
+                         data-name="format"
+                         data-label-target="#output-format"
+                         role="group"
+                    >
 
                         <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
@@ -131,7 +137,7 @@
 
 
             <!-- Archive content -->
-            <div class="row hide" id="zip-content">
+            <div class="row" id="zip-content" style="display: none">
                 <div class="col-md-3">
                     <div class="lead inline">Zip content</div>
                     <br/>
@@ -141,11 +147,16 @@
                 </div>
                 <div class="col-md-9">
 
-                    <div class="btn-group" data-toggle="buttons" data-name="report" data-label-target="#report-parts">
 
                         <div class="lead section">
                             Report
                         </div>
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons"
+                         data-name="report"
+                         data-label-target="#report-parts"
+                         role="group"
+                    >
 
                         <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="report"
@@ -208,11 +219,16 @@
                     <br/>
 
 
-                    <div class="btn-group" data-toggle="buttons" data-name="media" data-label-target="#media-parts">
 
                         <div class="lead section">
                             Media
                         </div>
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons"
+                         data-name="media"
+                         data-label-target="#media-parts"
+                         role="group"
+                      >
 
                         <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
@@ -302,9 +318,9 @@
 
 
             <!-- Link and embed content -->
-            <div class="row hide" id="link-embed-content">
                 <div class="col-md-3">
                     <div class="lead inline">Link and embed</div>
+            <div class="row" id="link-embed-content" style="display: none">
                 </div>
                 <div class="col-md-7">
 
@@ -374,7 +390,7 @@
 
 
             <!-- Display document numbers -->
-            <div class="row hide" id="display-content">
+            <div class="row" id="display-content" style="display: none">
 
                 <div class="col-md-3">
                     <div class="lead inline">Display document numbers</div>

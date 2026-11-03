@@ -49,8 +49,11 @@ var abstract_list = data.get_abstract_list();
             </div>
 
             <!-- Document details: Claims, Description, Family -->
-            <div class="btn-group btn-popover tabs document-details-chooser do-not-print"
-                 data-toggle="popover" data-trigger="hover" data-placement="top"
+            <div class="btn-group btn-group-toggle btn-popover tabs document-details-chooser do-not-print"
+                 role="group"
+                 data-toggle="popover"
+                 data-trigger="hover"
+                 data-placement="top"
                  data-content="Toggle detail view"
                     >
                 <button class="btn btn-secondary active"
@@ -130,8 +133,8 @@ var abstract_list = data.get_abstract_list();
 
 
         <!-- Document header: Menu on right side -->
-        <span class="btn-group btn-popover do-not-print">
-            <button class="btn btn-default btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
+        <span class="btn-group do-not-print">
+            <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="glyphicon glyphicon-menu-hamburger gi-2x"></i>
             </button>
 
@@ -403,7 +406,7 @@ var abstract_list = data.get_abstract_list();
             </div>
             <div class="col-md-7 tab-content document-details">
 
-                <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade in active">
+                <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane in active">
                     <dl class="dl-horizontal dl-horizontal-biblio">
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="Applicants">
