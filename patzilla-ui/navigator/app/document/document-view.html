@@ -139,7 +139,7 @@ var abstract_list = data.get_abstract_list();
             </button>
 
             <!-- Actions: Comment, PDF, Worldlinks -->
-            <ul class="dropdown-menu pull-right document-header-more-menu" role="menu">
+            <ul class="dropdown-menu dropdown-menu-right document-header-more-menu" role="menu">
 
                 <!--
                 <div class="dropdown-section-header">Actions</div>
@@ -155,7 +155,7 @@ var abstract_list = data.get_abstract_list();
                 </li>
 
                 <!-- Add/edit comment -->
-                <li id="region-comment-button"/>
+                <li id="region-comment-button"></li>
 
                 <!-- Links to external resources -->
                 <li class="dropdown-submenu">
@@ -459,8 +459,7 @@ var abstract_list = data.get_abstract_list();
                             (51)
                         </dt>
                         <dd class="dl-horizontal-inline-container">
-                            <span class="clearfix"></span>
-                            <dl class="dl-horizontal2 dl-horizontal-inline">
+                            <dl class="dl-horizontal-inline">
 
                                 <%
                                 var classifications_map = data.get_classifications(true);

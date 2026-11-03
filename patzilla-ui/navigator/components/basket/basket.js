@@ -1041,7 +1041,7 @@ const RatingController = Marionette.Controller.extend({
     setup_ui: function(options) {
 
         console.log('Setup rating widget');
-        //$('.rating-widget').raty('destroy');
+        $('.rating-widget').raty('destroy');
         $('.rating-widget').raty({
             number: 3,
             hints: ['slightly relevant', 'relevant', 'important'],

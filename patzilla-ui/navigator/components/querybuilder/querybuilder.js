@@ -365,7 +365,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
     check_query_empty: function(options) {
         options = options || {};
         if (this.query_empty()) {
-            navigatorApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
+            navigatorApp.ui.notify('Query expression is empty.', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -376,7 +376,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
     },
     check_numberlist_empty: function(options) {
         if (this.numberlist_empty()) {
-            navigatorApp.ui.notify('Numberlist is empty', {type: 'warning', icon: options.icon});
+            navigatorApp.ui.notify('Numberlist is empty.', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -578,15 +578,16 @@ const QueryBuilderView = Marionette.ItemView.extend({
                 $('#numberlist').val(numbers_valid.join('\n'));
 
                 // display invalid patent numbers
-                if (_.isEmpty(numbers_invalid)) {
-                    navigatorApp.ui.notify(
-                        'Successfully normalized patent numbers',
-                        {type: 'success', icon: 'glyphicon-exchange', right: true});
-                } else {
-                    var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
-                    navigatorApp.ui.user_alert(message, 'warning');
-
+                var message = 'Successfully normalized patent numbers.';
+                if (!_.isEmpty(numbers_invalid)) {
+                    message += ` ${numbers_invalid.length} invalid values were removed.`;
                 }
+                navigatorApp.ui.notify(
+                    message,
+                    {type: 'success', icon: 'glyphicon-exchange', right: true});
+
+                //var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
+                //navigatorApp.ui.user_alert(message, 'warning');
             });
         });
 
@@ -602,7 +603,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
             $('#numberlist').val(numbers.join('\n'));
 
             navigatorApp.ui.notify(
-                'Successfully stripped patent kind codes',
+                'Successfully stripped patent kind codes.',
                 {type: 'success', icon: 'glyphicon-eraser', right: true});
 
         });

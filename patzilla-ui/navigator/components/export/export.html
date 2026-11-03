@@ -15,8 +15,6 @@
         <p>
             Use project metadata to produce reports in different output formats.
             Optionally, add PDF- and XML-representations of all rated documents.
-            Remark: While exporting to CSV format is available in all Navigator versions,
-            other export formats are only shipped with Navigator Professional.
         </p>
         <hr/>
 
@@ -111,7 +109,7 @@
                             <input type="radio">
                             <i class="glyphicon glyphicon-link gi-2x"></i>
                             <br/>
-                            Link
+                            Share
                         </label>
 
 
@@ -147,10 +145,12 @@
                 </div>
                 <div class="col-md-9">
 
+                    <div class="content-block">
 
-                        <div class="lead section">
-                            Report
-                        </div>
+                    <div class="lead section">
+                        Report
+                    </div>
+
                     <div class="btn-group btn-group-toggle"
                          data-toggle="buttons"
                          data-name="report"
@@ -211,18 +211,17 @@
                         </button>
 
                     </div>
-                    <br/>
-                    <br/>
                     <p>
                         Choose from multiple formats for project metadata (document numbers, ratings and comments).
                     </p>
-                    <br/>
+                    </div>
 
+                    <div class="content-block">
 
+                    <div class="lead section">
+                        Media
+                    </div>
 
-                        <div class="lead section">
-                            Media
-                        </div>
                     <div class="btn-group btn-group-toggle"
                          data-toggle="buttons"
                          data-name="media"
@@ -305,36 +304,45 @@
                         </button>
 
                     </div>
-                    <br/>
-                    <br/>
                     <p>
                         Choose from multiple formats for exported documents, either full representations (PDF)
                         or machine readable formats for bibliographic information, description, claims and
                         legal data (XML and TEXT).
                     </p>
 
+                    </div>
+
                 </div>
             </div>
 
 
             <!-- Link and embed content -->
-                <div class="col-md-3">
-                    <div class="lead inline">Link and embed</div>
             <div class="row" id="link-embed-content" style="display: none">
+                <div class="col col-3 d-flex flex-column justify-content-between">
+                  <div class="lead inline">
+                    Link and embed
+                  </div>
+                  <div class="text-small">
+                    Note: Both sharing variants will only transfer the plain
+                    document numbers without any of your rating scores.
+                  </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col col-7">
 
-                    <div id="link-embed-sections" style="display: flex; flex-direction: column">
+                    <div id="link-embed-sections">
 
                       <!-- Internal url -->
-                      <div class="row section">
+                      <div class="content-block">
                         <div class="text-large">Share with authenticated users</div>
                         <p class="text-smaller">
                           A link for authenticated users to review the collected documents per »Numberlist« mode.
                         </p>
 
-                        <div class="input-group">
-                            <input id="share-link-numberlist" class="input-xlarge" type="text" />
+                        <div class="input-group row">
+                          <div class="col">
+                            <input id="share-link-numberlist" type="text" class="w-100"/>
+                          </div>
+                          <div>
                             <button id="share-link-numberlist-copy" type="button" class="btn btn-outline-secondary has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                 <i class="glyphicon glyphicon-copy"></i>
@@ -343,19 +351,23 @@
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
                                 <i class="glyphicon glyphicon-share"></i>
                             </button>
+                          </div>
                         </div>
                       </div>
 
                       <!-- External url -->
-                      <div class="row section">
+                      <div class="content-block">
                         <div class="text-large">Share with external users</div>
                         <p class="text-smaller">
                           A public link for external users to display the collected documents.
                           The link is read-only, and has an expiration time.
                         </p>
 
-                        <div class="input-group">
-                            <input id="share-link-external" class="input-xlarge" type="text" />
+                        <div class="input-group row">
+                          <div class="col">
+                            <input id="share-link-external" type="text" class="w-100"/>
+                          </div>
+                          <div>
                             <button id="share-link-external-copy" type="button" class="btn btn-outline-secondary has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                 <i class="glyphicon glyphicon-copy"></i>
@@ -364,22 +376,13 @@
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
                                 <i class="glyphicon glyphicon-share"></i>
                             </button>
+                          </div>
                         </div>
 
                         <div>
-                        The link will expire <span id="expiration-time-human">in 24 hours</span>.
+                          The link will expire <span id="expiration-time-human">in 24 hours</span>.
                         </div>
-                        <div>
-                        <input id="expiration-time-slider" type="text"/>
-                        </div>
-                      </div>
-
-                      <!-- Footer -->
-                      <div class="row section">
-                        <small>
-                            Note: Both sharing variants will just transfer the plain
-                            document numbers without any of your rating scores.
-                        </small>
+                        <input id="expiration-time-slider" type="text" styl2e="display: none"/>
                       </div>
 
                     </div>
@@ -449,12 +452,12 @@
     <div class="modal-footer">
 
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-7 text-left">
+            <div class="row justify-content-between">
+                <div>
                     <div id="export-dialog-action-text" class="lead footer"></div>
                     <div id="export-dialog-status-text" class="footer"></div>
                 </div>
-                <div class="col-md-5">
+                <div>
                     <i id="export-dialog-spinner" class="spinner glyphicon glyphicon-refresh glyphicon-spin glyphicon-large" style="display: none"></i>
                     &nbsp;&nbsp;
                     <button class="btn btn-outline-primary btn-lg" id="export-dialog-send-button" type="button">

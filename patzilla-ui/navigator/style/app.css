@@ -145,7 +145,11 @@ body {
 
 /* Export dialog */
 #export-dialog .modal-body .row {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
+}
+
+#export-dialog .content-block > * {
+    margin-bottom: 0.5rem;
 }
 
 .lead.inline {
@@ -219,7 +223,7 @@ ul.breathe li {
  * Query builder
  */
 #querybuilder-area .row {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Query builder: Data source and flavor chooser */
@@ -636,18 +640,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
-.document-title {
-    font-size: 24.5px;
-    font-weight: bold;
-}
-
-
-/* Tabs */
-.document-details.tab-content {
-    overflow: visible;
-}
-
-
 /* Rating */
 .dismiss {
     border-bottom: 3px solid #51a351;
@@ -705,29 +697,39 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
-.dl-horizontal-biblio {
-    margin-bottom: 0px;
+/* Document: Details */
+
+.document-title {
+    font-size: 24.5px;
+    font-weight: bold;
 }
+
+.document-details.tab-content {
+    overflow: visible;
+}
+
+.dl-horizontal-biblio {
+    margin-top: 2rem;
+    margin-bottom: 0;
+}
+/* Adjust the position of the tooltip element. */
 .dl-horizontal-biblio dt {
     width: 30px;
     text-align: left;
 }
+/* Adjust the position of the value element. */
 .dl-horizontal-biblio dd {
-    margin-left: 40px;
+    margin-left: 3rem;
+    margin-top: -1.5rem;
 }
 
 
-dl.dl-horizontal-inline {
-    -webkit-margin-before: 0em;
-    -webkit-margin-after: 0em;
-}
 @media (min-width: 768px) {
     .dl-horizontal-inline-container {
         position: relative;
         top: -1.4em;
     }
 }
-
 .dl-horizontal-inline dt {
     width: 60px;
     text-align: left;

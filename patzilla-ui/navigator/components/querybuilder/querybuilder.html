@@ -5,7 +5,7 @@
 
 <div id="querybuilder-area">
 
-    <div class="querybuilder-datasource-flavor-chooser">
+    <div class="row querybuilder-datasource-flavor-chooser">
 
         <!-- Search flavor chooser (comfort/expert/list) -->
         <span class="col">
@@ -46,12 +46,11 @@
                             >
                         <i class="glyphicon glyphicon-time btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
-                           data-content="Query history"
-                                ></i>
+                           data-content="Query history"></i>
                     </button>
 
                     <div id="cql-history-chooser-container" class="dropdown-menu">
-                        <div id="cql-history-chooser-select2" class="col-md-12"></div>
+                        <div id="cql-history-chooser-select2"></div>
                     </div>
 
                 </div>
@@ -272,13 +271,13 @@
                         <!-- Fulltext modifiers -->
                         <div id="fulltext-zoomed" class="container-fluid col-md-12 nomargin field-zoomed" style="display: none">
                           <div class="row">
-                            <div class="col-md-10" id="fulltext-textarea-container">
+                            <div class="col col-md-10" id="fulltext-textarea-container">
                                 <div class="input-group" style="vertical-align: top">
                                     <span class="input-group-addon">Full text</span>
                                 </div>
-                                <textarea class="col-md-10 monospace" data-name="fulltext" rows="6" style="width: 100%"></textarea>
+                                <textarea class="w-100 monospace" data-name="fulltext" rows="6"></textarea>
                             </div>
-                            <div class="col-md-2" id="fulltext-modifier-chooser" style="display: flex; flex-direction: column">
+                            <div class="col col-md-2" id="fulltext-modifier-chooser" style="display: flex; flex-direction: column">
                                 <span>Search&nbsp;in:</span>
                                 <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
                                 <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
@@ -294,7 +293,7 @@
 
                 <!-- https://stackoverflow.com/questions/15462991/trigger-autocomplete-without-submitting-a-form/15634249#15634249 -->
                 <!-- https://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-dynamically-generated-forms-handled-with-ajax/8449290#8449290 -->
-                <iframe id="querybuilder-comfort-form-iframe" name="querybuilder-comfort-form-iframe" src="javascript:false" class="hide"></iframe>
+                <iframe id="querybuilder-comfort-form-iframe" name="querybuilder-comfort-form-iframe" src="javascript:false" style="display: none"></iframe>
 
             </div>
 
@@ -446,7 +445,7 @@
 
                     <!-- Start search action -->
                     <button type="submit" role="button" class="btn btn-info btn-popover btn-query-perform"
-                        data-toggle="popover" data-trigger="hover" data-placement="right"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
                         data-content="Submit search expression to the database"
                         >
                         Start search
