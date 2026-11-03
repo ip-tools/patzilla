@@ -275,3 +275,20 @@ https://stackoverflow.com/a/27158090
 .gi-3x{font-size: 3em;}
 .gi-4x{font-size: 4em;}
 .gi-5x{font-size: 5em;}
+
+
+/** Oldschool micro layout **/
+
+.pull-left {
+    float: left;
+}
+.pull-right {
+    float: right;
+}
+.clearfix {
+    clear: both;
+}
+
+.display-none {
+    display: none;
+}

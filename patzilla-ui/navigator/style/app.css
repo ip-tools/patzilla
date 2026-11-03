@@ -121,7 +121,8 @@ body {
 
 
 
-/* Text */
+/** Text enhancements. **/
+
 .text-muted {
     color: #777777;
 }
@@ -130,9 +131,14 @@ body {
     content: "\f0c9";
 }
 
-.label-large {
+.badge-large {
     font-size: large;
     padding: 9px;
+}
+
+/* Less rounded corners than default. */
+.badge-pill {
+    border-radius: 0.3rem;
 }
 
 
@@ -242,15 +248,17 @@ ul.breathe li {
     flex-wrap: wrap-reverse;
 }
 
-.querybuilder-datasource-flavor-chooser * {
-    margin-bottom: 1px;
-}
+/** Query builder: Data source chooser **/
 
-/* Query builder: Data source chooser */
+/* Adjust icon sizes */
 #datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
 #datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
 #datasource img[class=square-24] { height/*\**/: 24px; width/*\**/: 24px; }
-#datasource label[class~=h-32] { height/*\**/: 34px; }
+
+/* Stick icon and text together; don't wrap. */
+#datasource .btn {
+    white-space: nowrap !important;
+}
 
 
 .query-actions div {
@@ -308,9 +316,8 @@ ul.breathe li {
     margin-bottom: 1px;
 }
 
-#querybuilder-comfort-form .input-group-addon.add-on-label {
-    margin-left: unset;
-    width: 16rem;
+#querybuilder-comfort-form .input-group-prepend.input-group-text {
+    width: 11rem;
 }
 #querybuilder-comfort-form input::-webkit-input-placeholder {
     color: #DDDDDD;
@@ -539,13 +546,17 @@ ul.breathe li {
 }
 
 /* Generalization of a large modal */
-.modal-high .modal-body {
+.modal-dialog.modal-medium {
+    max-width: 650px;
+}
+.modal-dialog.modal-wide {
+    max-width: 950px;
+}
+.modal-dialog.modal-high .modal-body {
     max-height: 750px;
     height: 550px;
 }
-.modal-wide .modal-dialog {
-    width: 950px;
-}
+
 
 .btn-symbol {
     padding: 0.6em;
@@ -725,7 +736,7 @@ dl.dl-horizontal-inline {
     margin-left: 60px;
 }
 
-.label-document-missing {
+.badge-document-missing {
     font-size: large;
     padding: 7px;
 }
@@ -800,7 +811,8 @@ dl.dl-horizontal-inline {
 }
 
 
-/* Project management */
+/** Project management **/
+
 #project-chooser-list .dropdown-menu {
     width: 300px;
 }
@@ -818,6 +830,11 @@ dl.dl-horizontal-inline {
 
 #basket {
     font-size: smaller;
+}
+
+/* Stick icon and text together; don't wrap. */
+#basket-form .btn {
+    white-space: nowrap !important;
 }
 
 #share-numberlist-clipboard {
@@ -881,9 +898,3 @@ dl.dl-horizontal-inline {
     z-index: 9999;
 }
 */
-
-
-/* Make tooltips wider */
-.popover[role="tooltip"] {
-    width: 30rem;
-}
