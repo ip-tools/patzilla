@@ -11,24 +11,24 @@
         <span>
             <div id="querybuilder-flavor-chooser" class="btn-group tabs">
 
-                <button class="btn btn-default active" data-toggle="tab"
+                <button class="btn btn-outline-dark active" data-toggle="tab"
                         href="#querybuilder-comfort-tab"
                         data-value="comfort">
                     <i class="glyphicon glyphicon-list"></i> Standard
                 </button>
                 <!--
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-outline-dark" data-toggle="tab"
                         href="#querybuilder-expert-tab"
                         data-value="expert">
                     Expert
                 </button>
                 -->
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-outline-dark" data-toggle="tab"
                         href="#querybuilder-cql-tab"
                         data-value="cql">
                     <i class="glyphicon glyphicon-console"></i> Expert
                 </button>
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-outline-dark" data-toggle="tab"
                         href="#querybuilder-numberlist-tab"
                         data-value="numberlist">
                     <i class="glyphicon glyphicon-list-alt"></i> Numberlist
@@ -39,7 +39,7 @@
 
                     <button
                             id="btn-query-history"
-                            class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown"
                             >
                         <i class="glyphicon glyphicon-time btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
@@ -54,7 +54,9 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" id="querybuilder-comfort-actions" data-toggle="dropdown">
+                    <button id="querybuilder-comfort-actions"
+                            class="btn btn-outline-dark dropdown-toggle"
+                            data-toggle="dropdown">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
@@ -78,7 +80,10 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" id="querybuilder-cql-actions" data-toggle="dropdown" style="display: none">
+                    <button id="querybuilder-cql-actions"
+                            class="btn btn-outline-dark dropdown-toggle"
+                            data-toggle="dropdown"
+                            style="display: none">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
@@ -101,7 +106,10 @@
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" id="querybuilder-numberlist-actions" data-toggle="dropdown" style="display: none">
+                    <button id="querybuilder-numberlist-actions"
+                            class="btn btn-outline-dark dropdown-toggle"
+                            data-toggle="dropdown"
+                            style="display: none">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
@@ -129,47 +137,47 @@
         <span>
 
             <div id="datasource" class="btn-group" data-toggle="buttons">
-              <label class="btn btn-default h-32" data-value="ops">
+              <label class="btn btn-outline-dark" data-value="ops">
                 <input type="radio">
                 <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
                 EPO
               </label>
-              <label class="btn btn-default h-32" data-value="depatisnet">
+              <label class="btn btn-outline-dark" data-value="depatisnet">
                 <input type="radio">
                 <img src="/static/img/icons/dpma-logo-small.svg" class="wider"/>
                 DPMA
               </label>
-              <label class="btn btn-default h-32" data-value="google">
+              <label class="btn btn-outline-dark" data-value="google">
                 <input type="radio">
                 <img src="/static/img/icons/google-g.svg" class="square"/>
                 Google
               </label>
-              <label class="btn btn-default h-32" data-value="sip">
+              <label class="btn btn-outline-dark" data-value="sip">
                 <input type="radio">
                 <img src="/static/img/icons/pro.svg" class="square"/>
                 SIP
               </label>
-              <label class="btn btn-default h-32" data-value="ificlaims">
+              <label class="btn btn-outline-dark" data-value="ificlaims">
                 <input type="radio">
                 <span class="glyphicon glyphicon-globe" style="color: #3781b7;"></span>
                 IFI CLAIMS
               </label>
-              <label class="btn btn-default h-32" data-value="ificlaims" data-vendor="europatent">
+              <label class="btn btn-outline-dark" data-value="ificlaims" data-vendor="europatent">
                 <input type="radio">
                 <img data-src="/static/vendor/europatent/europatent_icon.png" style="height: 20px" />
                 WPS Fulltext
               </label>
-              <label class="btn btn-default h-32" data-value="depatech">
+              <label class="btn btn-outline-dark" data-value="depatech">
                 <input type="radio">
                 <img src="/static/img/icons/depatech.png" class="square-24" />
                 depa.tech
               </label>
-              <label class="btn btn-default h-32" data-value="allpat">
+              <label class="btn btn-outline-dark" data-value="allpat">
                 <input type="radio">
                 <span class="icon icon-check icon-large" style="color: #0062A1;"></span>
                 ALLPAT
               </label>
-              <label class="btn btn-default h-32" data-value="companydb">
+              <label class="btn btn-outline-dark" data-value="companydb">
                 <input type="radio">
                 <span class="icon icon-group"></span>
                 Company-DB
@@ -269,15 +277,15 @@
                             </div>
                             <div class="col-md-2" id="fulltext-modifier-chooser" style="display: flex; flex-direction: column">
                                 <span>Search&nbsp;in:</span>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
                             </div>
                           </div>
                         </div>
 
-                        <button type="submit" class="btn btn-default hide">Submit</button>
+                        <button type="submit" style="display: none">Submit</button>
                     </fieldset>
                 </form>
 
@@ -314,13 +322,13 @@
                         <div class="btn-group" data-toggle="buttons" id="mode-syntax-buttons">
 
                             <!-- Toggle CQL vs. IKOFAX -->
-                            <label class="btn btn-default btn-popover btn-syntax active"
+                            <label class="btn btn-outline-secondary btn-popover btn-syntax active"
                                    data-name="syntax-cql"
                                    >
                               <input type="radio" checked>
                               CQL
                             </label>
-                            <label class="btn btn-default btn-popover btn-syntax"
+                            <label class="btn btn-outline-secondary btn-popover btn-syntax"
                                    data-name="syntax-ikofax"
                                    >
                               <input type="radio">
@@ -351,8 +359,8 @@
         <div class="col-md-1">
 
             <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
-                <button class="btn-cql-boolean btn btn-default btn-xs active" type="button" data-value="OR">OR</button>
-                <button class="btn-cql-boolean btn btn-default btn-xs"        type="button" data-value="AND">AND</button>
+                <button class="btn-cql-boolean btn btn-outline-dark btn-sm active" type="button" data-value="OR">OR</button>
+                <button class="btn-cql-boolean btn btn-outline-dark btn-sm"        type="button" data-value="AND">AND</button>
             </div>
 
             <a class="btn-cql-field badge badge-pill badge-success" data-value="num=">num=</a>
@@ -376,12 +384,12 @@
                  data-toggle="popover" data-trigger="hover" data-placement="top"
                  data-content="Run analytic queries"
                     >
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown">
                     <i class="glyphicon glyphicon-cog"></i>
                     &nbsp;
                     Analytics (beta)
                 </button>
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -483,7 +491,7 @@
                 </div>
 
                 <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
-                <button id="btn-ps-export" role="button" class="btn btn-default btn-lg">
+                <button id="btn-ps-export" role="button" class="btn btn-outline-dark btn-lg">
                     <i class="glyphicon glyphicon-save glyphicon-large"></i> Transfer to XPAT
                 </button>
                 <% } %>
@@ -497,7 +505,7 @@
 
                 <!-- Toggle: full-cycle -->
                 <button type="button"
-                        class="btn btn-default btn-popover btn-full-cycle"
+                        class="btn btn-outline-info btn-popover btn-full-cycle"
                         data-toggle="button"
                         data-name="full-cycle"
                         aria-pressed="false"
@@ -511,7 +519,7 @@
                 <div class="btn-group" data-toggle="buttons" id="mode-order-buttons">
 
                     <!-- Toggle "First pub." -->
-                    <label class="btn btn-default btn-popover btn-mode-order"
+                    <label class="btn btn-outline-info btn-popover btn-mode-order"
                            data-name="first-pub"
                            data-active-target="#mode-order-label"
                            data-active-text="First pub."
@@ -523,7 +531,7 @@
                     </label>
 
                     <!-- Toggle "Recent pub." -->
-                    <label class="btn btn-default btn-popover btn-mode-order"
+                    <label class="btn btn-outline-info btn-popover btn-mode-order"
                            data-name="recent-pub"
                            data-active-target="#mode-order-label"
                            data-active-text="Recent pub."
@@ -536,7 +544,7 @@
 
                     <!-- Label for First vs. Recent pub. -->
                     <button id="btn-mode-order-label"
-                            class="btn btn-default btn-popover disabled"
+                            class="btn btn-outline-info btn-popover disabled"
                             >
                         <span id="mode-order-label"
                             data-original-text="Default">
@@ -553,7 +561,7 @@
 
                 <!-- Toggle "Family member by priority" -->
                 <button type="button"
-                        class="btn btn-default btn-popover btn-family-swap-ger"
+                        class="btn btn-outline-info btn-popover btn-family-swap-ger"
                         data-name="family-swap-ger"
                         data-toggle="button"
                         data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
@@ -566,7 +574,7 @@
                 <div class="btn-group" data-toggle="buttons" id="family-remove-buttons">
 
                     <!-- Toggle "Remove family members" -->
-                    <label class="btn btn-default btn-popover btn-family-remove"
+                    <label class="btn btn-outline-info btn-popover btn-family-remove"
                            data-name="family-remove"
                            data-content="Display just one document per patent family by removing family members"
                            data-trigger="hover" data-placement="bottom"
@@ -577,7 +585,7 @@
                     </label>
 
                     <!-- Toggle "Replace family members" -->
-                    <label class="btn btn-default btn-popover btn-family-replace"
+                    <label class="btn btn-outline-info btn-popover btn-family-replace"
                            data-name="family-replace"
                            data-content="Display just one document per patent family by replacing family members"
                            data-trigger="hover" data-placement="bottom"
@@ -592,7 +600,7 @@
                 <!-- Toggle "All family members" -->
                 <button type="button"
                         id="btn-family-full"
-                        class="btn btn-default btn-popover btn-family-full"
+                        class="btn btn-outline-info btn-popover btn-family-full"
                         data-name="family-full"
                         data-toggle="button"
                         data-content="Expand each hit to all family members"
@@ -610,7 +618,7 @@
                     <!-- sorting direction -->
                     <button type="button"
                             id="sort-order-chooser"
-                            class="btn btn-default btn-popover"
+                            class="btn btn-outline-info btn-popover"
                             data-content="Define sort order"
                             data-trigger="hover" data-placement="bottom"
                             >
@@ -663,12 +671,12 @@
         </div>
     </div>
         <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons">
-          <label class="btn btn-default active">
     <div class="modal-footer row justify-content-between">
       <div class="col-auto">
+          <label class="btn btn-outline-info active">
             <input type="radio" name="options" data-value="OR" checked>OR
           </label>
-          <label class="btn btn-default">
+          <label class="btn btn-outline-info">
             <input type="radio" name="options" data-value="AND">AND
           </label>
         </div>

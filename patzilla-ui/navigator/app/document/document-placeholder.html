@@ -9,7 +9,7 @@ var learn_more_id = _.uniqueId('ops-placeholder-learn-more-');
 var document_number = model.get_document_number();
 var metadata = navigatorApp.metadata;
 var has_alternatives = !_.isEmpty(model.get('alternatives_local'));
-var button_not_available_style = has_alternatives ? 'btn-default' : 'btn-danger';
+var button_not_available_style = has_alternatives ? 'btn-secondary' : 'btn-danger';
 
 var linkmaker = model.linkmaker;
 %>
@@ -76,7 +76,7 @@ var linkmaker = model.linkmaker;
                 <div id="<%= accordion_id %>">
 
                 <p>
-                    <button class="btn btn-default" data-toggle="collapse" data-target="#<%= learn_more_id %>" data-parent="#<%= accordion_id %>">
+                    <button class="btn btn-secondary" data-toggle="collapse" data-target="#<%= learn_more_id %>" data-parent="#<%= accordion_id %>">
                         Learn more
                     </button>
                     <button

@@ -428,7 +428,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
         $('#btn-comfort-display-values').off('click');
         $('#btn-comfort-display-values').on('click', function() {
 
-            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn btn-default"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
+            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn btn-outline-primary"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
 
             var entries = _this.get_comfort_form_entries();
             var data = entries.join('\n') + '\n';
