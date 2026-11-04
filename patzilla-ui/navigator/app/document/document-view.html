@@ -160,7 +160,9 @@ var abstract_list = data.get_abstract_list();
                 <!-- Links to external resources -->
                 <li class="dropdown-submenu">
 
-                    <a tabindex="-1" href="#" data-toggle="dropdown" role="button" class="dropdown-item">
+                    <a tabindex="-1" href="#"
+                       data-toggle="dropdown" role="button"
+                       class="dropdown-item dropdown-toggle">
                         <i class="glyphicon glyphicon-globe glyphicon-large"></i>
                         &nbsp;
                         External sources
@@ -173,34 +175,40 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet">
+                            <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank"
+                               class="dropdown-item anchor-biblio-espacenet">
                                 [BIBLIO] <%= patent_number %> @ Espacenet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.new_espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet-new">
+                            <a href="<%= linkmaker.new_espacenet_worldwide_url() %>" target="_blank"
+                               class="dropdown-item anchor-biblio-espacenet-new">
                                 [BIBLIO] <%= patent_number %> @ New Espacenet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" class="anchor-biblio-depatisnet">
+                            <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-depatisnet">
                                 [BIBLIO] <%= patent_number %> @ DEPATISnet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.google_url() %>" target="_blank" class="anchor-biblio-google">
+                            <a href="<%= linkmaker.google_url() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-google">
                                 [BIBLIO] <%= patent_number %> @ Google Patents
                             </a>
                         </li>
 
                         <% if (linkmaker.country == 'US') { %>
                         <li>
-                            <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
+                            <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-uspto-appft">
                                 [BIBLIO] <%= patent_number %> @ USPTO Application Database
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
+                            <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-uspto-patft">
                                 [BIBLIO] <%= patent_number %> @ USPTO Patent Database
                             </a>
                         </li>
@@ -208,7 +216,8 @@ var abstract_list = data.get_abstract_list();
 
                         <% if (linkmaker.country == 'WO') { %>
                         <li>
-                            <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" class="anchor-biblio-wipo">
+                            <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-wipo">
                                 [BIBLIO] <%= patent_number %> @ WIPO
                             </a>
                         </li>
@@ -216,13 +225,13 @@ var abstract_list = data.get_abstract_list();
 
                         <% if (linkmaker.country == 'CA') { %>
                         <li>
-                            <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" class="anchor-biblio-cipo">
+                            <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-cipo">
                                 [BIBLIO] <%= patent_number %> @ CIPO
                             </a>
                         </li>
                         <% } %>
-
-                        <li class="divider"/>
+                        <hr class="divider">
 
 
                         <!-- legal status -->
@@ -231,28 +240,32 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank">
+                            <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [LEGAL] <%= patent_number %> @ INPADOC legal status
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.epo_register_url() %>" target="_blank" class="anchor-register-epo">
+                            <a href="<%= linkmaker.epo_register_url() %>" target="_blank" 
+                               class="dropdown-item anchor-register-epo">
                                 [LEGAL] <%= patent_number %> @ European Patent Register
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" class="anchor-register-dpma">
+                            <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" 
+                               class="dropdown-item anchor-register-dpma">
                                 [LEGAL] <%= patent_number %> @ DPMAregister
                             </a>
                         </li>
                         <% if (linkmaker.country == 'US') { %>
                         <li>
-                            <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank">
+                            <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [LEGAL] USPTO PAIR
                             </a>
                         </li>
                         <% } %>
-                        <li class="divider"/>
+                        <hr class="divider">
 
 
                         <!-- patent family -->
@@ -261,27 +274,32 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" class="anchor-ccd">
+                            <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" 
+                               class="dropdown-item anchor-ccd">
                                 [FAMILY] <%= patent_number %> @ CCD Viewer
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank">
+                            <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ USPTO Global Dossier (application)
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank">
+                            <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ USPTO Global Dossier (publication)
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank">
+                            <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ USPTO Global Dossier (patent)
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank">
+                            <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ INPADOC patent family
                             </a>
                         </li>
@@ -292,7 +310,7 @@ var abstract_list = data.get_abstract_list();
                             </a>
                         </li>
                         -->
-                        <li class="divider"/>
+                        <hr class="divider">
 
 
                         <!-- PDF -->
@@ -301,29 +319,34 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf-ops">
+                            <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" 
+                               class="dropdown-item anchor-pdf-ops">
                                 [PDF] <%= patent_number %> @ OPS
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf">
+                            <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf"
+                               class="dropdown-item">
                                 [PDF] <%= patent_number %> @ Espacenet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf">
+                            <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf"
+                               class="dropdown-item">
                                 [PDF] <%= patent_number %> @ DEPATISnet
                             </a>
                         </li>
 
                         <% if (linkmaker.country == 'US') { %>
                         <li>
-                            <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
+                            <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank"
+                               class="dropdown-item anchor-images-uspto-appft">
                                 [PDF] <%= patent_number %> @ USPTO Application Database
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
+                            <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank"
+                               class="dropdown-item anchor-images-uspto-patft">
                                 [PDF] <%= patent_number %> @ USPTO Publication Database
                             </a>
                         </li>

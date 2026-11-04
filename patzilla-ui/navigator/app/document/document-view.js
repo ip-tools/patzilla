@@ -96,15 +96,24 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
             this.enable_verbose_labels();
         }
 
-        // Bootstrap 3 no longer support nested menus, so provide a polyfill.
+        // Bootstrap 3+ no longer supports nested menus, so provide a polyfill.
         // https://stackoverflow.com/questions/47419550/multi-level-dropdown-in-bootstrap-3-3-4
         // https://codepen.io/SpielerJ/pen/WEvENo
-        $(container).find('li.dropdown-submenu a[data-toggle="dropdown"]')
-            .off('click').on('click', function(event) {
-            event.preventDefault();
-            event.stopPropagation();
-            $('li.dropdown-submenu').not($(this).parent()).removeClass('open');
-            $(this).parent().toggleClass('open');
+
+        // Source - https://stackoverflow.com/a/45755948
+        // Posted by Gerhard Götz, modified by community. See post 'Timeline' for change history
+        // Retrieved 2026-11-04, License - CC BY-SA 4.0
+        $('.dropdown-menu a.dropdown-toggle').off('click').on('click', function(e) {
+        if (!$(this).next().hasClass('show')) {
+            $(this).parents('.dropdown-menu').first().find('.show').removeClass('show');
+        }
+        var $subMenu = $(this).next('.dropdown-menu');
+        $subMenu.toggleClass('show');
+
+        $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+            $('.dropdown-submenu .show').removeClass('show');
+        });
+        return false;
         });
 
     },

@@ -666,12 +666,13 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
-/* More info */
+/* Document view: More links */
+/* TODO: Replace with bs4's `dropleft` */
 .document-header-more-menu {
     top: unset;
 }
 .more-links-menu-container {
-    left: -240px !important;
+    left: -280px !important;
     top: unset !important;
     margin-top: unset !important;
 }
