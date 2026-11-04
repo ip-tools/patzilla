@@ -817,10 +817,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 /** Project management **/
 
-#project-chooser-list .dropdown-menu {
-    width: 300px;
-}
-
 /*
 #project-chooser-actions button {
     margin-bottom: 1em;

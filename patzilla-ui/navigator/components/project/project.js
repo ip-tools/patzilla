@@ -403,13 +403,13 @@ export const ProjectChooserView = Marionette.ItemView.extend({
 
         // reject empty project names
         if (!projectname) {
-            return 'Project name must not be empty';
+            return 'Project name must not be empty.';
         }
 
         // reject renaming if project name already exists
         var results = this.collection.where({name: projectname});
         if (!_.isEmpty(results)) {
-            return 'Project name already exists';
+            return 'Project name already exists.';
         }
 
     },
@@ -452,9 +452,9 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             // TODO: refactor to project.html
             var entry = _.template(
                 '<li>' +
-                    '<a class="incognito" href="javascript: void(0);" data-value="<%= name %>">' +
-                        '<%= name %> ' +
-                        '<span class="pull-right"><%= modified %></span>' +
+                    '<a class="dropdown-item incognito d-flex justify-content-between" href="javascript: void(0);" data-value="<%= name %>">' +
+                        '<span class=""><%= name %></span>' +
+                        '<span class="ml-5"><%= modified %></span>' +
                     '</a>' +
                 '</li>')({name: name, modified: moment(modified).fromNow()});
             container.append(entry);
@@ -566,7 +566,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             chooser.editable({
                 mode: 'inline',
                 toggle: 'manual',
-                placeholder: 'Enter project name',
+                placeholder: 'Enter new project name',
                 success: function(response, projectname) {
                     navigatorApp.trigger('project:load', projectname);
                     navigatorApp.ui.notify(
