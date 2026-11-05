@@ -547,8 +547,8 @@ export const NavigatorApp = Marionette.Application.extend({
             // ------------------------------------------
             //   ui tuning
             // ------------------------------------------
-            $('.pagination').removeClass('col-md-10');
-            $('.pagination').addClass('col-md-12');
+            $('.pagination').removeClass('col-10');
+            $('.pagination').addClass('col-12');
 
             // TODO: selecting page size with DEPATISnet is currently not possible
             //$('.page-size-chooser').parent().remove();

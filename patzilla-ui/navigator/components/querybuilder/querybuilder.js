@@ -1105,11 +1105,11 @@ const QueryBuilderView = Marionette.ItemView.extend({
     },
 
     html_history_expression: function(content) {
-        return '<div class="col-md-6 history-entry-expression">' + content + '</div>';
+        return '<div class="col-6 history-entry-expression">' + content + '</div>';
     },
 
     html_history_labels: function(content) {
-        return '<div class="col-md-6 history-entry-labels"><small>' + content + '</small></div>';
+        return '<div class="col-6 history-entry-labels"><small>' + content + '</small></div>';
     },
 
     html_history_tag: function(content, options) {

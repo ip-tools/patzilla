@@ -167,7 +167,7 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
 
             // We don't have any bibliographic data to display, so swap to informational message
             var details = $(container).find('.ops-bibliographic-details').find('.document-details');
-            var info = $('<div class="col-md-7"></div>');
+            var info = $('<div class="col-7"></div>');
             details.replaceWith(info);
 
             //log('model:', this.model);

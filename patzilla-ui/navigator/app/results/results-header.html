@@ -5,7 +5,7 @@
 
 <!--
 <div class="row" id="pagination-info">
-    <div class="col-md-12 pagination-centered">
+    <div class="col-12 pagination-centered">
         &nbsp;&nbsp;
         current = <span class="badge badge-info"><%= data.result_range %></span>
     </div>
@@ -25,10 +25,10 @@ if ($.isNumeric(data.result_count)) {
 
     <div class="row">
 
-        <div class="row col-md-8">
+        <div class="row col-8">
 
             <!-- total result count -->
-            <div class="col col-md-3">
+            <div class="col col-3">
                 Total:
                 <br/>
                 <span style="font-size: x-large" id="result-count-total"><%= result_count %></span>
@@ -42,14 +42,14 @@ if ($.isNumeric(data.result_count)) {
             </div>
 
             <!-- current display range -->
-            <div class="col col-md-3">
+            <div class="col col-3">
                 Range:
                 <br/>
                 <span style="font-size: x-large"><%= data.result_range != null ? data.result_range : '--' %></span>
             </div>
 
             <!-- current cql query string -->
-            <div class="col col-md-6">
+            <div class="col col-6">
                 Query:
                 <br/>
                     <span style="font-size: small" class="cql-query">
@@ -107,10 +107,10 @@ if ($.isNumeric(data.result_count)) {
 
         </div>
 
-        <div class="col-md-4 do-not-print non-liveview">
+        <div class="col-4 do-not-print non-liveview">
 
             <% if (data.searchmode == 'subsearch' && !data.reviewmode && data.datasource_info && data.datasource_info.has_resultview) { %>
-            <div class="col-md-6">
+            <div class="col-6">
 
                 <div class="btn-group btn-popover tabs content-chooser"
                      data-toggle="popover" data-trigger="hover" data-placement="top"
@@ -130,7 +130,7 @@ if ($.isNumeric(data.result_count)) {
             <% if (false) { %>
 
             <% if (data.config.get('mode') != 'liveview') { %>
-            <div class="col-md-6 pull-right">
+            <div class="col-6 pull-right">
 
                 <% if (navigatorApp.component_enabled('basket')) { %>
                 <a id="basket-add-all-documents" role="button" class="btn btn-popover"
@@ -146,7 +146,7 @@ if ($.isNumeric(data.result_count)) {
             <!-- result list actions -->
             <!-- PDF export and print view -->
             <!--
-            <div class="btn-group btn-popover result-actions col-md-5 pull-right"
+            <div class="btn-group btn-popover result-actions col-5 pull-right"
                  data-toggle="popover" data-trigger="hover" data-placement="top"
                  data-content="Export results"
                     >
