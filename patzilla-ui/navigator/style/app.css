@@ -823,6 +823,18 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 */
 
+#project-name-editor form {
+    display: unset;
+}
+
+#project-name-editor .form-group {
+    align-items: unset;
+}
+
+#project-name-editor .editable-error-block {
+    margin-bottom: 1em;
+}
+
 .dropdown-section-header {
     margin-left: 10px;
     padding: 5px;
