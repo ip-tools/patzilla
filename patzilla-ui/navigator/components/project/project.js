@@ -577,7 +577,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             $(this).popover('hide');
 
             // When going into editing mode, hide the dropdown menu.
-            $(this).parents('.dropdown-menu').hide();
+            $(this).parents('.dropdown-menu').dropdown('hide');
 
             // swap projectname chooser from renaming to creation functionality
             var chooser = $('#project-chooser-name');
