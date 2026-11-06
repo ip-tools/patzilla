@@ -576,14 +576,17 @@ ul.breathe li {
 }
 
 
+/* Document / result metadata and entry */
 
-/* Document / result entry */
+#ops-metadata-region,.ops-collection-entry {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
 
 img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .ops-collection-entry, .ops-collection-meta, .light-panel {
     position: relative;
-    margin-bottom: 1.3rem;
     padding: 0px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -594,7 +597,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .ops-collection-meta:first-child, .light-panel {
     padding: 9px 15px;
-    border-bottom: 0px;
 }
 
 /* Document header */
