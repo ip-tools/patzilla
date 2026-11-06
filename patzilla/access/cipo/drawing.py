@@ -8,7 +8,7 @@ from patzilla.util.numbers.common import split_patent_number
 
 log = logging.getLogger(__name__)
 
-cipo_baseurl = 'http://brevets-patents.ic.gc.ca'
+cipo_baseurl = 'https://brevets-patents.ic.gc.ca'
 
 def fetch_first_drawing(patent):
     log.info('CIPO: Fetching first drawing of "{patent}"'.format(patent=patent))
@@ -45,7 +45,7 @@ def get_first_drawing_url(patent):
     # A. Industrial designs
     # http://www.ic.gc.ca/cgi-bin/sc_mrksv/cipo/ind-design/getImage.pl?appNum=140249&extension=0&imageType=1&order=1&rotation=0&imageBrand=Application
     if patent['kind'] == 'S':
-        url_tpl = 'http://www.ic.gc.ca/cgi-bin/sc_mrksv/cipo/ind-design/getImage.pl?appNum={number}&extension=0&imageType=1&order=1&rotation=0&imageBrand=Application'
+        url_tpl = 'https://www.ic.gc.ca/cgi-bin/sc_mrksv/cipo/ind-design/getImage.pl?appNum={number}&extension=0&imageType=1&order=1&rotation=0&imageBrand=Application'
         url = url_tpl.format(number=patent['number'])
         return url
 
