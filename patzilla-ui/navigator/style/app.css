@@ -868,10 +868,9 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     z-index: 1050;
     position: fixed;
     top: 10%;
-    left: 35%;
+    left: 18%;
 }
 .login-box {
-    width: 500px;
     padding-top: 9px;
     padding-left: 29px;
     padding-right: 29px;
