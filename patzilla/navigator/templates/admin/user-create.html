@@ -33,7 +33,7 @@
 
             <div class="row">
 
-                <div class="col-md-12">
+                <div class="col-12">
                     <h3 class="form-signin-heading-logo text-center">${theme['ui.productname.rich'] | n}</h3>
                     <h2 class="form-signin-heading">Create user</h2>
                     <input name="fullname" type="text" class="form-control" placeholder="Full name" value="${fullname}">
@@ -49,13 +49,13 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                     <button class="btn btn-lg btn-primary" type="submit">Submit</button>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                     % if success == True:
                     <br/>
                     <div class="alert alert-success alert-block">
@@ -69,7 +69,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                     % if error == True:
                     <br/>
                     <div class="alert alert-danger alert-block">
@@ -83,7 +83,7 @@
             </div>
 
             <div class="row" style="padding-top: 1em; padding-bottom: 1em">
-                <div class="col-md-12">
+                <div class="col-12">
                     <hr class="clear-margin" style="margin-top: 10px"/>
                     <div class="page-footer pull-left">
                         ${theme['ui.vendor.copyright'] | n}
@@ -97,6 +97,6 @@
 
 </div>
 
-<div class="modal-backdrop fade in"></div>
+<div class="modal-backdrop fade show"></div>
 
 </%block>

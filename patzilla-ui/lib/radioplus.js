@@ -68,7 +68,7 @@ export const RadioPlus = Backbone.Model.extend({
 
         // Toggle radio button groups.
         if ($(element).parent().hasClass('btn-group') && $(element).find('input[type=radio]').length > 0) {
-            $(element).parent().find('label').attr('aria-pressed', false).removeClass('btn-info');
+            $(element).parent().find('label').attr('aria-pressed', false).removeClass('btn-info').addClass('btn-outline-secondary');
 
             // The event will not see the new class on the clicked item, but the previous one.
             if (is_already_active) {
@@ -77,7 +77,7 @@ export const RadioPlus = Backbone.Model.extend({
                 event.preventDefault();
                 event.stopPropagation();
             } else {
-                $(element).attr('aria-pressed', true).addClass('btn-info');
+                $(element).attr('aria-pressed', true).removeClass('btn-outline-secondary').addClass('btn-info');
             }
             this.trigger('toggle');
 
@@ -97,7 +97,7 @@ export const RadioPlus = Backbone.Model.extend({
         options = options || {};
         if (options.with_active)
             $el.toggleClass('active', state);
-        $el.toggleClass('btn-info', state);
+        $el.toggleClass('btn-info', state).toggleClass('btn-outline-secondary', !state);
         $el.attr("aria-pressed", state);
         this.trigger('toggle');
     },
@@ -188,26 +188,10 @@ export const RadioPlus = Backbone.Model.extend({
 
             // Toggle visibility
             if (linked_element) {
-
                 if (element_state) {
-                    // v1 (bs): With class "fade out hide"
-                    linked_element.removeClass('hide').addClass('in');
-
-                    // v2: jQuery-based
-                    /*
-                    linked_element.fadeIn('fast', function() {
-                        $(this).trigger('shown');
-                    });
-                    */
-
+                    linked_element.show();
                 } else {
-                    // v1 (bs): With class "fade out hide"
-                    linked_element.removeClass('in').addClass('hide');
-
-                    // v2: jQuery-based
-                    //linked_element.hide();
-                    //linked_element.fadeOut('fast');
-
+                    linked_element.hide();
                 }
             }
         });

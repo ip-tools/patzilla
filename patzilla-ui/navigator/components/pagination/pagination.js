@@ -140,7 +140,7 @@ export const PaginationView = Marionette.ItemView.extend({
                 } else {
                     icon = '<i class="glyphicon glyphicon-unchecked"></i>';
                 }
-                var entry_html = _.template('<li><a href="" data-value="<%= entry %>"><%= icon %> <%= entry %></a></li>')({entry: entry, icon: icon});
+                var entry_html = _.template('<li><a href="" data-value="<%= entry %>" class="dropdown-item"><%= icon %> <%= entry %></a></li>')({entry: entry, icon: icon});
                 $(self).append(entry_html);
             });
         });

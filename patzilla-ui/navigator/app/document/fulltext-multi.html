@@ -13,7 +13,7 @@
     %>
 
     <!-- One button per language -->
-    <button class="btn btn-default <%= first_item_classes %>" data-toggle="tab"
+    <button class="btn btn-secondary <%= first_item_classes %>" data-toggle="tab"
             href="#document-details-<%= item.type %>-container-<%= identifier %>-<%= item.language %>">
         <%= item.language %>
     </button>
@@ -64,7 +64,7 @@ _(items).each(function(item) {
 
 <div id="document-details-<%= item.type %>-container-<%= identifier %>-<%= item.language %>"
      data-identifier="<%= identifier %>"
-     class="tab-pane fade <%= first_item_classes %>" style="margin-top: 1em">
+     class="tab-pane <%= first_item_classes %>" style="margin-top: 1em">
     <%= item_template(item) %>
 </div>
 

@@ -5,9 +5,19 @@
 import Marionette from 'backbone.marionette';
 
 require('patzilla.navigator.components.storage');
-require('x-editable-bs4/dist/bootstrap3-editable/js/bootstrap-editable');
-require('x-editable-bs4/dist/bootstrap3-editable/css/bootstrap-editable');
 var slugify = require('slugify');
+
+// bootstrap-editable for Bootstrap v4 uses Font Awesome icons,
+// so override with buttons from v3, to stick with Glyphicons.
+require('x-editable-bs4/dist/bootstrap4-editable/js/bootstrap-editable');
+require('x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable');
+$.fn.editableform.buttons =
+  '<button type="submit" class="btn btn-primary btn-sm editable-submit">'+
+    '<i class="glyphicon glyphicon-ok"></i>'+
+  '</button>'+
+  '<button type="button" class="btn btn-default btn-sm editable-cancel">'+
+    '<i class="glyphicon glyphicon-remove"></i>'+
+  '</button>';
 
 
 const QueryModel = Backbone.RelationalModel.extend({
@@ -403,13 +413,13 @@ export const ProjectChooserView = Marionette.ItemView.extend({
 
         // reject empty project names
         if (!projectname) {
-            return 'Project name must not be empty';
+            return 'Project name must not be empty.';
         }
 
         // reject renaming if project name already exists
         var results = this.collection.where({name: projectname});
         if (!_.isEmpty(results)) {
-            return 'Project name already exists';
+            return 'Project name already exists.';
         }
 
     },
@@ -419,8 +429,10 @@ export const ProjectChooserView = Marionette.ItemView.extend({
 
         var _this = this;
 
+        var $project_chooser = $('#project-chooser-name');
+
         // 1. rename a project by making the project name inline-editable
-        $('#project-chooser-name').editable({
+        $project_chooser.editable({
             mode: 'inline',
             placeholder: 'Enter project name',
             success: function(response, projectname) {
@@ -431,6 +443,13 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             validate: function(value) {
                 return _this.projectname_validate(value);
             },
+        });
+
+        // In editable mode, turn off the sup/sub markers.
+        $project_chooser.on('shown', function() {
+            $(this).parent().find('sup,sub').hide();
+        }).on('hidden', function() {
+            $(this).parent().find('sup,sub').show();
         });
 
         // 2. set project name
@@ -452,9 +471,9 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             // TODO: refactor to project.html
             var entry = _.template(
                 '<li>' +
-                    '<a class="incognito" href="javascript: void(0);" data-value="<%= name %>">' +
-                        '<%= name %> ' +
-                        '<span class="pull-right"><%= modified %></span>' +
+                    '<a class="dropdown-item incognito d-flex justify-content-between" href="javascript: void(0);" data-value="<%= name %>">' +
+                        '<span class=""><%= name %></span>' +
+                        '<span class="ml-5"><%= modified %></span>' +
                     '</a>' +
                 '</li>')({name: name, modified: moment(modified).fromNow()});
             container.append(entry);
@@ -557,6 +576,9 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             e.preventDefault();
             $(this).popover('hide');
 
+            // When going into editing mode, hide the dropdown menu.
+            $(this).parents('.dropdown-menu').dropdown('hide');
+
             // swap projectname chooser from renaming to creation functionality
             var chooser = $('#project-chooser-name');
             chooser.off();
@@ -566,7 +588,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             chooser.editable({
                 mode: 'inline',
                 toggle: 'manual',
-                placeholder: 'Enter project name',
+                placeholder: 'Enter new project name',
                 success: function(response, projectname) {
                     navigatorApp.trigger('project:load', projectname);
                     navigatorApp.ui.notify(
@@ -577,6 +599,9 @@ export const ProjectChooserView = Marionette.ItemView.extend({
                     return _this.projectname_validate(value);
                 },
             });
+
+            // In editable mode, turn off the sup/sub markers.
+            chooser.parent().find('sup,sub').hide();
 
             chooser.editable('show');
             chooser.editable('setValue', '');

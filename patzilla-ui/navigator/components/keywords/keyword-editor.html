@@ -3,23 +3,24 @@
 // (c) 2013,2014 Andreas Motl, Elmyra UG
 %>
 
-<div class="modal-dialog" role="document">
+<div class="modal-dialog modal-medium" role="document">
 <div class="modal-content">
 
 <div class="modal-header">
+    <h3 class="modal-title" id="keyword-editor-label">Keyword editor</h3>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title" id="keyword-editor-label">Keyword editor</h3>
 </div>
 <div class="modal-body">
-    Edit keywords for individual highlighting
-    <br/><br/>
+    <div>Edit keywords for individual highlighting of fulltext sections.</div>
+    <div class="text-muted">Please enter lists of comma-separated keywords.</div>
+    <br>
     <table class="table table-condensed">
         <thead>
             <tr>
-                <th class="col-md-10">Keywords</th>
-                <th class="col-md-2">Style</th>
+                <th class="col-10">Keywords</th>
+                <th class="col-2">Style</th>
             </tr>
         </thead>
         <tbody>
@@ -27,8 +28,8 @@
     </table>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-default" id="keyword-editor-save-button" type="button">Save</button>
-    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
+    <button class="btn btn-outline-primary" id="keyword-editor-save-button" type="button">Save</button>
+    <button class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
 </div>
 
 </div>

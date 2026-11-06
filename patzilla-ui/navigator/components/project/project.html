@@ -3,9 +3,9 @@
 // (c) 2014-2017 Andreas Motl, Elmyra UG
 %>
 
-<div class="">
+<div class="d-flex justify-content-between">
 
-    <div class="text-large" style="display: inline">
+    <div id="project-name-editor" class="d-inline text-large">
         <sup>｢</sup>
         <a id="project-chooser-name" href="#" data-type="text" data-pk="1" data-title="Project name"></a>
         <sub>｣</sub>
@@ -13,21 +13,18 @@
 
     <span id="project-chooser-actions" class="do-not-print">
         <div id="project-chooser-list" class="btn-group">
-            <button class="btn dropdown-toggle hidden" data-toggle="dropdown">
-                <!-- dummy, makes caret narrower -->
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
             </button>
-            <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu pull-right">
+            <!-- This dropdown will be dynamically populated from the list of project names. -->
+            <ul class="dropdown-menu dropdown-menu-right">
             </ul>
         </div>
 
         <div class="btn-group">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <i class="glyphicon glyphicon-wrench"></i>
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-toggle="dropdown">
+                <i class="glyphicon glyphicon-tasks"></i>
             </button>
-            <ul class="dropdown-menu pull-right">
+            <ul class="dropdown-menu dropdown-menu-right">
 
                 <li>
 
@@ -35,27 +32,27 @@
                     <div class="dropdown-section-header">Project</div>
 
                     <!-- new project -->
-                    <a id="project-create-button">
-                        <i class="glyphicon glyphicon-plus glyphicon-large"></i> &nbsp; Create
+                    <a id="project-create-button" class="dropdown-item">
+                        <i class="glyphicon glyphicon-plus glyphicon-large"></i> &nbsp; Create new project
                     </a>
 
                     <!-- delete project -->
-                    <a id="project-delete-button">
-                        <i class="glyphicon glyphicon-trash glyphicon-large"></i> &nbsp; Delete
+                    <a id="project-delete-button" class="dropdown-item">
+                        <i class="glyphicon glyphicon-trash glyphicon-large"></i> &nbsp; Delete current project
                     </a>
 
                     <hr class="divider"/>
 
 
                     <!-- Import project -->
-                    <a id="project-import-button">
-                        <i class="glyphicon glyphicon-folder-open glyphicon-large"></i> &nbsp; Import
+                    <a id="project-import-button" class="dropdown-item">
+                        <i class="glyphicon glyphicon-folder-open glyphicon-large"></i> &nbsp; Import from JSON file
                     </a>
-                    <input type="file" id="project-import-file" class="hide"/>
+                    <input type="file" id="project-import-file" class="display-none"/>
 
                     <!-- Export project -->
-                    <a id="project-export-button">
-                        <i class="glyphicon glyphicon-save glyphicon-large"></i> &nbsp; Export
+                    <a id="project-export-button" class="dropdown-item">
+                        <i class="glyphicon glyphicon-save glyphicon-large"></i> &nbsp; Export to JSON file
                     </a>
 
                     <hr class="divider"/>
@@ -67,7 +64,7 @@
                     </div>
 
                     <!-- fade "seen" mode -->
-                    <a id="mode-seen-fade-button">
+                    <a id="mode-seen-fade-button" class="dropdown-item">
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" id="mode-seen-fade"> Fade »seen« documents

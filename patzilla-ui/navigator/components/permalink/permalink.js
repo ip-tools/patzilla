@@ -3,6 +3,7 @@
 'use strict';
 
 import Marionette from 'backbone.marionette';
+import $ from "jquery";
 const {opaque_param} = require("patzilla.navigator.components.opaquelinks");
 const {dataurl} = require("dataurl");
 
@@ -149,13 +150,14 @@ const PermalinkPlugin = Marionette.Controller.extend({
 
         popover.data('amended', true);
         var title = options.title || popover.data('content');
-        $(element).popover('destroy');
         $(element).popover({
             title: title,
             content: content,
             html: true,
+            sanitize: false,
             placement: 'bottom',
-            trigger: 'manual'});
+            trigger: 'manual',
+        });
     },
 
     // setup permalink popover
@@ -167,10 +169,10 @@ const PermalinkPlugin = Marionette.Controller.extend({
         $(element).popover('toggle');
 
         // get popover tip, that is the visible overlay
-        var tip = $(element).popover().data('bs.popover').$tip;
+        var tip = $(element).popover().data('bs.popover').tip;
 
         // check if popover tip is active
-        var popover_active = tip.hasClass('in');
+        var popover_active = $(tip).hasClass('show');
         if (popover_active) {
             if (uri) {
 

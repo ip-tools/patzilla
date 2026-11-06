@@ -12,18 +12,18 @@
     <div class="ops-collection-entry-heading row">
 
         <!-- publication number -->
-        <div class="col-md-3 container-fluid">
+        <div class="col-3 container-fluid">
             <div class="header-compact">
                 <%= enrich_link(publication_number, 'pn') %>
             </div>
         </div>
 
-        <div class="col-md-9 container-fluid">
+        <div class="col-9 container-fluid">
             <div class="header-biblio">
                 <% if (is_document_missing) { %>
-                <span class="label label-danger label-document-missing pull-right">Document not available</span>
+                <span class="badge badge-pill badge-danger badge-document-missing pull-right">Document not available</span>
                 <% } else { %>
-                <span class="label label-success label-document-missing pull-right">Document available</span>
+                <span class="badge badge-pill badge-success badge-document-missing pull-right">Document available</span>
                 <% } %>
             </div>
         </div>
@@ -34,7 +34,7 @@
 
         <div class="row">
 
-            <div class="col-md-12 tab-content document-details">
+            <div class="col-12 tab-content document-details">
 
                 <% if (is_document_missing) { %>
                 <div class="alert alert-danger">
@@ -60,9 +60,9 @@
                 <table class="table table-condensed">
                     <thead>
                     <tr>
-                        <th class="col-md-1">Symbol</th>
-                        <th class="col-md-2">Name</th>
-                        <th class="col-md-9">Value</th>
+                        <th class="col-1">Symbol</th>
+                        <th class="col-2">Name</th>
+                        <th class="col-9">Value</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -96,7 +96,7 @@
                             %>
                             <% if (is_application_number_invalid()) { %>
                             <span class="pull-right">
-                                <span class="label label-warning">Warning</span>
+                                <span class="badge badge-pill badge-warning">Warning</span>
                                 This might not be a valid application number if it is in format (n)nnnnnyy.
                             </span>
                             <% } %>
@@ -129,7 +129,7 @@
                             <%= granted %>
                             <% if (_.string.startsWith(granted, '1899')) { %>
                             <span class="pull-right">
-                                <span class="label label-warning">Warning</span>
+                                <span class="badge badge-pill badge-warning">Warning</span>
                                 This date looks invalid.
                             </span>
                             <% } %>

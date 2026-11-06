@@ -19,16 +19,10 @@ $(function() {
 });
 
 
-// Twitter Bootstrap
-require('bootstrap/dist/css/bootstrap.min.css');
-require('bootstrap/dist/js/bootstrap.min.js');
-
-// Use bootstrap-tabs from Bootstrap 2.0.0
-require('bootstrap-tab-button.js');
-
 // Global utilities
 require('patzilla.lib.jquery');
 require('patzilla.lib.underscore');
+require('patzilla.lib.bootstrap');
 require('patzilla.lib.backbone');
 require('patzilla.lib.marionette');
 _(window).extend(require('patzilla.lib.util'));

@@ -6,7 +6,7 @@
 <!-- Menu -->
 <span class="btn-group btn-popover do-not-print">
 
-    <button class="btn btn-default btn-link btn-menu dropdown-toggle menu-opener" data-toggle="dropdown">
+    <button class="btn btn-link btn-menu menu-opener" data-toggle="dropdown">
         <i class="glyphicon glyphicon-menu-hamburger gi-3x"></i>
     </button>
     <ul class="dropdown-menu">
@@ -14,17 +14,17 @@
         <li>
 
             <!-- Actions -->
-            <div class="dropdown-section-header">Actions</div>
+            <div class="dropdown-header">Actions</div>
 
             <% if (navigatorApp.component_enabled('keywords')) { %>
-            <a class="action-keyword-editor">
+            <a class="dropdown-item action-keyword-editor" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-edit"></i>
                 &nbsp;
                 Edit keywords for highlighting
             </a>
             <% } %>
 
-            <a class="action-fullscreen" target="_blank">
+            <a class="dropdown-item action-fullscreen" target="_blank" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-fullscreen"></i>
                 &nbsp;
                 Enable fullscreen mode
@@ -35,21 +35,21 @@
 
             <% if (navigatorApp.component_enabled('storage')) { %>
             <!-- Database -->
-            <div class="dropdown-section-header">Database</div>
+            <div class="dropdown-header">Database</div>
 
             <!-- import database -->
-            <a id="data-import-button">
+            <a id="data-import-button" class="dropdown-item" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-folder-open"></i> &nbsp; Import
             </a>
-            <input type="file" id="data-import-file" class="hide"/>
+            <input type="file" id="data-import-file" class="display-none"/>
 
             <!-- save/export database -->
-            <a id="data-export-button">
+            <a id="data-export-button" class="dropdown-item" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-save"></i> &nbsp; Export
             </a>
 
             <!-- wipe database -->
-            <a id="database-wipe-button">
+            <a id="database-wipe-button" class="dropdown-item" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-trash"></i> &nbsp; Wipe
             </a>
 
@@ -58,28 +58,28 @@
 
 
             <!-- Online help -->
-            <div class="dropdown-section-header">Online help and feedback</div>
+            <div class="dropdown-header">Online help and feedback</div>
 
-            <a class="action-help-shortcuts" target="_blank">
+            <a class="dropdown-item action-help-shortcuts" target="_blank" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-question-sign"></i>
                 &nbsp;
                 Using hotkey navigation
             </a>
 
             <% if (navigatorApp.is_datasource_enabled('ificlaims')) { %>
-            <a class="action-help-ificlaims" target="_blank">
+            <a class="dropdown-item action-help-ificlaims" target="_blank" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-question-sign"></i>
                 &nbsp;
                 Searching with IFI CLAIMS
             </a>
             <% } %>
 
-            <a class="report-issue-feature" target="_blank">
+            <a class="dropdown-item report-issue-feature" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-thumbs-up"></i>
                 &nbsp;
                 Request feature
             </a>
-            <a class="report-issue-problem" target="_blank">
+            <a class="dropdown-item report-issue-problem" href="#" tabindex="0">
                 <i class="glyphicon glyphicon-thumbs-down"></i>
                 &nbsp;
                 Report problem
@@ -87,7 +87,7 @@
 
 
             <hr class="divider"/>
-            <a href="/logout">
+            <a class="dropdown-item" href="/logout" tabindex="0">
                 <i class="glyphicon glyphicon-log-out"></i>
                 &nbsp;
                 Sign out

@@ -3,12 +3,12 @@
 // (c) 2014-2016 Andreas Motl, Elmyra UG
 %>
 
-<div class="container-fluid nopadding popover-content">
+<div class="container-fluid popover-content">
     <div class="row">
         <p id="permalink-popover-intro"></p>
         <p id="permalink-expiration" class="hide">
             <small>
-                The link will expire <span id="permalink-expiration-time"/>.
+                The link will expire <span id="permalink-expiration-time"></span>.
             </small>
         </p>
     </div>
@@ -25,17 +25,18 @@
         <br/>
     </div>
     -->
-    <div class="row">
-        <a id="permalink-open" class="btn btn-default btn-sm pull-right">
-            <i class="glyphicon glyphicon-share"></i>
-            &nbsp;
-            Open link
-        </a>
-        <button id="permalink-copy" class="btn btn-default btn-sm">
+    <div class="row justify-content-between">
+        <button id="permalink-copy" class="btn btn-outline-dark btn-sm">
             <i class="glyphicon glyphicon-copy"></i>
             &nbsp;
             Copy link
         </button>
+        &nbsp;
+        <a id="permalink-open" class="btn btn-outline-dark btn-sm">
+            <i class="glyphicon glyphicon-share"></i>
+            &nbsp;
+            Open link
+        </a>
     </div>
     <div class="row">
         <div id="permalink-popover-message"></div>

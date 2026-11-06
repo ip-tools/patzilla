@@ -5,71 +5,75 @@
 
 <div id="querybuilder-area">
 
-    <div class="querybuilder-datasource-flavor-chooser">
+    <div class="row querybuilder-datasource-flavor-chooser">
 
         <!-- Search flavor chooser (comfort/expert/list) -->
-        <span>
-            <div id="querybuilder-flavor-chooser" class="btn-group tabs">
+        <span class="col">
+            <div id="querybuilder-flavor-chooser"
+                 class="nav btn-group btn-group-toggle tabs input-group"
+                 role="group">
 
-                <button class="btn btn-default active" data-toggle="tab"
+                <button class="btn btn-outline-dark active" data-toggle="tab"
                         href="#querybuilder-comfort-tab"
                         data-value="comfort">
                     <i class="glyphicon glyphicon-list"></i> Standard
                 </button>
                 <!--
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-outline-dark" data-toggle="tab"
                         href="#querybuilder-expert-tab"
                         data-value="expert">
                     Expert
                 </button>
                 -->
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-outline-dark" data-toggle="tab"
                         href="#querybuilder-cql-tab"
                         data-value="cql">
                     <i class="glyphicon glyphicon-console"></i> Expert
                 </button>
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-outline-dark" data-toggle="tab"
                         href="#querybuilder-numberlist-tab"
                         data-value="numberlist">
                     <i class="glyphicon glyphicon-list-alt"></i> Numberlist
                 </button>
 
                 <!-- history -->
-                <div id="cql-history-chooser" style="display: inline-block">
+                <div id="cql-history-chooser"
+                     class="input-group-append">
 
                     <button
                             id="btn-query-history"
-                            class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown"
                             >
                         <i class="glyphicon glyphicon-time btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
-                           data-content="Query history"
-                                ></i>
+                           data-content="Query history"></i>
                     </button>
 
                     <div id="cql-history-chooser-container" class="dropdown-menu">
-                        <div id="cql-history-chooser-select2" class="col-md-12"></div>
+                        <div id="cql-history-chooser-select2"></div>
                     </div>
 
                 </div>
 
-                <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" id="querybuilder-comfort-actions" data-toggle="dropdown">
+                <div class="input-group-append">
+                    <button id="querybuilder-comfort-actions"
+                            class="btn btn-outline-dark dropdown-toggle"
+                            data-toggle="dropdown">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu">
 
                         <li>
 
                             <!-- display values -->
-                            <a id="btn-comfort-display-values">
+                            <a id="btn-comfort-display-values" class="dropdown-item">
                                 <i class="glyphicon glyphicon-th-list"></i> &nbsp; Display form values
                             </a>
 
                             <!-- clear -->
-                            <a id="btn-comfort-clear">
+                            <a id="btn-comfort-clear" class="dropdown-item">
                                 <i class="glyphicon glyphicon-trash"></i> &nbsp; Clear form values
                             </a>
 
@@ -77,22 +81,25 @@
                     </ul>
                 </div>
 
-                <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" id="querybuilder-cql-actions" data-toggle="dropdown" style="display: none">
+                <div class="input-group-append">
+                    <button id="querybuilder-cql-actions"
+                            class="btn btn-outline-dark dropdown-toggle"
+                            data-toggle="dropdown"
+                            style="display: none">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu">
                         <li>
 
                             <!-- content transformation -->
-                            <a id="btn-query-transform">
+                            <a id="btn-query-transform" class="dropdown-item">
                                 <i class="glyphicon glyphicon-transfer"></i> &nbsp; Transform query
                             </a>
 
                             <!-- clear -->
-                            <a id="btn-query-clear">
+                            <a id="btn-query-clear" class="dropdown-item">
                                 <i class="glyphicon glyphicon-trash"></i> &nbsp; Clear query
                             </a>
 
@@ -100,22 +107,25 @@
                     </ul>
                 </div>
 
-                <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" id="querybuilder-numberlist-actions" data-toggle="dropdown" style="display: none">
+                <div class="input-group-append">
+                    <button id="querybuilder-numberlist-actions"
+                            class="btn btn-outline-dark dropdown-toggle"
+                            data-toggle="dropdown"
+                            style="display: none">
                         <i class="glyphicon glyphicon-wrench btn-popover"
                            data-toggle="popover" data-trigger="hover" data-placement="top"
                            data-content="Tools"></i>
                     </button>
-                    <ul class="dropdown-menu pull-right">
+                    <ul class="dropdown-menu">
                         <li>
                             <!-- normalize -->
-                            <a id="btn-numberlist-normalize">
+                            <a id="btn-numberlist-normalize" class="dropdown-item">
                                 <i class="glyphicon glyphicon-resize-horizontal"></i> &nbsp; Normalize numbers
                             </a>
                         </li>
                         <li>
                             <!-- strip kindcode -->
-                            <a id="btn-numberlist-strip-kindcodes">
+                            <a id="btn-numberlist-strip-kindcodes" class="dropdown-item">
                                 <i class="glyphicon glyphicon-erase"></i> &nbsp; Strip kindcodes
                             </a>
                         </li>
@@ -126,50 +136,50 @@
         </span>
 
         <!-- Data source chooser -->
-        <span>
+        <span class="col">
 
-            <div id="datasource" class="btn-group" data-toggle="buttons">
-              <label class="btn btn-default h-32" data-value="ops">
+            <div id="datasource" class="btn-group btn-group-toggle" data-toggle="buttons">
+              <label class="btn btn-outline-dark" data-value="ops">
                 <input type="radio">
                 <img src="/static/img/icons/epo-logo-small.svg" class="wider"/>
                 EPO
               </label>
-              <label class="btn btn-default h-32" data-value="depatisnet">
+              <label class="btn btn-outline-dark" data-value="depatisnet">
                 <input type="radio">
                 <img src="/static/img/icons/dpma-logo-small.svg" class="wider"/>
                 DPMA
               </label>
-              <label class="btn btn-default h-32" data-value="google">
+              <label class="btn btn-outline-dark" data-value="google">
                 <input type="radio">
                 <img src="/static/img/icons/google-g.svg" class="square"/>
                 Google
               </label>
-              <label class="btn btn-default h-32" data-value="sip">
+              <label class="btn btn-outline-dark" data-value="sip">
                 <input type="radio">
                 <img src="/static/img/icons/pro.svg" class="square"/>
                 SIP
               </label>
-              <label class="btn btn-default h-32" data-value="ificlaims">
+              <label class="btn btn-outline-dark" data-value="ificlaims">
                 <input type="radio">
                 <span class="glyphicon glyphicon-globe" style="color: #3781b7;"></span>
                 IFI CLAIMS
               </label>
-              <label class="btn btn-default h-32" data-value="ificlaims" data-vendor="europatent">
+              <label class="btn btn-outline-dark" data-value="ificlaims" data-vendor="europatent">
                 <input type="radio">
                 <img data-src="/static/vendor/europatent/europatent_icon.png" style="height: 20px" />
                 WPS Fulltext
               </label>
-              <label class="btn btn-default h-32" data-value="depatech">
+              <label class="btn btn-outline-dark" data-value="depatech">
                 <input type="radio">
                 <img src="/static/img/icons/depatech.png" class="square-24" />
                 depa.tech
               </label>
-              <label class="btn btn-default h-32" data-value="allpat">
+              <label class="btn btn-outline-dark" data-value="allpat">
                 <input type="radio">
                 <span class="icon icon-check icon-large" style="color: #0062A1;"></span>
                 ALLPAT
               </label>
-              <label class="btn btn-default h-32" data-value="companydb">
+              <label class="btn btn-outline-dark" data-value="companydb">
                 <input type="radio">
                 <span class="icon icon-group"></span>
                 Company-DB
@@ -181,10 +191,10 @@
 
     <div class="row">
 
-        <div class="col-md-12 tab-content">
+        <div class="col-12 tab-content">
 
             <!-- trimmed-down user interface -->
-            <div class="tab-pane fade in active" id="querybuilder-comfort-tab">
+            <div class="tab-pane in active" id="querybuilder-comfort-tab">
 
                 <form id="querybuilder-comfort-form" target="querybuilder-comfort-form-iframe" action="/api/void">
                     <fieldset class="querybuilder-comfort-form-fieldset">
@@ -193,32 +203,32 @@
 
                             <!-- Full text -->
                             <div class="input-group">
-                              <span class="input-group-addon add-on-label">Full text</span>
+                              <span class="input-group-prepend input-group-text">Full text</span>
                               <input name="fulltext" class="input-xlarge smaller" placeholder="rohr or tube or circular" type="text"></input>
-                              <span class="input-group-addon add-on-zoom"><i class="glyphicon glyphicon-resize-full"></i></span>
+                              <span class="input-group-append add-on-zoom"><button class="btn btn-outline-secondary" type="button"><i class="glyphicon glyphicon-resize-full"></i></button></span>
                             </div>
 
                             <!-- Classification -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Classification</span>
+                                <span class="input-group-prepend input-group-text">Classification</span>
                                 <input name="class" class="input-xlarge" placeholder="H04L12/433 or H04L12/24" data-placeholder-single="H04L12/433" type="text">
                             </div>
 
                             <!-- Applicant -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Applicant</span>
+                                <span class="input-group-prepend input-group-text">Applicant</span>
                                 <input name="applicant" class="input-xlarge" placeholder="Siemens and Bosch" type="text">
                             </div>
 
                             <!-- Inventor -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Inventor</span>
+                                <span class="input-group-prepend input-group-text">Inventor</span>
                                 <input name="inventor" class="input-xlarge" placeholder="&quot;Edison Thomas&quot;" data-placeholder-bosch="&quot;Robert Bosch&quot;" type="text">
                             </div>
 
                             <!-- Country -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Country</span>
+                                <span class="input-group-prepend input-group-text">Country</span>
                                 <input name="country" class="input-xlarge" placeholder="DE or EP or US; DE, EP" data-demo="DE or EP or US" type="text">
                             </div>
 
@@ -228,62 +238,62 @@
 
                             <!-- Publication number -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Publication number</span>
+                                <span class="input-group-prepend input-group-text">Publication number</span>
                                 <input id="patentnumber" name="patentnumber" class="input-xlarge" placeholder="EP666666 or EP666667" data-placeholder-single="EP666666" data-placeholder-dpma="DE102011078918A1" type="text" autofocus="autofocus">
                             </div>
 
                             <!-- Publication date -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Publication date</span>
+                                <span class="input-group-prepend input-group-text">Publication date</span>
                                 <input name="pubdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="within 1978,1986" type="text">
                             </div>
 
                             <!-- Application date -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Application date</span>
+                                <span class="input-group-prepend input-group-text">Application date</span>
                                 <input name="appdate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="1980-12-28" type="text">
                             </div>
 
                             <!-- Priority date -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Priority date</span>
+                                <span class="input-group-prepend input-group-text">Priority date</span>
                                 <input name="priodate" class="input-xlarge" placeholder="within 1978,1986; 1980-12-28; 1999" data-demo="1999" type="text">
                             </div>
 
                             <!-- Citation -->
                             <div class="input-group">
-                                <span class="input-group-addon add-on-label">Citations</span>
+                                <span class="input-group-prepend input-group-text">Citations</span>
                                 <input name="citation" class="input-xlarge" placeholder="US5155725 or EP0352041" type="text">
                             </div>
 
                         </div>
 
                         <!-- Fulltext modifiers -->
-                        <div id="fulltext-zoomed" class="container-fluid col-md-12 nomargin field-zoomed" style="display: none">
+                        <div id="fulltext-zoomed" class="container-fluid col-12 nomargin field-zoomed" style="display: none">
                           <div class="row">
-                            <div class="col-md-10" id="fulltext-textarea-container">
+                            <div class="col col-10" id="fulltext-textarea-container">
                                 <div class="input-group" style="vertical-align: top">
                                     <span class="input-group-addon">Full text</span>
                                 </div>
-                                <textarea class="col-md-10 monospace" data-name="fulltext" rows="6" style="width: 100%"></textarea>
+                                <textarea class="w-100 monospace" data-name="fulltext" rows="6"></textarea>
                             </div>
-                            <div class="col-md-2" id="fulltext-modifier-chooser" style="display: flex; flex-direction: column">
+                            <div class="col col-2" id="fulltext-modifier-chooser" style="display: flex; flex-direction: column">
                                 <span>Search&nbsp;in:</span>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
-                                <button type="button" class="btn btn-default active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="title">Title</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="abstract">Abstract</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="claim">Claims</button>
+                                <button type="button" class="btn btn-outline-secondary active" aria-pressed="true" data-toggle="button" data-name="fulltext" data-modifier="description">Description</button>
                             </div>
                           </div>
                         </div>
 
-                        <button type="submit" class="btn btn-default hide">Submit</button>
+                        <button type="submit" style="display: none">Submit</button>
                     </fieldset>
                 </form>
 
                 <!-- https://stackoverflow.com/questions/15462991/trigger-autocomplete-without-submitting-a-form/15634249#15634249 -->
                 <!-- https://stackoverflow.com/questions/8400269/browser-native-autocomplete-for-dynamically-generated-forms-handled-with-ajax/8449290#8449290 -->
-                <iframe id="querybuilder-comfort-form-iframe" name="querybuilder-comfort-form-iframe" src="javascript:false" class="hide"></iframe>
+                <iframe id="querybuilder-comfort-form-iframe" name="querybuilder-comfort-form-iframe" src="javascript:false" style="display: none"></iframe>
 
             </div>
 
@@ -311,16 +321,16 @@
                             Search&nbsp;syntax:
                         </div>
 
-                        <div class="btn-group" data-toggle="buttons" id="mode-syntax-buttons">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons" id="mode-syntax-buttons">
 
                             <!-- Toggle CQL vs. IKOFAX -->
-                            <label class="btn btn-default btn-popover btn-syntax active"
+                            <label class="btn btn-outline-secondary btn-popover btn-syntax active"
                                    data-name="syntax-cql"
                                    >
                               <input type="radio" checked>
                               CQL
                             </label>
-                            <label class="btn btn-default btn-popover btn-syntax"
+                            <label class="btn btn-outline-secondary btn-popover btn-syntax"
                                    data-name="syntax-ikofax"
                                    >
                               <input type="radio">
@@ -348,16 +358,16 @@
 
         <!-- quick builder -->
         <!--
-        <div class="col-md-1">
+        <div class="col-1">
 
             <div id="cql-quick-operator" class="btn-group" data-toggle="buttons-radio">
-                <button class="btn-cql-boolean btn btn-default btn-xs active" type="button" data-value="OR">OR</button>
-                <button class="btn-cql-boolean btn btn-default btn-xs"        type="button" data-value="AND">AND</button>
+                <button class="btn-cql-boolean btn btn-outline-dark btn-sm active" type="button" data-value="OR">OR</button>
+                <button class="btn-cql-boolean btn btn-outline-dark btn-sm"        type="button" data-value="AND">AND</button>
             </div>
 
-            <a class="btn-cql-field label label-success" data-value="num=">num=</a>
-            <a class="btn-cql-field label label-info" data-value="txt=">txt=</a>
-            <a class="btn-cql-field label label-danger" data-value="cl=">cl=</a>
+            <a class="btn-cql-field badge badge-pill badge-success" data-value="num=">num=</a>
+            <a class="btn-cql-field badge badge-pill badge-info" data-value="txt=">txt=</a>
+            <a class="btn-cql-field badge badge-pill badge-danger" data-value="cl=">cl=</a>
 
         </div>
         -->
@@ -367,7 +377,7 @@
     <div class="row" id="cql-field-chooser-row">
 
         <!-- cql field symbol chooser -->
-        <div class="col-md-12">
+        <div class="col-12">
 
             <div id="cql-field-chooser" name="cql-field-chooser" size="1"></div>
 
@@ -376,12 +386,12 @@
                  data-toggle="popover" data-trigger="hover" data-placement="top"
                  data-content="Run analytic queries"
                     >
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown">
                     <i class="glyphicon glyphicon-cog"></i>
                     &nbsp;
                     Analytics (beta)
                 </button>
-                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
@@ -420,7 +430,7 @@
 
     <div class="row">
 
-        <div class="col-md-12 light-panel query-actions">
+        <div class="col-12 light-panel query-actions">
 
             <div class="">
 
@@ -435,7 +445,7 @@
 
                     <!-- Start search action -->
                     <button type="submit" role="button" class="btn btn-info btn-popover btn-query-perform"
-                        data-toggle="popover" data-trigger="hover" data-placement="right"
+                        data-toggle="popover" data-trigger="hover" data-placement="bottom"
                         data-content="Submit search expression to the database"
                         >
                         Start search
@@ -453,19 +463,20 @@
                             <!-- Permalink to current search, with expiration time -->
                             <a tabindex="0" role="button" id="btn-query-permalink"
                                 data-toggle="popover" data-trigger="hover" data-placement="bottom"
+                                class="dropdown-item"
                                 >
                                 <i class="glyphicon glyphicon-share"></i> &nbsp; Share this search
                             </a>
 
                             <!-- Numberlist crawler subsystem -->
                             <% if (navigatorApp.component_enabled('crawler')) { %>
-                                <a id="fetch-result-numbers-action" class="btn-popover"
+                                <a id="fetch-result-numbers-action" class="dropdown-item btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results. This is the raw response of the datasource.">
                                     <i class="glyphicon glyphicon-save"></i> &nbsp; List of publication numbers
                                 </a>
 
-                                <a id="fetch-result-numbers-no-kindcodes-action" class="btn-popover"
+                                <a id="fetch-result-numbers-no-kindcodes-action" class="dropdown-item btn-popover"
                                    data-toggle="popover" data-trigger="hover" data-placement="bottom"
                                    data-content="Fetch publication numbers of all results, strip kindcodes and build list of unique entries.">
                                     <i class="glyphicon glyphicon-save"></i> &nbsp; List of publication numbers w/o kindcodes
@@ -482,7 +493,7 @@
                 </div>
 
                 <% if (navigatorApp.theme.get('feature.xpexport.enabled')) { %>
-                <button id="btn-ps-export" role="button" class="btn btn-default btn-lg">
+                <button id="btn-ps-export" role="button" class="btn btn-outline-dark btn-lg">
                     <i class="glyphicon glyphicon-save glyphicon-large"></i> Transfer to XPAT
                 </button>
                 <% } %>
@@ -496,7 +507,7 @@
 
                 <!-- Toggle: full-cycle -->
                 <button type="button"
-                        class="btn btn-default btn-popover btn-full-cycle"
+                        class="btn btn-outline-info btn-popover btn-full-cycle"
                         data-toggle="button"
                         data-name="full-cycle"
                         aria-pressed="false"
@@ -507,10 +518,10 @@
                   Full cycle
                 </button>
 
-                <div class="btn-group" data-toggle="buttons" id="mode-order-buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="mode-order-buttons">
 
                     <!-- Toggle "First pub." -->
-                    <label class="btn btn-default btn-popover btn-mode-order"
+                    <label class="btn btn-outline-info btn-popover btn-mode-order"
                            data-name="first-pub"
                            data-active-target="#mode-order-label"
                            data-active-text="First pub."
@@ -522,7 +533,7 @@
                     </label>
 
                     <!-- Toggle "Recent pub." -->
-                    <label class="btn btn-default btn-popover btn-mode-order"
+                    <label class="btn btn-outline-info btn-popover btn-mode-order"
                            data-name="recent-pub"
                            data-active-target="#mode-order-label"
                            data-active-text="Recent pub."
@@ -535,7 +546,7 @@
 
                     <!-- Label for First vs. Recent pub. -->
                     <button id="btn-mode-order-label"
-                            class="btn btn-default btn-popover disabled"
+                            class="btn btn-outline-info btn-popover disabled"
                             >
                         <span id="mode-order-label"
                             data-original-text="Default">
@@ -552,7 +563,7 @@
 
                 <!-- Toggle "Family member by priority" -->
                 <button type="button"
-                        class="btn btn-default btn-popover btn-family-swap-ger"
+                        class="btn btn-outline-info btn-popover btn-family-swap-ger"
                         data-name="family-swap-ger"
                         data-toggle="button"
                         data-content="Prefer display of family member prioritized by DE, EP..B, WO, EP..A2, EP..A3, EP and US"
@@ -562,10 +573,10 @@
                     Family member by priority
                 </button>
 
-                <div class="btn-group" data-toggle="buttons" id="family-remove-buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" id="family-remove-buttons">
 
                     <!-- Toggle "Remove family members" -->
-                    <label class="btn btn-default btn-popover btn-family-remove"
+                    <label class="btn btn-outline-info btn-popover btn-family-remove"
                            data-name="family-remove"
                            data-content="Display just one document per patent family by removing family members"
                            data-trigger="hover" data-placement="bottom"
@@ -576,7 +587,7 @@
                     </label>
 
                     <!-- Toggle "Replace family members" -->
-                    <label class="btn btn-default btn-popover btn-family-replace"
+                    <label class="btn btn-outline-info btn-popover btn-family-replace"
                            data-name="family-replace"
                            data-content="Display just one document per patent family by replacing family members"
                            data-trigger="hover" data-placement="bottom"
@@ -591,7 +602,7 @@
                 <!-- Toggle "All family members" -->
                 <button type="button"
                         id="btn-family-full"
-                        class="btn btn-default btn-popover btn-family-full"
+                        class="btn btn-outline-info btn-popover btn-family-full"
                         data-name="family-full"
                         data-toggle="button"
                         data-content="Expand each hit to all family members"
@@ -609,7 +620,7 @@
                     <!-- sorting direction -->
                     <button type="button"
                             id="sort-order-chooser"
-                            class="btn btn-default btn-popover"
+                            class="btn btn-outline-info btn-popover"
                             data-content="Define sort order"
                             data-trigger="hover" data-placement="bottom"
                             >
@@ -631,14 +642,14 @@
 
 <!-- modal dialog for choosing clipboard content modifier -->
 <div id="query-transform-dialog" class="modal fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="query-transform-dialog-label">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-medium" role="document">
   <div class="modal-content">
 
     <div class="modal-header">
+        <h3 class="modal-title" id="query-transform-dialog-label">Query transformation</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3 class="modal-title" id="query-transform-dialog-label">Query transformation</h3>
     </div>
     <div class="modal-body">
         Transform newline-separated data to syntactically correct query.
@@ -661,16 +672,22 @@
             </button>
         </div>
     </div>
-    <div class="modal-footer">
-        <div id="clipboard-modifier-operator" class="btn-group pull-left" data-toggle="buttons">
-          <label class="btn btn-default active">
+    <div class="modal-footer row justify-content-between">
+      <div class="col-auto">
+        <div id="clipboard-modifier-operator"
+             class="btn-group btn-group-toggle pull-left"
+             data-toggle="buttons">
+          <label class="btn btn-outline-info active">
             <input type="radio" name="options" data-value="OR" checked>OR
           </label>
-          <label class="btn btn-default">
+          <label class="btn btn-outline-info">
             <input type="radio" name="options" data-value="AND">AND
           </label>
         </div>
-        <button class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      <div class="col-2">
+        <button class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+      </div>
     </div>
 
   </div>

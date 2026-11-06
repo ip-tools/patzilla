@@ -189,7 +189,7 @@ class RuntimeSettings:
         if self.vendor:
             self.theme = self.theme_parameters()
 
-        self.beta_badge = '<span class="label label-success label-large do-not-print">BETA</span>'
+        self.beta_badge = '<span class="badge badge-pill badge-success badge-large do-not-print">BETA</span>'
 
     def asdict(self):
         return self.__dict__.copy()
@@ -460,7 +460,7 @@ class RuntimeSettings:
 
         if badge_text and label_kind:
             params['ui.environment.badge'] = \
-                '<span class="label label-{label_kind} label-large do-not-print">{badge_text}</span>'.format(**locals())
+                '<span class="badge badge-pill badge-{label_kind} badge-large do-not-print">{badge_text}</span>'.format(**locals())
 
         # TODO: Move the html stuff elsewhere!
         if self.config.get('mode') == 'liveview':

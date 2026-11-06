@@ -49,23 +49,31 @@ var abstract_list = data.get_abstract_list();
             </div>
 
             <!-- Document details: Claims, Description, Family -->
-            <div class="btn-group btn-popover tabs document-details-chooser do-not-print"
-                 data-toggle="popover" data-trigger="hover" data-placement="top"
+            <div class="btn-group btn-group-toggle btn-popover tabs document-details-chooser do-not-print"
+                 role="group"
+                 data-toggle="popover"
+                 data-trigger="hover"
+                 data-placement="top"
                  data-content="Toggle detail view"
                     >
-                <button class="btn btn-default active" data-toggle="tab"
-                        href="#document-details-biblio-container-<%= patent_number %>">
+                <button class="btn btn-secondary active"
+                        data-toggle="tab"
+                        href="#document-details-biblio-container-<%= patent_number %>"
+                        data-details-type="biblio"
+                        >
                     Biblio
                 </button>
                 <% if (data.has_fulltext()) { %>
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-secondary"
+                        data-toggle="tab"
                         href="#document-details-claims-container-<%= patent_number %>"
                         data-details-title="Claims"
                         data-details-type="claims"
                         >
                     Claims
                 </button>
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-secondary"
+                        data-toggle="tab"
                         href="#document-details-description-container-<%= patent_number %>"
                         data-details-title="Description"
                         data-details-type="description"
@@ -73,7 +81,8 @@ var abstract_list = data.get_abstract_list();
                     Desc
                 </button>
                 <% } %>
-                <button class="btn btn-default" data-toggle="tab"
+                <button class="btn btn-secondary"
+                        data-toggle="tab"
                         id="document-details-family-button-<%= patent_number %>"
                         href="#document-details-family-container-<%= patent_number %>"
                         data-details-type="family"
@@ -106,7 +115,7 @@ var abstract_list = data.get_abstract_list();
 
                     <!--
                     <input type="checkbox" id="chk-patent-number-<%= patent_number %>" class="chk-patent-number" value="<%= patent_number %>"/>
-                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-default btn-popover add-patent-number"
+                    <a id="add-patent-number-<%= patent_number %>" role="button" class="btn btn-secondary btn-popover add-patent-number"
                        data-patent-number="<%= patent_number %>"
                        data-toggle="popover" data-trigger="hover" data-placement="top" data-content="Add document number to collection"
                        >
@@ -124,13 +133,13 @@ var abstract_list = data.get_abstract_list();
 
 
         <!-- Document header: Menu on right side -->
-        <span class="btn-group btn-popover do-not-print">
-            <button class="btn btn-default btn-link btn-menu dropdown-toggle" data-toggle="dropdown">
+        <span class="btn-group do-not-print">
+            <button class="btn btn-link btn-menu dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <i class="glyphicon glyphicon-menu-hamburger gi-2x"></i>
             </button>
 
             <!-- Actions: Comment, PDF, Worldlinks -->
-            <ul class="dropdown-menu pull-right document-header-more-menu" role="menu">
+            <ul class="dropdown-menu dropdown-menu-right document-header-more-menu" role="menu">
 
                 <!--
                 <div class="dropdown-section-header">Actions</div>
@@ -138,7 +147,7 @@ var abstract_list = data.get_abstract_list();
 
                 <!-- Open PDF document -->
                 <li>
-                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf">
+                    <a href="<%= linkmaker.universal_pdf_url() %>" target="patzilla-pdf" class="dropdown-item anchor-pdf">
                         <%= navigatorApp.ui.pdf_icon() %>
                         &nbsp;
                         Open PDF
@@ -146,12 +155,14 @@ var abstract_list = data.get_abstract_list();
                 </li>
 
                 <!-- Add/edit comment -->
-                <li id="region-comment-button"/>
+                <li id="region-comment-button"></li>
 
                 <!-- Links to external resources -->
                 <li class="dropdown-submenu">
 
-                    <a tabindex="-1" href="#" data-toggle="dropdown" role="button">
+                    <a tabindex="-1" href="#"
+                       data-toggle="dropdown" role="button"
+                       class="dropdown-item dropdown-toggle">
                         <i class="glyphicon glyphicon-globe glyphicon-large"></i>
                         &nbsp;
                         External sources
@@ -164,34 +175,40 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet">
+                            <a href="<%= linkmaker.espacenet_worldwide_url() %>" target="_blank"
+                               class="dropdown-item anchor-biblio-espacenet">
                                 [BIBLIO] <%= patent_number %> @ Espacenet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.new_espacenet_worldwide_url() %>" target="_blank" class="anchor-biblio-espacenet-new">
+                            <a href="<%= linkmaker.new_espacenet_worldwide_url() %>" target="_blank"
+                               class="dropdown-item anchor-biblio-espacenet-new">
                                 [BIBLIO] <%= patent_number %> @ New Espacenet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" class="anchor-biblio-depatisnet">
+                            <a href="<%= linkmaker.depatisnet_url() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-depatisnet">
                                 [BIBLIO] <%= patent_number %> @ DEPATISnet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.google_url() %>" target="_blank" class="anchor-biblio-google">
+                            <a href="<%= linkmaker.google_url() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-google">
                                 [BIBLIO] <%= patent_number %> @ Google Patents
                             </a>
                         </li>
 
                         <% if (linkmaker.country == 'US') { %>
                         <li>
-                            <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" class="anchor-biblio-uspto-appft">
+                            <a href="<%= linkmaker.uspto_appft_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-uspto-appft">
                                 [BIBLIO] <%= patent_number %> @ USPTO Application Database
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" class="anchor-biblio-uspto-patft">
+                            <a href="<%= linkmaker.uspto_patft_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-uspto-patft">
                                 [BIBLIO] <%= patent_number %> @ USPTO Patent Database
                             </a>
                         </li>
@@ -199,7 +216,8 @@ var abstract_list = data.get_abstract_list();
 
                         <% if (linkmaker.country == 'WO') { %>
                         <li>
-                            <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" class="anchor-biblio-wipo">
+                            <a href="<%= linkmaker.wipo_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-wipo">
                                 [BIBLIO] <%= patent_number %> @ WIPO
                             </a>
                         </li>
@@ -207,13 +225,13 @@ var abstract_list = data.get_abstract_list();
 
                         <% if (linkmaker.country == 'CA') { %>
                         <li>
-                            <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" class="anchor-biblio-cipo">
+                            <a href="<%= linkmaker.cipo_biblio() %>" target="_blank" 
+                               class="dropdown-item anchor-biblio-cipo">
                                 [BIBLIO] <%= patent_number %> @ CIPO
                             </a>
                         </li>
                         <% } %>
-
-                        <li class="divider"/>
+                        <hr class="divider">
 
 
                         <!-- legal status -->
@@ -222,28 +240,32 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank">
+                            <a href="<%= linkmaker.inpadoc_legal_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [LEGAL] <%= patent_number %> @ INPADOC legal status
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.epo_register_url() %>" target="_blank" class="anchor-register-epo">
+                            <a href="<%= linkmaker.epo_register_url() %>" target="_blank" 
+                               class="dropdown-item anchor-register-epo">
                                 [LEGAL] <%= patent_number %> @ European Patent Register
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" class="anchor-register-dpma">
+                            <a href="<%= linkmaker.dpma_register_url() %>" target="_blank" 
+                               class="dropdown-item anchor-register-dpma">
                                 [LEGAL] <%= patent_number %> @ DPMAregister
                             </a>
                         </li>
                         <% if (linkmaker.country == 'US') { %>
                         <li>
-                            <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank">
+                            <a href="<%= linkmaker.uspto_pair_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [LEGAL] USPTO PAIR
                             </a>
                         </li>
                         <% } %>
-                        <li class="divider"/>
+                        <hr class="divider">
 
 
                         <!-- patent family -->
@@ -252,27 +274,32 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" class="anchor-ccd">
+                            <a href="<%= linkmaker.ccd_viewer_url() %>" target="_blank" 
+                               class="dropdown-item anchor-ccd">
                                 [FAMILY] <%= patent_number %> @ CCD Viewer
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank">
+                            <a href="<%= linkmaker.global_dossier_application_viewer_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ USPTO Global Dossier (application)
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank">
+                            <a href="<%= linkmaker.global_dossier_publication_viewer_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ USPTO Global Dossier (publication)
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank">
+                            <a href="<%= linkmaker.global_dossier_patent_viewer_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ USPTO Global Dossier (patent)
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank">
+                            <a href="<%= linkmaker.inpadoc_family_url() %>" target="_blank"
+                               class="dropdown-item">
                                 [FAMILY] <%= patent_number %> @ INPADOC patent family
                             </a>
                         </li>
@@ -283,7 +310,7 @@ var abstract_list = data.get_abstract_list();
                             </a>
                         </li>
                         -->
-                        <li class="divider"/>
+                        <hr class="divider">
 
 
                         <!-- PDF -->
@@ -292,29 +319,34 @@ var abstract_list = data.get_abstract_list();
                         </div>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" class="anchor-pdf-ops">
+                            <a href="<%= linkmaker.ops_pdf_url() %>" target="patzilla-pdf" 
+                               class="dropdown-item anchor-pdf-ops">
                                 [PDF] <%= patent_number %> @ OPS
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf">
+                            <a href="<%= linkmaker.espacenet_pdf_url() %>" target="patzilla-pdf"
+                               class="dropdown-item">
                                 [PDF] <%= patent_number %> @ Espacenet
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf">
+                            <a href="<%= linkmaker.depatisnet_pdf_url() %>" target="patzilla-pdf"
+                               class="dropdown-item">
                                 [PDF] <%= patent_number %> @ DEPATISnet
                             </a>
                         </li>
 
                         <% if (linkmaker.country == 'US') { %>
                         <li>
-                            <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank" class="anchor-images-uspto-appft">
+                            <a href="<%= linkmaker.uspto_appft_images() %>" target="_blank"
+                               class="dropdown-item anchor-images-uspto-appft">
                                 [PDF] <%= patent_number %> @ USPTO Application Database
                             </a>
                         </li>
                         <li>
-                            <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank" class="anchor-images-uspto-patft">
+                            <a href="<%= linkmaker.uspto_patft_images() %>" target="_blank"
+                               class="dropdown-item anchor-images-uspto-patft">
                                 [PDF] <%= patent_number %> @ USPTO Publication Database
                             </a>
                         </li>
@@ -337,18 +369,18 @@ var abstract_list = data.get_abstract_list();
     <div class="ops-collection-entry-inner ops-bibliographic-details">
 
         <div class="row">
-            <div class="col-md-12 keyword">
+            <div class="col-12 keyword">
                 <strong><%= title_list.join('<br/>') %></strong>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-5">
+            <div class="col-lg-5">
 
                 <!-- second header -->
                 <!-- TODO: for letting the drawing follow the text -->
                 <!--
-                <div class="ops-collection-entry-heading-second well col-md-4 hide">second heading</div>
+                <div class="ops-collection-entry-heading-second well col-4 hide">second heading</div>
                 -->
 
                 <!-- first drawing only -->
@@ -367,33 +399,37 @@ var abstract_list = data.get_abstract_list();
                     -->
                     <!-- carousel items -->
                     <div class="carousel-inner">
-                        <div class="active item">
+                        <div class="carousel-item active">
                             <img src="<%= linkmaker.drawing_url() %>"
                                  alt="No drawing available."
-                                 onload="var oce_view = $(this).closest('.ops-collection-entry').prop('view'); oce_view && oce_view.signalDrawingLoaded();"/>
+                                 onload="var oce_view = $(this).closest('.ops-collection-entry').prop('view'); oce_view && oce_view.signalDrawingLoaded();"
+                                 class="d-block w-100"
+                            />
                         </div>
                     </div>
+                    <div>
                     <!-- Carousel navigation: Left, right, rotate. -->
-                    <a class="carousel-control left do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="prev">
-                      <span class="glyphicon glyphicon-chevron-left"></span>
+                    <a class="carousel-control-prev carousel-control do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="prev">
+                      <span class="glyphicon glyphicon-chevron-left gi-2x"></span>
                     </a>
-                    <a class="carousel-control right do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="next">
-                      <span class="glyphicon glyphicon-chevron-right"></span>
+                    <a class="carousel-control-next carousel-control do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-slide="next">
+                      <span class="glyphicon glyphicon-chevron-right gi-2x"></span>
                     </a>
-                    <a class="carousel-control rotate do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-rotate="right">
+                    <a class="carousel-control-rotate carousel-control do-not-print" href="#drawings-carousel-<%= patent_number %>" role="button" data-rotate="right">
                       <i class="glyphicon glyphicon-repeat gi-2x"></i>
                     </a>
                     <!-- Carousel status text, e.g. "Drawing #1/3" -->
-                    <div class="drawing-info col-md-12 text-center">
+                    <div class="drawing-info col-12 text-center">
                         Drawing #<span class="drawing-number">1</span><span class="drawing-totalcount"></span>
+                    </div>
                     </div>
 
                 </div>
 
             </div>
-            <div class="col-md-7 tab-content document-details">
+            <div class="col-lg-7 tab-content document-details">
 
-                <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade in active">
+                <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane in active">
                     <dl class="dl-horizontal dl-horizontal-biblio">
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="Applicants">
@@ -446,8 +482,7 @@ var abstract_list = data.get_abstract_list();
                             (51)
                         </dt>
                         <dd class="dl-horizontal-inline-container">
-                            <span class="clearfix"></span>
-                            <dl class="dl-horizontal2 dl-horizontal-inline">
+                            <dl class="dl-horizontal-inline">
 
                                 <%
                                 var classifications_map = data.get_classifications(true);
@@ -492,7 +527,7 @@ var abstract_list = data.get_abstract_list();
                             <% } %>
                             <br/>
                             <%= data.get_citations_environment_button() %>
-                            <a class="btn btn-default btn-sm family-citations-shortcut-button do-not-print" role="button">
+                            <a class="btn btn-outline-secondary btn-sm family-citations-shortcut-button do-not-print" role="button">
                                 Family » Citations &nbsp; <i class="glyphicon glyphicon-arrow-right"></i>
                             </a>
                         </dd>
@@ -517,17 +552,17 @@ var abstract_list = data.get_abstract_list();
 
                             <div class="row">
 
-                            <div class="col-md-4">
+                            <div class="col-4">
                             <!-- Document number and publication date -->
                             <%= entry.get_patent_number() %>,
                             <%= entry.get_publication_date() %>
                             <span class="inid-tooltip strong" data-toggle="tooltip" title="Publication date">(45)</span>
                             </div>
 
-                            <div class="col-md-1">
+                            <div class="col-1">
                             <!-- Link to PDF document -->
                             <a href="<%= linkmaker.universal_pdf_url(entry.get_patent_number()) %>" target="patzilla-pdf"
-                               class="btn btn-default btn-sm anchor-pdf do-not-print" role="button"
+                               class="btn btn-outline-secondary btn-sm anchor-pdf do-not-print" role="button"
                                >
                                 <%= navigatorApp.ui.pdf_icon() %>
                             </a>
@@ -582,14 +617,14 @@ var abstract_list = data.get_abstract_list();
                     <strong>Patent family</strong>
                     &nbsp;&nbsp;&nbsp;
                     <div class="btn-group tabs family-chooser">
-                        <button class="btn btn-default btn-sm active" data-toggle="tab" data-view-type="compact">
+                        <button class="btn btn-secondary btn-sm active" data-toggle="tab" data-view-type="compact">
                             Compact
                         </button>
-                        <button class="btn btn-default btn-sm" data-toggle="tab" data-view-type="verbose">
+                        <button class="btn btn-secondary btn-sm" data-toggle="tab" data-view-type="verbose">
                             Full
                         </button>
                         <% if (navigatorApp.user_has_module('family-citations')) { %>
-                        <button class="btn btn-default btn-sm" data-toggle="tab" data-view-type="citations">
+                        <button class="btn btn-secondary btn-sm" data-toggle="tab" data-view-type="citations">
                             Citations
                         </button>
                         <% } %>

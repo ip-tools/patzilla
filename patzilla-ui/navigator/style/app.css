@@ -121,7 +121,8 @@ body {
 
 
 
-/* Text */
+/** Text enhancements. **/
+
 .text-muted {
     color: #777777;
 }
@@ -130,16 +131,25 @@ body {
     content: "\f0c9";
 }
 
-.label-large {
+.badge-large {
     font-size: large;
     padding: 9px;
+}
+
+/* Less rounded corners than default. */
+.badge-pill {
+    border-radius: 0.3rem;
 }
 
 
 
 /* Export dialog */
 #export-dialog .modal-body .row {
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
+}
+
+#export-dialog .content-block > * {
+    margin-bottom: 0.5rem;
 }
 
 .lead.inline {
@@ -213,7 +223,7 @@ ul.breathe li {
  * Query builder
  */
 #querybuilder-area .row {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 /* Query builder: Data source and flavor chooser */
@@ -242,15 +252,17 @@ ul.breathe li {
     flex-wrap: wrap-reverse;
 }
 
-.querybuilder-datasource-flavor-chooser * {
-    margin-bottom: 1px;
-}
+/** Query builder: Data source chooser **/
 
-/* Query builder: Data source chooser */
+/* Adjust icon sizes */
 #datasource img[class=wider] { height/*\**/: 20px; width/*\**/: 30px; }
 #datasource img[class=square] { height/*\**/: 20px; width/*\**/: 20px; }
 #datasource img[class=square-24] { height/*\**/: 24px; width/*\**/: 24px; }
-#datasource label[class~=h-32] { height/*\**/: 34px; }
+
+/* Stick icon and text together; don't wrap. */
+#datasource,#export-dialog .btn {
+    white-space: nowrap !important;
+}
 
 
 .query-actions div {
@@ -308,9 +320,8 @@ ul.breathe li {
     margin-bottom: 1px;
 }
 
-#querybuilder-comfort-form .input-group-addon.add-on-label {
-    margin-left: unset;
-    width: 16rem;
+#querybuilder-comfort-form .input-group-prepend.input-group-text {
+    width: 11rem;
 }
 #querybuilder-comfort-form input::-webkit-input-placeholder {
     color: #DDDDDD;
@@ -539,13 +550,17 @@ ul.breathe li {
 }
 
 /* Generalization of a large modal */
-.modal-high .modal-body {
+.modal-dialog.modal-medium {
+    max-width: 650px;
+}
+.modal-dialog.modal-wide {
+    max-width: 950px;
+}
+.modal-dialog.modal-high .modal-body {
     max-height: 750px;
     height: 550px;
 }
-.modal-wide .modal-dialog {
-    width: 950px;
-}
+
 
 .btn-symbol {
     padding: 0.6em;
@@ -561,14 +576,17 @@ ul.breathe li {
 }
 
 
+/* Document / result metadata and entry */
 
-/* Document / result entry */
+#ops-metadata-region,.ops-collection-entry {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
 
 img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .ops-collection-entry, .ops-collection-meta, .light-panel {
     position: relative;
-    margin-bottom: 1.3rem;
     padding: 0px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -579,7 +597,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 
 .ops-collection-meta:first-child, .light-panel {
     padding: 9px 15px;
-    border-bottom: 0px;
 }
 
 /* Document header */
@@ -625,18 +642,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
-.document-title {
-    font-size: 24.5px;
-    font-weight: bold;
-}
-
-
-/* Tabs */
-.document-details.tab-content {
-    overflow: visible;
-}
-
-
 /* Rating */
 .dismiss {
     border-bottom: 3px solid #51a351;
@@ -663,12 +668,13 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
-/* More info */
+/* Document view: More links */
+/* TODO: Replace with bs4's `dropleft` */
 .document-header-more-menu {
     top: unset;
 }
 .more-links-menu-container {
-    left: -240px !important;
+    left: -280px !important;
     top: unset !important;
     margin-top: unset !important;
 }
@@ -694,29 +700,39 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 }
 
 
-.dl-horizontal-biblio {
-    margin-bottom: 0px;
+/* Document: Details */
+
+.document-title {
+    font-size: 24.5px;
+    font-weight: bold;
 }
+
+.document-details.tab-content {
+    overflow: visible;
+}
+
+.dl-horizontal-biblio {
+    margin-top: 2rem;
+    margin-bottom: 0;
+}
+/* Adjust the position of the tooltip element. */
 .dl-horizontal-biblio dt {
     width: 30px;
     text-align: left;
 }
+/* Adjust the position of the value element. */
 .dl-horizontal-biblio dd {
-    margin-left: 40px;
+    margin-left: 3rem;
+    margin-top: -1.5rem;
 }
 
 
-dl.dl-horizontal-inline {
-    -webkit-margin-before: 0em;
-    -webkit-margin-after: 0em;
-}
 @media (min-width: 768px) {
     .dl-horizontal-inline-container {
         position: relative;
         top: -1.4em;
     }
 }
-
 .dl-horizontal-inline dt {
     width: 60px;
     text-align: left;
@@ -725,7 +741,7 @@ dl.dl-horizontal-inline {
     margin-left: 60px;
 }
 
-.label-document-missing {
+.badge-document-missing {
     font-size: large;
     padding: 7px;
 }
@@ -747,7 +763,7 @@ dl.dl-horizontal-inline {
 /* Align control arrows at bottom of image */
 .carousel-control {
     position: absolute;
-    top: 95%;
+    top: 90%;
     margin-top: inherit;
 }
 
@@ -760,12 +776,13 @@ dl.dl-horizontal-inline {
 }
 
 /* Adjust rotation control element */
-.carousel-control.rotate {
+.carousel-control-rotate {
     position: relative;
     left: 48%;
     right: 48%;
     font-size: inherit;
     font-weight: inherit;
+    opacity: 0.5;
 }
 
 /* "Drawing #1/3" status text */
@@ -800,16 +817,25 @@ dl.dl-horizontal-inline {
 }
 
 
-/* Project management */
-#project-chooser-list .dropdown-menu {
-    width: 300px;
-}
+/** Project management **/
 
 /*
 #project-chooser-actions button {
     margin-bottom: 1em;
 }
 */
+
+#project-name-editor form {
+    display: unset;
+}
+
+#project-name-editor .form-group {
+    align-items: unset;
+}
+
+#project-name-editor .editable-error-block {
+    margin-bottom: 1em;
+}
 
 .dropdown-section-header {
     margin-left: 10px;
@@ -818,6 +844,11 @@ dl.dl-horizontal-inline {
 
 #basket {
     font-size: smaller;
+}
+
+/* Stick icon and text together; don't wrap. */
+#basket-form .btn {
+    white-space: nowrap !important;
 }
 
 #share-numberlist-clipboard {
@@ -837,12 +868,9 @@ dl.dl-horizontal-inline {
 /* Login form */
 .login-modal {
     z-index: 1050;
-    position: fixed;
-    top: 10%;
-    left: 35%;
+    position: relative;
 }
 .login-box {
-    width: 500px;
     padding-top: 9px;
     padding-left: 29px;
     padding-right: 29px;
@@ -882,8 +910,11 @@ dl.dl-horizontal-inline {
 }
 */
 
-
-/* Make tooltips wider */
-.popover[role="tooltip"] {
-    width: 30rem;
+/* Adjust formatting on help pages */
+#ui-title {
+    margin-top: 0.5rem;
+}
+#hotkeys-help a {
+    color: black;
+    text-decoration: none;
 }

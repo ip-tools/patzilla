@@ -2,7 +2,7 @@
 // (c) 2014-2016 Andreas Motl, Elmyra UG
 require('jquery');
 require('jrumble');
-require('bootstrap/dist/css/bootstrap.min.css');
+require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
 $(function() {
@@ -12,6 +12,8 @@ $(function() {
     var domain = url.hostname;
 
     $.extend(login_settings, {domain: domain});
+
+    $('.login-modal').modal({backdrop: 'static'});
 
     if (url.searchParams.get('error') == 'true') {
         console.warn('Login failed (reason=' + url.searchParams.get('reason') + '). Please check your credentials or contact us for support at ' + login_settings.support_email + '.');

@@ -1,13 +1,13 @@
-<div id="export-dialog" class="modal modal-info modal-wide modal-high modal-not-rounded fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="export-dialog-label">
+<div id="export-dialog" class="modal modal-info modal-not-rounded fade" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="export-dialog-label">
 
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-wide modal-high" role="document">
     <div class="modal-content">
 
     <div class="modal-header">
+        <h3 class="modal-title" id="export-dialog-label">Export »<span id="export_title"></span>«</h3>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h3 class="modal-title" id="export-dialog-label">Export »<span id="export_title"></span>«</h3>
     </div>
 
     <div class="modal-body">
@@ -15,8 +15,6 @@
         <p>
             Use project metadata to produce reports in different output formats.
             Optionally, add PDF- and XML-representations of all rated documents.
-            Remark: While exporting to CSV format is available in all Navigator versions,
-            other export formats are only shipped with Navigator Professional.
         </p>
         <hr/>
 
@@ -24,16 +22,22 @@
 
             <!-- Output format -->
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-3">
                     <div class="lead inline">Output format</div>
                     <br/>
                     <div id="output-format" class="lead inline text-info"></div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-9">
 
-                    <div class="btn-group" data-toggle="buttons" data-toggle-release="false" data-name="format" data-label-target="#output-format">
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons"
+                         data-toggle-release="false"
+                         data-name="format"
+                         data-label-target="#output-format"
+                         role="group"
+                    >
 
-                        <label class="btn btn-default btn-symbol export-format"
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
                                data-value="display"
                                data-label="Display"
@@ -46,7 +50,7 @@
                             Display
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-format"
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
                                data-value="csv"
                                data-label="CSV"
@@ -58,7 +62,7 @@
                             CSV file
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-format"
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
                                data-value="xlsx"
                                data-label="XLSX"
@@ -70,19 +74,19 @@
                             Office Workbook
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-format"
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
                                data-value="pdf"
                                data-label="PDF"
                                data-action-text="Download Workbook in PDF format"
                                >
                             <input type="radio">
-                            <img src="/static/img/icons/pdf.svg" class="pdf-svg" style="width: 32px; height: 32px"/>
+                            <img src="/static/img/icons/pdf.svg" class="pdf-svg" style="width: 36px; height: 36px"/>
                             <br/>
                             PDF Report
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-format"
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
                                data-value="zip"
                                data-label="ZIP"
@@ -95,7 +99,7 @@
                             Zip archive
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-format"
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
                                data-value="link_embed"
                                data-label="URL"
@@ -105,7 +109,7 @@
                             <input type="radio">
                             <i class="glyphicon glyphicon-link gi-2x"></i>
                             <br/>
-                            Link
+                            Share
                         </label>
 
 
@@ -131,64 +135,67 @@
 
 
             <!-- Archive content -->
-            <div class="row hide" id="zip-content">
-                <div class="col-md-3">
+            <div class="row" id="zip-content" style="display: none">
+                <div class="col-3">
                     <div class="lead inline">Zip content</div>
                     <br/>
                     <div id="report-parts" class="text-info"></div>
                     <br/>
                     <div id="media-parts" class="text-info"></div>
                 </div>
-                <div class="col-md-9">
+                <div class="col-9">
 
-                    <div class="btn-group" data-toggle="buttons" data-name="report" data-label-target="#report-parts">
+                    <div class="content-block">
 
-                        <div class="lead section">
-                            Report
-                        </div>
+                    <div class="lead section">
+                        Report
+                    </div>
 
-                        <label class="btn btn-default btn-symbol export-content"
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons"
+                         data-name="report"
+                         data-label-target="#report-parts"
+                         role="group"
+                    >
+
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="report"
                                data-value="xlsx"
                                data-label="Workbook"
                                data-action-text="Add Office Workbook file"
-                               aria-pressed="false"
                                >
                             <input type="checkbox">
                             <i class="glyphicon glyphicon-list-alt"></i>
                             Workbook
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="report"
                                data-value="pdf"
                                data-label="PDF Report"
                                data-action-text="Add Workbook in PDF format"
-                               aria-pressed="false"
                                >
                             <input type="checkbox">
                             <img src="/static/img/icons/pdf.svg" class="pdf-svg"/>
                             PDF
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="report"
                                data-value="csv"
                                data-label="CSV"
                                data-action-text="Add CSV files (comma-separated values)"
-                               aria-pressed="false"
                                >
                             <input type="checkbox">
                             <i class="glyphicon glyphicon-list"></i>
                             CSV
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="report"
                                data-value="json"
                                data-label="JSON"
                                data-action-text="Add JSON files"
-                               aria-pressed="false"
                                >
                             <input type="checkbox">
                             <i class="glyphicon glyphicon-list"></i>
@@ -196,7 +203,7 @@
                         </label>
 
                         <button role="button"
-                                class="btn btn-default btn-symbol"
+                                class="btn btn-outline-secondary btn-symbol"
                                 data-toggle="select-all"
                                 data-target=".export-content">
                             <i class="glyphicon glyphicon-folder-open"></i>
@@ -204,22 +211,25 @@
                         </button>
 
                     </div>
-                    <br/>
-                    <br/>
                     <p>
                         Choose from multiple formats for project metadata (document numbers, ratings and comments).
                     </p>
-                    <br/>
+                    </div>
 
+                    <div class="content-block">
 
-                    <div class="btn-group" data-toggle="buttons" data-name="media" data-label-target="#media-parts">
+                    <div class="lead section">
+                        Media
+                    </div>
 
-                        <div class="lead section">
-                            Media
-                        </div>
+                    <div class="btn-group btn-group-toggle"
+                         data-toggle="buttons"
+                         data-name="media"
+                         data-label-target="#media-parts"
+                         role="group"
+                      >
 
-                        <label class="btn btn-default btn-symbol export-content"
-                               aria-pressed="false"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
                                data-value="pdf"
                                data-label="Full PDF"
@@ -230,8 +240,7 @@
                             PDF
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
-                               aria-pressed="false"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
                                data-value="biblio"
                                data-label="Biblio"
@@ -242,8 +251,7 @@
                             Biblio
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
-                               aria-pressed="false"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
                                data-value="description"
                                data-label="Description"
@@ -254,8 +262,7 @@
                             Description
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
-                               aria-pressed="false"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
                                data-value="claims"
                                data-label="Claims"
@@ -266,8 +273,7 @@
                             Claims
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
-                               aria-pressed="false"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
                                data-value="register"
                                data-label="Legal"
@@ -278,8 +284,7 @@
                             Legal
                         </label>
 
-                        <label class="btn btn-default btn-symbol export-content"
-                               aria-pressed="false"
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="media"
                                data-value="family"
                                data-label="Family"
@@ -291,7 +296,7 @@
                         </label>
 
                         <button role="button"
-                                class="btn btn-default btn-symbol"
+                                class="btn btn-outline-secondary btn-symbol"
                                 data-toggle="select-all"
                                 data-target=".export-content">
                             <i class="glyphicon glyphicon-folder-open"></i>
@@ -299,81 +304,85 @@
                         </button>
 
                     </div>
-                    <br/>
-                    <br/>
                     <p>
                         Choose from multiple formats for exported documents, either full representations (PDF)
                         or machine readable formats for bibliographic information, description, claims and
                         legal data (XML and TEXT).
                     </p>
 
+                    </div>
+
                 </div>
             </div>
 
 
             <!-- Link and embed content -->
-            <div class="row hide" id="link-embed-content">
-                <div class="col-md-3">
-                    <div class="lead inline">Link and embed</div>
+            <div class="row" id="link-embed-content" style="display: none">
+                <div class="col col-3 d-flex flex-column justify-content-between">
+                  <div class="lead inline">
+                    Link and embed
+                  </div>
+                  <div class="text-small">
+                    Note: Both sharing variants will only transfer the plain
+                    document numbers without any of your rating scores.
+                  </div>
                 </div>
-                <div class="col-md-7">
+                <div class="col col-7">
 
-                    <div id="link-embed-sections" style="display: flex; flex-direction: column">
+                    <div id="link-embed-sections">
 
                       <!-- Internal url -->
-                      <div class="row section">
+                      <div class="content-block">
                         <div class="text-large">Share with authenticated users</div>
                         <p class="text-smaller">
                           A link for authenticated users to review the collected documents per »Numberlist« mode.
                         </p>
 
-                        <div class="input-group">
-                            <input id="share-link-numberlist" class="input-xlarge" type="text" />
-                            <button id="share-link-numberlist-copy" type="button" class="btn btn-default has-tooltip"
+                        <div class="input-group row">
+                          <div class="col">
+                            <input id="share-link-numberlist" type="text" class="w-100"/>
+                          </div>
+                          <div>
+                            <button id="share-link-numberlist-copy" type="button" class="btn btn-outline-secondary has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                 <i class="glyphicon glyphicon-copy"></i>
                             </button>
-                            <button id="share-link-numberlist-open" type="button" class="btn btn-default has-tooltip"
+                            <button id="share-link-numberlist-open" type="button" class="btn btn-outline-secondary has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
                                 <i class="glyphicon glyphicon-share"></i>
                             </button>
+                          </div>
                         </div>
                       </div>
 
                       <!-- External url -->
-                      <div class="row section">
+                      <div class="content-block">
                         <div class="text-large">Share with external users</div>
                         <p class="text-smaller">
                           A public link for external users to display the collected documents.
                           The link is read-only, and has an expiration time.
                         </p>
 
-                        <div class="input-group">
-                            <input id="share-link-external" class="input-xlarge" type="text" />
-                            <button id="share-link-external-copy" type="button" class="btn btn-default has-tooltip"
+                        <div class="input-group row">
+                          <div class="col">
+                            <input id="share-link-external" type="text" class="w-100"/>
+                          </div>
+                          <div>
+                            <button id="share-link-external-copy" type="button" class="btn btn-outline-secondary has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard">
                                 <i class="glyphicon glyphicon-copy"></i>
                             </button>
-                            <button id="share-link-external-open" type="button" class="btn btn-default has-tooltip"
+                            <button id="share-link-external-open" type="button" class="btn btn-outline-secondary has-tooltip"
                                     data-toggle="tooltip" data-placement="bottom" title="Open link">
                                 <i class="glyphicon glyphicon-share"></i>
                             </button>
+                          </div>
                         </div>
 
                         <div>
-                        The link will expire <span id="expiration-time-human">in 24 hours</span>.
+                          The link will expire <span id="expiration-time-human">in 24 hours</span>.
                         </div>
-                        <div>
                         <input id="expiration-time-slider" type="text"/>
-                        </div>
-                      </div>
-
-                      <!-- Footer -->
-                      <div class="row section">
-                        <small>
-                            Note: Both sharing variants will just transfer the plain
-                            document numbers without any of your rating scores.
-                        </small>
                       </div>
 
                     </div>
@@ -384,13 +393,13 @@
 
 
             <!-- Display document numbers -->
-            <div class="row hide" id="display-content">
+            <div class="row" id="display-content" style="display: none">
 
-                <div class="col-md-3">
+                <div class="col-3">
                     <div class="lead inline">Display document numbers</div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-4">
 
                     <div class="lead section">
                         <i class="glyphicon glyphicon-pushpin"></i>
@@ -402,13 +411,13 @@
                     <br/>
 
                     <textarea id="result-content-rated" rows="11" cols="80" style="width: 90%"></textarea>
-                    <a id="result-content-rated-copy" role="button" class="btn btn-default pull-left">
+                    <a id="result-content-rated-copy" role="button" class="btn btn-outline-secondary pull-left">
                         <i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard
                     </a>
 
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-4">
 
                     <div class="lead section">
                         <i class="glyphicon glyphicon-eye-open"></i>
@@ -420,7 +429,7 @@
                     <br/>
 
                     <textarea id="result-content-seen" rows="11" cols="80" style="width: 90%"></textarea>
-                    <a id="result-content-seen-copy" role="button" class="btn btn-default pull-left">
+                    <a id="result-content-seen-copy" role="button" class="btn btn-outline-secondary pull-left">
                         <i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard
                     </a>
 
@@ -430,7 +439,7 @@
 
             <!--
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-12">
                     <div id="export-dialog-status"></div>
                 </div>
             </div>
@@ -443,20 +452,20 @@
     <div class="modal-footer">
 
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-7 text-left">
+            <div class="row justify-content-between">
+                <div>
                     <div id="export-dialog-action-text" class="lead footer"></div>
                     <div id="export-dialog-status-text" class="footer"></div>
                 </div>
-                <div class="col-md-5">
+                <div>
                     <i id="export-dialog-spinner" class="spinner glyphicon glyphicon-refresh glyphicon-spin glyphicon-large" style="display: none"></i>
                     &nbsp;&nbsp;
-                    <button class="btn btn-info btn-lg" id="export-dialog-send-button" type="button">
+                    <button class="btn btn-outline-primary btn-lg" id="export-dialog-send-button" type="button">
                         <i class="glyphicon glyphicon-download-alt"></i>
                         &nbsp;
                         Start export
                     </button>
-                    <button class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
+                    <button class="btn btn-outline-secondary btn-lg" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

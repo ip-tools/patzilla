@@ -365,7 +365,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
     check_query_empty: function(options) {
         options = options || {};
         if (this.query_empty()) {
-            navigatorApp.ui.notify('Query expression is empty', {type: 'warning', icon: options.icon});
+            navigatorApp.ui.notify('Query expression is empty.', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -376,7 +376,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
     },
     check_numberlist_empty: function(options) {
         if (this.numberlist_empty()) {
-            navigatorApp.ui.notify('Numberlist is empty', {type: 'warning', icon: options.icon});
+            navigatorApp.ui.notify('Numberlist is empty.', {type: 'warning', icon: options.icon});
             return true;
         }
         return false;
@@ -428,7 +428,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
         $('#btn-comfort-display-values').off('click');
         $('#btn-comfort-display-values').on('click', function() {
 
-            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn btn-default"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
+            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn btn-outline-primary"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
 
             var entries = _this.get_comfort_form_entries();
             var data = entries.join('\n') + '\n';
@@ -578,15 +578,17 @@ const QueryBuilderView = Marionette.ItemView.extend({
                 $('#numberlist').val(numbers_valid.join('\n'));
 
                 // display invalid patent numbers
-                if (_.isEmpty(numbers_invalid)) {
-                    navigatorApp.ui.notify(
-                        'Successfully normalized patent numbers',
-                        {type: 'success', icon: 'glyphicon-exchange', right: true});
-                } else {
-                    var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
-                    navigatorApp.ui.user_alert(message, 'warning');
-
+                var message = 'Successfully normalized patent numbers.';
+                if (!_.isEmpty(numbers_invalid)) {
+                    message += ` ${numbers_invalid.length} invalid values were removed.`;
                 }
+                navigatorApp.ui.notify(
+                    message,
+                    {type: 'success', icon: 'glyphicon-exchange', right: true});
+
+                // TODO: Show which patent numbers normalization removed.
+                //var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
+                //navigatorApp.ui.user_alert(message, 'warning');
             });
         });
 
@@ -602,7 +604,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
             $('#numberlist').val(numbers.join('\n'));
 
             navigatorApp.ui.notify(
-                'Successfully stripped patent kind codes',
+                'Successfully stripped patent kind codes.',
                 {type: 'success', icon: 'glyphicon-eraser', right: true});
 
         });
@@ -1104,11 +1106,11 @@ const QueryBuilderView = Marionette.ItemView.extend({
     },
 
     html_history_expression: function(content) {
-        return '<div class="col-md-6 history-entry-expression">' + content + '</div>';
+        return '<div class="col-6 history-entry-expression">' + content + '</div>';
     },
 
     html_history_labels: function(content) {
-        return '<div class="col-md-6 history-entry-labels"><small>' + content + '</small></div>';
+        return '<div class="col-6 history-entry-labels"><small>' + content + '</small></div>';
     },
 
     html_history_tag: function(content, options) {
@@ -1339,9 +1341,8 @@ const QueryBuilderView = Marionette.ItemView.extend({
 
         // Enrich form fields with actions
         _.each(form.find(".input-group"), function(item) {
-
             // Populate field value with placeholder value on demand
-            $(item).find('.input-group-addon.add-on-label').off('click').on('click', function(ev) {
+            $(item).find('.input-group-text').off('click').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 if (!input_element.val()) {
 
@@ -1359,7 +1360,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
             });
 
             // Zoom input field to textarea
-            $(item).find('.input-group-addon.add-on-zoom').off('click').on('click', function(ev) {
+            $(item).find('.add-on-zoom').off('click').on('click', function(ev) {
                 var input_element = $(item).find('input');
                 _this.comfort_form_regular_to_zoomed(input_element);
             });
@@ -1368,12 +1369,8 @@ const QueryBuilderView = Marionette.ItemView.extend({
         // Conditionally display fulltext-modifier-chooser
         if (datasource_info.querybuilder.enable_fulltext_modifiers) {
             $('#fulltext-modifier-chooser').show();
-            $('#fulltext-textarea-container').removeClass('col-md-12').addClass('col-md-11');
-            $('#fulltext-textarea-container').find('textarea').removeClass('col-md-11').addClass('col-md-10');
         } else {
             $('#fulltext-modifier-chooser').hide();
-            $('#fulltext-textarea-container').removeClass('col-md-11').addClass('col-md-12');
-            $('#fulltext-textarea-container').find('textarea').removeClass('col-md-10').addClass('col-md-11');
         }
 
     },
