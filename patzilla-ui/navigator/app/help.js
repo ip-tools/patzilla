@@ -6,7 +6,8 @@
 // https://marionette.gitbooks.io/marionette-guides/content/en/appendix/approuter/router.html
 // https://marionette.gitbooks.io/marionette-guides/content/en/application/routing.html
 
-require('backbone.marionette');
+import Marionette from 'backbone.marionette';
+
 require('bootstrap/dist/css/bootstrap.css');
 require('patzilla.navigator.style');
 

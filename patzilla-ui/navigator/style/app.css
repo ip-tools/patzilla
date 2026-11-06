@@ -910,3 +910,12 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     z-index: 9999;
 }
 */
+
+/* Adjust formatting on help pages */
+#ui-title {
+    margin-top: 0.5rem;
+}
+#hotkeys-help a {
+    color: black;
+    text-decoration: none;
+}
