@@ -19,19 +19,10 @@ $(function() {
 });
 
 
-// Twitter Bootstrap
-require('bootstrap/dist/css/bootstrap.css');
-require('bootstrap/dist/js/bootstrap.js');
-
-// Use bootstrap-tabs from Bootstrap 2.0.0
-require('bootstrap-tab-button.js');
-
-// Glyphicons from Bootstrap 3
-require('@neos21/bootstrap3-glyphicons');
-
 // Global utilities
 require('patzilla.lib.jquery');
 require('patzilla.lib.underscore');
+require('patzilla.lib.bootstrap');
 require('patzilla.lib.backbone');
 require('patzilla.lib.marionette');
 _(window).extend(require('patzilla.lib.util'));

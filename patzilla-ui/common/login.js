@@ -2,7 +2,7 @@
 // (c) 2014-2016 Andreas Motl, Elmyra UG
 require('jquery');
 require('jrumble');
-require('bootstrap/dist/css/bootstrap.css');
+require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
 $(function() {

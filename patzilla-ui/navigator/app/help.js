@@ -8,7 +8,7 @@
 
 import Marionette from 'backbone.marionette';
 
-require('bootstrap/dist/css/bootstrap.css');
+require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
 // Patches to make the old Backbone Marionette 1.1.0 work with Webpack
