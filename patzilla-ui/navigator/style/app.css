@@ -868,9 +868,7 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
 /* Login form */
 .login-modal {
     z-index: 1050;
-    position: fixed;
-    top: 10%;
-    left: 18%;
+    position: relative;
 }
 .login-box {
     padding-top: 9px;
