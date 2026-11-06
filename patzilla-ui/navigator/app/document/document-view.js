@@ -110,7 +110,7 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
         var $subMenu = $(this).next('.dropdown-menu');
         $subMenu.toggleClass('show');
 
-        $(this).parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+        $(this).parents('span.btn-group').on('hidden.bs.dropdown', function(e) {
             $('.dropdown-submenu .show').removeClass('show');
         });
         return false;
