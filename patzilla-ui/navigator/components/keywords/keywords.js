@@ -224,7 +224,8 @@ const KeywordsController = Marionette.Controller.extend({
 
         var _this = this;
 
-        $('.action-keyword-editor').off('click').on('click', function() {
+        $('.action-keyword-editor').off('click').on('click', function(event) {
+            event.preventDefault();
             if (_this.module_available) {
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);

@@ -66,19 +66,11 @@ const UiController = Marionette.ItemView.extend({
         // ------------------------------------------
 
         // Open help in modal dialog
-        $('.action-help-shortcuts').off('click');
-        $('.action-help-shortcuts').on('click', function() {
-            var baseurl = navigatorApp.config.get('baseurl');
-            var url = urlJoin(baseurl, '/help#hotkeys');
-            $(this).attr('href', url);
-        });
 
-        $('.action-help-ificlaims').off('click');
-        $('.action-help-ificlaims').on('click', function() {
-            var baseurl = navigatorApp.config.get('baseurl');
-            var url = urlJoin(baseurl, '/help#ificlaims');
-            $(this).attr('href', url);
-        });
+        // Set help URLs before the links are used.
+        var baseurl = navigatorApp.config.get('baseurl');
+        $('.action-help-shortcuts').attr('href', urlJoin(baseurl, '/help#hotkeys'));
+        $('.action-help-ificlaims').attr('href', urlJoin(baseurl, '/help#ificlaims'));
 
 
         $('.action-fullscreen').off('click');
