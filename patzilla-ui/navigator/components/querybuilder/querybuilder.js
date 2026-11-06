@@ -586,6 +586,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
                     message,
                     {type: 'success', icon: 'glyphicon-exchange', right: true});
 
+                // TODO: Show which patent numbers normalization removed.
                 //var message = 'Number normalization failed for:<br/><br/><pre>' + numbers_invalid.join('\n') + '</pre>';
                 //navigatorApp.ui.user_alert(message, 'warning');
             });
