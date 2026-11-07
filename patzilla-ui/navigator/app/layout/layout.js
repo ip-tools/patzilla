@@ -26,19 +26,19 @@ export const MainView = Marionette.View.extend({
         var content_layout = navigatorApp.options.theme.get('ui.content_layout');
 
         if (header_layout == 'wide') {
-            this.header.show(new WideHeaderView());
+            this.showChildView('header', new WideHeaderView());
         } else {
-            this.header.show(new HeaderView());
+            this.showChildView('header', new HeaderView());
         }
 
         if (content_layout == 'grid') {
-            this.content.show(new GridContentView());
+            this.showChildView('content', new GridContentView());
         } else {
-            this.content.show(new ContentView());
+            this.showChildView('content', new ContentView());
         }
 
         // Select footer view
-        this.footer.show(new FooterView());
+        this.showChildView('footer', new FooterView());
     },
 
     templateContext: {},
@@ -119,6 +119,7 @@ const HeaderView = Marionette.View.extend({
 
     onRender: function() {
         //log('HeaderView::onRender');
+        this.showChildView('menu', new MenuView());
     },
 
     onDomRefresh: function() {
@@ -157,6 +158,7 @@ const WideHeaderView = Marionette.View.extend({
 
     onRender: function() {
         //log('WideHeaderView::onRender');
+        this.showChildView('menu', new MenuView());
     },
 
     onDomRefresh: function() {

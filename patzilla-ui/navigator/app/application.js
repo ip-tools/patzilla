@@ -12,6 +12,16 @@ import {GenericExchangeDocument} from "patzilla.access.base";
  */
 export const NavigatorApp = Marionette.Application.extend({
 
+    region: '#root-region',
+
+    initialize: function(options) {
+        //log('NavigatorApp.initialize:', options);
+    },
+
+    onStart: function() {
+        //log("NavigatorApp.onStart");
+    },
+
     setup_ui: function() {
 
         // Initialize content which still resides on page level (i.e. no template yet)
@@ -1183,7 +1193,7 @@ export const NavigatorApp = Marionette.Application.extend({
             //el: $('#basket-area'),
             model: basket,
         });
-        this.basketRegion.show(this.basketView);
+        this.mainView.showChildView('basketRegion', this.basketView);
 
 
         // B. event listeners

@@ -41,13 +41,13 @@ export const MetadataView = Marionette.View.extend({
             // e.relatedTarget // previous tab
 
             var list_type = $(this).data('list-type');
-            if (list_type == 'ops') {
-                navigatorApp.listRegion.show(navigatorApp.collectionView, {
+            if (list_type === 'ops') {
+                navigatorApp.mainView.showChildView('listRegion', navigatorApp.collectionView, {
                     preventDestroy: true,
                 });
 
-            } else if (list_type == 'upstream') {
-                navigatorApp.listRegion.show(navigatorApp.resultView, {
+            } else if (list_type === 'upstream') {
+                navigatorApp.mainView.showChildView('listRegion', navigatorApp.resultView, {
                     preventDestroy: true,
                 });
             }

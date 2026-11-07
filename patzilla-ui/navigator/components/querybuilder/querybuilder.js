@@ -1731,7 +1731,7 @@ navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, 'application:init', function() {
         this.queryBuilderView = new QueryBuilderView({});
-        this.queryBuilderRegion.show(this.queryBuilderView);
+        this.mainView.showChildView('queryBuilderRegion', this.queryBuilderView);
     });
 
     // Special bootstrap handling for numberlist=EP666666,EP666667:
