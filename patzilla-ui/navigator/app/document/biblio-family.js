@@ -8,7 +8,7 @@ import {QueryLinkMixin} from "patzilla.access.util";
 import {OpsBaseModel} from "patzilla.access.epo.ops.base";
 import {OpsBaseViewMixin,TemplateHelperMixin,TemplateDataContextMixin} from "patzilla.navigator.app.document/util";
 
-const OpsFamilyVerboseMemberView = Marionette.ItemView.extend({
+const OpsFamilyVerboseMemberView = Marionette.View.extend({
 
     template: require('./biblio-family-verbose-member.html'),
     tagName: 'tr',
@@ -33,7 +33,7 @@ export const OpsFamilyVerboseCollectionView = Marionette.CompositeView.extend({
 _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
 
 
-const OpsFamilyCompactMemberView = Marionette.ItemView.extend({
+const OpsFamilyCompactMemberView = Marionette.View.extend({
 
     template: require('./biblio-family-compact-member.html'),
     tagName: 'tr',
@@ -64,12 +64,12 @@ export const OpsFamilyCompactCollectionView = Marionette.CompositeView.extend({
         OpsBaseViewMixin.bind_same_citations_links(this.$el);
     },
 
-    templateHelpers: function() {
+    templateContext: function() {
 
         // implement interface required for reusing #ops-citations-environment-button-template
         return {
 
-            // If your template needs access to the collection, you'll need to pass it via templateHelpers
+            // If your template needs access to the collection, you'll need to pass it via templateContext
             // https://github.com/marionettejs/Marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
             items: this.collection.toJSON(),
 
@@ -97,12 +97,12 @@ export const OpsFamilyCompactCollectionView = Marionette.CompositeView.extend({
 _.extend(OpsFamilyCompactCollectionView.prototype, TemplateDataContextMixin);
 
 
-const OpsFamilyCitationsMemberView = Marionette.ItemView.extend({
+const OpsFamilyCitationsMemberView = Marionette.View.extend({
 
     template: require('./biblio-family-citations-member.html'),
     tagName: 'tr',
 
-    templateHelpers: function() {
+    templateContext: function() {
 
         var funcs = {};
         // TODO: Review the reference to OpsBaseModel. Could this be refactored somehow?
@@ -166,13 +166,13 @@ export const OpsFamilyCitationsCollectionView = Marionette.CompositeView.extend(
         OpsBaseViewMixin.bind_same_citations_links(this.$el);
     },
 
-    templateHelpers: function() {
+    templateContext: function() {
 
         // Implement interface required for reusing #ops-citations-environment-button-template
         var helpers = {};
         helpers = _.extend(helpers, {
 
-            // If your template needs access to the collection, you'll need to pass it via templateHelpers
+            // If your template needs access to the collection, you'll need to pass it via templateContext
             // https://github.com/marionettejs/Marionette/blob/master/docs/marionette.compositeview.md#composite-model-template
             items: this.collection.toJSON(),
 

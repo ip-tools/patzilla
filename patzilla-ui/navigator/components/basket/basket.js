@@ -588,14 +588,14 @@ const BasketEntryModel = Backbone.RelationalModel.extend({
 Backbone.Relational.store.addModelScope({BasketModel: BasketModel, BasketEntryModel: BasketEntryModel});
 
 
-export const BasketView = Marionette.ItemView.extend({
+export const BasketView = Marionette.View.extend({
 
     template: require('./basket.html'),
 
     initialize: function() {
         //console.log('BasketView.initialize');
         this.listenTo(this.model, "change", this.render);
-        this.templateHelpers.config = navigatorApp.config;
+        this.templateContext.config = navigatorApp.options.config;
     },
 
     // For GUI setup, it was suggested to use `onDomRefresh` instead of the `render` event.
@@ -603,7 +603,7 @@ export const BasketView = Marionette.ItemView.extend({
         this.setup_ui();
     },
 
-    templateHelpers: {},
+    templateContext: {},
 
     serializeData: function() {
 

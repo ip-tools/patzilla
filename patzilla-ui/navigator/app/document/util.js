@@ -83,7 +83,7 @@ export const OpsBaseViewMixin = {
 
 export const TemplateHelperMixin = {
 
-    templateHelpers: function() {
+    templateContext: function() {
         var _this = this;
         var funcs = {
 
@@ -110,7 +110,7 @@ export const TemplateHelperMixin = {
 
 export const TemplateDataContextMixin = {
 
-    // Namespace template variables to "data", also accounting for "templateHelpers".
+    // Namespace template variables to "data", also accounting for "templateContext".
     serializeData: function() {
 
         var data;
@@ -122,7 +122,7 @@ export const TemplateDataContextMixin = {
             data = {};
         }
 
-        var helpers = this.templateHelpers();
+        var helpers = this.templateContext();
         _.extend(data, helpers);
 
         var tpldata = {data: data};

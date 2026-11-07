@@ -11,7 +11,7 @@ require('select2/dist/js/select2.js');
 require('select2/dist/css/select2.css');
 require('jquery-caret-plugin/dist/jquery.caret');
 
-const QueryBuilderView = Marionette.ItemView.extend({
+const QueryBuilderView = Marionette.View.extend({
 
     template: require('./querybuilder.html'),
 
@@ -19,12 +19,12 @@ const QueryBuilderView = Marionette.ItemView.extend({
         console.log('QueryBuilderView.initialize');
         //this.listenTo(this.model, "change", this.render);
         //this.listenTo(this, "render", this.setup_ui);
-        this.config = this.templateHelpers.config = navigatorApp.config;
+        this.config = this.templateContext.config = navigatorApp.options.config;
         //this.setup_ui();
         this.radios = new RadioPlus();
     },
 
-    templateHelpers: {},
+    templateContext: {},
 
     onDomRefresh: function() {
         console.log('QueryBuilderView.onDomRefresh');
