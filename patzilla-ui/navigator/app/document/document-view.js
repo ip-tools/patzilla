@@ -91,7 +91,7 @@ export const OpsExchangeDocumentView = Marionette.View.extend({
         }
 
         // Apply different display flavor at runtime: More verbose labels for INID codes
-        var verbose_labels = navigatorApp.theme.get('feature.inid-verbose.enabled');
+        var verbose_labels = navigatorApp.options.theme.get('feature.inid-verbose.enabled');
         if (verbose_labels) {
             this.enable_verbose_labels();
         }

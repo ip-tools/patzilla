@@ -81,8 +81,8 @@ export const BasketModel = Backbone.RelationalModel.extend({
 
         var _this = this;
 
-        var numberlist = navigatorApp.config.get('numberlist');
-        var context = navigatorApp.config.get('context');
+        var numberlist = navigatorApp.options.config.get('numberlist');
+        var context = navigatorApp.options.config.get('context');
 
         // Debugging
         //log('numberlist:', numberlist);
@@ -635,7 +635,7 @@ export const BasketView = Marionette.View.extend({
 
 
         // only enable submit button, if ship url is given
-        var ship_url = navigatorApp.config.get('ship-url');
+        var ship_url = navigatorApp.options.config.get('ship-url');
         if (ship_url) {
             $('#basket-submit-button').show().parent().addClass('btn-group');
         } else {
@@ -1071,7 +1071,7 @@ navigatorApp.on("before:start", function(options) {
     // This activates the review after both the application
     // and the basket signal readyness.
     this.listenTo(this, 'application:ready', function() {
-        if (this.config.get('datasource') == 'review') {
+        if (this.options.config.get('datasource') === 'review') {
             this.listenToOnce(this, 'basket:activated', function(basket) {
                 $.when(basket.init_from_query()).then(function() {
                     basket.review();

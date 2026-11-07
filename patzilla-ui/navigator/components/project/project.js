@@ -531,7 +531,7 @@ export const ProjectChooserView = Marionette.View.extend({
         delete_button.off('click');
         delete_button.on('click', function(e) {
 
-            var projectname = navigatorApp.config.get('project');
+            var projectname = navigatorApp.options.config.get('project');
             navigatorApp.ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
 
                 _this.model.destroy({success: function() {
@@ -553,8 +553,8 @@ export const ProjectChooserView = Marionette.View.extend({
                         navigatorApp.basketModel.destroy();
                         delete navigatorApp.basketModel;
 
-                        var projectname = navigatorApp.config._originalAttributes.project;
-                        navigatorApp.config.set('project', projectname);
+                        var projectname = navigatorApp.options.config._originalAttributes.project;
+                        navigatorApp.options.config.set('project', projectname);
 
                         navigatorApp.trigger('projects:initialize');
 
@@ -812,7 +812,7 @@ navigatorApp.on("before:start", function(options) {
 
         // use project name from config (propagated from current url)
         if (!projectname) {
-            projectname = this.config.get('project');
+            projectname = this.options.config.get('project');
         }
         // use default project name
         /*
