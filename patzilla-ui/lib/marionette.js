@@ -68,7 +68,7 @@ export const ModalRegion = Marionette.Region.extend({
         this.$el.toggleClass('fade', true);
     },
 
-    onShow: function() {
+    onRender: function() {
         this.$el.modal('show');
     },
 
@@ -83,9 +83,7 @@ export const ModalRegion = Marionette.Region.extend({
 (function () {
 
   Marionette.Controller.extendEach     =
-    Marionette.View.extendEach         =
-    Marionette.ItemView.extendEach     =
-    Marionette.LayoutView.extendEach   = Backbone.Model.extendEach;
+    Marionette.View.extendEach         = Backbone.Model.extendEach;
 
 })();
 

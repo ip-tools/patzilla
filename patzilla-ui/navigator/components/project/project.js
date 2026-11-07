@@ -382,7 +382,7 @@ const ProjectCollection = Backbone.Collection.extend({
 });
 
 
-export const ProjectChooserView = Marionette.ItemView.extend({
+export const ProjectChooserView = Marionette.View.extend({
 
     template: require('./project.html'),
 
@@ -402,7 +402,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             log('ProjectChooserView: Skip rendering');
             return;
         }
-        return Marionette.ItemView.prototype.render.call(this);
+        return Marionette.View.prototype.render.call(this);
     },
 
     onDomRefresh: function() {

@@ -16,7 +16,7 @@ import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 import {xhr_decode_error} from "patzilla.lib.util";
 
 
-const UiController = Marionette.ItemView.extend({
+const UiController = Marionette.View.extend({
 
     initialize: function() {
         log('UiController.initialize');
