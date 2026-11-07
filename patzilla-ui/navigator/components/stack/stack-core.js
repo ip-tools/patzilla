@@ -474,7 +474,7 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
         }
 
         // Create menu widget.
-        var opener_widget = event.view.$el;
+        var opener_widget = view.$el;
         this.menu_widget = new StackMenuWidget({
             collection: this.store,
             container: opener_widget.parent(),
