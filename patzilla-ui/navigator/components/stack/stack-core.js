@@ -201,7 +201,7 @@ const StackManager = NamedViewController.extend({
         this.view.showChildView('region_stack_checkbox', this.checkbox_widget);
     },
     close_checkbox: function() {
-        var region_stack_checkbox = this.view.region_stack_checkbox;
+        var region_stack_checkbox = this.view.getRegion('region_stack_checkbox');
         if (region_stack_checkbox) {
             region_stack_checkbox.empty();
         }
@@ -466,7 +466,7 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
         this.application.metadataView.getRegion('region_stack_opener').empty();
     },
 
-    open_menu: function(event) {
+    open_menu: function(view, event) {
 
         // Close menu widget before (re)opening, making this effectively a singleton.
         if (this.menu_widget) {

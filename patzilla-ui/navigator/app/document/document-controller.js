@@ -458,7 +458,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
             _this.indicate_activity(container, false);
 
             // indicate family acquistion failed
-            const FamilyFailedView = Marionette.ItemView.extend({
+            const FamilyFailedView = Marionette.View.extend({
                 render : function (){
                     this.$el.append('No family information available.');
                 }

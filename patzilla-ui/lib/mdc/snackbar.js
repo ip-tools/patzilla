@@ -10,7 +10,7 @@ import { DirectRenderMixin } from 'patzilla.lib.marionette';
 export class SnackbarWidget extends classes.many(Marionette.View, DirectRenderMixin) {
     /*
      * SnackbarWidget encapsulates the Snackbar Material Design Component (MDC)
-     * into a `Marionette.ItemView`.
+     * into a `Marionette.View`.
      *
      * https://material-components.github.io/material-components-web-catalog/#/component/snackbar
      *

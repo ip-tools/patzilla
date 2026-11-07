@@ -212,7 +212,7 @@ export const HotkeysPlugin = Marionette.Controller.extend({
         // Open help about hotkeys with "h"
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
-            var baseurl = _this.app.config.get('baseurl');
+            var baseurl = _this.app.options.config.get('baseurl');
             var url = urlJoin(baseurl, '/help#hotkeys');
             window.open(url);
         });

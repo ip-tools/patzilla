@@ -68,7 +68,7 @@ export const ModalRegion = Marionette.Region.extend({
         this.$el.toggleClass('fade', true);
     },
 
-    onRender: function() {
+    onShow: function() {
         this.$el.modal('show');
     },
 
@@ -145,7 +145,7 @@ export const DirectRenderMixin = {
         this.triggerMethod("item:before:render", this);
 
         var data = this.serializeData();
-        //data = this.mixinTemplateHelpers(data);
+        data = this.mixinTemplateContext(data);
 
         var template = this.getTemplate();
         var html = Marionette.Renderer.render(template, data);
