@@ -4,6 +4,8 @@ import os
 import json
 import string
 import logging
+from typing import cast
+
 import pandas
 import numpy
 import html2text
@@ -20,6 +22,8 @@ from json.encoder import JSONEncoder
 from tempfile import NamedTemporaryFile
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
+
+from odfdo.style_base import StyleBase
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError, HTTPNotFound
 from patzilla.access.generic.pdf import pdf_ziparchive_add
@@ -812,14 +816,14 @@ class DossierText(Dossier):
         #self.df_documents.dropna(subset=['document'], inplace=True)
         
         #Create style for the section : two columns
-        section_style =  Element.from_tag(
+        section_style = cast(StyleBase, Element.from_tag(
             (   '<style:style style:name="Sect1" style:family="section"><style:section-properties style:editable="false"><style:columns fo:column-count="2" fo:column-gap="0.497cm"><style:column style:rel-width="32767*" fo:start-indent="0cm" fo:end-indent="0.248cm"/><style:column style:rel-width="32768*" fo:start-indent="0.248cm" fo:end-indent="0cm"/></style:columns></style:section-properties></style:style>'
                 )
-            )
+            ))
             
         self.writer.insert_style(section_style, automatic=True)
         # Add page break before each new document
-        style_header = self.writer.get_style(family="paragraph", name_or_element="Heading_20_1")
+        style_header = cast(StyleBase, self.writer.get_style(family="paragraph", name_or_element="Heading_20_1"))
         style_header.set_properties(properties={
             "style:page-number":"auto",
             "fo:break-before":"page"},
@@ -829,15 +833,15 @@ class DossierText(Dossier):
             "fo:font-weight":"bold"},
             area="text")
         # Style for bibliographic properties
-        style_biblio = Element.from_tag(
+        style_biblio = cast(StyleBase, Element.from_tag(
             (   '<style:style style:name="Biblio" style:family="paragraph" style:parent-style-name="Text_20_body" style:master-page-name=""><style:paragraph-properties style:page-number="auto"/><style:text-properties fo:font-size="115%" fo:font-weight="bold"/></style:style>'
                 )
-            )
+            ))
         self.writer.insert_style(style_biblio)
-        style_horiz =  Element.from_tag(
+        style_horiz = cast(StyleBase, Element.from_tag(
             (   '<style:style style:name="Horizontal_20_Line" style:display-name="Horizontal Line" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="html" style:master-page-name=""><style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.2cm" style:contextual-spacing="false" style:page-number="auto" fo:padding="0.05cm" fo:border-left="none" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.74pt solid #000000" text:number-lines="false" text:line-number="0" style:join-border="false"/><style:text-properties fo:font-size="6pt" style:font-size-asian="6pt" style:font-size-complex="6pt"/></style:style>'
                 )
-            )
+            ))
         self.writer.insert_style(style_horiz)
         for document in self.data.collections.rated:
             self.writer.body.append(Header(1, document.number))
