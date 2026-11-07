@@ -177,8 +177,8 @@ const CommentManager = Marionette.Controller.extend({
         });
 
         // show views in regions
-        this.view.region_comment_button.show(this.comment_button);
-        this.view.region_comment_text.show(this.comment_text);
+        this.view.showChildView('region_comment_button', this.comment_button);
+        this.view.showChildView('region_comment_text', this.comment_text);
 
         // wire events
 

@@ -198,7 +198,7 @@ const StackManager = NamedViewController.extend({
         if (!this.checkbox_widget || this.checkbox_widget.isDestroyed) {
             this.checkbox_widget = this.create_checkbox();
         }
-        this.view.region_stack_checkbox.show(this.checkbox_widget);
+        this.view.showChildView('region_stack_checkbox', this.checkbox_widget);
     },
     close_checkbox: function() {
         var region_stack_checkbox = this.view.region_stack_checkbox;
@@ -458,12 +458,12 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
         opener_widget.listenTo(opener_widget, 'view:clicked', _.bind(this.open_menu, this));
 
         // Render and show the button in its designated region.
-        this.application.metadataView.region_stack_opener.show(opener_widget);
+        this.application.metadataView.showChildView('region_stack_opener', opener_widget);
     },
 
     close_opener: function() {
         // Close menu opener button by shutting down its region.
-        this.application.metadataView.region_stack_opener.empty();
+        this.application.metadataView.getRegion('region_stack_opener').empty();
     },
 
     open_menu: function(event) {

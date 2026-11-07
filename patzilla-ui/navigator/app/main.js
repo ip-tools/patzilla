@@ -35,7 +35,7 @@ _(window).extend(require('patzilla.navigator.util.patentnumbers'));
 const {propagate_opaque_errors} = require("patzilla.navigator.components.opaquelinks");
 const {NavigatorConfiguration, NavigatorTheme} = require("patzilla.navigator.app.config");
 const {NavigatorApp} = require("patzilla.navigator.app.application");
-const {LayoutView} = require("patzilla.navigator.app.layout/layout");
+const {MainView} = require("patzilla.navigator.app.layout/layout");
 const {ResultCollection} = require("patzilla.navigator.components.results-tabular/models");
 const {ResultCollectionView} = require("patzilla.navigator.components.results-tabular/views");
 
@@ -91,32 +91,26 @@ require('patzilla.access.depatisnet');
 require('patzilla.access.ificlaims');
 require('patzilla.access.sip');
 
-// Setup user interface regions
-navigatorApp.addRegions({
-    mainRegion: "#root-region",
-    queryBuilderRegion: "#querybuilder-region",
-    basketRegion: "#basket-region",
-    metadataRegion: "#ops-metadata-region",
-    listRegion: "#ops-collection-region",
-    paginationRegionTop: "#ops-pagination-region-top",
-    paginationRegionBottom: "#ops-pagination-region-bottom",
-});
 
-
-
-    this.listenToOnce(this, "application:init", function() {
-
-        //this.theme = new ApplicationTheme({config: navigatorConfiguration});
-        //log('this.applicationTheme:', this.applicationTheme);
-
-        this.layoutView = new LayoutView();
-        this.mainRegion.show(this.layoutView);
 // Main application user interface and regions.
 navigatorApp.on("before:start", function(options) {
 
-    });
+    //this.theme = new ApplicationTheme({config: navigatorConfiguration});
+    //log('this.applicationTheme:', this.applicationTheme);
 
+    this.mainView = new MainView();
+    this.mainView.addRegions({
+        mainRegion: "#root-region",
+        queryBuilderRegion: "#querybuilder-region",
+        basketRegion: "#basket-region",
+        metadataRegion: "#ops-metadata-region",
+        listRegion: "#ops-collection-region",
+        paginationRegionTop: "#ops-pagination-region-top",
+        paginationRegionBottom: "#ops-pagination-region-bottom",
+    });
+    this.showView(this.mainView);
 });
+
 
 // Universal helpers
 navigatorApp.on("before:start", function(options) {
@@ -174,9 +168,9 @@ navigatorApp.on("before:start", function(options) {
         });
 
         // bind view objects to region objects
-        this.metadataRegion.show(this.metadataView);
-        this.paginationRegionTop.show(this.paginationViewTop);
-        this.paginationRegionBottom.show(this.paginationViewBottom);
+        this.mainView.showChildView('metadataRegion', this.metadataView);
+        this.mainView.showChildView('paginationRegionTop', this.paginationViewTop);
+        this.mainView.showChildView('paginationRegionBottom', this.paginationViewBottom);
 
     });
 
@@ -207,7 +201,7 @@ navigatorApp.on("before:start", function(options) {
         this.bootstrap_datasource();
 
         // Activate regular list region right now to avoid double rendering on initial page load.
-        this.listRegion.show(this.collectionView);
+        this.mainView.showChildView('listRegion', this.collectionView);
 
         // Hide pagination- and metadata-area to start from scratch.
         this.ui.reset_content();
@@ -235,8 +229,8 @@ navigatorApp.on("before:start", function(options) {
 
         // show documents (ops results) in collection view
         // explicitly switch list region to OPS collection view
-        if (this.listRegion.currentView !== this.collectionView) {
-            this.listRegion.show(this.collectionView, {
+        if (this.getRegion('listRegion').currentView !== this.collectionView) {
+            this.mainView.showChildView('listRegion', this.collectionView, {
                 preventDestroy: true,
             });
         }
