@@ -496,7 +496,7 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
 // Setup plugin
 navigatorApp.on("before:start", function(options) {
 
-    var stack_enabled = navigatorApp.theme.get('feature.stack.enabled');
+    var stack_enabled = navigatorApp.options.theme.get('feature.stack.enabled');
 
     // Skip starting the stack subsystem.
     if (!stack_enabled) { return; }

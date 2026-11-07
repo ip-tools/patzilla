@@ -22,8 +22,8 @@ export const MainView = Marionette.View.extend({
         log("MainView::onRender");
 
         // Select between regular vs. vendor-specific header and content variants
-        var header_layout = navigatorApp.theme.get('ui.header_layout');
-        var content_layout = navigatorApp.theme.get('ui.content_layout');
+        var header_layout = navigatorApp.options.theme.get('ui.header_layout');
+        var content_layout = navigatorApp.options.theme.get('ui.content_layout');
 
         if (header_layout == 'wide') {
             this.header.show(new WideHeaderView());
@@ -112,8 +112,8 @@ const HeaderView = Marionette.View.extend({
 
     templateContext: function() {
         return {
-            config: navigatorApp.config.attributes,
-            theme: navigatorApp.theme.attributes,
+            config: navigatorApp.options.config.attributes,
+            theme: navigatorApp.options.theme.attributes,
         };
     },
 
@@ -150,8 +150,8 @@ const WideHeaderView = Marionette.View.extend({
 
     templateContext: function() {
         return {
-            config: navigatorApp.config.attributes,
-            theme: navigatorApp.theme.attributes,
+            config: navigatorApp.options.config.attributes,
+            theme: navigatorApp.options.theme.attributes,
         };
     },
 
@@ -177,8 +177,8 @@ const FooterView = Marionette.View.extend({
 
     templateContext: function() {
         return {
-            config: navigatorApp.config.attributes,
-            theme: navigatorApp.theme.attributes,
+            config: navigatorApp.options.config.attributes,
+            theme: navigatorApp.options.theme.attributes,
         };
     },
 

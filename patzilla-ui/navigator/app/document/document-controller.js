@@ -30,7 +30,7 @@ const DocumentBaseController = Marionette.Controller.extend({
         // ------------------------------------------
         //   print mode
         // ------------------------------------------
-        var MODE_PRINT = navigatorApp.config.get('mode') == 'print';
+        var MODE_PRINT = navigatorApp.options.config.get('mode') == 'print';
         if (MODE_PRINT) {
             return;
         }
@@ -241,8 +241,8 @@ const DocumentDetailsController = Marionette.Controller.extend({
         // Resolve effective fulltext datasource by country in order of definition
         var datasource_name;
         var country = document.get('@country');
-        _.find(navigatorApp.config.get('system').datasources, function(name) {
-            var datasource_info = navigatorApp.config.get('system').datasource[name];
+        _.find(navigatorApp.options.config.get('system').datasources, function(name) {
+            var datasource_info = navigatorApp.options.config.get('system').datasource[name];
             if (datasource_info.fulltext_enabled && _.contains(datasource_info.fulltext_countries, country)) {
                 datasource_name = name;
                 return true;

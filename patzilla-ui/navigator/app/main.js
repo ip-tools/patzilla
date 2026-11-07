@@ -258,7 +258,7 @@ navigatorApp.on("before:start", function(options) {
     this.listenToOnce(this, "application:ready", function() {
 
         // Propagate search modifiers from query parameters to search engine metadata
-        var modifiers = this.config.get('modifiers');
+        var modifiers = this.options.config.get('modifiers');
         this.metadata.apply_modifiers(modifiers);
 
         // Propagate search modifiers from search engine metadata to user interface

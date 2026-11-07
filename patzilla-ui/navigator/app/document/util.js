@@ -31,10 +31,10 @@ export const OpsBaseViewMixin = {
             params['datasource'] = 'ops';
 
             // debugging
-            //navigatorApp.config.set('isviewer', true);
+            //navigatorApp.options.config.set('isviewer', true);
 
             // When in liveview mode, scrumble database query and viewstate parameters into opaque parameter token
-            if (navigatorApp.config.get('isviewer')) {
+            if (navigatorApp.options.config.get('isviewer')) {
 
                 event.preventDefault();
                 event.stopPropagation();
@@ -88,7 +88,7 @@ export const TemplateHelperMixin = {
         var funcs = {
 
             // Propagate configuration object to template
-            config: navigatorApp.config,
+            config: navigatorApp.options.config,
 
             get_linkmaker: function() {
                 return new LinkMaker(_this.model);

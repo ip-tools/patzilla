@@ -241,7 +241,7 @@ export const HotkeysPlugin = Marionette.Controller.extend({
         });
 
         // Generic data source selector
-        _.each(navigatorApp.config.get('datasources_enabled'), function(datasource) {
+        _.each(navigatorApp.options.config.get('datasources_enabled'), function(datasource) {
 
             var datasource_info = navigatorApp.datasource_info(datasource);
             if (!datasource_info) return;
@@ -259,7 +259,7 @@ export const HotkeysPlugin = Marionette.Controller.extend({
         });
 
         // TODO: Remove or integrate into generic data source selector
-        if (navigatorApp.config.get('google_enabled')) {
+        if (navigatorApp.options.config.get('google_enabled')) {
             $(selector).on('keydown', null, 'ctrl+shift+g', function(event) {
                 var google_button = $('#datasource button[data-value="google"]');
                 google_button.show();

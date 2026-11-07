@@ -58,7 +58,7 @@ const PermalinkPlugin = Marionette.Controller.extend({
         // See also config.js:history_pushstate
 
         // Add baseline parameters
-        var config = navigatorApp.config;
+        var config = navigatorApp.options.config;
         var state = {
             mode: config.get('mode'),
             context: config.get('context'),
@@ -95,7 +95,7 @@ const PermalinkPlugin = Marionette.Controller.extend({
     // build an url to self
     // TODO: refactor this elsewhere, e.g. some UrlBuilder?
     make_uri: function(params) {
-        var baseurl = navigatorApp.config.get('baseurl');
+        var baseurl = navigatorApp.options.config.get('baseurl');
         var permalink = baseurl + '?' + jQuery.param(this.query_parameters(params));
         return permalink;
     },
@@ -119,15 +119,15 @@ const PermalinkPlugin = Marionette.Controller.extend({
 
     // TODO: Refactor to LinkMaker
     get_baseurl_patentview: function() {
-        //log('config:', navigatorApp.config);
-        var baseurl = navigatorApp.config.get('baseurl');
+        //log('config:', navigatorApp.options.config);
+        var baseurl = navigatorApp.options.config.get('baseurl');
 
         // When generating review-in-liveview-with-ttl links on the main patentsearch
         // domain like "patentsearch.example.org" or "navigator.example.org",
         // let's view them on another view-only domain like
         // "patentview.example.org" or "viewer.example.org".
         // Otherwise, fall back to "patentview.ip-tools.io".
-        var host = navigatorApp.config.get('request.host');
+        var host = navigatorApp.options.config.get('request.host');
         if (_.string.contains(host, 'patentsearch')) {
             baseurl = baseurl.replace('patentsearch', 'patentview');
         } else if (_.string.contains(host, 'navigator')) {
@@ -244,7 +244,7 @@ const PermalinkPlugin = Marionette.Controller.extend({
 
         // TODO: what about propagating the "context"?
         var projectname = navigatorApp.project.get('name');
-        // TODO: use in future: var projectname = navigatorApp.config.get('project');
+        // TODO: use in future: var projectname = navigatorApp.options.config.get('project');
 
         var params = {
             mode: 'liveview',

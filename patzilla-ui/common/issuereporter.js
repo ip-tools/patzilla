@@ -153,7 +153,7 @@ const IssueReport = Backbone.Model.extend({
         this.get('meta').timestamp       = (new Date()).toISOString();
 
         // TODO: Decouple from navigatorApp
-        this.get('application').config   = navigatorApp.config && navigatorApp.config.toJSON() || {};
+        this.get('application').config   = navigatorApp.options.config && navigatorApp.options.config.toJSON() || {};
         this.get('application').metadata = navigatorApp.metadata && navigatorApp.metadata.toJSON() || {};
 
     },

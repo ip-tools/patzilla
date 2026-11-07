@@ -32,7 +32,7 @@ export const PaginationView = Marionette.View.extend({
         return '#ops-pagination-template';
 
         // v1: use specific pager component
-        if (navigatorApp.config.get('mode') == 'liveview') {
+        if (navigatorApp.options.config.get('mode') == 'liveview') {
             return '#ops-pagination-template-liveview';
         } else if (this.model.get('searchmode') == 'subsearch') {
             return '#ops-pagination-template';

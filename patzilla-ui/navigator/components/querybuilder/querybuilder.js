@@ -303,11 +303,11 @@ const QueryBuilderView = Marionette.View.extend({
         $('#datasource label').hide();
 
         // Acquire vendor settings.
-        var vendor = navigatorApp.config.get('vendor');
+        var vendor = navigatorApp.options.config.get('vendor');
 
         // Compute data sources the user is allowed to see.
         if (_.isEmpty(whitelist)) {
-            whitelist = navigatorApp.config.get('datasources_enabled');
+            whitelist = navigatorApp.options.config.get('datasources_enabled');
         }
 
         // Display buttons for switching to different data sources.
@@ -320,7 +320,7 @@ const QueryBuilderView = Marionette.View.extend({
     },
 
     get_datasource_button: function(datasource) {
-        var vendor = navigatorApp.config.get('vendor');
+        var vendor = navigatorApp.options.config.get('vendor');
 
         // Handle vendor-provided data source button element.
         var element = $("#datasource > label[data-value='" + datasource + "'][data-vendor='" + vendor + "']");
@@ -338,7 +338,7 @@ const QueryBuilderView = Marionette.View.extend({
     // Hide query textarea for some data sources, if not in debug mode
     setup_ui_query_textarea: function() {
 
-        if (navigatorApp.config.get('debug')) {
+        if (navigatorApp.options.config.get('debug')) {
             return;
         }
 
@@ -1454,7 +1454,7 @@ const QueryBuilderView = Marionette.View.extend({
             format: flavor,
             datasource: datasource,
             modifiers: modifiers,
-            //query: navigatorApp.config.get('query'),
+            //query: navigatorApp.options.config.get('query'),
         };
 
         if (sorting) {
@@ -1736,7 +1736,7 @@ navigatorApp.on("before:start", function(options) {
 
     // Special bootstrap handling for numberlist=EP666666,EP666667:
     this.listenTo(this, 'application:ready', function() {
-        var numberlist_raw = this.config.get('numberlist');
+        var numberlist_raw = this.options.config.get('numberlist');
         if (numberlist_raw) {
             var numberlist = decodeURIComponent(numberlist_raw);
             this.queryBuilderView.set_numberlist(numberlist);
