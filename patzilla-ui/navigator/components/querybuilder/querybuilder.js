@@ -1727,7 +1727,7 @@ function select2_reset(element) {
 }
 
 // setup component
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, 'application:init', function() {
         this.queryBuilderView = new QueryBuilderView({});

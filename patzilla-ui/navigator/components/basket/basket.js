@@ -1062,7 +1062,7 @@ const RatingController = Marionette.Controller.extend({
 });
 
 // setup component
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.basketController = new BasketController();
     this.rating = new RatingController();

@@ -294,7 +294,7 @@ export const HotkeysPlugin = Marionette.Controller.extend({
 });
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.hotkeys = new HotkeysPlugin({app: this});
 
     this.listenTo(this, 'application:ready', function() {

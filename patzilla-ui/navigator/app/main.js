@@ -103,8 +103,6 @@ navigatorApp.addRegions({
 });
 
 
-// Main application user interface
-navigatorApp.addInitializer(function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 
@@ -113,13 +111,15 @@ navigatorApp.addInitializer(function(options) {
 
         this.layoutView = new LayoutView();
         this.mainRegion.show(this.layoutView);
+// Main application user interface and regions.
+navigatorApp.on("before:start", function(options) {
 
     });
 
 });
 
 // Universal helpers
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.issues = new IssueReporterGui();
     this.listenTo(this, 'application:ready', function() {
         this.issues.setup_ui();
@@ -131,7 +131,7 @@ navigatorApp.addInitializer(function(options) {
 
 
 // Initialize models
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // Application domain model objects
     this.search = new OpsPublishedDataSearch();
@@ -150,7 +150,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 // Initialize views
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 
@@ -183,7 +183,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 // activate anonymous basket (non-persistent/project-associated)
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     // remark: the model instance created here will get overwritten later
     //         by a project-specific basket when activating a project
     // reason: we still do it here for the case we decide to deactivate the project
@@ -194,7 +194,7 @@ navigatorApp.addInitializer(function(options) {
 
 
 // Main component event wiring
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // Application core, first stage boot process
     this.listenToOnce(this, 'application:boot', function() {
@@ -247,7 +247,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 // Kick off the search process triggered from query parameters
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // V1: Kick off search after basket machinery has been loaded
     // V2: Kick off search regardless to make it work without storage et al.

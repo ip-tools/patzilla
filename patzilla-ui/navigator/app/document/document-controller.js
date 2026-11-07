@@ -749,7 +749,7 @@ const PdfPanelController = Marionette.Controller.extend({
 
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.document_base = new DocumentBaseController();
     this.document_details = new DocumentDetailsController();
     this.document_carousel = new DocumentCarouselController();

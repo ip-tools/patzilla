@@ -381,7 +381,7 @@ const StoragePlugin = Marionette.Controller.extend({
 
 
 // Data storage components
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     var _this = this;
 
@@ -420,7 +420,7 @@ navigatorApp.addInitializer(function(options) {
 
 });
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.storage = new StoragePlugin();
 

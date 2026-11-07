@@ -419,7 +419,7 @@ export const ExportPlugin = Backbone.Model.extend({
 
 });
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.exporter = new ExportPlugin();
     this.register_component('export');

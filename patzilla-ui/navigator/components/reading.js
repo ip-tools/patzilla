@@ -78,7 +78,7 @@ const ReadingController = Marionette.Controller.extend({
 });
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.reading = new ReadingController();
     this.listenTo(this, 'results:ready', function() {
         this.reading.setup_ui();

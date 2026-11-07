@@ -765,7 +765,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
 });
 
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     var _this = this;
 

@@ -42,7 +42,7 @@ require('patzilla.navigator.components.waypoints');
 require('patzilla.navigator.components.stack');
 
 // Bootstrap the application after registering all components
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.listenToOnce(this, 'application:init', function() {
         this.trigger('application:boot');
     });

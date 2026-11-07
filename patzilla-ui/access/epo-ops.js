@@ -347,7 +347,7 @@ const OpsPublishedDataCrawler = DatasourceCrawler.extend({
 });
 
 // Register data source adapter with application
-window.navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.register_datasource('ops', {
 
         // The title used when referencing this data source to the user
