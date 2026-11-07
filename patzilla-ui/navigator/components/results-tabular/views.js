@@ -4,15 +4,15 @@
 
 import Marionette from 'backbone.marionette';
 
-export const ResultItemView = Marionette.ItemView.extend({
+export const ResultItemView = Marionette.View.extend({
 
     tagName: 'div',
     className: 'row',
 
-    // make additional data available in templateHelpers
     // https://stackoverflow.com/questions/12058610/backbone-marionette-templatehelpers-and-itemviewoptions/12065756#12065756
+    // make additional data available in templateContext
     serializeData: function() {
-        var data = Marionette.ItemView.prototype.serializeData.apply(this, arguments);
+        var data = Marionette.View.prototype.serializeData.apply(this, arguments);
         // indicate whether result hit is missing in ops view collection
         if (!_(this.model.collection.reference_document_numbers).contains(this.model.get('publication_number')) ||
             _(this.model.collection.placeholder_document_numbers).contains(this.model.get('publication_number'))) {

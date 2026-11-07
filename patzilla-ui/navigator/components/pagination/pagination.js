@@ -8,7 +8,7 @@ import Marionette from 'backbone.marionette';
 require('jq-pagination/js/jquery.jqpagination.js');
 require('jq-pagination/css/jqpagination.css');
 
-export const PaginationView = Marionette.ItemView.extend({
+export const PaginationView = Marionette.View.extend({
     tagName: 'div',
     //template: _.template($('#ops-pagination-template').html(), this.model),
     template: require('./pagination.html'),
@@ -17,11 +17,11 @@ export const PaginationView = Marionette.ItemView.extend({
         console.log('PaginationView.initialize');
         this.listenTo(this.model, "commit", this.render);
         this.listenTo(this, "render", this.setup_ui);
-        this.templateHelpers.config = navigatorApp.config;
+        this.templateContext.config = navigatorApp.options.config;
         this.bottom_pager = options.bottom_pager;
     },
 
-    templateHelpers: {},
+    templateContext: {},
 
     /*
     // Change Which Template Is Rendered For A View
@@ -32,7 +32,7 @@ export const PaginationView = Marionette.ItemView.extend({
         return '#ops-pagination-template';
 
         // v1: use specific pager component
-        if (navigatorApp.config.get('mode') == 'liveview') {
+        if (navigatorApp.options.config.get('mode') == 'liveview') {
             return '#ops-pagination-template-liveview';
         } else if (this.model.get('searchmode') == 'subsearch') {
             return '#ops-pagination-template';

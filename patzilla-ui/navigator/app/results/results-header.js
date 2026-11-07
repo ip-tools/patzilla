@@ -8,7 +8,7 @@ import Marionette from 'backbone.marionette';
 //import {MDCRipple} from '@material/ripple';
 const ripple = require('@material/ripple');
 
-export const MetadataView = Marionette.LayoutView.extend({
+export const MetadataView = Marionette.View.extend({
     tagName: "div",
     template: require('./results-header.html'),
 
@@ -16,19 +16,19 @@ export const MetadataView = Marionette.LayoutView.extend({
         region_stack_opener: '#region-stack-opener',
     },
 
-    templateHelpers: {},
+    templateContext: {},
 
     initialize: function() {
         log('MetadataView::initialize');
-        this.templateHelpers.config = navigatorApp.config;
+        this.templateContext.config = navigatorApp.options.config;
         this.listenTo(this.model, "change", this.render);
         this.listenTo(this, "render", this.setup_ui);
     },
 
-    // Namespace template variables to "data", also accounting for "templateHelpers".
+    // Namespace template variables to "data", also accounting for "templateContext".
     serializeData: function() {
         var data = _.clone(this.model.attributes);
-        _.extend(data, this.templateHelpers);
+        _.extend(data, this.templateContext);
         return {data: data};
     },
 
@@ -41,13 +41,13 @@ export const MetadataView = Marionette.LayoutView.extend({
             // e.relatedTarget // previous tab
 
             var list_type = $(this).data('list-type');
-            if (list_type == 'ops') {
-                navigatorApp.listRegion.show(navigatorApp.collectionView, {
+            if (list_type === 'ops') {
+                navigatorApp.mainView.showChildView('listRegion', navigatorApp.collectionView, {
                     preventDestroy: true,
                 });
 
-            } else if (list_type == 'upstream') {
-                navigatorApp.listRegion.show(navigatorApp.resultView, {
+            } else if (list_type === 'upstream') {
+                navigatorApp.mainView.showChildView('listRegion', navigatorApp.resultView, {
                     preventDestroy: true,
                 });
             }

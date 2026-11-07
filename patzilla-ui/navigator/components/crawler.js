@@ -91,7 +91,7 @@ const ResultNumbersView = GenericResultView.extend({
 });
 
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenTo(this, 'metadataview:setup_ui', function() {
         var _this = this;

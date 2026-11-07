@@ -198,10 +198,10 @@ const StackManager = NamedViewController.extend({
         if (!this.checkbox_widget || this.checkbox_widget.isDestroyed) {
             this.checkbox_widget = this.create_checkbox();
         }
-        this.view.region_stack_checkbox.show(this.checkbox_widget);
+        this.view.showChildView('region_stack_checkbox', this.checkbox_widget);
     },
     close_checkbox: function() {
-        var region_stack_checkbox = this.view.region_stack_checkbox;
+        var region_stack_checkbox = this.view.getRegion('region_stack_checkbox');
         if (region_stack_checkbox) {
             region_stack_checkbox.empty();
         }
@@ -458,15 +458,15 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
         opener_widget.listenTo(opener_widget, 'view:clicked', _.bind(this.open_menu, this));
 
         // Render and show the button in its designated region.
-        this.application.metadataView.region_stack_opener.show(opener_widget);
+        this.application.metadataView.showChildView('region_stack_opener', opener_widget);
     },
 
     close_opener: function() {
         // Close menu opener button by shutting down its region.
-        this.application.metadataView.region_stack_opener.empty();
+        this.application.metadataView.getRegion('region_stack_opener').empty();
     },
 
-    open_menu: function(event) {
+    open_menu: function(view, event) {
 
         // Close menu widget before (re)opening, making this effectively a singleton.
         if (this.menu_widget) {
@@ -474,7 +474,7 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
         }
 
         // Create menu widget.
-        var opener_widget = event.view.$el;
+        var opener_widget = view.$el;
         this.menu_widget = new StackMenuWidget({
             collection: this.store,
             container: opener_widget.parent(),
@@ -494,9 +494,9 @@ const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
 
 
 // Setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
-    var stack_enabled = navigatorApp.theme.get('feature.stack.enabled');
+    var stack_enabled = navigatorApp.options.theme.get('feature.stack.enabled');
 
     // Skip starting the stack subsystem.
     if (!stack_enabled) { return; }

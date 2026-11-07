@@ -109,7 +109,7 @@ EmbeddingController = Marionette.Controller.extend({
 $(function() {
 
     console.info("Start application [embedded]");
-    navigatorApp.config.set('embedded', true);
+    navigatorApp.options.config.set('embedded', true);
 
     navigatorApp.addInitializer(function(options) {
 
@@ -128,10 +128,10 @@ $(function() {
     // Transfer some options to application before booting
     if (embed_options && embed_options.params) {
         if (embed_options.params.context) {
-            navigatorApp.config.set('context', embed_options.params.context);
+            navigatorApp.options.config.set('context', embed_options.params.context);
         }
         if (embed_options.params.mode) {
-            navigatorApp.config.set('mode', embed_options.params.mode);
+            navigatorApp.options.config.set('mode', embed_options.params.mode);
         }
     }
 

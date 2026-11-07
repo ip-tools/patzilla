@@ -11,7 +11,7 @@ require('select2/dist/js/select2.js');
 require('select2/dist/css/select2.css');
 require('jquery-caret-plugin/dist/jquery.caret');
 
-const QueryBuilderView = Marionette.ItemView.extend({
+const QueryBuilderView = Marionette.View.extend({
 
     template: require('./querybuilder.html'),
 
@@ -19,12 +19,12 @@ const QueryBuilderView = Marionette.ItemView.extend({
         console.log('QueryBuilderView.initialize');
         //this.listenTo(this.model, "change", this.render);
         //this.listenTo(this, "render", this.setup_ui);
-        this.config = this.templateHelpers.config = navigatorApp.config;
+        this.config = this.templateContext.config = navigatorApp.options.config;
         //this.setup_ui();
         this.radios = new RadioPlus();
     },
 
-    templateHelpers: {},
+    templateContext: {},
 
     onDomRefresh: function() {
         console.log('QueryBuilderView.onDomRefresh');
@@ -303,11 +303,11 @@ const QueryBuilderView = Marionette.ItemView.extend({
         $('#datasource label').hide();
 
         // Acquire vendor settings.
-        var vendor = navigatorApp.config.get('vendor');
+        var vendor = navigatorApp.options.config.get('vendor');
 
         // Compute data sources the user is allowed to see.
         if (_.isEmpty(whitelist)) {
-            whitelist = navigatorApp.config.get('datasources_enabled');
+            whitelist = navigatorApp.options.config.get('datasources_enabled');
         }
 
         // Display buttons for switching to different data sources.
@@ -320,7 +320,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
     },
 
     get_datasource_button: function(datasource) {
-        var vendor = navigatorApp.config.get('vendor');
+        var vendor = navigatorApp.options.config.get('vendor');
 
         // Handle vendor-provided data source button element.
         var element = $("#datasource > label[data-value='" + datasource + "'][data-vendor='" + vendor + "']");
@@ -338,7 +338,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
     // Hide query textarea for some data sources, if not in debug mode
     setup_ui_query_textarea: function() {
 
-        if (navigatorApp.config.get('debug')) {
+        if (navigatorApp.options.config.get('debug')) {
             return;
         }
 
@@ -1454,7 +1454,7 @@ const QueryBuilderView = Marionette.ItemView.extend({
             format: flavor,
             datasource: datasource,
             modifiers: modifiers,
-            //query: navigatorApp.config.get('query'),
+            //query: navigatorApp.options.config.get('query'),
         };
 
         if (sorting) {
@@ -1727,16 +1727,16 @@ function select2_reset(element) {
 }
 
 // setup component
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, 'application:init', function() {
         this.queryBuilderView = new QueryBuilderView({});
-        this.queryBuilderRegion.show(this.queryBuilderView);
+        this.mainView.showChildView('queryBuilderRegion', this.queryBuilderView);
     });
 
     // Special bootstrap handling for numberlist=EP666666,EP666667:
     this.listenTo(this, 'application:ready', function() {
-        var numberlist_raw = this.config.get('numberlist');
+        var numberlist_raw = this.options.config.get('numberlist');
         if (numberlist_raw) {
             var numberlist = decodeURIComponent(numberlist_raw);
             this.queryBuilderView.set_numberlist(numberlist);

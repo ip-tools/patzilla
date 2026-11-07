@@ -40,7 +40,7 @@ const KeywordMapCollection = Backbone.Collection.extend({
 });
 
 
-const KeywordEditorEntryView = Marionette.ItemView.extend({
+const KeywordEditorEntryView = Marionette.View.extend({
 
     tagName: "tr",
     template: require('./keyword-editor-item.html'),
@@ -49,7 +49,7 @@ const KeywordEditorEntryView = Marionette.ItemView.extend({
         //console.log('KeywordEditorEntryView.initialize');
     },
 
-    templateHelpers: {
+    templateContext: {
     },
 
     onDomRefresh: function() {
@@ -89,10 +89,10 @@ const KeywordEditorView = Marionette.CompositeView.extend({
         }});
     },
 
-    templateHelpers: {
+    templateContext: {
     },
 
-    onShow: function() {
+    onRender: function() {
 
         // Dialog no longer displays with bs3.
         this.$el.modal("show");
@@ -306,7 +306,7 @@ const KeywordsController = Marionette.Controller.extend({
 
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.keywords = new KeywordsController();
     this.listenTo(this, 'application:ready', function() {
         this.keywords.setup_ui();

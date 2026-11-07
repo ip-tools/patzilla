@@ -35,7 +35,7 @@ _(window).extend(require('patzilla.navigator.util.patentnumbers'));
 const {propagate_opaque_errors} = require("patzilla.navigator.components.opaquelinks");
 const {NavigatorConfiguration, NavigatorTheme} = require("patzilla.navigator.app.config");
 const {NavigatorApp} = require("patzilla.navigator.app.application");
-const {LayoutView} = require("patzilla.navigator.app.layout/layout");
+const {MainView} = require("patzilla.navigator.app.layout/layout");
 const {ResultCollection} = require("patzilla.navigator.components.results-tabular/models");
 const {ResultCollectionView} = require("patzilla.navigator.components.results-tabular/views");
 
@@ -91,35 +91,29 @@ require('patzilla.access.depatisnet');
 require('patzilla.access.ificlaims');
 require('patzilla.access.sip');
 
-// Setup user interface regions
-navigatorApp.addRegions({
-    mainRegion: "#root-region",
-    queryBuilderRegion: "#querybuilder-region",
-    basketRegion: "#basket-region",
-    metadataRegion: "#ops-metadata-region",
-    listRegion: "#ops-collection-region",
-    paginationRegionTop: "#ops-pagination-region-top",
-    paginationRegionBottom: "#ops-pagination-region-bottom",
-});
 
+// Main application user interface and regions.
+navigatorApp.on("before:start", function(options) {
 
-// Main application user interface
-navigatorApp.addInitializer(function(options) {
+    //this.theme = new ApplicationTheme({config: navigatorConfiguration});
+    //log('this.applicationTheme:', this.applicationTheme);
 
-    this.listenToOnce(this, "application:init", function() {
-
-        //this.theme = new ApplicationTheme({config: navigatorConfiguration});
-        //log('this.applicationTheme:', this.applicationTheme);
-
-        this.layoutView = new LayoutView();
-        this.mainRegion.show(this.layoutView);
-
+    this.mainView = new MainView();
+    this.mainView.addRegions({
+        mainRegion: "#root-region",
+        queryBuilderRegion: "#querybuilder-region",
+        basketRegion: "#basket-region",
+        metadataRegion: "#ops-metadata-region",
+        listRegion: "#ops-collection-region",
+        paginationRegionTop: "#ops-pagination-region-top",
+        paginationRegionBottom: "#ops-pagination-region-bottom",
     });
-
+    this.showView(this.mainView);
 });
+
 
 // Universal helpers
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.issues = new IssueReporterGui();
     this.listenTo(this, 'application:ready', function() {
         this.issues.setup_ui();
@@ -131,7 +125,7 @@ navigatorApp.addInitializer(function(options) {
 
 
 // Initialize models
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // Application domain model objects
     this.search = new OpsPublishedDataSearch();
@@ -150,7 +144,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 // Initialize views
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 
@@ -174,16 +168,16 @@ navigatorApp.addInitializer(function(options) {
         });
 
         // bind view objects to region objects
-        this.metadataRegion.show(this.metadataView);
-        this.paginationRegionTop.show(this.paginationViewTop);
-        this.paginationRegionBottom.show(this.paginationViewBottom);
+        this.mainView.showChildView('metadataRegion', this.metadataView);
+        this.mainView.showChildView('paginationRegionTop', this.paginationViewTop);
+        this.mainView.showChildView('paginationRegionBottom', this.paginationViewBottom);
 
     });
 
 });
 
 // activate anonymous basket (non-persistent/project-associated)
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     // remark: the model instance created here will get overwritten later
     //         by a project-specific basket when activating a project
     // reason: we still do it here for the case we decide to deactivate the project
@@ -194,7 +188,7 @@ navigatorApp.addInitializer(function(options) {
 
 
 // Main component event wiring
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // Application core, first stage boot process
     this.listenToOnce(this, 'application:boot', function() {
@@ -207,7 +201,7 @@ navigatorApp.addInitializer(function(options) {
         this.bootstrap_datasource();
 
         // Activate regular list region right now to avoid double rendering on initial page load.
-        this.listRegion.show(this.collectionView);
+        this.mainView.showChildView('listRegion', this.collectionView);
 
         // Hide pagination- and metadata-area to start from scratch.
         this.ui.reset_content();
@@ -235,8 +229,8 @@ navigatorApp.addInitializer(function(options) {
 
         // show documents (ops results) in collection view
         // explicitly switch list region to OPS collection view
-        if (this.listRegion.currentView !== this.collectionView) {
-            this.listRegion.show(this.collectionView, {
+        if (this.mainView.getRegion('listRegion').currentView !== this.collectionView) {
+            this.mainView.showChildView('listRegion', this.collectionView, {
                 preventDestroy: true,
             });
         }
@@ -247,7 +241,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 // Kick off the search process triggered from query parameters
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // V1: Kick off search after basket machinery has been loaded
     // V2: Kick off search regardless to make it work without storage et al.
@@ -258,7 +252,7 @@ navigatorApp.addInitializer(function(options) {
     this.listenToOnce(this, "application:ready", function() {
 
         // Propagate search modifiers from query parameters to search engine metadata
-        var modifiers = this.config.get('modifiers');
+        var modifiers = this.options.config.get('modifiers');
         this.metadata.apply_modifiers(modifiers);
 
         // Propagate search modifiers from search engine metadata to user interface

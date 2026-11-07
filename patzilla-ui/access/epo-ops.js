@@ -347,7 +347,7 @@ const OpsPublishedDataCrawler = DatasourceCrawler.extend({
 });
 
 // Register data source adapter with application
-window.navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.register_datasource('ops', {
 
         // The title used when referencing this data source to the user
@@ -387,7 +387,7 @@ _.extend(OpsExchangeDocument.prototype, OpsBaseModel.prototype, QueryLinkMixin.p
         initialize: function(options) {
             this.set('datasource', 'ops');
             // TODO: enhance this as soon as we're in AMD land
-            this.printmode = navigatorApp.config.get('mode') == 'print';
+            this.printmode = navigatorApp.options.config.get('mode') == 'print';
         },
 
         select: function() {
@@ -784,7 +784,7 @@ _.extend(OpsExchangeDocument.prototype, {
 
         _add_crossref: function(text) {
             text = text.replace(/^- /, '');
-            var printmode = navigatorApp.config.get('mode') == 'print';
+            var printmode = navigatorApp.options.config.get('mode') == 'print';
             if (printmode) {
                 return text;
             } else {
@@ -811,7 +811,7 @@ _.extend(OpsExchangeDocument.prototype, {
 
         has_fulltext: function() {
             // Compute whether fulltexts are available for this document
-            var countries_allowed = navigatorApp.config.get('system').total.fulltext_countries;
+            var countries_allowed = navigatorApp.options.config.get('system').total.fulltext_countries;
             return _(countries_allowed).contains(this['@country']);
         },
 

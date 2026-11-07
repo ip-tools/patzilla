@@ -6,7 +6,7 @@ const {SipResultView} = require("./views");
 const {SipSearch, SipResultEntry, SipCrawler} = require("./models");
 
 // Register data source adapter with application
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.register_datasource('sip', {
 
         // The title used when referencing this data source to the user

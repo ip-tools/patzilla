@@ -63,9 +63,9 @@ export function propagate_opaque_errors() {
 
     // TODO: Decouple from "navigatorApp" instance
 
-    var status = navigatorApp.config.get('opaque.meta.status');
+    var status = navigatorApp.options.config.get('opaque.meta.status');
     if (status == 'error') {
-        var errors = navigatorApp.config.get('opaque.meta.errors');
+        var errors = navigatorApp.options.config.get('opaque.meta.errors');
         _.each(errors, function(error) {
 
             if (error.location == 'JSON Web Token' && error.description == 'expired') {
@@ -77,7 +77,7 @@ export function propagate_opaque_errors() {
 
                 error.description = tpl({
                     expiration_date: error.jwt_expiry_iso,
-                    purchase_email: navigatorApp.theme.get('ui.email.purchase')});
+                    purchase_email: navigatorApp.options.theme.get('ui.email.purchase')});
             }
 
             if (error.location == 'JSON Web Signature') {

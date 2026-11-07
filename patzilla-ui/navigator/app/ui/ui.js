@@ -16,7 +16,7 @@ import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 import {xhr_decode_error} from "patzilla.lib.util";
 
 
-const UiController = Marionette.ItemView.extend({
+const UiController = Marionette.View.extend({
 
     initialize: function() {
         log('UiController.initialize');
@@ -39,17 +39,17 @@ const UiController = Marionette.ItemView.extend({
         this.setup_text_tools();
 
         // logout button
-        if (navigatorApp.config.get('mode') == 'liveview') {
+        if (navigatorApp.options.config.get('mode') == 'liveview') {
             $('.logout-button').hide();
         }
 
         // Switch query interface flavor to expert mode when receiving query via url
-        if (navigatorApp.config.get('query')) {
+        if (navigatorApp.options.config.get('query')) {
             navigatorApp.queryBuilderView.set_flavor('cql');
         }
 
         // Switch query interface flavor to expert mode when signalled through url parameter
-        if (navigatorApp.config.get('mode') == 'expert') {
+        if (navigatorApp.options.config.get('mode') == 'expert') {
             navigatorApp.queryBuilderView.set_flavor('cql');
         }
 
@@ -68,7 +68,7 @@ const UiController = Marionette.ItemView.extend({
         // Open help in modal dialog
 
         // Set help URLs before the links are used.
-        var baseurl = navigatorApp.config.get('baseurl');
+        var baseurl = navigatorApp.options.config.get('baseurl');
         $('.action-help-shortcuts').attr('href', urlJoin(baseurl, '/help#hotkeys'));
         $('.action-help-ificlaims').attr('href', urlJoin(baseurl, '/help#ificlaims'));
 
@@ -256,16 +256,16 @@ const UiController = Marionette.ItemView.extend({
 
     do_element_visibility: function() {
 
-        //log('do_element_visibility', navigatorApp.config);
+        //log('do_element_visibility', navigatorApp.options.config);
 
         // hide all navigational- and action-elements when in print mode
-        var MODE_PRINT = navigatorApp.config.get('mode') == 'print';
+        var MODE_PRINT = navigatorApp.options.config.get('mode') == 'print';
         if (MODE_PRINT) {
             $('.do-not-print').hide();
         }
 
         // hide all navigational- and action-elements when in view-only mode
-        var MODE_LIVEVIEW = navigatorApp.config.get('mode') == 'liveview';
+        var MODE_LIVEVIEW = navigatorApp.options.config.get('mode') == 'liveview';
         if (MODE_LIVEVIEW) {
             $('.non-liveview').hide();
         }
@@ -376,7 +376,7 @@ const UiController = Marionette.ItemView.extend({
         }
 
         // Adjust specific options from theme settings
-        var header_layout = navigatorApp.theme.get('ui.header_layout');
+        var header_layout = navigatorApp.options.theme.get('ui.header_layout');
         if (header_layout) {
             options.layout = header_layout;
         }
@@ -610,7 +610,7 @@ const UiController = Marionette.ItemView.extend({
 
 
 // setup controller
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.ui = new UiController();
 
