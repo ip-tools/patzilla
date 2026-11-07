@@ -282,7 +282,7 @@ const PermalinkPlugin = Marionette.Controller.extend({
 
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // offer this throughout the whole application
     this.permalink = new PermalinkPlugin();

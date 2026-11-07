@@ -306,7 +306,7 @@ const KeywordsController = Marionette.Controller.extend({
 
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.keywords = new KeywordsController();
     this.listenTo(this, 'application:ready', function() {
         this.keywords.setup_ui();

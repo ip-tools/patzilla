@@ -313,7 +313,7 @@ const CommentsPlugin = Marionette.Controller.extend({
 
 
 // Setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 

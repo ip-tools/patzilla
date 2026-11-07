@@ -110,7 +110,7 @@ const ApplicationProfile = Marionette.Controller.extendEach(MarionetteFuture, {
 
 
 // Setup addon
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     // Start application profile component after the data store has been initialized.
     this.listenTo(this, 'localforage:ready', function() {

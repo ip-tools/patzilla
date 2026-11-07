@@ -610,7 +610,7 @@ const UiController = Marionette.ItemView.extend({
 
 
 // setup controller
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.ui = new UiController();
 

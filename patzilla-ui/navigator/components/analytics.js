@@ -157,7 +157,7 @@ const ResultAnalyticsDistinctApplicantView = AbstractResultView.extend({
 });
 
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenTo(this, 'application:ready', function() {
         var _this = this;

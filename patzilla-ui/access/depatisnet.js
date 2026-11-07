@@ -23,7 +23,7 @@ const DepatisnetCrawler = DatasourceCrawler.extend({
 });
 
 // Register data source adapter with application
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.register_datasource('depatisnet', {
 
         // The title used when referencing this data source to the user
