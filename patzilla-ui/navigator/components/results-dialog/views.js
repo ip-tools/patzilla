@@ -24,8 +24,9 @@ export const GenericResultView = Marionette.View.extend({
     },
 
     user_message: function(message, kind) {
-        $('#result-info').empty();
-        return navigatorApp.ui.user_alert(message, kind, '#result-info');
+        var result_info = this.$el.find('#result-info');
+        result_info.empty();
+        return navigatorApp.ui.user_alert(message, kind, result_info);
     },
 
     templateContext: {
