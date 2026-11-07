@@ -4,6 +4,6 @@
 
 import Marionette from 'backbone.marionette';
 
-export const IFIClaimsHandbookView = Marionette.ItemView.extend({
+export const IFIClaimsHandbookView = Marionette.View.extend({
     template: require('./ificlaims-help.html'),
 });
