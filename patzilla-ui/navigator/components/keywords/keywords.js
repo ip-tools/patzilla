@@ -92,22 +92,25 @@ const KeywordEditorView = Marionette.CompositeView.extend({
     templateContext: {
     },
 
-    onRender: function() {
+    onAttach: function() {
+
+        var _this = this;
+
+        this.$el.one('hidden.bs.modal', function() {
+             _this.destroy();
+        });
 
         // Dialog no longer displays with bs3.
         this.$el.modal("show");
 
         this.setup_ui();
 
-        var _this = this;
-
         // "save" button should save all models and close modal dialog
-        $('#keyword-editor-save-button').off('click');
-        $('#keyword-editor-save-button').on('click', function() {
+        $('#keyword-editor-save-button').off('click').on('click', function() {
             $.when(_this.save_models()).then(function() {
 
                 // Hide modal after saving.
-                $("#keyword-editor").modal("hide");
+                _this.$el.modal("hide");
                 // Needed for Marionette 2
                 $(".modal-backdrop").remove();
 
@@ -220,13 +223,12 @@ const KeywordsController = Marionette.Controller.extend({
 
     setup_ui: function() {
 
-        this.keyword_editor = new KeywordEditorView({collection: this.keywordmaps});
-
         var _this = this;
 
         $('.action-keyword-editor').off('click').on('click', function(event) {
             event.preventDefault();
             if (_this.module_available) {
+                _this.keyword_editor = new KeywordEditorView({collection: _this.keywordmaps});
                 _this.keyword_modal = new ModalRegion({el: '#modal-area'});
                 _this.keyword_modal.show(_this.keyword_editor);
             } else {
