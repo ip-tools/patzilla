@@ -55,7 +55,6 @@ const config = {
         'classie': true,
         'localforage.nopromises': true,
         'localforage.backbone': true,
-        'backbone-relational': true,
     },
 
     plugins: [
