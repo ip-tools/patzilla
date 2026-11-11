@@ -11,6 +11,7 @@ export const OpsExchangeDocumentCollectionView = Marionette.CollectionView.exten
     className: "",
     template: require('./results-list.html'),
     childView: OpsExchangeDocumentView,
+    childViewEventPrefix: 'childview',
 
     initialize: function(options) {
         console.log('OpsExchangeDocumentCollectionView.initialize');
