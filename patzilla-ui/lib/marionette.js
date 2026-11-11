@@ -16,7 +16,7 @@ import Marionette from 'backbone.marionette';
       const args = Array.prototype.slice.call(arguments);
       args[0] = this.options;
 
-      Marionette.deprecate('Marionette.Controller is deprecated. Use Marionette.Object');
+      //Marionette.deprecate('Marionette.Controller is deprecated. Use Marionette.Object');
       Marionette.Object.prototype.constructor.apply(this, args);
     },
 
