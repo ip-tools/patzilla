@@ -20,7 +20,7 @@ export const OpsExchangeDocumentCollectionView = Marionette.CollectionView.exten
     // Override and disable add:render event, see also:
     // https://github.com/marionettejs/Marionette/issues/640
     _initialEvents: function() {
-        if (this.collection) {
+        if (this.collection && !this._isRendered) {
             //this.listenTo(this.collection, "add", this.addChildView, this);
             this.listenTo(this.collection, "remove", this._onCollectionRemove, this);
             this.listenTo(this.collection, "reset", this.render, this);
