@@ -147,7 +147,7 @@ export const DirectRenderMixin = {
         data = this.mixinTemplateContext(data);
 
         var template = this.getTemplate();
-        var html = Marionette.Renderer.render(template, data);
+        var html = template(data);
 
         // v1: Use default intermediary element to wrap content from template
         if (!this.mode || this.mode == 'wrap') {
