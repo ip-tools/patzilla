@@ -41,15 +41,21 @@ export const MetadataView = Marionette.View.extend({
             // e.relatedTarget // previous tab
 
             var list_type = $(this).data('list-type');
+            var view;
             if (list_type === 'ops') {
-                navigatorApp.mainView.showChildView('listRegion', navigatorApp.collectionView, {
-                    preventDestroy: true,
-                });
+                view = navigatorApp.collectionView;
 
             } else if (list_type === 'upstream') {
-                navigatorApp.mainView.showChildView('listRegion', navigatorApp.resultView, {
-                    preventDestroy: true,
-                });
+                view = navigatorApp.resultView;
+            } else {
+                console.error("Unknown list type:", list_type);
+                return;
+            }
+
+            var listRegion = navigatorApp.mainView.getRegion('listRegion');
+            if (listRegion.currentView !== view) {
+                listRegion.detachView();
+                listRegion.show(view);
             }
 
         });
