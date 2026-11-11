@@ -71,7 +71,7 @@ navigatorApp.on("before:start", function(options) {
 });
 
 
-const IFIClaimsDocument = Backbone.Model.extend({});
+export const IFIClaimsDocument = Backbone.Model.extend({});
 
 _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLinkMixin.prototype, {
 

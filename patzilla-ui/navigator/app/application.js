@@ -829,6 +829,7 @@ export const NavigatorApp = Marionette.Application.extend({
 
             // || _.isEmpty(document_missing.alternatives_local)
             if (ificlaims_allowed) {
+                const {IFIClaimsDocument} = require("patzilla.access.ificlaims");
                 var ificlaims_doc = new IFIClaimsDocument({document_number: document_missing.number});
 
                 // TODO:
