@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 const {LinkMaker} = require("patzilla.navigator.util.linkmaker");
 const {TemplateHelperMixin} = require("./util.js");
 

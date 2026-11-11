@@ -7,7 +7,7 @@ import { classes } from '../es6';
 
 // Marionette
 import { DirectRenderMixin } from '../marionette';
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 
 // Material-UI
 import React from 'react';

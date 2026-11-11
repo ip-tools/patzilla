@@ -11,7 +11,7 @@ require('patzilla.lib.marionette');
 require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 import AppRouter from 'marionette.approuter';
 
 

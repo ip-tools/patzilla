@@ -2,7 +2,7 @@
 // (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 
 require('jquery.highlight.bartaz');
 

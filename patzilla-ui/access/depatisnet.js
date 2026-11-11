@@ -2,7 +2,7 @@
 // (c) 2014 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 const {DatasourceSearch, DatasourceCrawler} = require("./base");
 
 const DepatisnetSearch = DatasourceSearch.extend({

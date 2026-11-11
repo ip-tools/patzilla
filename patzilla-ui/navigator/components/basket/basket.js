@@ -2,7 +2,7 @@
 // (c) 2013-2017 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 import urlJoin from 'url-join';
 const memoize = require('memoize');
 const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");

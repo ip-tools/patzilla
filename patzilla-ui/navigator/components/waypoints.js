@@ -2,7 +2,7 @@
 // (c) 2015 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 
 require('waypoints/lib/jquery.waypoints.js');
 require('waypoints/lib/shortcuts/inview.js');

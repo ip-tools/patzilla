@@ -2,7 +2,7 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 import { classes } from 'patzilla.lib.es6';
 import { MDCSnackbar } from '@material/snackbar';
 import { DirectRenderMixin } from 'patzilla.lib.marionette';

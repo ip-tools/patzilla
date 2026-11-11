@@ -2,7 +2,7 @@
 // (c) 2014,2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 import urlJoin from 'url-join';
 
 require('jquery-hotkeys');

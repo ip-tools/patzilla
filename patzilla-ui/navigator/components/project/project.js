@@ -2,8 +2,8 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
 import moment from "moment";
+import Marionette from 'marionette';
 
 require('patzilla.navigator.components.storage');
 var slugify = require('slugify');

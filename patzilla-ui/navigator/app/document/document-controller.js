@@ -2,7 +2,7 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 const {Nataraja} = require("patzilla.navigator.components.nataraja");
 const {OpsFamilyCollection, OpsFulltext} = require("patzilla.access.epo.ops");
 const {DepatisConnectFulltext} = require("patzilla.access.depatisnet");

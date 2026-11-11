@@ -2,7 +2,7 @@
 // (c) 2014-2016 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import Marionette from 'marionette';
 import $ from "jquery";
 const {opaque_param} = require("patzilla.navigator.components.opaquelinks");
 const {dataurl} = require("dataurl");

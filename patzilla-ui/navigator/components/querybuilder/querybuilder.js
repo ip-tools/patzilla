@@ -2,8 +2,9 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
 import moment from "moment";
+import Marionette from 'marionette';
+
 const bootbox = require('bootbox');
 const {RadioPlus} = require("patzilla.lib.radioplus");
 const {FIELDS_KNOWLEDGE} = require("./expression-fields.js");
