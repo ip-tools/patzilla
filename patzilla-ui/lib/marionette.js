@@ -96,15 +96,6 @@ export const ModalRegion = Marionette.Region.extend({
 })();
 
 
-export const MarionetteFuture = {
-    // Modern Marionettes like to enjoy this as `this.getOption(name)`.
-    // This is a forward-compat polyfill to satisfy downstream components.
-    getOption: function(name) {
-        return Marionette.getOption(this, name);
-    },
-};
-
-
 export const DirectRenderMixin = {
     /*
     Utility: Directly render templates without intermediary wrapper element
@@ -189,7 +180,7 @@ export const DirectRenderMixin = {
 };
 
 
-export const NamedViewController = Marionette.Controller.extendEach(MarionetteFuture, {
+export const NamedViewController = Marionette.Controller.extend({
     /*
     In order to deduce the Marionette object currently visible in viewport,
     we needed a way to connect the DOM universe to the Marionette one.

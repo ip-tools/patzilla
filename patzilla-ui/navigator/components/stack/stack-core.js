@@ -4,7 +4,7 @@
 
 import Marionette from 'backbone.marionette';
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
-import { MarionetteFuture, NamedViewController } from 'patzilla.lib.marionette';
+import { NamedViewController } from 'patzilla.lib.marionette';
 import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
 require('backbone-dom-to-view');
@@ -221,7 +221,7 @@ const StackManager = NamedViewController.extend({
 });
 
 
-const StackPlugin = Marionette.Controller.extendEach(MarionetteFuture, {
+const StackPlugin = Marionette.Controller.extend({
 
     manager_class: StackManager,
 
