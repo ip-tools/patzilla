@@ -111,7 +111,7 @@ export const DirectRenderMixin = {
     renderOnce: false,
 
     // Bookkeeping about whether this has already been rendered
-    isRendered: false,
+    _hasRendered: false,
 
     // How to display an item view with no tag
     // https://stackoverflow.com/questions/14659597/backbonejs-view-self-template-replacewith-and-events/49246853#49246853
@@ -132,10 +132,10 @@ export const DirectRenderMixin = {
     render: function() {
 
         // Suppress multiple rendering, if requested
-        if (this.isRendered && this.renderOnce) {
+        if (this._hasRendered && this.renderOnce) {
             return this;
         }
-        this.isRendered = true;
+        this._hasRendered = true;
 
         //log('DirectRenderMixin::render', this);
 

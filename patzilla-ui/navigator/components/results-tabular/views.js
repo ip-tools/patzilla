@@ -32,8 +32,8 @@ export const ResultCollectionView = Marionette.CompositeView.extend({
     //className: "container",
     template: _.template(''),
 
-    getChildView: function(item) {
-        log('ResultCollectionView.getChildView');
+    childView: function(item) {
+        log('ResultCollectionView.childView');
         var view_class = navigatorApp.current_datasource_info().adapter.result_item_view;
         if (view_class) {
             return view_class;

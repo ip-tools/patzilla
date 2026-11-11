@@ -111,9 +111,9 @@ $(function() {
     console.info("Start application [embedded]");
     navigatorApp.options.config.set('embedded', true);
 
-    navigatorApp.addInitializer(function(options) {
+    navigatorApp.on('before:start', function(options) {
 
-        this.embeddingController = new EmbeddingController(options=embed_options);
+        this.embeddingController = new EmbeddingController(embed_options);
 
         this.listenTo(this, 'application:ready', function() {
             this.embeddingController.run();
