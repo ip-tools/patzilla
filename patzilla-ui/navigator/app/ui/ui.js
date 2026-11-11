@@ -75,7 +75,7 @@ const UiController = Marionette.View.extend({
 
         $('.action-fullscreen').off('click');
         $('.action-fullscreen').on('click', function() {
-            if (screenfull.enabled) {
+            if (screenfull.isEnabled) {
                 screenfull.request();
             }
         });
