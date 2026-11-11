@@ -67,7 +67,7 @@
     "jrumble": "^1",
     "keyboarder": "https://github.com/ip-tools/KeyBoarder#1.0.2",
     "localforage": "^1.10",
-    "localforage-backbone": "https://github.com/ip-tools/localForage-backbone#0.6.3-alpha.1",
+    "localforage-backbone": "^0.6",
     "lz-string": "^1",
     "marionette.approuter": "^1",
     "modernizr": "^3",
