@@ -46,6 +46,7 @@
     "@neos21/bootstrap3-glyphicons": "^1",
     "autonumeric": "^2",
     "backbone": "^1",
+    "backbone-relational": "^0.10",
     "backbone.marionette": "^4",
     "blobjs": "^1",
     "bootbox": "^6",
