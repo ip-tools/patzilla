@@ -68,6 +68,7 @@
     "localforage": "^1.10",
     "localforage-backbone": "https://github.com/ip-tools/localForage-backbone#0.6.3-alpha.1",
     "lz-string": "^1",
+    "marionette.approuter": "^1",
     "modernizr": "^3",
     "moment": "^2",
     "popper.js": "^1",

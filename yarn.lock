@@ -4284,6 +4284,11 @@ make-dir@^3.0.2:
   dependencies:
     semver "^6.0.0"
 
+marionette.approuter@^1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/marionette.approuter/-/marionette.approuter-1.0.2.tgz#bd45b801762fea4ec5caa9505640413596cc432c"
+  integrity sha512-XjcKb1Y6KROCmdZxO/rtOdRhd3Hfrs+7zWjtfiuCFS3VZa2IQjNgKUuIGmaKDZte2AmKRRMaPvXMh22nKYFh8A==
+
 markdown-it@^13.0.2, markdown-it@^14:
   version "14.3.3"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-14.3.3.tgz#15e6e145d20b1499a7b323bb14e21062690132d8"
