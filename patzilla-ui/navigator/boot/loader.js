@@ -44,6 +44,7 @@ require('patzilla.navigator.components.stack');
 // Bootstrap the application after registering all components
 navigatorApp.on("before:start", function(options) {
     this.listenToOnce(this, 'application:init', function() {
+        this.showView(this.mainView);
         this.trigger('application:boot');
     });
 });

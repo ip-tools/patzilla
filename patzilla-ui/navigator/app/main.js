@@ -108,7 +108,6 @@ navigatorApp.on("before:start", function(options) {
         paginationRegionTop: "#ops-pagination-region-top",
         paginationRegionBottom: "#ops-pagination-region-bottom",
     });
-    this.showView(this.mainView);
 });
 
 
