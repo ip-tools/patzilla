@@ -5,7 +5,7 @@
 import Marionette from 'backbone.marionette';
 const {OpsExchangeDocumentView} = require("patzilla.navigator.app.document/document-view");
 
-export const OpsExchangeDocumentCollectionView = Marionette.CompositeView.extend({
+export const OpsExchangeDocumentCollectionView = Marionette.CollectionView.extend({
     tagName: "div",
     id: "ops-collection-container",
     className: "",

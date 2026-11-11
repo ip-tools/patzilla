@@ -19,7 +19,7 @@ const OpsFamilyVerboseMemberView = Marionette.View.extend({
 _.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-export const OpsFamilyVerboseCollectionView = Marionette.CompositeView.extend({
+export const OpsFamilyVerboseCollectionView = Marionette.CollectionView.extend({
 
     template: require('./biblio-family-verbose-collection.html'),
     childView: OpsFamilyVerboseMemberView,
@@ -45,7 +45,7 @@ const OpsFamilyCompactMemberView = Marionette.View.extend({
 _.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-export const OpsFamilyCompactCollectionView = Marionette.CompositeView.extend({
+export const OpsFamilyCompactCollectionView = Marionette.CollectionView.extend({
 
     template: require('./biblio-family-compact-collection.html'),
     childView: OpsFamilyCompactMemberView,
@@ -133,7 +133,7 @@ const OpsFamilyCitationsMemberView = Marionette.View.extend({
 _.extend(OpsFamilyCitationsMemberView.prototype, TemplateDataContextMixin);
 
 
-export const OpsFamilyCitationsCollectionView = Marionette.CompositeView.extend({
+export const OpsFamilyCitationsCollectionView = Marionette.CollectionView.extend({
 
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),

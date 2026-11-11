@@ -25,7 +25,7 @@ export const ResultItemView = Marionette.View.extend({
 
 });
 
-export const ResultCollectionView = Marionette.CompositeView.extend({
+export const ResultCollectionView = Marionette.CollectionView.extend({
 
     tagName: "div",
     id: "resultcollection",
