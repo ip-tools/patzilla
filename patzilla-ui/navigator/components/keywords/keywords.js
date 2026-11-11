@@ -60,7 +60,7 @@ const KeywordEditorEntryView = Marionette.View.extend({
 
 });
 
-const KeywordEditorView = Marionette.CompositeView.extend({
+const KeywordEditorView = Marionette.CollectionView.extend({
 
     tagName: "div",
     id: "keyword-editor",

@@ -12,6 +12,7 @@ require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
 import Marionette from 'backbone.marionette';
+import AppRouter from 'marionette.approuter';
 
 
 const HelpView = Marionette.View.extend({
@@ -35,7 +36,7 @@ const HelpView = Marionette.View.extend({
     },
 });
 
-const Router = Marionette.AppRouter.extend({
+const Router = AppRouter.extend({
     appRoutes: {
         'hotkeys': 'hotkeys',
         'ificlaims': 'ificlaims',

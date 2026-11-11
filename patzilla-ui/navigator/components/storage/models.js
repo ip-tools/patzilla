@@ -4,7 +4,6 @@
 
 import Marionette from 'backbone.marionette';
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
-import { MarionetteFuture } from 'patzilla.lib.marionette';
 
 const ProfileRecord = Backbone.RelationalModel.extend({
 
@@ -47,7 +46,7 @@ const ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const ApplicationProfile = Marionette.Controller.extendEach(MarionetteFuture, {
+const ApplicationProfile = Marionette.Controller.extend({
 
     // We just support a single application profile by now.
     profile_name: 'default',

@@ -16,7 +16,7 @@ import Marionette from 'backbone.marionette';
       const args = Array.prototype.slice.call(arguments);
       args[0] = this.options;
 
-      Marionette.deprecate('Marionette.Controller is deprecated. Use Marionette.Object');
+      //Marionette.deprecate('Marionette.Controller is deprecated. Use Marionette.Object');
       Marionette.Object.prototype.constructor.apply(this, args);
     },
 
@@ -61,27 +61,15 @@ export const ModalRegion = Marionette.Region.extend({
 
     constructor: function() {
         Marionette.Region.prototype.constructor.apply(this, arguments);
-
-        // `ensureEl` longer supported with Marionette 2?
-        //this.ensureEl();
-
         this.$el.toggleClass('fade', true);
     },
 
     onShow: function(region, view) {
-        this.$modal = view.$el;
-        this.listenTo(view, 'before:destroy', this.hideModal);
-        this.$modal.modal('show');
-    },
-
-    hideModal: function() {
-        if (this.$modal) {
-            this.$modal.modal('hide');
-        }
+        this.$el.modal('show');
     },
 
     onDestroy: function() {
-        this.hideModal();
+        this.$el.modal('hide');
     },
 
 });
@@ -94,15 +82,6 @@ export const ModalRegion = Marionette.Region.extend({
     Marionette.View.extendEach         = Backbone.Model.extendEach;
 
 })();
-
-
-export const MarionetteFuture = {
-    // Modern Marionettes like to enjoy this as `this.getOption(name)`.
-    // This is a forward-compat polyfill to satisfy downstream components.
-    getOption: function(name) {
-        return Marionette.getOption(this, name);
-    },
-};
 
 
 export const DirectRenderMixin = {
@@ -156,7 +135,7 @@ export const DirectRenderMixin = {
         data = this.mixinTemplateContext(data);
 
         var template = this.getTemplate();
-        var html = Marionette.Renderer.render(template, data);
+        var html = template(data);
 
         // v1: Use default intermediary element to wrap content from template
         if (!this.mode || this.mode == 'wrap') {
@@ -189,7 +168,7 @@ export const DirectRenderMixin = {
 };
 
 
-export const NamedViewController = Marionette.Controller.extendEach(MarionetteFuture, {
+export const NamedViewController = Marionette.Controller.extend({
     /*
     In order to deduce the Marionette object currently visible in viewport,
     we needed a way to connect the DOM universe to the Marionette one.

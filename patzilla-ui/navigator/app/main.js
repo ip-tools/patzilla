@@ -228,10 +228,10 @@ navigatorApp.on("before:start", function(options) {
 
         // show documents (ops results) in collection view
         // explicitly switch list region to OPS collection view
-        if (this.mainView.getRegion('listRegion').currentView !== this.collectionView) {
-            this.mainView.showChildView('listRegion', this.collectionView, {
-                preventDestroy: true,
-            });
+        var listRegion = this.mainView.getRegion('listRegion');
+        if (listRegion.currentView !== this.collectionView) {
+            listRegion.detachView();
+            listRegion.show(this.collectionView);
         }
 
     });

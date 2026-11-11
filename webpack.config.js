@@ -52,7 +52,6 @@ const config = {
 
     amd: {
         'jquery': true,
-        'backbone.marionette': true,
         'classie': true,
         'localforage.nopromises': true,
         'localforage.backbone': true,

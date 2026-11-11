@@ -5,7 +5,7 @@
 import Marionette from 'backbone.marionette';
 import { classes } from 'patzilla.lib.es6';
 import { MDCMenu } from '@material/menu';
-import { MarionetteFuture, DirectRenderMixin } from 'patzilla.lib.marionette';
+import { DirectRenderMixin } from 'patzilla.lib.marionette';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
 // TODO: Maybe
@@ -36,7 +36,7 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-export const StackOpenerWidget = Marionette.View.extendEach(MarionetteFuture, DirectRenderMixin, {
+export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -89,7 +89,7 @@ export const StackOpenerWidget = Marionette.View.extendEach(MarionetteFuture, Di
 });
 
 
-export class StackMenuWidget extends classes.many(Marionette.View, MarionetteFuture, DirectRenderMixin) {
+export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderMixin) {
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
      * into a `Marionette.View`.
