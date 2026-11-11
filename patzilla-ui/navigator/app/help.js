@@ -6,35 +6,29 @@
 // https://marionette.gitbooks.io/marionette-guides/content/en/appendix/approuter/router.html
 // https://marionette.gitbooks.io/marionette-guides/content/en/application/routing.html
 
-import Marionette from 'backbone.marionette';
-
+require('patzilla.lib.backbone');
+require('patzilla.lib.marionette');
 require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
-// Patches to make the old Backbone Marionette 1.1.0 work with Webpack
-Backbone.$   = window.jQuery;
-Marionette.$ = window.jQuery;
+import Marionette from 'backbone.marionette';
 
 
 const Controller = Marionette.Controller.extend({
 
     initialize: function() {
         console.log('Controller.initialize');
-        this.options.regionManager = new Marionette.RegionManager({});
-        this.options.regionManager.addRegion('content', '#content-region');
     },
 
     hotkeys: function() {
         const {HotkeysHelpView} = require("patzilla.navigator.components.hotkeys/hotkeys-help");
-        var rmanager = Marionette.getOption(this, 'regionManager');
         $('#title-container').html('Hotkeys overview');
-        rmanager.get('content').show(new HotkeysHelpView());
+        navigatorHelp.showView(new HotkeysHelpView());
     },
     ificlaims: function() {
         const {IFIClaimsHandbookView} = require("patzilla.access.ificlaims-help");
-        var rmanager = Marionette.getOption(this, 'regionManager');
         $('#title-container').html('Benutzerhandbuch für die Suche bei IFI Claims');
-        rmanager.get('content').show(new IFIClaimsHandbookView());
+        navigatorHelp.showView(new IFIClaimsHandbookView());
     },
 });
 
@@ -58,6 +52,8 @@ const Router = Marionette.AppRouter.extend({
 
 // Main
 const NavigatorHelp = Marionette.Application.extend({
+
+    region: '#content-region',
 
     initialize: function() {
     },
