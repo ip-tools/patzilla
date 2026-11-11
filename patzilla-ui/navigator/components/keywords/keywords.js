@@ -65,7 +65,8 @@ const KeywordEditorView = Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "keyword-editor",
-    className: "modal fade",
+    // Close synchronously so Bootstrap cleans up before Marionette removes the view.
+    className: "modal",
     template: require('./keyword-editor.html'),
     childView: KeywordEditorEntryView,
     childViewContainer: 'tbody',
@@ -96,12 +97,9 @@ const KeywordEditorView = Marionette.CompositeView.extend({
 
         var _this = this;
 
-        this.$el.one('hidden.bs.modal', function() {
+        this.$el.one('hidden.bs.modal.keywordEditor', function() {
              _this.destroy();
         });
-
-        // Dialog no longer displays with bs3.
-        this.$el.modal("show");
 
         this.setup_ui();
 
@@ -111,14 +109,16 @@ const KeywordEditorView = Marionette.CompositeView.extend({
 
                 // Hide modal after saving.
                 _this.$el.modal("hide");
-                // Needed for Marionette 2
-                $(".modal-backdrop").remove();
 
                 // Re-apply highlighting.
                 navigatorApp.keywords.unhighlight();
                 navigatorApp.keywords.highlight();
             });
         });
+    },
+
+    onBeforeDestroy: function() {
+        this.$el.off('.keywordEditor');
     },
 
     save_models: function() {

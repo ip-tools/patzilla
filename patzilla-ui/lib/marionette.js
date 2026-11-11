@@ -68,12 +68,20 @@ export const ModalRegion = Marionette.Region.extend({
         this.$el.toggleClass('fade', true);
     },
 
-    onShow: function() {
-        this.$el.modal('show');
+    onShow: function(region, view) {
+        this.$modal = view.$el;
+        this.listenTo(view, 'before:destroy', this.hideModal);
+        this.$modal.modal('show');
+    },
+
+    hideModal: function() {
+        if (this.$modal) {
+            this.$modal.modal('hide');
+        }
     },
 
     onDestroy: function() {
-        this.$el.modal('hide');
+        this.hideModal();
     },
 
 });
