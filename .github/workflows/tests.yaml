@@ -63,7 +63,7 @@ jobs:
       # https://stackoverflow.com/a/57721936
       if: runner.os == 'Linux'
       run: |
-        sudo rm /etc/ImageMagick-6/policy.xml
+        sudo rm -f /etc/ImageMagick-6/policy.xml
 
     - name: Install uv
       uses: astral-sh/setup-uv@v10.3.0
