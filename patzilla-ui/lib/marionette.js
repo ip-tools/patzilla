@@ -61,27 +61,15 @@ export const ModalRegion = Marionette.Region.extend({
 
     constructor: function() {
         Marionette.Region.prototype.constructor.apply(this, arguments);
-
-        // `ensureEl` longer supported with Marionette 2?
-        //this.ensureEl();
-
         this.$el.toggleClass('fade', true);
     },
 
     onShow: function(region, view) {
-        this.$modal = view.$el;
-        this.listenTo(view, 'before:destroy', this.hideModal);
-        this.$modal.modal('show');
-    },
-
-    hideModal: function() {
-        if (this.$modal) {
-            this.$modal.modal('hide');
-        }
+        this.$el.modal('show');
     },
 
     onDestroy: function() {
-        this.hideModal();
+        this.$el.modal('hide');
     },
 
 });
