@@ -94,30 +94,21 @@ const config = {
             // Use Babel for loading own code
             // https://www.npmjs.com/package/babel-loader
             {
-                test: /\.tsx?$/,
-                exclude: /(node_modules|bower_components)/,
-                loaders: [
-                    {
-                        loader: 'babel-loader',
-                        options: { presets: ['env'] },
-                    },
-                    'ts-loader',
-                ],
-            },
-            {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/,
                 exclude: /(node_modules|bower_components)/,
                 use: [
                     {
                         loader: 'babel-loader',
-                        options: {
-                            cacheDirectory: true,
-                            presets: [
-                                // https://babeljs.io/docs/plugins/preset-env/
-                                ['env', { modules: false, debug: true }],
-                            ],
-                            //plugins: ['transform-runtime'],
-                        }
+                        options: { presets: ['@babel/preset-env'] },
+                    },
+                ]
+            },
+            {
+                test: /\.(ts|tsx)$/,
+                exclude: /(node_modules|bower_components)/,
+                use: [
+                    {
+                        loader: 'ts-loader',
                     },
                 ]
             },
