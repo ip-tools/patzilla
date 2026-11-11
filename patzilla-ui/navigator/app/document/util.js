@@ -31,10 +31,10 @@ export const OpsBaseViewMixin = {
             params['datasource'] = 'ops';
 
             // debugging
-            //navigatorApp.config.set('isviewer', true);
+            //navigatorApp.options.config.set('isviewer', true);
 
             // When in liveview mode, scrumble database query and viewstate parameters into opaque parameter token
-            if (navigatorApp.config.get('isviewer')) {
+            if (navigatorApp.options.config.get('isviewer')) {
 
                 event.preventDefault();
                 event.stopPropagation();
@@ -83,12 +83,12 @@ export const OpsBaseViewMixin = {
 
 export const TemplateHelperMixin = {
 
-    templateHelpers: function() {
+    templateContext: function() {
         var _this = this;
         var funcs = {
 
             // Propagate configuration object to template
-            config: navigatorApp.config,
+            config: navigatorApp.options.config,
 
             get_linkmaker: function() {
                 return new LinkMaker(_this.model);
@@ -110,7 +110,7 @@ export const TemplateHelperMixin = {
 
 export const TemplateDataContextMixin = {
 
-    // Namespace template variables to "data", also accounting for "templateHelpers".
+    // Namespace template variables to "data", also accounting for "templateContext".
     serializeData: function() {
 
         var data;
@@ -122,7 +122,7 @@ export const TemplateDataContextMixin = {
             data = {};
         }
 
-        var helpers = this.templateHelpers();
+        var helpers = this.templateContext();
         _.extend(data, helpers);
 
         var tpldata = {data: data};

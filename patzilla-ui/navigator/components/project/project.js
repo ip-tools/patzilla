@@ -382,7 +382,7 @@ const ProjectCollection = Backbone.Collection.extend({
 });
 
 
-export const ProjectChooserView = Marionette.ItemView.extend({
+export const ProjectChooserView = Marionette.View.extend({
 
     template: require('./project.html'),
 
@@ -402,7 +402,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
             log('ProjectChooserView: Skip rendering');
             return;
         }
-        return Marionette.ItemView.prototype.render.call(this);
+        return Marionette.View.prototype.render.call(this);
     },
 
     onDomRefresh: function() {
@@ -531,7 +531,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
         delete_button.off('click');
         delete_button.on('click', function(e) {
 
-            var projectname = navigatorApp.config.get('project');
+            var projectname = navigatorApp.options.config.get('project');
             navigatorApp.ui.confirm('This will delete the current project "' + projectname + '". Are you sure?').then(function() {
 
                 _this.model.destroy({success: function() {
@@ -553,8 +553,8 @@ export const ProjectChooserView = Marionette.ItemView.extend({
                         navigatorApp.basketModel.destroy();
                         delete navigatorApp.basketModel;
 
-                        var projectname = navigatorApp.config._originalAttributes.project;
-                        navigatorApp.config.set('project', projectname);
+                        var projectname = navigatorApp.options.config._originalAttributes.project;
+                        navigatorApp.options.config.set('project', projectname);
 
                         navigatorApp.trigger('projects:initialize');
 
@@ -765,7 +765,7 @@ export const ProjectChooserView = Marionette.ItemView.extend({
 });
 
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     var _this = this;
 
@@ -812,7 +812,7 @@ navigatorApp.addInitializer(function(options) {
 
         // use project name from config (propagated from current url)
         if (!projectname) {
-            projectname = this.config.get('project');
+            projectname = this.options.config.get('project');
         }
         // use default project name
         /*

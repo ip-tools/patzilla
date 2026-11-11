@@ -6,73 +6,44 @@
 // https://marionette.gitbooks.io/marionette-guides/content/en/appendix/approuter/router.html
 // https://marionette.gitbooks.io/marionette-guides/content/en/application/routing.html
 
-import Marionette from 'backbone.marionette';
-
+require('patzilla.lib.backbone');
+require('patzilla.lib.marionette');
 require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
-// Patches to make the old Backbone Marionette 1.1.0 work with Webpack
-Backbone.$   = window.jQuery;
-Marionette.$ = window.jQuery;
+import Marionette from 'backbone.marionette';
 
 
-const Controller = Marionette.Controller.extend({
+const HelpView = Marionette.View.extend({
+    el: 'body',
+    template: function() {},
 
-    initialize: function() {
-        console.log('Controller.initialize');
-        this.options.regionManager = new Marionette.RegionManager({});
-        this.options.regionManager.addRegion('content', '#content-region');
+    regions: {
+        content: '#content-region',
     },
 
     hotkeys: function() {
         const {HotkeysHelpView} = require("patzilla.navigator.components.hotkeys/hotkeys-help");
-        var rmanager = Marionette.getOption(this, 'regionManager');
-        $('#title-container').html('Hotkeys overview');
-        rmanager.get('content').show(new HotkeysHelpView());
+        this.$('#title-container').text('Hotkeys overview');
+        this.showChildView('content', new HotkeysHelpView());
     },
+
     ificlaims: function() {
         const {IFIClaimsHandbookView} = require("patzilla.access.ificlaims-help");
-        var rmanager = Marionette.getOption(this, 'regionManager');
-        $('#title-container').html('Benutzerhandbuch für die Suche bei IFI Claims');
-        rmanager.get('content').show(new IFIClaimsHandbookView());
+        this.$('#title-container').text('Benutzerhandbuch für die Suche bei IFI Claims');
+        this.showChildView('content', new IFIClaimsHandbookView());
     },
 });
-
 
 const Router = Marionette.AppRouter.extend({
-
     appRoutes: {
-        'hotkeys':   'hotkeys',
-        'ificlaims': 'ificlaims'
+        'hotkeys': 'hotkeys',
+        'ificlaims': 'ificlaims',
     },
-
-    initialize: function() {
-        console.log('Router.initialize');
-        this.controller = new Controller({
-            initialData: Marionette.getOption(this, 'initialData'),
-        });
-    },
-
 });
-
-
-// Main
-const NavigatorHelp = Marionette.Application.extend({
-
-    initialize: function() {
-    },
-
-    onStart: function(options) {
-        console.info('NavigatorHelp:onStart');
-        var router = new Router(options);
-        Backbone.history.start();
-    },
-
-});
-
-const navigatorHelp = new NavigatorHelp({});
 
 $(function() {
-    console.log("document.ready");
-    navigatorHelp.start();
+    const helpView = new HelpView();
+    new Router({controller: helpView});
+    Backbone.history.start();
 });

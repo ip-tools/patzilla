@@ -48,7 +48,7 @@ const StoragePlugin = Marionette.Controller.extend({
                     metadata: {
                         type: 'patzilla.navigator.database',
                         description: 'IP Navigator database dump',
-                        software_version: navigatorApp.config.get('setting.app.software.version'),
+                        software_version: navigatorApp.options.config.get('setting.app.software.version'),
                         database_version: _this.database_version,
                         database_name: localforage.config('name'),
                         created: timestamp(),
@@ -381,12 +381,12 @@ const StoragePlugin = Marionette.Controller.extend({
 
 
 // Data storage components
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     var _this = this;
 
     // Set database name from "context" query parameter
-    localforage.config({name: this.config.get('context')});
+    localforage.config({name: this.options.config.get('context')});
 
     // Set localforage driver
     // We use Local Storage here to make introspection easier.
@@ -399,13 +399,13 @@ navigatorApp.addInitializer(function(options) {
     // Import database from url :-)
     // TODO: I'd like this to have storage.js make it on its own, but that'd be too late :-(
     //       check again what we could achieve...
-    var database_dump = this.config.get('database');
+    var database_dump = this.options.config.get('database');
     if (database_dump) {
 
         // When importing a database dump, we assign "context=viewer" a special meaning here:
         // the database scope will always be cleared beforehand to avoid project name collisions.
         // Ergo the "viewer" context is considered a *very transient* datastore.
-        if (this.config.get('context') == 'viewer') {
+        if (this.options.config.get('context') == 'viewer') {
             this.storage.dbreset();
         }
 
@@ -420,7 +420,7 @@ navigatorApp.addInitializer(function(options) {
 
 });
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.storage = new StoragePlugin();
 

@@ -12,10 +12,20 @@ import {GenericExchangeDocument} from "patzilla.access.base";
  */
 export const NavigatorApp = Marionette.Application.extend({
 
+    region: '#root-region',
+
+    initialize: function(options) {
+        //log('NavigatorApp.initialize:', options);
+    },
+
+    onStart: function() {
+        //log("NavigatorApp.onStart");
+    },
+
     setup_ui: function() {
 
         // Initialize content which still resides on page level (i.e. no template yet)
-        $('#query').val(this.config.get('query'));
+        $('#query').val(this.options.config.get('query'));
 
     },
 
@@ -41,12 +51,12 @@ export const NavigatorApp = Marionette.Application.extend({
     bootstrap_datasource: function() {
 
         // Acquire "datasource" query parameter.
-        var datasource = this.config.get('datasource');
+        var datasource = this.options.config.get('datasource');
 
         // Compute preferred data source.
         if (!datasource) {
-            var datasources_enabled = this.config.get('datasources_enabled');
-            var datasource_preferred = this.theme.get('ui.datasource_preferred');
+            var datasources_enabled = this.options.config.get('datasources_enabled');
+            var datasource_preferred = this.options.theme.get('ui.datasource_preferred');
             if (datasource_preferred && _(datasources_enabled).contains(datasource_preferred)) {
                 datasource = datasource_preferred;
             }
@@ -812,13 +822,14 @@ export const NavigatorApp = Marionette.Application.extend({
             var placeholder;
 
             // Fall back to IFI Claims for bibliographic data
-            var ificlaims_settings = navigatorApp.config.get('system').datasource.ificlaims;
+            var ificlaims_settings = navigatorApp.options.config.get('system').datasource.ificlaims;
             var ificlaims_allowed =
                 ificlaims_settings && ificlaims_settings.details_enabled &&
                 _.contains(ificlaims_settings.details_countries, patent.country);
 
             // || _.isEmpty(document_missing.alternatives_local)
             if (ificlaims_allowed) {
+                const {IFIClaimsDocument} = require("patzilla.access.ificlaims");
                 var ificlaims_doc = new IFIClaimsDocument({document_number: document_missing.number});
 
                 // TODO:
@@ -1090,7 +1101,7 @@ export const NavigatorApp = Marionette.Application.extend({
             'modified ' + moment(project.get('modified')).fromNow() + '.'
         );
         $('#ui-opaquelink-expiry').html(
-            'Link expires ' + moment(this.config.get('link_expires')).fromNow() + '.'
+            'Link expires ' + moment(this.options.config.get('link_expires')).fromNow() + '.'
         );
 
 
@@ -1100,7 +1111,7 @@ export const NavigatorApp = Marionette.Application.extend({
         // must not expect a *fully* initialized project/basket structure.
         // 2016-05-02: Now updating config model after fetching the basket.
         var register_project = function() {
-            _this.config.set('project', project.get('name'));
+            _this.options.config.set('project', project.get('name'));
         }
 
         // Activate basket
@@ -1183,7 +1194,7 @@ export const NavigatorApp = Marionette.Application.extend({
             //el: $('#basket-area'),
             model: basket,
         });
-        this.basketRegion.show(this.basketView);
+        this.mainView.showChildView('basketRegion', this.basketView);
 
 
         // B. event listeners
@@ -1387,37 +1398,37 @@ export const NavigatorApp = Marionette.Application.extend({
     },
 
     user_has_module: function(module) {
-        var module_abo = _(this.config.get('user.modules')).contains(module);
-        var development_mode = this.config.get('request.host_name').endsWith('localhost');
+        var module_abo = _(this.options.config.get('user.modules')).contains(module);
+        var development_mode = this.options.config.get('request.host_name').endsWith('localhost');
         return module_abo || development_mode;
     },
 
     register_component: function(name) {
-        this.config.get('component_list').push(name);
+        this.options.config.get('component_list').push(name);
     },
 
     component_enabled: function(name) {
-        //log('is_enabled?: ', this.config.get('component_list'), name);
-        return _.contains(this.config.get('component_list'), name);
+        //log('is_enabled?: ', this.options.config.get('component_list'), name);
+        return _.contains(this.options.config.get('component_list'), name);
     },
 
     register_datasource: function(name, info) {
         log('Registering data source adapter for "' + name + '"');
-        this.config.get('datasources')[name] = info;
+        this.options.config.get('datasources')[name] = info;
     },
 
     datasource_info: function(name) {
-        return this.config.get('datasources')[name];
+        return this.options.config.get('datasources')[name];
     },
     has_datasource: function(name) {
-        return !_.isEmpty(this.config.get('datasources')[name]);
+        return !_.isEmpty(this.options.config.get('datasources')[name]);
     },
     current_datasource_info: function() {
         var datasource = this.get_datasource();
         return this.datasource_info(datasource);
     },
     is_datasource_enabled: function(name) {
-        var whitelist = navigatorApp.config.get('datasources_enabled');
+        var whitelist = navigatorApp.options.config.get('datasources_enabled');
         return _.contains(whitelist, name);
     },
 

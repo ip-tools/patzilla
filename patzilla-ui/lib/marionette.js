@@ -4,31 +4,32 @@
 
 import Marionette from 'backbone.marionette';
 
-// Marionette 2.4.7 uses jQuery Deferreds.
-// Preserve synchronous initializer execution with jQuery 3.
-// https://github.com/ip-tools/patzilla/pull/168#issuecomment-6548579723
-Marionette.Callbacks.prototype.add = function(callback, contextOverride) {
-    this._callbacks.push({cb: callback, ctx: contextOverride});
 
-    this._deferred.done(function(args) {
-        callback.call(contextOverride || args.context, args.options);
-    });
-};
-
-// Marionette 2.4.7 relies on $el.selector, removed in jQuery 3.
-// Restore the configured element so selector-based regions can re-query.
-// https://github.com/ip-tools/patzilla/pull/168#discussion_r4437458622
-
-
+/* `Controller` was removed in Marionette v3.
+ * https://github.com/marionettejs/marionette-v3-compat/blob/master/src/Controller.js
+ **/
 (function() {
-    var ensureElement = Marionette.Region.prototype._ensureElement;
-    Marionette.Region.prototype._ensureElement = function() {
-        if (!_.has(this, '_resetEl')) {
-            this._resetEl = this.el;
-        }
-        return ensureElement.apply(this, arguments);
-    };
+  Marionette.Controller = Marionette.Object.extend({
+    constructor(options) {
+      this.options = options || {};
+
+      const args = Array.prototype.slice.call(arguments);
+      args[0] = this.options;
+
+      Marionette.deprecate('Marionette.Controller is deprecated. Use Marionette.Object');
+      Marionette.Object.prototype.constructor.apply(this, args);
+    },
+
+    destroy: function(...args) {
+      this.triggerMethod('before:destroy', ...args);
+      this.triggerMethod('destroy', ...args);
+      this.stopListening();
+
+      return this;
+    }
+  });
 })();
+
 
 Marionette.Region.prototype.reset = function() {
 
@@ -67,12 +68,20 @@ export const ModalRegion = Marionette.Region.extend({
         this.$el.toggleClass('fade', true);
     },
 
-    onShow: function() {
-        this.$el.modal('show');
+    onShow: function(region, view) {
+        this.$modal = view.$el;
+        this.listenTo(view, 'before:destroy', this.hideModal);
+        this.$modal.modal('show');
+    },
+
+    hideModal: function() {
+        if (this.$modal) {
+            this.$modal.modal('hide');
+        }
     },
 
     onDestroy: function() {
-        this.$el.modal('hide');
+        this.hideModal();
     },
 
 });
@@ -82,9 +91,7 @@ export const ModalRegion = Marionette.Region.extend({
 (function () {
 
   Marionette.Controller.extendEach     =
-    Marionette.View.extendEach         =
-    Marionette.ItemView.extendEach     =
-    Marionette.LayoutView.extendEach   = Backbone.Model.extendEach;
+    Marionette.View.extendEach         = Backbone.Model.extendEach;
 
 })();
 
@@ -112,7 +119,7 @@ export const DirectRenderMixin = {
     renderOnce: false,
 
     // Bookkeeping about whether this has already been rendered
-    isRendered: false,
+    _hasRendered: false,
 
     // How to display an item view with no tag
     // https://stackoverflow.com/questions/14659597/backbonejs-view-self-template-replacewith-and-events/49246853#49246853
@@ -133,10 +140,10 @@ export const DirectRenderMixin = {
     render: function() {
 
         // Suppress multiple rendering, if requested
-        if (this.isRendered && this.renderOnce) {
+        if (this._hasRendered && this.renderOnce) {
             return this;
         }
-        this.isRendered = true;
+        this._hasRendered = true;
 
         //log('DirectRenderMixin::render', this);
 
@@ -146,7 +153,7 @@ export const DirectRenderMixin = {
         this.triggerMethod("item:before:render", this);
 
         var data = this.serializeData();
-        data = this.mixinTemplateHelpers(data);
+        data = this.mixinTemplateContext(data);
 
         var template = this.getTemplate();
         var html = Marionette.Renderer.render(template, data);

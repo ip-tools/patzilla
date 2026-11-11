@@ -5,7 +5,7 @@
 import Marionette from 'backbone.marionette';
 const Grid = require('split-grid').default;
 
-export const LayoutView = Marionette.LayoutView.extend({
+export const MainView = Marionette.View.extend({
 
     template: require('./root.html'),
     regions: {
@@ -15,57 +15,58 @@ export const LayoutView = Marionette.LayoutView.extend({
     },
 
     initialize: function() {
-        //log('LayoutView::initialize');
+        log('MainView::initialize');
     },
 
-    onShow: function() {
+    onRender: function() {
+        log("MainView::onRender");
 
         // Select between regular vs. vendor-specific header and content variants
-        var header_layout = navigatorApp.theme.get('ui.header_layout');
-        var content_layout = navigatorApp.theme.get('ui.content_layout');
+        var header_layout = navigatorApp.options.theme.get('ui.header_layout');
+        var content_layout = navigatorApp.options.theme.get('ui.content_layout');
 
         if (header_layout == 'wide') {
-            this.header.show(new WideHeaderView());
+            this.showChildView('header', new WideHeaderView());
         } else {
-            this.header.show(new HeaderView());
+            this.showChildView('header', new HeaderView());
         }
 
         if (content_layout == 'grid') {
-            this.content.show(new GridContentView());
+            this.showChildView('content', new GridContentView());
         } else {
-            this.content.show(new ContentView());
+            this.showChildView('content', new ContentView());
         }
 
         // Select footer view
-        this.footer.show(new FooterView());
+        this.showChildView('footer', new FooterView());
     },
 
-    templateHelpers: {},
+    templateContext: {},
 
     onDomRefresh: function() {
-        //log('LayoutView::onDomRefresh');
+        log('MainView::onDomRefresh');
     },
 
 });
 
-const ContentView = Marionette.ItemView.extend({
+const ContentView = Marionette.View.extend({
     template: require('./content.html'),
     initialize: function() {
         //log('ContentView::initialize');
-        this.templateHelpers.config = navigatorApp.config;
+        this.templateContext.config = navigatorApp.options.config;
     },
-    templateHelpers: {},
+    templateContext: {},
 });
 
-const GridContentView = Marionette.ItemView.extend({
+const GridContentView = Marionette.View.extend({
     template: require('./content_grid.html'),
     initialize: function() {
         //log('GridContentView::initialize');
-        this.templateHelpers.config = navigatorApp.config;
+        this.templateContext.config = navigatorApp.options.config;
     },
-    templateHelpers: {},
-    onShow: function() {
-        //log('GridContentView::onShow');
+    templateContext: {},
+    onRender: function() {
+        //log('GridContentView::onRender');
 
         // Setup Grid
         // https://split.js.org/
@@ -77,7 +78,7 @@ const GridContentView = Marionette.ItemView.extend({
                 element: gutter,
             }],
         });
-        //log('GridContentView::onShow grid:', grid);
+        //log('GridContentView::onRender grid:', grid);
 
     },
     onDomRefresh: function() {
@@ -85,20 +86,20 @@ const GridContentView = Marionette.ItemView.extend({
     },
 });
 
-const MenuView = Marionette.ItemView.extend({
+const MenuView = Marionette.View.extend({
     template: require('./menu.html'),
     tagName: 'span',
     initialize: function() {
         //log('MenuView::initialize');
     },
     /*
-    templateHelpers: {
+    templateContext: {
         component_enabled: navigatorApp.component_enabled;
     },
     */
 });
 
-const HeaderView = Marionette.LayoutView.extend({
+const HeaderView = Marionette.View.extend({
 
     regions: {
         menu: "#menu-region",
@@ -109,20 +110,16 @@ const HeaderView = Marionette.LayoutView.extend({
         //log('HeaderView::initialize');
     },
 
-    onShow: function() {
-        //log('HeaderView::onShow');
-        this.menu.show(new MenuView());
-    },
-
-    templateHelpers: function() {
+    templateContext: function() {
         return {
-            config: navigatorApp.config.attributes,
-            theme: navigatorApp.theme.attributes,
+            config: navigatorApp.options.config.attributes,
+            theme: navigatorApp.options.theme.attributes,
         };
     },
 
     onRender: function() {
         //log('HeaderView::onRender');
+        this.showChildView('menu', new MenuView());
     },
 
     onDomRefresh: function() {
@@ -132,7 +129,7 @@ const HeaderView = Marionette.LayoutView.extend({
 });
 
 
-const WideHeaderView = Marionette.LayoutView.extend({
+const WideHeaderView = Marionette.View.extend({
 
     regions: {
         menu: "#menu-region",
@@ -140,8 +137,8 @@ const WideHeaderView = Marionette.LayoutView.extend({
 
     initialize: function() {
         //log('WideHeaderView::initialize');
-        this.config = this.templateHelpers.config;
-        this.theme = this.templateHelpers.theme;
+        this.config = this.templateContext.config;
+        this.theme = this.templateContext.theme;
     },
 
     //template: require('./header.html'),
@@ -152,20 +149,16 @@ const WideHeaderView = Marionette.LayoutView.extend({
         return header_wide(model);
     },
 
-    onShow: function() {
-        //log('WideHeaderView::onShow');
-        this.menu.show(new MenuView());
-    },
-
-    templateHelpers: function() {
+    templateContext: function() {
         return {
-            config: navigatorApp.config.attributes,
-            theme: navigatorApp.theme.attributes,
+            config: navigatorApp.options.config.attributes,
+            theme: navigatorApp.options.theme.attributes,
         };
     },
 
     onRender: function() {
         //log('WideHeaderView::onRender');
+        this.showChildView('menu', new MenuView());
     },
 
     onDomRefresh: function() {
@@ -175,19 +168,19 @@ const WideHeaderView = Marionette.LayoutView.extend({
 });
 
 
-const FooterView = Marionette.ItemView.extend({
+const FooterView = Marionette.View.extend({
 
     template: require('./footer.html'),
 
     initialize: function() {
         //log('FooterView::initialize');
-        this.config = this.templateHelpers.config = navigatorApp.config;
+        this.config = this.templateContext.config = navigatorApp.options.config;
     },
 
-    templateHelpers: function() {
+    templateContext: function() {
         return {
-            config: navigatorApp.config.attributes,
-            theme: navigatorApp.theme.attributes,
+            config: navigatorApp.options.config.attributes,
+            theme: navigatorApp.options.theme.attributes,
         };
     },
 

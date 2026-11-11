@@ -17,7 +17,7 @@ import FullScreenDialog from './fullscreendialog';
 const log = console.log;
 
 
-export class DialogWidget extends classes.many(Marionette.ItemView, DirectRenderMixin) {
+export class DialogWidget extends classes.many(Marionette.View, DirectRenderMixin) {
 
     el: any;
 

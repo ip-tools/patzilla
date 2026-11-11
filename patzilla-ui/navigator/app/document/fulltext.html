@@ -5,13 +5,10 @@
 
 <span data-area="text">
 <strong><%= title %></strong> <%= language ? '[' + language + ']' : '' %>
-<br/><br/>
-<span class="keyword"><%= content %></span>
-<br/><br/><br/>
+<div class="keyword"><%= content %></div>
 <% if (datasource) { %>
-<span class="pull-right text-small text-muted">
-    Data source: <span class="datasource-label"><%= datasource %></span>
-</span>
+<div class="text-align-right text-small text-muted">
+    Fulltext data source: <span class="datasource-label"><%= datasource %></span>
+</div>
 <% } %>
-<span class="clearfix"></span>
 </span>

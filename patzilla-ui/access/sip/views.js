@@ -14,7 +14,7 @@ export const SipResultView = ResultItemView.extend({
     },
 
     // TODO: Maybe refactor to models/sip.js
-    templateHelpers: _({}).extend(QueryLinkMixin.prototype, {
+    templateContext: _({}).extend(QueryLinkMixin.prototype, {
 
         is_application_number_invalid: function() {
             return this.cc == 'JP' && (this.ApplicationNumber.length == 7 || this.ApplicationNumber.length == 8);

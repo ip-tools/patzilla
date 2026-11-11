@@ -5,7 +5,7 @@
 import Marionette from 'backbone.marionette';
 import {ModalRegion} from "patzilla.lib.marionette";
 
-export const GenericResultView = Marionette.ItemView.extend({
+export const GenericResultView = Marionette.View.extend({
 
     tagName: "div",
     id: "result-view",
@@ -24,11 +24,12 @@ export const GenericResultView = Marionette.ItemView.extend({
     },
 
     user_message: function(message, kind) {
-        $('#result-info').empty();
-        return navigatorApp.ui.user_alert(message, kind, '#result-info');
+        var result_info = this.$el.find('#result-info');
+        result_info.empty();
+        return navigatorApp.ui.user_alert(message, kind, result_info);
     },
 
-    templateHelpers: {
+    templateContext: {
     },
 
     events: {
@@ -68,7 +69,7 @@ export const GenericResultView = Marionette.ItemView.extend({
         this.$el.find('#result-to-basket-button').hide();
     },
 
-    onShow: function() {
+    onRender: function() {
         this.start();
     },
 

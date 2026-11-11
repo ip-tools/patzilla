@@ -30,7 +30,7 @@ const DocumentBaseController = Marionette.Controller.extend({
         // ------------------------------------------
         //   print mode
         // ------------------------------------------
-        var MODE_PRINT = navigatorApp.config.get('mode') == 'print';
+        var MODE_PRINT = navigatorApp.options.config.get('mode') == 'print';
         if (MODE_PRINT) {
             return;
         }
@@ -241,8 +241,8 @@ const DocumentDetailsController = Marionette.Controller.extend({
         // Resolve effective fulltext datasource by country in order of definition
         var datasource_name;
         var country = document.get('@country');
-        _.find(navigatorApp.config.get('system').datasources, function(name) {
-            var datasource_info = navigatorApp.config.get('system').datasource[name];
+        _.find(navigatorApp.options.config.get('system').datasources, function(name) {
+            var datasource_info = navigatorApp.options.config.get('system').datasource[name];
             if (datasource_info.fulltext_enabled && _.contains(datasource_info.fulltext_countries, country)) {
                 datasource_name = name;
                 return true;
@@ -458,7 +458,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
             _this.indicate_activity(container, false);
 
             // indicate family acquistion failed
-            const FamilyFailedView = Marionette.ItemView.extend({
+            const FamilyFailedView = Marionette.View.extend({
                 render : function (){
                     this.$el.append('No family information available.');
                 }
@@ -749,7 +749,7 @@ const PdfPanelController = Marionette.Controller.extend({
 
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.document_base = new DocumentBaseController();
     this.document_details = new DocumentDetailsController();
     this.document_carousel = new DocumentCarouselController();

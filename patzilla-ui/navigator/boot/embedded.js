@@ -43,9 +43,9 @@ EmbeddingController = Marionette.Controller.extend({
     },
 
     hide_regions: function() {
-        navigatorApp.queryBuilderRegion.empty();
-        navigatorApp.basketRegion.empty();
-        navigatorApp.metadataRegion.empty();
+        navigatorApp.mainView.getRegion('queryBuilderRegion').empty();
+        navigatorApp.mainView.getRegion('basketRegion').empty();
+        navigatorApp.mainView.getRegion('metadataRegion').empty();
     },
 
     run: function() {
@@ -59,7 +59,7 @@ EmbeddingController = Marionette.Controller.extend({
     },
 
     process_results: function() {
-        navigatorApp.basketRegion.empty();
+        navigatorApp.mainView.getRegion('basketRegion').empty();
 
         /*
         log('results:', navigatorApp.metadata.get('result_count_received'));
@@ -109,11 +109,11 @@ EmbeddingController = Marionette.Controller.extend({
 $(function() {
 
     console.info("Start application [embedded]");
-    navigatorApp.config.set('embedded', true);
+    navigatorApp.options.config.set('embedded', true);
 
-    navigatorApp.addInitializer(function(options) {
+    navigatorApp.on('before:start', function(options) {
 
-        this.embeddingController = new EmbeddingController(options=embed_options);
+        this.embeddingController = new EmbeddingController(embed_options);
 
         this.listenTo(this, 'application:ready', function() {
             this.embeddingController.run();
@@ -128,10 +128,10 @@ $(function() {
     // Transfer some options to application before booting
     if (embed_options && embed_options.params) {
         if (embed_options.params.context) {
-            navigatorApp.config.set('context', embed_options.params.context);
+            navigatorApp.options.config.set('context', embed_options.params.context);
         }
         if (embed_options.params.mode) {
-            navigatorApp.config.set('mode', embed_options.params.mode);
+            navigatorApp.options.config.set('mode', embed_options.params.mode);
         }
     }
 

@@ -46,7 +46,7 @@ const AbstractResultView = GenericResultView.extend({
         this.fetcher_class = null;
     },
 
-    onShow: function() {
+    onRender: function() {
         this.hide_buttons();
         this.start();
     },
@@ -112,7 +112,7 @@ const ResultAnalyticsDaterangeView = AbstractResultView.extend({
         this.kind = options.kind;
     },
 
-    onShow: function() {
+    onRender: function() {
         this.start();
     },
 
@@ -157,7 +157,7 @@ const ResultAnalyticsDistinctApplicantView = AbstractResultView.extend({
 });
 
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenTo(this, 'application:ready', function() {
         var _this = this;

@@ -11,7 +11,7 @@ const ReadingController = Marionette.Controller.extend({
         console.log('ReadingController.initialize');
 
         // Vendor-specific color of reading indicator
-        var vendor = navigatorApp.config.get('vendor');
+        var vendor = navigatorApp.options.config.get('vendor');
         var color = '#2f96b4';
         if (vendor == 'serviva') {
             color = '#3ebfd9';
@@ -78,7 +78,7 @@ const ReadingController = Marionette.Controller.extend({
 });
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.reading = new ReadingController();
     this.listenTo(this, 'results:ready', function() {
         this.reading.setup_ui();

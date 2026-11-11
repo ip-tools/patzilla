@@ -29,7 +29,7 @@ const IFIClaimsCrawler = DatasourceCrawler.extend({
 });
 
 // Register data source adapter with application
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.register_datasource('ificlaims', {
 
         // The title used when referencing this data source to the user
@@ -71,7 +71,7 @@ navigatorApp.addInitializer(function(options) {
 });
 
 
-const IFIClaimsDocument = Backbone.Model.extend({});
+export const IFIClaimsDocument = Backbone.Model.extend({});
 
 _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLinkMixin.prototype, {
 

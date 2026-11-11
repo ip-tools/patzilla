@@ -195,7 +195,7 @@ const WaypointController = Marionette.Controller.extend({
 });
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.waypoints = new WaypointController();
     this.listenTo(this, 'results:ready', function() {
         this.waypoints.setup_ui();

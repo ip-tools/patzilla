@@ -3,7 +3,6 @@
 'use strict';
 
 import Marionette from 'backbone.marionette';
-const {ModalRegion} = require("patzilla.lib.marionette");
 
 require('jquery.highlight.bartaz');
 
@@ -40,7 +39,7 @@ const KeywordMapCollection = Backbone.Collection.extend({
 });
 
 
-const KeywordEditorEntryView = Marionette.ItemView.extend({
+const KeywordEditorEntryView = Marionette.View.extend({
 
     tagName: "tr",
     template: require('./keyword-editor-item.html'),
@@ -49,7 +48,7 @@ const KeywordEditorEntryView = Marionette.ItemView.extend({
         //console.log('KeywordEditorEntryView.initialize');
     },
 
-    templateHelpers: {
+    templateContext: {
     },
 
     onDomRefresh: function() {
@@ -65,7 +64,8 @@ const KeywordEditorView = Marionette.CompositeView.extend({
 
     tagName: "div",
     id: "keyword-editor",
-    className: "modal fade",
+    // Close synchronously so Bootstrap cleans up before Marionette removes the view.
+    className: "modal",
     template: require('./keyword-editor.html'),
     childView: KeywordEditorEntryView,
     childViewContainer: 'tbody',
@@ -89,33 +89,53 @@ const KeywordEditorView = Marionette.CompositeView.extend({
         }});
     },
 
-    templateHelpers: {
+    templateContext: {
     },
 
-    onShow: function() {
+    onAttach: function() {
+        var view = this;
+        var alive = true;
+        var shown = false;
 
-        // Dialog no longer displays with bs3.
-        this.$el.modal("show");
+        this.once('destroy', function() {
+            alive = false;
+        });
+
+        this.$el.one('shown.bs.modal', function() {
+            shown = true;
+        });
+
+        this.$el.one('hidden.bs.modal', function() {
+            view.destroy();
+        });
 
         this.setup_ui();
 
-        var _this = this;
+        this.$('#keyword-editor-save-button').off('click').on('click', function() {
+            $.when(view.save_models()).then(function() {
+                if (!alive) {
+                    return;
+                }
 
-        // "save" button should save all models and close modal dialog
-        $('#keyword-editor-save-button').off('click');
-        $('#keyword-editor-save-button').on('click', function() {
-            $.when(_this.save_models()).then(function() {
+                // Bootstrap ignores hide calls during the opening transition.
+                if (shown) {
+                    view.$el.modal('hide');
+                } else {
+                    view.$el.one('shown.bs.modal', function() {
+                        view.$el.modal('hide');
+                    });
+                }
 
-                // Hide modal after saving.
-                $("#keyword-editor").modal("hide");
-                // Needed for Marionette 2
-                $(".modal-backdrop").remove();
-
-                // Re-apply highlighting.
                 navigatorApp.keywords.unhighlight();
                 navigatorApp.keywords.highlight();
             });
         });
+
+        this.$el.modal('show');
+    },
+
+    onBeforeDestroy: function() {
+        this.$el.off('.keywordEditor');
     },
 
     save_models: function() {
@@ -220,15 +240,28 @@ const KeywordsController = Marionette.Controller.extend({
 
     setup_ui: function() {
 
-        this.keyword_editor = new KeywordEditorView({collection: this.keywordmaps});
-
         var _this = this;
 
         $('.action-keyword-editor').off('click').on('click', function(event) {
             event.preventDefault();
             if (_this.module_available) {
-                _this.keyword_modal = new ModalRegion({el: '#modal-area'});
-                _this.keyword_modal.show(_this.keyword_editor);
+
+                // Do not replace an editor while its modal is open or closing.
+                if (_this.keyword_editor) {
+                    return;
+                }
+
+                var editor = new KeywordEditorView({collection: _this.keywordmaps});
+                _this.keyword_editor = editor;
+
+                editor.once('destroy', function() {
+                    if (_this.keyword_editor === editor) {
+                        _this.keyword_editor = null;
+                    }
+                });
+
+                _this.keyword_modal = new Marionette.Region({el: '#modal-area'});
+                _this.keyword_modal.show(editor);
             } else {
                 navigatorApp.ui.notify_module_locked(_this.module_name);
             }
@@ -306,7 +339,7 @@ const KeywordsController = Marionette.Controller.extend({
 
 
 // setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
     this.keywords = new KeywordsController();
     this.listenTo(this, 'application:ready', function() {
         this.keywords.setup_ui();

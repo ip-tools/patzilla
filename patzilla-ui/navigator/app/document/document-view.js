@@ -9,7 +9,7 @@ const {TemplateHelperMixin} = require("./util.js");
 require('jquery.highlight.bartaz');
 
 // TODO: Rename to DocumentView
-export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
+export const OpsExchangeDocumentView = Marionette.View.extend({
 
     template: require('./document-view.html'),
     tagName: 'div',
@@ -33,10 +33,10 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
         //log('OpsExchangeDocumentView::initialize');
     },
 
-    // Namespace template variables to "data", also accounting for "templateHelpers".
+    // Namespace template variables to "data", also accounting for "templateContext".
     serializeData: function() {
         var data = _.clone(this.model.attributes);
-        _.extend(data, this.templateHelpers());
+        _.extend(data, this.templateContext());
         return {data: data};
     },
 
@@ -44,7 +44,7 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
 
         try {
             var args = Array.prototype.slice.apply(arguments);
-            var result = Marionette.LayoutView.prototype.render.apply(this, args);
+            var result = Marionette.View.prototype.render.apply(this, args);
             return result;
 
         } catch (error) {
@@ -52,7 +52,7 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
             var args = Array.prototype.slice.apply(arguments);
             this.model.set('error_message', error.message);
             this.template = require('./document-error.html');
-            var result = Marionette.LayoutView.prototype.render.apply(this, args);
+            var result = Marionette.View.prototype.render.apply(this, args);
             return result;
         }
 
@@ -91,7 +91,7 @@ export const OpsExchangeDocumentView = Marionette.LayoutView.extend({
         }
 
         // Apply different display flavor at runtime: More verbose labels for INID codes
-        var verbose_labels = navigatorApp.theme.get('feature.inid-verbose.enabled');
+        var verbose_labels = navigatorApp.options.theme.get('feature.inid-verbose.enabled');
         if (verbose_labels) {
             this.enable_verbose_labels();
         }

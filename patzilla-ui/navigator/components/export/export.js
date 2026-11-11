@@ -26,7 +26,7 @@ export const ExportPlugin = Backbone.Model.extend({
             var expiration_steps = ["short", "medium", "long"];
 
             // Extend share time when having special permissions.
-            if (navigatorApp.theme.get('ui.sharing.extra_long')) {
+            if (navigatorApp.options.theme.get('ui.sharing.extra_long')) {
                 expiration_steps.push("extra-long");
             }
 
@@ -387,7 +387,7 @@ export const ExportPlugin = Backbone.Model.extend({
 
         var deferred = $.Deferred();
 
-        var user = navigatorApp.config.get('user');
+        var user = navigatorApp.options.config.get('user');
         var project = navigatorApp.project;
         var basket = project.get('basket');
 
@@ -419,7 +419,7 @@ export const ExportPlugin = Backbone.Model.extend({
 
 });
 
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.exporter = new ExportPlugin();
     this.register_component('export');

@@ -17,7 +17,7 @@ elbody.addEventListener("keyup", function(event) {
     event.stopImmediatePropagation();
 }, true);
 
-export const HotkeysHelpView = Marionette.ItemView.extend({
+export const HotkeysHelpView = Marionette.View.extend({
 
     template: require('./hotkeys-help.html'),
 

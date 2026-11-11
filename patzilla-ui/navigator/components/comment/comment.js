@@ -59,7 +59,7 @@ const CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const CommentButtonView = Marionette.ItemView.extend({
+const CommentButtonView = Marionette.View.extend({
     template: require('./comment-button.html'),
     //tagName: null,
 
@@ -74,7 +74,7 @@ const CommentButtonView = Marionette.ItemView.extend({
 _.extend(CommentButtonView.prototype, DirectRenderMixin);
 
 
-const CommentTextView = Marionette.ItemView.extend({
+const CommentTextView = Marionette.View.extend({
     template: require('./comment-widget.html'),
     tagName: 'span',
 
@@ -177,8 +177,8 @@ const CommentManager = Marionette.Controller.extend({
         });
 
         // show views in regions
-        this.view.region_comment_button.show(this.comment_button);
-        this.view.region_comment_text.show(this.comment_text);
+        this.view.showChildView('region_comment_button', this.comment_button);
+        this.view.showChildView('region_comment_text', this.comment_text);
 
         // wire events
 
@@ -313,7 +313,7 @@ const CommentsPlugin = Marionette.Controller.extend({
 
 
 // Setup plugin
-navigatorApp.addInitializer(function(options) {
+navigatorApp.on("before:start", function(options) {
 
     this.listenToOnce(this, "application:init", function() {
 
