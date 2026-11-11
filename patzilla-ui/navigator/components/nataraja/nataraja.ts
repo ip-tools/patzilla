@@ -1,4 +1,4 @@
-import { DialogWidget } from 'patzilla.lib.mui.dialog';
+import { DialogWidget } from "../../../lib/mui/dialog";
 
 const log = console.log;
 
