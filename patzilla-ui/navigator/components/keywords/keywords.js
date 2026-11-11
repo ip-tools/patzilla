@@ -3,7 +3,6 @@
 'use strict';
 
 import Marionette from 'backbone.marionette';
-const {ModalRegion} = require("patzilla.lib.marionette");
 
 require('jquery.highlight.bartaz');
 
@@ -94,27 +93,45 @@ const KeywordEditorView = Marionette.CompositeView.extend({
     },
 
     onAttach: function() {
+        var view = this;
+        var alive = true;
+        var shown = false;
 
-        var _this = this;
+        this.once('destroy', function() {
+            alive = false;
+        });
 
-        this.$el.one('hidden.bs.modal.keywordEditor', function() {
-             _this.destroy();
+        this.$el.one('shown.bs.modal', function() {
+            shown = true;
+        });
+
+        this.$el.one('hidden.bs.modal', function() {
+            view.destroy();
         });
 
         this.setup_ui();
 
-        // "save" button should save all models and close modal dialog
-        $('#keyword-editor-save-button').off('click').on('click', function() {
-            $.when(_this.save_models()).then(function() {
+        this.$('#keyword-editor-save-button').off('click').on('click', function() {
+            $.when(view.save_models()).then(function() {
+                if (!alive) {
+                    return;
+                }
 
-                // Hide modal after saving.
-                _this.$el.modal("hide");
+                // Bootstrap ignores hide calls during the opening transition.
+                if (shown) {
+                    view.$el.modal('hide');
+                } else {
+                    view.$el.one('shown.bs.modal', function() {
+                        view.$el.modal('hide');
+                    });
+                }
 
-                // Re-apply highlighting.
                 navigatorApp.keywords.unhighlight();
                 navigatorApp.keywords.highlight();
             });
         });
+
+        this.$el.modal('show');
     },
 
     onBeforeDestroy: function() {
@@ -228,9 +245,23 @@ const KeywordsController = Marionette.Controller.extend({
         $('.action-keyword-editor').off('click').on('click', function(event) {
             event.preventDefault();
             if (_this.module_available) {
-                _this.keyword_editor = new KeywordEditorView({collection: _this.keywordmaps});
-                _this.keyword_modal = new ModalRegion({el: '#modal-area'});
-                _this.keyword_modal.show(_this.keyword_editor);
+
+                // Do not replace an editor while its modal is open or closing.
+                if (_this.keyword_editor) {
+                    return;
+                }
+
+                var editor = new KeywordEditorView({collection: _this.keywordmaps});
+                _this.keyword_editor = editor;
+
+                editor.once('destroy', function() {
+                    if (_this.keyword_editor === editor) {
+                        _this.keyword_editor = null;
+                    }
+                });
+
+                _this.keyword_modal = new Marionette.Region({el: '#modal-area'});
+                _this.keyword_modal.show(editor);
             } else {
                 navigatorApp.ui.notify_module_locked(_this.module_name);
             }
