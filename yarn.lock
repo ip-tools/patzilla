@@ -4204,9 +4204,10 @@ loader-utils@^1.0.2, loader-utils@^1.1.0, loader-utils@^1.2.3, loader-utils@^1.4
     emojis-list "^3.0.0"
     json5 "^2.1.2"
 
-"localforage-backbone@https://github.com/ip-tools/localForage-backbone#0.6.3-alpha.1":
+localforage-backbone@^0.6:
   version "0.6.2"
-  resolved "https://github.com/ip-tools/localForage-backbone#d096cbe0d9b50f0f7f6fec12b724d84eda1e36bf"
+  resolved "https://registry.yarnpkg.com/localforage-backbone/-/localforage-backbone-0.6.2.tgz#4546ca314906d377983fe0aa632861ad5dadd456"
+  integrity sha512-Z2KEWvrpF/J2b7uzQuK+i1WbxtY/O0oS5XntoPNSlHs5LYMvbbXQ10XK++ZE8F9Y6P7GeG0XE6VkBIzIhfSulQ==
 
 localforage@^1.10:
   version "1.10.0"
