@@ -427,9 +427,11 @@ var abstract_list = data.get_abstract_list();
                 </div>
 
             </div>
-            <div class="col-lg-7 tab-content document-details">
+            <div class="col-lg-7 tab-content document-details d-flex flex-column justify-content-between">
 
-                <div id="document-details-biblio-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane in active">
+                <div id="document-details-biblio-container-<%= patent_number %>"
+                     data-identifier="<%= patent_number %>"
+                     class="tab-pane in active">
                     <dl class="dl-horizontal dl-horizontal-biblio">
 
                         <dt class="inid-tooltip" data-toggle="tooltip" title="Applicants">
@@ -589,17 +591,6 @@ var abstract_list = data.get_abstract_list();
                         <br/>
                         <% } %>
 
-                        <%
-                        var datasource_label = data.get_datasource_label();
-                        if (datasource_label) {
-                        %>
-                        <br/><br/><br/>
-                                        <span class="pull-right text-small text-muted">
-                                            Data source: <%= datasource_label %>
-                                        </span>
-                        <span class="clearfix"></span>
-                        <% } %>
-
                     </dl>
                 </div>
 
@@ -638,6 +629,15 @@ var abstract_list = data.get_abstract_list();
                 <!-- embed 3rd-party component -->
                 <div class="embed-item" data-embed-url="<%= data.config.get('embed-item-url') %>" data-document-number="<%= patent_number %>">
                 </div>
+
+                <%
+                var datasource_label = data.get_datasource_label();
+                if (datasource_label) {
+                %>
+                <div class="text-align-right text-small text-muted">
+                    Bibliographic data source: <%= datasource_label %>
+                </div>
+                <% } %>
 
             </div>
         </div>
