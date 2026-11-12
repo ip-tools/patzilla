@@ -5293,6 +5293,11 @@ uc.micro@^3.0.0:
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-3.0.0.tgz#64d6cb0bfe2a558ce0ec7c8c0dc88a02d898f506"
   integrity sha512-U3PppEkleoTnIfi8BozMx3yju3qc/L6SwqWo2Sw+54PX+PX0q9I+r1Um5HCmqD7n9VDX5/v3vQH/AjA6deDdtw==
 
+uglify-js@^3.17.4:
+  version "3.19.3"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.19.3.tgz#82315e9bbc6f2b25888858acd1fff8441035b77f"
+  integrity sha512-v3Xu+yuwBXisp6QYTcH4UbH+xYJXqnq2m/LtQVWKWzYc1iehYnLixoQDN9FH6/j9/oybfd6W9Ghwkl8+UMKTKQ==
+
 underscore-template-loader@^1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/underscore-template-loader/-/underscore-template-loader-1.2.0.tgz#16e77199aba6b69aa43e9dab16fa6601f02ad830"

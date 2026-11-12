@@ -329,6 +329,11 @@ const config = {
         }
     },
 
+   stats: {
+        errorDetails: true,
+        children: true
+   },
+
 };
 
 module.exports = config;

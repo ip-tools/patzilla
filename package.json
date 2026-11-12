@@ -30,8 +30,8 @@
   },
   "scripts": {
     "watch": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --watch",
-    "build": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --display detailed --display-error-details --progress",
-    "release": "webpack --mode=production --config=webpack.release.config.js --display detailed --display-error-details --progress"
+    "build": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --progress",
+    "release": "webpack --mode=production --config=webpack.release.config.js --progress"
   },
   "dependencies": {
     "@material/button": "^14",
@@ -114,6 +114,7 @@
     "style-loader": "^4",
     "ts-loader": "^9",
     "typescript": "^4",
+    "uglify-js": "^3.17.4",
     "underscore-template-loader": "^1",
     "webpack": "^5",
     "webpack-cli": "^5",
@@ -147,7 +148,6 @@
     "tar": "^7",
     "terser": "^4.8.1",
     "trim-newlines": "^3.0.1",
-    "uglify-js": "3.17.4",
     "underscore": "^1.13",
     "uuid": "^11",
     "yargs-parser": "^13"

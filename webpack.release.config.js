@@ -3,7 +3,7 @@
 var os = require('os');
 const config = require('./webpack.config');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MinimizerPlugin = require('minimizer-webpack-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
 
 // Signal minified resource names
@@ -49,57 +49,13 @@ config.plugins.push(
 
 );
 
-
+// https://webpack.js.org/plugins/minimizer-webpack-plugin/
+// https://www.npmjs.com/package/minimizer-webpack-plugin
+config.optimization.minimize = true;
 config.optimization.minimizer = [
-
-    // https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
-    new UglifyJsPlugin({
-        sourceMap: true,
-        cache: true,
+    new MinimizerPlugin({
         parallel: true,
-        /*
-        uglifyOptions: {
-            ie8: false,
-            compress: {
-                passes: 2,
-                //toplevel: true,
-                warnings: false,
-                properties: true,
-                sequences: true,
-                dead_code: true,
-                conditionals: true,
-                comparisons: true,
-                evaluate: true,
-                booleans: true,
-                unused: true,
-                loops: true,
-                hoist_funs: true,
-                hoist_props: true,
-                hoist_vars: true,
-                //cascade: true,
-                if_return: true,
-                join_vars: true,
-                drop_console: false,
-                drop_debugger: true,
-                //unsafe: true,
-                negate_iife: true,
-                //side_effects: true
-            },
-            mangle: {
-                //toplevel: true,
-                //sort: true,
-                //eval: true,
-                properties: true
-            },
-            output: {
-                comments: false,
-                beautify: false,
-            },
-        },
-        */
-    })
-
+    }),
 ];
-
 
 module.exports = config;
