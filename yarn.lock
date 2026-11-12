@@ -3618,12 +3618,9 @@ jest-worker@^27.4.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
-jq-pagination@^1.4:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/jq-pagination/-/jq-pagination-1.4.1.tgz#6752704f410b191e59ac91941a3a1c1cd3192481"
-  integrity sha512-MV5JOMRJm/MXHFU3AWy8lHnKOFGh4zUS4RBslmmMOJfafdLLv/D21KZvKgeA8saVH4Kw4w+/bkID36Wbe48nAg==
-  dependencies:
-    jquery ">=1.7"
+"jq-pagination@https://github.com/ip-tools/jqPagination#1.4.2-alpha.2":
+  version "1.4.2-alpha.2"
+  resolved "https://github.com/ip-tools/jqPagination#793f3a40bb4fd44e9b2a0f0ad2af86942ce1f793"
 
 jquery-caret-plugin@^1.5:
   version "1.5.3"

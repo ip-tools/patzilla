@@ -57,7 +57,7 @@
     "css-element-queries": "^1",
     "file-saver": "^2",
     "humanize-plus": "^1",
-    "jq-pagination": "^1.4",
+    "jq-pagination": "https://github.com/ip-tools/jqPagination#1.4.2-alpha.2",
     "jquery": "^3.7",
     "jquery-caret-plugin": "^1.5",
     "jquery-hotkeys": "^0.2",
