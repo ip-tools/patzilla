@@ -3,6 +3,7 @@
 'use strict';
 
 import Marionette from 'backbone.marionette';
+import moment from "moment";
 const bootbox = require('bootbox');
 const {RadioPlus} = require("patzilla.lib.radioplus");
 const {FIELDS_KNOWLEDGE} = require("./expression-fields.js");

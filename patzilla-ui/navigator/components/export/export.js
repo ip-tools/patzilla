@@ -2,6 +2,8 @@
 // (c) 2016-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import moment from "moment";
+
 require('jquery.redirect');
 require('bootstrap-slider/dist/css/bootstrap-slider');
 const Slider = require('bootstrap-slider');

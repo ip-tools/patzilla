@@ -3,6 +3,7 @@
 'use strict';
 
 import Marionette from 'backbone.marionette';
+import moment from "moment";
 
 require('patzilla.navigator.components.storage');
 var slugify = require('slugify');

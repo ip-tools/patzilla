@@ -70,7 +70,6 @@ const config = {
             '_': 'underscore',
             '_.str': 'underscore.string',
             '_.string': 'underscore.string',
-            'moment': 'moment',
             'Humanize': 'humanize-plus',
         }),
 
