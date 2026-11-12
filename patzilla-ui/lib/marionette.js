@@ -8,7 +8,6 @@ import {MnObject, Region, View} from "marionette";
 /* `Controller` was removed in Marionette v3.
  * https://github.com/marionettejs/marionette-v3-compat/blob/master/src/Controller.js
  **/
-(function() {
   export const MarionetteController = MnObject.extend({
     constructor(options) {
       this.options = options || {};
@@ -28,10 +27,9 @@ import {MnObject, Region, View} from "marionette";
       return this;
     }
   });
-})();
 
 
-Marionette.Region.prototype.reset = function() {
+Region.prototype.reset = function() {
 
     // Also support reset() before the first show().
     if (!_.has(this, '_resetEl')) {
