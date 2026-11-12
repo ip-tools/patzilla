@@ -29,36 +29,13 @@ import {MnObject, Region, View} from "marionette";
   });
 
 
-Region.prototype.reset = function() {
-
-    // Also support reset() before the first show().
-    if (!_.has(this, '_resetEl')) {
-        this._resetEl = this.getOption('el');
-    }
-
-    this.empty();
-
-    this.el = this._resetEl;
-    if (this.el instanceof Backbone.$) {
-        this.el = this.el[0];
-    }
-
-    if (_.isObject(this.el)) {
-        this.$el = this.getEl(this.el);
-    } else {
-        delete this.$el;
-    }
-
-    return this;
-};
-
 // Widget: Modal container as Marionette region component
 // http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
 export const ModalRegion = Region.extend({
 
     constructor: function() {
-        Marionette.Region.prototype.constructor.apply(this, arguments);
+        Region.prototype.constructor.apply(this, arguments);
         this.$el.toggleClass('fade', true);
     },
 
