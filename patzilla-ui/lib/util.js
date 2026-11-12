@@ -2,6 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 require('underscore');
 require('underscore.string');
+const moment = require("moment");
 
 function to_list(value) {
     return _.isArray(value) && value || [value];

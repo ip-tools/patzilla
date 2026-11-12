@@ -4,6 +4,7 @@
 
 import Marionette from 'backbone.marionette';
 import {GenericExchangeDocument} from "patzilla.access.base";
+import moment from "moment";
 
 /**
  * ------------------------------------------
