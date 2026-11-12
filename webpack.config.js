@@ -50,13 +50,6 @@ const config = {
         //hints: false,
     },
 
-    amd: {
-        'jquery': true,
-        'classie': true,
-        'localforage.nopromises': true,
-        'localforage.backbone': true,
-    },
-
     plugins: [
 
         new CleanWebpackPlugin({
