@@ -2,13 +2,13 @@
 // (c) 2015 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 require('waypoints/lib/jquery.waypoints.js');
 require('waypoints/lib/shortcuts/inview.js');
 require('waypoints/lib/shortcuts/sticky.js');
 
-const WaypointController = Marionette.Controller.extend({
+const WaypointController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('WaypointController.initialize');

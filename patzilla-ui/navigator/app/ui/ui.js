@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {View} from 'marionette';
 import urlJoin from 'url-join';
 import ClipboardJS from "clipboard";
 
@@ -16,7 +16,7 @@ import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 import {xhr_decode_error} from "patzilla.lib.util";
 
 
-const UiController = Marionette.View.extend({
+const UiController = View.extend({
 
     initialize: function() {
         log('UiController.initialize');

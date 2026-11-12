@@ -3,7 +3,7 @@
 'use strict';
 
 import moment from "moment";
-import Marionette from 'marionette';
+import {View} from 'marionette';
 
 const bootbox = require('bootbox');
 const {RadioPlus} = require("patzilla.lib.radioplus");
@@ -13,7 +13,7 @@ require('select2/dist/js/select2.js');
 require('select2/dist/css/select2.css');
 require('jquery-caret-plugin/dist/jquery.caret');
 
-const QueryBuilderView = Marionette.View.extend({
+const QueryBuilderView = View.extend({
 
     template: require('./querybuilder.html'),
 

@@ -2,10 +2,10 @@
 // (c) 2014-2015 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'marionette';
+import {View} from 'marionette';
 import {ModalRegion} from "patzilla.lib.marionette";
 
-export const GenericResultView = Marionette.View.extend({
+export const GenericResultView = View.extend({
 
     tagName: "div",
     id: "result-view",

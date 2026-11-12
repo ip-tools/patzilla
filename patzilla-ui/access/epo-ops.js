@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 const {DatasourceCrawler} = require("./base");
 const {OpsBaseModel} = require("./epo-ops-base");
@@ -876,7 +876,7 @@ export const OpsExchangeDocumentCollection = Backbone.Collection.extend({
 });
 
 
-export const OpsFulltext = Marionette.Controller.extend({
+export const OpsFulltext = MarionetteController.extend({
 
     initialize: function(document_number) {
         log('OpsFulltext.initialize');

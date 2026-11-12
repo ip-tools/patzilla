@@ -2,13 +2,13 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
 import { StackDisplayMode } from 'patzilla.navigator.components.stack';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 require('jquery.viewport');
 
 
-const ViewportPlugin = Marionette.Controller.extend({
+const ViewportPlugin = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('ViewportPlugin.initialize');

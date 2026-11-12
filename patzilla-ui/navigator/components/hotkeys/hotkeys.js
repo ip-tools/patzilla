@@ -2,12 +2,12 @@
 // (c) 2014,2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
 import urlJoin from 'url-join';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 require('jquery-hotkeys');
 
-export const HotkeysPlugin = Marionette.Controller.extend({
+export const HotkeysPlugin = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('HotkeysPlugin.initialize');

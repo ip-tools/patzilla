@@ -3,7 +3,7 @@
 'use strict';
 
 import moment from "moment";
-import Marionette from 'marionette';
+import {View} from 'marionette';
 
 require('patzilla.navigator.components.storage');
 var slugify = require('slugify');
@@ -383,7 +383,7 @@ const ProjectCollection = Backbone.Collection.extend({
 });
 
 
-export const ProjectChooserView = Marionette.View.extend({
+export const ProjectChooserView = View.extend({
 
     template: require('./project.html'),
 
@@ -403,7 +403,7 @@ export const ProjectChooserView = Marionette.View.extend({
             log('ProjectChooserView: Skip rendering');
             return;
         }
-        return Marionette.View.prototype.render.call(this);
+        return View.prototype.render.call(this);
     },
 
     onDomRefresh: function() {

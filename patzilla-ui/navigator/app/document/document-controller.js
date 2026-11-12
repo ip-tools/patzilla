@@ -2,7 +2,9 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
+import {Region, View} from "marionette";
+
 const {Nataraja} = require("patzilla.navigator.components.nataraja");
 const {OpsFamilyCollection, OpsFulltext} = require("patzilla.access.epo.ops");
 const {DepatisConnectFulltext} = require("patzilla.access.depatisnet");
@@ -13,7 +15,7 @@ const {xhr_decode_error} = require("patzilla.lib.util");
 
 require('jquery.shorten.1.0');
 
-const DocumentBaseController = Marionette.Controller.extend({
+const DocumentBaseController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('DocumentBaseController.initialize');
@@ -162,7 +164,7 @@ const DocumentBaseController = Marionette.Controller.extend({
 });
 
 
-const DocumentDetailsController = Marionette.Controller.extend({
+const DocumentDetailsController = MarionetteController.extend({
 
     initialize: function(options) {
         log('DocumentDetailsController.initialize');
@@ -429,7 +431,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
 
         // create marionette region at dom element for displaying family information
         var content_element = container.find('.document-details-content');
-        var family_region = new Marionette.Region({
+        var family_region = new Region({
             el: content_element
         });
 
@@ -458,7 +460,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
             _this.indicate_activity(container, false);
 
             // indicate family acquistion failed
-            const FamilyFailedView = Marionette.View.extend({
+            const FamilyFailedView = View.extend({
                 render : function (){
                     this.$el.append('No family information available.');
                 }
@@ -484,7 +486,7 @@ const DocumentDetailsController = Marionette.Controller.extend({
 
 });
 
-const DocumentCarouselController = Marionette.Controller.extend({
+const DocumentCarouselController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('DocumentCarouselController.initialize');
@@ -523,7 +525,7 @@ const DocumentCarouselController = Marionette.Controller.extend({
             if (item_count <= 1) {
                 event.preventDefault();
                 event.stopPropagation();
-            }
+            }3
 
             // TODO: Use same navigation utility function like the "next" button on the right hand side
             //drawing_navigate(this, -1);
@@ -684,7 +686,7 @@ const DocumentCarouselController = Marionette.Controller.extend({
 });
 
 
-const PdfPanelController = Marionette.Controller.extend({
+const PdfPanelController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('PdfPanelController.initialize');

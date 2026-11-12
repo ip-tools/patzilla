@@ -2,7 +2,7 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {View} from 'marionette';
 import { classes } from 'patzilla.lib.es6';
 import { MDCMenu } from '@material/menu';
 import { DirectRenderMixin } from 'patzilla.lib.marionette';
@@ -36,7 +36,7 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
+export const StackOpenerWidget = View.extendEach(DirectRenderMixin, {
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -89,10 +89,10 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
 });
 
 
-export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderMixin) {
+export class StackMenuWidget extends classes.many(View, DirectRenderMixin) {
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
-     * into a `Marionette.View`.
+     * into a Marionette `View`.
      *
      * https://material-components.github.io/material-components-web-catalog/#/component/menu
      *

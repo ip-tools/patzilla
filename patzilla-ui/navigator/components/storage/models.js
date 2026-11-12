@@ -2,8 +2,8 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 const ProfileRecord = Backbone.RelationalModel.extend({
 
@@ -46,7 +46,7 @@ const ProfileCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const ApplicationProfile = Marionette.Controller.extend({
+const ApplicationProfile = MarionetteController.extend({
 
     // We just support a single application profile by now.
     profile_name: 'default',

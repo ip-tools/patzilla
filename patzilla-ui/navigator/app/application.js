@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {Application} from "marionette";
 import {GenericExchangeDocument} from "patzilla.access.base";
 import moment from "moment";
 
@@ -11,7 +11,7 @@ import moment from "moment";
  *          main application object
  * ------------------------------------------
  */
-export const NavigatorApp = Marionette.Application.extend({
+export const NavigatorApp = Application.extend({
 
     region: '#root-region',
 

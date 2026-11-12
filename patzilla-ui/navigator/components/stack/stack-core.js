@@ -2,9 +2,8 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
-import { NamedViewController } from 'patzilla.lib.marionette';
+import {MarionetteController, NamedViewController} from 'patzilla.lib.marionette';
 import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
 require('backbone-dom-to-view');
@@ -221,7 +220,7 @@ const StackManager = NamedViewController.extend({
 });
 
 
-const StackPlugin = Marionette.Controller.extend({
+const StackPlugin = MarionetteController.extend({
 
     manager_class: StackManager,
 

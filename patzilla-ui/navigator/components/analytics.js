@@ -2,10 +2,10 @@
 // (c) 2015 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'marionette';
 import {GenericResultView, make_modal_view} from "patzilla.navigator.components.results-dialog/views";
+import {MarionetteController} from "patzilla.lib.marionette";
 
-const AbstractResultFetcher = Marionette.Controller.extend({
+const AbstractResultFetcher = MarionetteController.extend({
 
     initialize: function(options) {
         options = options || {};

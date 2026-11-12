@@ -2,7 +2,8 @@
 // (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
+
 const {DatasourceSearch, DatasourceCrawler, GenericExchangeDocument} = require("./base");
 const {QueryLinkMixin} = require("./util");
 
@@ -537,7 +538,7 @@ _.extend(IFIClaimsDocument.prototype, GenericExchangeDocument.prototype, QueryLi
 });
 
 
-export const IFIClaimsFulltext = Marionette.Controller.extend({
+export const IFIClaimsFulltext = MarionetteController.extend({
 
     initialize: function(document_number) {
         log('IFIClaimsFulltext.initialize');

@@ -2,12 +2,12 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {View} from 'marionette';
 import { classes } from 'patzilla.lib.es6';
 import { MDCSnackbar } from '@material/snackbar';
 import { DirectRenderMixin } from 'patzilla.lib.marionette';
 
-export class SnackbarWidget extends classes.many(Marionette.View, DirectRenderMixin) {
+export class SnackbarWidget extends classes.many(View, DirectRenderMixin) {
     /*
      * SnackbarWidget encapsulates the Snackbar Material Design Component (MDC)
      * into a `Marionette.View`.

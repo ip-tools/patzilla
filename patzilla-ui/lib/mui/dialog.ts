@@ -7,7 +7,7 @@ import { classes } from '../es6';
 
 // Marionette
 import { DirectRenderMixin } from '../marionette';
-import Marionette from 'marionette';
+import {View} from 'marionette';
 
 // Material-UI
 import React from 'react';
@@ -17,7 +17,7 @@ import FullScreenDialog from './fullscreendialog';
 const log = console.log;
 
 
-export class DialogWidget extends classes.many(Marionette.View, DirectRenderMixin) {
+export class DialogWidget extends classes.many(View, DirectRenderMixin) {
 
     el: any;
 

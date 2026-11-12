@@ -2,14 +2,14 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {MnObject, Region, View} from "marionette";
 
 
 /* `Controller` was removed in Marionette v3.
  * https://github.com/marionettejs/marionette-v3-compat/blob/master/src/Controller.js
  **/
 (function() {
-  Marionette.Controller = Marionette.Object.extend({
+  export const MarionetteController = MnObject.extend({
     constructor(options) {
       this.options = options || {};
 
@@ -17,7 +17,7 @@ import Marionette from 'marionette';
       args[0] = this.options;
 
       //Marionette.deprecate('Marionette.Controller is deprecated. Use Marionette.Object');
-      Marionette.Object.prototype.constructor.apply(this, args);
+      MnObject.prototype.constructor.apply(this, args);
     },
 
     destroy: function(...args) {
@@ -57,7 +57,7 @@ Marionette.Region.prototype.reset = function() {
 // Widget: Modal container as Marionette region component
 // http://www.joezimjs.com/javascript/using-marionette-to-display-modal-views/
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
-export const ModalRegion = Marionette.Region.extend({
+export const ModalRegion = Region.extend({
 
     constructor: function() {
         Marionette.Region.prototype.constructor.apply(this, arguments);
@@ -78,8 +78,8 @@ export const ModalRegion = Marionette.Region.extend({
 // Utility: Propagate "extendEach" monkeypatch from Backbone to Marionette
 (function () {
 
-  Marionette.Controller.extendEach     =
-    Marionette.View.extendEach         = Backbone.Model.extendEach;
+  MarionetteController.extendEach     =
+              View.extendEach         = Backbone.Model.extendEach;
 
 })();
 
@@ -168,7 +168,7 @@ export const DirectRenderMixin = {
 };
 
 
-export const NamedViewController = Marionette.Controller.extend({
+export const NamedViewController = MarionetteController.extend({
     /*
     In order to deduce the Marionette object currently visible in viewport,
     we needed a way to connect the DOM universe to the Marionette one.

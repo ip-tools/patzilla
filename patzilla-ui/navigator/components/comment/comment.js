@@ -2,7 +2,8 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {View} from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 const {DirectRenderMixin} = require("patzilla.lib.marionette");
 const {SmartCollectionMixin} = require("patzilla.lib.backbone");
 
@@ -59,7 +60,7 @@ const CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const CommentButtonView = Marionette.View.extend({
+const CommentButtonView = View.extend({
     template: require('./comment-button.html'),
     //tagName: null,
 
@@ -74,7 +75,7 @@ const CommentButtonView = Marionette.View.extend({
 _.extend(CommentButtonView.prototype, DirectRenderMixin);
 
 
-const CommentTextView = Marionette.View.extend({
+const CommentTextView = View.extend({
     template: require('./comment-widget.html'),
     tagName: 'span',
 
@@ -156,7 +157,7 @@ const CommentTextView = Marionette.View.extend({
 });
 
 
-const CommentManager = Marionette.Controller.extend({
+const CommentManager = MarionetteController.extend({
 
     initialize: function(options) {
 
@@ -204,7 +205,7 @@ const CommentManager = Marionette.Controller.extend({
 });
 
 
-const CommentsPlugin = Marionette.Controller.extend({
+const CommentsPlugin = MarionetteController.extend({
 
     initialize: function(options) {
 

@@ -2,13 +2,13 @@
 // (c) 2013-2015 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'marionette';
+import {CollectionView, View} from 'marionette';
 import {OpsExchangeDocument} from "patzilla.access.epo.ops";
 import {QueryLinkMixin} from "patzilla.access.util";
 import {OpsBaseModel} from "patzilla.access.epo.ops.base";
 import {OpsBaseViewMixin,TemplateHelperMixin,TemplateDataContextMixin} from "patzilla.navigator.app.document/util";
 
-const OpsFamilyVerboseMemberView = Marionette.View.extend({
+const OpsFamilyVerboseMemberView = View.extend({
 
     template: require('./biblio-family-verbose-member.html'),
     tagName: 'tr',
@@ -19,7 +19,7 @@ const OpsFamilyVerboseMemberView = Marionette.View.extend({
 _.extend(OpsFamilyVerboseMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-export const OpsFamilyVerboseCollectionView = Marionette.CollectionView.extend({
+export const OpsFamilyVerboseCollectionView = CollectionView.extend({
 
     template: require('./biblio-family-verbose-collection.html'),
     childView: OpsFamilyVerboseMemberView,
@@ -33,7 +33,7 @@ export const OpsFamilyVerboseCollectionView = Marionette.CollectionView.extend({
 _.extend(OpsFamilyVerboseCollectionView.prototype, TemplateHelperMixin);
 
 
-const OpsFamilyCompactMemberView = Marionette.View.extend({
+const OpsFamilyCompactMemberView = View.extend({
 
     template: require('./biblio-family-compact-member.html'),
     tagName: 'tr',
@@ -45,7 +45,7 @@ const OpsFamilyCompactMemberView = Marionette.View.extend({
 _.extend(OpsFamilyCompactMemberView.prototype, TemplateHelperMixin, TemplateDataContextMixin);
 
 
-export const OpsFamilyCompactCollectionView = Marionette.CollectionView.extend({
+export const OpsFamilyCompactCollectionView = CollectionView.extend({
 
     template: require('./biblio-family-compact-collection.html'),
     childView: OpsFamilyCompactMemberView,
@@ -97,7 +97,7 @@ export const OpsFamilyCompactCollectionView = Marionette.CollectionView.extend({
 _.extend(OpsFamilyCompactCollectionView.prototype, TemplateDataContextMixin);
 
 
-const OpsFamilyCitationsMemberView = Marionette.View.extend({
+const OpsFamilyCitationsMemberView = View.extend({
 
     template: require('./biblio-family-citations-member.html'),
     tagName: 'tr',
@@ -133,7 +133,7 @@ const OpsFamilyCitationsMemberView = Marionette.View.extend({
 _.extend(OpsFamilyCitationsMemberView.prototype, TemplateDataContextMixin);
 
 
-export const OpsFamilyCitationsCollectionView = Marionette.CollectionView.extend({
+export const OpsFamilyCitationsCollectionView = CollectionView.extend({
 
     id: "ops-family-citations-collection",
     template: require('./biblio-family-citations-collection.html'),

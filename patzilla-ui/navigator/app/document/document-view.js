@@ -2,14 +2,15 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {View} from "marionette";
+
 const {LinkMaker} = require("patzilla.navigator.util.linkmaker");
 const {TemplateHelperMixin} = require("./util.js");
 
 require('jquery.highlight.bartaz');
 
 // TODO: Rename to DocumentView
-export const OpsExchangeDocumentView = Marionette.View.extend({
+export const OpsExchangeDocumentView = View.extend({
 
     template: require('./document-view.html'),
     tagName: 'div',
@@ -44,7 +45,7 @@ export const OpsExchangeDocumentView = Marionette.View.extend({
 
         try {
             var args = Array.prototype.slice.apply(arguments);
-            var result = Marionette.View.prototype.render.apply(this, args);
+            var result = View.prototype.render.apply(this, args);
             return result;
 
         } catch (error) {
@@ -52,7 +53,7 @@ export const OpsExchangeDocumentView = Marionette.View.extend({
             var args = Array.prototype.slice.apply(arguments);
             this.model.set('error_message', error.message);
             this.template = require('./document-error.html');
-            var result = Marionette.View.prototype.render.apply(this, args);
+            var result = View.prototype.render.apply(this, args);
             return result;
         }
 

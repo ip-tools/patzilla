@@ -2,7 +2,8 @@
 // (c) 2014-2019 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'marionette';
+import {View, Region, CollectionView} from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 require('jquery.highlight.bartaz');
 
@@ -39,7 +40,7 @@ const KeywordMapCollection = Backbone.Collection.extend({
 });
 
 
-const KeywordEditorEntryView = Marionette.View.extend({
+const KeywordEditorEntryView = View.extend({
 
     tagName: "tr",
     template: require('./keyword-editor-item.html'),
@@ -60,7 +61,7 @@ const KeywordEditorEntryView = Marionette.View.extend({
 
 });
 
-const KeywordEditorView = Marionette.CollectionView.extend({
+const KeywordEditorView = CollectionView.extend({
 
     tagName: "div",
     id: "keyword-editor",
@@ -178,7 +179,7 @@ const KeywordEditorView = Marionette.CollectionView.extend({
 });
 
 
-const KeywordsController = Marionette.Controller.extend({
+const KeywordsController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('KeywordsController.initialize');
@@ -260,7 +261,7 @@ const KeywordsController = Marionette.Controller.extend({
                     }
                 });
 
-                _this.keyword_modal = new Marionette.Region({el: '#modal-area'});
+                _this.keyword_modal = new Region({el: '#modal-area'});
                 _this.keyword_modal.show(editor);
             } else {
                 navigatorApp.ui.notify_module_locked(_this.module_name);
