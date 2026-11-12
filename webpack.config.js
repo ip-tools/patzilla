@@ -59,7 +59,6 @@ const config = {
         // https://webpack.js.org/plugins/provide-plugin/
         new webpack.ProvidePlugin({
             '$': 'jquery',
-            'jQuery': 'jquery',
             '_': 'underscore',
             '_.str': 'underscore.string',
             '_.string': 'underscore.string',
@@ -127,16 +126,6 @@ const config = {
                     {
                         loader: 'imports-loader',
                         options: { additionalCode: "var define = false; /* Disable AMD for misbehaving libraries */" },
-                    },
-                ],
-            },
-
-            {
-                test: require.resolve('humanize-plus'),
-                use: [
-                    {
-                        loader: 'expose-loader',
-                        options: { exposes: 'Humanize' },
                     },
                 ],
             },
