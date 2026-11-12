@@ -195,6 +195,9 @@ const config = {
                 use: [
                     {
                         loader: "file-loader",
+                        options: {
+                            esModule: false,
+                        },
                     },
                 ]
             },
@@ -203,6 +206,9 @@ const config = {
                 use: [
                     {
                         loader: "file-loader",
+                        options: {
+                            esModule: false,
+                        },
                     },
                 ]
             },
