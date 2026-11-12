@@ -21,7 +21,8 @@ export const PaginationView = View.extend({
         this.bottom_pager = options.bottom_pager;
     },
 
-    templateContext: {},
+    templateContext: {
+    },
 
     /*
     // Change Which Template Is Rendered For A View

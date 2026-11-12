@@ -37,6 +37,7 @@
     "@material/menu": "^14",
     "@material/ripple": "^14",
     "@material/snackbar": "^14",
+    "@mnjs/adapters": "^5",
     "@mui/icons-material": "^5",
     "@mui/material": "^5",
     "@mui/styles": "^5",

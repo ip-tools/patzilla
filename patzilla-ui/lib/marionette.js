@@ -2,7 +2,11 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import {MnObject, Region, View} from "marionette";
+import {MnObject, Region, View, setDataApi} from "marionette";
+import BackboneApi from '@mnjs/adapters/backbone';
+
+// The Backbone adapter returns the model’s attributes for template rendering.
+setDataApi(BackboneApi);
 
 
 /* `Controller` was removed in Marionette v3.
