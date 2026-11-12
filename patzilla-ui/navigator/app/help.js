@@ -12,7 +12,7 @@ require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
 import Marionette from 'marionette';
-import AppRouter from 'marionette.approuter';
+//import AppRouter from 'marionette.approuter';
 
 
 const HelpView = Marionette.View.extend({
