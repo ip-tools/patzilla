@@ -2,7 +2,7 @@
 // (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 var fs = require("fs");
 
@@ -39,7 +39,7 @@ const config = {
         //concatenateModules: false,
 
         // To keep filename consistent between different modes (for example building only)
-        occurrenceOrder: true
+        //occurrenceOrder: true,
     },
 
     // Configure performance budget
@@ -119,11 +119,11 @@ const config = {
                 use: [
                     {
                         loader: 'expose-loader',
-                        options: 'jQuery',
+                        options: { exposes: 'jQuery' },
                     },
                     {
                         loader: 'expose-loader',
-                        options: '$',
+                        options: { exposes: '$' },
                     },
                 ],
             },
@@ -131,7 +131,12 @@ const config = {
             // https://github.com/jquery/jquery-migrate/issues/273
             {
                 test: require.resolve("jquery-migrate"),
-                use: "imports-loader?define=>false",
+                use: [
+                    {
+                        loader: 'imports-loader',
+                        options: { additionalCode: "var define = false; /* Disable AMD for misbehaving libraries */" },
+                    },
+                ],
             },
 
             {
@@ -139,7 +144,7 @@ const config = {
                 use: [
                     {
                         loader: 'expose-loader',
-                        options: 'Humanize',
+                        options: { exposes: 'Humanize' },
                     },
                 ],
             },
@@ -188,26 +193,51 @@ const config = {
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
                 use: [
-                    'file-loader'
+                    {
+                        loader: "file-loader",
+                        options: {
+                            esModule: false,
+                        },
+                    },
                 ]
             },
             {
                 test: /\.(png|svg|jpg|gif|swf|ico)$/,
                 use: [
-                    'file-loader'
+                    {
+                        loader: "file-loader",
+                        options: {
+                            esModule: false,
+                        },
+                    },
                 ]
             },
             {
                 test: /\.html$/,
-                loader: 'underscore-template-loader',
+                use: [
+                    {
+                        loader: "underscore-template-loader",
+                    },
+                ],
             },
             {
                 test: /\.modernizrrc.js$/,
-                loader: "modernizr-loader"
+                use: [
+                    {
+                        loader: "modernizr-loader",
+                    },
+                ],
             },
             {
                 test: /\.modernizrrc(\.json)?$/,
-                loader: "modernizr-loader!json-loader"
+                use: [
+                    {
+                        loader: "modernizr-loader",
+                    },
+                    {
+                        loader: "json-loader",
+                    },
+                ]
             },
 
             /*
@@ -304,6 +334,11 @@ const config = {
 
         }
     },
+
+   stats: {
+        errorDetails: true,
+        children: true
+   },
 
 };
 
