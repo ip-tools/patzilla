@@ -34,17 +34,16 @@ import {MnObject, Region, View} from "marionette";
 // see also: http://lostechies.com/derickbailey/2012/04/17/managing-a-modal-dialog-with-backbone-and-marionette/
 export const ModalRegion = Region.extend({
 
-    constructor: function() {
-        Region.prototype.constructor.apply(this, arguments);
-        this.$el.toggleClass('fade', true);
+    onBeforeShow: function() {
+        $(this.el).toggleClass('fade', true);
     },
 
     onShow: function(region, view) {
-        this.$el.modal('show');
+        $(this.el).modal('show');
     },
 
     onDestroy: function() {
-        this.$el.modal('hide');
+        $(this.el).modal('hide');
     },
 
 });
@@ -81,8 +80,8 @@ export const DirectRenderMixin = {
     render_basic: function() {
         var html = this.template();
         var el = $(html);
-        this.$el.replaceWith(el);
-        this.setElement(el);
+        $(this.el).replaceWith(el);
+        //this.setElement(el);
         return this;
     },
 
@@ -129,8 +128,8 @@ export const DirectRenderMixin = {
             // Replace container element with effective elements.
             // ATTENTION: This will actually just use the first element.
             // TODO: For more elements >1, new elements could be appended to its parent node.
-            this.$el.replaceWith(elements);
-            this.setElement(elements);
+            $(this.el).replaceWith(elements);
+            //this.setElement(elements);
         }
 
         this.bindUIElements();

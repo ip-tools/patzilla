@@ -73,10 +73,10 @@ export const PaginationView = View.extend({
 
 
         if (page_count < 1) {
-            this.$el.hide();
+            $(this.el).hide();
             return;
         } else {
-            this.$el.show();
+            $(this.el).show();
         }
 
         // 1. initialize pagination widget
