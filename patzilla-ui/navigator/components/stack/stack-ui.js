@@ -16,8 +16,8 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
     */
 
-    inputSelector: 'input',
-    labelSelector: '.text_label',
+    inputSelector: ':scope input',
+    labelSelector: ':scope .text_label',
 
     // Forward the "click" dom event to a "toggle" application event
     triggers: {
@@ -50,7 +50,7 @@ export const StackOpenerWidget = View.extend({
     // Define user interface
     ui: function() {
         return {
-            count: '#count',
+            count: ':scope #count',
         };
     },
 

@@ -247,7 +247,10 @@ const CommentsPlugin = MarionetteController.extend({
         });
 
         // clear remembered childviews
-        this.listenTo(this.view, 'before:render before:destroy', function() {
+        this.listenTo(this.view, 'before:render', function() {
+            _.clear(this.childviews);
+        });
+        this.listenTo(this.view, 'before:destroy', function() {
             _.clear(this.childviews);
         });
 
