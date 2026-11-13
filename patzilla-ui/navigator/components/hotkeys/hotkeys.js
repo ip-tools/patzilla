@@ -213,7 +213,7 @@ export const HotkeysPlugin = MarionetteController.extend({
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
             var baseurl = _this.app.options.config.get('baseurl');
-            var url = urlJoin(baseurl, '/help#hotkeys');
+            var url = urlJoin(baseurl, '/help/hotkeys');
             window.open(url);
         });
 

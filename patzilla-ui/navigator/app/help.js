@@ -18,10 +18,9 @@ import { IFIClaimsHandbookView } from 'patzilla.access.ificlaims-help';
 const HelpApplication = RouteApplication.extend({
   region: { el: '#content-region' },
 
-  // FIXME: Must not hard-code `/navigator` prefix. How?
   routes: {
-    '/navigator/help/hotkeys': { name: 'hotkeys', handler: 'hotkeys' },
-    '/navigator/help/ificlaims': { name: 'ificlaims', handler: 'ificlaims' },
+    'help/hotkeys': { name: 'hotkeys', handler: 'hotkeys' },
+    'help/ificlaims': { name: 'ificlaims', handler: 'ificlaims' },
   },
 
   hotkeys() {
@@ -35,9 +34,16 @@ const HelpApplication = RouteApplication.extend({
   },
 });
 
-const router = new Router({ driver: historyDriver() });
+
+const router = new Router({
+  driver: historyDriver(),
+  routes: {
+    // FIXME: Must not hard-code `/navigator` prefix. How?
+    ['/navigator']: { name: 'app' },
+  },
+});
 const help = new HelpApplication();
-help.mountRoutes(router);
+help.mountRoutes(router, { parent: 'app' });
 
 $(function() {
   help.start();
