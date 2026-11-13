@@ -72,17 +72,17 @@ export const CheckboxWidget = View.extendEach(DirectRenderMixin, {
         this.log('CheckboxWidget::_updateView');
         var modelField = this.getOption('modelField');
         var checked = !!this.model.get(modelField);
-        this.ui.input.prop('checked', checked);
+        $(this.ui.input).prop('checked', checked);
 
         var textLabel = this.getOption('textLabel');
-        this.ui.label.html(textLabel);
+        $(this.ui.label).html(textLabel);
     },
 
     _updateModel: function() {
         this.log('CheckboxWidget::_updateModel');
         var modelField = this.getOption('modelField');
         //this.log('CheckboxWidget this.ui:', this.ui);
-        var checked = this.ui.input.is(':checked');
+        var checked = $(this.ui.input).is(':checked');
         this.model.set(modelField, checked);
     },
 

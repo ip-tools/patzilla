@@ -18,8 +18,8 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
     */
 
-    inputSelector: '> input',
-    labelSelector: '> .text_label',
+    inputSelector: 'input',
+    labelSelector: '.text_label',
 
     // Forward the "click" dom event to a "toggle" application event
     triggers: {
@@ -52,7 +52,7 @@ export const StackOpenerWidget = View.extendEach(DirectRenderMixin, {
     // Define user interface
     ui: function() {
         return {
-            count: '> #count',
+            count: '#count',
         };
     },
 
@@ -79,7 +79,7 @@ export const StackOpenerWidget = View.extendEach(DirectRenderMixin, {
 
     _updateView: function() {
         //log('StackOpenerWidget::_updateView');
-        this.ui.count.html(this.get_selected_count());
+        $(this.ui.count).html(this.get_selected_count());
     },
 
     log_event: function(event) {
@@ -89,7 +89,7 @@ export const StackOpenerWidget = View.extendEach(DirectRenderMixin, {
 });
 
 
-export class StackMenuWidget extends classes.many(View, DirectRenderMixin) {
+export class StackMenuWidget extends View {
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
      * into a Marionette `View`.
@@ -107,13 +107,13 @@ export class StackMenuWidget extends classes.many(View, DirectRenderMixin) {
      *
     **/
 
-    get render_once() {
-        return true;
-    }
-
     // The HTML template for a MDC Menu
     get template() {
         return require('./stack-menu.html');
+    }
+
+    get render_once() {
+        return true;
     }
 
     initialize() {
@@ -128,9 +128,9 @@ export class StackMenuWidget extends classes.many(View, DirectRenderMixin) {
     }
 
     setup_mdc_element() {
-        this.$el.remove();
+        $(this.el).remove();
         this.container = this.getOption('container') || $('body');
-        this.container.append(this.$el);
+        this.container.append($(this.el));
         this.menu = new MDCMenu(this.el);
         this.bind_mdc_events();
     }
