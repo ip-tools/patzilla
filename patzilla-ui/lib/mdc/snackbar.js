@@ -3,45 +3,41 @@
 'use strict';
 
 import {View} from 'marionette';
-import { classes } from 'patzilla.lib.es6';
 import { MDCSnackbar } from '@material/snackbar';
-import { DirectRenderMixin } from 'patzilla.lib.marionette';
 
-export class SnackbarWidget extends classes.many(View, DirectRenderMixin) {
+export const SnackbarWidget = View.extend({
     /*
      * SnackbarWidget encapsulates the Snackbar Material Design Component (MDC)
-     * into a `Marionette.View`.
+     * into a Marionette `View`.
      *
      * https://material-components.github.io/material-components-web-catalog/#/component/snackbar
      *
-     * Details
-     * =======
-     *
-     * As this is intended to be instantiated only once, it will actually
-     * render just once and attach itself to the HTML body on the DOM element
-     * level.
-     *
-     * As the element is declared `aria-hidden="true"`, it will _not_ be
-     * displayed on the first hand.
-     *
-     * When used, it will show up and disappear at runtime, which is completely
-     * the responsibility of the `MDCSnackbar` controller component.
-     *
     **/
-
-    // The HTML template for a MDC Snackbar
-    get template() {
-        return require('./snackbar.html');
-    }
+    tagName: 'aside',
+    className: 'mdc-snackbar',
+    template: require('./snackbar.html'),
 
     initialize() {
         this.render();
-    }
+        document.body.append(this.el);
+    },
+
+    onBeforeRender() {
+        this.destroySnackbar();
+    },
 
     onRender() {
         this.snackbar = new MDCSnackbar(this.el);
-        $("body").append(this.el);
-    }
+    },
+
+    onBeforeDestroy() {
+        this.destroySnackbar();
+    },
+
+    destroySnackbar() {
+        this.snackbar?.destroy();
+        this.snackbar = undefined;
+    },
 
     show(message, options) {
 
@@ -69,6 +65,6 @@ export class SnackbarWidget extends classes.many(View, DirectRenderMixin) {
         this.snackbar.timeoutMs = timeout;
         this.snackbar.actionButtonText = 'Dismiss';
         this.snackbar.open();
-    }
+    },
 
-}
+});
