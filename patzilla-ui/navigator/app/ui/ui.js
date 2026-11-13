@@ -69,8 +69,8 @@ const UiController = View.extend({
 
         // Set help URLs before the links are used.
         var baseurl = navigatorApp.options.config.get('baseurl');
-        $('.action-help-shortcuts').attr('href', urlJoin(baseurl, '/help#hotkeys'));
-        $('.action-help-ificlaims').attr('href', urlJoin(baseurl, '/help#ificlaims'));
+        $('.action-help-shortcuts').attr('href', urlJoin(baseurl, '/help/hotkeys'));
+        $('.action-help-ificlaims').attr('href', urlJoin(baseurl, '/help/ificlaims'));
 
 
         $('.action-fullscreen').off('click');

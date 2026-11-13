@@ -2,49 +2,44 @@
 // (c) 2014,2017 Andreas Motl, Elmyra UG
 'use strict';
 
-// https://marionette.gitbooks.io/marionette-guides/content/en/approuter/
-// https://marionette.gitbooks.io/marionette-guides/content/en/appendix/approuter/router.html
-// https://marionette.gitbooks.io/marionette-guides/content/en/application/routing.html
+// Two help pages, wired with @mnjs/router.
+// https://marionettejs.com/docs/packages/router/
+// https://marionettejs.com/docs/guides/routing/
 
 require('patzilla.lib.backbone');
 require('patzilla.lib.marionette');
 require('patzilla.lib.bootstrap');
 require('patzilla.navigator.style');
 
-import {View} from 'marionette';
-//import AppRouter from 'marionette.approuter';
+import { Router, RouteApplication, historyDriver } from '@mnjs/router';
+import { HotkeysHelpView } from 'patzilla.navigator.components.hotkeys/hotkeys-help';
+import { IFIClaimsHandbookView } from 'patzilla.access.ificlaims-help';
 
+const HelpApplication = RouteApplication.extend({
+  region: { el: '#content-region' },
 
-const HelpView = View.extend({
-    el: 'body',
-    template: function() {},
+  // FIXME: Must not hard-code `/navigator` prefix. How?
+  routes: {
+    '/navigator/help/hotkeys': { name: 'hotkeys', handler: 'hotkeys' },
+    '/navigator/help/ificlaims': { name: 'ificlaims', handler: 'ificlaims' },
+  },
 
-    regions: {
-        content: '#content-region',
-    },
+  hotkeys() {
+    $('#title-container').text('Hotkeys overview');
+    this.showView(new HotkeysHelpView());
+  },
 
-    hotkeys: function() {
-        const {HotkeysHelpView} = require("patzilla.navigator.components.hotkeys/hotkeys-help");
-        this.$('#title-container').text('Hotkeys overview');
-        this.showChildView('content', new HotkeysHelpView());
-    },
-
-    ificlaims: function() {
-        const {IFIClaimsHandbookView} = require("patzilla.access.ificlaims-help");
-        this.$('#title-container').text('Benutzerhandbuch für die Suche bei IFI Claims');
-        this.showChildView('content', new IFIClaimsHandbookView());
-    },
+  ificlaims() {
+    $('#title-container').text('Benutzerhandbuch für die Suche bei IFI Claims');
+    this.showView(new IFIClaimsHandbookView());
+  },
 });
 
-const Router = AppRouter.extend({
-    appRoutes: {
-        'hotkeys': 'hotkeys',
-        'ificlaims': 'ificlaims',
-    },
-});
+const router = new Router({ driver: historyDriver() });
+const help = new HelpApplication();
+help.mountRoutes(router);
 
 $(function() {
-    const helpView = new HelpView();
-    new Router({controller: helpView});
-    Backbone.history.start();
+  help.start();
+  router.start();
 });

@@ -32,7 +32,8 @@ def includeme(config):
     config.add_route('login', '/login')
 
     # serve help pages
-    config.add_route('help', '/help')
+    config.add_route('help-hotkeys', '/help/hotkeys')
+    config.add_route('help-ificlaims', '/help/ificlaims')
 
     # serve application
     config.add_route('patentsearch', '/')
@@ -317,7 +318,8 @@ def login_page(request):
     }
     return tplvars
 
-@view_config(route_name='help', renderer='patzilla.navigator:templates/help.html')
+@view_config(route_name='help-hotkeys', renderer='patzilla.navigator:templates/help.html')
+@view_config(route_name='help-ificlaims', renderer='patzilla.navigator:templates/help.html')
 def help(request):
     return {}
 
