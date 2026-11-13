@@ -1086,7 +1086,7 @@ export const NavigatorApp = Application.extend({
         }
         const { ProjectChooserView } = require("patzilla.navigator.components.project/project");
         this.projectChooserView = new ProjectChooserView({
-            el: $('#project-chooser-area'),
+            el: $('#project-chooser-area')[0],
             model: project,
             collection: project.collection,
         });

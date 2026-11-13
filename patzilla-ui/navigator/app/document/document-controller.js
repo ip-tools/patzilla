@@ -432,7 +432,7 @@ const DocumentDetailsController = MarionetteController.extend({
         // create marionette region at dom element for displaying family information
         var content_element = container.find('.document-details-content');
         var family_region = new Region({
-            el: content_element
+            el: content_element[0]
         });
 
         if (!family_collection || !view_class) {
