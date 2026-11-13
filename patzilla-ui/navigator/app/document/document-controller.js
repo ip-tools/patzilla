@@ -455,14 +455,18 @@ const DocumentDetailsController = MarionetteController.extend({
             family_region.show(view);
             //log('family_collection:', family_collection);
 
-        }).fail(function() {
+        }).fail(function(error) {
+
+            console.error('Fetching family information failed:', error);
 
             _this.indicate_activity(container, false);
 
             // indicate family acquistion failed
             const FamilyFailedView = View.extend({
-                render : function (){
-                    this.$el.append('No family information available.');
+                //template: () => '<div></div>',
+                tagName: () => 'div',
+                onRender : function (){
+                    $(this.el).append('No family information available.');
                 }
             });
             family_region.show(new FamilyFailedView());
