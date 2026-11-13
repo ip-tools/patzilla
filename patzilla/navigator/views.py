@@ -48,7 +48,7 @@ def includeme(config):
     # vanity-/shortcut urls
     config.add_route('patentsearch-vanity', '/{label}')
     config.add_route('patentsearch-quick',  '/{field}/{value}')
-    config.add_route('patentsearch-quick2', '/{field}/{value}/{value2}', path_info='^(?!.*\.map).*$')
+    config.add_route('patentsearch-quick2', '/{field}/{value}/{value2}', path_info=r'^(?!.*\.map).*$')
 
     # Remark:
     # At route "patentsearch-quick2", exclude access to javascript .map files. Otherwise, these would match.
