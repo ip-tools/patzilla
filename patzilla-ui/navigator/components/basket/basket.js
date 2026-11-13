@@ -708,7 +708,7 @@ export const BasketView = View.extend({
 
         });
 
-        this.$el.find('.btn-popover').popover();
+        $(this.el).find('.btn-popover').popover();
 
 
         /*

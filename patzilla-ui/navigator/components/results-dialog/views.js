@@ -14,17 +14,17 @@ export const GenericResultView = View.extend({
 
     indicate_activity: function(active) {
         if (active) {
-            this.$el.find('#result-busy').show();
-            this.$el.find('#result-ready').hide();
+            $(this.el).find('#result-busy').show();
+            $(this.el).find('#result-ready').hide();
 
         } else {
-            this.$el.find('#result-busy').hide();
-            this.$el.find('#result-ready').show();
+            $(this.el).find('#result-busy').hide();
+            $(this.el).find('#result-ready').show();
         }
     },
 
     user_message: function(message, kind) {
-        var result_info = this.$el.find('#result-info');
+        var result_info = $(this.el).find('#result-info');
         result_info.empty();
         return navigatorApp.ui.user_alert(message, kind, result_info);
     },
@@ -41,11 +41,11 @@ export const GenericResultView = View.extend({
         var numberlist_string = numberlist.join('\n');
 
         // setup copy-to-clipboard button
-        var clipboard_button = this.$el.find('#result-to-clipboard-button');
+        var clipboard_button = $(this.el).find('#result-to-clipboard-button');
         navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', numberlist_string, {element: clipboard_button[0], wrapper: this.el});
 
         // setup insert-to-basket button
-        var basket_button = this.$el.find('#result-to-basket-button');
+        var basket_button = $(this.el).find('#result-to-basket-button');
         basket_button.off('click');
         basket_button.on('click', function(event) {
             $('#result-to-basket-indicator').removeClass('glyphicon-plus').addClass('glyphicon-refresh glyphicon-spin');
@@ -61,12 +61,12 @@ export const GenericResultView = View.extend({
     },
 
     hide_buttons: function() {
-        this.$el.find('#result-to-clipboard-button').hide();
-        this.$el.find('#result-to-basket-button').hide();
+        $(this.el).find('#result-to-clipboard-button').hide();
+        $(this.el).find('#result-to-basket-button').hide();
     },
 
     hide_button_to_basket: function() {
-        this.$el.find('#result-to-basket-button').hide();
+        $(this.el).find('#result-to-basket-button').hide();
     },
 
     onRender: function() {

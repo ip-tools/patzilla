@@ -60,8 +60,8 @@ export const OpsFamilyCompactCollectionView = CollectionView.extend({
     },
 
     setup_ui: function() {
-        OpsBaseViewMixin.bind_query_links(this.$el);
-        OpsBaseViewMixin.bind_same_citations_links(this.$el);
+        OpsBaseViewMixin.bind_query_links(this.el);
+        OpsBaseViewMixin.bind_same_citations_links(this.el);
     },
 
     templateContext: function() {
@@ -162,8 +162,8 @@ export const OpsFamilyCitationsCollectionView = CollectionView.extend({
     },
 
     setup_ui: function() {
-        OpsBaseViewMixin.bind_query_links(this.$el);
-        OpsBaseViewMixin.bind_same_citations_links(this.$el);
+        OpsBaseViewMixin.bind_query_links(this.el);
+        OpsBaseViewMixin.bind_same_citations_links(this.el);
     },
 
     templateContext: function() {
@@ -297,7 +297,7 @@ export const OpsFamilyCitationsCollectionView = CollectionView.extend({
             var class_name = _.uniqueId('citation-highlight-');
 
             // perform highlighting
-            _this.$el.highlight(citation, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
+            $(_this.el).highlight(citation, {className: 'highlight-base ' + class_name, wholeWords: true, minLength: 3});
 
             // apply style
             $('.' + class_name).css(style);

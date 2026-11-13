@@ -102,17 +102,17 @@ const KeywordEditorView = CollectionView.extend({
             alive = false;
         });
 
-        this.$el.one('shown.bs.modal', function() {
+        $(this.el).one('shown.bs.modal', function() {
             shown = true;
         });
 
-        this.$el.one('hidden.bs.modal', function() {
+        $(this.el).one('hidden.bs.modal', function() {
             view.destroy();
         });
 
         this.setup_ui();
 
-        this.$('#keyword-editor-save-button').off('click').on('click', function() {
+        $('#keyword-editor-save-button').one('click', function() {
             $.when(view.save_models()).then(function() {
                 if (!alive) {
                     return;
@@ -120,10 +120,10 @@ const KeywordEditorView = CollectionView.extend({
 
                 // Bootstrap ignores hide calls during the opening transition.
                 if (shown) {
-                    view.$el.modal('hide');
+                    $(view.el).modal('hide');
                 } else {
-                    view.$el.one('shown.bs.modal', function() {
-                        view.$el.modal('hide');
+                    $(view.el).one('shown.bs.modal', function() {
+                        $(view.el).modal('hide');
                     });
                 }
 
@@ -132,11 +132,11 @@ const KeywordEditorView = CollectionView.extend({
             });
         });
 
-        this.$el.modal('show');
+        $(this.el).modal('show');
     },
 
     onBeforeDestroy: function() {
-        this.$el.off('.keywordEditor');
+        $(this.el).off('.keywordEditor');
     },
 
     save_models: function() {
