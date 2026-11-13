@@ -84,8 +84,8 @@ export const DirectRenderMixin = {
     render_basic: function() {
         var html = this.template();
         var el = $(html);
-        $(this.el).replaceWith(el);
-        //this.setElement(el);
+        $(this.el).empty();
+        $(this.el).append(el);
         return this;
     },
 
@@ -117,7 +117,7 @@ export const DirectRenderMixin = {
 
         // v1: Use default intermediary element to wrap content from template
         if (!this.mode || this.mode == 'wrap') {
-            this.$el.html(html);
+            $(this.el).html(html);
 
         // v2: Replace intermediary element with content from template
         } else if (this.mode == 'replace') {
@@ -132,8 +132,8 @@ export const DirectRenderMixin = {
             // Replace container element with effective elements.
             // ATTENTION: This will actually just use the first element.
             // TODO: For more elements >1, new elements could be appended to its parent node.
-            $(this.el).replaceWith(elements);
-            //this.setElement(elements);
+            $(this.el).empty();
+            $(this.el).append(elements);
         }
 
         this.bindUIElements();
@@ -157,8 +157,6 @@ export const NamedViewController = MarionetteController.extend({
     The way a component is resolved by a given viewport is:
 
     - Calls method `this.viewport_resolver` to resolve the designated DOM element.
-    - Calls method `.backboneView()` on the element, which obtains the Marionette
-      view attached to the closest element having one.
     - Get the value of the object attribute called `this.name`, as this is a
       reference to the object instance of ourselves which got primarily registered
       by `this.register_view_component()`.
