@@ -3,12 +3,11 @@
 'use strict';
 
 import {View} from 'marionette';
-import { DirectRenderMixin } from 'patzilla.lib.marionette';
 
 // TODO: Maybe
 //const CheckboxBehavior = require('marionette-checkbox-behavior');
 
-export const CheckboxWidget = View.extendEach(DirectRenderMixin, {
+export const CheckboxWidget = View.extend({
     /*
     Contemporary <input type="checkbox"> elements with bidirectional data binding.
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior

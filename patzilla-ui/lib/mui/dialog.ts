@@ -3,10 +3,8 @@
 'use strict';
 
 import _ from 'underscore';
-import { classes } from '../es6';
 
 // Marionette
-import { DirectRenderMixin } from '../marionette';
 import {View} from 'marionette';
 
 // Material-UI
@@ -17,11 +15,9 @@ import FullScreenDialog from './fullscreendialog';
 const log = console.log;
 
 
-export class DialogWidget extends classes.many(View, DirectRenderMixin) {
+export class DialogWidget extends View {
 
     el: any;
-
-    render: () => void;
 
     // The HTML template for making up a HTML element
     get template() {

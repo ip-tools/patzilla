@@ -3,9 +3,7 @@
 'use strict';
 
 import {View} from 'marionette';
-import { classes } from 'patzilla.lib.es6';
 import { MDCMenu } from '@material/menu';
-import { DirectRenderMixin } from 'patzilla.lib.marionette';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
 // TODO: Maybe
@@ -36,7 +34,7 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-export const StackOpenerWidget = View.extendEach(DirectRenderMixin, {
+export const StackOpenerWidget = View.extend({
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
