@@ -11,7 +11,7 @@ export const OpsBaseViewMixin = {
         var _this = this;
 
         // Run search actions when clicking query-links
-        $(container).find(".query-link").one('click', function(event) {
+        $(container).find(".query-link").off('click').on('click', function(event) {
 
             // Add baseline parameters which reflect current gui state (e.g. selected project)
             var no_modifiers = $(this).data('no-modifiers');
@@ -60,7 +60,7 @@ export const OpsBaseViewMixin = {
 
     bind_same_citations_links: function(container) {
         // bind user notification to all same citations links of "explore citation environment" fame
-        $(container).find('.same-citations-link').one('click', function(event) {
+        $(container).find('.same-citations-link').off('click').on('click', function(event) {
             var citations_length = $(this).data('length');
             if (citations_length > 10) {
                 event.preventDefault();
