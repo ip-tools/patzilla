@@ -8,7 +8,6 @@ const {DirectRenderMixin} = require("patzilla.lib.marionette");
 const {SmartCollectionMixin} = require("patzilla.lib.backbone");
 
 require('patzilla.navigator.components.storage');
-require('backbone-dom-to-view');
 
 
 const CommentModel = Backbone.RelationalModel.extend({

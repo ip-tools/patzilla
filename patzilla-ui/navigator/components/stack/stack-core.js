@@ -6,7 +6,6 @@ import { SmartCollectionMixin } from 'patzilla.lib.backbone';
 import {MarionetteController, NamedViewController} from 'patzilla.lib.marionette';
 import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
-require('backbone-dom-to-view');
 require('patzilla.navigator.components.storage');
 
 
