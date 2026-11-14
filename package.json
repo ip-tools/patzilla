@@ -89,9 +89,13 @@
     "x-editable-bs4": "^1",
     "zeroclipboard": "^2"
   },
+  "peerDependencies": {
+    "@popperjs/core": "^2"
+  },
   "devDependencies": {
     "@babel/core": "^7",
     "@babel/preset-env": "^7",
+    "@popperjs/core": "^2",
     "@types/jquery": "^3.5",
     "@types/node": "^24",
     "@types/react": "^17",
