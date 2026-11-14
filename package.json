@@ -140,7 +140,7 @@
     "minimist": "^1.2.6",
     "node-forge": "^1.4",
     "picomatch": "^4",
-    "pify": "^6",
+    "pify": "^5",
     "postcss": "^8.5",
     "rimraf": "^6",
     "serialize-javascript": "^7",
