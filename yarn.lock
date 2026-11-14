@@ -5899,17 +5899,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pify@npm:^2.0.0":
-  version: 2.3.0
-  resolution: "pify@npm:2.3.0"
-  checksum: 10c0/551ff8ab830b1052633f59cb8adc9ae8407a436e06b4a9718bcb27dc5844b83d535c3a8512b388b6062af65a98c49bdc0dd523d8b2617b188f7c8fee457158dc
-  languageName: node
-  linkType: hard
-
-"pify@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "pify@npm:4.0.1"
-  checksum: 10c0/6f9d404b0d47a965437403c9b90eca8bb2536407f03de165940e62e72c8c8b75adda5516c6b9b23675a5877cc0bcac6bdfb0ef0e39414cd2476d5495da40e7cf
+"pify@npm:^6":
+  version: 6.1.0
+  resolution: "pify@npm:6.1.0"
+  checksum: 10c0/5744905e271d821ce1c96a615aecc857bfc0154a2f55cfd773e0a27478c1e1457dd69c932f2196cfa0d298cc4a2847edaf42b1ba600b95022ba5225c079443a6
   languageName: node
   linkType: hard
 
