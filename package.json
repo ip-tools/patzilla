@@ -131,7 +131,6 @@
     "braces": "^3",
     "browserslist": "^4",
     "cacache": "^21",
-    "elliptic": "^6",
     "eventsource": "^5",
     "glob": "^9",
     "glob-parent": "^6",
