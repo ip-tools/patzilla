@@ -1848,6 +1848,61 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mnjs/adapters@npm:^5":
+  version: 5.1.1
+  resolution: "@mnjs/adapters@npm:5.1.1"
+  peerDependencies:
+    "@types/backbone": ^1.4.23
+    "@types/jquery": ^4.0.1
+    backbone: ^1.3.1
+    jquery: ^4.0.0
+    lit-html: ^3.3.3
+    marionette: ^5.0.1
+    morphdom: ^2.7.8
+  peerDependenciesMeta:
+    "@types/backbone":
+      optional: true
+    "@types/jquery":
+      optional: true
+    backbone:
+      optional: true
+    jquery:
+      optional: true
+    lit-html:
+      optional: true
+    morphdom:
+      optional: true
+  checksum: 10c0/7e432537ce18d3ad5f2788b7682e536ec0bc3370f1cf13b8e5ff2a095a2f65aa29ed88b9e22ed9c6f9930765485ae08ea410742b496d2fca64d0b455f0469b41
+  languageName: node
+  linkType: hard
+
+"@mnjs/radio@npm:5.1.1":
+  version: 5.1.1
+  resolution: "@mnjs/radio@npm:5.1.1"
+  dependencies:
+    "@mnjs/utils": "npm:5.1.1"
+  checksum: 10c0/1203568d254ab104985a0f3e22ee2a8fd9506e25043d17b33451e9bce812298cb1f4ddd1cdef2fa3c6ba24dfbeb1763a7759f99efc87ee73377a7edd07c2dc93
+  languageName: node
+  linkType: hard
+
+"@mnjs/router@npm:^0.1":
+  version: 0.1.1
+  resolution: "@mnjs/router@npm:0.1.1"
+  dependencies:
+    "@mnjs/utils": "npm:^5.0.1"
+  peerDependencies:
+    marionette: ^5.0.1
+  checksum: 10c0/cb59aa756a39ac5515719efae3928cd763cde339726dba794c789fa0cbf184ddaa43de69fc22c972473d6be7eba860c6b392c6eb37f7709d4d9734da5a062a2a
+  languageName: node
+  linkType: hard
+
+"@mnjs/utils@npm:5.1.1, @mnjs/utils@npm:^5.0.1":
+  version: 5.1.1
+  resolution: "@mnjs/utils@npm:5.1.1"
+  checksum: 10c0/e6d53d1d7487fd0a3fcdc4cb2cef76010b49e9c486e8d746b8b1c70473919900c284eeb254ad186e56b46ccd8b66a0c384f6ba50a3764dbe7fe88cc45c2abc2c
+  languageName: node
+  linkType: hard
+
 "@mui/core-downloads-tracker@npm:^5.18.0":
   version: 5.18.0
   resolution: "@mui/core-downloads-tracker@npm:5.18.0"
@@ -3111,28 +3166,6 @@ __metadata:
     backbone: "npm:>=1.2.1"
     underscore: "npm:>=1.7.0"
   checksum: 10c0/47ef2ea2e1c2e11200dc2205c66c47071f765d4bd1a0f150204b8bb340acca0279cce1e586a4d599cfa2d0fc6ab4ee21291a14d97fee4d9860e5f398de251c43
-  languageName: node
-  linkType: hard
-
-"backbone.marionette@npm:^4":
-  version: 4.1.3
-  resolution: "backbone.marionette@npm:4.1.3"
-  dependencies:
-    backbone.radio: "npm:^2.0.0"
-  peerDependencies:
-    backbone: ^1.3.3
-    underscore: ^1.8.3
-  checksum: 10c0/0ec531601af4d2a945e7614ea30bbd4136f7be3cfc5bf86004bf8d511957945f6784f648507772a6e990b70f9619f78f2dc17e79856aa0c1f1dfe83e371c051b
-  languageName: node
-  linkType: hard
-
-"backbone.radio@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "backbone.radio@npm:2.0.0"
-  peerDependencies:
-    backbone: ^1.3.3
-    underscore: ^1.8.3
-  checksum: 10c0/13280197cb169d59b9869e3860a9ac9a371103e95f6a8243665913de00c07858dae1958590aa11bf3a670f5813576934f4dd5fc246bb8a26be8fbcad096d865c
   languageName: node
   linkType: hard
 
@@ -5209,14 +5242,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marionette.approuter@npm:^1":
-  version: 1.0.2
-  resolution: "marionette.approuter@npm:1.0.2"
+"marionette@npm:^5":
+  version: 5.1.1
+  resolution: "marionette@npm:5.1.1"
+  dependencies:
+    "@mnjs/radio": "npm:5.1.1"
+    "@mnjs/utils": "npm:5.1.1"
   peerDependencies:
-    backbone: ^1.3.3
-    backbone.marionette: ^4.0.0
-    underscore: ^1.8.3
-  checksum: 10c0/f46f2e9d81559118386f98b21a23b6116cae5f4b174598f2443aa2be1cceec5664bce31cb8911303f7595794bff64b4a9a9783f7d119da6ef92b33fddad77719
+    eslint: ^10.0.0
+  peerDependenciesMeta:
+    eslint:
+      optional: true
+  checksum: 10c0/980f4b2de034082e28e54405d1ce522b9b303e103ae065c44e36249356c093e3a52617490cd7b225aba59e4da3bae64acb74c6792f5b4cc06c7d81ef18483c4b
   languageName: node
   linkType: hard
 
@@ -5375,7 +5412,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimizer-webpack-plugin@npm:^5, minimizer-webpack-plugin@npm:^5.13.0":
+"minimizer-webpack-plugin@npm:^5.13.0":
   version: 5.14.0
   resolution: "minimizer-webpack-plugin@npm:5.14.0"
   dependencies:
@@ -5803,6 +5840,8 @@ __metadata:
     "@material/menu": "npm:^14"
     "@material/ripple": "npm:^14"
     "@material/snackbar": "npm:^14"
+    "@mnjs/adapters": "npm:^5"
+    "@mnjs/router": "npm:^0.1"
     "@mui/icons-material": "npm:^5"
     "@mui/material": "npm:^5"
     "@mui/styles": "npm:^5"
@@ -5815,7 +5854,6 @@ __metadata:
     babel-loader: "npm:^8"
     backbone: "npm:^1"
     backbone-relational: "npm:^0.10"
-    backbone.marionette: "npm:^4"
     blobjs: "npm:^1"
     bootbox: "npm:^6"
     bootstrap: "npm:^4"
@@ -5847,8 +5885,7 @@ __metadata:
     localforage: "npm:^1.10"
     localforage-backbone: "npm:^0.6"
     lz-string: "npm:^1"
-    marionette.approuter: "npm:^1"
-    minimizer-webpack-plugin: "npm:^5"
+    marionette: "npm:^5"
     modernizr: "npm:^3"
     modernizr-loader: "npm:^1"
     moment: "npm:^2"
