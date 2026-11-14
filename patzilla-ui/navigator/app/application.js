@@ -942,7 +942,11 @@ export const NavigatorApp = Marionette.Application.extend({
 
         log('propagate_datasource_message');
 
-        // Generic backend message
+        // Curated backend message.
+        let is_curated = this.propagate_datasource_signals(response, options);
+        if (is_curated) return;
+
+        // Generic backend message.
         var bucket = undefined;
         response && response.navigator && (bucket = response.navigator.user_info);
         if (_.isObject(bucket)) {
@@ -956,7 +960,6 @@ export const NavigatorApp = Marionette.Application.extend({
             this.ui.user_alert(response.message, 'warning');
         }
 
-        this.propagate_datasource_signals(response, options);
     },
 
     propagate_datasource_signals: function(response, options) {
@@ -1037,6 +1040,8 @@ export const NavigatorApp = Marionette.Application.extend({
                     'The first ' + hits_max + ' hits are accessible from datasource "' + meta.upstream.name + '".  ' +
                     'You can narrow your search by adding more search criteria.', 'warning');
             }
+            // Signal that this is a curated error message, which suppresses any others.
+            return true;
         }
 
     },

@@ -238,12 +238,11 @@ class DpmaDepatisnetAccess:
             error_message = ''
 
         # Compute error message.
-        prefix = 'Upstream service: '
         if 'An error has occurred' in body:
-            error_message = prefix + error_message.replace('\t', '').replace('\r\n', '\n').strip()
+            error_message = 'Upstream service: ' + error_message.replace('\t', '').replace('\r\n', '\n').strip()
             raise SyntaxError(error_message)
 
-        return prefix + error_message
+        return error_message
 
     def read_xls_response(self, xls_response):
         data = excel_to_dict(xls_response.read())
