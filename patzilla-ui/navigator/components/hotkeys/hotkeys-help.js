@@ -2,7 +2,7 @@
 // (c) 2014 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {View} from 'marionette';
 
 require('jquery.shorten.1.0');
 require('keyboarder/keyboarder.js');
@@ -17,7 +17,7 @@ elbody.addEventListener("keyup", function(event) {
     event.stopImmediatePropagation();
 }, true);
 
-export const HotkeysHelpView = Marionette.View.extend({
+export const HotkeysHelpView = View.extend({
 
     template: require('./hotkeys-help.html'),
 

@@ -2,10 +2,10 @@
 // (c) 2015 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 const ToProgress = require('toprogress');
 
-const ReadingController = Marionette.Controller.extend({
+const ReadingController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('ReadingController.initialize');

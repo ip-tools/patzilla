@@ -2,12 +2,11 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
-const {DirectRenderMixin} = require("patzilla.lib.marionette");
+import {View} from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 const {SmartCollectionMixin} = require("patzilla.lib.backbone");
 
 require('patzilla.navigator.components.storage');
-require('backbone-dom-to-view');
 
 
 const CommentModel = Backbone.RelationalModel.extend({
@@ -59,11 +58,14 @@ const CommentCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const CommentButtonView = Marionette.View.extend({
+const CommentButtonView = View.extend({
     template: require('./comment-button.html'),
-    //tagName: null,
+    className: 'comment-button',
 
-    //className: 'dropdown-item',
+    // Link button to comment manager.
+    initialize: function(options) {
+        $(this.el).data("comment_manager", options.manager);
+    },
 
     // forward the "click" dom event to a "toggle" application event
     triggers: {
@@ -71,10 +73,9 @@ const CommentButtonView = Marionette.View.extend({
     },
 
 });
-_.extend(CommentButtonView.prototype, DirectRenderMixin);
 
 
-const CommentTextView = Marionette.View.extend({
+const CommentTextView = View.extend({
     template: require('./comment-widget.html'),
     tagName: 'span',
 
@@ -156,7 +157,7 @@ const CommentTextView = Marionette.View.extend({
 });
 
 
-const CommentManager = Marionette.Controller.extend({
+const CommentManager = MarionetteController.extend({
 
     initialize: function(options) {
 
@@ -170,7 +171,7 @@ const CommentManager = Marionette.Controller.extend({
         this.model = this.get_or_create();
 
         // setup descendant views
-        this.comment_button = new CommentButtonView();
+        this.comment_button = new CommentButtonView({manager: this});
         this.comment_text = new CommentTextView({
             model: this.model,
             collection: this.collection,
@@ -204,7 +205,7 @@ const CommentManager = Marionette.Controller.extend({
 });
 
 
-const CommentsPlugin = Marionette.Controller.extend({
+const CommentsPlugin = MarionetteController.extend({
 
     initialize: function(options) {
 
@@ -246,7 +247,10 @@ const CommentsPlugin = Marionette.Controller.extend({
         });
 
         // clear remembered childviews
-        this.listenTo(this.view, 'before:render before:destroy', function() {
+        this.listenTo(this.view, 'before:render', function() {
+            _.clear(this.childviews);
+        });
+        this.listenTo(this.view, 'before:destroy', function() {
             _.clear(this.childviews);
         });
 
@@ -293,19 +297,15 @@ const CommentsPlugin = Marionette.Controller.extend({
     },
 
     toggle_by_element: function(element) {
-
-        var backbone_view = element.backboneView();
-
-        // Edit-toggle the comment manager
-        if (backbone_view && backbone_view.comment_manager) {
-            backbone_view.comment_manager.toggle_edit();
-        }
+        var $button = $(element).find('.comment-button');
+        var manager = $button.data('comment_manager');
+        manager.toggle_edit();
     },
 
     toggle_all: function() {
         var _this = this;
         $('.ops-collection-entry').each(function(index, element) {
-            _this.toggle_by_element($(element));
+            _this.toggle_by_element(element);
         });
     },
 

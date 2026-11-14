@@ -2,13 +2,12 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
-import { DirectRenderMixin } from 'patzilla.lib.marionette';
+import {View} from 'marionette';
 
 // TODO: Maybe
 //const CheckboxBehavior = require('marionette-checkbox-behavior');
 
-export const CheckboxWidget = Marionette.View.extendEach(DirectRenderMixin, {
+export const CheckboxWidget = View.extend({
     /*
     Contemporary <input type="checkbox"> elements with bidirectional data binding.
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
@@ -72,17 +71,17 @@ export const CheckboxWidget = Marionette.View.extendEach(DirectRenderMixin, {
         this.log('CheckboxWidget::_updateView');
         var modelField = this.getOption('modelField');
         var checked = !!this.model.get(modelField);
-        this.ui.input.prop('checked', checked);
+        $(this.ui.input).prop('checked', checked);
 
         var textLabel = this.getOption('textLabel');
-        this.ui.label.html(textLabel);
+        $(this.ui.label).html(textLabel);
     },
 
     _updateModel: function() {
         this.log('CheckboxWidget::_updateModel');
         var modelField = this.getOption('modelField');
         //this.log('CheckboxWidget this.ui:', this.ui);
-        var checked = this.ui.input.is(':checked');
+        var checked = $(this.ui.input).is(':checked');
         this.model.set(modelField, checked);
     },
 

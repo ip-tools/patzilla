@@ -2,12 +2,12 @@
 // (c) 2014,2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
 import urlJoin from 'url-join';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 require('jquery-hotkeys');
 
-export const HotkeysPlugin = Marionette.Controller.extend({
+export const HotkeysPlugin = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('HotkeysPlugin.initialize');
@@ -213,7 +213,7 @@ export const HotkeysPlugin = Marionette.Controller.extend({
         $(document).on('keydown', null, 'h', function(event) {
             event.preventDefault();
             var baseurl = _this.app.options.config.get('baseurl');
-            var url = urlJoin(baseurl, '/help#hotkeys');
+            var url = urlJoin(baseurl, '/help/hotkeys');
             window.open(url);
         });
 

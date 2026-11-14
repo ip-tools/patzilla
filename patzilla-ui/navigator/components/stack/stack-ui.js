@@ -2,10 +2,8 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
-import { classes } from 'patzilla.lib.es6';
+import {View} from 'marionette';
 import { MDCMenu } from '@material/menu';
-import { DirectRenderMixin } from 'patzilla.lib.marionette';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
 // TODO: Maybe
@@ -18,8 +16,8 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
     */
 
-    inputSelector: '> input',
-    labelSelector: '> .text_label',
+    inputSelector: ':scope input',
+    labelSelector: ':scope .text_label',
 
     // Forward the "click" dom event to a "toggle" application event
     triggers: {
@@ -36,7 +34,7 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
+export const StackOpenerWidget = View.extend({
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -52,7 +50,7 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
     // Define user interface
     ui: function() {
         return {
-            count: '> #count',
+            count: ':scope #count',
         };
     },
 
@@ -79,7 +77,7 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
 
     _updateView: function() {
         //log('StackOpenerWidget::_updateView');
-        this.ui.count.html(this.get_selected_count());
+        $(this.ui.count).html(this.get_selected_count());
     },
 
     log_event: function(event) {
@@ -89,10 +87,10 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
 });
 
 
-export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderMixin) {
+export class StackMenuWidget extends View {
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
-     * into a `Marionette.View`.
+     * into a Marionette `View`.
      *
      * https://material-components.github.io/material-components-web-catalog/#/component/menu
      *
@@ -107,13 +105,13 @@ export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderM
      *
     **/
 
-    get render_once() {
-        return true;
-    }
-
     // The HTML template for a MDC Menu
     get template() {
         return require('./stack-menu.html');
+    }
+
+    get render_once() {
+        return true;
     }
 
     initialize() {
@@ -128,9 +126,9 @@ export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderM
     }
 
     setup_mdc_element() {
-        this.$el.remove();
+        $(this.el).remove();
         this.container = this.getOption('container') || $('body');
-        this.container.append(this.$el);
+        this.container.append($(this.el));
         this.menu = new MDCMenu(this.el);
         this.bind_mdc_events();
     }

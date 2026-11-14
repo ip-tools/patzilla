@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {Application} from "marionette";
 import {GenericExchangeDocument} from "patzilla.access.base";
 import moment from "moment";
 
@@ -11,7 +11,7 @@ import moment from "moment";
  *          main application object
  * ------------------------------------------
  */
-export const NavigatorApp = Marionette.Application.extend({
+export const NavigatorApp = Application.extend({
 
     region: '#root-region',
 
@@ -1086,7 +1086,7 @@ export const NavigatorApp = Marionette.Application.extend({
         }
         const { ProjectChooserView } = require("patzilla.navigator.components.project/project");
         this.projectChooserView = new ProjectChooserView({
-            el: $('#project-chooser-area'),
+            el: $('#project-chooser-area')[0],
             model: project,
             collection: project.collection,
         });

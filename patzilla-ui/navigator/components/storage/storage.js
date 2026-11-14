@@ -2,7 +2,7 @@
 // (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 require('blobjs');
 var dataurl = require('dataurl').dataurl;
@@ -13,7 +13,7 @@ require('backbone-relational');
 require('localforage-backbone');
 
 
-const StoragePlugin = Marionette.Controller.extend({
+const StoragePlugin = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('StoragePlugin.initialize');

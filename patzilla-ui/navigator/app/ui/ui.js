@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {View} from 'marionette';
 import urlJoin from 'url-join';
 import ClipboardJS from "clipboard";
 
@@ -16,7 +16,7 @@ import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 import {xhr_decode_error} from "patzilla.lib.util";
 
 
-const UiController = Marionette.View.extend({
+const UiController = View.extend({
 
     initialize: function() {
         log('UiController.initialize');
@@ -69,8 +69,8 @@ const UiController = Marionette.View.extend({
 
         // Set help URLs before the links are used.
         var baseurl = navigatorApp.options.config.get('baseurl');
-        $('.action-help-shortcuts').attr('href', urlJoin(baseurl, '/help#hotkeys'));
-        $('.action-help-ificlaims').attr('href', urlJoin(baseurl, '/help#ificlaims'));
+        $('.action-help-shortcuts').attr('href', urlJoin(baseurl, '/help/hotkeys'));
+        $('.action-help-ificlaims').attr('href', urlJoin(baseurl, '/help/ificlaims'));
 
 
         $('.action-fullscreen').off('click');

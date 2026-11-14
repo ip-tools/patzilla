@@ -2,12 +2,10 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
 import { SmartCollectionMixin } from 'patzilla.lib.backbone';
-import { NamedViewController } from 'patzilla.lib.marionette';
+import { MarionetteController } from 'patzilla.lib.marionette';
 import { StackCheckboxWidget, StackOpenerWidget, StackMenuWidget } from './stack-ui.js';
 
-require('backbone-dom-to-view');
 require('patzilla.navigator.components.storage');
 
 
@@ -52,7 +50,7 @@ const StackCollection = Backbone.Collection.extendEach(SmartCollectionMixin, {
 });
 
 
-const StackManager = NamedViewController.extend({
+const StackManager = MarionetteController.extend({
 
     // The name under which this controller
     // register itself with the designated view.
@@ -79,6 +77,9 @@ const StackManager = NamedViewController.extend({
         this.model = options.model;
         this.view = options.view;
 
+        // Associate DOM with stack manager.
+        $(this.view.el).data('stack_manager', this);
+
         // https://makandracards.com/makandra/22121-how-to-call-overwritten-methods-of-parent-classes-in-backbone-js
         // https://stackoverflow.com/questions/15987490/backbone-view-inheritance-call-parent-leads-to-recursion/15988038#15988038
         StackManager.__super__.initialize.apply(this, arguments);
@@ -101,7 +102,7 @@ const StackManager = NamedViewController.extend({
     setup_ui: function() {
 
         // Find DOM elements
-        var rating_stack_container = this.view.$el.find('.document-rating-stack');
+        var rating_stack_container = $(this.view.el).find('.document-rating-stack');
         this.rating_element = rating_stack_container.find('.document-rating-widget');
 
         // setup descendant views
@@ -169,7 +170,7 @@ const StackManager = NamedViewController.extend({
         var selected = !!this.model.get(this.modelField);
 
         // Update sidecar view
-        var sidecar_element = this.view.$el;
+        var sidecar_element = $(this.view.el);
         if (selected) {
             sidecar_element.addClass('document-stack-decorated');
         } else {
@@ -221,7 +222,7 @@ const StackManager = NamedViewController.extend({
 });
 
 
-const StackPlugin = Marionette.Controller.extend({
+const StackPlugin = MarionetteController.extend({
 
     manager_class: StackManager,
 
@@ -375,7 +376,7 @@ const StackPlugin = Marionette.Controller.extend({
 
         // Reset user interface.
         var _this = this;
-        this.view.children.forEach(function(childview) {
+        [...this.view.children].forEach(function(childview) {
             _this.make_stack_manager(childview);
         });
         if (mode) {
@@ -385,16 +386,23 @@ const StackPlugin = Marionette.Controller.extend({
 
     // Activate single element
     activate_by_element: function(element, mode) {
-        var stack = this.manager_class.prototype.by_element(element);
-        if (!stack) return;
+        var stack = $(element).data('stack_manager');
+        if (!stack) {
+            console.warn('Unable to activate stack by element');
+            return;
+        }
         stack.activate(mode);
         return stack;
     },
 
     // Activate single element currently in viewport
     activate_by_viewport: function(mode) {
-        var stack = this.manager_class.prototype.by_viewport();
-        if (!stack) return;
+        var element = this.manager_class.prototype.viewport_resolver();
+        var stack = $(element).data('stack_manager');
+        if (!stack) {
+            console.warn('Unable to activate stack by viewport');
+            return;
+        }
         stack.activate(mode);
         return stack;
     },
@@ -422,8 +430,8 @@ const StackPlugin = Marionette.Controller.extend({
         // Iterate list of visible result elements and activate
         // the designated mode on each of them.
         var _this = this;
-        this.view.children.forEach(function(childview) {
-            _this.activate_by_element(childview.$el, mode);
+        [...this.view.children].forEach(function(childview) {
+            _this.activate_by_element($(childview.el), mode);
         });
 
         this.update_opener_view(mode);
@@ -474,7 +482,7 @@ const StackPlugin = Marionette.Controller.extend({
         }
 
         // Create menu widget.
-        var opener_widget = view.$el;
+        var opener_widget = $(view.el);
         this.menu_widget = new StackMenuWidget({
             collection: this.store,
             container: opener_widget.parent(),
