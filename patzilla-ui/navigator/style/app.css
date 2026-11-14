@@ -349,6 +349,34 @@ ul.breathe li {
     }
 }
 
+/* Adjust Select2 style for sorting chooser @ DPMA */
+#sorting-chooser .select2-container--default .select2-selection--single {
+    height: 38px;
+    border: 1px solid #17a2b8;
+    border-radius: 0.25rem;
+}
+
+#sorting-chooser .select2-container--default
+.select2-selection--single .select2-selection__rendered {
+    color: #17a2b8;
+    line-height: 36px;
+}
+
+#sorting-chooser .select2-container--default
+.select2-selection--single .select2-selection__placeholder {
+    color: #17a2b8;
+}
+
+#sorting-chooser .select2-container--default
+.select2-selection--single .select2-selection__arrow {
+    height: 36px;
+}
+
+#sorting-chooser .select2-container--default.select2-container--focus
+.select2-selection--single {
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.5);
+}
+
 
 /* Dossier management */
 #querybuilder-basket-area {
