@@ -1208,11 +1208,12 @@ const QueryBuilderView = Marionette.View.extend({
     },
 
     cql_history_chooser_destroy: function() {
-        // Destroy widget and close dropdown container
-        var element = $('#cql-history-chooser-select2');
-        element.select2("close");
-        element.dropdown("toggle");
-        //element.closest('#cql-history-chooser-container').hide();
+        // Destroy widget and close dropdown container.
+        $('#cql-history-chooser-select2').select2('close');
+
+        if ($('#cql-history-chooser-container').hasClass('show')) {
+            $('#btn-query-history').dropdown('toggle');
+        }
     },
 
     cql_history_chooser_load_data: function(data) {
