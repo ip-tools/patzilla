@@ -61,6 +61,10 @@ application's dependencies::
     export YARN_VERSION=1.22.22
     source /dev/stdin <<<"$(curl -s https://raw.githubusercontent.com/cicerops/supernode/main/supernode)"
 
+    # Update Yarn.
+    corepack enable
+    corepack use yarn@4.18.1
+
     # Install all module dependencies.
     yarn install
 
