@@ -1116,10 +1116,11 @@ const QueryBuilderView = Marionette.View.extend({
 
     html_history_tag: function(content, options) {
         options = options || {};
-        options.type = options.type || 'label';
-        options.kind = options.kind || 'default';
+        options.type = options.type || 'badge';
+        options.kind = options.kind || 'secondary';
         var classes = [
             options.type,
+            'badge-pill',
             options.type + '-' + options.kind,
             options.role  ? 'history-tag-' + options.role : '',
             options.width ? 'history-tag-' + options.width : '',

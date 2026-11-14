@@ -54,7 +54,7 @@ navigatorApp.on("before:start", function(options) {
             enable_remove_replace_family_members: true,
 
             // Bootstrap color variant used for referencing this data source in a query history entry
-            history_label_color: 'inverse',
+            history_label_color: 'dark',
 
         },
 
