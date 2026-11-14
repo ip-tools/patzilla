@@ -342,7 +342,7 @@ export const ExportPlugin = Backbone.Model.extend({
 
         if (_.any(state.format)) {
             var format = _.invert(state.format)[true];
-            if (_(['csv', 'xlsx', 'pdf', 'zip']).contains(format)) {
+            if (_(['csv', 'odt', 'xlsx', 'pdf', 'zip']).contains(format)) {
                 if (format == 'zip' && !_.any(state.report) && !_.any(state.media)) {
                     spinner.hide();
                     _this.update_status('Please choose any report or media format.', false, true);
