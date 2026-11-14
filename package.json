@@ -147,7 +147,6 @@
     "sockjs": "^0.3",
     "sockjs-client": "^1.6",
     "tar": "^7",
-    "terser": "^4.8.1",
     "trim-newlines": "^3.0.1",
     "underscore": "^1.13",
     "uuid": "^11",
