@@ -68,6 +68,7 @@
     "localforage-backbone": "^0.6",
     "lz-string": "^1",
     "marionette": "^5",
+    "material-design-icons-iconfont": "^5",
     "modernizr": "^3",
     "moment": "^2",
     "popper.js": "^1",
