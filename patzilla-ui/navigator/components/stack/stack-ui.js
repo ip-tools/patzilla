@@ -2,7 +2,7 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import {View} from 'marionette';
+import { View } from 'marionette';
 import { MDCMenu } from '@material/menu';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
@@ -87,7 +87,7 @@ export const StackOpenerWidget = View.extend({
 });
 
 
-export class StackMenuWidget extends View {
+export const StackMenuWidget = View.extend({
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
      * into a Marionette `View`.
@@ -104,68 +104,48 @@ export class StackMenuWidget extends View {
      * Controlling the element is the responsibility of the `MDCMenu` component.
      *
     **/
-
-    // The HTML template for a MDC Menu
-    get template() {
-        return require('./stack-menu.html');
-    }
-
-    get render_once() {
-        return true;
-    }
+    tagName: 'div',
+    className: 'mdc-menu mdc-menu-surface stack-menu',
+    template: require('./stack-menu.html'),
 
     initialize() {
         log('StackMenuWidget::initialize', this);
         //this.listenTo(this, 'all', this.log_event);
+        this.handleMdcSelected = this.handleMdcSelected.bind(this);
+        this.el.addEventListener('MDCMenu:selected', this.handleMdcSelected);
+
         this.render();
-    }
+        const container = this.getOption('container') || $('body');
+        container.append(this.el);
+    },
+
+    onBeforeRender() {
+        this.destroyMenu();
+    },
 
     onRender() {
-        //log('StackMenuWidget::onRender', this.el);
-        this.setup_mdc_element();
-    }
-
-    setup_mdc_element() {
-        $(this.el).remove();
-        this.container = this.getOption('container') || $('body');
-        this.container.append($(this.el));
         this.menu = new MDCMenu(this.el);
-        this.bind_mdc_events();
-    }
+    },
+
+    onBeforeDestroy() {
+        this.el.removeEventListener('MDCMenu:selected', this.handleMdcSelected);
+        this.destroyMenu();
+    },
+
+    destroyMenu() {
+        this.menu?.destroy();
+        this.menu = undefined;
+    },
+
+    handleMdcSelected(event) {
+        const detail = event.detail;
+        detail.action = $(detail.item).data('action');
+
+        this.trigger('item:select', detail);
+        this.trigger('action:' + detail.action, detail);
+    },
 
     open() {
-        //log('StackMenuWidget::open', this);
-        // TODO: Sanity check to reject this when not being rendered?
         this.menu.open = true;
-    }
-
-    onDestroy() {
-        log('StackMenuWidget::onDestroy');
-        this.menu.destroy();
-    }
-
-
-    bind_mdc_events() {
-        //log('StackMenuWidget::bind_mdc_events');
-        var _this = this;
-        this.el.addEventListener('MDCMenu:selected', function(event) {
-
-            //log('MDCMenu:selected', event);
-
-            // Resolve designated action from `mdc-list-item`.
-            var detail = event.detail;
-            var element = $(detail.item);
-            var action = element.data('action');
-
-            // Propagate as action event
-            detail.action = action;
-            _this.trigger('item:select', detail);
-            _this.trigger('action:' + action, detail);
-        });
-    }
-
-    log_event(event) {
-        log('StackMenuWidget::log_event', event);
-    }
-
-}
+    },
+});

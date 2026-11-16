@@ -63,9 +63,12 @@ const StackManager = MarionetteController.extend({
     // Which text label to display besides the checkbox
     textLabel: 'Select',
 
-    // Resolve the closest Backbone view
+    // Resolve the view root for the first visible document.
     viewport_resolver: function() {
-        var element = $('.document-anchor:in-viewport').closest('.ops-collection-entry');
+        var element = $('.document-anchor:in-viewport')
+            .closest('.ops-collection-entry')
+            .first()
+            .parent();
         return element;
     },
 
@@ -332,7 +335,9 @@ const StackPlugin = MarionetteController.extend({
                 var manager = _this.activate_by_viewport(StackDisplayMode.STACK);
 
                 // Select item
-                manager.select();
+                if (manager) {
+                    manager.select();
+                }
 
             } catch (error) {
                 console.error('Selecting document failed:', error);
@@ -346,7 +351,9 @@ const StackPlugin = MarionetteController.extend({
                 var manager = _this.activate_by_viewport(StackDisplayMode.STACK);
 
                 // Unselect item
-                manager.unselect();
+                if (manager) {
+                    manager.unselect();
+                }
 
             } catch (error) {
                 console.error('Unselecting document failed:', error);
