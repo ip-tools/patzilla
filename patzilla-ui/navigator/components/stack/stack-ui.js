@@ -114,9 +114,9 @@ export const StackMenuWidget = View.extend({
         this.handleMdcSelected = this.handleMdcSelected.bind(this);
         this.el.addEventListener('MDCMenu:selected', this.handleMdcSelected);
 
-        this.render();
         const container = this.getOption('container') || $('body');
         container.append(this.el);
+        this.render();
     },
 
     onBeforeRender() {
