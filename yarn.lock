@@ -3284,20 +3284,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bootstrap-slider@npm:^9":
-  version: 9.10.0
-  resolution: "bootstrap-slider@npm:9.10.0"
-  checksum: 10c0/0963d7b934bfc5430b1637902ea1dec5a353eb9fb72fe59c97fe1432713877d106732ce0a976b44a96c860d413bd971ce841e28f3007156c242dc38db862e9e1
+"bootstrap-slider@npm:^11":
+  version: 11.0.2
+  resolution: "bootstrap-slider@npm:11.0.2"
+  checksum: 10c0/28c02042c1aaebcbacba84c8d472164bae6a7d8f1373a9889ea93c59ade97e8ce12bb98b9a1024dea9fc6ca9c1e8e23d32a6ffa5267ee6af2f727fbe3a4de1ee
   languageName: node
   linkType: hard
 
-"bootstrap@npm:^4":
-  version: 4.6.2
-  resolution: "bootstrap@npm:4.6.2"
+"bootstrap@npm:^5":
+  version: 5.3.9
+  resolution: "bootstrap@npm:5.3.9"
   peerDependencies:
-    jquery: 1.9.1 - 3
-    popper.js: ^1.16.1
-  checksum: 10c0/aae7178a306cd9376d10302bf557e00ba7e3bffffb4c0533687c1e0de90f9d30d8883a9b0ac629a2e64131954eca4e03ee06ee665e52b8c44ca66b3599024e8a
+    "@popperjs/core": ^2.11.8
+  checksum: 10c0/6c707349e7db52b44f72c7b5e1e7973c9518adf3843748186d79fc6c38dd956cf0164be15192e3a1dfa8b2151cc6cb5dc13e74d1241e5666009bf651a631c0be
   languageName: node
   linkType: hard
 
@@ -4945,10 +4944,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.7":
-  version: 3.7.1
-  resolution: "jquery@npm:3.7.1"
-  checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
+"jquery@npm:^3":
+  version: 3.8.0
+  resolution: "jquery@npm:3.8.0"
+  checksum: 10c0/e9e8b764042dd19adcfadb311b01d4d77a8c0094b70fd54c9310ed692d6aad0b5ffd1ad3759a8b453117c57327f33a15829b66dbff37c9ed446d8c06e1169cb0
   languageName: node
   linkType: hard
 
@@ -5885,8 +5884,8 @@ __metadata:
     backbone-relational: "npm:^0.10"
     blobjs: "npm:^1"
     bootbox: "npm:^6"
-    bootstrap: "npm:^4"
-    bootstrap-slider: "npm:^9"
+    bootstrap: "npm:^5"
+    bootstrap-slider: "npm:^11"
     classie: "npm:^1"
     clean-webpack-plugin: "npm:^4"
     clipboard: "npm:^2"
@@ -5901,7 +5900,7 @@ __metadata:
     humanize-plus: "npm:^1"
     imports-loader: "npm:^4"
     jq-pagination: "https://github.com/ip-tools/jqPagination#1.4.2-alpha.2"
-    jquery: "npm:^3.7"
+    jquery: "npm:^3"
     jquery-caret-plugin: "npm:^1.5"
     jquery-hotkeys: "npm:^0.2"
     jquery-migrate: "npm:3.0.1"
@@ -5919,7 +5918,6 @@ __metadata:
     modernizr: "npm:^3"
     modernizr-loader: "npm:^1"
     moment: "npm:^2"
-    popper.js: "npm:^1"
     promise: "npm:^8"
     react: "npm:^17"
     react-dom: "npm:^17"
@@ -5947,8 +5945,6 @@ __metadata:
     webpack-notifier: "npm:^1"
     x-editable-bs4: "npm:^1"
     zeroclipboard: "npm:^2"
-  peerDependencies:
-    "@popperjs/core": ^2
   languageName: unknown
   linkType: soft
 
@@ -6029,13 +6025,6 @@ __metadata:
   bin:
     playwright: cli.js
   checksum: 10c0/30ce029c9fb2a6e88cf81b150b978fd60edb59b8af5a6460f5576f0fe6e2bb739454109f0ce4904eac63cb2cf10390518d7d71d335fd695b5897734a5af7250d
-  languageName: node
-  linkType: hard
-
-"popper.js@npm:^1":
-  version: 1.16.1
-  resolution: "popper.js@npm:1.16.1"
-  checksum: 10c0/1c1a826f757edb5b8c2049dfd7a9febf6ae1e9d0e51342fc715b49a0c1020fced250d26484619883651e097c5764bbcacd2f31496e3646027f079dd83e072681
   languageName: node
   linkType: hard
 

@@ -10,16 +10,17 @@ var slugify = require('slugify');
 
 // bootstrap-editable for Bootstrap v4 uses Font Awesome icons,
 // so override with buttons from v3, to stick with Glyphicons.
-require('x-editable-bs4/dist/bootstrap4-editable/js/bootstrap-editable');
-require('x-editable-bs4/dist/bootstrap4-editable/css/bootstrap-editable');
-$.fn.editableform.buttons =
-  '<button type="submit" class="btn btn-primary btn-sm editable-submit">'+
-    '<i class="glyphicon glyphicon-ok"></i>'+
-  '</button>'+
-  '<button type="button" class="btn btn-default btn-sm editable-cancel">'+
-    '<i class="glyphicon glyphicon-remove"></i>'+
-  '</button>';
-
+require('x-editable-bs4/dist/bootstrap5-editable/js/bootstrap-editable');
+require('x-editable-bs4/dist/bootstrap5-editable/css/bootstrap-editable');
+(function ($) {
+    $.fn.editableform.buttons =
+        '<button type="submit" class="btn btn-primary btn-sm editable-submit">' +
+        '<i class="glyphicon glyphicon-ok"></i>' +
+        '</button>' +
+        '<button type="button" class="btn btn-default btn-sm editable-cancel">' +
+        '<i class="glyphicon glyphicon-remove"></i>' +
+        '</button>';
+});
 
 const QueryModel = Backbone.RelationalModel.extend({
 
