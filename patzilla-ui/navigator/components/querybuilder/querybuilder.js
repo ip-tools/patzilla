@@ -1528,13 +1528,13 @@ const QueryBuilderView = View.extend({
         // populate sorting state to user interface
         if (data && data.sorting) {
             //log('data.sorting:', data.sorting);
-            $('#sort-field-chooser').val(data.sorting.field).trigger('change');
             $('#sort-order-chooser').data('value', data.sorting.order);
             this.setup_sorting_chooser();
+            $('#sort-field-chooser').val(data.sorting.field).trigger('change');
         } else {
-            $('#sort-field-chooser').val(null).trigger('change');
             $('#sort-order-chooser').data('value', null);
             this.setup_sorting_chooser();
+            $('#sort-field-chooser').val(null).trigger('change');
         }
 
     },
