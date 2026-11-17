@@ -133,6 +133,17 @@ jobs:
         node-version:
           - '24'
 
+    services:
+      mongodb:
+        image: docker.io/mongo:9
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ping: 1}).ok' | grep -q 1"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
     defaults:
       run:
         shell: bash
@@ -146,12 +157,24 @@ jobs:
     - name: Acquire sources
       uses: actions/checkout@v7
 
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v10.3.0
+      with:
+        activate-environment: true
+        enable-cache: true
+        python-version: '3.14'
+
+    - name: Install Python project
+      run: |
+        uv pip install pip virtualenv
+        make setup-test
+
     # Update this when Yarn no longer recommends Corepack
     # See: https://yarnpkg.com/getting-started/install
     - name: Enable Corepack
       run: corepack enable
 
-    - name: Setup Node.js
+    - name: Set up Node.js
       uses: actions/setup-node@v7
       with:
         node-version: ${{ matrix.node-version }}
@@ -159,11 +182,14 @@ jobs:
         cache: 'yarn'
         cache-dependency-path: 'yarn.lock'
 
-    - name: Setup project
-      run: yarn install
+    - name: Install JavaScript project
+      run: |
+        yarn install --immutable
+        yarn build
+        yarn playwright install --with-deps chromium
 
-    - name: Run build
-      run: yarn build
+    - name: Run tests
+      run: make test-ui
 
     - name: Run release
       run: yarn release

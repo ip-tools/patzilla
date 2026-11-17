@@ -111,9 +111,13 @@ Go to http://localhost:6544
 Software tests
 ==============
 
-Run all linters and software tests::
+Run Python linters and software tests::
 
     make check
+
+Run JavaScript software tests::
+
+    make test-ui
 
 Run tests in parallel
 =====================
