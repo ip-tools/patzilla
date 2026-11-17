@@ -26,6 +26,7 @@
     "url": "https://github.com/ip-tools/patzilla/issues"
   },
   "scripts": {
+    "test:browser": "playwright test",
     "watch": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --watch",
     "build": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --progress",
     "release": "webpack --mode=production --config=webpack.release.config.js --progress"
@@ -94,6 +95,7 @@
   "devDependencies": {
     "@babel/core": "^7",
     "@babel/preset-env": "^7",
+    "@playwright/test": "^1",
     "@popperjs/core": "^2",
     "@types/jquery": "^3.5",
     "@types/node": "^24",

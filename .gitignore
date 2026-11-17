@@ -10,6 +10,7 @@
 MANIFEST
 /build
 /dist*
+/test-results
 /var
 /node_modules*
 .coverage

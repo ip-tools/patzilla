@@ -113,6 +113,10 @@ test-coverage:
 test-parallel:
 	@$(pytest) $(options) --numprocesses=auto
 
+test-ui:
+	yarn playwright install --with-deps chromium
+	NODE_OPTIONS=--openssl-legacy-provider yarn test:browser
+
 format:
 	@$(pyproject-fmt) --keep-full-version pyproject.toml
 

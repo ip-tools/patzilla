@@ -147,7 +147,7 @@ class GlobalSettings:
 
         # Container for email settings
         email_settings = SmartMunch({
-            'addressbook': [],
+            'addressbook': SmartMunch(),
             'content': SmartMunch(),
         })
 
@@ -160,10 +160,10 @@ class GlobalSettings:
             if defaults and specific:
                 thing.update(deepcopy(specific))
 
-            for key, value in list(thing.items()):
-                thing[key] = value
-
-            email_settings[setting_name] = thing
+            if thing:
+                for key, value in list(thing.items()):
+                    thing[key] = value
+                email_settings[setting_name] = thing
 
         return email_settings
 
