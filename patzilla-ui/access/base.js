@@ -2,7 +2,7 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 
 export const DatasourceSearch = Backbone.Model.extend({
     keywords: [],
@@ -79,7 +79,7 @@ export const DatasourceSearch = Backbone.Model.extend({
 });
 
 
-export const DatasourceCrawler = Marionette.Controller.extend({
+export const DatasourceCrawler = MarionetteController.extend({
 
     initialize: function(options) {
         log('DatasourceCrawler.initialize');

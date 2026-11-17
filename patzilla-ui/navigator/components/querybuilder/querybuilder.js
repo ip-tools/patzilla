@@ -2,8 +2,9 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
 import moment from "moment";
+import {View} from 'marionette';
+
 const bootbox = require('bootbox');
 const {RadioPlus} = require("patzilla.lib.radioplus");
 const {FIELDS_KNOWLEDGE} = require("./expression-fields.js");
@@ -12,7 +13,7 @@ require('select2/dist/js/select2.js');
 require('select2/dist/css/select2.css');
 require('jquery-caret-plugin/dist/jquery.caret');
 
-const QueryBuilderView = Marionette.View.extend({
+const QueryBuilderView = View.extend({
 
     template: require('./querybuilder.html'),
 

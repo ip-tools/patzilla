@@ -2,10 +2,10 @@
 // (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {View} from 'marionette';
 const Grid = require('split-grid').default;
 
-export const MainView = Marionette.View.extend({
+export const MainView = View.extend({
 
     template: require('./root.html'),
     regions: {
@@ -49,7 +49,7 @@ export const MainView = Marionette.View.extend({
 
 });
 
-const ContentView = Marionette.View.extend({
+const ContentView = View.extend({
     template: require('./content.html'),
     initialize: function() {
         //log('ContentView::initialize');
@@ -58,7 +58,7 @@ const ContentView = Marionette.View.extend({
     templateContext: {},
 });
 
-const GridContentView = Marionette.View.extend({
+const GridContentView = View.extend({
     template: require('./content_grid.html'),
     initialize: function() {
         //log('GridContentView::initialize');
@@ -86,7 +86,7 @@ const GridContentView = Marionette.View.extend({
     },
 });
 
-const MenuView = Marionette.View.extend({
+const MenuView = View.extend({
     template: require('./menu.html'),
     tagName: 'span',
     initialize: function() {
@@ -99,7 +99,7 @@ const MenuView = Marionette.View.extend({
     */
 });
 
-const HeaderView = Marionette.View.extend({
+const HeaderView = View.extend({
 
     regions: {
         menu: "#menu-region",
@@ -129,7 +129,7 @@ const HeaderView = Marionette.View.extend({
 });
 
 
-const WideHeaderView = Marionette.View.extend({
+const WideHeaderView = View.extend({
 
     regions: {
         menu: "#menu-region",
@@ -168,7 +168,7 @@ const WideHeaderView = Marionette.View.extend({
 });
 
 
-const FooterView = Marionette.View.extend({
+const FooterView = View.extend({
 
     template: require('./footer.html'),
 

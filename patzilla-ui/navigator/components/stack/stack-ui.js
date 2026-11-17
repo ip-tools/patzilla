@@ -2,10 +2,8 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
-import Marionette from 'backbone.marionette';
-import { classes } from 'patzilla.lib.es6';
+import { View } from 'marionette';
 import { MDCMenu } from '@material/menu';
-import { DirectRenderMixin } from 'patzilla.lib.marionette';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
 // TODO: Maybe
@@ -18,8 +16,8 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
     Derived from https://github.com/rafeememon/marionette-checkbox-behavior
     */
 
-    inputSelector: '> input',
-    labelSelector: '> .text_label',
+    inputSelector: ':scope input',
+    labelSelector: ':scope .text_label',
 
     // Forward the "click" dom event to a "toggle" application event
     triggers: {
@@ -36,7 +34,7 @@ export const StackCheckboxWidget = CheckboxWidget.extend({
 });
 
 
-export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
+export const StackOpenerWidget = View.extend({
     /*
     Button for opening the stack user interface
     also displaying the number of selected documents.
@@ -52,7 +50,7 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
     // Define user interface
     ui: function() {
         return {
-            count: '> #count',
+            count: ':scope #count',
         };
     },
 
@@ -79,7 +77,7 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
 
     _updateView: function() {
         //log('StackOpenerWidget::_updateView');
-        this.ui.count.html(this.get_selected_count());
+        $(this.ui.count).html(this.get_selected_count());
     },
 
     log_event: function(event) {
@@ -89,10 +87,10 @@ export const StackOpenerWidget = Marionette.View.extendEach(DirectRenderMixin, {
 });
 
 
-export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderMixin) {
+export const StackMenuWidget = View.extend({
     /*
      * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
-     * into a `Marionette.View`.
+     * into a Marionette `View`.
      *
      * https://material-components.github.io/material-components-web-catalog/#/component/menu
      *
@@ -106,68 +104,48 @@ export class StackMenuWidget extends classes.many(Marionette.View, DirectRenderM
      * Controlling the element is the responsibility of the `MDCMenu` component.
      *
     **/
-
-    get render_once() {
-        return true;
-    }
-
-    // The HTML template for a MDC Menu
-    get template() {
-        return require('./stack-menu.html');
-    }
+    tagName: 'div',
+    className: 'mdc-menu mdc-menu-surface stack-menu',
+    template: require('./stack-menu.html'),
 
     initialize() {
         log('StackMenuWidget::initialize', this);
         //this.listenTo(this, 'all', this.log_event);
+        this.handleMdcSelected = this.handleMdcSelected.bind(this);
+        this.el.addEventListener('MDCMenu:selected', this.handleMdcSelected);
+
+        const container = this.getOption('container') || $('body');
+        container.append(this.el);
         this.render();
-    }
+    },
+
+    onBeforeRender() {
+        this.destroyMenu();
+    },
 
     onRender() {
-        //log('StackMenuWidget::onRender', this.el);
-        this.setup_mdc_element();
-    }
-
-    setup_mdc_element() {
-        this.$el.remove();
-        this.container = this.getOption('container') || $('body');
-        this.container.append(this.$el);
         this.menu = new MDCMenu(this.el);
-        this.bind_mdc_events();
-    }
+    },
+
+    onBeforeDestroy() {
+        this.el.removeEventListener('MDCMenu:selected', this.handleMdcSelected);
+        this.destroyMenu();
+    },
+
+    destroyMenu() {
+        this.menu?.destroy();
+        this.menu = undefined;
+    },
+
+    handleMdcSelected(event) {
+        const detail = event.detail;
+        detail.action = $(detail.item).data('action');
+
+        this.trigger('item:select', detail);
+        this.trigger('action:' + detail.action, detail);
+    },
 
     open() {
-        //log('StackMenuWidget::open', this);
-        // TODO: Sanity check to reject this when not being rendered?
         this.menu.open = true;
-    }
-
-    onDestroy() {
-        log('StackMenuWidget::onDestroy');
-        this.menu.destroy();
-    }
-
-
-    bind_mdc_events() {
-        //log('StackMenuWidget::bind_mdc_events');
-        var _this = this;
-        this.el.addEventListener('MDCMenu:selected', function(event) {
-
-            //log('MDCMenu:selected', event);
-
-            // Resolve designated action from `mdc-list-item`.
-            var detail = event.detail;
-            var element = $(detail.item);
-            var action = element.data('action');
-
-            // Propagate as action event
-            detail.action = action;
-            _this.trigger('item:select', detail);
-            _this.trigger('action:' + action, detail);
-        });
-    }
-
-    log_event(event) {
-        log('StackMenuWidget::log_event', event);
-    }
-
-}
+    },
+});

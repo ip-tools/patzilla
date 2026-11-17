@@ -10,7 +10,5 @@
  *
 **/
 
-// package.json: "material-design-icons-iconfont": "^5",
-
-// require('material-design-icons-iconfont/dist/material-design-icons.css');
-// require('./material-icons.css');
+require('material-design-icons-iconfont/dist/material-design-icons.css');
+require('./material-icons.css');

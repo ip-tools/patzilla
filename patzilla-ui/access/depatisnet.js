@@ -2,7 +2,7 @@
 // (c) 2014 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 const {DatasourceSearch, DatasourceCrawler} = require("./base");
 
 const DepatisnetSearch = DatasourceSearch.extend({
@@ -62,7 +62,7 @@ navigatorApp.on("before:start", function(options) {
 });
 
 
-export const DepatisConnectFulltext = Marionette.Controller.extend({
+export const DepatisConnectFulltext = MarionetteController.extend({
 
     initialize: function(document_number) {
         log('DepatisConnectFulltext.initialize');

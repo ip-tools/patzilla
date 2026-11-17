@@ -2,12 +2,12 @@
 // (c) 2014-2016 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
 import $ from "jquery";
+import {MarionetteController} from "patzilla.lib.marionette";
 const {opaque_param} = require("patzilla.navigator.components.opaquelinks");
 const {dataurl} = require("dataurl");
 
-const PermalinkPlugin = Marionette.Controller.extend({
+const PermalinkPlugin = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('PermalinkPlugin.initialize');

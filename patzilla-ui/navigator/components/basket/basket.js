@@ -2,7 +2,8 @@
 // (c) 2013-2017 Andreas Motl, Elmyra UG
 'use strict';
 
-import Marionette from 'backbone.marionette';
+import {View} from 'marionette';
+import {MarionetteController} from "patzilla.lib.marionette";
 import urlJoin from 'url-join';
 const memoize = require('memoize');
 const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");
@@ -588,7 +589,7 @@ const BasketEntryModel = Backbone.RelationalModel.extend({
 Backbone.Relational.store.addModelScope({BasketModel: BasketModel, BasketEntryModel: BasketEntryModel});
 
 
-export const BasketView = Marionette.View.extend({
+export const BasketView = View.extend({
 
     template: require('./basket.html'),
 
@@ -707,7 +708,7 @@ export const BasketView = Marionette.View.extend({
 
         });
 
-        this.$el.find('.btn-popover').popover();
+        $(this.el).find('.btn-popover').popover();
 
 
         /*
@@ -902,7 +903,7 @@ export const BasketView = Marionette.View.extend({
 
 });
 
-const BasketController = Marionette.Controller.extend({
+const BasketController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('BasketController.initialize');
@@ -1032,7 +1033,7 @@ export const BasketListView = GenericResultView.extend({
 });
 
 
-const RatingController = Marionette.Controller.extend({
+const RatingController = MarionetteController.extend({
 
     initialize: function(options) {
         console.log('RatingController.initialize');
