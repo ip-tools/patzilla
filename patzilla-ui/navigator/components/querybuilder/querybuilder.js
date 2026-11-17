@@ -808,7 +808,7 @@ const QueryBuilderView = View.extend({
         // --------------------
         //   sort field
         // --------------------
-
+        select2_reset(element_field_chooser);
         element_field_chooser.select2({
             placeholder: '<i class="glyphicon glyphicon-sort"></i> Sorting',
             data: fields_knowledge.sorting,
