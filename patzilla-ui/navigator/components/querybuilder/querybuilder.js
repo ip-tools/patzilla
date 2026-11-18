@@ -141,7 +141,7 @@ const QueryBuilderView = View.extend({
                 $('#patentnumber').trigger('focus');
 
                 // Hide action tools
-                $('#querybuilder-comfort-actions').show();
+                //$('#querybuilder-comfort-actions').show();
                 $('#querybuilder-cql-actions').hide();
                 $('#querybuilder-numberlist-actions').hide();
 
@@ -160,7 +160,7 @@ const QueryBuilderView = View.extend({
                 $('#query').trigger('focus');
 
                 // Show action tools
-                $('#querybuilder-comfort-actions').hide();
+                //$('#querybuilder-comfort-actions').hide();
                 $('#querybuilder-cql-actions').show();
                 $('#querybuilder-numberlist-actions').hide();
 
@@ -300,6 +300,8 @@ const QueryBuilderView = View.extend({
     },
 
     display_datasource_buttons: function(whitelist) {
+
+        return;
 
         // Hide all buttons as we will incrementally enable them.
         $('#datasource label').hide();

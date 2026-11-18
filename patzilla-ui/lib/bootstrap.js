@@ -7,6 +7,3 @@ require('bootstrap-tab-button.js');
 
 // Glyphicons from Bootstrap 3
 require('@neos21/bootstrap3-glyphicons');
-
-// Initializers
-$('.alert').alert();
