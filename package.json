@@ -132,7 +132,7 @@
     "browserslist": "^4",
     "cacache": "^21",
     "eventsource": "^5",
-    "glob": "^9",
+    "glob": "^14",
     "glob-parent": "^6",
     "json5": "^2",
     "loader-utils": "^2",
