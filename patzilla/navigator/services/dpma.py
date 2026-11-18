@@ -25,7 +25,7 @@ depatisnet_published_data_search_service = Service(
     description="DEPATISnet search interface")
 depatisnet_published_data_crawl_service = Service(
     name='depatisnet-published-data-crawl',
-    path='/api/depatisnet/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    path=r'/api/depatisnet/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="DEPATISnet crawler interface")
 
 depatisconnect_description_service = Service(

@@ -62,7 +62,7 @@ class IFIClaimsParser:
         after:                  text:((parallel* AND schalt*) AND (antrieb* AND stufe*))
         """
         #print >>sys.stderr, 'expression-before:', self.expression
-        self.expression = re.sub('"(.+?)"~\d+', '(\\1)', self.expression)
+        self.expression = re.sub(r'"(.+?)"~\d+', '(\\1)', self.expression)
         self.expression = self.expression.replace('{!complexphrase}', '')
         #print >>sys.stderr, 'expression-after :', self.expression
 

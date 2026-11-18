@@ -28,7 +28,7 @@ class IpcDecoder:
     #PATTERN = '([A-Z])(\d\d)?([A-Z])?\s*(?:(\d+))?(?:[/-](\d+))?'
 
     # remarks for example "C09D 163/00", also vice-versa "H01L0021677000"
-    PATTERN = """
+    PATTERN = r"""
     (?P<section__1>[A-Z])         # C
     (?P<class__1>\d{1,2})?        # 09
     (?P<subclass__1>[A-Z])?       # D
@@ -66,12 +66,12 @@ class IpcDecoder:
 
         # strip all leading zeros from group
         if self.ipc['group']:
-            self.ipc['group'] = re.sub('^0*(\d+)', '\\1', self.ipc['group'])
+            self.ipc['group'] = re.sub(r'^0*(\d+)', '\\1', self.ipc['group'])
 
         # strip trailing zeros from subgroup, but leave two digits even when zeros
         # => don't manipulate too much!
         if self.ipc['subgroup']:
-            self.ipc['subgroup'] = re.sub('(\d\d+?)0*$', '\\1', self.ipc['subgroup'])
+            self.ipc['subgroup'] = re.sub(r'(\d\d+?)0*$', '\\1', self.ipc['subgroup'])
 
     def __str__(self):
         return str(self.ipc)

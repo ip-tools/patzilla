@@ -23,7 +23,7 @@ sip_published_data_search_service = Service(
     description="SIP search interface")
 sip_published_data_crawl_service = Service(
     name='sip-published-data-crawl',
-    path='/api/sip/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    path=r'/api/sip/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="SIP crawler interface")
 
 

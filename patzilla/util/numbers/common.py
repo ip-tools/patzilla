@@ -55,7 +55,7 @@ def split_patent_number(patent_number):
     #pattern = '^(\D\D)(0?\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
 
     # e.g. BR000PI0507004A, MX00PA05006297A, ITVR0020130124A
-    pattern = '^(\D\D)(0*\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
+    pattern = r'^(\D\D)(0*\D{,2}[\d.]+?)([a-zA-Z].?)?(_.+)?$'
 
 
 
@@ -96,7 +96,7 @@ def split_patent_number(patent_number):
 
     elif patent_number.startswith('AT') and '/' in patent_number:
         patent_number = strip_spaces(patent_number)
-        pattern = '^(\D\D)([\d|\/]+?)(\D.?)?(_.+)?$'
+        pattern = r'^(\D\D)([\d|\/]+?)(\D.?)?(_.+)?$'
 
     elif patent_number.startswith('JP'):
         """
@@ -110,14 +110,14 @@ def split_patent_number(patent_number):
         #pattern = '^(\D\D)([SH\d|-]+?)(\D.?)?(_.+)?$'
 
         # JPWO2013186910A1
-        pattern = '^(\D\D)((?:WO)?[SH\d|-]+?)(\D.?)?(_.+)?$'
+        pattern = r'^(\D\D)((?:WO)?[SH\d|-]+?)(\D.?)?(_.+)?$'
 
     elif patent_number.startswith('IN'):
         """
         examples:
         IN2011MU02282A, IN2009KN02715A, IND265197S
         """
-        pattern = '^(\D\D)(D?\d+\D*?\d+)(\D.?)?(_.+)?$'
+        pattern = r'^(\D\D)(D?\d+\D*?\d+)(\D.?)?(_.+)?$'
 
     else:
         patent_number = modify_invalid_patent_number(patent_number)
@@ -159,7 +159,7 @@ def split_patent_number(patent_number):
 
 def split_patent_number_more(patent):
     # filter: special document handling (with alphanumeric prefixes)
-    pattern = '^(\D+)(\d+)'
+    pattern = r'^(\D+)(\d+)'
     r = re.compile(pattern)
     matches = r.match(patent['number'])
     if matches:
@@ -176,7 +176,7 @@ def modify_invalid_patent_number(patent_number):
 
     # remove invalid characters
     #r_invalid = re.compile('[\W_]')
-    r_invalid = re.compile('[\s_/-]')
+    r_invalid = re.compile(r'[\s_/-]')
     patent_number = r_invalid.sub('', patent_number)
 
     # make all characters uppercase

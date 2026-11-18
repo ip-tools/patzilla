@@ -99,7 +99,7 @@ class DpmaRegisterAccess:
         self.accessurl = self.baseurl + 'register:showalleverfahrenstabellen?AKZ={number}&lang={language}'
         self.pdfurl = self.baseurl + 'register/PAT_{number}_{today}?AKZ={number}&VIEW=pdf'
 
-        self.reference_pattern = re.compile('.*\?AKZ=(.+?)&.*')
+        self.reference_pattern = re.compile(r'.*\?AKZ=(.+?)&.*')
 
     def start_http_session(self):
         if not self.http_session_valid:

@@ -85,7 +85,7 @@ class SearchExpression:
             self.keywords = unique_sequence(keywords)
 
     def parse_expression_ikofax(self, expression):
-        words_raw = re.split('(\s+)', expression)
+        words_raw = re.split(r'(\s+)', expression)
         words = []
         stopwords = ['and', 'or', 'not']
         badchars = '()?!#\''
