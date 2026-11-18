@@ -136,7 +136,7 @@ class GooglePatentsAccess:
         # 2. parse result numbers
         results = []
         # <h3 class="r"><a href="https://www.google.com/patents/US351065?dq=matrix&amp;hl=en&amp;sa=X&amp;ei=TrJaVJfSNYbWPcyPgLAI&amp;ved=0CO8CEOgBMDA">Dental matrix</a></h3>
-        href_pattern = re.compile('https://www.google.com/patents/(.+?)\?.*')
+        href_pattern = re.compile(r'https://www.google.com/patents/(.+?)\?.*')
         entries = soup.find_all('h3', attrs={'class': 'r'})
         for entry in entries:
             anchor = entry.find('a')

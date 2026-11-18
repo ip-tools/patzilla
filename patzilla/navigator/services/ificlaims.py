@@ -30,7 +30,7 @@ ificlaims_published_data_search_service = Service(
     description="IFI CLAIMS search interface")
 ificlaims_published_data_crawl_service = Service(
     name='ificlaims-published-data-crawl',
-    path='/api/ificlaims/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    path=r'/api/ificlaims/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="IFI CLAIMS crawler interface")
 
 ificlaims_download_service = Service(

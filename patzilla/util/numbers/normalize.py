@@ -265,7 +265,7 @@ def normalize_patent_wo(patent):
     patched = copy(patent)
 
     # filter: leave special documents untouched (with alphanumeric prefix)
-    pattern = '^\D+'
+    pattern = r'^\D+'
     r = re.compile(pattern)
     if r.match(patched['number']):
         return patched
@@ -342,7 +342,7 @@ def normalize_patent_wo_pct(patent):
     patched = copy(patent)
     #print patched
 
-    r = re.compile('[\/|-]')
+    r = re.compile(r'[\/|-]')
     parts = r.split(patched['number'])
 
     # handle special formatting like "WOPCT/WO9831467": convert to WO publication number
@@ -543,7 +543,7 @@ def normalize_patent_jp(patent):
 
         # handle special formatting like "JP8-179521"
         if '-' in patched['number'] or '/' in patched['number']:
-            parts = re.split('[\/|-]', patched['number'])
+            parts = re.split(r'[\/|-]', patched['number'])
             if len(parts) == 2:
                 patched['number'] = parts[0].rjust(2, '0') + parts[1].rjust(6, '0')
 

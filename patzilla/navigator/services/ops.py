@@ -21,7 +21,7 @@ ops_published_data_search_service = Service(
     description="OPS search interface")
 ops_published_data_crawl_service = Service(
     name='ops-published-data-crawl',
-    path='/api/ops/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    path=r'/api/ops/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="OPS crawler interface")
 
 ops_family_simple_service = Service(

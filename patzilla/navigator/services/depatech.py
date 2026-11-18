@@ -25,7 +25,7 @@ depatech_published_data_search_service = Service(
     description="MTC depa.tech search interface")
 depatech_published_data_crawl_service = Service(
     name='depatech-published-data-crawl',
-    path='/api/depatech/published-data/crawl{dummy1:\/?}{constituents:.*?}',
+    path=r'/api/depatech/published-data/crawl{dummy1:\/?}{constituents:.*?}',
     description="MTC depa.tech crawler interface")
 
 status_upstream_depatech = Service(

@@ -199,7 +199,7 @@ def compute_expression(field, value, value2=None, **kwargs):
             for part in parts_raw:
 
                 # "Alfred H. Schütte" => Alfred Schütte
-                if re.match('^(\w\.)+$', part):
+                if re.match(r'^(\w\.)+$', part):
                     continue
 
                 part_normalized = replace_parts(part)

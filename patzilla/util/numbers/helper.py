@@ -13,12 +13,12 @@ def pad_left(data, prefix, length):
     return data
 
 def trim_leading_zeros(number):
-    re_leading_zeros = re.compile('^0*')
+    re_leading_zeros = re.compile(r'^0*')
     number = re_leading_zeros.sub('', number)
     return number
 
 def strip_spaces(number):
-    r_invalid = re.compile('\s')
+    r_invalid = re.compile(r'\s')
     number = r_invalid.sub('', number)
     return number
 
