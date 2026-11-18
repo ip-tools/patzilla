@@ -29,8 +29,7 @@
     "test:browser": "playwright test",
     "watch": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --watch",
     "build": "webpack --output-pathinfo --mode=development --config=webpack.develop.config.js --progress",
-    "release": "webpack --mode=production --config=webpack.release.config.js --progress",
-    "test:browser": "playwright test"
+    "release": "webpack --mode=production --config=webpack.release.config.js --progress"
   },
   "dependencies": {
     "@emotion/react": "^11",
