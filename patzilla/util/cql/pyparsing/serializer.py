@@ -121,7 +121,7 @@ def get_keywords(triples, whitelist_indexes=None):
                     # strip single and double quotes from term
                     # split by comma or whitespace
                     # iterate subterms
-                    for subterm in re.split('(?:,\s|,|\s)', term.strip('"\'')):
+                    for subterm in re.split(r'(?:,\s|,|\s)', term.strip('"\'')):
                         keywords.append(subterm)
                 else:
                     keywords.append(term)
