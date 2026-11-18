@@ -150,6 +150,8 @@ jobs:
 
     env:
       NODE_OPTIONS: --openssl-legacy-provider
+      OPS_API_CONSUMER_KEY: ${{ secrets.OPS_API_CONSUMER_KEY }}
+      OPS_API_CONSUMER_SECRET: ${{ secrets.OPS_API_CONSUMER_SECRET }}
 
     name: Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
     steps:
