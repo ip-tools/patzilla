@@ -205,7 +205,7 @@ setup(name='patzilla',
                'fulltext search search-engine query-language patent-search patent-data '
                'research-and-development management'
       ,
-      packages=find_packages(),
+      packages=find_packages(include="patzilla*"),
       include_package_data=True,
       package_data={
           'patzilla.navigator': [
