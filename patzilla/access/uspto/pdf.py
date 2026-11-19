@@ -271,7 +271,7 @@ class UsptoDocumentAccess:
             },
         }
 
-        response = http.post("https://ppubs.uspto.gov/dirsearch-public/searches/searchWithBeFamily", json=data)
+        response = http.post("https://ppubs.uspto.gov/dirsearch-public/searches/searchWithBeFamily", json=data, timeout=DEFAULT_TIMEOUT)
         response.raise_for_status()
         if response.status_code == 202:
             raise SearchException("Empty response from USPTO, most probably caused by WAF blocking")
