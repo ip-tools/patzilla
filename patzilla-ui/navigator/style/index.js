@@ -4,7 +4,7 @@
 */
 
 /* Material Components for the web */
-require('./material.css');
+require('./material.scss');
 
 /* Generic CSS styles */
 require('./generic.css');
