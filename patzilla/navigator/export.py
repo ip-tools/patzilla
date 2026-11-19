@@ -24,6 +24,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
 
 from odfdo.style_base import StyleBase
+from pyramid.threadlocal import get_current_request
 from xlsxwriter.worksheet import Worksheet
 from pyramid.httpexceptions import HTTPError, HTTPNotFound
 from patzilla.access.generic.pdf import pdf_ziparchive_add
@@ -921,16 +922,31 @@ class DossierText(Dossier):
                 self.print_classification("Classification:", info, section)
 
             # Other publications
+            request = get_current_request()
+            errors = getattr(request, "errors", None)
+            error_count = len(errors) if errors is not None else 0
+
             # Recover "family" data
-            family = ops_family_members(document.number)
-            #if len(family) != 0:
-            section.append(Paragraph("Other publications", style="Biblio"))
-            for member in family.items:
-                if member['publication']['number-docdb'] != document.number:
-                    link = Link(url=f"https://worldwide.espacenet.com/patent/search/publication/{member['publication']['number-docdb']}",
-                            text=f"{member['publication']['number-docdb']}",
-                            )
-                    section.append(Paragraph(link))
+            try:
+                family = ops_family_members(document.number)
+            except (JSONError, HTTPError) as ex:
+                if getattr(ex, "status_int", None) != 404:
+                    raise
+
+                # Remove errors added by this handled lookup only.
+                if errors is not None:
+                    del errors[error_count:]
+                log.warning("Family data not found for %s", document.number)
+            else:
+                #if len(family) != 0:
+                section.append(Paragraph("Other publications", style="Biblio"))
+                for member in family.items:
+                    if member['publication']['number-docdb'] != document.number:
+                        link = Link(url=f"https://worldwide.espacenet.com/patent/search/publication/{member['publication']['number-docdb']}",
+                                text=f"{member['publication']['number-docdb']}",
+                                )
+                        section.append(Paragraph(link))
+
             self.writer.body.append(section)
             self.writer.body.append(Paragraph("", style="Horizontal_20_Line"))
 
@@ -945,7 +961,10 @@ class DossierText(Dossier):
                 try:
                     image_payload = get_ops_image(patent, 1, 'Drawing')
                 except HTTPNotFound:
-                    continue
+                    try:
+                        image_payload = get_ops_image(patent, 1, 'FullDocumentDrawing')
+                    except HTTPNotFound:
+                        continue
             # Use "Drawing" for thumbnail
             drawing = BytesIO(image_payload)
             uri = self.writer.add_file(drawing) 

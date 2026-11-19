@@ -169,3 +169,166 @@ def test_zip_handles_pdf_conversion(dossier_data, monkeypatch, conversion_fails)
             assert "report/@dossier.pdf" not in archive.namelist()
         else:
             assert archive.read("report/@dossier.pdf") == b"pdf"
+
+
+def test_odt_contains_document_details(dossier_data, monkeypatch):
+    from types import SimpleNamespace
+    from unittest.mock import Mock
+    from xml.etree import ElementTree
+
+    from pyramid.httpexceptions import HTTPNotFound
+    from patzilla.navigator import export
+
+    biblio = b"""\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <invention-title lang="en">A test invention</invention-title>
+    </bibliographic-data>
+    <abstract lang="en"><p>Test abstract</p></abstract>
+  </exchange-document>
+</exchange-documents>
+"""
+    get_biblio = Mock(return_value=biblio)
+    get_family = Mock(return_value=SimpleNamespace(items=[]))
+    get_image = Mock(side_effect=HTTPNotFound())
+
+    monkeypatch.setattr(export, "get_ops_biblio_data", get_biblio)
+    monkeypatch.setattr(export, "ops_family_members", get_family)
+    monkeypatch.setattr(export, "get_ops_image", get_image)
+
+    payload = export.DossierText(dossier_data).create()
+
+    with ZipFile(BytesIO(payload)) as archive:
+        assert archive.read("mimetype") == b"application/vnd.oasis.opendocument.text"
+        content = ElementTree.fromstring(archive.read("content.xml"))
+        text = " ".join(content.itertext())
+        assert "Test project" in text
+        assert "EP0007054A1" in text
+        assert "A test invention" in text
+        assert "Relevant document" in text
+        assert "Test abstract" in text
+
+    get_biblio.assert_called_once_with("publication", "EP0007054A1", xml=True)
+    get_family.assert_called_once_with("EP0007054A1")
+    assert get_image.call_count == 3  # Both image alternatives returned 404.
+
+
+@pytest.mark.parametrize("error_kind", ["json404", "http404", "json503"])
+def test_odt_family_lookup_errors(dossier_data, monkeypatch, error_kind):
+    from xml.etree import ElementTree
+
+    from cornice.renderer import JSONError
+
+    first_number = "EP0007054A1"
+    second_number = "EP0666666A2"
+    dossier_data["collections"]["rated"].append(
+        {"number": second_number, "score": 1}
+    )
+
+    biblio = b"""\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <invention-title lang="en">A test invention</invention-title>
+      <applicant data-format="epodoc">
+        <applicant-name><name>Test applicant</name></applicant-name>
+      </applicant>
+    </bibliographic-data>
+    <abstract lang="en"><p>Test abstract</p></abstract>
+  </exchange-document>
+</exchange-documents>
+"""
+    request = SimpleNamespace(errors=["preexisting error"])
+    monkeypatch.setattr(export, "get_current_request", lambda: request)
+    monkeypatch.setattr(export, "get_ops_biblio_data", Mock(return_value=biblio))
+
+    if error_kind == "http404":
+        error = HTTPNotFound()
+    else:
+        error = JSONError(serializer=json.dumps, serializer_kw={}, errors=[])
+        error.status = 404 if error_kind == "json404" else 503
+
+    def get_family(number):
+        if number == first_number:
+            return SimpleNamespace(items=[])
+        assert number == second_number
+        request.errors.append("family lookup error")
+        raise error
+
+    family_lookup = Mock(side_effect=get_family)
+    image_lookup = Mock(side_effect=HTTPNotFound())
+    monkeypatch.setattr(export, "ops_family_members", family_lookup)
+    monkeypatch.setattr(export, "get_ops_image", image_lookup)
+
+    if error_kind == "json503":
+        with pytest.raises(JSONError) as exc_info:
+            export.DossierText(dossier_data).create()
+
+        assert exc_info.value is error
+        assert request.errors == ["preexisting error", "family lookup error"]
+        return
+
+    payload = export.DossierText(dossier_data).create()
+
+    with ZipFile(BytesIO(payload)) as archive:
+        assert archive.read("mimetype") == b"application/vnd.oasis.opendocument.text"
+        content = ElementTree.fromstring(archive.read("content.xml"))
+        text = " ".join(content.itertext())
+
+    assert first_number in text
+    assert second_number in text
+    assert text.count("A test invention") == 2
+    assert text.count("Test applicant") == 2
+    assert text.count("Test abstract") == 2
+    assert family_lookup.call_count == 2
+    assert image_lookup.call_count == 6  # Both image alternatives for each card.
+    assert request.errors == ["preexisting error"]
+
+
+def test_odt_embeds_full_document_drawing_fallback(dossier_data, monkeypatch):
+    from xml.etree import ElementTree
+
+    from PIL import Image
+
+    biblio = b"""\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <invention-title lang="en">A test invention</invention-title>
+    </bibliographic-data>
+  </exchange-document>
+</exchange-documents>
+"""
+    image_buffer = BytesIO()
+    Image.new("RGB", (4, 4), "black").save(image_buffer, format="TIFF")
+    image_bytes = image_buffer.getvalue()
+
+    get_image = Mock(side_effect=[
+        HTTPNotFound(),
+        HTTPNotFound(),
+        image_bytes,
+    ])
+    monkeypatch.setattr(export, "get_ops_biblio_data", Mock(return_value=biblio))
+    monkeypatch.setattr(
+        export, "ops_family_members", Mock(return_value=SimpleNamespace(items=[]))
+    )
+    monkeypatch.setattr(export, "get_ops_image", get_image)
+
+    payload = export.DossierText(dossier_data).create()
+
+    assert [entry.args[1:] for entry in get_image.call_args_list] == [
+        (1, "FirstPageClipping", "png"),
+        (1, "Drawing"),
+        (1, "FullDocumentDrawing"),
+    ]
+
+    with ZipFile(BytesIO(payload)) as archive:
+        content = ElementTree.fromstring(archive.read("content.xml"))
+        image = content.find(
+            ".//{urn:oasis:names:tc:opendocument:xmlns:drawing:1.0}image"
+        )
+        assert image is not None
+        href = image.get("{http://www.w3.org/1999/xlink}href")
+        assert href is not None
+        assert archive.read(href) == image_bytes
