@@ -64,7 +64,6 @@ def test_dpmaregister_html_compact_en():
 def test_dpmaregister_html_compact_de():
     with F5WafWrapper():
         html = access_register("EP666666", output_format="html-compact", language="de")
-        print(html)
         assert "EPA-Erstveröffentlichung" in html
         assert "09.08.1995" in html
 
