@@ -20,6 +20,9 @@ from patzilla.util.python.system import run_command, find_program_candidate
 
 logger = logging.getLogger(__name__)
 
+# Timeout for HTTP requests.
+DEFAULT_TIMEOUT = 5.0
+
 
 def to_png(tiff, width=None, height=None):
     """
@@ -110,7 +113,7 @@ def run_convert(resource, target_format, width=None, height=None):
 
     elif isinstance(resource, str):
         if resource.startswith("http://") or resource.startswith("https://"):
-            payload = requests.get(resource).content
+            payload = requests.get(resource, timeout=DEFAULT_TIMEOUT).content
         elif Path(resource).exists():
             with open(resource, "rb") as f:
                 payload = f.read()
