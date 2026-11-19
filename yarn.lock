@@ -4762,12 +4762,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery-migrate@npm:3.0.1":
-  version: 3.0.1
-  resolution: "jquery-migrate@npm:3.0.1"
+"jquery-migrate@npm:^3.6":
+  version: 3.6.0
+  resolution: "jquery-migrate@npm:3.6.0"
   peerDependencies:
     jquery: ">=3 <4"
-  checksum: 10c0/63eb63845927642f3536d52b9ae01c97040fa7af3e3f08436cb85a89f768053b72a9b6747e923f616983f4679600df0518d0f1150bc030ea9f72ad5d17fd4771
+  checksum: 10c0/e663dd104708ca262207e3f790814db83934e59615d4f0654e215ac76f0fc7a0db5fec20d0f85fed0f1c04f5acfb51eacfd4e3b07165fffd98985dde9fbfda73
   languageName: node
   linkType: hard
 
@@ -4792,10 +4792,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jquery@npm:^3.7":
-  version: 3.7.1
-  resolution: "jquery@npm:3.7.1"
-  checksum: 10c0/808cfbfb758438560224bf26e17fcd5afc7419170230c810dd11f5c1792e2263e2970cca8d659eb84fcd9acc301edb6d310096e450277d54be4f57071b0c82d9
+"jquery@npm:^3.8":
+  version: 3.8.0
+  resolution: "jquery@npm:3.8.0"
+  checksum: 10c0/e9e8b764042dd19adcfadb311b01d4d77a8c0094b70fd54c9310ed692d6aad0b5ffd1ad3759a8b453117c57327f33a15829b66dbff37c9ed446d8c06e1169cb0
   languageName: node
   linkType: hard
 
@@ -5696,10 +5696,10 @@ __metadata:
     humanize-plus: "npm:^1"
     imports-loader: "npm:^5"
     jq-pagination: "https://github.com/ip-tools/jqPagination#1.4.2-alpha.2"
-    jquery: "npm:^3.7"
+    jquery: "npm:^3.8"
     jquery-caret-plugin: "npm:^1.5"
     jquery-hotkeys: "npm:^0.2"
-    jquery-migrate: "npm:3.0.1"
+    jquery-migrate: "npm:^3.6"
     jquery.redirect: "npm:^1"
     jquery.viewport: "npm:^1"
     jrumble: "npm:^1"
