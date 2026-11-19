@@ -2,7 +2,6 @@
 // (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 const path = require('path');
 const webpack = require('webpack');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const LicenseWebpackPlugin = require('license-webpack-plugin').LicenseWebpackPlugin;
 var fs = require("fs");
 
@@ -30,6 +29,9 @@ const config = {
         path: path.resolve(__contextpath, 'assets'),
         filename: '[name].bundle.js',
         publicPath: '/static/assets/',
+        clean: {
+            keep: (filename) => filename === 'README.txt' || filename === '.gitignore',
+        },
     },
 
     optimization: {
@@ -51,10 +53,6 @@ const config = {
     },
 
     plugins: [
-
-        new CleanWebpackPlugin({
-            cleanOnceBeforeBuildPatterns: ['**/*', '!README.txt', '!.gitignore'],
-        }),
 
         // https://webpack.js.org/plugins/provide-plugin/
         new webpack.ProvidePlugin({

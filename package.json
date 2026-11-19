@@ -101,7 +101,6 @@
     "@types/node": "^24",
     "@types/react": "^17",
     "babel-loader": "^8",
-    "clean-webpack-plugin": "^4",
     "compression-webpack-plugin": "^12",
     "css-loader": "^4",
     "es6-shim": "^0.35",
