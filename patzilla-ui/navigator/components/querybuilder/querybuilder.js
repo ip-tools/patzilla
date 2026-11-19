@@ -4,8 +4,8 @@
 
 import moment from "moment";
 import {View} from 'marionette';
+import {SheetDialog} from "patzilla.lib.mdc.dialog";
 
-const bootbox = require('bootbox');
 const {RadioPlus} = require("patzilla.lib.radioplus");
 const {FIELDS_KNOWLEDGE} = require("./expression-fields.js");
 
@@ -430,20 +430,21 @@ const QueryBuilderView = View.extend({
         $('#btn-comfort-display-values').off('click');
         $('#btn-comfort-display-values').on('click', function() {
 
-            var copy_button = '<a id="comfort-form-copy-button" role="button" class="btn btn-outline-primary"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
+            var copy_button_html = '<a id="comfort-form-copy-button" role="button" class="btn btn-outline-primary"><i class="glyphicon glyphicon-copy"></i> &nbsp; Copy to clipboard</a>';
 
             var entries = _this.get_comfort_form_entries();
             var data = entries.join('\n') + '\n';
-            var modal_html = '<pre>' + data + '</pre>' + copy_button;
+            var modal_html = '<pre>' + data + '</pre>' + copy_button_html;
 
-            var box = bootbox.alert({
+            const dialog = new SheetDialog({
                 title: 'Contents of comfort form',
                 message: modal_html,
+                width: '560px',
             });
+            dialog.show();
+            const copy_button = $(dialog.el).find('#comfort-form-copy-button');
 
-            // bind clipboard copy button
-            var copy_button = box.find('#comfort-form-copy-button');
-            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: box[0]});
+            navigatorApp.ui.copy_to_clipboard_bind_button('text/plain', data, {element: copy_button[0], wrapper: dialog.el});
 
         });
 

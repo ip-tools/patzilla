@@ -5,6 +5,7 @@
 import {View} from 'marionette';
 import {MarionetteController} from "patzilla.lib.marionette";
 import urlJoin from 'url-join';
+import {ConfirmationDialog} from "patzilla.lib.mdc.dialog";
 const memoize = require('memoize');
 const {GenericResultView} = require("patzilla.navigator.components.results-dialog/views");
 const {sanitize_non_ascii} = require("patzilla.lib.util");
@@ -880,13 +881,8 @@ export const BasketView = View.extend({
     },
 
     future_premium_feature: function() {
-        bootbox.dialog(
-            'Available soon via subscription.', [{
-                "label": 'OK',
-                "icon" : 'OK',
-                "callback": null,
-            }],
-            {header: 'Future feature'});
+        const dialog = new ConfirmationDialog({message: 'Available soon via subscription.'});
+        return dialog.show();
     },
 
     textarea_scroll_bottom: function() {

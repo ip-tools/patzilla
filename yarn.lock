@@ -1643,6 +1643,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@material/dialog@npm:^14":
+  version: 14.0.0
+  resolution: "@material/dialog@npm:14.0.0"
+  dependencies:
+    "@material/animation": "npm:^14.0.0"
+    "@material/base": "npm:^14.0.0"
+    "@material/button": "npm:^14.0.0"
+    "@material/dom": "npm:^14.0.0"
+    "@material/elevation": "npm:^14.0.0"
+    "@material/feature-targeting": "npm:^14.0.0"
+    "@material/icon-button": "npm:^14.0.0"
+    "@material/ripple": "npm:^14.0.0"
+    "@material/rtl": "npm:^14.0.0"
+    "@material/shape": "npm:^14.0.0"
+    "@material/theme": "npm:^14.0.0"
+    "@material/tokens": "npm:^14.0.0"
+    "@material/touch-target": "npm:^14.0.0"
+    "@material/typography": "npm:^14.0.0"
+    tslib: "npm:^2.1.0"
+  checksum: 10c0/646917559662fc8b7e3ce41642c010a68039e6733694f0eae7be05611c2fc534b099133f3f8f29b0ae82de787597a3f7b01a7451967ae7c660f2411cf9a4a300
+  languageName: node
+  linkType: hard
+
 "@material/dom@npm:^14.0.0":
   version: 14.0.0
   resolution: "@material/dom@npm:14.0.0"
@@ -3270,17 +3293,6 @@ __metadata:
     fast-deep-equal: "npm:^3.1.3"
     multicast-dns: "npm:^7.2.5"
   checksum: 10c0/92b24ed6d7cfc8deb7ba4f0611682a1da5a9501aae8067f24f067bcceaea6a57bd7b2d1734e38b062274d2671377621ef4c4f23ee422ba2f1710adee5972d8ca
-  languageName: node
-  linkType: hard
-
-"bootbox@npm:^6":
-  version: 6.0.4
-  resolution: "bootbox@npm:6.0.4"
-  peerDependencies:
-    "@popperjs/core": ^2.0.0
-    bootstrap: ^4.4.0 || ^5.0.0
-    jquery: ^3.5.1
-  checksum: 10c0/8926b057a17e2650da4c86b13cf63be8959ea972a4fd01b967ee0215a496f76d4406a89ac3bd44c60301157674d613d3e506c07adc3ecb3fff0ad28f66681ecc
   languageName: node
   linkType: hard
 
@@ -5865,6 +5877,7 @@ __metadata:
     "@emotion/react": "npm:^11"
     "@emotion/styled": "npm:^11"
     "@material/button": "npm:^14"
+    "@material/dialog": "npm:^14"
     "@material/menu": "npm:^14"
     "@material/ripple": "npm:^14"
     "@material/snackbar": "npm:^14"
@@ -5884,7 +5897,6 @@ __metadata:
     backbone: "npm:^1"
     backbone-relational: "npm:^0.10"
     blobjs: "npm:^1"
-    bootbox: "npm:^6"
     bootstrap: "npm:^4"
     bootstrap-slider: "npm:^9"
     classie: "npm:^1"

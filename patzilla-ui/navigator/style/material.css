@@ -14,7 +14,12 @@ $mdc-typography-font-family: unset;
 
 /* MDC Styles */
 
-/* https://material-components.github.io/material-components-web-catalog/#/component/button */
+/*
+https://m2.material.io/components/dialogs
+https://m2.material.io/components/buttons
+https://m2.material.io/components/snackbars
+*/
+@use "@material/dialog/mdc-dialog";
 @use "@material/button/mdc-button";
 @use "@material/snackbar/mdc-snackbar";
 

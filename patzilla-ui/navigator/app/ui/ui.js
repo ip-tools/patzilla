@@ -8,12 +8,12 @@ import ClipboardJS from "clipboard";
 
 require('glyphicon-spin');
 require('jquery.shorten.1.0');
-var bootbox = require('bootbox');
 var screenfull = require('screenfull');
 
 // Material Design Snackbar
 import { SnackbarWidget } from 'patzilla.lib.mdc.snackbar';
 import {xhr_decode_error} from "patzilla.lib.util";
+import {ConfirmationDialog} from "patzilla.lib.mdc.dialog";
 
 
 const UiController = View.extend({
@@ -278,24 +278,10 @@ const UiController = View.extend({
         }
     },
 
+    // Display confirmation dialog and return promise.
     confirm: function(message) {
-
-        var deferred = $.Deferred();
-
-        var dialog = bootbox.confirm('<h4>' + message + '</h4>', function(ack) {
-            if (ack) {
-                deferred.resolve();
-            }
-        });
-
-        // style: danger, error
-        dialog.css({
-            'color': '#b94a48',
-            'background-color': '#f2dede',
-            'border-color': '#eed3d7',
-        });
-
-        return deferred.promise();
+        const dialog = new ConfirmationDialog({message: message});
+        return dialog.show();
     },
 
     user_alert: function(message, kind, selector) {

@@ -277,17 +277,14 @@ const StoragePlugin = MarionetteController.extend({
     },
 
     confirm_load_data: function() {
-        var deferred = $.Deferred();
-        navigatorApp.ui.confirm(
+        return navigatorApp.ui.confirm(
             'You requested to load data from an import file which might render existing data inaccessible. ' +
             'The application will reload itself after the import task has finished. ' +
             '<br/><br/>' +
             'Please make sure you performed a backup using the "export" feature.' +
             '<br/><br/>' +
-            'Continue import operation?').then(function() {
-                deferred.resolve();
-            });
-        return deferred.promise();
+            'Continue import operation?'
+        );
     },
 
     setup_ui: function() {
