@@ -6,7 +6,7 @@ require('jquery');
 
 // Helper for transitioning to jQuery 3.x
 // https://www.npmjs.com/package/jquery-migrate
-require('jquery-migrate');
+//require('jquery-migrate');
 
 
 
