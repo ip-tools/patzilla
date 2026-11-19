@@ -151,9 +151,9 @@ test('cancels and confirms project deletion', async ({ page }) => {
   await openActions(page);
   await page.locator('#project-delete-button').click();
 
-  let dialog = page.locator('.bootbox.modal:visible');
+  var dialog = page.locator('.mdc-dialog');
   await expect(dialog).toContainText('Beta');
-  await dialog.locator('.bootbox-cancel').click();
+  await dialog.locator('[data-mdc-dialog-action="close"]').click();
   await expect(dialog).toBeHidden();
   await waitForActiveProject(page, 'Beta');
   expect((await storedProject(page, betaId))?.name).toBe('Beta');
@@ -161,9 +161,9 @@ test('cancels and confirms project deletion', async ({ page }) => {
   await openActions(page);
   await page.locator('#project-delete-button').click();
 
-  dialog = page.locator('.bootbox.modal:visible');
+  dialog = page.locator('.mdc-dialog');
   await expect(dialog).toContainText('Beta');
-  await dialog.locator('.bootbox-accept').click();
+  await dialog.locator('[data-mdc-dialog-action="confirm"]').click();
 
   await expect
     .poll(async () => await storedProject(page, betaId))
