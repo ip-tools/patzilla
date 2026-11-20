@@ -44,3 +44,14 @@ $md-typography-font-family: unset;
     --md-dialog-supporting-text-font: var(--font-family-sans-serif, sans-serif);
     --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
 }
+
+
+/** SnackbarWidget **/
+md-gb-snackbar {
+    --container-color: #323232;
+    --supporting-text-color: white;
+    --action-label-text-color: white;
+    --supporting-text: 400 14px/20px sans-serif;
+    --action-label-text: 500 14px/20px sans-serif;
+    --z-index: 9999;
+}
