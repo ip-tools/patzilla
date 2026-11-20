@@ -12,24 +12,6 @@ $md-theme-on-secondary: #000000;
 /* https://material-components.github.io/material-components-web-catalog/#/component/typography */
 $md-typography-font-family: unset;
 
-/* Tune back to previous MDC style */
-.mdc-dialog md-dialog {
-    --md-dialog-container-shape: 4px;
-    --md-dialog-container-color: #fff;
-    --md-sys-color-primary: #{$md-theme-primary};
-}
-
-.mdc-dialog md-dialog {
-    --md-dialog-headline-font: var(--font-family-sans-serif, sans-serif);
-    --md-dialog-supporting-text-font: var(--font-family-sans-serif, sans-serif);
-    --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
-}
-
-.mdc-dialog md-dialog md-text-button {
-    --md-text-button-container-shape: 4px;
-}
-
-
 /* Custom */
 /*
 .foo-button {
@@ -38,3 +20,27 @@ $md-typography-font-family: unset;
     @include mdc-states(#1565c0);
 }
 */
+
+
+/** Dialog style: More flat, less rounded **/
+.mdc-dialog md-dialog {
+    --md-dialog-container-shape: 4px;
+    --md-dialog-container-color: #fff;
+    --md-sys-color-primary: #{$md-theme-primary};
+}
+/* Less rounded buttons */
+.mdc-dialog md-dialog md-text-button {
+    --md-text-button-container-shape: 4px;
+}
+/* Display focus ring */
+.mdc-dialog md-dialog md-text-button:focus-within {
+    outline: 2px solid var(--md-sys-color-primary, #0755b8);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+/* Use sans-serif font */
+.mdc-dialog md-dialog {
+    --md-dialog-headline-font: var(--font-family-sans-serif, sans-serif);
+    --md-dialog-supporting-text-font: var(--font-family-sans-serif, sans-serif);
+    --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
+}
