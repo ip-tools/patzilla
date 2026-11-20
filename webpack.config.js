@@ -176,6 +176,7 @@ const config = {
 
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
+                type: 'javascript/auto',
                 use: [
                     {
                         loader: "file-loader",
@@ -187,6 +188,7 @@ const config = {
             },
             {
                 test: /\.(png|svg|jpg|gif|swf|ico)$/,
+                type: 'javascript/auto',
                 use: [
                     {
                         loader: "file-loader",
