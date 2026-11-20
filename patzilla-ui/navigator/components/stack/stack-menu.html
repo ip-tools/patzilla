@@ -3,42 +3,31 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 %>
 
-<!--
-Menu for selecting actions on the current stack.
-It also displays the number of selected documents.
-It is a Material Design Component (MDC) Menu with dynamic content.
- -->
-
-    <ul class="mdc-deprecated-list mdc-deprecated-list--two-line" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-        <li class="mdc-deprecated-list-item" role="menuitem" data-action="edit">
-            <span class="mdc-deprecated-list-item__graphic material-icons">comment</span>
-            <span class="mdc-deprecated-list-item__text">
-                <span class="mdc-deprecated-list-item__primary-text">Edit</span>
-                <span class="mdc-deprecated-list-item__secondary-text">Bulk-edit selected documents</span>
-            </span>
-            <span class="mdc-deprecated-list-item__meta">⎇+E</span>
-        </li>
-        <li class="mdc-deprecated-list-item" role="menuitem" data-action="share">
-            <span class="mdc-deprecated-list-item__graphic material-icons">share</span>
-            <span class="mdc-deprecated-list-item__text">
-                <span class="mdc-deprecated-list-item__primary-text">Share</span>
-                <span class="mdc-deprecated-list-item__secondary-text">Share documents with others</span>
-            </span>
-            <span class="mdc-deprecated-list-item__meta">⎇+S</span>
-        </li>
-        <% if (navigatorApp.options.theme.get('feature.xpexport.enabled')) { %>
-        <li class="mdc-deprecated-list-item" role="menuitem" data-action="xpexport">
-            <span class="mdc-deprecated-list-item__graphic material-icons">forward</span>
-                Transfer to XPAT
-            <span class="mdc-deprecated-list-item__meta">⎇+X</span>
-        </li>
-        <% } %>
-        <li class="mdc-deprecated-list-item" role="menuitem" data-action="reset">
-            <span class="mdc-deprecated-list-item__graphic material-icons">clear_all</span>
-            <span class="mdc-deprecated-list-item__text">
-                <span class="mdc-deprecated-list-item__primary-text">Reset</span>
-                <span class="mdc-deprecated-list-item__secondary-text">Clear list of selections</span>
-            </span>
-            <span class="mdc-deprecated-list-item__meta">⎇+R</span>
-        </li>
-    </ul>
+<!-- Menu for actions on the current stack. -->
+<md-menu class="stack-menu" positioning="fixed">
+    <md-menu-item data-action="edit">
+        <span slot="start" class="material-icons" aria-hidden="true">comment</span>
+        <span slot="headline">Edit</span>
+        <span slot="supporting-text">Bulk-edit selected documents</span>
+        <span slot="trailing-supporting-text">⎇+E</span>
+    </md-menu-item>
+    <md-menu-item data-action="share">
+        <span slot="start" class="material-icons" aria-hidden="true">share</span>
+        <span slot="headline">Share</span>
+        <span slot="supporting-text">Share documents with others</span>
+        <span slot="trailing-supporting-text">⎇+S</span>
+    </md-menu-item>
+    <% if (navigatorApp.options.theme.get('feature.xpexport.enabled')) { %>
+    <md-menu-item data-action="xpexport">
+        <span slot="start" class="material-icons" aria-hidden="true">forward</span>
+        <span slot="headline">Transfer to XPAT</span>
+        <span slot="trailing-supporting-text">⎇+X</span>
+    </md-menu-item>
+    <% } %>
+    <md-menu-item data-action="reset">
+        <span slot="start" class="material-icons" aria-hidden="true">clear_all</span>
+        <span slot="headline">Reset</span>
+        <span slot="supporting-text">Clear list of selections</span>
+        <span slot="trailing-supporting-text">⎇+R</span>
+    </md-menu-item>
+</md-menu>

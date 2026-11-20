@@ -8,10 +8,6 @@ $md-theme-secondary: #ffffff;
 $md-theme-on-primary: #5e92f3;
 $md-theme-on-secondary: #000000;
 
-/* Use default font */
-/* https://material-components.github.io/material-components-web-catalog/#/component/typography */
-$md-typography-font-family: unset;
-
 /* Custom */
 /*
 .foo-button {
@@ -21,6 +17,11 @@ $md-typography-font-family: unset;
 }
 */
 
+/** Use a sans-serif default font **/
+:root {
+    --md-ref-typeface-plain: var(--font-family-sans-serif, sans-serif);
+    --md-ref-typeface-brand: var(--font-family-sans-serif, sans-serif);
+}
 
 /** Dialog style: More flat, less rounded **/
 .mdc-dialog md-dialog {
@@ -37,12 +38,6 @@ $md-typography-font-family: unset;
     outline: 2px solid var(--md-sys-color-primary, #0755b8);
     outline-offset: 2px;
     border-radius: 4px;
-}
-/* Use sans-serif font */
-.mdc-dialog md-dialog {
-    --md-dialog-headline-font: var(--font-family-sans-serif, sans-serif);
-    --md-dialog-supporting-text-font: var(--font-family-sans-serif, sans-serif);
-    --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
 }
 
 

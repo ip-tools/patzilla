@@ -690,9 +690,17 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     border-left: 3px solid #2196F3;
     margin-left: -3px;
 }
-
 .stack-menu {
-    min-width: calc(25vw - 32px);
+    min-width: min(max(320px, calc(25vw - 32px)), calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    --md-menu-container-color: #fff;
+    --md-menu-container-shape: 4px;
+}
+.stack-opener {
+    --md-sys-color-primary: #1565c0;
+    --md-outlined-button-outline-color: #1565c0;
+    --md-outlined-button-container-height: 32px;
+    --md-outlined-button-container-shape: 4px;
 }
 
 

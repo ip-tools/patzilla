@@ -389,6 +389,7 @@ const StackPlugin = MarionetteController.extend({
         if (mode) {
             this.update_content_view(mode);
         }
+
     },
 
     // Activate single element
@@ -476,7 +477,16 @@ const StackPlugin = MarionetteController.extend({
         this.application.metadataView.showChildView('region_stack_opener', opener_widget);
     },
 
+    close_menu: function() {
+        if (this.menu_widget) {
+            this.stopListening(this.menu_widget);
+            this.menu_widget.destroy();
+            this.menu_widget = undefined;
+        }
+    },
+
     close_opener: function() {
+        this.close_menu();
         // Close menu opener button by shutting down its region.
         this.application.metadataView.getRegion('region_stack_opener').empty();
     },
@@ -484,22 +494,29 @@ const StackPlugin = MarionetteController.extend({
     open_menu: function(view, event) {
 
         // Close menu widget before (re)opening, making this effectively a singleton.
-        if (this.menu_widget) {
-            this.menu_widget.destroy();
-        }
+        this.close_menu();
+
+        // Anchor the menu to the button, not its Marionette view wrapper.
+        var anchor = view.el.querySelector('md-outlined-button');
 
         // Create menu widget.
-        var opener_widget = $(view.el);
         this.menu_widget = new StackMenuWidget({
             collection: this.store,
-            container: opener_widget.parent(),
+            anchor: anchor,
         });
 
         // Wire menu events.
         this.listenTo(this.menu_widget, 'action:edit', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
         this.listenTo(this.menu_widget, 'action:share', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
         this.listenTo(this.menu_widget, 'action:xpexport', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
-        this.listenTo(this.menu_widget, 'action:reset', this.reset);
+        this.listenTo(this.menu_widget, 'action:reset', function () {
+            this.reset();
+            // Reset can replace the opener while the menu is closing.
+            if (!anchor.isConnected) {
+                const region = this.application.metadataView.getRegion('region_stack_opener');
+                region.currentView?.el.querySelector('md-outlined-button')?.focus();
+            }
+        });
 
         // Open/show/display widget.
         this.menu_widget.open();
