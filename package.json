@@ -98,7 +98,7 @@
     "@types/react": "^17",
     "babel-loader": "^10",
     "compression-webpack-plugin": "^12",
-    "css-loader": "^6",
+    "css-loader": "^7",
     "es6-shim": "^0.35",
     "exports-loader": "^5",
     "expose-loader": "^5",
