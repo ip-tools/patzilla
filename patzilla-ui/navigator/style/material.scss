@@ -12,6 +12,24 @@ $md-theme-on-secondary: #000000;
 /* https://material-components.github.io/material-components-web-catalog/#/component/typography */
 $md-typography-font-family: unset;
 
+/* Tune back to previous MDC style */
+.mdc-dialog md-dialog {
+    --md-dialog-container-shape: 4px;
+    --md-dialog-container-color: #fff;
+    --md-sys-color-primary: #{$md-theme-primary};
+}
+
+.mdc-dialog md-dialog {
+    --md-dialog-headline-font: var(--font-family-sans-serif, sans-serif);
+    --md-dialog-supporting-text-font: var(--font-family-sans-serif, sans-serif);
+    --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
+}
+
+.mdc-dialog md-dialog md-text-button {
+    --md-text-button-container-shape: 4px;
+}
+
+
 /* Custom */
 /*
 .foo-button {
