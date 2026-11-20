@@ -3,7 +3,7 @@
 'use strict';
 
 import {View} from 'marionette';
-import { MDCSnackbar } from '@material/snackbar';
+import { SnackbarElement } from '@material/web/labs/gb/components/snackbar/snackbar-element';
 
 export const SnackbarWidget = View.extend({
     /*
@@ -27,7 +27,7 @@ export const SnackbarWidget = View.extend({
     },
 
     onRender() {
-        this.snackbar = new MDCSnackbar(this.el);
+        this.snackbar = new SnackbarElement(this.el);
     },
 
     onBeforeDestroy() {

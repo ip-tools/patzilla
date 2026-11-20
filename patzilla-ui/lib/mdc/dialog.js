@@ -3,7 +3,7 @@
 'use strict';
 
 import {View} from 'marionette';
-import {MDCDialog} from '@material/dialog';
+import {MdDialog} from '@material/web/dialog/dialog';
 
 export const DialogBase = View.extend({
     /*
@@ -29,7 +29,7 @@ export const DialogBase = View.extend({
     },
 
     onRender() {
-        this.dialog = new MDCDialog(this.el);
+        this.dialog = new MdDialog(this.el);
         const surface = this.el.querySelector('.mdc-dialog__surface');
         const title = this.el.querySelector('.mdc-dialog__title');
         const content = this.el.querySelector('.mdc-dialog__content');
@@ -71,14 +71,14 @@ export const DialogBase = View.extend({
     },
 
     destroyDialog() {
-        this.dialog?.destroy();
+        this.dialog?.close();
         this.dialog = undefined;
     },
 
     show() {
         const deferred = $.Deferred();
         const _this = this;
-        this.el.addEventListener('MDCDialog:closed', function(event) {
+        this.el.addEventListener('MdDialog:closed', function(event) {
             const confirmed = event.detail.action === 'confirm';
             _this.destroyDialog();
             _this.el.remove();
@@ -90,8 +90,7 @@ export const DialogBase = View.extend({
             }
         }, {once: true});
 
-        this.dialog.open();
-        return deferred.promise();
+        return this.dialog.show();
     },
 });
 

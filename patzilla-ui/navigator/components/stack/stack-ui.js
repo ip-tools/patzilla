@@ -3,7 +3,7 @@
 'use strict';
 
 import { View } from 'marionette';
-import { MDCMenu } from '@material/menu';
+import { MdMenu } from '@material/web/menu/menu';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
 // TODO: Maybe
@@ -101,7 +101,7 @@ export const StackMenuWidget = View.extend({
      * it will be appended to the DOM element obtained via the `container` option
      * when creating an instance of `StackMenuWidget`.
      *
-     * Controlling the element is the responsibility of the `MDCMenu` component.
+     * Controlling the element is the responsibility of the `MdMenu` component.
      *
     **/
     tagName: 'div',
@@ -112,7 +112,7 @@ export const StackMenuWidget = View.extend({
         log('StackMenuWidget::initialize', this);
         //this.listenTo(this, 'all', this.log_event);
         this.handleMdcSelected = this.handleMdcSelected.bind(this);
-        this.el.addEventListener('MDCMenu:selected', this.handleMdcSelected);
+        this.el.addEventListener('MdMenu:selected', this.handleMdcSelected);
 
         const container = this.getOption('container') || $('body');
         container.append(this.el);
@@ -124,11 +124,11 @@ export const StackMenuWidget = View.extend({
     },
 
     onRender() {
-        this.menu = new MDCMenu(this.el);
+        this.menu = new MdMenu(this.el);
     },
 
     onBeforeDestroy() {
-        this.el.removeEventListener('MDCMenu:selected', this.handleMdcSelected);
+        this.el.removeEventListener('MdMenu:selected', this.handleMdcSelected);
         this.destroyMenu();
     },
 

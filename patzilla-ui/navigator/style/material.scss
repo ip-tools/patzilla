@@ -3,31 +3,14 @@
 
 /* Use custom color theme */
 /* https://material-components.github.io/material-components-web-catalog/#/component/theme */
-$mdc-theme-primary: #1565c0;
-$mdc-theme-secondary: #ffffff;
-$mdc-theme-on-primary: #5e92f3;
-$mdc-theme-on-secondary: #000000;
+$md-theme-primary: #1565c0;
+$md-theme-secondary: #ffffff;
+$md-theme-on-primary: #5e92f3;
+$md-theme-on-secondary: #000000;
 
 /* Use default font */
 /* https://material-components.github.io/material-components-web-catalog/#/component/typography */
-$mdc-typography-font-family: unset;
-
-/* MDC Styles */
-
-/*
-https://m2.material.io/components/dialogs
-https://m2.material.io/components/buttons
-https://m2.material.io/components/snackbars
-*/
-@use "@material/dialog/mdc-dialog";
-@use "@material/button/mdc-button";
-@use "@material/snackbar/mdc-snackbar";
-
-/* https://material.io/develop/web/components/menus/ */
-@use "@material/list/mdc-list";
-@use "@material/menu-surface/mdc-menu-surface";
-@use "@material/menu/mdc-menu";
-
+$md-typography-font-family: unset;
 
 /* Custom */
 /*
