@@ -57,7 +57,7 @@ export const SnackbarWidget = View.extend({
         }
         */
         //$(this.el).css('background-color', '#323232');
-        $(this.el).find('.mdc-snackbar__label,.mdc-snackbar__action').css('color', 'white');
+        //$(this.el).find('.mdc-snackbar__label,.mdc-snackbar__action').css('color', 'white');
 
         const timeout = message.length >= 50 ? 7000
             : message.length >= 30 ? 5500
@@ -65,7 +65,6 @@ export const SnackbarWidget = View.extend({
 
         this.snackbar.labelText = message;
         this.snackbar.timeoutMs = timeout;
-        this.snackbar.actionLabel = 'Dismiss';
         this.snackbar.show();
     },
 });

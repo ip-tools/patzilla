@@ -55,3 +55,11 @@ md-gb-snackbar {
     --action-label-text: 500 14px/20px sans-serif;
     --z-index: 9999;
 }
+/* Less rounded buttons */
+md-gb-snackbar > button[slot="action"] {
+    border-radius: 4px;
+}
+md-gb-snackbar > button[slot="action"]:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
