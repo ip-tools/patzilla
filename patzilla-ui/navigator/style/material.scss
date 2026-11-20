@@ -1,21 +1,14 @@
-/* Material Components for the web *
-/* https://github.com/material-components/material-components-web */
+/* Material Design Web Components *
+/* https://github.com/material-components/material-web */
 
 /* Use custom color theme */
 /* https://material-components.github.io/material-components-web-catalog/#/component/theme */
+/* FIXME: This is deprecated. Migrate to Material Web. */
 $md-theme-primary: #1565c0;
 $md-theme-secondary: #ffffff;
 $md-theme-on-primary: #5e92f3;
 $md-theme-on-secondary: #000000;
 
-/* Custom */
-/*
-.foo-button {
-    @include mdc-button-ink-color(#1565c0);
-    @include mdc-button-outline-color(#5e92f3);
-    @include mdc-states(#1565c0);
-}
-*/
 
 /** Use a sans-serif default font **/
 :root {
@@ -29,16 +22,6 @@ $md-theme-on-secondary: #000000;
     --md-dialog-container-color: #fff;
     --md-sys-color-primary: #{$md-theme-primary};
 }
-/* Less rounded buttons */
-.mdc-dialog md-dialog md-text-button {
-    --md-text-button-container-shape: 4px;
-}
-/* Display focus ring */
-.mdc-dialog md-dialog md-text-button:focus-within {
-    outline: 2px solid var(--md-sys-color-primary, #0755b8);
-    outline-offset: 2px;
-    border-radius: 4px;
-}
 
 
 /** SnackbarWidget **/
@@ -50,15 +33,65 @@ md-gb-snackbar {
     --action-label-text: 500 14px/20px sans-serif;
     --z-index: 9999;
 }
-/* Less rounded buttons */
-md-gb-snackbar > button[slot="action"] {
-    border-radius: 4px;
-}
-md-gb-snackbar > button[slot="action"]:focus-visible {
-    outline: 2px solid white;
-    outline-offset: 2px;
-}
 /* Color for close icon */
 md-gb-snackbar {
     --icon-color: white;
+}
+
+
+/** Style buttons like Bootstrap **/
+
+.mdc-dialog md-dialog md-text-button {
+    /* Bootstrap outline-secondary by default */
+    --dialog-button-color: #6c757d;
+    --dialog-button-active-color: #5a6268;
+
+    --md-text-button-container-shape: 4px;
+    --md-text-button-container-height: 38px;
+    --md-text-button-leading-space: 0.75rem;
+    --md-text-button-trailing-space: 0.75rem;
+    --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
+    --md-text-button-label-text-size: 1rem;
+    --md-text-button-label-text-line-height: 1.5rem;
+    --md-text-button-label-text-weight: 400;
+
+    --md-text-button-label-text-color: var(--dialog-button-color);
+    --md-text-button-focus-label-text-color: var(--dialog-button-color);
+    --md-text-button-hover-label-text-color: #fff;
+    --md-text-button-pressed-label-text-color: #fff;
+    --md-text-button-disabled-label-text-color: var(--dialog-button-color);
+    --md-text-button-disabled-label-text-opacity: 1;
+    --md-text-button-hover-state-layer-opacity: 0;
+    --md-text-button-pressed-state-layer-opacity: 0;
+
+    border: 1px solid var(--dialog-button-color);
+    border-radius: 4px;
+    background: transparent;
+}
+
+.mdc-dialog md-dialog md-text-button[data-mdc-dialog-action="confirm"] {
+    /* Bootstrap outline-primary */
+    --dialog-button-color: #007bff;
+    --dialog-button-active-color: #0062cc;
+}
+
+.mdc-dialog md-dialog md-text-button:hover:not([disabled]):not([soft-disabled]) {
+    background: var(--dialog-button-color);
+    --md-text-button-focus-label-text-color: #fff;
+}
+
+.mdc-dialog md-dialog md-text-button:active:not([disabled]):not([soft-disabled]) {
+    border-color: var(--dialog-button-active-color);
+    background: var(--dialog-button-active-color);
+    --md-text-button-focus-label-text-color: #fff;
+}
+
+/* Focus ring */
+.mdc-dialog md-dialog md-text-button:focus-within {
+    outline: 2px solid var(--dialog-button-color);
+    outline-offset: 2px;
+}
+
+.mdc-dialog md-dialog md-text-button:is([disabled], [soft-disabled]) {
+    opacity: 0.65;
 }
