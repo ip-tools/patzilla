@@ -45,7 +45,7 @@ requires = [
     # Can't upgrade to pymongo-3.5.1 due to "from pymongo.connection import Connection"
     # usage in "mongodb_gridfs_beaker" module.
     'pymongo<5',
-    'mongodb_gridfs_beaker @ git+https://github.com/loucash/mongodb_gridfs_beaker@master',
+    'mongodb_gridfs_beaker @ git+https://github.com/loucash/mongodb_gridfs_beaker@main',
     'mongoengine==0.20.0',      # 0.29.3
     'python-magic<1',
 
