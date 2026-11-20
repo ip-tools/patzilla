@@ -209,7 +209,7 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#data-import-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('.mdc-dialog > md-dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText('Continue import operation?');
     await dialog.locator('[data-mdc-dialog-action="close"]').click();
@@ -230,7 +230,7 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#data-import-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('.mdc-dialog > md-dialog');
     await expect(dialog).toBeVisible();
     const [chooser] = await Promise.all([
       page.waitForEvent('filechooser'),
@@ -255,7 +255,7 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#database-wipe-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('.mdc-dialog > md-dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText('All data will be lost.');
     await dialog.locator('[data-mdc-dialog-action="close"]').click(),
@@ -276,7 +276,7 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#database-wipe-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('.mdc-dialog > md-dialog');
     await expect(dialog).toBeVisible();
     await dialog.locator('[data-mdc-dialog-action="confirm"]').click(),
     await expect(dialog).toBeHidden();
