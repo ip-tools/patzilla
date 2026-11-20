@@ -389,7 +389,6 @@ const StackPlugin = MarionetteController.extend({
         if (mode) {
             this.update_content_view(mode);
         }
-
     },
 
     // Activate single element

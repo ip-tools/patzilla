@@ -4,10 +4,6 @@
 
 import {View} from 'marionette';
 
-// TODO: Make ripple effect work.
-//import {MDCRipple} from '@material/ripple';
-//const ripple = require('@material/ripple');
-
 export const MetadataView = View.extend({
     tagName: "div",
     template: require('./results-header.html'),
@@ -89,18 +85,6 @@ export const MetadataView = View.extend({
 
         }
 
-    },
-
-
-    onDomRefresh: function() {
-        // Further UI enhancements: Material Design ripple
-        /*
-        $('.ripple').each(function(index, element) {
-            log('ripple:', index, element);
-            log('ripple:', $(element).hasClass('mdc-ripple-upgraded'));
-            const rippler = new ripple.MDCRipple(element);
-        });
-        */
     },
 
 });

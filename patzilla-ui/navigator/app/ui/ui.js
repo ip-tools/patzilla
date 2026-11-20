@@ -328,8 +328,8 @@ const UiController = View.extend({
         this.notify('This feature is a work in progress.');
     },
 
-    // Notifications using the "Snackbar" Material Design Component (MDC).
-    // https://material.io/develop/web/components/snackbars/
+    // Notifications using the "Snackbar" Material Web element.
+    // https://m3.material.io/components/snackbar/overview
     setup_snackbar: function() {
         this.snackbar = new SnackbarWidget();
     },

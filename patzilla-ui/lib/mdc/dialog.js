@@ -8,7 +8,7 @@ import '@material/web/button/text-button.js';
 
 export const DialogBase = View.extend({
     /*
-     * Encapsulate the "Dialog" Material Web element into a Marionette `View`.
+     * Encapsulate the "Dialog" Material Web element into a Marionette View.
      *
      * https://m3.material.io/components/dialogs
      * https://material-web.dev/components/dialog/

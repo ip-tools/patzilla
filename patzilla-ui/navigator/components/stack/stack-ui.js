@@ -42,7 +42,7 @@ export const StackOpenerWidget = View.extend({
     Button for opening the stack user interface
     also displaying the number of selected documents.
 
-    It is a Material Design Component (MDC) button with dynamic content.
+    It is a Material Design Web element button with dynamic content.
     */
 
     template: require('./stack-opener.html'),
