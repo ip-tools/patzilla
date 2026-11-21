@@ -508,12 +508,18 @@ const StackPlugin = MarionetteController.extend({
         this.listenTo(this.menu_widget, 'action:edit', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
         this.listenTo(this.menu_widget, 'action:share', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
         this.listenTo(this.menu_widget, 'action:xpexport', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
-        this.listenTo(this.menu_widget, 'action:reset', function () {
+        this.listenTo(this.menu_widget, 'action:reset', async function () {
             this.reset();
             // Reset can replace the opener while the menu is closing.
             if (!anchor.isConnected) {
                 const region = this.application.metadataView.getRegion('region_stack_opener');
-                region.currentView?.el.querySelector('md-outlined-button')?.focus();
+                const opener = region.currentView?.el.querySelector('md-outlined-button');
+                if (opener) {
+                    await opener.updateComplete;
+                    if (opener.isConnected) {
+                        opener.focus();
+                    }
+                }
             }
         });
 
