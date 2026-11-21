@@ -30,8 +30,6 @@ md-gb-snackbar {
     --container-color: #323232;
     --supporting-text-color: white;
     --action-label-text-color: white;
-    --supporting-text: 400 14px/20px sans-serif;
-    --action-label-text: 500 14px/20px sans-serif;
     --z-index: 9999;
 }
 /* Color for close icon */
@@ -51,7 +49,6 @@ md-dialog md-text-button {
     --md-text-button-container-height: 38px;
     --md-text-button-leading-space: 0.75rem;
     --md-text-button-trailing-space: 0.75rem;
-    --md-text-button-label-text-font: var(--font-family-sans-serif, sans-serif);
     --md-text-button-label-text-size: 1rem;
     --md-text-button-label-text-line-height: 1.5rem;
     --md-text-button-label-text-weight: 400;
