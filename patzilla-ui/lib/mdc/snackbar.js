@@ -3,18 +3,19 @@
 'use strict';
 
 import {View} from 'marionette';
-import { MDCSnackbar } from '@material/snackbar';
+import '@material/web/labs/gb/components/snackbar/md-gb-snackbar.js';
 
 export const SnackbarWidget = View.extend({
     /*
-     * SnackbarWidget encapsulates the Snackbar Material Design Component (MDC)
+     * SnackbarWidget encapsulates the Snackbar Material Design element
      * into a Marionette `View`.
      *
-     * https://material-components.github.io/material-components-web-catalog/#/component/snackbar
+     * https://m3.material.io/components/snackbar/overview
+     * https://github.com/material-components/material-web/tree/main/labs/gb/components/snackbar
      *
     **/
     tagName: 'aside',
-    className: 'mdc-snackbar',
+    className: 'snackbar-widget',
     template: require('./snackbar.html'),
 
     initialize() {
@@ -27,7 +28,7 @@ export const SnackbarWidget = View.extend({
     },
 
     onRender() {
-        this.snackbar = new MDCSnackbar(this.el);
+        this.snackbar = this.el.querySelector('md-gb-snackbar');
     },
 
     onBeforeDestroy() {
@@ -35,11 +36,15 @@ export const SnackbarWidget = View.extend({
     },
 
     destroySnackbar() {
-        this.snackbar?.destroy();
+        this.snackbar?.remove();
         this.snackbar = undefined;
     },
 
     show(message, options) {
+        // Restart the timeout when another message arrives.
+        if (this.snackbar.open) {
+            this.snackbar.close();
+        }
 
         // Compute colors based on ambient.
         /*
@@ -52,19 +57,14 @@ export const SnackbarWidget = View.extend({
         }
         */
         //$(this.el).css('background-color', '#323232');
-        $(this.el).find('.mdc-snackbar__label,.mdc-snackbar__action').css('color', 'white');
+        //$(this.el).find('.mdc-snackbar__label,.mdc-snackbar__action').css('color', 'white');
 
-        var timeout = 4000;
-        if (message.length >= 30) {
-            timeout = 5500;
-        }
-        if (message.length >= 50) {
-            timeout = 7000;
-        }
+        const timeout = message.length >= 50 ? 7000
+            : message.length >= 30 ? 5500
+            : 4000;
+
         this.snackbar.labelText = message;
         this.snackbar.timeoutMs = timeout;
-        this.snackbar.actionButtonText = 'Dismiss';
-        this.snackbar.open();
+        this.snackbar.show();
     },
-
 });

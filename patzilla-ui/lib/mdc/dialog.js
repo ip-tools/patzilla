@@ -3,20 +3,19 @@
 'use strict';
 
 import {View} from 'marionette';
-import {MDCDialog} from '@material/dialog';
+import '@material/web/dialog/dialog.js';
+import '@material/web/button/text-button.js';
 
 export const DialogBase = View.extend({
     /*
-     * Encapsulate the "Dialog" Material Design Component (MDC) into a Marionette `View`.
+     * Encapsulate the "Dialog" Material Web element into a Marionette View.
      *
-     * https://m2.material.io/components/dialogs
-     * https://material-components.github.io/material-components-web-catalog/#/component/dialog
-     * https://github.com/material-components/material-components-web/tree/master/packages/mdc-dialog
+     * https://m3.material.io/components/dialogs
+     * https://material-web.dev/components/dialog/
+     * https://github.com/material-components/material-web/tree/main/dialog
      *
     **/
-
-    tagName: 'div',
-    className: 'mdc-dialog',
+    tagName: 'aside',
 
     initialize(options) {
         this.options = options || {};
@@ -29,41 +28,38 @@ export const DialogBase = View.extend({
     },
 
     onRender() {
-        this.dialog = new MDCDialog(this.el);
-        const surface = this.el.querySelector('.mdc-dialog__surface');
-        const title = this.el.querySelector('.mdc-dialog__title');
-        const content = this.el.querySelector('.mdc-dialog__content');
-        const idPrefix = `mdc-dialog-${this.cid}`;
+        const dialog = this.el.querySelector('md-dialog');
+        const title = dialog.querySelector('[slot="headline"]');
+        const content = dialog.querySelector('[slot="content"]');
 
-        content.innerHTML = this.options.message;
-        content.style.whiteSpace = 'pre-line';
-        content.id = `${idPrefix}-content`;
-
+        this.dialog = dialog;
         title.innerHTML = this.options.title || this.title || '';
+        content.innerHTML = this.options.message || '';
+        content.style.whiteSpace = 'pre-line';
 
-        this.el.setAttribute('role', 'dialog');
-        this.el.setAttribute('aria-modal', 'true');
-        this.el.setAttribute('aria-describedby', content.id);
-
-        if (title.textContent.trim()) {
-            title.id = `${idPrefix}-title`;
-            this.el.setAttribute('aria-labelledby', title.id);
-            this.el.removeAttribute('aria-label');
-        } else {
-            title.removeAttribute('id');
-            this.el.removeAttribute('aria-labelledby');
-            this.el.setAttribute('aria-label', this.options.ariaLabel || 'Dialog');
+        if (!title.textContent.trim()) {
+            title.remove();
+            dialog.ariaLabel = this.options.ariaLabel || 'Dialog';
         }
 
         if (this.options.confirm === false) {
-            $(this.el).find('[data-mdc-dialog-action="confirm"]').hide();
+            dialog.querySelector('[value="confirm"]')?.remove();
         }
         if (this.options.ok === true) {
-            $(this.el).find('[data-mdc-dialog-action="close"]').find('.mdc-button__label').html('OK');
+            const close = dialog.querySelector('[value="close"]');
+            if (close) close.textContent = 'OK';
         }
         if (this.options.width) {
-            $(surface).css('width', this.options.width);
+            dialog.style.width = typeof this.options.width === 'number'
+                ? `${this.options.width}px` : this.options.width;
+            dialog.style.maxWidth = 'calc(100% - 48px)';
         }
+
+        dialog.querySelectorAll('md-text-button').forEach(button => {
+            button.addEventListener('click', () => {
+                dialog.close(button.value);
+            });
+        });
     },
 
     onBeforeDestroy() {
@@ -71,38 +67,53 @@ export const DialogBase = View.extend({
     },
 
     destroyDialog() {
-        this.dialog?.destroy();
+        const dialog = this.dialog;
         this.dialog = undefined;
+        if (dialog && this._onClosed) {
+            dialog.removeEventListener('closed', this._onClosed);
+        }
+        this._onClosed = undefined;
+        this._deferred?.reject('cancelled');
+        this._deferred = undefined;
+        dialog?.close();
     },
 
     show() {
+        if (this._deferred) return this._deferred.promise();
+
+        const dialog = this.dialog;
         const deferred = $.Deferred();
-        const _this = this;
-        this.el.addEventListener('MDCDialog:closed', function(event) {
-            const confirmed = event.detail.action === 'confirm';
-            _this.destroyDialog();
-            _this.el.remove();
+        this._deferred = deferred;
+        dialog.returnValue = '';
 
-            if (confirmed) {
-                deferred.resolve();
-            } else {
-                deferred.reject('cancelled');
-            }
-        }, {once: true});
+        this._onClosed = () => {
+            const confirmed = dialog.returnValue === 'confirm';
+            this._deferred = undefined;
+            this._onClosed = undefined;
+            this.dialog = undefined;
+            this.el.remove();
+            if (confirmed) deferred.resolve();
+            else deferred.reject('cancelled');
+        };
+        dialog.addEventListener('closed', this._onClosed, {once: true});
 
-        this.dialog.open();
+        dialog.show().catch(error => {
+            if (this._deferred !== deferred) return;
+            this._deferred = undefined;
+            this.destroyDialog();
+            this.el.remove();
+            deferred.reject(error);
+        });
+
         return deferred.promise();
     },
 });
-
 
 export const ConfirmationDialog = DialogBase.extend({
     title: 'Confirm operation',
     template: require('./dialog-confirm.html'),
 });
 
-
 export const SheetDialog = DialogBase.extend({
-    className: 'mdc-dialog mdc-dialog--sheet',
     template: require('./dialog-sheet.html'),
 });

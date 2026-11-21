@@ -1,39 +1,95 @@
-/* Material Components for the web *
-/* https://github.com/material-components/material-components-web */
+/* Material Design Web Components *
+/* https://github.com/material-components/material-web */
 
-/* Use custom color theme */
-/* https://material-components.github.io/material-components-web-catalog/#/component/theme */
-$mdc-theme-primary: #1565c0;
-$mdc-theme-secondary: #ffffff;
-$mdc-theme-on-primary: #5e92f3;
-$mdc-theme-on-secondary: #000000;
-
-/* Use default font */
-/* https://material-components.github.io/material-components-web-catalog/#/component/typography */
-$mdc-typography-font-family: unset;
-
-/* MDC Styles */
-
-/*
-https://m2.material.io/components/dialogs
-https://m2.material.io/components/buttons
-https://m2.material.io/components/snackbars
-*/
-@use "@material/dialog/mdc-dialog";
-@use "@material/button/mdc-button";
-@use "@material/snackbar/mdc-snackbar";
-
-/* https://material.io/develop/web/components/menus/ */
-@use "@material/list/mdc-list";
-@use "@material/menu-surface/mdc-menu-surface";
-@use "@material/menu/mdc-menu";
-
-
-/* Custom */
-/*
-.foo-button {
-    @include mdc-button-ink-color(#1565c0);
-    @include mdc-button-outline-color(#5e92f3);
-    @include mdc-states(#1565c0);
+/* Custom color theme */
+/* https://material-web.dev/theming/color/ */
+:root {
+    /* Starting point, not a complete color scheme. */
+    --md-sys-color-primary: #1565c0;
+    --md-sys-color-on-primary: #5e92f3;
+    --md-sys-color-secondary: #ffffff;
+    --md-sys-color-on-secondary: #000000;
 }
-*/
+
+/** Use a sans-serif default font **/
+/* https://material-web.dev/theming/typography/ */
+:root {
+    --md-ref-typeface-plain: var(--font-family-sans-serif, sans-serif);
+    --md-ref-typeface-brand: var(--font-family-sans-serif, sans-serif);
+}
+
+/** Dialog style: More flat, less rounded **/
+md-dialog {
+    --md-dialog-container-shape: 4px;
+    --md-dialog-container-color: #fff;
+}
+
+
+/** SnackbarWidget **/
+md-gb-snackbar {
+    --container-color: #323232;
+    --supporting-text-color: white;
+    --action-label-text-color: white;
+    --z-index: 9999;
+}
+/* Color for close icon */
+md-gb-snackbar {
+    --icon-color: white;
+}
+
+
+/** Style buttons like Bootstrap **/
+
+md-dialog md-text-button {
+    /* Bootstrap outline-secondary by default */
+    --dialog-button-color: #6c757d;
+    --dialog-button-active-color: #5a6268;
+
+    --md-text-button-container-shape: 4px;
+    --md-text-button-container-height: 38px;
+    --md-text-button-leading-space: 0.75rem;
+    --md-text-button-trailing-space: 0.75rem;
+    --md-text-button-label-text-size: 1rem;
+    --md-text-button-label-text-line-height: 1.5rem;
+    --md-text-button-label-text-weight: 400;
+
+    --md-text-button-label-text-color: var(--dialog-button-color);
+    --md-text-button-focus-label-text-color: var(--dialog-button-color);
+    --md-text-button-hover-label-text-color: #fff;
+    --md-text-button-pressed-label-text-color: #fff;
+    --md-text-button-disabled-label-text-color: var(--dialog-button-color);
+    --md-text-button-disabled-label-text-opacity: 1;
+    --md-text-button-hover-state-layer-opacity: 0;
+    --md-text-button-pressed-state-layer-opacity: 0;
+
+    border: 1px solid var(--dialog-button-color);
+    border-radius: 4px;
+    background: transparent;
+}
+
+md-dialog md-text-button[value="confirm"] {
+    /* Bootstrap outline-primary */
+    --dialog-button-color: #007bff;
+    --dialog-button-active-color: #0062cc;
+}
+
+md-dialog md-text-button:hover:not([disabled]):not([soft-disabled]) {
+    background: var(--dialog-button-color);
+    --md-text-button-focus-label-text-color: #fff;
+}
+
+md-dialog md-text-button:active:not([disabled]):not([soft-disabled]) {
+    border-color: var(--dialog-button-active-color);
+    background: var(--dialog-button-active-color);
+    --md-text-button-focus-label-text-color: #fff;
+}
+
+/* Focus ring */
+md-dialog md-text-button:focus-within {
+    outline: 2px solid var(--dialog-button-color);
+    outline-offset: 2px;
+}
+
+md-dialog md-text-button:is([disabled], [soft-disabled]) {
+    opacity: 0.65;
+}

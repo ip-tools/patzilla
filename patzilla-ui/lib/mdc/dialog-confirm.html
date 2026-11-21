@@ -1,22 +1,12 @@
-<div class="mdc-dialog__scrim" data-mdc-dialog-action="cancel"></div>
-<div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-        <h2 class="mdc-dialog__title"></h2>
-        <div class="mdc-dialog__content"></div>
-        <div class="mdc-dialog__actions">
-            <button type="button"
-                    class="mdc-button mdc-dialog__button"
-                    data-mdc-dialog-action="close"
-                    data-mdc-dialog-initial-focus>
-              <div class="mdc-button__ripple"></div>
-              <span class="mdc-button__label">Cancel</span>
-            </button>
-            <button type="button"
-                    class="mdc-button mdc-dialog__button"
-                    data-mdc-dialog-action="confirm">
-              <div class="mdc-button__ripple"></div>
-              <span class="mdc-button__label">Confirm</span>
-            </button>
-        </div>
+<md-dialog>
+    <div slot="headline"></div>
+    <div slot="content"></div>
+    <div slot="actions">
+      <md-text-button slot="actions" value="close" autofocus>
+          Cancel
+      </md-text-button>
+      <md-text-button slot="actions" value="confirm">
+          Confirm
+      </md-text-button>
     </div>
-</div>
+</md-dialog>

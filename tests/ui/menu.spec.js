@@ -209,10 +209,10 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#data-import-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('md-dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText('Continue import operation?');
-    await dialog.locator('[data-mdc-dialog-action="close"]').click();
+    await dialog.locator('[value="close"]').click();
     await expect(dialog).toBeHidden();
     expect(await page.evaluate(() => window.__deactivateCalls)).toBe(0);
   });
@@ -230,11 +230,11 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#data-import-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('md-dialog');
     await expect(dialog).toBeVisible();
     const [chooser] = await Promise.all([
       page.waitForEvent('filechooser'),
-      dialog.locator('[data-mdc-dialog-action="confirm"]').click(),
+      dialog.locator('[value="confirm"]').click(),
     ]);
 
     expect(chooser.isMultiple()).toBe(false);
@@ -255,10 +255,10 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#database-wipe-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('md-dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog).toContainText('All data will be lost.');
-    await dialog.locator('[data-mdc-dialog-action="close"]').click(),
+    await dialog.locator('[value="close"]').click(),
     await expect(dialog).toBeHidden();
     expect(await page.evaluate(() => window.__resetCalls)).toEqual([]);
   });
@@ -276,9 +276,9 @@ test.describe('menu actions', () => {
     await openMenu(page);
     await page.locator('#database-wipe-button').click();
 
-    const dialog = page.locator('.mdc-dialog');
+    const dialog = page.locator('md-dialog');
     await expect(dialog).toBeVisible();
-    await dialog.locator('[data-mdc-dialog-action="confirm"]').click(),
+    await dialog.locator('[value="confirm"]').click(),
     await expect(dialog).toBeHidden();
 
     expect(await page.evaluate(() => window.__resetCalls))

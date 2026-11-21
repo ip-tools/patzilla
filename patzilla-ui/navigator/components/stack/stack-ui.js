@@ -2,8 +2,11 @@
 // (c) 2018 Andreas Motl <andreas.motl@ip-tools.org>
 'use strict';
 
+import '@material/web/menu/menu.js';
+import '@material/web/menu/menu-item.js';
+import '@material/web/button/outlined-button.js';
+
 import { View } from 'marionette';
-import { MDCMenu } from '@material/menu';
 import { CheckboxWidget } from 'patzilla.lib.hero-checkbox';
 
 // TODO: Maybe
@@ -39,7 +42,7 @@ export const StackOpenerWidget = View.extend({
     Button for opening the stack user interface
     also displaying the number of selected documents.
 
-    It is a Material Design Component (MDC) button with dynamic content.
+    It is a Material Design Web element button with dynamic content.
     */
 
     template: require('./stack-opener.html'),
@@ -89,30 +92,22 @@ export const StackOpenerWidget = View.extend({
 
 export const StackMenuWidget = View.extend({
     /*
-     * StackMenuWidget encapsulates the Menu Material Design Component (MDC)
-     * into a Marionette `View`.
+     * Encapsulate a Material Web menu in a Marionette View.
      *
-     * https://material-components.github.io/material-components-web-catalog/#/component/menu
-     *
-     * Details
-     * =======
-     *
-     * The template defines the base structure of the MDC Menu,
-     * it will be appended to the DOM element obtained via the `container` option
-     * when creating an instance of `StackMenuWidget`.
-     *
-     * Controlling the element is the responsibility of the `MDCMenu` component.
+     * https://m3.material.io/components/menus/overview
+     * https://material-web.dev/components/menu/
+     * https://github.com/material-components/material-web/tree/main/menu
      *
     **/
-    tagName: 'div',
-    className: 'mdc-menu mdc-menu-surface stack-menu',
+    tagName: 'aside',
     template: require('./stack-menu.html'),
 
     initialize() {
         log('StackMenuWidget::initialize', this);
         //this.listenTo(this, 'all', this.log_event);
-        this.handleMdcSelected = this.handleMdcSelected.bind(this);
-        this.el.addEventListener('MDCMenu:selected', this.handleMdcSelected);
+        this.handleMenuSelection = this.handleMenuSelection.bind(this);
+        this.handleMenuClosed = this.handleMenuClosed.bind(this);
+        this.el.addEventListener('close-menu', this.handleMenuSelection);
 
         const container = this.getOption('container') || $('body');
         container.append(this.el);
@@ -124,28 +119,54 @@ export const StackMenuWidget = View.extend({
     },
 
     onRender() {
-        this.menu = new MDCMenu(this.el);
+        this.menu = this.el.querySelector('md-menu');
+        this.menu.anchorElement = this.getOption('anchor');
+        this.menu.addEventListener('closed', this.handleMenuClosed);
     },
 
     onBeforeDestroy() {
-        this.el.removeEventListener('MDCMenu:selected', this.handleMdcSelected);
+        this.el.removeEventListener('close-menu', this.handleMenuSelection);
         this.destroyMenu();
     },
 
     destroyMenu() {
-        this.menu?.destroy();
+        if (!this.menu) return;
+
+        this.menu.removeEventListener('closed', this.handleMenuClosed);
+        this.menu.close();
+        this.handleMenuClosed();
         this.menu = undefined;
     },
 
-    handleMdcSelected(event) {
-        const detail = event.detail;
-        detail.action = $(detail.item).data('action');
+    handleMenuClosed() {
+        this.getOption('anchor')?.setAttribute('aria-expanded', 'false');
+    },
 
+    handleMenuSelection(event) {
+        const { initiator: item, reason } = event.detail;
+        const selected = reason?.kind === 'click-selection' ||
+            (reason?.kind === 'keydown' && ['Enter', 'Space'].includes(reason.key));
+
+        if (!selected || !item?.matches('md-menu-item[data-action]') ||
+            !this.menu.contains(item)) return;
+
+        const items = Array.from(this.menu.querySelectorAll('md-menu-item'));
+        const detail = { item, index: items.indexOf(item), action: item.dataset.action };
         this.trigger('item:select', detail);
         this.trigger('action:' + detail.action, detail);
     },
 
-    open() {
-        this.menu.open = true;
+    async open() {
+        const menu = this.menu;
+        const anchor = this.getOption('anchor');
+        if (!menu || !anchor) return;
+
+        // Let the closed menu render before its position is calculated.
+        await menu.updateComplete;
+        if (this.menu !== menu || !menu.isConnected || !anchor.isConnected) return;
+
+        anchor.focus();
+        anchor.setAttribute('aria-expanded', 'true');
+        menu.show();
     },
 });
