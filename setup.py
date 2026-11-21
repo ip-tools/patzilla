@@ -10,8 +10,6 @@ requires = [
     #   Environment
     # ----------------------------------------------
     'setuptools<81',
-    'six>=1.10.0',
-    'mock',
 
     # ----------------------------------------------
     #   Backend
@@ -20,8 +18,6 @@ requires = [
     # Pyramid core
     'pyramid>=2,<2.2',
     'simplejson<5',
-    'hupper<2',
-    'watchdog<7',
     'pyramid-debugtoolbar<5',
     'Pygments<3',
     'pyramid-mako<2',
@@ -137,6 +133,7 @@ test_requires = [
     # -----------
     #   Testing
     # -----------
+    'mock',
     'pytest>=4,<10',
     'pytest-cov>=2,<8',
     'pytest-xdist<4',
