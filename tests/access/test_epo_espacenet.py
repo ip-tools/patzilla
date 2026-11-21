@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
 # (c) 2022 Andreas Motl <andreas.motl@ip-tools.org>
+"""
+playwright install --with-deps msedge
+"""
+import os
+
 import pytest
 
-from patzilla.access.epo.espacenet.api import espacenet_description, espacenet_claims, espacenet_abstract
+if "GITHUB_ACTION" in os.environ:
+    pytest.skip("Espacenet per MS Edge does not work on GitHub Actions", allow_module_level=True)
 
-pytest.skip("Espacenet per web no longer works? (2026)", allow_module_level=True)
+
+from patzilla.access.epo.espacenet.api import espacenet_description, espacenet_claims, espacenet_abstract
 
 
 def test_espacenet_abstract_success(app_request):

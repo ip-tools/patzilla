@@ -10,7 +10,7 @@ import requests
 from beaker.cache import cache_region
 from bs4 import BeautifulSoup
 
-from patzilla.util.network.browser import regular_user_agent
+from patzilla.access.epo.espacenet.client import EspacenetClient
 from patzilla.util.numbers.normalize import normalize_patent
 
 
@@ -47,7 +47,7 @@ def espacenet_fetch_html(document_number, section, element_id=None, element_clas
     url = url_tpl.format(section=section, **patent)
 
     logger.info('Accessing Espacenet: {}'.format(url))
-    response = http.get(url, headers={'User-Agent': regular_user_agent})
+    response = EspacenetClient().fetch(url)
 
     # https://worldwide.espacenet.com/errorpages/error403.htm?reason=RobotAbuse&ip=89.247.174.135
     if "errorpages" in response.url:
@@ -103,6 +103,16 @@ def espacenet_fetch_html(document_number, section, element_id=None, element_clas
             raise ValueError(message_fail)
 
 
+def espacenet_abstract(document_number):
+    """
+    Acquire Espacenet "abstract" text from HTML page of old Espacenet.
+
+    https://worldwide.espacenet.com/data/publicationDetails/biblio?CC=US&NR=5770123A&DB=worldwide.espacenet.com&FT=D
+    https://worldwide.espacenet.com/data/publicationDetails/biblio?CC=DE&NR=19814298A1&DB=worldwide.espacenet.com&FT=D
+    """
+    return espacenet_fetch_html(document_number, 'biblio', element_class='printAbstract')
+
+
 def espacenet_description(document_number):
     """
     Acquire Espacenet "description" fulltext from HTML page of old Espacenet.
@@ -111,7 +121,7 @@ def espacenet_description(document_number):
     https://worldwide.espacenet.com/data/publicationDetails/description?CC=DE&NR=19814298A1&DB=worldwide.espacenet.com&FT=D
     https://worldwide.espacenet.com/3.2/rest-services/published-data/publication/docdb/EP0666666B1/description.json
     """
-    return espacenet_fetch_html(document_number, 'description', 'description')
+    return espacenet_fetch_html(document_number, 'description', element_id='description')
 
 
 def espacenet_claims(document_number):
@@ -121,4 +131,4 @@ def espacenet_claims(document_number):
     https://worldwide.espacenet.com/data/publicationDetails/claims?CC=US&NR=5770123A&FT=D&DB=worldwide.espacenet.com
     https://worldwide.espacenet.com/data/publicationDetails/claims?CC=DE&NR=19814298A1&DB=worldwide.espacenet.com&FT=D
     """
-    return espacenet_fetch_html(document_number, 'claims', 'claims')
+    return espacenet_fetch_html(document_number, 'claims', element_id='claims')

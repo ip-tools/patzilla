@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 from patzilla.boot.cache import configure_cache_backend
-from .client_api import espacenet_abstract
-from .client_html import espacenet_description, espacenet_claims
+from .client_html import espacenet_abstract, espacenet_claims, espacenet_description
 
 
 if __name__ == '__main__':
@@ -15,7 +14,7 @@ if __name__ == '__main__':
         "US6269530B1",
         "DE19814298A1",
         "DE29624638U1",
-        "EP0666666B1"
+        "EP0666666B1",
     ]
     for number in numbers:
         print("\n")
@@ -30,9 +29,15 @@ if __name__ == '__main__':
         print("")
 
         print("### Claims")
-        print(espacenet_claims(number))
+        try:
+            print(espacenet_claims(number))
+        except Exception as ex:
+            print("ERROR: {}".format(ex))
         print("")
 
         print("### Description")
-        print(espacenet_description(number))
+        try:
+            print(espacenet_description(number))
+        except Exception as ex:
+            print("ERROR: {}".format(ex))
         print("")

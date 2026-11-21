@@ -9,7 +9,7 @@ About
 
 PatZilla is a modular patent information research platform and data integration
 toolkit. It provides access to multiple data sources, like the OPS service from
-EPO, and other professional fulltext patent databases.
+EPO, Espacenet, and other professional fulltext patent databases.
 
 The system features an efficient user interface for convenient data exploration
 in its standalone version. Its software components and interfaces can also be
@@ -173,6 +173,7 @@ Primary data sources:
 
 Auxiliary data sources:
 
+- `Espacenet`_
 - `USPTO/PATIMG`_
 - `CIPO`_
 
@@ -283,6 +284,7 @@ development of PatZilla.
 .. _CIPO: http://cipo.gc.ca
 .. _DPMA/DEPATISnet: https://depatisnet.dpma.de/DepatisNet/depatisnet?window=1&space=menu&content=index&action=index&switchToLang=en
 .. _EPO/OPS: https://ops.epo.org/
+.. _Espacenet: https://worldwide.espacenet.com/
 .. _IFI Claims: https://www.ificlaims.com/
 .. _MTC depa.tech: https://depa.tech/
 .. _USPTO/PATIMG: https://www.uspto.gov/
