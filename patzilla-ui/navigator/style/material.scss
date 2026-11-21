@@ -1,16 +1,18 @@
 /* Material Design Web Components *
 /* https://github.com/material-components/material-web */
 
-/* Use custom color theme */
-/* https://material-components.github.io/material-components-web-catalog/#/component/theme */
-/* FIXME: This is deprecated. Migrate to Material Web. */
-$md-theme-primary: #1565c0;
-$md-theme-secondary: #ffffff;
-$md-theme-on-primary: #5e92f3;
-$md-theme-on-secondary: #000000;
-
+/* Custom color theme */
+/* https://material-web.dev/theming/color/ */
+:root {
+    /* Starting point, not a complete color scheme. */
+    --md-sys-color-primary: #1565c0;
+    --md-sys-color-on-primary: #5e92f3;
+    --md-sys-color-secondary: #ffffff;
+    --md-sys-color-on-secondary: #000000;
+}
 
 /** Use a sans-serif default font **/
+/* https://material-web.dev/theming/typography/ */
 :root {
     --md-ref-typeface-plain: var(--font-family-sans-serif, sans-serif);
     --md-ref-typeface-brand: var(--font-family-sans-serif, sans-serif);
@@ -20,7 +22,6 @@ $md-theme-on-secondary: #000000;
 md-dialog {
     --md-dialog-container-shape: 4px;
     --md-dialog-container-color: #fff;
-    --md-sys-color-primary: #{$md-theme-primary};
 }
 
 

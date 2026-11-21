@@ -691,7 +691,6 @@ img.pdf-svg[src*=svg] { height/*\**/: 18px; width/*\**/: 18px; }
     --md-menu-container-shape: 4px;
 }
 .stack-opener {
-    --md-sys-color-primary: #1565c0;
     --md-outlined-button-outline-color: #1565c0;
     --md-outlined-button-container-height: 32px;
     --md-outlined-button-container-shape: 4px;
