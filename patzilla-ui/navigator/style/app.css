@@ -444,12 +444,6 @@ ul.breathe li {
 }
 
 
-/* MDC Snackbar */
-.mdc-snackbar {
-    z-index: 9999;
-    padding: 1.4rem;
-}
-
 /* Notification box */
 .ns-box {
     font-size: 130% !important;

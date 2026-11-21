@@ -17,7 +17,7 @@ $md-theme-on-secondary: #000000;
 }
 
 /** Dialog style: More flat, less rounded **/
-.mdc-dialog md-dialog {
+md-dialog {
     --md-dialog-container-shape: 4px;
     --md-dialog-container-color: #fff;
     --md-sys-color-primary: #{$md-theme-primary};
@@ -41,7 +41,7 @@ md-gb-snackbar {
 
 /** Style buttons like Bootstrap **/
 
-.mdc-dialog md-dialog md-text-button {
+md-dialog md-text-button {
     /* Bootstrap outline-secondary by default */
     --dialog-button-color: #6c757d;
     --dialog-button-active-color: #5a6268;
@@ -69,29 +69,29 @@ md-gb-snackbar {
     background: transparent;
 }
 
-.mdc-dialog md-dialog md-text-button[data-mdc-dialog-action="confirm"] {
+md-dialog md-text-button[value="confirm"] {
     /* Bootstrap outline-primary */
     --dialog-button-color: #007bff;
     --dialog-button-active-color: #0062cc;
 }
 
-.mdc-dialog md-dialog md-text-button:hover:not([disabled]):not([soft-disabled]) {
+md-dialog md-text-button:hover:not([disabled]):not([soft-disabled]) {
     background: var(--dialog-button-color);
     --md-text-button-focus-label-text-color: #fff;
 }
 
-.mdc-dialog md-dialog md-text-button:active:not([disabled]):not([soft-disabled]) {
+md-dialog md-text-button:active:not([disabled]):not([soft-disabled]) {
     border-color: var(--dialog-button-active-color);
     background: var(--dialog-button-active-color);
     --md-text-button-focus-label-text-color: #fff;
 }
 
 /* Focus ring */
-.mdc-dialog md-dialog md-text-button:focus-within {
+md-dialog md-text-button:focus-within {
     outline: 2px solid var(--dialog-button-color);
     outline-offset: 2px;
 }
 
-.mdc-dialog md-dialog md-text-button:is([disabled], [soft-disabled]) {
+md-dialog md-text-button:is([disabled], [soft-disabled]) {
     opacity: 0.65;
 }

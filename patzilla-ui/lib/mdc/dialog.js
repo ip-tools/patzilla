@@ -15,8 +15,7 @@ export const DialogBase = View.extend({
      * https://github.com/material-components/material-web/tree/main/dialog
      *
     **/
-    tagName: 'div',
-    className: 'mdc-dialog',
+    tagName: 'aside',
 
     initialize(options) {
         this.options = options || {};
@@ -44,10 +43,10 @@ export const DialogBase = View.extend({
         }
 
         if (this.options.confirm === false) {
-            dialog.querySelector('[data-mdc-dialog-action="confirm"]')?.remove();
+            dialog.querySelector('[value="confirm"]')?.remove();
         }
         if (this.options.ok === true) {
-            const close = dialog.querySelector('[data-mdc-dialog-action="close"]');
+            const close = dialog.querySelector('[value="close"]');
             if (close) close.textContent = 'OK';
         }
         if (this.options.width) {
@@ -56,9 +55,9 @@ export const DialogBase = View.extend({
             dialog.style.maxWidth = 'calc(100% - 48px)';
         }
 
-        dialog.querySelectorAll('[data-mdc-dialog-action]').forEach(button => {
+        dialog.querySelectorAll('md-text-button').forEach(button => {
             button.addEventListener('click', () => {
-                dialog.close(button.dataset.mdcDialogAction);
+                dialog.close(button.value);
             });
         });
     },
@@ -116,6 +115,5 @@ export const ConfirmationDialog = DialogBase.extend({
 });
 
 export const SheetDialog = DialogBase.extend({
-    className: 'mdc-dialog mdc-dialog--sheet',
     template: require('./dialog-sheet.html'),
 });

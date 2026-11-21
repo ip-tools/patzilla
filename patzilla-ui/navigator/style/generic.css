@@ -146,16 +146,6 @@ https://stackoverflow.com/questions/27103312/wkhtmltopdf-does-not-respect-page-b
     page-break-after: always;
 }
 
-/*
-Snackbar
-
-Rationale: With BS3, the font size became way too small.
-*/
-.mdc-snackbar__label, .mdc-snackbar__action {
-    font-size: unset;
-    line-height: unset;
-}
-
 
 /*
 Bootstrap 3+ no longer supports nested menus, so provide a polyfill.
