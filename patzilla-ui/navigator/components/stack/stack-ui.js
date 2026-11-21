@@ -156,10 +156,17 @@ export const StackMenuWidget = View.extend({
         this.trigger('action:' + detail.action, detail);
     },
 
-    open() {
+    async open() {
+        const menu = this.menu;
         const anchor = this.getOption('anchor');
+        if (!menu || !anchor) return;
+
+        // Let the closed menu render before its position is calculated.
+        await menu.updateComplete;
+        if (this.menu !== menu || !menu.isConnected || !anchor.isConnected) return;
+
         anchor.focus();
         anchor.setAttribute('aria-expanded', 'true');
-        this.menu.show();
+        menu.show();
     },
 });

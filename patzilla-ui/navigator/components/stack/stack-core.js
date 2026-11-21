@@ -524,7 +524,9 @@ const StackPlugin = MarionetteController.extend({
         });
 
         // Open/show/display widget.
-        this.menu_widget.open();
+        this.menu_widget.open().catch((error) => {
+            console.error('Opening stack menu failed:', error);
+        });
     },
 
 });

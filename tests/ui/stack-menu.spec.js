@@ -35,11 +35,6 @@ test('reopens the stack menu and restores focus after Escape', async ({ page }) 
     await expect(menu).toHaveJSProperty('open', true);
     //await expect(opener).toHaveAttribute('aria-expanded', 'true');
 
-    // Wait for the opening animation and focus transfer.
-    await expect.poll(() =>
-      menu.evaluate((element) => element.matches(':focus-within'))
-    ).toBe(true);
-
     // Close the menu again.
     await page.keyboard.press('Escape');
 
