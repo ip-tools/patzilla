@@ -965,21 +965,35 @@ class DossierText(Dossier):
             self.writer.body.append(section)
             self.writer.body.append(Paragraph("", style="Horizontal_20_Line"))
 
-            # Abstract text and image
+            # Abstract text
             for node in self.get_from_xml("p", tree, parent="abstract"):
                 self.writer.body.append(Paragraph( "Abstract:", style="Biblio"))
-                self.writer.body.append(Paragraph(f"({node.getparent().get('lang').upper()}) " + node.text))
+                if node.text:
+                    language = node.getparent().get('lang', '-').upper()
+                    self.writer.body.append(Paragraph(f"({language}) {node.text}"))
 
-            try:
-                image_payload = get_ops_image(patent, 1, 'FirstPageClipping', 'png')
-            except HTTPNotFound:
+            # Drawing
+            for kind, image_format in (
+                    ("FirstPageClipping", "png"),
+                    ("Drawing", None),
+                    ("FullDocumentDrawing", None),
+            ):
+                request = get_current_request()
+                errors = getattr(request, "errors", None)
+                error_count = len(errors) if errors is not None else 0
+
                 try:
-                    image_payload = get_ops_image(patent, 1, 'Drawing')
-                except HTTPNotFound:
-                    try:
-                        image_payload = get_ops_image(patent, 1, 'FullDocumentDrawing')
-                    except HTTPNotFound:
-                        continue
+                    image_payload = get_ops_image(patent, 1, kind, image_format)
+                except (JSONError, HTTPError) as ex:
+                    if getattr(ex, "status_int", None) != 404:
+                        raise
+                    if errors is not None:
+                        del errors[error_count:]
+                else:
+                    break
+            else:
+                continue
+
             # Use "Drawing" for thumbnail
             drawing = BytesIO(image_payload)
             uri = self.writer.add_file(drawing) 

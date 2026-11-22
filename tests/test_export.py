@@ -319,8 +319,8 @@ def test_odt_embeds_full_document_drawing_fallback(dossier_data, monkeypatch):
 
     assert [entry.args[1:] for entry in get_image.call_args_list] == [
         (1, "FirstPageClipping", "png"),
-        (1, "Drawing"),
-        (1, "FullDocumentDrawing"),
+        (1, "Drawing", None),
+        (1, "FullDocumentDrawing", None),
     ]
 
     with ZipFile(BytesIO(payload)) as archive:
