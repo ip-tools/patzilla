@@ -98,7 +98,7 @@ requires = [
     'arrow<2',
     'validate_email<2',
     'numpy>=1.16.6,<3',
-    'pandas<3',
+    'pandas<3.2',
     'pathlib2',
 
     # Data formatting
