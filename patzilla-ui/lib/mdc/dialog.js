@@ -88,20 +88,17 @@ export const DialogBase = View.extend({
 
         this._onClosed = () => {
             const confirmed = dialog.returnValue === 'confirm';
-            this._deferred = undefined;
-            this._onClosed = undefined;
-            this.dialog = undefined;
-            this.el.remove();
+            this.destroy();
+
             if (confirmed) deferred.resolve();
             else deferred.reject('cancelled');
         };
+
         dialog.addEventListener('closed', this._onClosed, {once: true});
 
         dialog.show().catch(error => {
             if (this._deferred !== deferred) return;
-            this._deferred = undefined;
-            this.destroyDialog();
-            this.el.remove();
+            this.destroy();
             deferred.reject(error);
         });
 
