@@ -464,7 +464,7 @@ const UiController = View.extend({
 
         // For use in Bootstrap Modals or with any other library that changes the focus
         // you'll want to set the focused element as the container value.
-        var modal = $(element).closest('.modal');
+        var modal = $(element).closest('.modal, [slot="content"]');
         if (modal.exists()) {
             clipboard.container = modal[0];
         }
