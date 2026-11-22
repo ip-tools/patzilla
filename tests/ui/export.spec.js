@@ -137,9 +137,9 @@ test('validates output format and ZIP content selection', async ({ page }) => {
   await expect(reports.locator('[aria-pressed="true"]')).toHaveCount(0);
   await expect(dialog.locator(
     '.export-content[data-name="report"][aria-pressed="true"]'
-  )).toHaveCount(4);
+  )).toHaveCount(5);
   await expect(dialog.locator('#report-parts'))
-    .toHaveText('Workbook, PDF Report, CSV, JSON');
+    .toHaveText('Workbook, Text report, PDF Report, CSV, JSON');
 
   await reportAll.click();
   await expect(dialog.locator(

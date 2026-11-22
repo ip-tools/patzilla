@@ -228,6 +228,14 @@ class Dossier:
                 workbook_payload = DossierXlsx(self.data).create()
                 zipfile.writestr('report/@dossier.xlsx', workbook_payload)
 
+            # Add report in ODT format
+            if options.report.get("odt", False):
+                try:
+                    zipfile.writestr('report/@dossier.odt', DossierText(self.data).create())
+                except Exception as ex:
+                    log.error('Rendering dossier to ODT failed. ' \
+                              'Exception: {ex}\n{trace}'.format(ex=ex, trace=exception_traceback()))
+
             # Add Workbook in PDF format
             if options.report.pdf:
                 try:

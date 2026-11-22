@@ -516,3 +516,60 @@ def test_odt_classifications(dossier_data, monkeypatch, scheme):
     assert "Classification:" in paragraphs
     assert paragraphs.count("- A01B1/00 (EP, US)") == 1
     assert paragraphs.count("- H01M10/0525 (EP, WO)") == 1
+
+
+@pytest.mark.parametrize(
+    "odt_selected",
+    [True, False, None],
+    ids=["selected", "unselected", "omitted"],
+)
+def test_zip_odt_report(dossier_data, monkeypatch, odt_selected):
+    from xml.etree import ElementTree
+
+    biblio = """\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <invention-title lang="en">A test invention</invention-title>
+    </bibliographic-data>
+    <abstract lang="en"><p>Test abstract</p></abstract>
+  </exchange-document>
+</exchange-documents>
+"""
+    get_biblio = Mock(return_value=biblio)
+    monkeypatch.setattr(export, "get_ops_biblio_data", get_biblio)
+    monkeypatch.setattr(
+        export, "ops_family_members", Mock(return_value=SimpleNamespace(items=[]))
+    )
+    monkeypatch.setattr(export, "get_ops_image", Mock(side_effect=HTTPNotFound()))
+
+    report = {"xlsx": False, "pdf": False, "csv": True, "json": False}
+    if odt_selected is not None:
+        report["odt"] = odt_selected
+
+    options = munchify({
+        "report": report,
+        "media": {
+            "pdf": False, "biblio": False, "description": False,
+            "claims": False, "register": False, "family": False,
+        },
+    })
+
+    payload = Dossier(dossier_data).to_zip(options=options)
+
+    with ZipFile(BytesIO(payload)) as archive:
+        assert b"EP0007054A1" in archive.read("report/csv/02-documents.csv")
+        odt_name = "report/@dossier.odt"
+
+        if odt_selected:
+            with ZipFile(BytesIO(archive.read(odt_name))) as odt:
+                assert odt.read("mimetype") == b"application/vnd.oasis.opendocument.text"
+                content = ElementTree.fromstring(odt.read("content.xml"))
+                text = " ".join(content.itertext())
+                assert "Test project" in text
+                assert "A test invention" in text
+                assert "Relevant document" in text
+            get_biblio.assert_called_once_with("publication", "EP0007054A1", xml=True)
+        else:
+            assert odt_name not in archive.namelist()
+            get_biblio.assert_not_called()
