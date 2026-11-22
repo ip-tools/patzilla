@@ -461,19 +461,31 @@ const StackPlugin = MarionetteController.extend({
     // Toggle stack opener widget
     show_opener: function() {
 
-        // Hack for destroying the old instance.
+        var metadataView = this.application.metadataView;
+        var region = metadataView.getRegion('region_stack_opener');
+        var current = region.currentView;
+
+        // Reuse the current opener if it is still in the metadata view.
+        if (current instanceof StackOpenerWidget &&
+            current.collection === this.store &&
+            metadataView.el.contains(current.el)) {
+            return;
+        }
+
+        // Clean up an old opener and its menu before creating a new one.
         this.close_opener();
 
-        // Create stack menu opener button.
         var opener_widget = new StackOpenerWidget({
             collection: this.store,
         });
 
-        // When clicked, open the menu widget.
-        opener_widget.listenTo(opener_widget, 'view:clicked', _.bind(this.open_menu, this));
+        opener_widget.listenTo(
+            opener_widget,
+            'view:clicked',
+            _.bind(this.open_menu, this)
+        );
 
-        // Render and show the button in its designated region.
-        this.application.metadataView.showChildView('region_stack_opener', opener_widget);
+        metadataView.showChildView('region_stack_opener', opener_widget);
     },
 
     close_menu: function() {
@@ -508,20 +520,7 @@ const StackPlugin = MarionetteController.extend({
         this.listenTo(this.menu_widget, 'action:edit', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
         this.listenTo(this.menu_widget, 'action:share', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
         this.listenTo(this.menu_widget, 'action:xpexport', _.bind(navigatorApp.ui.work_in_progress, navigatorApp.ui));
-        this.listenTo(this.menu_widget, 'action:reset', async function () {
-            this.reset();
-            // Reset can replace the opener while the menu is closing.
-            if (!anchor.isConnected) {
-                const region = this.application.metadataView.getRegion('region_stack_opener');
-                const opener = region.currentView?.el.querySelector('md-outlined-button');
-                if (opener) {
-                    await opener.updateComplete;
-                    if (opener.isConnected) {
-                        opener.focus();
-                    }
-                }
-            }
-        });
+        this.listenTo(this.menu_widget, 'action:reset', this.reset);
 
         // Open/show/display widget.
         this.menu_widget.open().catch((error) => {
