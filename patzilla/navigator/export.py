@@ -866,7 +866,7 @@ class DossierText(Dossier):
                 continue
             namespace = "http://www.epo.org/exchange"
             self.u = len(namespace) + 2
-            tree = ET.parse(BytesIO(biblio_payload))
+            tree = ET.parse(BytesIO(biblio_payload.encode("utf-8")))
 
             # Titles
             for title in self.get_from_xml("invention-title", tree, parent="bibliographic-data"):

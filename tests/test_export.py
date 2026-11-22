@@ -179,7 +179,7 @@ def test_odt_contains_document_details(dossier_data, monkeypatch):
     from pyramid.httpexceptions import HTTPNotFound
     from patzilla.navigator import export
 
-    biblio = b"""\
+    biblio = """\
 <exchange-documents xmlns="http://www.epo.org/exchange">
   <exchange-document>
     <bibliographic-data>
@@ -226,7 +226,7 @@ def test_odt_family_lookup_errors(dossier_data, monkeypatch, error_kind):
         {"number": second_number, "score": 1}
     )
 
-    biblio = b"""\
+    biblio = """\
 <exchange-documents xmlns="http://www.epo.org/exchange">
   <exchange-document>
     <bibliographic-data>
@@ -291,7 +291,7 @@ def test_odt_embeds_full_document_drawing_fallback(dossier_data, monkeypatch):
 
     from PIL import Image
 
-    biblio = b"""\
+    biblio = """\
 <exchange-documents xmlns="http://www.epo.org/exchange">
   <exchange-document>
     <bibliographic-data>
@@ -337,7 +337,7 @@ def test_odt_embeds_full_document_drawing_fallback(dossier_data, monkeypatch):
 def test_odt_document_ids(dossier_data, monkeypatch):
     from xml.etree import ElementTree
 
-    biblio = b"""\
+    biblio = """\
 <exchange-documents xmlns="http://www.epo.org/exchange">
   <exchange-document>
     <bibliographic-data>
@@ -406,7 +406,7 @@ def test_odt_document_ids(dossier_data, monkeypatch):
 def test_odt_contains_inventors(dossier_data, monkeypatch):
     from xml.etree import ElementTree
 
-    biblio = b"""\
+    biblio = """\
 <exchange-documents xmlns="http://www.epo.org/exchange">
   <exchange-document>
     <bibliographic-data>
@@ -492,7 +492,7 @@ def test_odt_classifications(dossier_data, monkeypatch, scheme):
         </bibliographic-data>
       </exchange-document>
     </exchange-documents>
-    """.encode("utf-8")
+    """
 
     monkeypatch.setattr(
         export, "get_current_request", lambda: SimpleNamespace(errors=[])
