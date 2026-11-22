@@ -286,6 +286,7 @@ const config = {
             'patzilla.access.base':                          path.resolve(__ui, 'access', 'base'),
             'patzilla.access.depatech':                      path.resolve(__ui, 'access', 'depatech'),
             'patzilla.access.depatisnet':                    path.resolve(__ui, 'access', 'depatisnet'),
+            'patzilla.access.epo.espacenet':                 path.resolve(__ui, 'access', 'epo-espacenet'),
             'patzilla.access.epo.ops':                       path.resolve(__ui, 'access', 'epo-ops'),
             'patzilla.access.epo.ops.base':                  path.resolve(__ui, 'access', 'epo-ops-base'),
             'patzilla.access.ificlaims':                     path.resolve(__ui, 'access', 'ificlaims'),

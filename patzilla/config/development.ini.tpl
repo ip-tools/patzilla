@@ -15,8 +15,8 @@ include     = vendors.ini
 vendors     = patzilla
 
 # Which datasources are configured?
-# Choose one or more of ops, depatisnet, depatisconnect, ificlaims, depatech, sip.
-datasources = ops, depatisnet
+# Choose one or more of ops, depatisnet, espacenet, depatisconnect, ificlaims, depatech, sip.
+datasources = ops, depatisnet, espacenet
 
 # Fields to protect from being leaked into Javascript environment
 datasources_protected_fields = api_consumer_key, api_consumer_secret, api_uri, api_username, api_password
@@ -56,6 +56,12 @@ api_consumer_secret = {ops_api_consumer_secret}
 #    - https://forums.epo.org/ops-extends-data-coverage-for-character-coded-full-text-xml-to-19-country-collections-7833
 fulltext_enabled = true
 fulltext_countries = EP, WO, AT, BE, BG, CA, CH, CY, CZ, DK, EE, ES, FR, GB, GR, HR, IE, IT, LT, LU, MC, MD, ME, NO, PL, PT, RO, RS, SE, SK
+
+
+[datasource:espacenet]
+
+fulltext_enabled = true
+fulltext_countries = DE, US
 
 
 [datasource:depatisconnect]

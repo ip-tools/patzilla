@@ -8,10 +8,9 @@ import logging
 
 import requests
 from beaker.cache import cache_region
-
+from patzilla.access.epo.espacenet.client import EspacenetClient
 from patzilla.util.config import to_list
 from patzilla.util.data.container import jpath
-from patzilla.util.network.browser import regular_user_agent
 from patzilla.util.numbers.normalize import normalize_patent
 
 
@@ -38,7 +37,7 @@ def espacenet_fetch_json(document_number, section):
     url = url_template.format(document_number, section)
 
     logger.info('Accessing Espacenet: {}'.format(url))
-    response = http.get(url, headers={'User-Agent': regular_user_agent})
+    response = EspacenetClient().fetch(url)
 
     if response.status_code == 200:
         return response

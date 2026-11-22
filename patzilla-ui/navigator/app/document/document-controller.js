@@ -8,6 +8,7 @@ import {Region, View} from "marionette";
 const {Nataraja} = require("patzilla.navigator.components.nataraja");
 const {OpsFamilyCollection, OpsFulltext} = require("patzilla.access.epo.ops");
 const {DepatisConnectFulltext} = require("patzilla.access.depatisnet");
+const {EspacenetFulltext} = require("patzilla.access.epo.espacenet");
 const {IFIClaimsFulltext} = require("patzilla.access.ificlaims");
 const {OpsBaseViewMixin, citations_environment_button} = require("./util");
 const {OpsFamilyCompactCollectionView, OpsFamilyVerboseCollectionView, OpsFamilyCitationsCollectionView} = require("./biblio-family");
@@ -259,6 +260,10 @@ const DocumentDetailsController = MarionetteController.extend({
             clazz = OpsFulltext;
             document_number = document.get_publication_number('docdb');
             log('Acquiring fulltext information for ' + document_number);
+
+        } else if (datasource_name == 'espacenet') {
+            clazz = EspacenetFulltext;
+            document_number = document.get_publication_number('docdb');
 
         } else if (datasource_name == 'depatisconnect') {
             clazz = DepatisConnectFulltext;

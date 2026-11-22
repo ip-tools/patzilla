@@ -58,6 +58,9 @@ requires = [
     #   Protocols and data formats
     # ----------------------------------------------
 
+    # APIs
+    'espacenet-cli==0.5.0',
+
     # HTTP
     'python-epo-ops-client<5',
     'requests<3',
@@ -122,7 +125,7 @@ requires = [
     #   Console and system interfaces
     # ----------------------------------------------
     'docopt-ng<1',
-    'click>=7,<8',
+    'click>=7,<9',
     'envoy<0.1',
     'where<2',
     'tqdm<5',

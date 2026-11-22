@@ -592,6 +592,16 @@ var abstract_list = data.get_abstract_list();
                         <% } %>
 
                     </dl>
+
+                    <%
+                    var datasource_label = data.get_datasource_label();
+                    if (datasource_label) {
+                    %>
+                    <div class="text-align-right text-small text-muted">
+                        Bibliographic data source: <%= datasource_label %>
+                    </div>
+                    <% } %>
+
                 </div>
 
                 <div id="document-details-claims-container-<%= patent_number %>" data-identifier="<%= patent_number %>" class="tab-pane fade" style="margin-top: 1em">
@@ -629,15 +639,6 @@ var abstract_list = data.get_abstract_list();
                 <!-- embed 3rd-party component -->
                 <div class="embed-item" data-embed-url="<%= data.config.get('embed-item-url') %>" data-document-number="<%= patent_number %>">
                 </div>
-
-                <%
-                var datasource_label = data.get_datasource_label();
-                if (datasource_label) {
-                %>
-                <div class="text-align-right text-small text-muted">
-                    Bibliographic data source: <%= datasource_label %>
-                </div>
-                <% } %>
 
             </div>
         </div>

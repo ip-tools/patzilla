@@ -22,6 +22,11 @@ Some primary data sources are obligatory, some are optional.
       -  :ref:`epo-ops-setup`
       -  Obligatory
 
+   *  -  EPO Espacenet
+      -  :ref:`datasource-epo-espacenet`
+      -  --
+      -  Optional
+
    *  -  DEPATISnet (DPMA)
       -  `DEPATISnet <https://depatisnet.dpma.de/DepatisNet/depatisnet?window=1&space=menu&content=index&action=index&switchToLang=en>`_
       -
@@ -43,5 +48,6 @@ Some primary data sources are obligatory, some are optional.
     :hidden:
 
     epo-ops
+    epo-espacenet
     ifi-claims
     mtc-depatech
