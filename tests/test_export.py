@@ -573,3 +573,87 @@ def test_zip_odt_report(dossier_data, monkeypatch, odt_selected):
         else:
             assert odt_name not in archive.namelist()
             get_biblio.assert_not_called()
+
+
+@pytest.mark.parametrize("status", [404, 503])
+def test_odt_ep_a4_nested_family_errors(dossier_data, monkeypatch, status):
+    from uuid import uuid4
+    from xml.etree import ElementTree
+
+    from cornice.renderer import JSONError
+    from patzilla.access.epo.ops import api as ops
+
+    # Use a unique synthetic number to avoid a cached image inquiry.
+    number_without_kind = f"EP{uuid4().int}"
+    number = f"{number_without_kind}A4"
+    dossier_data["collections"]["rated"] = [{"number": number, "score": 2}]
+
+    biblio = """\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <invention-title lang="en">A test invention</invention-title>
+    </bibliographic-data>
+  </exchange-document>
+</exchange-documents>
+"""
+    request = SimpleNamespace(errors=["preexisting error"])
+    monkeypatch.setattr(export, "get_current_request", lambda: request)
+    monkeypatch.setattr(
+        export, "get_ops_biblio_data", Mock(return_value=biblio)
+    )
+
+    def json_error(status_code):
+        error = JSONError(serializer=json.dumps, serializer_kw={}, errors=[])
+        error.status = status_code
+        return error
+
+    # The report's direct family lookup has no family data.
+    def report_family_lookup(document_number):
+        request.errors.append("report family error")
+        raise json_error(404)
+
+    report_family = Mock(side_effect=report_family_lookup)
+    monkeypatch.setattr(export, "ops_family_members", report_family)
+
+    # The image lookup performs a separate family lookup for EP A4.
+    nested_error = json_error(status)
+
+    def image_family_lookup(document_number):
+        request.errors.append("image family error")
+        raise nested_error
+
+    image_family = Mock(side_effect=image_family_lookup)
+    monkeypatch.setattr(ops, "ops_family_members", image_family)
+
+    # No network access is expected after the family lookup fails.
+    get_client = Mock(side_effect=AssertionError("Unexpected OPS request"))
+    monkeypatch.setattr(ops, "get_ops_client", get_client)
+
+    if status == 503:
+        with pytest.raises(JSONError) as exc_info:
+            export.DossierText(dossier_data).create()
+
+        assert exc_info.value is nested_error
+        assert request.errors == ["preexisting error", "image family error"]
+        assert image_family.call_count == 1
+    else:
+        payload = export.DossierText(dossier_data).create()
+
+        with ZipFile(BytesIO(payload)) as archive:
+            assert archive.read("mimetype") == (
+                b"application/vnd.oasis.opendocument.text"
+            )
+            content = ElementTree.fromstring(archive.read("content.xml"))
+            text = " ".join(content.itertext())
+
+        assert number in text
+        assert "A test invention" in text
+        assert request.errors == ["preexisting error"]
+        assert image_family.call_count == 3
+
+    report_family.assert_called_once_with(number)
+    assert [call.args[0] for call in image_family.call_args_list] == [
+        number_without_kind
+    ] * image_family.call_count
+    get_client.assert_not_called()
