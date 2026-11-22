@@ -1,4 +1,5 @@
 import atexit
+import logging
 from concurrent.futures import Future
 from queue import Queue
 from threading import Lock, Thread
@@ -16,6 +17,9 @@ _requests = Queue()
 _lock = Lock()
 _worker = None
 _closed = False
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -53,6 +57,21 @@ def _run_backend():
                     )
                 )
             except Exception as error:
+
+                if backend is not None:
+                    try:
+                        browser = backend._browser
+                        disconnected = browser is None or not browser.is_connected()
+                    except Exception:
+                        logger.exception("Could not check Espacenet browser connection")
+                    else:
+                        if disconnected:
+                            stale_backend, backend = backend, None
+                            try:
+                                stale_backend.close()
+                            except Exception:
+                                logger.exception("Could not close disconnected Espacenet backend")
+
                 future.set_exception(error)
     finally:
         if backend is not None:
