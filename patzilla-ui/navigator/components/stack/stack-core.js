@@ -461,22 +461,43 @@ const StackPlugin = MarionetteController.extend({
     // Toggle stack opener widget
     show_opener: function() {
 
-        // Hack for destroying the old instance.
+        var metadataView = this.application.metadataView;
+        var region = metadataView.getRegion('region_stack_opener');
+        var current = region.currentView;
+
+        // Reuse the current opener if it is still in the metadata view.
+        if (current instanceof StackOpenerWidget &&
+            current.collection === this.store &&
+            metadataView.el.contains(current.el)) {
+            return;
+        }
+
+        // Clean up an old opener and its menu before creating a new one.
         this.close_opener();
 
-        // Create stack menu opener button.
         var opener_widget = new StackOpenerWidget({
             collection: this.store,
         });
 
-        // When clicked, open the menu widget.
-        opener_widget.listenTo(opener_widget, 'view:clicked', _.bind(this.open_menu, this));
+        opener_widget.listenTo(
+            opener_widget,
+            'view:clicked',
+            _.bind(this.open_menu, this)
+        );
 
-        // Render and show the button in its designated region.
-        this.application.metadataView.showChildView('region_stack_opener', opener_widget);
+        metadataView.showChildView('region_stack_opener', opener_widget);
+    },
+
+    close_menu: function() {
+        if (this.menu_widget) {
+            this.stopListening(this.menu_widget);
+            this.menu_widget.destroy();
+            this.menu_widget = undefined;
+        }
     },
 
     close_opener: function() {
+        this.close_menu();
         // Close menu opener button by shutting down its region.
         this.application.metadataView.getRegion('region_stack_opener').empty();
     },
@@ -484,15 +505,15 @@ const StackPlugin = MarionetteController.extend({
     open_menu: function(view, event) {
 
         // Close menu widget before (re)opening, making this effectively a singleton.
-        if (this.menu_widget) {
-            this.menu_widget.destroy();
-        }
+        this.close_menu();
+
+        // Anchor the menu to the button, not its Marionette view wrapper.
+        var anchor = view.el.querySelector('md-outlined-button');
 
         // Create menu widget.
-        var opener_widget = $(view.el);
         this.menu_widget = new StackMenuWidget({
             collection: this.store,
-            container: opener_widget.parent(),
+            anchor: anchor,
         });
 
         // Wire menu events.
@@ -502,7 +523,9 @@ const StackPlugin = MarionetteController.extend({
         this.listenTo(this.menu_widget, 'action:reset', this.reset);
 
         // Open/show/display widget.
-        this.menu_widget.open();
+        this.menu_widget.open().catch((error) => {
+            console.error('Opening stack menu failed:', error);
+        });
     },
 
 });

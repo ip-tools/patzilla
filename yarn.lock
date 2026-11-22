@@ -1588,289 +1588,40 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@material/animation@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/animation@npm:14.0.0"
-  dependencies:
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/6facd710b6103064a5eaa0caac3f8d2e7696a58ccdf66a8d560ce742b9bdfd12de3aa927964a97e8b3d156ddf0dee3ee1b9addc7b0006fe133f2ef8864e9e864
+"@lit-labs/ssr-dom-shim@npm:^1.5.0":
+  version: 1.6.0
+  resolution: "@lit-labs/ssr-dom-shim@npm:1.6.0"
+  checksum: 10c0/deffcfd765d268820beef600a1c1cf9d3cf1a5cb4bbe7e80843796ff33d1a122f4e5651ef4a44b33d36e5fa6538e6ee87a95b9d40b4a26cabf3c35b45194c87a
   languageName: node
   linkType: hard
 
-"@material/base@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/base@npm:14.0.0"
+"@lit/context@npm:^1.1.6":
+  version: 1.1.6
+  resolution: "@lit/context@npm:1.1.6"
   dependencies:
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/4576b1d32c8c9c1e71c50b1b39f70e42ef9ca87884a9f4450a982ad272a619df4c35dde3993f1d9ca7a54219ac8eec95570a9005b40abb1ae70eaa8cf84f3dcf
+    "@lit/reactive-element": "npm:^1.6.2 || ^2.1.0"
+  checksum: 10c0/203f761eda19c8b37d77f01d9a0148535c5b28c47b76e28b321cb6e5ed0546c45332512e68b1647ce92ca67690d8c66de31972ec115410b080d69fa25a5d86f3
   languageName: node
   linkType: hard
 
-"@material/button@npm:^14, @material/button@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/button@npm:14.0.0"
+"@lit/reactive-element@npm:^1.6.2 || ^2.1.0, @lit/reactive-element@npm:^2.1.0":
+  version: 2.1.2
+  resolution: "@lit/reactive-element@npm:2.1.2"
   dependencies:
-    "@material/density": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/elevation": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/focus-ring": "npm:^14.0.0"
-    "@material/ripple": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/shape": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    "@material/tokens": "npm:^14.0.0"
-    "@material/touch-target": "npm:^14.0.0"
-    "@material/typography": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/1d9a85d3d65e6bf7a71e245894e1a623f4ea971e7ca6da9134924d36133d6ff0ba728ec7a16463717927c286599b3c79dba5fc788837c6dff28c3eb8ceda8bb2
+    "@lit-labs/ssr-dom-shim": "npm:^1.5.0"
+  checksum: 10c0/557069ce6ebbbafb1140e1e0a25ce73d3501bf455cda231d42bb131baa9065c54b6b7ca1655507eede397decd7ddde16c84192cb72a07d4edf41d54e07725933
   languageName: node
   linkType: hard
 
-"@material/density@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/density@npm:14.0.0"
+"@material/web@npm:^2.5.1-nightly.fd45953.0":
+  version: 2.5.1-nightly.fd45953.0
+  resolution: "@material/web@npm:2.5.1-nightly.fd45953.0"
   dependencies:
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/d7e43fd8a007f8758404077092da783ca33118d9c782d5f2ebad214b678419a6e31133f111330031db01540e55a4f0aca2086000b8deac6b43ddacff08934107
-  languageName: node
-  linkType: hard
-
-"@material/dialog@npm:^14":
-  version: 14.0.0
-  resolution: "@material/dialog@npm:14.0.0"
-  dependencies:
-    "@material/animation": "npm:^14.0.0"
-    "@material/base": "npm:^14.0.0"
-    "@material/button": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/elevation": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/icon-button": "npm:^14.0.0"
-    "@material/ripple": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/shape": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    "@material/tokens": "npm:^14.0.0"
-    "@material/touch-target": "npm:^14.0.0"
-    "@material/typography": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/646917559662fc8b7e3ce41642c010a68039e6733694f0eae7be05611c2fc534b099133f3f8f29b0ae82de787597a3f7b01a7451967ae7c660f2411cf9a4a300
-  languageName: node
-  linkType: hard
-
-"@material/dom@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/dom@npm:14.0.0"
-  dependencies:
-    "@material/feature-targeting": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/b2ff727e92916501cf92cdecf072c19359adcfd25ca4addb55f61a01353ee7c21918aab4ea2506cd5578777d2906c77c200e5730769456a7c1c0a4b0d378a38f
-  languageName: node
-  linkType: hard
-
-"@material/elevation@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/elevation@npm:14.0.0"
-  dependencies:
-    "@material/animation": "npm:^14.0.0"
-    "@material/base": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/173eca010f7b3c0d9a83c617b50241458b5984b974595c3529dd65f92d4ce9d682deedf79029ad7e983f33ebeb9dd4314e576b5a4ac751d157105e36da4ef913
-  languageName: node
-  linkType: hard
-
-"@material/feature-targeting@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/feature-targeting@npm:14.0.0"
-  dependencies:
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/ed95fc68af51b10e1597f74d19c02b17b9c271e5ff74b6cace768c1ffbb5678f2e99918821ebcfd4481ad3538dc5e5e9d3428a6339815e856be05af245f781e0
-  languageName: node
-  linkType: hard
-
-"@material/focus-ring@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/focus-ring@npm:14.0.0"
-  dependencies:
-    "@material/dom": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-  checksum: 10c0/2c227d0a3c1059aa04a56d9bcbb5aeee41b899495cb0e0982e8ec69058df8f5d8191a660f3a3eafd69294405a6a68db8bf0d61bde8da10a98e73e443bb4face9
-  languageName: node
-  linkType: hard
-
-"@material/icon-button@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/icon-button@npm:14.0.0"
-  dependencies:
-    "@material/base": "npm:^14.0.0"
-    "@material/density": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/elevation": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/focus-ring": "npm:^14.0.0"
-    "@material/ripple": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    "@material/touch-target": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/eb67479b5d7714e6ff0ad19602bdc08db5228adee3547fa73f4be02b9319fcaaf266bebbfabeb35617d5ba60ac8b97dce3c9849f2bd225b0a6ef774b3b913db3
-  languageName: node
-  linkType: hard
-
-"@material/list@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/list@npm:14.0.0"
-  dependencies:
-    "@material/base": "npm:^14.0.0"
-    "@material/density": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/ripple": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/shape": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    "@material/typography": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/55dd4d56a7be25f11b86e2e5bfb8afa3fb2866b92b01537ca1cfe70fd55f2ecf66e93d26328d5819a395c197a6b809e1db66459a5d21daeb346bf56221c4aa3a
-  languageName: node
-  linkType: hard
-
-"@material/menu-surface@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/menu-surface@npm:14.0.0"
-  dependencies:
-    "@material/animation": "npm:^14.0.0"
-    "@material/base": "npm:^14.0.0"
-    "@material/elevation": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/shape": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/58f32332375dee3cf0685815b93b94c31f3e5460d6b655d690af315982941f8d484a8440ff064fe6fb481d359db016df270ec9c69e21c3458056d66dbd57fb9f
-  languageName: node
-  linkType: hard
-
-"@material/menu@npm:^14":
-  version: 14.0.0
-  resolution: "@material/menu@npm:14.0.0"
-  dependencies:
-    "@material/base": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/elevation": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/list": "npm:^14.0.0"
-    "@material/menu-surface": "npm:^14.0.0"
-    "@material/ripple": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/ef86b170a9c019ebf182c1939342a0c64f8dab595345f36b57441e433ff15b233c63d7d2ae65600e4dcf1d7f7fc3d346f91d4d74463a159b3bfdaa919c2b820d
-  languageName: node
-  linkType: hard
-
-"@material/ripple@npm:^14, @material/ripple@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/ripple@npm:14.0.0"
-  dependencies:
-    "@material/animation": "npm:^14.0.0"
-    "@material/base": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/8074b8f0fbf73aac138cec7084bc76a59902a7b48e65c9fe2dcfa572564ceda720f4655f238ed0148c0c9f29004dd5256ebe634834fe64534527501a8a5327c7
-  languageName: node
-  linkType: hard
-
-"@material/rtl@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/rtl@npm:14.0.0"
-  dependencies:
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/320bb5e9deb1134b197eeef01edfb15cb91401ce30cc32def8451c328bf416ca0f5fd68e444494563ef65075d604940b5213d136222f02b9bb32c33eb93ab74f
-  languageName: node
-  linkType: hard
-
-"@material/shape@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/shape@npm:14.0.0"
-  dependencies:
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/7f573a343a369998c124b9eda6d741a711794045e1c708c4c63f0a10e3b67be027b96ded6e817d0d74bde749ece9b06ca7d28323dfd17d9fc8ed1f957e72e8a9
-  languageName: node
-  linkType: hard
-
-"@material/snackbar@npm:^14":
-  version: 14.0.0
-  resolution: "@material/snackbar@npm:14.0.0"
-  dependencies:
-    "@material/animation": "npm:^14.0.0"
-    "@material/base": "npm:^14.0.0"
-    "@material/button": "npm:^14.0.0"
-    "@material/dom": "npm:^14.0.0"
-    "@material/elevation": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/icon-button": "npm:^14.0.0"
-    "@material/ripple": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    "@material/shape": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    "@material/typography": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/2933c2da5e96bfb6df9d712eeda3651e3600d9d420e09107bbe40a0a49d5b5e717e8234d27de139c3db0cd51218d449a0449ec0c77c171228863b7d8b6499738
-  languageName: node
-  linkType: hard
-
-"@material/theme@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/theme@npm:14.0.0"
-  dependencies:
-    "@material/feature-targeting": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/6a94d6e80fd268b28b8a04cd43ae23771fd6c16af5bdee3ee08fd01f8d4e17d3475861d6027b56adfa68b0fe55da091a763f30c5024a99efd4c1cf161366419b
-  languageName: node
-  linkType: hard
-
-"@material/tokens@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/tokens@npm:14.0.0"
-  dependencies:
-    "@material/elevation": "npm:^14.0.0"
-  checksum: 10c0/72cca6149fdc1ff3e9e600c85db13785aae2215f3e5735e102a64587dce6aaa8c90233ac3797e16c5651bfbbe6f9695110321c6967137af02d2c308f7e11b147
-  languageName: node
-  linkType: hard
-
-"@material/touch-target@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/touch-target@npm:14.0.0"
-  dependencies:
-    "@material/base": "npm:^14.0.0"
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/rtl": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/c10bc4ddc325f4e10713190c0dbf36420588ce247e7896ef70f1098184228e177b181b4f5d827b8253ba2a461674027bf71f8c5e3b417e294536cf210cd8eb17
-  languageName: node
-  linkType: hard
-
-"@material/typography@npm:^14.0.0":
-  version: 14.0.0
-  resolution: "@material/typography@npm:14.0.0"
-  dependencies:
-    "@material/feature-targeting": "npm:^14.0.0"
-    "@material/theme": "npm:^14.0.0"
-    tslib: "npm:^2.1.0"
-  checksum: 10c0/36aad65e3c5861111a8930ba0c3009362ecbcb8611134e323694e72a4d7e553b24c95a7cfdd27585eda0996682f712577a02c438e6edc8c9597dde9f1583cc1b
+    "@lit/context": "npm:^1.1.6"
+    lit: "npm:^2.8.0 || ^3.0.0"
+    safevalues: "npm:^1.2.0"
+    tslib: "npm:^2.4.0"
+  checksum: 10c0/abcb9453fa067480248d22e56e7c57769f9c77a7a7f4692a6d81092468fe3ceec8186c1607e67dc252b151f4977c50c7f471baa3a4127ee93890dc8f2b3d4629
   languageName: node
   linkType: hard
 
@@ -2717,6 +2468,13 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10c0/b20b7820ee813f22de4f2ce98bdd12c68c930e016a8912b1ed967595ac0d8a4cbbff44f4d486dd97f77f5927e7b5725bdac7472c9ec5b27f53a5a13179f0612f
+  languageName: node
+  linkType: hard
+
+"@types/trusted-types@npm:^2.0.2":
+  version: 2.0.7
+  resolution: "@types/trusted-types@npm:2.0.7"
+  checksum: 10c0/4c4855f10de7c6c135e0d32ce462419d8abbbc33713b31d294596c0cc34ae1fa6112a2f9da729c8f7a20707782b0d69da3b1f8df6645b0366d08825ca1522e0c
   languageName: node
   linkType: hard
 
@@ -3635,23 +3393,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"css-loader@npm:^5":
-  version: 5.2.7
-  resolution: "css-loader@npm:5.2.7"
+"css-loader@npm:^7":
+  version: 7.1.5
+  resolution: "css-loader@npm:7.1.5"
   dependencies:
     icss-utils: "npm:^5.1.0"
-    loader-utils: "npm:^2.0.0"
-    postcss: "npm:^8.2.15"
-    postcss-modules-extract-imports: "npm:^3.0.0"
-    postcss-modules-local-by-default: "npm:^4.0.0"
-    postcss-modules-scope: "npm:^3.0.0"
+    postcss: "npm:^8.4.40"
+    postcss-modules-extract-imports: "npm:^3.1.0"
+    postcss-modules-local-by-default: "npm:^4.0.5"
+    postcss-modules-scope: "npm:^3.2.0"
     postcss-modules-values: "npm:^4.0.0"
-    postcss-value-parser: "npm:^4.1.0"
-    schema-utils: "npm:^3.0.0"
-    semver: "npm:^7.3.5"
+    postcss-value-parser: "npm:^4.2.0"
+    semver: "npm:^7.6.3"
   peerDependencies:
-    webpack: ^4.27.0 || ^5.0.0
-  checksum: 10c0/02fbdb0dca92e4a4d2aa27b2817ea51d0af3d662d3295c61f2aa37537b29f9a46a9c2e87d8f5e40a1a97159f35d5c7b9a325f27761b59a38c8e15e8ca3988d2b
+    "@rspack/core": 0.x || ^1.0.0 || ^2.0.0-0
+    webpack: ^5.27.0
+  peerDependenciesMeta:
+    "@rspack/core":
+      optional: true
+    webpack:
+      optional: true
+  checksum: 10c0/a75341a93542b8ad465d0a499244da9bb38c79a33be8f400b24aa102825d14a3c9ccd38522c13ab1af9b4068675ef364fe2be4d5abd516660b16b1c9d901d35a
   languageName: node
   linkType: hard
 
@@ -5008,6 +4770,37 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lit-element@npm:^4.2.0":
+  version: 4.2.2
+  resolution: "lit-element@npm:4.2.2"
+  dependencies:
+    "@lit-labs/ssr-dom-shim": "npm:^1.5.0"
+    "@lit/reactive-element": "npm:^2.1.0"
+    lit-html: "npm:^3.3.0"
+  checksum: 10c0/114ab5837f1f9e03a30b1ed1c055fa0e31f01e444464e5ab0453ef88be12d778508235533267c42614d323e3048ee58f865b5c612948a53bd6219abca404c710
+  languageName: node
+  linkType: hard
+
+"lit-html@npm:^3.3.0":
+  version: 3.3.3
+  resolution: "lit-html@npm:3.3.3"
+  dependencies:
+    "@types/trusted-types": "npm:^2.0.2"
+  checksum: 10c0/84e57314412ff385cc67fc482d26b77057370e2cfe3c6495cc45f692bdad840d5ed0519ddddcfae1d043bb098c66daa7e807593d5a21ac72094da14274497879
+  languageName: node
+  linkType: hard
+
+"lit@npm:^2.8.0 || ^3.0.0":
+  version: 3.3.3
+  resolution: "lit@npm:3.3.3"
+  dependencies:
+    "@lit/reactive-element": "npm:^2.1.0"
+    lit-element: "npm:^4.2.0"
+    lit-html: "npm:^3.3.0"
+  checksum: 10c0/11b6175ebffce92f4cf835ddd8a198d49707c27f34b0a7c538d2cb294f6c2fb7ff40aabd3589fcf0c2ed162404faaf2bb7c966fad9024bb9e02d013e2d5aa0b5
+  languageName: node
+  linkType: hard
+
 "loader-utils@npm:^2":
   version: 2.0.4
   resolution: "loader-utils@npm:2.0.4"
@@ -5660,11 +5453,7 @@ __metadata:
     "@babel/preset-env": "npm:^7"
     "@emotion/react": "npm:^11"
     "@emotion/styled": "npm:^11"
-    "@material/button": "npm:^14"
-    "@material/dialog": "npm:^14"
-    "@material/menu": "npm:^14"
-    "@material/ripple": "npm:^14"
-    "@material/snackbar": "npm:^14"
+    "@material/web": "npm:^2.5.1-nightly.fd45953.0"
     "@mnjs/adapters": "npm:^5"
     "@mnjs/router": "npm:^0.1"
     "@mui/icons-material": "npm:^5"
@@ -5687,7 +5476,7 @@ __metadata:
     clipboard: "npm:^2"
     compression-webpack-plugin: "npm:^12"
     css-element-queries: "npm:^1"
-    css-loader: "npm:^5"
+    css-loader: "npm:^7"
     es6-shim: "npm:^0.35"
     exports-loader: "npm:^5"
     expose-loader: "npm:^5"
@@ -5811,7 +5600,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-modules-extract-imports@npm:^3.0.0":
+"postcss-modules-extract-imports@npm:^3.1.0":
   version: 3.1.0
   resolution: "postcss-modules-extract-imports@npm:3.1.0"
   peerDependencies:
@@ -5820,7 +5609,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-modules-local-by-default@npm:^4.0.0":
+"postcss-modules-local-by-default@npm:^4.0.5":
   version: 4.2.0
   resolution: "postcss-modules-local-by-default@npm:4.2.0"
   dependencies:
@@ -5833,7 +5622,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-modules-scope@npm:^3.0.0":
+"postcss-modules-scope@npm:^3.2.0":
   version: 3.2.1
   resolution: "postcss-modules-scope@npm:3.2.1"
   dependencies:
@@ -5864,7 +5653,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-value-parser@npm:^4.1.0":
+"postcss-value-parser@npm:^4.1.0, postcss-value-parser@npm:^4.2.0":
   version: 4.2.0
   resolution: "postcss-value-parser@npm:4.2.0"
   checksum: 10c0/f4142a4f56565f77c1831168e04e3effd9ffcc5aebaf0f538eee4b2d465adfd4b85a44257bb48418202a63806a7da7fe9f56c330aebb3cac898e46b4cbf49161
@@ -6281,6 +6070,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"safevalues@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "safevalues@npm:1.2.0"
+  checksum: 10c0/81effe58d45d240a9ddedb4a851d983ea40ef8a084664ffc2fbfe7929c1be64cf55f2f24618980d22cfbe7b47864c24c8e22b8b6d969e04639192d7a813a52a6
+  languageName: node
+  linkType: hard
+
 "sass-loader@npm:^17":
   version: 17.1.0
   resolution: "sass-loader@npm:17.1.0"
@@ -6415,7 +6211,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.2, semver@npm:^7.3.5":
+"semver@npm:^7.3.2, semver@npm:^7.3.5, semver@npm:^7.6.3":
   version: 7.8.6
   resolution: "semver@npm:7.8.6"
   bin:
@@ -6959,7 +6755,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.8.1":
+"tslib@npm:^2.0.0, tslib@npm:^2.4.0, tslib@npm:^2.8.1":
   version: 2.9.1
   resolution: "tslib@npm:2.9.1"
   checksum: 10c0/8ff46e7a4d19fa62c23483c89cf5ccc3906e742ef6e6d60bd3826b686143b300b4f6f04161cc1cf31a6b11fe70e1058ae4d4e4a108b5c68326d469684736a83c

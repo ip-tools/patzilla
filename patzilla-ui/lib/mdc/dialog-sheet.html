@@ -1,12 +1,9 @@
-<div class="mdc-dialog__scrim" data-mdc-dialog-action="cancel"></div>
-<div class="mdc-dialog__container">
-    <div class="mdc-dialog__surface">
-        <div class="mdc-dialog__close-tooltip-wrapper">
-          <button class="mdc-icon-button material-icons mdc-dialog__close" data-mdc-dialog-action="close">
-            close
-          </button>
-        </div>
-        <h2 class="mdc-dialog__title"></h2>
-        <div class="mdc-dialog__content"></div>
+<md-dialog>
+    <div slot="headline"></div>
+    <div slot="content"></div>
+    <div slot="actions">
+      <md-text-button value="close">
+          Close
+      </md-text-button>
     </div>
-</div>
+</md-dialog>

@@ -94,7 +94,9 @@ test('warns when an empty basket is reviewed', async ({ page }) => {
   await expectBasket(page, []);
   await page.locator('#basket-review-button').click();
 
-  await expect(page.locator('.mdc-snackbar__label')).toHaveText(
+  const label = page.locator('md-gb-snackbar [part="label"]');
+  await expect(label).toBeVisible();
+  await expect(label).toHaveText(
     "An empty collection can't be reviewed, please add some documents."
   );
   await expectBasket(page, []);

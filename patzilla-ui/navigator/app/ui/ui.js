@@ -328,8 +328,8 @@ const UiController = View.extend({
         this.notify('This feature is a work in progress.');
     },
 
-    // Notifications using the "Snackbar" Material Design Component (MDC).
-    // https://material.io/develop/web/components/snackbars/
+    // Notifications using the "Snackbar" Material Web element.
+    // https://m3.material.io/components/snackbar/overview
     setup_snackbar: function() {
         this.snackbar = new SnackbarWidget();
     },
@@ -464,7 +464,7 @@ const UiController = View.extend({
 
         // For use in Bootstrap Modals or with any other library that changes the focus
         // you'll want to set the focused element as the container value.
-        var modal = $(element).closest('.modal');
+        var modal = $(element).closest('.modal, [slot="content"]');
         if (modal.exists()) {
             clipboard.container = modal[0];
         }

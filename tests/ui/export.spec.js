@@ -65,7 +65,9 @@ test('does not export an empty basket', async ({ page }) => {
   await expect(page.locator('.basket-entry-count')).toHaveText('0');
   await page.locator('#dossier-export-button').click();
 
-  await expect(page.locator('.mdc-snackbar__label')).toHaveText(
+  const label = page.locator('md-gb-snackbar [part="label"]');
+  await expect(label).toBeVisible();
+  await expect(label).toHaveText(
     "An empty collection can't be exported, please add some documents."
   );
   await expect(page.locator('#export-dialog')).toBeHidden();

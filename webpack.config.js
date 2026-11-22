@@ -139,38 +139,44 @@ const config = {
             },
             */
 
-            // Use Sass loader for using Material Components for the web
+            // Use Sass loader for using Material Web elements
             // https://github.com/webpack-contrib/sass-loader
-            // https://github.com/material-components/material-components-web
+            // https://github.com/material-components/material-web
             {
                 test: /\.(css|scss)$/,
-                use: [
-
-                    // Create style nodes from JS strings
-                    "style-loader",
-
-                    // Translate CSS into CommonJS
+                oneOf: [
                     {
-                        loader: "css-loader",
-                        options: {}
-                    },
-
-                    // Compile Sass to CSS, using Node Sass by default
-                    {
-                        loader: "sass-loader",
+                        with: {type: 'css'},
+                        type: 'javascript/auto',
+                        loader: 'css-loader',
                         options: {
-                            sourceMap: true,
-                            sassOptions: {
-                                includePaths: ['./node_modules'],
-                            }
-                        }
+                            exportType: 'css-style-sheet',
+                        },
                     },
-
+                    {
+                        use: [
+                            'style-loader',
+                            {
+                                loader: 'css-loader',
+                                options: {},
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sourceMap: true,
+                                    sassOptions: {
+                                        includePaths: ['./node_modules'],
+                                    },
+                                },
+                            },
+                        ],
+                    },
                 ],
             },
 
             {
                 test: /\.(woff|woff2|eot|ttf|otf)$/,
+                type: 'javascript/auto',
                 use: [
                     {
                         loader: "file-loader",
@@ -182,6 +188,7 @@ const config = {
             },
             {
                 test: /\.(png|svg|jpg|gif|swf|ico)$/,
+                type: 'javascript/auto',
                 use: [
                     {
                         loader: "file-loader",
