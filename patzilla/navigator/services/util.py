@@ -326,7 +326,6 @@ def export_util_handler(request):
                 # Generate Text document with summaries
                 payload = DossierText(data).create()
 
-
             elif output_format == 'zip':
                 dossier = Dossier(data)
                 payload = dossier.to_zip(request=request, options=data.get('options'))

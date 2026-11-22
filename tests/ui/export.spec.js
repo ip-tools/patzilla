@@ -139,7 +139,7 @@ test('validates output format and ZIP content selection', async ({ page }) => {
     '.export-content[data-name="report"][aria-pressed="true"]'
   )).toHaveCount(5);
   await expect(dialog.locator('#report-parts'))
-    .toHaveText('Workbook, Text report, PDF Report, CSV, JSON');
+    .toHaveText('Workbook, Text report, PDF report, CSV, JSON');
 
   await reportAll.click();
   await expect(dialog.locator(
