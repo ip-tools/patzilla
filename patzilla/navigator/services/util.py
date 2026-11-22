@@ -259,7 +259,7 @@ def request_to_options(request, options):
 
     if asbool(request.params.get('query_data[modifiers][family-remove]')):
         options.update({'feature_family_remove': True})
-    elif asbool(request.params.get('query_data[modifiers][family-replace]')):
+    if asbool(request.params.get('query_data[modifiers][family-replace]')):
         options.update({'feature_family_replace': True})
 
     # this is awful, switch to JSON POST
@@ -267,11 +267,11 @@ def request_to_options(request, options):
         if key.startswith('query_data[sorting]'):
             key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
             options.setdefault('sorting', {})
-            options['sorting'][key] = value
+            options['sorting'][key] = asbool(value)
 
 
 @export_util_service.decorator("post", renderer='null')
-def export_util_handler(request):
+def export_util_handler(request):  # pragma: nocover
 
     #print 'request.matchdict:', request.matchdict
 

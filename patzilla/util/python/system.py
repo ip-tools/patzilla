@@ -4,6 +4,8 @@ import logging
 import os
 import shlex
 import subprocess
+from typing import Union
+
 from six import BytesIO
 
 logger = logging.getLogger(__name__)
@@ -74,7 +76,7 @@ def run_command(command, input=None):
     """
 
 
-def find_program_candidate(candidates):
+def find_program_candidate(candidates) -> Union[str, None]:
     for candidate in candidates:
         if os.path.isfile(candidate):
             return candidate
