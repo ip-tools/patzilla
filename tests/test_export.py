@@ -332,3 +332,187 @@ def test_odt_embeds_full_document_drawing_fallback(dossier_data, monkeypatch):
         href = image.get("{http://www.w3.org/1999/xlink}href")
         assert href is not None
         assert archive.read(href) == image_bytes
+
+
+def test_odt_document_ids(dossier_data, monkeypatch):
+    from xml.etree import ElementTree
+
+    biblio = b"""\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <priority-claims>
+        <priority-claim>
+          <document-id document-id-type="epodoc">
+            <doc-number>12345678</doc-number>
+            <date>20200131</date>
+          </document-id>
+        </priority-claim>
+        <priority-claim>
+          <document-id document-id-type="epodoc">
+            <doc-number>87654321</doc-number>
+          </document-id>
+        </priority-claim>
+      </priority-claims>
+      <application-reference>
+        <document-id document-id-type="epodoc">
+          <doc-number>11223344</doc-number>
+          <date>20210215</date>
+        </document-id>
+        <document-id document-id-type="docdb">
+          <doc-number>ignored-docdb-number</doc-number>
+        </document-id>
+      </application-reference>
+      <publication-reference>
+        <document-id document-id-type="epodoc">
+          <doc-number>55667788</doc-number>
+          <date>20220320</date>
+        </document-id>
+      </publication-reference>
+    </bibliographic-data>
+  </exchange-document>
+</exchange-documents>
+"""
+    monkeypatch.setattr(export, "get_current_request", lambda: SimpleNamespace(errors=[]))
+    monkeypatch.setattr(export, "get_ops_biblio_data", Mock(return_value=biblio))
+    monkeypatch.setattr(
+        export, "ops_family_members", Mock(return_value=SimpleNamespace(items=[]))
+    )
+    monkeypatch.setattr(export, "get_ops_image", Mock(side_effect=HTTPNotFound()))
+
+    payload = export.DossierText(dossier_data).create()
+
+    with ZipFile(BytesIO(payload)) as archive:
+        content = ElementTree.fromstring(archive.read("content.xml"))
+
+    text_namespace = "urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+    paragraphs = [
+        "".join(node.itertext())
+        for node in content.iter(f"{{{text_namespace}}}p")
+    ]
+
+    expected_sections = {
+        "Priority:": ["No 12345678 (2020-01-31)", "No 87654321 ()"],
+        "Filing:": ["No 11223344 (2021-02-15)"],
+        "Publication:": ["No 55667788 (2022-03-20)"],
+    }
+    for label, identifiers in expected_sections.items():
+        start = paragraphs.index(label)
+        assert paragraphs[start + 1 : start + 1 + len(identifiers)] == identifiers
+
+    assert "ignored-docdb-number" not in " ".join(paragraphs)
+
+
+def test_odt_contains_inventors(dossier_data, monkeypatch):
+    from xml.etree import ElementTree
+
+    biblio = b"""\
+<exchange-documents xmlns="http://www.epo.org/exchange">
+  <exchange-document>
+    <bibliographic-data>
+      <applicant data-format="epodoc">
+        <applicant-name><name>Test Applicant</name></applicant-name>
+      </applicant>
+      <inventor data-format="epodoc">
+        <inventor-name><name>Ada Inventor</name></inventor-name>
+      </inventor>
+      <inventor data-format="epodoc">
+        <inventor-name><name>Grace Inventor</name></inventor-name>
+      </inventor>
+      <inventor data-format="docdb">
+        <inventor-name><name>Ignored Inventor</name></inventor-name>
+      </inventor>
+    </bibliographic-data>
+  </exchange-document>
+</exchange-documents>
+"""
+    monkeypatch.setattr(
+        export, "get_current_request", lambda: SimpleNamespace(errors=[])
+    )
+    monkeypatch.setattr(export, "get_ops_biblio_data", Mock(return_value=biblio))
+    monkeypatch.setattr(
+        export, "ops_family_members", Mock(return_value=SimpleNamespace(items=[]))
+    )
+    monkeypatch.setattr(export, "get_ops_image", Mock(side_effect=HTTPNotFound()))
+
+    payload = export.DossierText(dossier_data).create()
+
+    with ZipFile(BytesIO(payload)) as archive:
+        content = ElementTree.fromstring(archive.read("content.xml"))
+
+    ns = {"text": "urn:oasis:names:tc:opendocument:xmlns:text:1.0"}
+    section = content.find(".//text:section[@text:name='Section1']", ns)
+    assert section is not None
+
+    paragraphs = [
+        "".join(paragraph.itertext())
+        for paragraph in section.findall("./text:p", ns)
+    ]
+    assert paragraphs.count("Inventor:") == 1
+    index = paragraphs.index("Inventor:")
+    assert paragraphs[index + 1:index + 3] == ["Ada Inventor", "Grace Inventor"]
+    assert "Ignored Inventor" not in paragraphs
+
+
+@pytest.mark.parametrize("scheme", ["CPCI", "CPC", "CPCNO"])
+def test_odt_classifications(dossier_data, monkeypatch, scheme):
+    from xml.etree import ElementTree
+
+    def cpc(office):
+        return f"""
+        <patent-classification>
+          <classification-scheme scheme="{scheme}" office="XX"/>
+          <section>A</section>
+          <class>01</class>
+          <subclass>B</subclass>
+          <main-group>1</main-group>
+          <subgroup>00</subgroup>
+          <generating-office>{office}</generating-office>
+        </patent-classification>
+        """
+
+    def ipc(office):
+        return f"""
+        <patent-classification>
+          <classification-scheme scheme="IPC" office="{office}"/>
+          <classification-symbol>H01M10/0525</classification-symbol>
+        </patent-classification>
+        """
+
+    biblio = f"""\
+    <exchange-documents xmlns="http://www.epo.org/exchange">
+      <exchange-document>
+        <bibliographic-data>
+          <patent-classifications>
+            {cpc("EP")}
+            {cpc("US")}
+            {ipc("EP")}
+            {ipc("WO")}
+          </patent-classifications>
+        </bibliographic-data>
+      </exchange-document>
+    </exchange-documents>
+    """.encode("utf-8")
+
+    monkeypatch.setattr(
+        export, "get_current_request", lambda: SimpleNamespace(errors=[])
+    )
+    monkeypatch.setattr(export, "get_ops_biblio_data", Mock(return_value=biblio))
+    monkeypatch.setattr(
+        export, "ops_family_members", Mock(return_value=SimpleNamespace(items=[]))
+    )
+    monkeypatch.setattr(export, "get_ops_image", Mock(side_effect=HTTPNotFound()))
+
+    payload = export.DossierText(dossier_data).create()
+
+    with ZipFile(BytesIO(payload)) as archive:
+        content = ElementTree.fromstring(archive.read("content.xml"))
+
+    text_ns = "urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+    paragraphs = [
+        "".join(node.itertext())
+        for node in content.iter(f"{{{text_ns}}}p")
+    ]
+    assert "Classification:" in paragraphs
+    assert paragraphs.count("- A01B1/00 (EP, US)") == 1
+    assert paragraphs.count("- H01M10/0525 (EP, WO)") == 1
