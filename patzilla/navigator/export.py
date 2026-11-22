@@ -11,7 +11,6 @@ import numpy
 import html2text
 import where
 import envoy
-import tempfile
 from io import BytesIO
 from textwrap import dedent
 
@@ -703,7 +702,7 @@ class DossierXlsx(Dossier):
             payload = self.create()
 
         # Save to temporary file
-        xlsx_file = tempfile.NamedTemporaryFile(suffix='.xlsx', delete=False)
+        xlsx_file = NamedTemporaryFile(suffix='.xlsx', delete=False)
         xlsx_file.write(payload)
         xlsx_file.flush()
 
