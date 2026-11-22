@@ -9,6 +9,7 @@ Development
 - [mw] Updated backend dependency packages
 - [ui] Updated UI dependency packages
 - [mw] Fixed DEPATISnet connectivity
+- [mw] Validated support for Python up to 3.15
 - [mw] Validated support for MongoDB up to 9.x
 - [mw] Fixed URLs to CIPO. Thanks, @papoteur-mga.
 - [mw] Improved management of failing access to image from OPS.
