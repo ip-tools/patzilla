@@ -30,11 +30,11 @@ def espacenet_abstract_handler(request):
         return espacenet_abstract(patent)
 
     except KeyError as ex:
-        log.error('Problem fetching details of Espacenet: %s %s', type(ex), ex)
+        log.error('Problem fetching abstract from Espacenet: %s %s', type(ex), ex)
         raise HTTPNotFound(ex)
 
     except ValueError as ex:
-        log.error('Problem fetching details of Espacenet: %s %s', type(ex), ex)
+        log.error('Problem fetching abstract from Espacenet: %s %s', type(ex), ex)
         raise HTTPBadRequest(ex)
 
 
@@ -42,11 +42,29 @@ def espacenet_abstract_handler(request):
 def espacenet_claims_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
-    return espacenet_claims(patent)
+    try:
+        return espacenet_claims(patent)
+
+    except KeyError as ex:
+        log.error('Problem fetching claims from Espacenet: %s %s', type(ex), ex)
+        raise HTTPNotFound(ex)
+
+    except ValueError as ex:
+        log.error('Problem fetching claims from Espacenet: %s %s', type(ex), ex)
+        raise HTTPBadRequest(ex)
 
 
 @espacenet_description_service.get()
 def espacenet_description_handler(request):
     # TODO: use jsonified error responses
     patent = request.matchdict['patent']
-    return espacenet_description(patent)
+    try:
+        return espacenet_description(patent)
+
+    except KeyError as ex:
+        log.error('Problem fetching description from Espacenet: %s %s', type(ex), ex)
+        raise HTTPNotFound(ex)
+
+    except ValueError as ex:
+        log.error('Problem fetching description from Espacenet: %s %s', type(ex), ex)
+        raise HTTPBadRequest(ex)
