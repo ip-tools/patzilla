@@ -850,12 +850,20 @@ class DossierText(Dossier):
             log.info('Data acquisition for document {document}'.format(document=document.number))
 
             patent = decode_patent_number(document.number)
+
+            # Keep errors that existed before this lookup.
+            request = get_current_request()
+            errors = getattr(request, "errors", None)
+            error_count = len(errors) if errors is not None else 0
+
             # Recover "bibliographic" data (full-cycle)
             try:
                 biblio_payload = get_ops_biblio_data('publication', document.number, xml=True)
 
             except Exception as ex:
                 self.handle_exception(ex, 'biblio', document.number)
+                if errors is not None:
+                    del errors[error_count:]
                 continue
             namespace = "http://www.epo.org/exchange"
             self.u = len(namespace) + 2
@@ -892,7 +900,7 @@ class DossierText(Dossier):
                 for name in info:
                     section.append(Paragraph(name))
 
-            #Priorities
+            # Priorities
             info = []
             for node in self.get_from_xml("document-id", tree, parent="priority-claim", attr='document-id-type="epodoc"'):
                 info.append(node)
