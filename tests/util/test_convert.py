@@ -37,7 +37,7 @@ def test_png_resize(tiff):
     assert png[:20].startswith(b"\x89PNG")
 
 
-def test_pdf_join(tiff, tmp_path):
+def test_pdf_join(tiff):
     """Test joining PDFs."""
     pdf_single = to_pdf(tiff).read()
     pdf = pdf_join([pdf_single, pdf_single])

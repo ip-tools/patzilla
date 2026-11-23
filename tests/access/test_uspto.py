@@ -164,6 +164,8 @@ def test_get_reference_type_valid():
     assert get_reference_type(Munch(number="2022110447")) == UsptoPdfReferenceType.APPLICATION
     assert get_reference_type(Munch(number="2548918")) == UsptoPdfReferenceType.PUBLICATION
     assert get_reference_type(Munch(number=1)) == UsptoPdfReferenceType.PUBLICATION
+    assert get_reference_type(split_patent_number("US2007231208A1")) == UsptoPdfReferenceType.APPLICATION
+    assert get_reference_type(split_patent_number("US10194689B2")) == UsptoPdfReferenceType.PUBLICATION
 
 
 def test_get_reference_type_invalid():

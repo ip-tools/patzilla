@@ -181,7 +181,7 @@ def fetch_url(url, method="get"):
     raise HTTPNotFound(msg)
 
 
-def get_patent_number_patentcenter(any_number):
+def get_patent_number_patentcenter(any_number):  # pragma: nocover
     """
     Inquire patent number from `patentcenter.uspto.gov`.
 

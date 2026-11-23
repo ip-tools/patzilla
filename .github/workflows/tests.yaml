@@ -51,12 +51,12 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt update
-        sudo apt install --yes pdftk poppler-utils
+        sudo apt install --yes pdftk imagemagick poppler-utils
 
     - name: Install dependencies for macOS
       if: runner.os == 'macOS'
       run: |
-        brew install poppler
+        brew install imagemagick poppler
 
     - name: Configure policy for ImageMagick
       # https://stackoverflow.com/q/52998331

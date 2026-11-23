@@ -57,7 +57,7 @@ def query_expression_util_handler(request):
     try:
         data = request.json
         log.info('[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
-        expression_data = make_expression_filter(data)
+        expression_data = make_expression_filter(data, request)
         log.info('[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
         return expression_data
 
@@ -66,9 +66,9 @@ def query_expression_util_handler(request):
         request.errors.add('util', 'expression-filter', message)
 
 
-def make_expression_filter(data):
+def make_expression_filter(data, request=None):
 
-    request = get_current_request()
+    request = request or get_current_request()
 
     if 'datasource' not in data or not data['datasource']:
         raise ValueError("Unable to compute expression: Missing datasource")
