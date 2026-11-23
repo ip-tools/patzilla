@@ -33,7 +33,7 @@ def test_to_pdf(tiff):
 def test_png_resize(tiff):
     """Test resizing PNG."""
     png = to_png(tiff)
-    png = png_resize(png, 42)
+    png = png_resize(png, 12)
     assert png[:20].startswith(b"\x89PNG")
 
 

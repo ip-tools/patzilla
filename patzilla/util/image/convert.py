@@ -114,12 +114,21 @@ def run_convert(resource, target_format, width=None, height=None):
 
     elif isinstance(resource, (str, Path)):
         path = Path(resource)
-        if path.exists():
+        is_url = str(resource).startswith(("http://", "https://"))
+
+        try:
+            path_exists = path.exists()
+        except OSError:
+            if not is_url:
+                raise
+            path_exists = False
+
+        if path_exists:
             with open(path, "rb") as f:
                 payload = f.read()
         else:
             resource = str(resource)
-            if resource.startswith("http://") or resource.startswith("https://"):
+            if is_url:
                 payload = requests.get(resource, timeout=DEFAULT_TIMEOUT).content
 
     if payload is None:
@@ -522,7 +531,7 @@ def find_pdftk() -> Union[str, None]:
     ]
 
     # More location candidates from the system
-    candidates += str(where.where('pdftk'))
+    candidates += where.where('pdftk')
 
     return find_program_candidate(candidates)
 

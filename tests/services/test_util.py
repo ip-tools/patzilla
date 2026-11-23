@@ -79,7 +79,7 @@ def test_numberlist_util_handler_normalize_success():
     assert request.errors == []
 
 
-def test_request_to_options():
+def test_request_to_options_family_remove():
     request = FakeRequest(params={
         'query_data[modifiers][family-remove]': 'true',
         'query_data[modifiers][family-replace]': 'true',
@@ -90,8 +90,22 @@ def test_request_to_options():
     request_to_options(request, options)
     assert options == {
         "feature_family_remove": True,
+        "sorting": {"foo": "true"},
+    }
+
+
+def test_request_to_options_family_replace():
+    request = FakeRequest(params={
+        'query_data[modifiers][family-remove]': 'false',
+        'query_data[modifiers][family-replace]': 'true',
+        'query_data[sorting][foo]': 'true',
+    })
+    options = {}
+    request.errors = cornice.Errors()
+    request_to_options(request, options)
+    assert options == {
         "feature_family_replace": True,
-        "sorting": {"foo": True},
+        "sorting": {"foo": "true"},
     }
 
 
