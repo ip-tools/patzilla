@@ -9,13 +9,30 @@ from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
 from mongoengine import connect as mongoengine_connect, signals, IntField, DoesNotExist
 from mongoengine.document import Document
-from mongoengine.fields import StringField, ListField, DateTimeField, DictField
+from mongoengine.fields import BooleanField, DateTimeField, DictField, ListField, StringField
 from mongoengine.errors import NotUniqueError
 from pyramid.threadlocal import get_current_request
 from zope.interface.interface import Interface
 from zope.interface import implementer
 
 log = logging.getLogger(__name__)
+
+
+def utcnow() -> datetime.datetime:
+    """
+    Return the current UTC timestamp as a naive datetime compatible with
+    MongoEngine / PyMongo while avoiding deprecated `datetime.utcnow()`.
+    """
+    return datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None)
+
+
+def ensure_utc_naive(dt: datetime.datetime) -> datetime.datetime:
+    """
+    Normalize a datetime to naive UTC for safe comparison with MongoDB values.
+    """
+    if dt.tzinfo is not None:
+        return dt.astimezone(datetime.timezone.utc).replace(tzinfo=None)
+    return dt
 
 
 # ------------------------------------------
@@ -61,11 +78,16 @@ class User(Document):
     userid = StringField(unique=True)
 
     username = StringField(unique=True)
+    email = StringField(required=False)
+    email_verified = BooleanField(default=False)
+    email_verified_at = DateTimeField(required=False)
     password = StringField()
     fullname = StringField()
 
     created = DateTimeField()
-    modified = DateTimeField(default=datetime.datetime.now)
+    modified = DateTimeField(default=utcnow)
+    last_login_at = DateTimeField(required=False)
+    status = StringField(default='active')
 
     phone = StringField(required=False)
     homepage = StringField(required=False)
@@ -77,6 +99,41 @@ class User(Document):
     upstream_credentials = DictField(required=False)
     billing = DictField(required=False)
     parent = StringField(required=False)
+
+    @property
+    def is_active(self) -> bool:
+        """
+        Return True when the user account is permitted to authenticate.
+        Respects both the explicit `status` field and the legacy `login:disabled` tag.
+        """
+        if self.status and self.status != 'active':
+            return False
+        if self.tags and 'login:disabled' in self.tags:
+            return False
+        return True
+
+    @property
+    def is_authenticated(self) -> bool:
+        """
+        Return True for a persisted/identified user rather than an anonymous placeholder.
+        """
+        return bool(self.userid and (self.username or self.email))
+
+    def to_public_dict(self) -> dict:
+        """
+        Return a safe dictionary representation suitable for API responses and frontend state.
+        Excludes sensitive fields such as `password`, `upstream_credentials`, and `billing`.
+        """
+        return {
+            'userid': self.userid,
+            'username': self.username,
+            'email': self.email or (self.username if self.username and '@' in self.username else None),
+            'email_verified': bool(self.email_verified),
+            'fullname': self.fullname or '',
+            'status': self.status or 'active',
+            'tags': list(self.tags or []),
+            'modules': list(self.modules or []),
+        }
 
     @classmethod
     def assign_userid(cls, sender, document, **kwargs):
@@ -95,7 +152,7 @@ class User(Document):
     @classmethod
     def assign_created(cls, sender, document, **kwargs):
         if sender is User and not document.created:
-            document.created = datetime.datetime.now()
+            document.created = utcnow()
 
     @staticmethod
     def crypt500(password):
@@ -108,6 +165,8 @@ class User(Document):
 
     def check_password(self, password):
         pwhash = self.password
+        if not pwhash:
+            return False
         return pwhash == crypt(password, pwhash)
 
 signals.post_init.connect(User.assign_userid)
@@ -115,9 +174,71 @@ signals.post_init.connect(User.assign_created)
 signals.pre_save.connect(User.hash_password)
 
 
+class MagicLinkToken(Document):
+    """
+    Single-use, short-lived authentication token sent via email.
+    Only the SHA-256 hash of the raw token is persisted.
+    """
+
+    meta = {
+        'collection': 'magic_link_token',
+        'indexes': [
+            {'fields': ['expires_at'], 'expireAfterSeconds': 0},
+            {'fields': ['email', 'created_at']},
+            {'fields': ['request_ip', 'created_at']},
+        ],
+    }
+
+    token_hash = StringField(required=True, unique=True)
+    email = StringField(required=True)
+    purpose = StringField(default='login')
+    came_from = StringField(required=False)
+    created_at = DateTimeField(default=utcnow)
+    expires_at = DateTimeField(required=True)
+    consumed_at = DateTimeField(required=False)
+    request_ip = StringField(required=False)
+    user_agent = StringField(required=False)
+
+
+class UserSession(Document):
+    """
+    Server-side user session backed by an HttpOnly session cookie.
+    Only the SHA-256 hash of the raw session token is persisted so
+    sessions can be audited and revoked server-side.
+    """
+
+    meta = {
+        'collection': 'user_session',
+        'indexes': [
+            {'fields': ['expires_at'], 'expireAfterSeconds': 0},
+            'userid',
+        ],
+    }
+
+    session_hash = StringField(required=True, unique=True)
+    userid = StringField(required=True)
+    created_at = DateTimeField(default=utcnow)
+    last_seen_at = DateTimeField(default=utcnow)
+    expires_at = DateTimeField(required=True)
+    revoked_at = DateTimeField(required=False)
+    ip_address = StringField(required=False)
+    user_agent = StringField(required=False)
+
+    def is_valid(self, now: datetime.datetime | None = None) -> bool:
+        """
+        Return True if the session has not been revoked and has not expired.
+        """
+        current = ensure_utc_naive(now) if now is not None else utcnow()
+        if self.revoked_at is not None:
+            return False
+        if self.expires_at is None:
+            return False
+        return ensure_utc_naive(self.expires_at) > current
+
+
 class UserHistory(Document):
     userid = StringField()
-    timestamp = DateTimeField(default=datetime.datetime.now)
+    timestamp = DateTimeField(default=utcnow)
     action = StringField()
 
 

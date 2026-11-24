@@ -1,0 +1,92 @@
+## -*- coding: utf-8 -*-
+## (c) 2026 Andreas Motl <andreas.motl@ip-tools.org>
+
+<%inherit file="site.mako" />
+
+<%block name="application">
+
+<style type="text/css">
+    body {
+        background-image: url("/static/img/login-background.jpg");
+        background-repeat: no-repeat;
+        background-position: top;
+    }
+</style>
+
+<!-- Application bundle -->
+% if h.development_mode():
+<script type="text/javascript" src="/static/assets/commons.bundle.js"></script>
+<script type="text/javascript" src="/static/assets/app-login.bundle.js"></script>
+% else:
+<script type="text/javascript" src="/static/assets/commons.bundle.min.js"></script>
+<script type="text/javascript" src="/static/assets/app-login.bundle.min.js"></script>
+% endif
+
+<!-- Vendor stylesheet -->
+% if 'ui.stylesheet' in theme:
+<link rel="stylesheet" href="${ theme['ui.stylesheet'] }">
+% endif
+
+<div class="login-modal container d-flex align-center-middle">
+
+<div class="login-box col-lg-4 col-sm-10">
+
+    <div class="row">
+        <div class="col-12">
+            <h3 class="form-signin-heading-logo text-center">${theme['ui.productname.login'] | n}</h3>
+        </div>
+    </div>
+
+    % if valid:
+    <form class="form-signin" method="post" action="${r.path | h}">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="form-signin-heading">Complete sign in</h2>
+                <p>
+                    Sign in as <strong>${email | h}</strong>.
+                </p>
+                <input name="token" type="hidden" value="${token | h}" />
+            </div>
+        </div>
+        <div class="row" style="margin-top: 1em">
+            <div class="col-12">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">
+                    <i class="glyphicon glyphicon-log-in"></i>&nbsp;Continue to ${theme['ui.productname'] | h}
+                </button>
+            </div>
+        </div>
+    </form>
+    % else:
+    <div class="row" style="margin-top: 1em">
+        <div class="col-12">
+            <div class="alert alert-danger" role="alert">
+                <h4>Sign-in link could not be verified</h4>
+                <p>${error_message | h}</p>
+            </div>
+            <a class="btn btn-primary btn-lg btn-block" href="/login" role="button">
+                Request a new sign-in link
+            </a>
+        </div>
+    </div>
+    % endif
+
+    <div class="row" style="padding-top: 1em; padding-bottom: 1em">
+        <div class="col-12">
+            <hr class="clear-margin"/>
+            <div class="page-footer pull-left">
+                ${theme['ui.vendor.copyright'] | n}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+<style>
+.modal-backdrop.show {
+  opacity: 0.8;
+}
+</style>
+
+</%block>

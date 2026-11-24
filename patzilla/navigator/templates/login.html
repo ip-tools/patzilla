@@ -42,16 +42,60 @@
 ## login form
 <div class="login-box col-lg-4 col-sm-10">
 
+    <div class="row">
+        <div class="col-12">
+            <h3 class="form-signin-heading-logo text-center">${theme['ui.productname.login'] | n}</h3>
+            <h2 class="form-signin-heading">Please sign in</h2>
+        </div>
+    </div>
+
+    % if magic_link_enabled:
+    <ul class="nav nav-tabs" id="login-method-tabs" role="tablist" style="margin-bottom: 1em">
+        <li class="nav-item">
+            <a class="nav-link ${'active' if not error else ''}" id="tab-magic-link" data-toggle="tab" href="#pane-magic-link" role="tab" aria-controls="pane-magic-link" aria-selected="${'true' if not error else 'false'}">Email link</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link ${'active' if error else ''}" id="tab-password" data-toggle="tab" href="#pane-password" role="tab" aria-controls="pane-password" aria-selected="${'true' if error else 'false'}">Password</a>
+        </li>
+    </ul>
+    % endif
+
+    <div class="tab-content">
+
+    % if magic_link_enabled:
+    <div class="tab-pane fade ${'show active' if not error else ''}" id="pane-magic-link" role="tabpanel" aria-labelledby="tab-magic-link">
+        <form id="form-magic-link" class="form-signin" method="post" action="/api/identity/magic-link">
+            <div class="row">
+                <div class="col-12">
+                    <input id="magic-link-email" name="email" type="email" class="form-control" placeholder="Email address" value="${username | h}" required="required" autofocus="autofocus" />
+                    <input id="magic-link-came-from" name="came_from" type="hidden" value="${came_from | h}" />
+                </div>
+            </div>
+            <div class="row" style="margin-top: 0.75em">
+                <div class="col-12">
+                    <button id="magic-link-submit" class="btn btn-primary btn-lg btn-block" type="submit">
+                        <i class="glyphicon glyphicon-envelope"></i>&nbsp;Send sign-in link
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 1em">
+                <div class="col-12">
+                    <div id="magic-link-feedback" class="alert d-none" role="alert"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+    % endif
+
+    <div class="tab-pane fade ${'show active' if (not magic_link_enabled or error) else ''}" id="pane-password" role="tabpanel" aria-labelledby="tab-password">
     <form class="form-signin" method="post" action="/auth">
 
         <div class="row">
 
             <div class="col-12">
-                <h3 class="form-signin-heading-logo text-center">${theme['ui.productname.login'] | n}</h3>
-                <h2 class="form-signin-heading">Please sign in</h2>
-                <input name="username" type="text" class="form-control" placeholder="Email address" value="${username}" autofocus="autofocus" />
+                <input name="username" type="text" class="form-control" placeholder="Email address" value="${username | h}" ${'' if magic_link_enabled else 'autofocus="autofocus"'} />
                 <input name="password" type="password" class="form-control" placeholder="Password" />
-                <input name="came_from" type="hidden" value="${came_from}" />
+                <input name="came_from" type="hidden" value="${came_from | h}" />
                 <!--
                 <label class="checkbox">
                     <input type="checkbox" value="remember-me"> Remember me
@@ -101,30 +145,33 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-success alert-dismissible text-small" role="alert">
-                    You are welcome to register for a 14 day trial account.
-                    <br/><br/>
-                    Otherwise, please take a glimpse into a <a id="visit-demo" href="/" target="_blank">demo query</a>,
-                    feel free to explore and drill down further.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="row" style="padding-top: 1em; padding-bottom: 1em">
-            <div class="col-12">
-                <hr class="clear-margin"/>
-                <div class="page-footer pull-left">
-                    ${theme['ui.vendor.copyright'] | n}
-                </div>
-            </div>
-        </div>
-
     </form>
+    </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-success alert-dismissible text-small" role="alert">
+                You are welcome to register for a 14 day trial account.
+                <br/><br/>
+                Otherwise, please take a glimpse into a <a id="visit-demo" href="/" target="_blank">demo query</a>,
+                feel free to explore and drill down further.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="padding-top: 1em; padding-bottom: 1em">
+        <div class="col-12">
+            <hr class="clear-margin"/>
+            <div class="page-footer pull-left">
+                ${theme['ui.vendor.copyright'] | n}
+            </div>
+        </div>
+    </div>
 
 </div> <!-- /container -->
 
