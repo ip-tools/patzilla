@@ -139,6 +139,7 @@ test_requires = [
     'mock',
     'pytest>=4,<10',
     'pytest-cov>=2,<8',
+    'pytest-mock<4',
     'pytest-xdist<4',
     'testfixtures>=6,<8',
     'pytest-forked>=1,<2',

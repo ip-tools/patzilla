@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 from pathlib import Path
+from typing import Union
 
 import PIL.Image
 import requests
@@ -111,12 +112,24 @@ def run_convert(resource, target_format, width=None, height=None):
     if hasattr(resource, "read"):
         payload = resource.read()
 
-    elif isinstance(resource, str):
-        if resource.startswith("http://") or resource.startswith("https://"):
-            payload = requests.get(resource, timeout=DEFAULT_TIMEOUT).content
-        elif Path(resource).exists():
-            with open(resource, "rb") as f:
+    elif isinstance(resource, (str, Path)):
+        path = Path(resource)
+        is_url = str(resource).startswith(("http://", "https://"))
+
+        try:
+            path_exists = path.exists()
+        except OSError:
+            if not is_url:
+                raise
+            path_exists = False
+
+        if path_exists:
+            with open(path, "rb") as f:
                 payload = f.read()
+        else:
+            resource = str(resource)
+            if is_url:
+                payload = requests.get(resource, timeout=DEFAULT_TIMEOUT).content
 
     if payload is None:
         raise ValueError("Unable to acquire resource for media conversion. type={}".format(type(resource)))
@@ -189,7 +202,7 @@ def to_pdf(resource):
 
 def run_imagemagick(command, input=None):
     output = run_command(command, input)
-    if 'ImageMagick' in output.read()[:200]:
+    if b'ImageMagick' in output.read()[:200]:
         command_string = ' '.join(command)
         message = 'Image conversion failed, found "ImageMagick" in STDOUT. Command was "{}"'.format(command_string)
         logger.error(message)
@@ -202,7 +215,7 @@ def png_resize(png_payload, width):
 
     from PIL import Image
 
-    image = Image.open(io.BytesIO(png_payload)).convert('RGB')
+    image = Image.open(png_payload).convert('RGB')
 
     image_width = image.size[0]
     image_height = image.size[1]
@@ -410,7 +423,7 @@ def pdf_now():
     return now
 
 
-def pdf_extract_image(pdf_payload, format="tiff"):
+def pdf_extract_image(pdf_payload, format="tiff"):  # pragma: nocover
     """
     pdfimages is an open-source command-line utility for extracting images from PDF files.
 
@@ -463,7 +476,7 @@ def pdf_extract_image(pdf_payload, format="tiff"):
 
 
 @memoize
-def find_convert():
+def find_convert() -> Union[str, None]:
     """
     Debian: aptitude install imagemagick
     /usr/bin/convert
@@ -499,7 +512,7 @@ def find_convert():
 
 
 @memoize
-def find_pdftk():
+def find_pdftk() -> Union[str, None]:
     """
     Debian: aptitude install pdftk
     /usr/bin/pdftk
@@ -524,5 +537,5 @@ def find_pdftk():
 
 
 @memoize
-def find_pdfimages():
+def find_pdfimages() -> Union[str, None]:
     return find_program_candidate(where.where('pdfimages'))
