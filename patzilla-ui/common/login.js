@@ -26,6 +26,59 @@ $(function() {
         }, 150);
     }
 
+    $('#form-magic-link').off('submit');
+    $('#form-magic-link').on('submit', function(event) {
+        event.preventDefault();
+
+        var $email = $('#magic-link-email');
+        var $cameFrom = $('#magic-link-came-from');
+        var $submit = $('#magic-link-submit');
+        var $feedback = $('#magic-link-feedback');
+
+        var email = ($email.val() || '').trim();
+        var cameFrom = ($cameFrom.val() || '').trim();
+
+        $feedback.addClass('d-none').removeClass('alert-success alert-danger').text('');
+        $submit.prop('disabled', true);
+
+        fetch('/api/identity/magic-link', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                came_from: cameFrom,
+            }),
+        })
+        .then(function(response) {
+            return response.json().then(function(data) {
+                return { ok: response.ok, data: data };
+            });
+        })
+        .then(function(result) {
+            if (result.ok) {
+                var message = (result.data && result.data.message)
+                    || 'If the email address is valid, a sign-in link has been sent.';
+                $feedback.removeClass('d-none').addClass('alert-success').text(message);
+            } else {
+                var errMsg = 'Could not send sign-in link. Please try again.';
+                if (result.data && result.data.errors && result.data.errors.length > 0) {
+                    errMsg = result.data.errors[0].description || errMsg;
+                }
+                $feedback.removeClass('d-none').addClass('alert-danger').text(errMsg);
+            }
+        })
+        .catch(function() {
+            $feedback.removeClass('d-none').addClass('alert-danger')
+                .text('Network error while requesting sign-in link. Please try again.');
+        })
+        .finally(function() {
+            $submit.prop('disabled', false);
+        });
+    });
+
     $('#mail-register').off('click');
     $('#mail-register').on('click', function() {
 

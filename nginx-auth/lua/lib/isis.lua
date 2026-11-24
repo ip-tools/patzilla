@@ -199,11 +199,45 @@ function verify_cookie()
 
 end
 
+function verify_session_cookie()
+
+    local session_token = ngx.var.cookie_patzilla_session
+    if not session_token or session_token == "" then
+        return nil
+    end
+
+    local response = ngx.location.capture('/api/identity/session', { method = ngx.HTTP_GET })
+    if response.status ~= 200 or not response.body then
+        return nil
+    end
+
+    local ok, payload = pcall(cjson.decode, response.body)
+    if not ok or not payload or not payload.authenticated or not payload.user then
+        return nil
+    end
+
+    local user = payload.user
+    ngx.var.user_id = user.userid
+    ngx.header['X-User-Id'] = user.userid
+    ngx.header['X-User-Username'] = user.username
+    ngx.header['X-User-Fullname'] = user.fullname or ''
+    if user.tags then
+        ngx.header['X-User-Tags'] = cjson.encode(user.tags)
+    end
+    if user.modules then
+        ngx.header['X-User-Modules'] = cjson.encode(user.modules)
+    end
+
+    return user
+
+end
+
 return {
     authenticate_user=authenticate_user,
     get_basic_credentials=get_basic_credentials,
     set_cookie=set_cookie,
     delete_cookie=delete_cookie,
     verify_cookie=verify_cookie,
+    verify_session_cookie=verify_session_cookie,
     decode_referer=decode_referer,
 }

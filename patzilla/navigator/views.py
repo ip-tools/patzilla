@@ -14,7 +14,21 @@ from pyramid.view import view_config
 from patzilla.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
 from patzilla.util.render.phantomjs import render_pdf
 from patzilla.util.text.format import slugify
-from patzilla.util.web.identity.store import User
+from patzilla.util.web.identity.config import AuthSettings
+from patzilla.util.web.identity.magic_link import (
+    MagicLinkError,
+    consume_magic_link,
+    get_client_ip,
+    inspect_magic_link_token,
+    sanitize_redirect_url,
+)
+from patzilla.util.web.identity.session import (
+    clear_session_cookie,
+    create_session,
+    revoke_session,
+    set_session_cookie,
+)
+from patzilla.util.web.identity.store import User, UserHistory
 
 log = logging.getLogger(__name__)
 
@@ -28,8 +42,10 @@ def includeme(config):
     # serve admin page
     config.add_route('admin-user-create', '/admin/user/create')
 
-    # serve login page
+    # serve login and auth pages
     config.add_route('login', '/login')
+    config.add_route('auth-magic-verify', '/auth/magic/verify')
+    config.add_route('logout', '/logout')
 
     # serve help pages
     config.add_route('help-hotkeys', '/help/hotkeys')
@@ -310,13 +326,107 @@ def admin_user_create(request):
 
 @view_config(route_name='login', renderer='patzilla.navigator:templates/login.html')
 def login_page(request):
+    auth_settings = AuthSettings.from_registry(request.registry)
     tplvars = {
         'username': request.params.get('username', ''),
-        'came_from': request.params.get('came_from', ''),
+        'came_from': sanitize_redirect_url(request.params.get('came_from', ''), default=''),
         'error': asbool(request.params.get('error')),
         'reason': request.params.get('reason', ''),
+        'magic_link_enabled': auth_settings.magic_link_enabled,
     }
     return tplvars
+
+
+@view_config(route_name='auth-magic-verify', renderer='patzilla.navigator:templates/magic-link-verify.html')
+@view_config(route_name='auth-magic-verify-root', renderer='patzilla.navigator:templates/magic-link-verify.html')
+def auth_magic_verify(request):
+    """
+    Two-step magic-link verification endpoint protecting against email link scanners:
+    - GET: validates token read-only and renders a confirmation form.
+    - POST: atomically consumes the token, provisions/updates the user, creates a
+      server-side session, sets the HttpOnly cookie, and redirects.
+    """
+    auth_settings = AuthSettings.from_registry(request.registry)
+
+    if request.method == 'POST':
+        raw_token = request.POST.get('token', '').strip()
+        try:
+            user, redirect_url = consume_magic_link(raw_token, auth_settings)
+            raw_session_token, _ = create_session(
+                user=user,
+                settings=auth_settings,
+                ip_address=get_client_ip(request),
+                user_agent=request.headers.get('User-Agent'),
+            )
+            response = HTTPFound(location=redirect_url)
+            set_session_cookie(response, raw_session_token, auth_settings, request=request)
+            return response
+        except MagicLinkError as ex:
+            return {
+                'token': '',
+                'email': '',
+                'valid': False,
+                'error': True,
+                'error_code': ex.code,
+                'error_message': ex.message,
+                'magic_link_enabled': auth_settings.magic_link_enabled,
+            }
+
+    # GET: read-only inspection (does not consume the token).
+    raw_token = request.params.get('token', '').strip()
+    if not auth_settings.magic_link_enabled:
+        return {
+            'token': '',
+            'email': '',
+            'valid': False,
+            'error': True,
+            'error_code': 'magic-link-disabled',
+            'error_message': 'Magic-link authentication is currently disabled.',
+            'magic_link_enabled': False,
+        }
+
+    try:
+        token_doc = inspect_magic_link_token(raw_token)
+        return {
+            'token': raw_token,
+            'email': token_doc.email,
+            'valid': True,
+            'error': False,
+            'error_code': '',
+            'error_message': '',
+            'magic_link_enabled': True,
+        }
+    except MagicLinkError as ex:
+        return {
+            'token': '',
+            'email': '',
+            'valid': False,
+            'error': True,
+            'error_code': ex.code,
+            'error_message': ex.message,
+            'magic_link_enabled': True,
+        }
+
+
+@view_config(route_name='logout')
+@view_config(route_name='logout-root')
+def logout_view(request):
+    """
+    Revoke active session cookie and redirect to the login page.
+    """
+    auth_settings = AuthSettings.from_registry(request.registry)
+    raw_token = request.cookies.get(auth_settings.session_cookie_name)
+    user = getattr(request, 'user', None)
+
+    if raw_token:
+        revoke_session(raw_token)
+
+    if user is not None and user.is_authenticated:
+        UserHistory(userid=user.userid, action='logout').save()
+
+    response = HTTPFound(location='/login')
+    clear_session_cookie(response, auth_settings, request=request)
+    return response
 
 @view_config(route_name='help-hotkeys', renderer='patzilla.navigator:templates/help.html')
 @view_config(route_name='help-ificlaims', renderer='patzilla.navigator:templates/help.html')

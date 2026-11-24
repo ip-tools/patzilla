@@ -104,6 +104,36 @@ api_password = {depatech_api_password}
 
 
 # ========================
+# Authentication settings
+# ========================
+
+[auth]
+
+# Passwordless email magic-link authentication
+magic_link_enabled                   = true
+magic_link_allow_signup              = true
+magic_link_ttl_seconds               = 900        ; 15 minutes (single-use)
+magic_link_rate_limit_count          = 5
+magic_link_rate_limit_window_seconds = 900        ; 15 minutes
+magic_link_default_tags              = self-registered
+magic_link_default_modules           =
+
+# Server-side session & cookie settings
+session_ttl_seconds                  = 1209600    ; 14 days
+session_renewal_threshold_seconds    = 604800     ; renew when < 7 days remain
+session_cookie_name                  = patzilla_session
+session_cookie_secure                = true
+session_cookie_samesite              = Lax
+
+# Explicit public base URL for links sent via email (recommended behind reverse proxy)
+public_base_url                      =
+
+# Never log magic links in production
+log_magic_link_in_dev                = false
+
+
+
+# ========================
 # Email/SMTP configuration
 # ========================
 

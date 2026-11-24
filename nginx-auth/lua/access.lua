@@ -23,8 +23,8 @@ local request_uri = ngx.var.request_uri
 
 -- always permit access to ...
 
--- the authentication endpoint
-if request_uri == "/auth" then
+-- the authentication endpoints (password login & email magic links)
+if request_uri == "/auth" or request_uri:find("^/auth/magic.*$") then
     return
 end
 
@@ -39,7 +39,10 @@ if request_uri:find("^/static.*$") then
 end
 
 -- some api endpoints
-if request_uri:find("^/api/identity/pwhash.*$") then
+if request_uri:find("^/api/identity/pwhash.*$")
+    or request_uri:find("^/api/identity/magic%-link.*$")
+    or request_uri:find("^/api/identity/session.*$")
+    or request_uri:find("^/api/identity/logout.*$") then
     return
 end
 
@@ -80,13 +83,14 @@ end
 -- ------------------------------------------
 if request_uri:find("^/logout.*$") then
     isis.delete_cookie()
+    return
 end
 
 
 -- ------------------------------------------
---  verify cookie
+--  verify cookie (nginx-auth HMAC cookie or Pyramid session cookie)
 -- ------------------------------------------
-local user = isis.verify_cookie()
+local user = isis.verify_cookie() or isis.verify_session_cookie()
 if user then
 
     -- permit admin access only to users with tag "staff"

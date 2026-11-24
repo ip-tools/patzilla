@@ -334,12 +334,8 @@ class RuntimeSettings:
             user_dict = json.loads(request.user.to_json())
 
             # Strip sensitive information
-            if '_id' in user_dict:
-                del user_dict['_id']
-            if 'password' in user_dict:
-                del user_dict['password']
-            if 'upstream_credentials' in user_dict:
-                del user_dict['upstream_credentials']
+            for sensitive_field in ('_id', 'password', 'upstream_credentials', 'billing'):
+                user_dict.pop(sensitive_field, None)
 
             # Add whole user attributes to JS-domain
             user_params['user'] = user_dict
