@@ -15,7 +15,7 @@ from patzilla.config import get_configuration
 from patzilla.util.config import read_list, normalize_docopt_options
 from patzilla.boot.logging import boot_logging
 from patzilla.util.web.identity.store import UserManager
-from patzilla.boot.framework import pyramid_setup
+from patzilla.boot.framework import setup_environment
 from patzilla.version import __version__
 
 logger = logging.getLogger(__name__)
@@ -70,7 +70,35 @@ def make_config(ctx, kind, flavor):
     print(payload)
 
 
+@click.command(name="serve")
+@click.argument("configfile", type=click.Path(exists=True, dir_okay=False), required=True, envvar="PATZILLA_CONFIG")
+@click.option("--host", type=str, required=False, help="Bind socket to this host. Default: `[server:main]` host.")
+@click.option("--port", type=int, required=False, help="Bind socket to this port. Default: `[server:main]` port.")
+@click.option("--reload", is_flag=True, required=False, help="Reload the application when the source code changes.")
+@click.option("--workers", type=int, required=False, help="Number of worker processes.")
+@click.pass_context
+def serve(ctx, configfile, host, port, reload, workers):
+    """
+    Run the PatZilla web application.
+
+    The CONFIGFILE argument can also be provided using the `PATZILLA_CONFIG` environment variable.
+
+    Examples::
+
+        \b
+        # Run the application.
+        patzilla serve /path/to/patzilla.ini
+
+        \b
+        # Run the application in development mode, reloading on code changes.
+        patzilla serve patzilla/config/development-local.ini --reload
+    """
+    from patzilla.web.server import serve as run_server
+    run_server(configfile, host=host, port=port, reload=reload, workers=workers)
+
+
 cli.add_command(cmd=make_config)
+cli.add_command(cmd=serve)
 cli.add_command(cmd=ops_cli)
 cli.add_command(cmd=ificlaims_cli)
 
@@ -124,11 +152,11 @@ def usercmd():
     boot_logging(options)
 
 
-    # Boot Pyramid to access the database
+    # Bootstrap the application environment to access the database
     configfile = os.environ['PATZILLA_CONFIG']
 
     # TODO: Currently, this is a full bootstrap. It can be trimmed down to database setup only.
-    env = pyramid_setup(configfile)
+    env = setup_environment(configfile)
     #logger = logging.getLogger(__name__)
 
     # Clean option names

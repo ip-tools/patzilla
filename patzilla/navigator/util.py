@@ -4,7 +4,7 @@ import traceback
 import collections
 from typing import Dict
 
-from cornice.renderer import JSONError
+from patzilla.web.errors import JSONError
 
 
 def get_exception_message(ex, add_traceback=False):

@@ -3,7 +3,7 @@
 import logging
 from typing import List, Optional, Type
 
-import cornice
+from patzilla.web.errors import JSONError
 
 from patzilla.util.cql.pyparsing import CQLGrammar
 from patzilla.util.expression import SearchExpression
@@ -28,7 +28,7 @@ def ikofax_prepare_query(query):
 
 def handle_generic_exception(request, ex, backend_name, query):
 
-    if isinstance(ex, cornice.renderer.JSONError):
+    if isinstance(ex, JSONError):
         raise ex
 
     http_response = None

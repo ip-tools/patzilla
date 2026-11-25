@@ -2,9 +2,9 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
 import arrow
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound
-from pyramid.response import Response
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPNotFound
+from patzilla.web.response import Response
 from patzilla.access.epo.ops.api import ops_service_usage
 from patzilla.util.date import week_range, month_range, year_range
 from patzilla.util.web.identity.store import User

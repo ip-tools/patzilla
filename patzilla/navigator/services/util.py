@@ -7,10 +7,10 @@ import mimetypes
 from typing import Dict, List, Union
 
 from munch import munchify
-from cornice.service import Service
-from pyramid.settings import asbool
-from pyramid.threadlocal import get_current_request
-from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
+from patzilla.web.service import Service
+from patzilla.util.config import asbool
+from patzilla.web.context import get_current_request
+from patzilla.web.exceptions import HTTPServerError, HTTPBadRequest
 from patzilla.navigator.export import Dossier, DossierXlsx
 from patzilla.navigator.services import handle_generic_exception
 from patzilla.util.config import read_list

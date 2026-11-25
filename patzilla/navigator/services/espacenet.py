@@ -1,7 +1,7 @@
 import logging
 
-from cornice import Service
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPNotFound, HTTPBadRequest
 
 from patzilla.access.epo.espacenet.api import espacenet_abstract, espacenet_claims, espacenet_description
 

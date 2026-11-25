@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-from pyramid.threadlocal import get_current_request
+from patzilla.web.context import get_current_request
 
 logger = logging.getLogger(__name__)
 

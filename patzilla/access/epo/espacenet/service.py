@@ -2,8 +2,8 @@
 # (c) 2015-2018 Andreas Motl, Elmyra UG
 
 import logging
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPBadRequest, HTTPNotFound
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPBadRequest, HTTPNotFound
 from patzilla.access.epo.espacenet.api import espacenet_claims, espacenet_description
 
 logger = logging.getLogger(__name__)

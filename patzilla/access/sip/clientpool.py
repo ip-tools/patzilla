@@ -3,10 +3,7 @@
 import logging
 import os
 
-from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface import implementer
-from zope.interface.interface import Interface
-from zope.interface import implementer
+from patzilla.web.exceptions import HTTPUnauthorized
 
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.access.sip.client import SipClient
@@ -14,10 +11,10 @@ from patzilla.access.sip.client import SipClient
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
+def setup(registry):
 
     # Acquire settings for SIP.
-    datasource_settings = config.registry.datasource_settings
+    datasource_settings = registry.datasource_settings
     sip_settings = datasource_settings.datasource.sip
 
     # Get URI settings, optionally falling back to environment variables.
@@ -26,8 +23,8 @@ def includeme(config):
     # When an API URI can be discovered, register the component.
     if api_uri:
         logger.info("Using SIP API at {}".format(api_uri))
-        config.registry.registerUtility(SipClientPool(api_uri=api_uri))
-        config.add_subscriber(attach_sip_client, "pyramid.events.ContextFound")
+        registry.sip_client_pool = SipClientPool(api_uri=api_uri)
+        registry.add_request_subscriber(attach_sip_client)
 
 
 class SipCredentialsGetter(AbstractCredentialsGetter):
@@ -75,18 +72,13 @@ def attach_sip_client(event):
     username = credentials_data['api_username'][:10]
     logger.debug('Attaching SIP credentials from "{}": {}'.format(credentials_source, username))
 
-    pool = request.registry.getUtility(ISipClientPool)
+    pool = request.registry.sip_client_pool
     request.sip_client = pool.get(credentials_source, credentials_data)
 
 
-class ISipClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(ISipClientPool)
 class SipClientPool:
     """
-    SIP client pool as Pyramid utility implementation.
+    SIP client pool registered on the application registry.
     """
 
     def __init__(self, api_uri):

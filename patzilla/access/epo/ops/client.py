@@ -5,21 +5,17 @@ import os
 
 import epo_ops
 from mock import mock
-from pyramid.httpexceptions import HTTPUnauthorized
-from pyramid.threadlocal import get_current_registry
-from zope.interface import implementer
-from zope.interface.interface import Interface
-from zope.interface.interfaces import ComponentLookupError
+from patzilla.web.exceptions import HTTPUnauthorized
+from patzilla.web.context import get_current_registry
 
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
-from patzilla.util.web.identity.store import IUserMetricsManager
 
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
-    config.registry.registerUtility(OpsClientPool())
-    config.add_subscriber(attach_ops_client, "pyramid.events.ContextFound")
+def setup(registry):
+    registry.ops_client_pool = OpsClientPool()
+    registry.add_request_subscriber(attach_ops_client)
 
 
 class OpsCredentialsGetter(AbstractCredentialsGetter):
@@ -67,18 +63,13 @@ def attach_ops_client(event):
     ckshort = credentials_data['consumer_key'][:10] + "..."
     logger.debug('Attaching OPS credentials from "{}": {}'.format(credentials_source, ckshort))
 
-    pool = request.registry.getUtility(IOpsClientPool)
+    pool = request.registry.ops_client_pool
     request.ops_client = pool.get(credentials_source, credentials_data)
 
 
-class IOpsClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(IOpsClientPool)
 class OpsClientPool:
     """
-    EPO/OPS client pool as Pyramid utility implementation.
+    EPO/OPS client pool registered on the application registry.
     """
 
     def __init__(self):
@@ -105,10 +96,8 @@ def ops_client_factory(key, secret):
 
     # Attach metrics manager object to ops client instance.
     registry = get_current_registry()
-    # TODO: Find another place how to propagate the utility, NOT using the OPS Client instance?
-    try:
-        ops.metrics_manager = registry.getUtility(IUserMetricsManager)  # ty: ignore[unresolved-attribute]
-    except ComponentLookupError:
-        ops.metrics_manager = mock.Mock()  # ty: ignore[unresolved-attribute]
+    # TODO: Find another place how to propagate the metrics manager, NOT using the OPS Client instance?
+    metrics_manager = getattr(registry, "user_metrics_manager", None)
+    ops.metrics_manager = metrics_manager if metrics_manager is not None else mock.Mock()  # ty: ignore[unresolved-attribute]
 
     return ops

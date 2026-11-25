@@ -4,8 +4,7 @@ import html
 import json
 import logging
 from contextlib import contextmanager
-from pyramid.httpexceptions import HTTPError
-from pyramid.response import Response
+from patzilla.web.exceptions import HTTPError
 
 log = logging.getLogger(__name__)
 
@@ -53,9 +52,8 @@ class NoResultsException(GenericAdapterException):
 class ExampleJsonException(HTTPError, GenericAdapterException):
     def __init__(self, data=None, status=404):
         #body = {'status': 'error', 'errors': errors}
-        Response.__init__(self, json.dumps(data, use_decimal=True))
+        HTTPError.__init__(self, body=json.dumps(data), content_type='application/json')
         self.status = status
-        self.content_type = 'application/json'
 
 
 # https://stackoverflow.com/questions/15572288/general-decorator-to-wrap-try-except-in-python/15573313#15573313

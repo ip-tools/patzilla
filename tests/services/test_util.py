@@ -2,9 +2,9 @@ import json
 from unittest import mock
 from unittest.mock import Mock
 
-import cornice
+from patzilla.web.errors import Errors
 from munch import Munch
-from pyramid.testing import DummyRequest
+from patzilla.web.testing import DummyRequest
 
 from patzilla.navigator.services.util import query_expression_util_handler, numberlist_util_handler, request_to_options, \
     issue_reporter_handler
@@ -13,7 +13,7 @@ from patzilla.navigator.services.util import query_expression_util_handler, numb
 class FakeRequest(DummyRequest):
     def __init__(self, *args, **kwargs):
         self.user = Munch(userid="foo")
-        self.errors = cornice.Errors()
+        self.errors = Errors()
         super().__init__(*args, **kwargs)
 
 
@@ -86,7 +86,7 @@ def test_request_to_options_family_remove():
         'query_data[sorting][foo]': 'true',
     })
     options = {}
-    request.errors = cornice.Errors()
+    request.errors = Errors()
     request_to_options(request, options)
     assert options == {
         "feature_family_remove": True,
@@ -101,7 +101,7 @@ def test_request_to_options_family_replace():
         'query_data[sorting][foo]': 'true',
     })
     options = {}
-    request.errors = cornice.Errors()
+    request.errors = Errors()
     request_to_options(request, options)
     assert options == {
         "feature_family_replace": True,
@@ -110,13 +110,12 @@ def test_request_to_options_family_replace():
 
 
 def test_issue_reporter_handler(app_environment, mocker):
-    # https://docs.pylonsproject.org/projects/pyramid/en/latest/api/testing.html
     request = DummyRequest(
         json={"dialog": {"what": "Something", "remark": "Wrong"}, "meta": {"id": "unknown"}},
         params={"targets": "email:test@example.org"},
         user=None,
     )
-    request.errors = cornice.Errors()  # ty: ignore[unresolved-attribute]
+    request.errors = Errors()  # ty: ignore[unresolved-attribute]
     request.registry = Mock()
 
     submit = mocker.patch('patzilla.navigator.services.util.email_issue_report')

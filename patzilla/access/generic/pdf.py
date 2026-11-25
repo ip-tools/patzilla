@@ -5,7 +5,7 @@ from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 import attr
-from pyramid.httpexceptions import HTTPError
+from patzilla.web.exceptions import HTTPError
 from patzilla.util.numbers.common import decode_patent_number
 from patzilla.util.python import exception_traceback
 from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
@@ -85,7 +85,7 @@ def pdf_universal_real(patent, response):
     # 3. Next, try DPMA servers.
     """
     if response.pdf is None:
-        from pyramid.httpexceptions import HTTPNotFound
+        from patzilla.web.exceptions import HTTPNotFound
         from patzilla.util.numbers.normalize import normalize_patent
         from patzilla.access.dpma.depatisconnect import fetch_pdf as depatisconnect_fetch_pdf, NotConfiguredError
         number_normalized = normalize_patent(patent)

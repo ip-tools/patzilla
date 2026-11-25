@@ -1,7 +1,7 @@
 from mongodb_gridfs_beaker import MongoDBGridFSNamespaceManager, log, pickle
 
 
-def includeme(config):
+def setup(registry):
 
     # Monkey patch 3rd party class to fix runtime error
     MongoDBGridFSNamespaceManager.lock_dir = None  # ty: ignore[invalid-attribute-access]

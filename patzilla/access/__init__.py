@@ -5,31 +5,31 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
+def setup(registry):
 
     datasources = []
     try:
-        datasources = config.registry.application_settings.ip_navigator.datasources
+        datasources = registry.application_settings.ip_navigator.datasources
         logger.info('Enabling data sources: {}'.format(datasources))
     except:
         logger.warning('No data source configured')
 
     if 'ops' in datasources:
-        config.include("patzilla.access.epo.ops.client")
+        registry.include("patzilla.access.epo.ops.client")
 
     if 'depatisconnect' in datasources:
-        config.include("patzilla.access.dpma.depatisconnect")
+        registry.include("patzilla.access.dpma.depatisconnect")
 
     if 'ificlaims' in datasources:
-        config.include("patzilla.access.ificlaims.clientpool")
+        registry.include("patzilla.access.ificlaims.clientpool")
 
     if 'depatech' in datasources:
-        config.include("patzilla.access.depatech.clientpool")
+        registry.include("patzilla.access.depatech.clientpool")
 
     """
     if 'sip' in datasources:
-        config.include("patzilla.access.sip.concordance")
-        config.include("patzilla.access.sip.clientpool")
+        registry.include("patzilla.access.sip.concordance")
+        registry.include("patzilla.access.sip.clientpool")
     """
 
-    config.include('.office')
+    registry.include("patzilla.access.office")

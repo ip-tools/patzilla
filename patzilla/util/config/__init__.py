@@ -8,6 +8,11 @@ from configparser import ConfigParser
 
 logger = logging.getLogger(__name__)
 
+
+class ConfigurationError(Exception):
+    pass
+
+
 def get_configuration(*args, **kwargs):
     config_files = []
     config_files += list(args)

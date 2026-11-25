@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # (c) 2017-2018 Andreas Motl <andreas.motl@ip-tools.org>
 #
-# Cornice services for search provider "MTC depa.tech"
+# API services for search provider "MTC depa.tech"
 #
 import logging
-from cornice.service import Service
+from patzilla.web.service import Service
 from pymongo.errors import OperationFailure
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from patzilla.web.exceptions import HTTPNotFound, HTTPBadRequest
 from patzilla.access.depatech import get_depatech_client
 from patzilla.access.depatech.client import depatech_search, LoginException, depatech_crawl
 from patzilla.access.depatech.expression import DepaTechParser, should_be_quoted

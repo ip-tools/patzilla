@@ -3,12 +3,12 @@
 from patzilla.navigator.settings import RuntimeSettings
 
 
-def includeme(config):
-    config.add_subscriber(runtime_config, "pyramid.events.ContextFound")
+def setup(registry):
+    registry.add_request_method(runtime_settings)
 
 
-def runtime_config(event):
+def runtime_settings(request):
     """
-    Provide the runtime settings and attach them to the `request` object.
+    Provide the runtime settings as `request.runtime_settings`, computed lazily on first access.
     """
-    event.request.runtime_settings = RuntimeSettings()
+    return RuntimeSettings(request=request)

@@ -4,6 +4,6 @@
 # ------------------------------------------
 #   bootstrapping
 # ------------------------------------------
-def includeme(config):
-    config.include(".store")
-    config.include(".service")
+def setup(registry):
+    registry.include("patzilla.util.web.identity.store")
+    registry.include("patzilla.util.web.identity.service")

@@ -6,11 +6,10 @@ import json
 import logging
 from pkg_resources import resource_filename
 from mongoengine.errors import NotUniqueError
-from pyramid.encode import urlencode
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.response import FileResponse
-from pyramid.settings import asbool
-from pyramid.view import view_config
+from urllib.parse import urlencode
+from patzilla.web.exceptions import HTTPFound, HTTPNotFound
+from starlette.responses import FileResponse
+from patzilla.util.config import asbool
 from patzilla.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
 from patzilla.util.render.phantomjs import render_pdf
 from patzilla.util.text.format import slugify
@@ -29,42 +28,56 @@ from patzilla.util.web.identity.session import (
     set_session_cookie,
 )
 from patzilla.util.web.identity.store import User, UserHistory
+from patzilla.web.routing import RouteTable
 
 log = logging.getLogger(__name__)
 
-def includeme(config):
+TEMPLATE_STANDALONE = 'patzilla.navigator:templates/standalone.html'
+TEMPLATE_EMBEDDED = 'patzilla.navigator:templates/embedded.html'
+TEMPLATE_HELP = 'patzilla.navigator:templates/help.html'
+TEMPLATE_LOGIN = 'patzilla.navigator:templates/login.html'
+TEMPLATE_MAGIC_LINK_VERIFY = 'patzilla.navigator:templates/magic-link-verify.html'
+TEMPLATE_ADMIN_USER_CREATE = 'patzilla.navigator:templates/admin/user-create.html'
+TEMPLATE_PORTFOLIO_DEMO = 'patzilla.navigator:templates/portfolio-demo.mako'
+
+
+def navigator_routes(prefix=''):
+    """
+    The routes of the navigator web pages. They are matched in the order defined here.
+    """
+
+    routes = RouteTable(prefix=prefix)
 
     # serve favicon.ico
-    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
-    config.add_route('favicon', '/favicon.ico')
-    config.add_view('patzilla.navigator.views.favicon_view', route_name='favicon')
+    routes.add('favicon', '/favicon.ico', favicon_view)
 
     # serve admin page
-    config.add_route('admin-user-create', '/admin/user/create')
+    routes.add('admin-user-create', '/admin/user/create', admin_user_create, renderer=TEMPLATE_ADMIN_USER_CREATE)
 
     # serve login and auth pages
-    config.add_route('login', '/login')
-    config.add_route('auth-magic-verify', '/auth/magic/verify')
-    config.add_route('logout', '/logout')
+    routes.add('login', '/login', login_page, renderer=TEMPLATE_LOGIN)
+    routes.add('auth-magic-verify', '/auth/magic/verify', auth_magic_verify, renderer=TEMPLATE_MAGIC_LINK_VERIFY)
+    routes.add('logout', '/logout', logout_view)
 
     # serve help pages
-    config.add_route('help-hotkeys', '/help/hotkeys')
-    config.add_route('help-ificlaims', '/help/ificlaims')
+    routes.add('help-hotkeys', '/help/hotkeys', help, renderer=TEMPLATE_HELP)
+    routes.add('help-ificlaims', '/help/ificlaims', help, renderer=TEMPLATE_HELP)
 
     # serve application
-    config.add_route('patentsearch', '/')
+    routes.add('patentsearch', '/', navigator_standalone, renderer=TEMPLATE_STANDALONE)
+    routes.add('patentsearch', '/', opspdf, renderer='pdf', request_param='pdf=true')
 
     # serve web components
-    config.add_route('embedded-item', '/embed/item')
-    config.add_route('embedded-list', '/embed/list')
+    routes.add('embedded-item', '/embed/item', navigator_embedded, renderer=TEMPLATE_EMBEDDED)
+    routes.add('embedded-list', '/embed/list', navigator_embedded, renderer=TEMPLATE_EMBEDDED)
 
     # public
-    config.add_route('patentview',          '/view/{field}/{value}')
+    routes.add('patentview', '/view/{field}/{value}', patentview, renderer=TEMPLATE_EMBEDDED)
 
     # vanity-/shortcut urls
-    config.add_route('patentsearch-vanity', '/{label}')
-    config.add_route('patentsearch-quick',  '/{field}/{value}')
-    config.add_route('patentsearch-quick2', '/{field}/{value}/{value2}', path_info=r'^(?!.*\.map).*$')
+    routes.add('patentsearch-vanity', '/{label}', navigator_vanity)
+    routes.add('patentsearch-quick', '/{field}/{value}', navigator_quick)
+    routes.add('patentsearch-quick2', '/{field}/{value}/{value2}', navigator_quick, path_info=r'^(?!.*\.map).*$')
 
     # Remark:
     # At route "patentsearch-quick2", exclude access to javascript .map files. Otherwise, these would match.
@@ -77,16 +90,14 @@ def includeme(config):
     # Negative lookahead to the rescue:
     # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
 
-@view_config(route_name='patentsearch', renderer='patzilla.navigator:templates/standalone.html')
+    return routes
+
 def navigator_standalone(request):
     return {}
 
-@view_config(route_name='embedded-item', renderer='patzilla.navigator:templates/embedded.html')
-@view_config(route_name='embedded-list', renderer='patzilla.navigator:templates/embedded.html')
 def navigator_embedded(request):
     return {}
 
-@view_config(route_name='patentview', renderer='patzilla.navigator:templates/embedded.html')
 def patentview(request):
 
     matchdict = request.matchdict.copy()
@@ -103,7 +114,6 @@ def patentview(request):
     }
     return payload
 
-@view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
 def opspdf(request):
     name = 'ip-navigator-' + (request.params.get('query') or 'default')
     filename = slugify(name, strip_equals=False, lowercase=False)
@@ -114,7 +124,6 @@ def opspdf(request):
         print_url = print_url.replace('ops/browser', '')
     return render_pdf(print_url)
 
-@view_config(route_name='patentsearch-vanity')
 def navigator_vanity(request):
     label = request.matchdict.get('label')
 
@@ -145,8 +154,6 @@ def navigator_vanity(request):
 
     return get_redirect_query(request, query)
 
-@view_config(route_name='patentsearch-quick')
-@view_config(route_name='patentsearch-quick2')
 def navigator_quick(request):
     field = request.matchdict.get('field')
     value = request.matchdict.get('value')
@@ -269,7 +276,6 @@ def get_redirect_query(request, expression=None, query_args=None):
     return HTTPFound(redirect_url)
 
 
-@view_config(route_name='admin-user-create', renderer='patzilla.navigator:templates/admin/user-create.html')
 def admin_user_create(request):
 
     success = False
@@ -324,7 +330,6 @@ def admin_user_create(request):
     tplvars['error'] = asbool(tplvars['error'])
     return tplvars
 
-@view_config(route_name='login', renderer='patzilla.navigator:templates/login.html')
 def login_page(request):
     auth_settings = AuthSettings.from_registry(request.registry)
     tplvars = {
@@ -337,8 +342,6 @@ def login_page(request):
     return tplvars
 
 
-@view_config(route_name='auth-magic-verify', renderer='patzilla.navigator:templates/magic-link-verify.html')
-@view_config(route_name='auth-magic-verify-root', renderer='patzilla.navigator:templates/magic-link-verify.html')
 def auth_magic_verify(request):
     """
     Two-step magic-link verification endpoint protecting against email link scanners:
@@ -408,8 +411,6 @@ def auth_magic_verify(request):
         }
 
 
-@view_config(route_name='logout')
-@view_config(route_name='logout-root')
 def logout_view(request):
     """
     Revoke active session cookie and redirect to the login page.
@@ -428,20 +429,16 @@ def logout_view(request):
     clear_session_cookie(response, auth_settings, request=request)
     return response
 
-@view_config(route_name='help-hotkeys', renderer='patzilla.navigator:templates/help.html')
-@view_config(route_name='help-ificlaims', renderer='patzilla.navigator:templates/help.html')
 def help(request):
     return {}
 
 def favicon_view(request):
-    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
     icon = resource_filename('patzilla.navigator', 'static/favicon.ico')
     if os.path.isfile(icon):
-        return FileResponse(icon, request=request)
+        return FileResponse(icon)
     else:
         return HTTPNotFound()
 
-@view_config(name='portfolio-demo', renderer='patzilla.navigator:templates/portfolio-demo.mako')
 def portfolio(request):
     return {}
 

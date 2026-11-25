@@ -14,8 +14,8 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
-from pyramid.httpexceptions import HTTPFound
-from pyramid.testing import DummyRequest
+from patzilla.web.exceptions import HTTPFound
+from patzilla.web.testing import DummyRequest
 
 from patzilla.navigator.views import auth_magic_verify, login_page, logout_view
 from patzilla.util.web.identity.config import AuthSettings

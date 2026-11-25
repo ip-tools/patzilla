@@ -6,7 +6,7 @@ import requests
 from beaker.cache import cache_region
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.util.network.browser import regular_user_agent
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 
 logger = logging.getLogger(__name__)
 

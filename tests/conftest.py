@@ -5,7 +5,7 @@ Configure and bootstrap the test harness.
 
 The most important topics are:
 
-a) bringing up a Pyramid environment at runtime.
+a) bringing up an application environment at runtime.
 b) configuring the application object cache at runtime.
 """
 import logging
@@ -15,7 +15,7 @@ import pytest
 
 from patzilla.boot.cache import configure_cache_backend, get_cache_directory
 from patzilla.boot.config import BootConfiguration
-from patzilla.boot.framework import pyramid_setup, pyramid_dispatch_events
+from patzilla.boot.framework import setup_environment, dispatch_request_events
 
 logger = logging.getLogger(__name__)
 
@@ -23,9 +23,9 @@ logger = logging.getLogger(__name__)
 @pytest.fixture(scope="session")
 def app_environment():
     """
-    Provide and configure a Pyramid environment at runtime, a minimal application flavor.
+    Provide and configure an application environment at runtime, a minimal application flavor.
     """
-    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="minimal", datasources=["ops", "ificlaims"]))
+    return setup_environment(bootconfiguration=BootConfiguration(flavor="minimal", datasources=["ops", "ificlaims"]))
 
 
 @pytest.fixture(scope="function")
@@ -38,7 +38,7 @@ def app_request(app_environment):
     del request.errors[:]
 
     # Make sure each test case has a fresh environment.
-    pyramid_dispatch_events(env)
+    dispatch_request_events(env)
 
     return request
 
@@ -46,9 +46,9 @@ def app_request(app_environment):
 @pytest.fixture(scope="session")
 def web_environment():
     """
-    Provide and configure a Pyramid environment at runtime, this time the full web application flavor.
+    Provide and configure an application environment at runtime, this time the full web application flavor.
     """
-    return pyramid_setup(bootconfiguration=BootConfiguration(flavor="web", datasources=["ops", "ificlaims"]))
+    return setup_environment(bootconfiguration=BootConfiguration(flavor="web", datasources=["ops", "ificlaims"]))
 
 
 @pytest.fixture(scope='session', autouse=True)

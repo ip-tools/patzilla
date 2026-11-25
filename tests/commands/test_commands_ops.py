@@ -5,7 +5,7 @@ import json
 from click.testing import CliRunner
 
 import pytest
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 
 from patzilla.access.epo.ops.client import OpsCredentialsGetter
 from patzilla.commands import cli

@@ -3,8 +3,8 @@
 import logging
 
 import re
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region
 from patzilla.access.dpma import dpmaregister
 from patzilla.access.generic.exceptions import NoResultsException
@@ -13,7 +13,7 @@ from patzilla.util.expression.keywords import clean_keyword, keywords_to_respons
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
-from patzilla.access.epo.espacenet.pyramid import espacenet_claims_handler, espacenet_description_handler
+from patzilla.access.epo.espacenet.service import espacenet_claims_handler, espacenet_description_handler
 from patzilla.navigator.services import cql_prepare_query, handle_generic_exception, ikofax_prepare_query
 from patzilla.navigator.services.util import request_to_options
 

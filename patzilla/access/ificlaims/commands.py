@@ -34,7 +34,7 @@ from patzilla.boot.cache import configure_cache_backend
 from patzilla.boot.config import BootConfiguration
 from patzilla.util.config import get_configfile_from_commandline
 from patzilla.util.data.container import SmartMunch, jd
-from patzilla.boot.framework import pyramid_setup
+from patzilla.boot.framework import setup_environment
 
 
 logger = logging.getLogger(__name__)
@@ -47,14 +47,14 @@ def ificlaims_cli(ctx):
     Access the IFI CLAIMS data source adapter.
     """
 
-    # Create a Pyramid runtime environment.
-    env = pyramid_setup(
+    # Create an application runtime environment.
+    env = setup_environment(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
     )
 
     # Propagate reference to the environment to the Click context.
-    ctx.meta["pyramid_env"] = env
+    ctx.meta["app_env"] = env
 
 
 @click.command(name="search")
@@ -157,8 +157,8 @@ if __name__ == '__main__':
     Demo program for accessing different IFI CLAIMS services in a high-level manner.
     """
 
-    # Create a Pyramid runtime environment.
-    env = pyramid_setup(
+    # Create an application runtime environment.
+    env = setup_environment(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
     )

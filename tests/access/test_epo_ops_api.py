@@ -2,9 +2,9 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from cornice.errors import Errors
-from cornice.renderer import JSONError
-from pyramid.httpexceptions import HTTPBadGateway
+from patzilla.web.errors import Errors
+from patzilla.web.errors import JSONError
+from patzilla.web.exceptions import HTTPBadGateway
 
 from patzilla.access.epo.ops import api as ops_api
 

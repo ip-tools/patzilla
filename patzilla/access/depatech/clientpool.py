@@ -2,19 +2,17 @@
 # (c) 2017-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 import os
-from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.interface import Interface
-from zope.interface import implementer
+from patzilla.web.exceptions import HTTPUnauthorized
 from patzilla.access.depatech.client import DepaTechClient
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
+def setup(registry):
 
     # Acquire settings for depa.tech.
-    datasource_settings = config.registry.datasource_settings
+    datasource_settings = registry.datasource_settings
     depatech_settings = datasource_settings.datasource.depatech
 
     # Get URI settings, optionally falling back to environment variables.
@@ -23,8 +21,8 @@ def includeme(config):
     # When an API URI can be discovered, register the component.
     if api_uri:
         logger.info("Using depa.tech API at {}".format(api_uri))
-        config.registry.registerUtility(DepaTechClientPool(api_uri=api_uri))
-        config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")
+        registry.depatech_client_pool = DepaTechClientPool(api_uri=api_uri)
+        registry.add_request_subscriber(attach_depatech_client)
 
 
 class DepaTechCredentialsGetter(AbstractCredentialsGetter):
@@ -72,18 +70,13 @@ def attach_depatech_client(event):
     username = credentials_data['api_username'][:10]
     logger.debug('Attaching depa.tech credentials from "{}": {}'.format(credentials_source, username))
 
-    pool = request.registry.getUtility(IDepaTechClientPool)
+    pool = request.registry.depatech_client_pool
     request.depatech_client = pool.get(credentials_source, credentials_data)
 
 
-class IDepaTechClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(IDepaTechClientPool)
 class DepaTechClientPool:
     """
-    depa.tech client pool as Pyramid utility implementation.
+    depa.tech client pool registered on the application registry.
     """
 
     def __init__(self, api_uri):

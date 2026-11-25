@@ -6,7 +6,7 @@ from copy import copy
 
 class BootConfiguration:
     """
-    Provide configuration file snippets to the Pyramid environment bootloader.
+    Provide configuration file snippets to the application environment bootloader.
     It is needed when configuring the application at runtime.
     """
 
@@ -27,7 +27,7 @@ datasources = {datasources}
     # The full snippet for configuring the logging subsystem.
     INI_LOGGING = """
 # Logging configuration
-# See also: http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/logging.html
+# See also: https://docs.python.org/3/library/logging.config.html#configuration-file-format
 
 [loggers]
 keys = root, oauthlib, sqlalchemy, patzilla

@@ -9,9 +9,9 @@ from io import StringIO
 from configparser import NoOptionError
 from lxml import etree as ET
 from lxml.builder import E
-from cornice.util import to_list
+from patzilla.util.config import to_list
 from beaker.cache import cache_region, region_invalidate
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 from patzilla.util.network.requests_xmlrpclib import RequestsTransport
 from patzilla.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
 from patzilla.util.web.util.xmlrpclib import XmlRpcTimeoutServer
@@ -25,10 +25,10 @@ log = logging.getLogger(__name__)
 use_https: bool = False
 archive_service_baseurl: str = ""
 
-def includeme(config):
+def setup(registry):
     global use_https
     global archive_service_baseurl
-    datasource_settings = config.registry.datasource_settings
+    datasource_settings = registry.datasource_settings
 
     try:
         archive_service_baseurl = datasource_settings.datasource.depatisconnect.api_uri
@@ -287,13 +287,13 @@ if __name__ == '__main__':
         python patzilla/access/dpma/depatisconnect.py | jq --raw-output '.xml' | xmllint --format -
     """
 
-    from patzilla.boot.framework import pyramid_setup
+    from patzilla.boot.framework import setup_environment
     configfile = os.environ['PATZILLA_CONFIG']
 
-    env = pyramid_setup(configfile)
+    env = setup_environment(configfile)
     logger = logging.getLogger(__name__)
 
-    # Populate archive_service_baseurl again because "includeme" runs in a different thread
+    # Populate archive_service_baseurl again because "setup" runs in a different thread
     registry = env['registry']
     archive_service_baseurl = registry.datasource_settings.datasource.depatisconnect.api_uri
     if archive_service_baseurl.startswith('https'):

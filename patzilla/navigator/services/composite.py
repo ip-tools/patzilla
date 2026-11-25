@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound, HTTPTemporaryRedirect
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPNotFound, HTTPTemporaryRedirect
 from patzilla.access.drawing import get_drawing_png
 from patzilla.access.generic.pdf import pdf_universal, pdf_ziparchive
 from patzilla.util.date import datetime_iso_filename, now

@@ -3,7 +3,7 @@ import unittest
 import mock
 import pytest
 
-from pyramid import testing
+from patzilla.web.testing import DummyRequest
 
 from patzilla.navigator.views import navigator_standalone
 from patzilla.util.web.identity.service import identity_auth_handler, identity_pwhash_handler
@@ -11,21 +11,15 @@ from patzilla.util.web.identity.service import identity_auth_handler, identity_p
 
 class TestNavigatorStandalone:
 
-    def setup_method(self):
-        self.config = testing.setUp()
-
-    def teardown_method(self):
-        testing.tearDown()
-
     def test_navigator_standalone(self):
-        request = testing.DummyRequest()
+        request = DummyRequest()
         info = navigator_standalone(request)
         assert type(info) is dict
 
     @mock.patch("patzilla.util.web.identity.service.User")
     @mock.patch("patzilla.util.web.identity.service.UserHistory")
     def test_identity_auth_success(self, user_history_mock, user_mock):
-        request = testing.DummyRequest(json={"username": "foo", "password": "bar"})
+        request = DummyRequest(json={"username": "foo", "password": "bar"})
 
         user_data = {
             'userid': '12345',
@@ -49,7 +43,7 @@ class TestNavigatorStandalone:
     @mock.patch("patzilla.util.web.identity.service.UserHistory")
     def test_identity_auth_failure(self, user_history_mock, user_mock):
 
-        request = testing.DummyRequest(json={"username": "foo", "password": "bar"})
+        request = DummyRequest(json={"username": "foo", "password": "bar"})
         request.errors = mock.Mock()  # ty: ignore[unresolved-attribute]
 
         user_data_mock = mock.Mock()
@@ -66,7 +60,7 @@ class TestNavigatorStandalone:
         assert response is None
 
     def test_identity_pwhash(self):
-        request = testing.DummyRequest(matchdict={"password": "foobar"})
+        request = DummyRequest(matchdict={"password": "foobar"})
         pwhash = identity_pwhash_handler(request)
         assert '$p5k2$' in pwhash
 
@@ -74,14 +68,14 @@ class TestNavigatorStandalone:
                              [{}, {"username": None}, {"username": ""}, {"username": "foo"}],
                              ids=["empty-payload", "username-null", "username-empty", "password-missing"])
     def test_identity_auth_incomplete_credentials(self, payload):
-        request = testing.DummyRequest(json=payload)
+        request = DummyRequest(json=payload)
         request.errors = mock.Mock()  # ty: ignore[unresolved-attribute]
         response = identity_auth_handler(request)
         request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')  # ty: ignore[unresolved-attribute]
         assert response is None
 
     def test_identity_auth_invalid_payload(self):
-        request = testing.DummyRequest(post={})
+        request = DummyRequest(post={})
         request.errors = mock.Mock()  # ty: ignore[unresolved-attribute]
         response = identity_auth_handler(request)
         request.errors.add.assert_called_once_with('identity subsystem', 'authentication-failed', 'Incomplete credentials')  # ty: ignore[unresolved-attribute]

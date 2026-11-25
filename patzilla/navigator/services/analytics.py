@@ -5,7 +5,7 @@ import datetime
 import operator
 import html.parser
 from arrow.arrow import Arrow
-from cornice.service import Service
+from patzilla.web.service import Service
 from dateutil.relativedelta import relativedelta
 from jsonpointer import JsonPointer
 from transitions.core import Machine

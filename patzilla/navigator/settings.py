@@ -5,12 +5,11 @@ import logging
 from copy import deepcopy
 from email.utils import parseaddr
 
-from pyramid.exceptions import ConfigurationError
-from pyramid.threadlocal import get_current_request, get_current_registry
+from patzilla.web.context import get_current_request, get_current_registry
 
 from patzilla.version import __version__
 from patzilla.navigator.util import dict_prefix_key
-from patzilla.util.config import read_list, asbool, get_configuration
+from patzilla.util.config import ConfigurationError, read_list, asbool, get_configuration
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
 from patzilla.util.data.container import SmartMunch
@@ -175,10 +174,10 @@ class RuntimeSettings:
 
     # TODO: Refactor IpsuiteNavigatorConfig.defaults here as well, trim down config.js
 
-    def __init__(self):
+    def __init__(self, request=None):
 
-        self.request = get_current_request()
-        self.registry = get_current_registry()
+        self.request = request or get_current_request()
+        self.registry = self.request.registry if self.request is not None else get_current_registry()
 
         self.hostname = self.request.host.split(':')[0]
         self.development_mode = development_mode()
@@ -303,7 +302,7 @@ class RuntimeSettings:
         """
         Return datasource settings while accounting for sensible settings like API URI and credentials.
         """
-        request = get_current_request()
+        request = self.request
         datasource_settings = SmartMunch.munchify(request.registry.datasource_settings)
         if 'protected_fields' in datasource_settings:
             for fieldname in datasource_settings.protected_fields:
@@ -315,7 +314,7 @@ class RuntimeSettings:
 
     def config_parameters(self):
 
-        request = get_current_request()
+        request = self.request
 
         # prefix environment and settings in configuration model
         environment = dict_prefix_key(self.environment(), 'request.')
@@ -437,7 +436,7 @@ class RuntimeSettings:
         return enabled
 
     def theme_parameters(self):
-        request = get_current_request()
+        request = self.request
 
         params = self.theme_settings()
 

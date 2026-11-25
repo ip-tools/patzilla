@@ -3,10 +3,10 @@
 import socket
 
 import pytest
-from cornice.renderer import JSONError
+from patzilla.web.errors import JSONError
 from epo_ops.exceptions import MissingRequiredValue
-from pyramid.httpexceptions import HTTPBadGateway, HTTPNotFound
-from pyramid.threadlocal import get_current_request
+from patzilla.web.exceptions import HTTPBadGateway, HTTPNotFound
+from patzilla.web.context import get_current_request
 
 from patzilla.access.epo.ops.api import ops_published_data_search, get_ops_client, OPS_BASE_URI, get_ops_biblio_data, \
     ops_biblio_documents, ops_document_kindcodes, ops_family_members, ops_published_data_search_swap_family, \

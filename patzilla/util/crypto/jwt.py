@@ -7,18 +7,10 @@ from datetime import datetime, timedelta
 
 import python_jwt
 from jwcrypto import jwk
-from zope.interface.interface import Interface
-#from zope.interface.declarations import implements
-from zope.interface import implementer
 
 log = logging.getLogger(__name__)
 
 
-class ISigner(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(ISigner)
 class JwtSigner:
     """
     Generate and verify JSON Web Tokens.
@@ -28,8 +20,6 @@ class JwtSigner:
     - https://github.com/latchset/jwcrypto
     - https://jwcrypto.readthedocs.io/
     """
-
-# py27  implements(ISigner)
 
     def __init__(self, key=None, ttl=None):
         self.key = key

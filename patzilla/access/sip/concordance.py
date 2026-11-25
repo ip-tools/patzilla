@@ -19,15 +19,15 @@ log = logging.getLogger(__name__)
 # ------------------------------------------
 #   bootstrapping
 # ------------------------------------------
-def includeme(config):
-    config.add_subscriber(setup_mongoengine, "pyramid.events.ApplicationCreated")
+def setup(registry):
+    registry.add_startup_hook(setup_mongoengine)
 
 
 # ------------------------------------------
 #   database connection
 # ------------------------------------------
 def setup_mongoengine(event):
-    registry = event.app.registry
+    registry = event.registry
     mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
     mongodb_database = parse_uri(mongodb_uri)['database']
     mongoengine_connect(mongodb_database, host=mongodb_uri)

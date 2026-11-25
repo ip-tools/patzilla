@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
-from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+from patzilla.web.exceptions import HTTPFound, HTTPNotFound
+from patzilla.web.routing import RouteTable
 from patzilla.util.numbers.normalize import normalize_patent
 
-def includeme(config):
-    config.add_route('jump-office', '/office/{office}/{service}/{document_type}/{document_number}')
+def setup(registry):
+    routes = RouteTable()
+    routes.add('jump-office', '/office/{office}/{service}/{document_type}/{document_number}', jump_office)
+    registry.add_routes(routes)
 
-@view_config(route_name='jump-office')
 def jump_office(request):
     office          = request.matchdict.get('office')
     service         = request.matchdict.get('service')

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2018 Andreas Motl <andreas.motl@ip-tools.org>
-from pyramid.threadlocal import get_current_request
+from patzilla.web.context import get_current_request
 from patzilla.navigator.settings import JavascriptParameterFiddler
-from pyramid.settings import asbool                             # Keep this for h.asbool()
+from patzilla.util.config import asbool                             # Keep this for h.asbool()
 from patzilla.navigator.settings import development_mode        # Keep this for h.development_mode()
 
 

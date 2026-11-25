@@ -4,9 +4,9 @@ import re
 import logging
 from pprint import pprint
 
-from cornice.service import Service
+from patzilla.web.service import Service
 from pymongo.errors import OperationFailure
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 from patzilla.navigator.services.util import request_to_options
 from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.access.sip.client import sip_published_data_search, sip_published_data_crawl, SearchException

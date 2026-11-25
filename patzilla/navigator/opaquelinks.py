@@ -8,9 +8,9 @@ import Crypto.Random
 import datetime
 from pkg_resources import resource_filename
 from simplejson import JSONDecodeError
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPBadRequest
-from patzilla.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPBadRequest
+from patzilla.util.crypto.jwt import JwtSigner, JwtVerifyError, JwtExpiryError
 from patzilla.util.date import datetime_iso, unixtime_to_datetime
 from patzilla.util.python import exception_traceback
 
@@ -32,7 +32,7 @@ def init_random():
     Crypto.Random.atfork()
 
 
-def includeme(config):
+def setup(registry):
 
     # register a signer object used throughout this place
     signer = JwtSigner()
@@ -44,10 +44,10 @@ def includeme(config):
     keyfile = resource_filename(__name__, 'resources/opaquelinks.pem')
     signer.readkey(keyfile)
 
-    config.registry.registerUtility(signer)
+    registry.signer = signer
 
     # attempt to decode opaque parameter tokens on each request
-    config.add_subscriber(create_request_interceptor, 'pyramid.events.ContextFound')
+    registry.add_request_subscriber(create_request_interceptor)
 
 
 # ------------------------------------------
@@ -70,8 +70,7 @@ def create_request_interceptor(event):
     if not op_token:
         return
 
-    registry = event.request.registry
-    signer = registry.getUtility(ISigner)
+    signer = event.request.registry.signer
 
     try:
         data, meta = signer.unsign(op_token)
@@ -93,7 +92,7 @@ def create_request_interceptor(event):
 
         msg = f'Opaque parameter token expired: expiry={expiry_iso}'
         request.opaque_meta.update({'status': 'error', 'errors': [msg]})
-        # TODO: Propagate error via cornice instead?
+        # TODO: Propagate error via `request.errors` instead?
         # request.errors.add('sharing', 'jwt', info)
         # TODO: log/send full stacktrace
         log.error(exception_traceback())
@@ -101,7 +100,7 @@ def create_request_interceptor(event):
     except JwtVerifyError as ex:
         msg = f'Decoding opaque parameter token failed: {ex}'
         request.opaque_meta.update({'status': 'error', 'errors': [msg]})
-        # TODO: Propagate error via cornice instead?
+        # TODO: Propagate error via `request.errors` instead?
         # request.errors.add('sharing', 'jwt', info)
         # TODO: log/send full stacktrace
         log.error(exception_traceback())
@@ -128,7 +127,7 @@ opaquelinks_verify_service = Service(
 def opaquelinks_token_handler(request):
     """Generate an opaquelinks token"""
     payload = request_payload(request)
-    signer = request.registry.getUtility(ISigner)
+    signer = request.registry.signer
 
     ttl = None
     if 'ttl' in request.params:
@@ -147,7 +146,7 @@ def opaquelinks_verify_handler(request):
     if not token:
         return HTTPBadRequest('Token missing')
 
-    signer = request.registry.getUtility(ISigner)
+    signer = request.registry.signer
     data, meta = signer.unsign(token)
     return data
 

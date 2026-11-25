@@ -7,7 +7,7 @@ import re
 
 import pytest
 from munch import Munch
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 
 from patzilla.access.uspto.image import fetch_first_drawing
 from patzilla.access.uspto.pdf import fetch_pdf, document_viewer_url, png_url, fetch_url, get_reference_type, \

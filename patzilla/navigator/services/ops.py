@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2018 Andreas Motl, Elmyra UG
 import logging
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound
-from pyramid.settings import asbool
+from patzilla.web.service import Service
+from patzilla.web.exceptions import HTTPNotFound
+from patzilla.util.config import asbool
 from patzilla.access.epo.ops.api import inquire_images, get_ops_image, ops_family_inpadoc, \
     pdf_document_build, ops_claims, ops_document_kindcodes, ops_description, ops_family_publication_docdb_xml, \
     ops_published_data_search, ops_published_data_search_real, ops_published_data_search_swap_family, \

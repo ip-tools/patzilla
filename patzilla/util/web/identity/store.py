@@ -11,9 +11,7 @@ from mongoengine import connect as mongoengine_connect, signals, IntField, DoesN
 from mongoengine.document import Document
 from mongoengine.fields import BooleanField, DateTimeField, DictField, ListField, StringField
 from mongoengine.errors import NotUniqueError
-from pyramid.threadlocal import get_current_request
-from zope.interface.interface import Interface
-from zope.interface import implementer
+from patzilla.web.context import get_current_request
 
 log = logging.getLogger(__name__)
 
@@ -38,19 +36,19 @@ def ensure_utc_naive(dt: datetime.datetime) -> datetime.datetime:
 # ------------------------------------------
 #   bootstrapping
 # ------------------------------------------
-def includeme(config):
-    #config.add_subscriber(setup_pymongo, "pyramid.events.NewRequest")
-    config.add_subscriber(setup_mongoengine, "pyramid.events.ApplicationCreated")
-    config.add_subscriber(provision_users, "pyramid.events.ApplicationCreated")
+def setup(registry):
+    #registry.add_request_subscriber(setup_pymongo)
+    registry.add_startup_hook(setup_mongoengine)
+    registry.add_startup_hook(provision_users)
     # TODO: Is it really needed in "minimal" mode?
-    config.registry.registerUtility(UserMetricsManager())
+    registry.user_metrics_manager = UserMetricsManager()
 
 
 # ------------------------------------------
 #   database connection
 # ------------------------------------------
 def setup_mongoengine(event):
-    registry = event.app.registry
+    registry = event.registry
     mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
     if mongodb_uri is None:
         log.warning("No user identity database enabled")
@@ -251,13 +249,7 @@ class UserMetrics(Document):
 # ------------------------------------------
 #   utilities
 # ------------------------------------------
-class IUserMetricsManager(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-@implementer(IUserMetricsManager)
 class UserMetricsManager:
-
-# py27    implements(IUserMetricsManager)
 
     def measure_upstream(self, upstream, volume):
 

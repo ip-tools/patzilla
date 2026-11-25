@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2014-2026 Andreas Motl, Elmyra UG
 import logging
-from cornice.service import Service
+from patzilla.web.service import Service
 from patzilla.util.web.identity.config import AuthSettings
 from patzilla.util.web.identity.magic_link import (
     InvalidEmailError,
@@ -23,8 +23,8 @@ from patzilla.util.web.identity.store import User, UserHistory
 log = logging.getLogger(__name__)
 
 
-def includeme(config):
-    config.add_subscriber(attach_user, "pyramid.events.ContextFound")
+def setup(registry):
+    registry.add_request_subscriber(attach_user)
 
 
 # ------------------------------------------
@@ -35,7 +35,7 @@ def attach_user(event):
     Attach `request.user` and `request.auth_session` to incoming requests.
 
     Resolution order:
-    1. Native Pyramid HttpOnly session cookie (`patzilla_session`), validated
+    1. Native HttpOnly session cookie (`patzilla_session`), validated
        against MongoDB `UserSession` with automatic sliding renewal.
     2. Reverse-proxy `X-User-Id` header (e.g. from `nginx-auth`).
     3. Anonymous placeholder `User()`.
@@ -228,7 +228,7 @@ def identity_magic_link_handler(request):
 def identity_session_handler(request):
     """
     Return the current user's authentication status and non-sensitive profile data.
-    Also used by `nginx-auth` to validate native Pyramid session cookies.
+    Also used by `nginx-auth` to validate native session cookies.
     """
     user = getattr(request, "user", None)
     if user is not None and user.is_authenticated and user.is_active:

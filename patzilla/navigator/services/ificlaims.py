@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2018 Andreas Motl <andreas.motl@ip-tools.org>
 #
-# Cornice services for search provider "IFI CLAIMS Direct"
+# API services for search provider "IFI CLAIMS Direct"
 #
 import re
 import json
 import time
 import logging
-from cornice.service import Service
-from pyramid.settings import asbool
+from patzilla.web.service import Service
+from patzilla.util.config import asbool
 from pymongo.errors import OperationFailure
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
+from patzilla.web.exceptions import HTTPNotFound, HTTPBadRequest
 from patzilla.navigator.services import handle_generic_exception
 from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.navigator.services.util import request_to_options

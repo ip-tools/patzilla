@@ -1,16 +1,27 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
-def includeme(config):
+# (c) 2013-2026 Andreas Motl <andreas.motl@ip-tools.org>
+import os
+
+from patzilla.web.routing import RouteTable
+
+
+def setup(registry):
 
     # Register application components: URL generator, renderer globals
-    config.include("patzilla.navigator.opaquelinks")
-    config.include("patzilla.navigator.subscribers")
-    config.include("patzilla.navigator.views", route_prefix='/navigator')
+    registry.include("patzilla.navigator.opaquelinks")
+    registry.include("patzilla.navigator.subscribers")
 
     # Views and routes
-    #config.add_static_view('static', 'static')
-    config.add_static_view('static', 'static', cache_max_age=0)
-    #config.add_static_view('static', 'static', cache_max_age=3600)
-    config.add_route('home', '/')
-    config.add_route('auth-magic-verify-root', '/auth/magic/verify')
-    config.add_route('logout-root', '/logout')
+    from patzilla.navigator.views import (
+        TEMPLATE_MAGIC_LINK_VERIFY, TEMPLATE_PORTFOLIO_DEMO,
+        auth_magic_verify, logout_view, navigator_routes, portfolio,
+    )
+    registry.add_routes(navigator_routes(prefix='/navigator'))
+    registry.add_static_view('static', os.path.join(os.path.dirname(__file__), 'static'), cache_max_age=0)
+
+    routes = RouteTable()
+    routes.add('home', '/')
+    routes.add('auth-magic-verify-root', '/auth/magic/verify', auth_magic_verify, renderer=TEMPLATE_MAGIC_LINK_VERIFY)
+    routes.add('logout-root', '/logout', logout_view)
+    routes.add('portfolio-demo', '/portfolio-demo', portfolio, renderer=TEMPLATE_PORTFOLIO_DEMO)
+    registry.add_routes(routes)

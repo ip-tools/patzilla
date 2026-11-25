@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2015-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
-from pyramid.httpexceptions import HTTPBadGateway
-from pyramid.threadlocal import get_current_request
+from patzilla.web.exceptions import HTTPBadGateway
+from patzilla.web.context import get_current_request
 
 logger = logging.getLogger(__name__)
 

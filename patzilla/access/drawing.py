@@ -3,7 +3,7 @@
 import logging
 from six import BytesIO
 from beaker.cache import cache_region
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 
 from patzilla.util.numbers.common import split_patent_number
 from patzilla.util.numbers.normalize import normalize_patent

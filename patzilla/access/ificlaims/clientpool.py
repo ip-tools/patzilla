@@ -3,9 +3,7 @@
 import logging
 import os
 
-from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface import implementer
-from zope.interface.interface import Interface
+from patzilla.web.exceptions import HTTPUnauthorized
 
 from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
 from patzilla.access.ificlaims.client import IFIClaimsClient
@@ -13,10 +11,10 @@ from patzilla.access.ificlaims.client import IFIClaimsClient
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
+def setup(registry):
 
     # Acquire settings for IFI CLAIMS.
-    datasource_settings = config.registry.datasource_settings
+    datasource_settings = registry.datasource_settings
     ificlaims_settings = datasource_settings.datasource.ificlaims
 
     # Get URI settings, optionally falling back to environment variables.
@@ -26,8 +24,8 @@ def includeme(config):
     # When an API URI can be discovered, register the component.
     if api_uri:
         logger.info("Using IFI CLAIMS API at {}".format(api_uri))
-        config.registry.registerUtility(IFIClaimsClientPool(api_uri=api_uri, api_uri_json=api_uri_json))
-        config.add_subscriber(attach_ificlaims_client, "pyramid.events.ContextFound")
+        registry.ificlaims_client_pool = IFIClaimsClientPool(api_uri=api_uri, api_uri_json=api_uri_json)
+        registry.add_request_subscriber(attach_ificlaims_client)
 
 
 class IfiClaimsCredentialsGetter(AbstractCredentialsGetter):
@@ -75,18 +73,13 @@ def attach_ificlaims_client(event):
     username = credentials_data['api_username'][:10]
     logger.debug('Attaching IFI CLAIMS credentials from "{}": {}'.format(credentials_source, username))
 
-    pool = request.registry.getUtility(IIFIClaimsClientPool)
+    pool = request.registry.ificlaims_client_pool
     request.ificlaims_client = pool.get(credentials_source, credentials_data)
 
 
-class IIFIClaimsClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(IIFIClaimsClientPool)
 class IFIClaimsClientPool:
     """
-    IFI CLAIMS client pool as Pyramid utility implementation.
+    IFI CLAIMS client pool registered on the application registry.
     """
 
 

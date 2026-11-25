@@ -8,7 +8,7 @@ from zipfile import ZipFile
 import pytest
 from munch import munchify
 from openpyxl import load_workbook
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 
 from patzilla.navigator import export
 from patzilla.navigator.export import Dossier, DossierXlsx

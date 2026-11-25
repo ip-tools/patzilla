@@ -1,9 +1,9 @@
-from mock import mock
+from patzilla.web.registry import Registry
 
-from patzilla.util.web.identity.service import includeme, attach_user
+from patzilla.util.web.identity.service import setup, attach_user
 
 
 def test_identity_service_baseline():
-    config = mock.Mock()
-    includeme(config)
-    config.add_subscriber.assert_called_once_with(attach_user, 'pyramid.events.ContextFound')
+    registry = Registry()
+    setup(registry)
+    assert registry.request_subscribers == [attach_user]

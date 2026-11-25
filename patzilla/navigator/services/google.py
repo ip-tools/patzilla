@@ -2,7 +2,7 @@
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
 from beaker.cache import cache_region
-from cornice.service import Service
+from patzilla.web.service import Service
 from patzilla.access.google.search import GooglePatentsAccess
 
 log = logging.getLogger(__name__)

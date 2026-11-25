@@ -13,14 +13,14 @@ import tempfile
 from io import BytesIO
 from textwrap import dedent
 
-from cornice.renderer import JSONError
+from patzilla.web.errors import JSONError
 from lxml import etree as ET
 from munch import munchify, Munch
 from json.encoder import JSONEncoder
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
 from xlsxwriter.worksheet import Worksheet
-from pyramid.httpexceptions import HTTPError
+from patzilla.web.exceptions import HTTPError
 from patzilla.access.generic.pdf import pdf_ziparchive_add
 from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
 from patzilla.access.generic.exceptions import ignored
@@ -426,7 +426,7 @@ class Dossier:
 
     @staticmethod
     def clear_request_errors(request):
-        # Reset cornice error store to prevent errors adding up on bulkyfied OPS requests
+        # Reset request error store to prevent errors adding up on bulkyfied OPS requests
         del request.errors[:]
 
     @staticmethod

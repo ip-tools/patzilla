@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # (c) 2019 The PatZilla Developers
 import logging
-from cornice.service import Service
+from patzilla.web.service import Service
 from patzilla.access.epo.publicationserver.client import fetch_pdf
 
 log = logging.getLogger(__name__)

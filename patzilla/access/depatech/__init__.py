@@ -2,8 +2,8 @@
 # (c) 2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 # Access MTC depa.tech API
 import logging
-from pyramid.httpexceptions import HTTPBadGateway
-from pyramid.threadlocal import get_current_request
+from patzilla.web.exceptions import HTTPBadGateway
+from patzilla.web.context import get_current_request
 
 logger = logging.getLogger(__name__)
 

@@ -9,12 +9,12 @@ from contextlib import contextmanager
 
 import epo_ops
 import epo_ops.models
-from cornice.util import to_list
+from patzilla.util.config import to_list
 from beaker.cache import cache_region
 from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
-from pyramid.threadlocal import get_current_request
-from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest, HTTPBadGateway
+from patzilla.web.context import get_current_request
+from patzilla.web.exceptions import HTTPNotFound, HTTPError, HTTPBadRequest, HTTPBadGateway
 
 from patzilla.access.epo.ops.model import OpsFamilyAwareSearchResult
 from patzilla.navigator.util import object_attributes_to_dict
@@ -24,7 +24,7 @@ from patzilla.access.generic.exceptions import NoResultsException
 from patzilla.util.numbers.common import decode_patent_number, split_patent_number
 from patzilla.util.numbers.common import encode_epodoc_number, encode_docdb_number
 from patzilla.util.numbers.normalize import normalize_patent
-from patzilla.util.web.pyramid.cornice import json_error
+from patzilla.web.errors import json_error
 
 log = logging.getLogger(__name__)
 

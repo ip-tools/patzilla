@@ -28,7 +28,7 @@ import click
 
 from patzilla.access.epo.ops.api import OPS_API_URI, OPS_DEVELOPERS_URI, get_ops_client, get_ops_image, inquire_images
 from patzilla.boot.config import BootConfiguration
-from patzilla.boot.framework import pyramid_setup
+from patzilla.boot.framework import setup_environment
 from patzilla.util.config import get_configfile_from_commandline
 from patzilla.util.data.container import jd
 
@@ -43,14 +43,14 @@ def ops_cli(ctx):
     Access the EPO/OPS data source adapter.
     """
 
-    # Create a Pyramid runtime environment.
-    env = pyramid_setup(
+    # Create an application runtime environment.
+    env = setup_environment(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ops"]),
     )
 
     # Propagate reference to the environment to the Click context.
-    ctx.meta["pyramid_env"] = env
+    ctx.meta["app_env"] = env
 
 
 date_format_input = "%Y-%m-%d"

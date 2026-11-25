@@ -59,7 +59,7 @@ from collections import OrderedDict
 
 import requests
 from beaker.cache import cache_region
-from pyramid.httpexceptions import HTTPNotFound
+from patzilla.web.exceptions import HTTPNotFound
 from repoze.lru import lru_cache
 
 from patzilla.access.generic.exceptions import SearchException
