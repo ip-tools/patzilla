@@ -7,8 +7,8 @@ import shutil
 from typing import Dict, Union
 
 import platformdirs
-from beaker.cache import CacheManager
-from beaker.util import parse_cache_config_options
+from beaker.cache import CacheManager, cache_regions
+from beaker.util import coerce_cache_params, parse_cache_config_options
 
 logger = logging.getLogger(__name__)
 
@@ -80,3 +80,39 @@ def configure_cache_backend(kind="memory", cache_directory=None, clear_cache=Fal
     # Configure the caching subsystem at runtime.
     logger.info("Configuring object cache. kind={}, location={}".format(kind, cache_location))
     CacheManager(**parse_cache_config_options(cache_opts))
+
+
+def configure_cache_regions(settings):
+    """
+    Configure Beaker cache regions from application settings with `cache.` prefix,
+    e.g. `cache.regions = search, static` and `cache.search.expire = 7200`.
+
+    This is the same procedure `pyramid_beaker` used before.
+    """
+    cache_settings = {"regions": []}
+    for key, value in settings.items():
+        for prefix in ("beaker.cache.", "cache."):
+            if key.startswith(prefix):
+                name = key[len(prefix):].strip()
+                cache_settings[name] = value.strip() if isinstance(value, str) else value
+    coerce_cache_params(cache_settings)
+    cache_settings.setdefault("enabled", True)
+
+    for region in cache_settings["regions"]:
+        if not region:
+            continue
+        region_settings = {
+            "data_dir": cache_settings.get("data_dir"),
+            "lock_dir": cache_settings.get("lock_dir"),
+            "expire": cache_settings.get("expire", 60),
+            "enabled": cache_settings["enabled"],
+            "key_length": cache_settings.get("key_length", 250),
+            "type": cache_settings.get("type"),
+            "url": cache_settings.get("url"),
+        }
+        region_prefix = "%s." % region
+        for key in list(cache_settings.keys()):
+            if key.startswith(region_prefix):
+                region_settings[key[len(region_prefix):]] = cache_settings.pop(key)
+        coerce_cache_params(region_settings)
+        cache_regions[region] = region_settings
