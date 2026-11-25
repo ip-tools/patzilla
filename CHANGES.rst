@@ -15,6 +15,7 @@ Development
 - [mw] Improved management of failing access to image from OPS.
   Thanks, @papoteur-mga.
 - [mw] Enabled access to Espacenet for claims and description (DE and US)
+- [feat] Export: Added text report in ODT format. Thanks, @papoteur-mga.
 
 2026-10-20 0.170.0
 ==================

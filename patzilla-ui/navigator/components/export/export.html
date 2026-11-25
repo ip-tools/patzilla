@@ -22,12 +22,12 @@
 
             <!-- Output format -->
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <div class="lead inline">Output format</div>
                     <br/>
                     <div id="output-format" class="lead inline text-info"></div>
                 </div>
-                <div class="col-9">
+                <div class="col-10">
 
                     <div class="btn-group btn-group-toggle"
                          data-toggle="buttons"
@@ -76,6 +76,18 @@
 
                         <label class="btn btn-outline-secondary btn-symbol export-format"
                                data-name="format"
+                               data-value="odt"
+                               data-label="ODT"
+                               data-action-text="Text document with summaries"
+                               >
+                            <input type="radio">
+                            <i class="glyphicon glyphicon-text-background gi-2x"></i>
+                            <br/>
+                            Text report
+                        </label>
+
+                        <label class="btn btn-outline-secondary btn-symbol export-format"
+                               data-name="format"
                                data-value="pdf"
                                data-label="PDF"
                                data-action-text="Download Workbook in PDF format"
@@ -83,7 +95,7 @@
                             <input type="radio">
                             <img src="/static/img/icons/pdf.svg" class="pdf-svg" style="width: 36px; height: 36px"/>
                             <br/>
-                            PDF Report
+                            PDF report
                         </label>
 
                         <label class="btn btn-outline-secondary btn-symbol export-format"
@@ -171,8 +183,18 @@
 
                         <label class="btn btn-outline-secondary btn-symbol export-content"
                                data-name="report"
+                               data-value="odt"
+                               data-label="Text report"
+                               data-action-text="Add text report">
+                            <input type="checkbox">
+                            <i class="glyphicon glyphicon-text-background"></i>
+                            Text report
+                        </label>
+
+                        <label class="btn btn-outline-secondary btn-symbol export-content"
+                               data-name="report"
                                data-value="pdf"
-                               data-label="PDF Report"
+                               data-label="PDF report"
                                data-action-text="Add Workbook in PDF format"
                                >
                             <input type="checkbox">

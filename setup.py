@@ -102,6 +102,7 @@ requires = [
     'pathlib2',
 
     # Data formatting
+    'odfdo>=3.16.7,<4',
     'openpyxl<4',
     'xlrd3<2',
     'XlsxWriter<4',
