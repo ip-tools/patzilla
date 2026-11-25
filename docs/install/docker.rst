@@ -64,4 +64,4 @@ an appropriate snippet that should get you started::
     docker run --rm -it \
         --volume=$PWD/patzilla.ini:/etc/patzilla.ini:ro --publish=6543:6543 \
         local/patzilla \
-        pserve /etc/patzilla.ini
+        patzilla serve /etc/patzilla.ini

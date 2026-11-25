@@ -15,24 +15,17 @@ requires = [
     #   Backend
     # ----------------------------------------------
 
-    # Pyramid core
-    'pyramid>=2,<2.2',
+    # Web framework
+    'fastapi<1',
+    'uvicorn[standard]<1',
+    'python-multipart<1',
     'simplejson<5',
-    'pyramid-debugtoolbar<5',
-    'Pygments<3',
-    'pyramid-mako<2',
     'Mako<2',
     'Jinja2>=2.11.3,<4',
     'MarkupSafe<4',
-    'Akhet<3',
-    'waitress>=1,<4',
-    'Paste<3',                  # 3.10.1
-    'PasteDeploy<4',
-    'PasteScript<3',            # 3.7.0
 
     # Caching
     'Beaker<2',
-    'pyramid_beaker<0.10',
     'dogpile.cache<2',
     'platformdirs<5',
     'repoze-lru<0.9',
@@ -44,9 +37,6 @@ requires = [
     'mongodb_gridfs_beaker @ git+https://github.com/loucash/mongodb_gridfs_beaker@main',
     'mongoengine==0.20.0',      # 0.29.3
     'python-magic<1',
-
-    # Web services
-    'cornice>=5.2,<6',
 
     # Authorization
     'pycryptodome>=3,<4',
@@ -136,6 +126,7 @@ test_requires = [
     # -----------
     #   Testing
     # -----------
+    'httpx<1',
     'mock',
     'pytest>=4,<10',
     'pytest-cov>=2,<8',
@@ -156,8 +147,7 @@ setup(name='patzilla',
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Environment :: Web Environment",
-        "Framework :: Paste",
-        "Framework :: Pyramid",
+        "Framework :: FastAPI",
         "Intended Audience :: Developers",
         "Intended Audience :: Education",
         "Intended Audience :: End Users/Desktop",
@@ -225,10 +215,6 @@ setup(name='patzilla',
       },
 
       entry_points={
-        'paste.app_factory': [
-            'web     = patzilla:web',
-            'minimal = patzilla:minimal',
-        ],
 
         # This is now a Beaker builtin as per "ext:mongodb"
         #'beaker.backends': [

@@ -5,7 +5,7 @@ $(eval venvpath     := .venv)
 $(eval pip          := $(venvpath)/bin/pip)
 $(eval twine        := $(venvpath)/bin/twine)
 $(eval python       := $(venvpath)/bin/python)
-$(eval pserve       := $(venvpath)/bin/pserve)
+$(eval patzilla     := $(venvpath)/bin/patzilla)
 $(eval pytest       := $(venvpath)/bin/pytest)
 $(eval bumpversion  := $(venvpath)/bin/bumpversion)
 $(eval fab          := $(venvpath)/bin/fab)
@@ -21,7 +21,7 @@ jswatch:
 	NODE_OPTIONS=--openssl-legacy-provider npx yarn watch
 
 pywatch:
-	HUPPER_DEFAULT_MONITOR=hupper.watchdog.WatchdogFileMonitor $(pserve) --reload patzilla/config/development-local.ini
+	$(patzilla) serve patzilla/config/development-local.ini --reload
 
 
 js:
