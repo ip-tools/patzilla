@@ -4,16 +4,14 @@ import re
 import json
 import logging
 import mimetypes
-from typing import Dict, List, Union
+from typing import Annotated, Dict, List, Optional, Union
 
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from munch import munchify
-from cornice.service import Service
-from pyramid.settings import asbool
-from pyramid.threadlocal import get_current_request
-from pyramid.httpexceptions import HTTPServerError, HTTPBadRequest
+from patzilla.access.generic.exceptions import ServiceError
 from patzilla.navigator.export import Dossier, DossierXlsx
 from patzilla.navigator.services import handle_generic_exception
-from patzilla.util.config import read_list
+from patzilla.util.config import asbool, read_list
 from patzilla.util.cql.util import pair_to_cql
 from patzilla.util.data.container import SmartMunch
 from patzilla.util.expression.keywords import keywords_from_boolean_expression
@@ -21,54 +19,49 @@ from patzilla.util.numbers.numberlists import parse_numberlist, normalize_number
 from patzilla.util.python import exception_traceback
 from patzilla.util.xml.format import pretty_print
 from patzilla.util.web.email.submit import email_issue_report
+from patzilla.web.dependencies import CurrentUser, LenientBool, Params, State, Vendor
 
 log = logging.getLogger(__name__)
 
-query_expression_util_service = Service(
-    name='query-expression-utility-service',
-    path='/api/util/query-expression',
-    description="Query expression utility service")
-
-numberlist_util_service = Service(
-    name='numberlist-utility-service',
-    path='/api/util/numberlist',
-    description="Numberlist utility service")
-
-export_util_service = Service(
-    name='export-utility-service',
-    path='/api/util/export/{kind}.{format}',
-    description="Export utility service")
-
-issue_reporter_service = Service(
-    name='issue-reporter-service',
-    path='/api/util/issue/report',
-    description="Issue reporter service")
-
-void_service = Service(
-    name='void-service',
-    path='/api/void',
-    description="Void service")
+router = APIRouter(tags=["util"])
 
 
-@query_expression_util_service.decorator("post")
-def query_expression_util_handler(request):
+async def get_body(request: Request) -> bytes:
+    """The raw request body, for synchronous handlers."""
+    return await request.body()
+
+
+RawBody = Annotated[bytes, Depends(get_body)]
+
+
+@router.post("/api/util/query-expression", name="query-expression-utility-service",
+             summary="Query expression utility service")
+def query_expression_util_handler(response: Response, user: CurrentUser, body: RawBody):
 
     # TODO: split functionality between ops/depatisnet, google and sip
     try:
-        data = request.json
-        log.info('[{userid}] Expression data:  {data}'.format(userid=request.user.userid, data=data))
-        expression_data = make_expression_filter(data, request)
-        log.info('[{userid}] Expression query: {expression_data}'.format(userid=request.user.userid, expression_data=expression_data))
+        data = json.loads(body)
+        log.info('[{userid}] Expression data:  {data}'.format(userid=user.userid, data=data))
+        expression_data = make_expression_filter(data, response)
+        log.info('[{userid}] Expression query: {expression_data}'.format(userid=user.userid, expression_data=expression_data))
         return expression_data
 
     except Exception as ex:
-        message = handle_generic_exception(request, ex, 'compute-expression', request.text)
-        request.errors.add('util', 'expression-filter', message)
+        message = handle_generic_exception(ex, 'compute-expression', body.decode('utf-8', errors='replace'))
+        raise ServiceError('util', 'expression-filter', message)
 
 
-def make_expression_filter(data, request=None):
+def make_expression_filter(data, response: Optional[Response] = None):
+    """
+    Compute query expression and filter from comfort form data.
+    Raises `ServiceError` carrying all accumulated errors when criteria are invalid.
+    When `response` is given, propagate keywords using the `X-PatZilla-Query-Keywords` header.
+    """
 
-    request = request or get_current_request()
+    errors: List[Dict[str, str]] = []
+
+    def add_error(message):
+        errors.append({'location': 'query-expression-utility-service', 'name': 'comfort-form', 'description': message})
 
     if 'datasource' not in data or not data['datasource']:
         raise ValueError("Unable to compute expression: Missing datasource")
@@ -175,13 +168,13 @@ def make_expression_filter(data, request=None):
                 if not expression_part:
                     message = error_tpl.format(key, value, datasource)
                     log.warning(message)
-                    request.errors.add('query-expression-utility-service', 'comfort-form', message)
+                    add_error(message)
 
                 elif 'error' in expression_part:
                     message = error_tpl.format(key, value, datasource)
                     message += '<br/>' + str(expression_part.get('message', ''))
                     log.warning(message)
-                    request.errors.add('query-expression-utility-service', 'comfort-form', message)
+                    add_error(message)
 
                 else:
                     query = expression_part.get('query')
@@ -198,7 +191,7 @@ def make_expression_filter(data, request=None):
                         message = error_tpl.format(key, value, datasource)
                         message += '<br/>' + filter_part['message']
                         log.warning(message)
-                        request.errors.add('query-expression-utility-service', 'comfort-form', message)
+                        add_error(message)
 
                     else:
                         filter_item = filter_part.get('query')
@@ -207,7 +200,14 @@ def make_expression_filter(data, request=None):
 
 
     log.info("Propagating keywords from comfort form: {keywords}".format(keywords=keywords))
-    request.response.headers['X-PatZilla-Query-Keywords'] = json.dumps(keywords)
+    if response is not None:
+        response.headers['X-PatZilla-Query-Keywords'] = json.dumps(keywords)
+
+    # Report invalid criteria, like Cornice did with accumulated `request.errors`
+    if errors:
+        error = ServiceError(**errors[0])
+        error.errors = errors
+        raise error
 
     # assemble complete expression from parts, connect them with AND operators
     if datasource in ['ops', 'depatisnet']:
@@ -238,49 +238,49 @@ def make_expression_filter(data, request=None):
     return payload
 
 
-@numberlist_util_service.decorator("post")
-def numberlist_util_handler(request):
+@router.post("/api/util/numberlist", name="numberlist-utility-service", summary="Numberlist utility service")
+def numberlist_util_handler(request: Request, body: RawBody, normalize: LenientBool = False):
     response = {}
     numberlist = None
 
-    if request.content_type == 'text/plain':
-        numberlist = parse_numberlist(request.text)
+    content_type = request.headers.get('content-type', '').split(';')[0].strip().lower()
+    if content_type == 'text/plain':
+        numberlist = parse_numberlist(body.decode('utf-8'))
         response['numbers-sent'] = numberlist
 
     if numberlist:
-        if asbool(request.params.get('normalize')):
+        if normalize:
             response['numbers-normalized'] = normalize_numbers(numberlist)
 
     return response
 
-def request_to_options(request, options):
+def request_to_options(params: dict, options: dict):
+    """Propagate request parameters (query and form) to search options."""
 
     # TODO: transfer all modifiers 1:1
 
-    if asbool(request.params.get('query_data[modifiers][family-remove]')):
+    if asbool(params.get('query_data[modifiers][family-remove]')):
         options.update({'feature_family_remove': True})
-    elif asbool(request.params.get('query_data[modifiers][family-replace]')):
+    elif asbool(params.get('query_data[modifiers][family-replace]')):
         options.update({'feature_family_replace': True})
 
     # this is awful, switch to JSON POST
-    for key, value in request.params.items():
+    for key, value in params.items():
         if key.startswith('query_data[sorting]'):
             key = key.replace('query_data[sorting]', '').replace('[', '').replace(']', '')
             options.setdefault('sorting', {})
             options['sorting'][key] = value
 
 
-@export_util_service.decorator("post", renderer='null')
-def export_util_handler(request):  # pragma: nocover
+@router.post("/api/util/export/{kind}.{format}", name="export-utility-service", summary="Export utility service")
+def export_util_handler(kind: str, format: str, params: Params, state: State, user: CurrentUser, vendor: Vendor):  # pragma: nocover
 
-    #print 'request.matchdict:', request.matchdict
-
-    output_kind   = request.matchdict['kind']
-    output_format = request.matchdict['format']
+    output_kind   = kind
+    output_format = format
 
     # Convert numberlists to Excel
     if output_kind == 'numberlist':
-        numberlist = parse_numberlist(request.params.get('numberlist'))
+        numberlist = parse_numberlist(params.get('numberlist'))
 
         # FIXME: `create_xlsx` does not exist.
         payload = create_xlsx({'numberlist': numberlist})  # ty: ignore[unresolved-reference]
@@ -289,19 +289,17 @@ def export_util_handler(request):  # pragma: nocover
         filename = '{0}.xlsx'.format('numberlist')
         mimetype, encoding = mimetypes.guess_type(filename, strict=False)
 
-        request.response.content_type = mimetype
-        request.response.charset = None
-        request.response.headers['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=filename)
-
         #response['numberlist'] = numberlist
 
         # Send as response
-        return payload
+        return Response(payload, media_type=mimetype, headers={
+            'Content-Disposition': 'attachment; filename={filename}'.format(filename=filename),
+        })
 
     elif output_kind == 'dossier':
 
         log.info('Starting dossier export to format "{format}"'.format(format=output_format))
-        data = munchify(json.loads(request.params.get('json')))
+        data = munchify(json.loads(params.get('json')))
 
         # Debugging
         #print 'dossier-data:'; pprint(data.toDict())
@@ -324,15 +322,20 @@ def export_util_handler(request):  # pragma: nocover
 
             elif output_format == 'zip':
                 dossier = Dossier(data)
-                payload = dossier.to_zip(request=request, options=data.get('options'))
+                # The OPS client is optional, it is only needed when exporting media from OPS.
+                client = state.client('ops', user=user, vendor=vendor)
+                payload = dossier.to_zip(client=client, options=data.get('options'))
 
             else:
-                return HTTPBadRequest('Export format "{format}" is unknown.'.format(format=output_format))
+                raise HTTPException(400, 'Export format "{format}" is unknown.'.format(format=output_format))
+
+        except HTTPException:
+            raise
 
         except Exception as ex:
             message = 'Exporting format "{format}" failed.'.format(format=output_format)
             log.error('{message}. Exception:\n{trace}'.format(message=message, trace=exception_traceback()))
-            return HTTPServerError(message)
+            raise HTTPException(500, message)
 
         # Send HTTP response
         filename = 'dossier_{name}_{timestamp}.{format}'.format(
@@ -341,40 +344,34 @@ def export_util_handler(request):  # pragma: nocover
             format=output_format)
         mimetype, encoding = mimetypes.guess_type(filename, strict=False)
 
-        request.response.content_type = mimetype
-        request.response.charset = None
-        request.response.headers['Content-Disposition'] = 'attachment; filename={filename}'.format(filename=filename)
-
-        return payload
+        return Response(payload, media_type=mimetype, headers={
+            'Content-Disposition': 'attachment; filename={filename}'.format(filename=filename),
+        })
 
     # TODO: Log request
     log.error('Data export error')
 
     # TODO: Proper error page for user to report this problem.
-    raise HTTPServerError('Data export error. Please contact support.')
+    raise HTTPException(500, 'Data export error. Please contact support.')
 
 
+@router.post("/api/util/issue/report", name="issue-reporter-service", summary="Issue reporter service")
+def issue_reporter_handler(state: State, user: CurrentUser, vendor: Vendor, body: RawBody,
+                           targets: Optional[str] = None):
 
-
-@issue_reporter_service.decorator("post")
-def issue_reporter_handler(request):
-
-    targets = request.params.get('targets')
-
-    report_data = request.json
+    report_data = json.loads(body)
     report_data.setdefault('application', {})
     report = SmartMunch.munchify(report_data)
 
     # Add user information to issue report
-    user = request.user
-    if user:
+    if user is not None and user.is_authenticated:
 
-        # Anonymize sensitive user data
-        user.password = None
-        user.upstream_credentials = None
-
-        # Serialize user object and attach to report
-        report.application.user = SmartMunch(json.loads(user.to_json()))
+        # Serialize user object, anonymize sensitive user data, and attach to report.
+        # Do not modify the request's user object itself.
+        user_data = json.loads(user.to_json())
+        user_data.pop('password', None)
+        user_data.pop('upstream_credentials', None)
+        report.application.user = SmartMunch(user_data)
 
     # Send the whole beast to the standard application log
     log.error('Issue report [{targets}]:\n{report}'.format(
@@ -389,5 +386,5 @@ def issue_reporter_handler(request):
     for target in read_list(targets):
         if target.startswith('email:'):
             recipient = target.replace('email:', '')
-            email_issue_report(report, recipient)
+            email_issue_report(report, recipient, state.application_settings.smtp, vendor, user)
 

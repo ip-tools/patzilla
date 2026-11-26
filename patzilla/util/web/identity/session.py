@@ -157,7 +157,7 @@ def _should_set_secure_cookie(settings: AuthSettings, request: Any = None) -> bo
     if settings.session_cookie_secure:
         return True
     if request is not None:
-        scheme = getattr(request, "scheme", None)
+        scheme = getattr(getattr(request, "url", None), "scheme", None)
         forwarded_proto = getattr(request, "headers", {}).get("X-Forwarded-Proto", "")
         if scheme == "https" or forwarded_proto.lower() == "https":
             return True
@@ -171,10 +171,10 @@ def set_session_cookie(
     request: Any = None,
 ) -> None:
     """
-    Attach a hardened HttpOnly session cookie to a Pyramid response.
+    Attach a hardened HttpOnly session cookie to a Starlette response.
     """
     response.set_cookie(
-        name=settings.session_cookie_name,
+        key=settings.session_cookie_name,
         value=raw_token,
         max_age=settings.session_ttl_seconds,
         path="/",
@@ -190,9 +190,9 @@ def clear_session_cookie(
     request: Any = None,
 ) -> None:
     """
-    Delete the session cookie from a Pyramid response.
+    Delete the session cookie from a Starlette response.
     """
     response.delete_cookie(
-        name=settings.session_cookie_name,
+        key=settings.session_cookie_name,
         path="/",
     )

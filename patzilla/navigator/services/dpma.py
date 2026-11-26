@@ -2,93 +2,55 @@
 # (c) 2013-2018 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 
-import re
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound, HTTPBadRequest
 from beaker.cache import cache_region
+from fastapi import APIRouter, HTTPException, Response
 from patzilla.access.dpma import dpmaregister
-from patzilla.access.generic.exceptions import NoResultsException
+from patzilla.access.generic.exceptions import NoResultsException, ServiceError
 from patzilla.util.config import asbool
-from patzilla.util.expression.keywords import clean_keyword, keywords_to_response
+from patzilla.util.expression.keywords import keywords_to_response
 from patzilla.util.python import _exception_traceback, exception_traceback
 from patzilla.access.dpma.depatisconnect import depatisconnect_claims, depatisconnect_abstracts, depatisconnect_description
 from patzilla.access.dpma.depatisnet import DpmaDepatisnetAccess
-from patzilla.access.epo.espacenet.pyramid import espacenet_claims_handler, espacenet_description_handler
+from patzilla.access.epo.espacenet.service import espacenet_claims_handler, espacenet_description_handler
 from patzilla.navigator.services import cql_prepare_query, handle_generic_exception, ikofax_prepare_query
 from patzilla.navigator.services.util import request_to_options
+from patzilla.web.dependencies import Params
 
 log = logging.getLogger(__name__)
 
-depatisnet_published_data_search_service = Service(
-    name='depatisnet-published-data-search',
-    path='/api/depatisnet/published-data/search',
-    description="DEPATISnet search interface")
-depatisnet_published_data_crawl_service = Service(
-    name='depatisnet-published-data-crawl',
-    path=r'/api/depatisnet/published-data/crawl{dummy1:\/?}{constituents:.*?}',
-    description="DEPATISnet crawler interface")
-
-depatisconnect_description_service = Service(
-    name='depatisconnect-description',
-    path='/api/depatisconnect/{patent}/description',
-    description="DEPATISconnect description interface")
-depatisconnect_claims_service = Service(
-    name='depatisconnect-claims',
-    path='/api/depatisconnect/{patent}/claims',
-    description="DEPATISconnect claims interface")
-depatisconnect_abstract_service = Service(
-    name='depatisconnect-abstract',
-    path='/api/depatisconnect/{patent}/abstract',
-    description="DEPATISconnect abstract interface")
-
-dpma_register_service = Service(
-    name='dpma-register',
-    path='/api/dpma/register/{type}/{document}',
-    description="DPMAregister interface")
+router = APIRouter(tags=["dpma"])
 
 
-status_upstream_depatisnet = Service(
-    name='status_depatisnet',
-    path='/api/status/upstream/dpma/depatisnet',
-    description="Checks DPMA depatisnet upstream for valid response")
-status_upstream_depatisconnect = Service(
-    name='status_depatisconnect',
-    path='/api/status/upstream/dpma/depatisconnect',
-    description="Checks DPMA depatisconnect upstream for valid response")
-status_upstream_dpmaregister = Service(
-    name='status_dpmaregister',
-    path='/api/status/upstream/dpma/dpmaregister',
-    description="Checks DPMA dpmaregister upstream for valid response")
-
-@status_upstream_depatisnet.decorator("get")
-def status_upstream_depatisnet_handler(request):
+@router.get("/api/status/upstream/dpma/depatisnet", name="status_depatisnet",
+            summary="Checks DPMA depatisnet upstream for valid response")
+def status_upstream_depatisnet_handler():
     data = dpma_published_data_search_real('pn=EP666666', None)
     assert data, 'Empty response from depatisnet'
     return "OK"
 
-@status_upstream_depatisconnect.decorator("get")
-def status_upstream_depatisconnect_handler(request):
+@router.get("/api/status/upstream/dpma/depatisconnect", name="status_depatisconnect",
+            summary="Checks DPMA depatisconnect upstream for valid response")
+def status_upstream_depatisconnect_handler():
     data = depatisconnect_claims_handler_real('DE212016000074U1')
     assert data['xml'], 'Empty response from depatisconnect'
     return "OK"
 
-@status_upstream_dpmaregister.decorator("get")
-def status_upstream_dpmaregister_handler(request):
+@router.get("/api/status/upstream/dpma/dpmaregister", name="status_dpmaregister",
+            summary="Checks DPMA dpmaregister upstream for valid response")
+def status_upstream_dpmaregister_handler():
     data = dpmaregister.access_register('DE212016000074', 'json')
     assert data, 'Empty response from dpmaregister'
     return "OK"
 
 
-def prepare_search(request):
-
-    #pprint(request.params)
+def prepare_search(params, response):
 
     # CQL expression string
-    expression = request.params.get('expression', '').strip()
+    expression = params.get('expression', '').strip()
 
     # Compute expression syntax
-    syntax_cql = asbool(request.params.get('query_data[modifiers][syntax-cql]'))
-    syntax_ikofax = asbool(request.params.get('query_data[modifiers][syntax-ikofax]'))
+    syntax_cql = asbool(params.get('query_data[modifiers][syntax-cql]'))
+    syntax_ikofax = asbool(params.get('query_data[modifiers][syntax-ikofax]'))
     syntax = 'cql'
     if syntax_ikofax or expression.startswith('ikofax:'):
         expression = expression.replace('ikofax:', '')
@@ -104,7 +66,7 @@ def prepare_search(request):
     options.update({'syntax': syntax})
 
     # propagate request parameters to search options parameters
-    request_to_options(request, options)
+    request_to_options(params, options)
 
     # Transcode query expression
     if syntax == 'cql':
@@ -112,54 +74,56 @@ def prepare_search(request):
     elif syntax == 'ikofax':
         search = ikofax_prepare_query(expression)
     else:
-        request.errors.add('depatisnet-search', 'expression', 'Unknown syntax {}'.format(syntax))
+        raise ServiceError('depatisnet-search', 'expression', 'Unknown syntax {}'.format(syntax))
 
     # Propagate keywords to highlighting component
-    keywords_to_response(request, search=search)
+    keywords_to_response(response, search=search)
 
     return search, options
 
 
 # TODO: implement as JSON POST
-@depatisnet_published_data_search_service.decorator("get", accept="application/json")
-@depatisnet_published_data_search_service.decorator("post", accept="application/json")
-def depatisnet_published_data_search_handler(request):
+@router.api_route("/api/depatisnet/published-data/search", methods=["GET", "POST"],
+                  name="depatisnet-published-data-search", summary="DEPATISnet search interface")
+def depatisnet_published_data_search_handler(params: Params, response: Response):
     """Search for published-data at DEPATISnet"""
 
-    search, options = prepare_search(request)
+    search, options = prepare_search(params, response)
 
     # Run query through upstream database
     try:
         return dpma_published_data_search(search.expression, options)
 
     except SyntaxError as ex:
-        request.errors.add('depatisnet-search', 'expression', str(ex.msg))
-        log.warning(request.errors)
+        log.warning('depatisnet-search: Invalid expression: %s', ex.msg)
+        raise ServiceError('depatisnet-search', 'expression', str(ex.msg))
 
     except NoResultsException as ex:
         # Forward response to let the frontend recognize zero hits
-        request.response.status = HTTPNotFound.code
+        response.status_code = 404
         return ex.data
 
     except Exception as ex:
-        message = handle_generic_exception(request, ex, 'depatisnet-search', search.expression)
-        request.errors.add('depatisnet-search', 'search', message)
+        message = handle_generic_exception(ex, 'depatisnet-search', search.expression)
+        raise ServiceError('depatisnet-search', 'search', message)
 
 
-@depatisnet_published_data_crawl_service.decorator("get", accept="application/json")
-@depatisnet_published_data_crawl_service.decorator("post", accept="application/json")
-def depatisnet_published_data_crawl_handler(request):
+@router.api_route("/api/depatisnet/published-data/crawl", methods=["GET", "POST"],
+                  name="depatisnet-published-data-crawl", summary="DEPATISnet crawler interface")
+@router.api_route("/api/depatisnet/published-data/crawl/{constituents:path}", methods=["GET", "POST"],
+                  name="depatisnet-published-data-crawl")
+def depatisnet_published_data_crawl_handler(params: Params, response: Response):
     """Crawl published-data at DEPATISnet"""
 
-    search, options = prepare_search(request)
+    search, options = prepare_search(params, response)
 
     try:
         result = dpma_published_data_search(search.expression, options)
         return result
 
     except SyntaxError as ex:
-        request.errors.add('depatisnet-search', 'expression', str(ex.msg))
-        log.warning(request.errors)
+        log.warning('depatisnet-search: Invalid expression: %s', ex.msg)
+        raise ServiceError('depatisnet-search', 'expression', str(ex.msg))
 
     except Exception as ex:
         http_response = None
@@ -169,7 +133,7 @@ def depatisnet_published_data_crawl_handler(request):
             search.expression, ex, http_response, _exception_traceback()))
 
         message = 'An exception occurred while processing your query<br/>Reason: {}'.format(ex)
-        request.errors.add('depatisnet-search', 'crawl', message)
+        raise ServiceError('depatisnet-search', 'crawl', message)
 
 
 @cache_region('search', 'dpma_search')
@@ -188,10 +152,10 @@ def dpma_published_data_search_real(query, options):
 
     return data
 
-@depatisconnect_claims_service.decorator("get")
-def depatisconnect_claims_handler(request):
+@router.get("/api/depatisconnect/{patent}/claims", name="depatisconnect-claims",
+            summary="DEPATISconnect claims interface")
+def depatisconnect_claims_handler(patent: str):
     # TODO: use jsonified error responses
-    patent = request.matchdict['patent']
     # return depatisconnect_claims_handler_real(patent)
     try:
         return espacenet_claims_handler(patent)
@@ -205,23 +169,23 @@ def depatisconnect_claims_handler_real(patent):
 
     except KeyError as ex:
         log.error('No details at DEPATISconnect: %s %s', type(ex), ex)
-        raise HTTPNotFound(ex)
+        raise HTTPException(404, str(ex))
 
     except ValueError as ex:
         log.error('Fetching details from DEPATISconnect failed: %s %s', type(ex), ex)
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
     except Exception as ex:
         log.error('Unknown error from DEPATISconnect: %s %s.', type(ex), ex)
         log.error(exception_traceback())
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
     return claims
 
-@depatisconnect_description_service.decorator("get")
-def depatisconnect_description_handler(request):
+@router.get("/api/depatisconnect/{patent}/description", name="depatisconnect-description",
+            summary="DEPATISconnect description interface")
+def depatisconnect_description_handler(patent: str):
     # TODO: use jsonified error responses
-    patent = request.matchdict['patent']
     # return depatisconnect_description_handler_real(patent)
     try:
         return espacenet_description_handler(patent)
@@ -237,71 +201,68 @@ def depatisconnect_description_handler_real(patent):
 
     except KeyError as ex:
         log.error('No details at DEPATISconnect: %s %s', type(ex), ex)
-        raise HTTPNotFound(ex)
+        raise HTTPException(404, str(ex))
 
     except ValueError as ex:
         log.error('Fetching details from DEPATISconnect failed: %s %s', type(ex), ex)
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
     except Exception as ex:
         log.error('Unknown error from DEPATISconnect: %s %s.', type(ex), ex)
         log.error(exception_traceback())
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
     return description
 
 
-@depatisconnect_abstract_service.decorator("get")
-def depatisconnect_abstract_handler(request):
+@router.get("/api/depatisconnect/{patent}/abstract", name="depatisconnect-abstract",
+            summary="DEPATISconnect abstract interface")
+def depatisconnect_abstract_handler(patent: str, language: str = None):
     # TODO: use jsonified error responses
-    patent = request.matchdict['patent']
-    language = request.params.get('language')
     try:
         abstract = depatisconnect_abstracts(patent, language)
 
     except KeyError as ex:
         log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
-        raise HTTPNotFound(ex)
+        raise HTTPException(404, str(ex))
 
     except ValueError as ex:
         log.error('Problem fetching details of DEPATISconnect: %s %s', type(ex), ex)
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
     return abstract
 
 
-@dpma_register_service.decorator("get", renderer='null')
-def dpma_register_handler(request):
+@router.get("/api/dpma/register/{type}/{document}", name="dpma-register", summary="DPMAregister interface")
+def dpma_register_handler(type: str, document: str, format: str = None, lang: str = 'en'):
 
-    type = request.matchdict['type']
-    document = request.matchdict['document']
-    format = request.params.get('format')
-    language = request.params.get('lang', 'en')
+    language = lang
 
     try:
         if type == 'patent':
             payload = dpmaregister.access_register(document, format, language)
         else:
-            raise HTTPBadRequest('IP right type "{}" not implemented yet.'.format(type))
+            raise HTTPException(400, 'IP right type "{}" not implemented yet.'.format(type))
 
     except dpmaregister.NoResults as ex:
-        raise HTTPNotFound(ex)
+        raise HTTPException(404, str(ex))
 
     except dpmaregister.UnknownFormat as ex:
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
     except ValueError as ex:
-        raise HTTPBadRequest(ex)
+        raise HTTPException(400, str(ex))
 
+    media_type = None
     if format == 'xml':
-        request.response.content_type = 'application/xml'
+        media_type = 'application/xml'
     elif format.startswith('json'):
-        request.response.content_type = 'application/json'
+        media_type = 'application/json'
     elif format.startswith('html'):
-        request.response.content_type = 'text/html'
+        media_type = 'text/html'
     elif format == 'pdf':
-        request.response.content_type = 'application/pdf'
+        media_type = 'application/pdf'
     elif format == 'url':
-        request.response.content_type = 'text/uri-list'
+        media_type = 'text/uri-list'
 
-    return payload
+    return Response(payload, media_type=media_type)

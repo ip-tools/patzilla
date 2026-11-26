@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2022 Andreas Motl <andreas.motl@ip-tools.org>
-from pyramid.view import view_config
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
+# (c) 2013-2026 Andreas Motl <andreas.motl@ip-tools.org>
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import PlainTextResponse, RedirectResponse
+
 from patzilla.util.numbers.normalize import normalize_patent
 
-def includeme(config):
-    config.add_route('jump-office', '/office/{office}/{service}/{document_type}/{document_number}')
+router = APIRouter(include_in_schema=False)
 
-@view_config(route_name='jump-office')
-def jump_office(request):
-    office          = request.matchdict.get('office')
-    service         = request.matchdict.get('service')
-    document_type   = request.matchdict.get('document_type')
-    document_number = request.matchdict.get('document_number')
-    redirect        = request.params.get('redirect')
+
+@router.get('/office/{office}/{service}/{document_type}/{document_number}', name='jump-office')
+def jump_office(office: str, service: str, document_type: str, document_number: str, redirect: str = None):
+    """Redirect to, or respond with, the URL of a document at a patent office or other service."""
 
     if document_number:
 
@@ -24,7 +21,7 @@ def jump_office(request):
             try:
                 url = dra.get_document_url(document_number)
             except:
-                return HTTPNotFound('Document number {} not found.'.format(document_number))
+                raise HTTPException(404, 'Document number {} not found.'.format(document_number))
 
             # TODO: application number vs. file number, e.g.
             # - EP666666   vs. E95480005.8
@@ -72,9 +69,9 @@ def jump_office(request):
 
         if url:
             if redirect:
-                return HTTPFound(location=url)
+                return RedirectResponse(url, status_code=302)
             else:
-                return url
+                return PlainTextResponse(url)
 
-    return HTTPNotFound('Could not locate document "{document_number}" at {office}/{service}.'.format(
+    raise HTTPException(404, 'Could not locate document "{document_number}" at {office}/{service}.'.format(
         document_number=document_number, office=office, service=service))
