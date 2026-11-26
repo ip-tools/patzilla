@@ -33,21 +33,23 @@ class DatasourceCredentialsManager:
     identifier: str
     credentials_getter: Type[AbstractCredentialsGetter]
 
-    def resolve(self, request):
+    def resolve(self, user, vendor, datasource_settings):
+        """
+        Resolve credentials for the requesting `user`, the effective `vendor` settings,
+        and the system-wide `datasource_settings`. Returns `(source, credentials)`.
+        """
 
         logger.debug("Getting credentials for data source: {}".format(self.identifier))
 
-        registry = request.registry
-
-        vendor_settings = request.runtime_settings.vendor
+        vendor_settings = vendor
 
         credentials_source = None
         credentials_data = None
 
         # Check user-associated credentials.
-        if request.user and request.user.upstream_credentials and request.user.upstream_credentials.has_key(self.identifier):
-            credentials_source = request.user.userid
-            credentials_data = request.user.upstream_credentials[self.identifier]
+        if user and user.upstream_credentials and self.identifier in user.upstream_credentials:
+            credentials_source = user.userid
+            credentials_data = user.upstream_credentials[self.identifier]
 
         # Check vendor-wide credentials.
         elif vendor_settings and 'datasource_settings' in vendor_settings:
@@ -61,7 +63,7 @@ class DatasourceCredentialsManager:
         if not credentials_data:
             try:
                 credentials_source = 'system'
-                credentials_data = self.credentials_getter.from_settings(registry.datasource_settings)
+                credentials_data = self.credentials_getter.from_settings(datasource_settings)
             except:
                 pass
 

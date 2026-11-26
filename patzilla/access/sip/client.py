@@ -6,12 +6,11 @@ from typing import Optional, Dict, Union
 
 import requests
 from lxml import etree
-from beaker.cache import cache_region
 from munch import Munch
 from requests.exceptions import ConnectionError, ConnectTimeout
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
-from patzilla.access.sip import get_sip_client
+from patzilla.boot.cache import client_cache_region
 from patzilla.util.data.container import SmartMunch
 
 """
@@ -99,7 +98,7 @@ class SipClient(GenericSearchClient):
         self.stale = True
 
     def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
-        return sip_published_data_search(query=query, options=options)
+        return sip_published_data_search(self, query, options)
 
     def search(self, expression, options=None):
 
@@ -367,13 +366,12 @@ class SipSearchResponse(GenericSearchResponse):
         return document['famid']
 
 
-@cache_region('search', 'sip_search')
-def sip_published_data_search(query, options):
+@client_cache_region('search', 'sip_search')
+def sip_published_data_search(sip, query, options):
 
     # <applicant type="inpadoc">grohe</applicant>
     # <applicant type="inpadoc">siemens</applicant>
 
-    sip = get_sip_client()
     try:
         data = sip.search(query, options)
 
@@ -393,9 +391,8 @@ def sip_published_data_search(query, options):
         raise
 
 
-@cache_region('search')
-def sip_published_data_crawl(constituents, query, chunksize):
-    sip = get_sip_client()
+@client_cache_region('search')
+def sip_published_data_crawl(sip, constituents, query, chunksize):
     try:
         return sip.crawl(constituents, query, chunksize)
     except SyntaxError as ex:

@@ -3,7 +3,6 @@
 import logging
 from email.utils import formataddr
 from validate_email import validate_email
-from pyramid.threadlocal import get_current_request
 from patzilla.util.config import read_config, read_list, to_list
 from patzilla.util.data.container import SmartMunch
 from patzilla.util.email.message import EmailMessage
@@ -11,36 +10,30 @@ from patzilla.util.email.message import EmailMessage
 log = logging.getLogger(__name__)
 
 
-def message_factory(**kwargs):
-
-    request = get_current_request()
-    application_settings = request.registry.application_settings
-
-    settings = request.runtime_settings
+def message_factory(smtp_settings, vendor, user, **kwargs):
 
     # EmailMessage builder
-    message = EmailMessage(application_settings.smtp, settings.vendor.email)
+    message = EmailMessage(smtp_settings, vendor.email)
 
-    if 'reply' in settings.vendor.email.addressbook:
-        message.add_reply(read_list(settings.vendor.email.addressbook.reply))
+    if 'reply' in vendor.email.addressbook:
+        message.add_reply(read_list(vendor.email.addressbook.reply))
 
     is_support_email = False
     if 'recipients' in kwargs:
         for recipient in kwargs['recipients']:
             if recipient == 'support':
                 is_support_email = True
-            if recipient in settings.vendor.email.addressbook:
-                message.add_recipient(read_list(settings.vendor.email.addressbook[recipient]))
+            if recipient in vendor.email.addressbook:
+                message.add_recipient(read_list(vendor.email.addressbook[recipient]))
             else:
                 log.warning('Could not add recipient {}'.format(recipient))
 
     # Extend "To" and "Reply-To" addresses by email address of user
-    #request.user.username = 'test@example.org'; request.user.fullname = 'Hello World'   # debugging
-    if request.user.username:
-        username = request.user.username
+    if user is not None and user.username:
+        username = user.username
         if validate_email(username):
-            if request.user.fullname:
-                pair = (request.user.fullname, username)
+            if user.fullname:
+                pair = (user.fullname, username)
             else:
                 pair = (None, username)
 
@@ -63,7 +56,7 @@ def message_factory(**kwargs):
     return message
 
 
-def email_issue_report(report, recipients):
+def email_issue_report(report, recipients, smtp_settings, vendor, user):
 
     recipients = to_list(recipients)
 
@@ -86,7 +79,7 @@ def email_issue_report(report, recipients):
     # Add JSON report as attachment
     files = {'report.json': report.pretty()}
 
-    email = message_factory(recipients=recipients)
+    email = message_factory(smtp_settings, vendor, user, recipients=recipients)
     email.send(
         subject     = subject,
         message     = message,

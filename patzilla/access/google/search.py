@@ -4,7 +4,7 @@ import json
 import re
 from typing import cast
 
-from pyramid.encode import urlencode
+from urllib.parse import urlencode
 # py27 import re
 import sys
 import logging

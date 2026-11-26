@@ -15,7 +15,7 @@ import io
 import subprocess
 from six import BytesIO
 from tempfile import NamedTemporaryFile
-from cornice.util import to_list
+from patzilla.util.config import to_list
 from patzilla.util.python.decorators import memoize
 from patzilla.util.python.system import run_command, find_program_candidate
 

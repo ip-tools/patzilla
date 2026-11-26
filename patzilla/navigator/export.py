@@ -13,17 +13,15 @@ import tempfile
 from io import BytesIO
 from textwrap import dedent
 
-from cornice.renderer import JSONError
 from lxml import etree as ET
 from munch import munchify, Munch
 from json.encoder import JSONEncoder
 from zipfile import ZipFile, ZIP_DEFLATED
 from collections import OrderedDict
 from xlsxwriter.worksheet import Worksheet
-from pyramid.httpexceptions import HTTPError
 from patzilla.access.generic.pdf import pdf_ziparchive_add
 from patzilla.access.epo.ops.api import ops_description, get_ops_biblio_data, ops_register, ops_claims, ops_family_inpadoc
-from patzilla.access.generic.exceptions import ignored
+from patzilla.access.generic.exceptions import ignored, is_http_error
 from patzilla.util.date import humanize_date_english
 from patzilla.util.numbers.common import decode_patent_number, encode_epodoc_number
 from patzilla.util.python import exception_traceback
@@ -173,8 +171,11 @@ class Dossier:
         return json.dumps(dataframe.to_dict(orient='records'), indent=4, cls=PandasJSONEncoder)
         #return dataframe.to_json(orient='records', date_format='iso')
 
-    def to_zip(self, request=None, options=None):
+    def to_zip(self, client=None, options=None):
         """
+        Create a Zip archive containing reports and media files.
+        `client` is the EPO OPS client, required for acquiring media files.
+
          u'options': {u'media': {u'biblio': False,
                                  u'claims': False,
                                  u'description': False,
@@ -253,7 +254,7 @@ class Dossier:
 
             # Add full PDF documents
             if options.media.pdf:
-                pdf_ziparchive_add(zipfile, documents, path='media/pdf')
+                pdf_ziparchive_add(client, zipfile, documents, path='media/pdf')
 
             # Add XML data
             # TODO: Add @report.txt for reflecting missing documents, differentiate between different XML kinds.
@@ -275,15 +276,13 @@ class Dossier:
                 # Add XML "bibliographic" data (full-cycle)
                 if options.media.biblio:
                     try:
-                        biblio_payload = get_ops_biblio_data('publication', document, xml=True)
+                        biblio_payload = get_ops_biblio_data(client, 'publication', document, xml=True)
                         zipfile.writestr('media/xml/{document}.biblio.xml'.format(document=document), biblio_payload)
                         status[document]['biblio'] = True
 
                     except Exception as ex:
                         status[document]['biblio'] = False
                         self.handle_exception(ex, 'biblio', document)
-
-                    self.clear_request_errors(request)
 
                 # Add XML "description" full text data
                 # OPS does not have full texts for US, ...
@@ -293,7 +292,7 @@ class Dossier:
                         try:
                             # Write XML
                             document_number = encode_epodoc_number(patent)
-                            description_payload = ops_description(document_number, xml=True)
+                            description_payload = ops_description(client, document_number, xml=True)
                             zipfile.writestr('media/xml/{document}.description.xml'.format(document=document), description_payload)
                             status[document]['description'] = True
 
@@ -306,8 +305,6 @@ class Dossier:
                         except Exception as ex:
                             self.handle_exception(ex, 'description', document)
 
-                    self.clear_request_errors(request)
-
                 # Add XML "claims" full text data
                 # OPS does not have full texts for US, ...
                 if options.media.claims:
@@ -316,7 +313,7 @@ class Dossier:
                         try:
                             # Write XML
                             document_number = encode_epodoc_number(patent)
-                            claims_payload = ops_claims(document_number, xml=True)
+                            claims_payload = ops_claims(client, document_number, xml=True)
                             zipfile.writestr('media/xml/{document}.claims.xml'.format(document=document), claims_payload)
                             status[document]['claims'] = True
 
@@ -329,13 +326,11 @@ class Dossier:
                         except Exception as ex:
                             self.handle_exception(ex, 'claims', document)
 
-                    self.clear_request_errors(request)
-
                 # Add XML register data
                 if options.media.register:
 
                     try:
-                        register_payload = ops_register('publication', document, xml=True)
+                        register_payload = ops_register(client, 'publication', document, xml=True)
                         zipfile.writestr('media/xml/{document}.register.xml'.format(document=document), register_payload)
                         status[document]['register'] = True
 
@@ -343,21 +338,17 @@ class Dossier:
                         status[document]['register'] = False
                         self.handle_exception(ex, 'register', document)
 
-                    self.clear_request_errors(request)
-
                 # Add XML family data
                 if options.media.family:
                     try:
                         document_number = encode_epodoc_number(patent, options={'nokind': True})
-                        family_payload = ops_family_inpadoc('publication', document_number, 'biblio', xml=True)
+                        family_payload = ops_family_inpadoc(client, 'publication', document_number, 'biblio', xml=True)
                         zipfile.writestr('media/xml/{document}.family.xml'.format(document=document), family_payload)
                         status[document]['family'] = True
 
                     except Exception as ex:
                         status[document]['family'] = False
                         self.handle_exception(ex, 'family', document)
-
-                    self.clear_request_errors(request)
 
 
             #from pprint import pprint; print '====== status:'; pprint(status)
@@ -412,7 +403,7 @@ class Dossier:
         return payload
 
     def handle_exception(self, ex, service_name, document):
-        if isinstance(ex, (JSONError, HTTPError)) and hasattr(ex, 'status_int') and ex.status_int == 404:
+        if is_http_error(ex, 404):
             log.warning('XML({service_name}, {document}) not found'.format(service_name=service_name, document=document))
 
             # Signal exception has been handled (ignored)
@@ -423,11 +414,6 @@ class Dossier:
 
         # Signal exception should be re-raised, maybe
         return False
-
-    @staticmethod
-    def clear_request_errors(request):
-        # Reset cornice error store to prevent errors adding up on bulkyfied OPS requests
-        del request.errors[:]
 
     @staticmethod
     def get_fulltext(payload, what):

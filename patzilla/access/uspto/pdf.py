@@ -59,7 +59,7 @@ from collections import OrderedDict
 
 import requests
 from beaker.cache import cache_region
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
 from repoze.lru import lru_cache
 
 from patzilla.access.generic.exceptions import SearchException
@@ -178,7 +178,7 @@ def fetch_url(url, method="get"):
     else:
         msg = 'USPTO [PDF]: Accessing resource at {} failed. status={}, response={}'.format(
             url, response.status_code, response.text)
-    raise HTTPNotFound(msg)
+    raise HTTPException(404, msg)
 
 
 def get_patent_number_patentcenter(any_number):  # pragma: nocover
@@ -301,7 +301,7 @@ class UsptoDocumentAccess:
             logger.warning(message)
 
             msg = 'USPTO [PDF]: Resource {} not found'.format(self.document_number)
-            raise HTTPNotFound(msg)
+            raise HTTPException(404, msg)
 
     def get_allpages_urls(self):
         """
@@ -311,7 +311,7 @@ class UsptoDocumentAccess:
 
         if not (data and data["patents"]):
             msg = 'USPTO [PDF]: Resource {} not found'.format(self.document_number)
-            raise HTTPNotFound(msg)
+            raise HTTPException(404, msg)
 
         first_hit = data["patents"][0]
         page_count = first_hit["pageCount"]

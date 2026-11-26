@@ -5,15 +5,11 @@ import arrow
 import logging
 import datetime
 from pbkdf2 import crypt
-from pymongo.mongo_client import MongoClient
 from pymongo.uri_parser import parse_uri
 from mongoengine import connect as mongoengine_connect, signals, IntField, DoesNotExist
 from mongoengine.document import Document
 from mongoengine.fields import BooleanField, DateTimeField, DictField, ListField, StringField
 from mongoengine.errors import NotUniqueError
-from pyramid.threadlocal import get_current_request
-from zope.interface.interface import Interface
-from zope.interface import implementer
 
 log = logging.getLogger(__name__)
 
@@ -36,22 +32,9 @@ def ensure_utc_naive(dt: datetime.datetime) -> datetime.datetime:
 
 
 # ------------------------------------------
-#   bootstrapping
-# ------------------------------------------
-def includeme(config):
-    #config.add_subscriber(setup_pymongo, "pyramid.events.NewRequest")
-    config.add_subscriber(setup_mongoengine, "pyramid.events.ApplicationCreated")
-    config.add_subscriber(provision_users, "pyramid.events.ApplicationCreated")
-    # TODO: Is it really needed in "minimal" mode?
-    config.registry.registerUtility(UserMetricsManager())
-
-
-# ------------------------------------------
 #   database connection
 # ------------------------------------------
-def setup_mongoengine(event):
-    registry = event.app.registry
-    mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
+def setup_mongoengine(mongodb_uri):
     if mongodb_uri is None:
         log.warning("No user identity database enabled")
         return
@@ -60,14 +43,6 @@ def setup_mongoengine(event):
         mongoengine_connect(mongodb_database, host=mongodb_uri)
     except Exception:
         log.exception('Failed to connect to MongoDB database at %s', mongodb_uri)
-
-# provide lowlevel access to the pymongo connection via ``request.db``
-def setup_pymongo(event):
-    registry = event.request.registry
-    mongodb_uri = registry.settings.get('mongodb.patzilla.uri')
-    mongodb_database = parse_uri(mongodb_uri)['database']
-    mongodb_connection = MongoClient(mongodb_uri)
-    event.request.db = mongodb_connection[mongodb_database]
 
 
 # ------------------------------------------
@@ -251,22 +226,9 @@ class UserMetrics(Document):
 # ------------------------------------------
 #   utilities
 # ------------------------------------------
-class IUserMetricsManager(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-@implementer(IUserMetricsManager)
 class UserMetricsManager:
 
-# py27    implements(IUserMetricsManager)
-
-    def measure_upstream(self, upstream, volume):
-
-        # measure per-user
-        request = get_current_request()
-        if not hasattr(request, 'user'):
-            return
-
-        userid = request.user and request.user.userid or None
+    def measure_upstream(self, upstream, volume, userid=None):
 
         log.debug('Measure transfer: userid={0}, upstream={1}, volume={2}'.format(userid, upstream, volume))
         date = arrow.utcnow().format('YYYY-MM-DD')
@@ -291,7 +253,7 @@ class UserMetricsManager:
 # ------------------------------------------
 #   provisioning
 # ------------------------------------------
-def provision_users(event):
+def provision_users():
 
     # Disabled as of 2017-08-09.
     # Enable temporarily again to create "admin" user on daemon start. YMMV.

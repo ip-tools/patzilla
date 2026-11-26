@@ -5,7 +5,7 @@ from io import BytesIO
 from zipfile import ZipFile, ZipInfo, ZIP_DEFLATED
 
 import attr
-from pyramid.httpexceptions import HTTPError
+from patzilla.access.generic.exceptions import is_http_error
 from patzilla.util.numbers.common import decode_patent_number
 from patzilla.util.python import exception_traceback
 from patzilla.access.epo.ops.api import pdf_document_build as ops_build_pdf
@@ -23,7 +23,7 @@ class PDFResponse:
     success = attr.ib(default=False)
 
 
-def pdf_universal(patent):
+def pdf_universal(client, patent):
     """
     Attempt to fetch PDF document from best practice sources.
 
@@ -39,7 +39,7 @@ def pdf_universal(patent):
 
     # Acquire PDF document.
     try:
-        response.success = pdf_universal_real(patent, response)
+        response.success = pdf_universal_real(client, patent, response)
 
     except Exception as ex:
         log.warning('PDF acquisition for "%s" failed: %s', patent, ex)
@@ -48,7 +48,7 @@ def pdf_universal(patent):
     return response
 
 
-def pdf_universal_real(patent, response):
+def pdf_universal_real(client, patent, response):
 
     document = decode_patent_number(patent)
 
@@ -67,7 +67,7 @@ def pdf_universal_real(patent, response):
 
         except Exception as ex:
             log.warning('PDF {}: Not available from EPO. {}'.format(patent, ex))
-            if not isinstance(ex, HTTPError):
+            if not is_http_error(ex):
                 log.error(exception_traceback())
 
     # 2. Next, try USPTO servers if it's a US document.
@@ -79,13 +79,12 @@ def pdf_universal_real(patent, response):
 
         except Exception as ex:
             log.warning('PDF {}: Not available from USPTO. {}'.format(patent, ex))
-            if not isinstance(ex, HTTPError):
+            if not is_http_error(ex):
                 log.error(exception_traceback())
 
     # 3. Next, try DPMA servers.
     """
     if response.pdf is None:
-        from pyramid.httpexceptions import HTTPNotFound
         from patzilla.util.numbers.normalize import normalize_patent
         from patzilla.access.dpma.depatisconnect import fetch_pdf as depatisconnect_fetch_pdf, NotConfiguredError
         number_normalized = normalize_patent(patent)
@@ -104,14 +103,14 @@ def pdf_universal_real(patent, response):
             if isinstance(ex, NotConfiguredError):
                 log.warning(ex)
 
-            elif not isinstance(ex, HTTPNotFound):
+            elif not is_http_error(ex, 404):
                 log.error(exception_traceback())
     """
 
-    # 4. Next, try EPO OPS service.
+    # 4. Next, try EPO OPS service, when configured.
     # Note this will assemble PDF out of single pages requested
     # from EPO OPS, which is a rather expensive operation.
-    if response.pdf is None:
+    if response.pdf is None and client is not None:
 
         # 2016-04-21: Amend document number for CA documents, e.g. CA2702893C -> CA2702893A1
         # TODO: Reenable feature, but only when prefixing document with a custom page
@@ -120,12 +119,12 @@ def pdf_universal_real(patent, response):
         #    patent = document.country + document.number
 
         try:
-            response.pdf = ops_build_pdf(patent)
+            response.pdf = ops_build_pdf(client, patent)
             response.datasource = 'epo-ops'
 
         except Exception as ex:
             log.warning('PDF {}: Not available from OPS. {}'.format(patent, ex))
-            if not isinstance(ex, HTTPError):
+            if not is_http_error(ex):
                 log.error(exception_traceback())
 
     # 5. Last but not least, try to redirect to USPTO server.
@@ -144,7 +143,7 @@ def pdf_universal_real(patent, response):
 
         except Exception as ex:
             reason = ex
-            if not isinstance(ex, HTTPError):
+            if not is_http_error(ex):
                 log.error(exception_traceback())
 
         if not uspto_found:
@@ -153,16 +152,16 @@ def pdf_universal_real(patent, response):
     return True
 
 
-def pdf_ziparchive(patents):
+def pdf_ziparchive(client, patents):
     buffer = BytesIO()
     with ZipFile(buffer, 'w', ZIP_DEFLATED) as archive:
-        pdf_ziparchive_add(archive, patents)
+        pdf_ziparchive_add(client, archive, patents)
     buffer.seek(0)
     payload = buffer.read()
     return {'zip': payload}
 
 
-def pdf_ziparchive_add(zipfile, numbers, path=''):
+def pdf_ziparchive_add(client, zipfile, numbers, path=''):
 
     delivered = []
     missing = []
@@ -175,7 +174,7 @@ def pdf_ziparchive_add(zipfile, numbers, path=''):
 
         log.info('PDF request for document {document}'.format(document=patent))
         try:
-            data = pdf_universal(patent)
+            data = pdf_universal(client, patent)
             if data.pdf is not None:
                 inode = ZipInfo('{path}/{document}.pdf'.format(path=path, document=patent))
                 zipfile.writestr(inode, data.pdf)
@@ -184,7 +183,9 @@ def pdf_ziparchive_add(zipfile, numbers, path=''):
                 log.warning('No PDF for "{patent}" in context of a bulk request'.format(patent=patent))
                 missing.append(patent)
 
-        except HTTPError as ex:
+        except Exception as ex:
+            if not is_http_error(ex):
+                raise
             log.error('Problem fetching PDF for "{patent}" in context of a bulk request. error={ex}'.format(
                 patent=patent, ex=ex))
             missing.append(patent)

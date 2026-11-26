@@ -3,21 +3,17 @@
 import logging
 import os
 
-from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface import implementer
-from zope.interface.interface import Interface
-from zope.interface import implementer
+from starlette.exceptions import HTTPException
 
-from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
+from patzilla.access.generic.credentials import AbstractCredentialsGetter
 from patzilla.access.sip.client import SipClient
 
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
+def create_pool(datasource_settings):
 
     # Acquire settings for SIP.
-    datasource_settings = config.registry.datasource_settings
     sip_settings = datasource_settings.datasource.sip
 
     # Get URI settings, optionally falling back to environment variables.
@@ -26,8 +22,7 @@ def includeme(config):
     # When an API URI can be discovered, register the component.
     if api_uri:
         logger.info("Using SIP API at {}".format(api_uri))
-        config.registry.registerUtility(SipClientPool(api_uri=api_uri))
-        config.add_subscriber(attach_sip_client, "pyramid.events.ContextFound")
+        return SipClientPool(api_uri=api_uri)
 
 
 class SipCredentialsGetter(AbstractCredentialsGetter):
@@ -54,39 +49,9 @@ class SipCredentialsGetter(AbstractCredentialsGetter):
         }
 
 
-def attach_sip_client(event):
-    """
-    Create SIP client pool per credentials context.
-    """
-
-    # Don't start data source machinery on requests to static assets.
-    if '/static' in event.request.url:
-        return
-
-    request = event.request
-
-    try:
-        dcm = DatasourceCredentialsManager(identifier="sip", credentials_getter=SipCredentialsGetter)
-        credentials_source, credentials_data = dcm.resolve(request)
-    except:
-        logger.exception("Unable to resolve credentials for SIP")
-        return
-
-    username = credentials_data['api_username'][:10]
-    logger.debug('Attaching SIP credentials from "{}": {}'.format(credentials_source, username))
-
-    pool = request.registry.getUtility(ISipClientPool)
-    request.sip_client = pool.get(credentials_source, credentials_data)
-
-
-class ISipClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(ISipClientPool)
 class SipClientPool:
     """
-    SIP client pool as Pyramid utility implementation.
+    SIP client pool, holding one client per credentials context.
     """
 
     def __init__(self, api_uri):
@@ -98,7 +63,7 @@ class SipClientPool:
         if identifier not in self.clients:
 
             if credentials is None:
-                raise HTTPUnauthorized("Unable to discover credentials for SIP. identifier={}".format(identifier))
+                raise HTTPException(401, "Unable to discover credentials for SIP. identifier={}".format(identifier))
 
             logger.info("Creating upstream client for SIP. identifier={}".format(identifier))
             self.clients[identifier] = SipClient(

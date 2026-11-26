@@ -13,7 +13,7 @@ import requests
 from beaker.cache import cache_region
 from munch import Munch
 from requests import RequestException
-from patzilla.access.depatech import get_depatech_client
+from patzilla.boot.cache import client_cache_region
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
 from patzilla.util.data.container import SmartMunch
@@ -54,7 +54,7 @@ class DepaTechClient(GenericSearchClient):
     def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
         if isinstance(query, str):
             raise TypeError("Query must be a dictionary-like object")
-        return depatech_search(query=query, options=options)
+        return depatech_search(self, query, options)
 
     @cache_region('search')
     def search(self, query: Munch, options=None):
@@ -333,11 +333,10 @@ class DepaTechSearchResponse(GenericSearchResponse):
         return document['fam']
 
 
-def depatech_search(query: Munch, options: Optional[Dict]) -> SmartMunch:
+def depatech_search(client, query: Munch, options: Optional[Dict]) -> SmartMunch:
 
     options = options or SmartMunch()
 
-    client = get_depatech_client()
     try:
         data = client.search(query, options)
         # Raise an exception on empty results to skip caching this response
@@ -350,9 +349,8 @@ def depatech_search(query: Munch, options: Optional[Dict]) -> SmartMunch:
         raise
 
 
-@cache_region('search')
-def depatech_crawl(constituents, query, chunksize, options=None):
-    client = get_depatech_client()
+@client_cache_region('search')
+def depatech_crawl(client, constituents, query, chunksize, options=None):
     try:
         return client.crawl(constituents, query, chunksize)
     except SyntaxError as ex:
