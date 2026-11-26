@@ -5,7 +5,7 @@ import json
 from click.testing import CliRunner
 
 import pytest
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
 
 from patzilla.access.epo.ops.client import OpsCredentialsGetter
 from patzilla.commands import cli
@@ -62,7 +62,7 @@ def test_command_ops_image_info_failure():
     """
     runner = CliRunner()
 
-    with pytest.raises(HTTPNotFound) as ex:
+    with pytest.raises(HTTPException) as ex:
         runner.invoke(cli, "ops image-info --document=EP123A2", catch_exceptions=False)
     ex.match("No image information for document=EP123A2")
 
@@ -111,6 +111,6 @@ def test_command_ops_image_failure():
     """
     runner = CliRunner()
 
-    with pytest.raises(HTTPNotFound) as ex:
+    with pytest.raises(HTTPException) as ex:
         runner.invoke(cli, "ops image --document=EP123A2 --page=1", catch_exceptions=False)
     ex.match("No image information for document=EP123A2")

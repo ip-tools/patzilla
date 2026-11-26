@@ -5,7 +5,7 @@ from docopt import docopt
 
 from patzilla.access.sip.concordance import import_countries, import_ipc_classes, import_cpc_classes
 from patzilla.util.config import normalize_docopt_options
-from patzilla.boot.framework import pyramid_setup
+from patzilla.boot.framework import setup_environment
 from patzilla.version import __version__
 from patzilla.boot.logging import boot_logging
 
@@ -49,11 +49,11 @@ def run():
     # Start logging subsystem
     boot_logging(options)
 
-    # Boot Pyramid to access the database
+    # Bootstrap the application environment to access the database
     configfile = os.environ['PATZILLA_CONFIG']
 
     # TODO: Currently, this is a full bootstrap. It can be trimmed down to database setup only.
-    env = pyramid_setup(configfile)
+    env = setup_environment(configfile)
 
     # Clean option names
     options = normalize_docopt_options(options)

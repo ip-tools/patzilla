@@ -1,9 +1,11 @@
-from mock import mock
+from starlette.requests import HTTPConnection
 
-from patzilla.util.web.identity.service import includeme, attach_user
+from patzilla.util.web.identity.config import AuthSettings
+from patzilla.web.auth import resolve_user
 
 
-def test_identity_service_baseline():
-    config = mock.Mock()
-    includeme(config)
-    config.add_subscriber.assert_called_once_with(attach_user, 'pyramid.events.ContextFound')
+def test_resolve_user_anonymous():
+    conn = HTTPConnection({"type": "http", "headers": []})
+    user, cookie_headers = resolve_user(conn, AuthSettings())
+    assert user.is_authenticated is False
+    assert cookie_headers == []

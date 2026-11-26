@@ -7,7 +7,7 @@ import re
 
 import pytest
 from munch import Munch
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
 
 from patzilla.access.uspto.image import fetch_first_drawing
 from patzilla.access.uspto.pdf import fetch_pdf, document_viewer_url, png_url, fetch_url, get_reference_type, \
@@ -59,25 +59,25 @@ class TestFetchResourceInvalid:
 
     @pytest.mark.slow
     def test_full_pdf_application_notfound_zero(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             fetch_pdf("US0000000000")
         assert ex.match("Resource .+ not found")
 
     @pytest.mark.slow
     def test_full_pdf_publication_notfound_zero(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             fetch_pdf("US0000000")
         assert ex.match("Resource .+ not found")
 
     @pytest.mark.slow
     def test_full_pdf_application_notfound_one(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             fetch_pdf("US0000000001")
         assert ex.match("Resource .+ not found")
 
     @pytest.mark.slow
     def test_full_pdf_publication_notfound_one(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             fetch_pdf("US0000001")
         assert ex.match("Resource .+ not found")
 
@@ -103,25 +103,25 @@ class TestDocumentViewerUrlInvalid:
 
     @pytest.mark.slow
     def test_application_zeros(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             document_viewer_url("US0000000000")
         ex.match("Resource .+ not found")
 
     @pytest.mark.slow
     def test_publication_zeros(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             document_viewer_url("US0000000")
         ex.match("Resource .+ not found")
 
     @pytest.mark.slow
     def test_application_one(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             document_viewer_url("US0000000001")
         ex.match("Resource .+ not found")
 
     @pytest.mark.slow
     def test_publication_one(self):
-        with pytest.raises(HTTPNotFound) as ex:
+        with pytest.raises(HTTPException) as ex:
             document_viewer_url("US0000001")
         ex.match("Resource .+ not found")
 
@@ -155,7 +155,7 @@ def test_pdf_url_invalid():
 
 
 def test_fetch_url_failure():
-    with pytest.raises(HTTPNotFound) as ex:
+    with pytest.raises(HTTPException) as ex:
         assert fetch_url("https://httpbin.org/status/500") is None
     ex.match("Accessing resource at .+ failed. status=500, response=")
 

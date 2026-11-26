@@ -14,7 +14,7 @@ if "GITHUB_ACTION" in os.environ:
 from patzilla.access.epo.espacenet.api import espacenet_description, espacenet_claims, espacenet_abstract
 
 
-def test_espacenet_abstract_success(app_request):
+def test_espacenet_abstract_success():
     """
     Acquire "abstract" section of valid patent document from Espacenet.
 
@@ -26,7 +26,7 @@ def test_espacenet_abstract_success(app_request):
     assert "A non-quota access indicator is circulated among nodes" in result["xml"]
 
 
-def test_espacenet_abstract_failure(app_request):
+def test_espacenet_abstract_failure():
     """
     Acquire "abstract" section of invalid patent document from Espacenet.
     """
@@ -35,7 +35,7 @@ def test_espacenet_abstract_failure(app_request):
     assert ex.match('No section "biblio" at Espacenet for "EP0000123A2"')
 
 
-def test_espacenet_description_success(app_request):
+def test_espacenet_description_success():
     """
     Acquire "description" section of valid patent document from Espacenet.
     """
@@ -45,7 +45,7 @@ def test_espacenet_description_success(app_request):
     assert "multi-node communication systems with shared resources" in result["xml"]
 
 
-def test_espacenet_description_failure(app_request):
+def test_espacenet_description_failure():
     """
     Acquire "description" section of invalid patent document from Espacenet.
     """
@@ -54,7 +54,7 @@ def test_espacenet_description_failure(app_request):
     assert ex.match('No section "description" at Espacenet for "EP0000123A2"')
 
 
-def test_espacenet_claims_success(app_request):
+def test_espacenet_claims_success():
     """
     Acquire "claims" section of valid patent document from Espacenet.
     """
@@ -64,7 +64,7 @@ def test_espacenet_claims_success(app_request):
     assert "A method for non-quota access to a shared resource" in result["xml"]
 
 
-def test_espacenet_claims_failure(app_request):
+def test_espacenet_claims_failure():
     """
     Acquire "claims" section of invalid patent document from Espacenet.
     """

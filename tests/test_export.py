@@ -1,14 +1,13 @@
 import csv
 import json
 from io import BytesIO, StringIO
-from types import SimpleNamespace
 from unittest.mock import Mock
 from zipfile import ZipFile
 
 import pytest
 from munch import munchify
 from openpyxl import load_workbook
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
 
 from patzilla.navigator import export
 from patzilla.navigator.export import Dossier, DossierXlsx
@@ -108,7 +107,7 @@ def test_xlsx_contains_queries_and_comments(dossier_data, tmp_path, monkeypatch)
 
 def test_zip_reports_delivered_and_missing_media(dossier_data, monkeypatch):
     biblio = Mock(return_value=b"<biblio/>")
-    register = Mock(side_effect=HTTPNotFound())
+    register = Mock(side_effect=HTTPException(404))
     monkeypatch.setattr(export, "get_ops_biblio_data", biblio)
     monkeypatch.setattr(export, "ops_register", register)
 
@@ -119,9 +118,9 @@ def test_zip_reports_delivered_and_missing_media(dossier_data, monkeypatch):
             "claims": False, "register": True, "family": False,
         },
     })
-    request = SimpleNamespace(errors=["stale error"])
+    client = Mock()
 
-    payload = Dossier(dossier_data).to_zip(request=request, options=options)
+    payload = Dossier(dossier_data).to_zip(client=client, options=options)
 
     with ZipFile(BytesIO(payload)) as archive:
         assert archive.read("media/xml/EP0007054A1.biblio.xml") == b"<biblio/>"
@@ -132,9 +131,8 @@ def test_zip_reports_delivered_and_missing_media(dossier_data, monkeypatch):
         assert "biblio" in report
         assert "register" in report
 
-    assert request.errors == []
-    biblio.assert_called_once_with("publication", "EP0007054A1", xml=True)
-    register.assert_called_once_with("publication", "EP0007054A1", xml=True)
+    biblio.assert_called_once_with(client, "publication", "EP0007054A1", xml=True)
+    register.assert_called_once_with(client, "publication", "EP0007054A1", xml=True)
 
 
 @pytest.mark.parametrize("conversion_fails", [False, True])

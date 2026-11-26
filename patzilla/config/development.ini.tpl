@@ -202,30 +202,25 @@ signature =
 
 
 ###
-# Pyramid application configuration
-# http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/environment.html
+# Web application configuration
 ###
 
+# Evaluate `X-Forwarded-Proto` and `X-Forwarded-For` headers set by a reverse proxy.
+# Use `prefix = /path` to serve the application below a path prefix.
+# Only enable it when the application is exclusively reachable through the reverse proxy.
 [filter:prefix-middleware]
 use = egg:PasteDeploy#prefix
 
 [app:main]
 use = egg:patzilla#web
 filter-with = prefix-middleware
-#filter-with = translogger
 
-pyramid.reload_templates = true
-pyramid.debug_authorization = false
-pyramid.debug_notfound = false
-pyramid.debug_routematch = false
-pyramid.default_locale_name = en
-#pyramid.includes =
-#    pyramid_debugtoolbar
+# Whether to reload Mako templates when they change.
+reload_templates = true
 
-# By default, the toolbar only appears for clients from IP addresses
-# '127.0.0.1' and '::1'.
-# debugtoolbar.hosts = 127.0.0.1 ::1
-
+# Whether to publish the OpenAPI schema and documentation at `/api/openapi.json` and `/api/docs`.
+# Beware: Some endpoints are only protected by the reverse proxy.
+api.docs = false
 
 # Database configuration
 mongodb.patzilla.uri = mongodb://localhost:27017/patzilla_development
@@ -269,17 +264,18 @@ cache.static.expire = 2592000
 
 
 ###
-# wsgi server configuration
+# HTTP server configuration, used by `patzilla serve`
 ###
 
 [server:main]
-use = egg:waitress#main
 host = 0.0.0.0
 port = 6543
+# Number of worker threads for processing requests. Default: 40.
+#threads = 40
 
 ###
 # logging configuration
-# http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/logging.html
+# https://docs.python.org/3/library/logging.config.html#configuration-file-format
 ###
 
 [loggers]
@@ -323,27 +319,3 @@ formatter = generic
 [formatter_generic]
 format = %(asctime)s %(levelname)-8.8s [%(name)-40s][%(threadName)s] %(message)s
 
-
-# ---------------------------
-#   Paste translogger
-#   for having an accesslog
-# ---------------------------
-# http://pyramid.readthedocs.org/en/latest/narr/logging.html#request-logging-with-paste-s-translogger
-[filter:translogger]
-use = egg:Paste#translogger
-setup_console_handler = False
-
-[logger_wsgi]
-level = INFO
-handlers = accesslog
-qualname = wsgi
-propagate = 0
-
-#[handler_accesslog]
-#class = FileHandler
-#args = ('/var/log/patzilla/access.log','a')
-#level = INFO
-#formatter = accesslog
-
-[formatter_accesslog]
-format = %(message)s
