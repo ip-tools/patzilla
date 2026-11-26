@@ -15,7 +15,7 @@ module.exports = defineConfig({
   ],
 
   webServer: {
-    command: '.venv/bin/pserve tests/ui/ci.ini',
+    command: '.venv/bin/patzilla serve tests/ui/ci.ini',
     url: `${baseURL}/navigator/`,
     timeout: 60_000,
     reuseExistingServer: true,

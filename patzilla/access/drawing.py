@@ -3,8 +3,10 @@
 import logging
 from six import BytesIO
 from beaker.cache import cache_region
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
 
+from patzilla.access.generic.exceptions import is_http_error
+from patzilla.boot.cache import client_cache_region
 from patzilla.util.numbers.common import split_patent_number
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.util.image.convert import to_png
@@ -16,14 +18,16 @@ log = logging.getLogger(__name__)
 
 # TODO: Refactor to patzilla.access.composite.drawing
 
-@cache_region('longer')
-def get_drawing_png(document, page, kind):
+@client_cache_region('longer')
+def get_drawing_png(client, document, page, kind):
 
     # 2. Try to fetch drawing from OPS, fall back to other patent offices
     try:
-        payload = get_ops_image(document, page, kind, 'tiff')
+        payload = get_ops_image(client, document, page, kind, 'tiff')
 
-    except HTTPNotFound:
+    except Exception as ex:
+        if not is_http_error(ex, 404):
+            raise
 
         # fallback to USPTO (U.S.)
         if document.upper().startswith('US'):
@@ -31,7 +35,7 @@ def get_drawing_png(document, page, kind):
             try:
                 payload = get_uspto_image_cached(document_id)
             except PayloadEmpty as ex:
-                raise HTTPNotFound('No drawing for "{0}" at OPS or USPTO'.format(document))
+                raise HTTPException(404, 'No drawing for "{0}" at OPS or USPTO'.format(document))
 
         # fallback to CIPO (Canada)
         elif document.upper().startswith('CA'):
@@ -39,7 +43,7 @@ def get_drawing_png(document, page, kind):
             try:
                 payload = get_cipo_image_cached(document_id)
             except PayloadEmpty as ex:
-                raise HTTPNotFound('No drawing for "{0}" at OPS or CIPO'.format(document))
+                raise HTTPException(404, 'No drawing for "{0}" at OPS or CIPO'.format(document))
 
         # otherwise, pass through exception
         else:
@@ -49,7 +53,7 @@ def get_drawing_png(document, page, kind):
     if not payload:
         msg = 'No image available for document={document}, kind={kind}, page={page}'.format(**locals())
         log.warning(msg)
-        raise HTTPNotFound(msg)
+        raise HTTPException(404, msg)
 
     # 4. Convert image from TIFF to PNG format
     payload = to_png(BytesIO(payload))

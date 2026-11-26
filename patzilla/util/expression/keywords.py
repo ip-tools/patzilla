@@ -71,12 +71,12 @@ def scan_keywords(op, keywords):
     hasattr(op, 'rightOperand') and scan_keywords(op.rightOperand, keywords)
 
 
-def keywords_to_response(request, search):
+def keywords_to_response(response, search):
     """
-    Propagate keywords to client for highlighting
+    Propagate keywords to client for highlighting, using the `X-PatZilla-Query-Keywords` response header.
     """
 
     logger.info('Propagating keywords from "{origin}": {keywords}'.format(
         origin=search.keywords_origin, keywords=search.keywords))
 
-    request.response.headers['X-PatZilla-Query-Keywords'] = json.dumps(search.keywords)
+    response.headers['X-PatZilla-Query-Keywords'] = json.dumps(search.keywords)

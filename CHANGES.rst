@@ -15,6 +15,14 @@ Development
 - [mw] Improved management of failing access to image from OPS.
   Thanks, @papoteur-mga.
 - [mw] Enabled access to Espacenet for claims and description (DE and US)
+- [mw] Replaced Pyramid, Cornice, and waitress with FastAPI and uvicorn.
+  Start the web application using ``patzilla serve /path/to/patzilla.ini``
+  instead of ``pserve``. The format of the configuration file is retained.
+  Behaviour changes: HTTP errors of API endpoints use the JSON error envelope,
+  endpoints do not respond to ``HEAD`` requests, XML responses must be requested
+  explicitly using the ``Accept`` header, and ``filter-with`` only supports the
+  ``egg:PasteDeploy#prefix`` filter. The OpenAPI documentation is available at
+  ``/api/docs`` when enabled using ``api.docs = true``.
 
 2026-10-20 0.170.0
 ==================

@@ -16,13 +16,14 @@ from __future__ import annotations
 import datetime
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Callable, Optional
 from urllib.parse import quote, urlsplit
 
 from mongoengine.errors import NotUniqueError
 from mongoengine.queryset.visitor import Q
 
+from patzilla.util.config import asbool
 from patzilla.util.email.message import EmailMessage
 from patzilla.util.web.identity.config import AuthSettings
 from patzilla.util.web.identity.session import generate_token, hash_token
@@ -147,23 +148,24 @@ def build_verify_url(raw_token: str, base_url: str) -> str:
 def resolve_base_url(request: Any, settings: AuthSettings) -> str:
     """
     Determine the public base URL used to construct magic links.
-    Prefers explicit `[auth] public_base_url` over `request.application_url`.
+    Prefers explicit `[auth] public_base_url` over the base URL of the request.
     """
     if settings.public_base_url:
         return settings.public_base_url
-    return str(getattr(request, "application_url", "http://localhost:6543")).rstrip("/")
+    return str(getattr(request, "base_url", "http://localhost:6543")).rstrip("/")
 
 
 def get_client_ip(request: Any) -> Optional[str]:
     """
-    Extract client IP address from a Pyramid request (respecting X-Forwarded-For).
+    Extract client IP address from a request (respecting X-Forwarded-For).
     """
     if request is None:
         return None
     forwarded = getattr(request, "headers", {}).get("X-Forwarded-For")
     if forwarded:
         return forwarded.split(",")[0].strip() or None
-    return getattr(request, "client_addr", None) or getattr(request, "remote_addr", None)
+    client = getattr(request, "client", None)
+    return client.host if client else None
 
 
 # ------------------------------------------
@@ -209,18 +211,36 @@ def _is_smtp_configured(smtp_settings: dict[str, Any]) -> bool:
     return True
 
 
-def _is_development_mode(request: Any) -> bool:
-    try:
-        return bool(request.registry.application_settings.get("ip_navigator", {}).get("development_mode", False))
-    except Exception:
-        return False
+@dataclass(frozen=True)
+class MagicLinkMail:
+    """
+    Email delivery context: SMTP settings, and the vendor's product name and email settings.
+    """
+
+    smtp: dict = field(default_factory=dict)
+    addressbook: dict = field(default_factory=dict)
+    content: dict = field(default_factory=dict)
+    productname: str = "PatZilla"
+    development_mode: bool = True
+
+    @classmethod
+    def from_settings(cls, application_settings: Any, vendor: Any = None) -> "MagicLinkMail":
+        vendor = vendor or {}
+        vendor_email = vendor.get("email") or {}
+        return cls(
+            smtp=dict(application_settings.get("smtp", {}) or {}),
+            addressbook=dict(vendor_email.get("addressbook", {}) or {}),
+            content=dict(vendor_email.get("content", {}) or {}),
+            productname=vendor.get("productname", "PatZilla"),
+            development_mode=asbool(application_settings.get("ip_navigator", {}).get("development_mode", False)),
+        )
 
 
 def send_magic_link_email(
     email: str,
     verify_url: str,
     ttl_minutes: int,
-    request: Any = None,
+    mail: Optional[MagicLinkMail] = None,
     settings: Optional[AuthSettings] = None,
 ) -> bool:
     """
@@ -228,24 +248,13 @@ def send_magic_link_email(
     In development mode with unconfigured SMTP, logs the link instead of raising.
     """
     auth_settings = settings or AuthSettings()
-    smtp_settings: dict[str, Any] = {}
-    email_settings: dict[str, Any] = {"addressbook": {}, "content": {}}
-    productname = "PatZilla"
-
-    if request is not None:
-        app_settings = getattr(request.registry, "application_settings", {}) or {}
-        smtp_settings = dict(app_settings.get("smtp", {}) or {})
-        runtime_settings = getattr(request, "runtime_settings", None)
-        if runtime_settings is not None:
-            vendor = getattr(runtime_settings, "vendor", None)
-            if vendor is not None:
-                productname = vendor.get("productname", productname)
-                vendor_email = vendor.get("email") or {}
-                email_settings["addressbook"] = dict(vendor_email.get("addressbook", {}) or {})
-                email_settings["content"] = dict(vendor_email.get("content", {}) or {})
+    mail = mail or MagicLinkMail()
+    smtp_settings = dict(mail.smtp)
+    email_settings: dict[str, Any] = {"addressbook": dict(mail.addressbook), "content": dict(mail.content)}
+    productname = mail.productname
 
     if not _is_smtp_configured(smtp_settings):
-        if auth_settings.log_magic_link_in_dev and (request is None or _is_development_mode(request)):
+        if auth_settings.log_magic_link_in_dev and mail.development_mode:
             log.warning(
                 "SMTP is not configured; logging magic link for %s (valid %d min): %s",
                 email,
@@ -282,7 +291,7 @@ def request_magic_link(
     came_from: Optional[str] = None,
     request_ip: Optional[str] = None,
     user_agent: Optional[str] = None,
-    request: Any = None,
+    mail: Optional[MagicLinkMail] = None,
     send_mail_fn: Optional[Callable[..., bool]] = None,
 ) -> MagicLinkRequestResult:
     """
@@ -324,7 +333,7 @@ def request_magic_link(
         email=normalized_email,
         verify_url=verify_url,
         ttl_minutes=ttl_minutes,
-        request=request,
+        mail=mail,
         settings=settings,
     )
 

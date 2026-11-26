@@ -9,9 +9,9 @@ from io import StringIO
 from configparser import NoOptionError
 from lxml import etree as ET
 from lxml.builder import E
-from cornice.util import to_list
 from beaker.cache import cache_region, region_invalidate
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
+from patzilla.util.config import to_list
 from patzilla.util.network.requests_xmlrpclib import RequestsTransport
 from patzilla.util.numbers.normalize import normalize_patent, depatisconnect_alternatives
 from patzilla.util.web.util.xmlrpclib import XmlRpcTimeoutServer
@@ -25,10 +25,9 @@ log = logging.getLogger(__name__)
 use_https: bool = False
 archive_service_baseurl: str = ""
 
-def includeme(config):
+def configure(datasource_settings):
     global use_https
     global archive_service_baseurl
-    datasource_settings = config.registry.datasource_settings
 
     try:
         archive_service_baseurl = datasource_settings.datasource.depatisconnect.api_uri
@@ -105,10 +104,10 @@ def fetch_pdf_real(number):
         if payload:
             return payload
         else:
-            raise HTTPNotFound('Empty PDF for document {0} found in archive'.format(number))
+            raise HTTPException(404, 'Empty PDF for document {0} found in archive'.format(number))
 
     else:
-        raise HTTPNotFound('No PDF for document {0} found in archive'.format(number))
+        raise HTTPException(404, 'No PDF for document {0} found in archive'.format(number))
 
 @cache_region('static', 'get_xml')
 def get_xml(number):
@@ -287,17 +286,9 @@ if __name__ == '__main__':
         python patzilla/access/dpma/depatisconnect.py | jq --raw-output '.xml' | xmllint --format -
     """
 
-    from patzilla.boot.framework import pyramid_setup
-    configfile = os.environ['PATZILLA_CONFIG']
-
-    env = pyramid_setup(configfile)
-    logger = logging.getLogger(__name__)
-
-    # Populate archive_service_baseurl again because "includeme" runs in a different thread
-    registry = env['registry']
-    archive_service_baseurl = registry.datasource_settings.datasource.depatisconnect.api_uri
-    if archive_service_baseurl.startswith('https'):
-        use_https = True
+    from patzilla.boot.framework import setup_environment
+    env = setup_environment(os.environ['PATZILLA_CONFIG'])
+    configure(env['state'].datasource_settings)
 
     #response = depatisconnect_abstracts('DE19653398A1', 'DE')
     #response = depatisconnect_description('DE19653398A1')

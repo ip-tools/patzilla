@@ -1,181 +1,89 @@
 # -*- coding: utf-8 -*-
-# (c) 2014-2016 Andreas Motl, Elmyra UG
-import logging
-from typing import cast, Dict
-
-import Crypto
-import Crypto.Random
+# (c) 2014-2026 Andreas Motl, Elmyra UG
+"""
+Opaque links: Sign request parameters into a JWT token (`op` parameter), to share
+links with fixed parameters and an optional expiry time.
+"""
+import dataclasses
 import datetime
-from pkg_resources import resource_filename
-from simplejson import JSONDecodeError
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPBadRequest
-from patzilla.util.crypto.jwt import JwtSigner, JwtVerifyError, ISigner, JwtExpiryError
+import logging
+import os
+from typing import Annotated, Dict, Optional, cast
+
+from fastapi import APIRouter, Body, HTTPException, Request
+
+from patzilla.util.crypto.jwt import JwtExpiryError, JwtSigner, JwtVerifyError
 from patzilla.util.date import datetime_iso, unixtime_to_datetime
 from patzilla.util.python import exception_traceback
-
-try:
-    from patzilla.util.web.uwsgi.uwsgidecorators import postfork
-except ImportError:
-    class postfork:
-        def __init__(self, f):
-            pass
-        def __call__(self, *args, **kwargs):
-            pass
+from patzilla.web.dependencies import State
 
 log = logging.getLogger(__name__)
 
+KEYFILE = os.path.join(os.path.dirname(__file__), 'resources', 'opaquelinks.pem')
 
-# https://github.com/davedoesdev/python-jwt/issues/15
-@postfork
-def init_random():
-    Crypto.Random.atfork()
+router = APIRouter(tags=["opaquelinks"])
 
 
-def includeme(config):
-
-    # register a signer object used throughout this place
+def create_signer():
     signer = JwtSigner()
-
-    # v1: always create a key
-    # signer.genkey(keysize=768)
-
-    # v2: have a key on the filesystem
-    keyfile = resource_filename(__name__, 'resources/opaquelinks.pem')
-    signer.readkey(keyfile)
-
-    config.registry.registerUtility(signer)
-
-    # attempt to decode opaque parameter tokens on each request
-    config.add_subscriber(create_request_interceptor, 'pyramid.events.ContextFound')
+    signer.readkey(KEYFILE)
+    return signer
 
 
-# ------------------------------------------
-#   hooks
-# ------------------------------------------
-def create_request_interceptor(event):
+@dataclasses.dataclass
+class OpaqueParameters:
+    data: Dict = dataclasses.field(default_factory=dict)
+    meta: Dict = dataclasses.field(default_factory=dict)
+
+
+def decode_opaque_parameters(signer, token: Optional[str]) -> OpaqueParameters:
     """
-    Intercept "op" (opaque parameters) request parameter,
-    decode it and serve as ``request.opaque`` dictionary.
+    Decode the opaque parameters token. Errors are reported within `meta`.
     """
-    request = event.request
-
-    request.opaque = {}
-    request.opaque_meta = {}
-
-    # extract opaque parameters token from request
-    op_token = request.params.get('op')
-
-    # do nothing if no token given
-    if not op_token:
-        return
-
-    registry = event.request.registry
-    signer = registry.getUtility(ISigner)
+    opaque = OpaqueParameters()
+    if not token:
+        return opaque
 
     try:
-        data, meta = signer.unsign(op_token)
+        data, meta = signer.unsign(token)
         if data:
-            request.opaque.update(data)
+            opaque.data.update(data)
         else:
-            log.error('opaque parameter token is empty. data=%s, token=%s', data, op_token)
+            log.error('opaque parameter token is empty. data=%s, token=%s', data, token)
         if meta:
-            request.opaque_meta.update(meta)
-            request.opaque_meta.update({'status': 'ok'})
+            opaque.meta.update(meta)
+            opaque.meta.update({'status': 'ok'})
         else:
-            log.error('metadata of opaque parameter token is empty. meta=%s, token=%s', meta, op_token)
+            log.error('metadata of opaque parameter token is empty. meta=%s, token=%s', meta, token)
 
     except JwtExpiryError as ex:
         info: Dict = cast(dict, ex.args[0])
-        expiry_unixtime = info['jwt_expiry']
-        expiry_iso = datetime_iso(unixtime_to_datetime(expiry_unixtime))
-        info['jwt_expiry_iso'] = expiry_iso
-
+        expiry_iso = datetime_iso(unixtime_to_datetime(info['jwt_expiry']))
         msg = f'Opaque parameter token expired: expiry={expiry_iso}'
-        request.opaque_meta.update({'status': 'error', 'errors': [msg]})
-        # TODO: Propagate error via cornice instead?
-        # request.errors.add('sharing', 'jwt', info)
-        # TODO: log/send full stacktrace
+        opaque.meta.update({'status': 'error', 'errors': [msg]})
         log.error(exception_traceback())
 
     except JwtVerifyError as ex:
         msg = f'Decoding opaque parameter token failed: {ex}'
-        request.opaque_meta.update({'status': 'error', 'errors': [msg]})
-        # TODO: Propagate error via cornice instead?
-        # request.errors.add('sharing', 'jwt', info)
-        # TODO: log/send full stacktrace
+        opaque.meta.update({'status': 'error', 'errors': [msg]})
         log.error(exception_traceback())
 
-
-# ------------------------------------------
-#   services
-# ------------------------------------------
-opaquelinks_token_service = Service(
-    name='opaquelinks-token',
-    path='/api/opaquelinks/token',
-    description="opaquelinks token generator")
-
-opaquelinks_verify_service = Service(
-    name='opaquelinks-verify',
-    path='/api/opaquelinks/token/verify',
-    description="opaquelinks token verifier")
+    return opaque
 
 
-# ------------------------------------------
-#   service handlers
-# ------------------------------------------
-@opaquelinks_token_service.decorator("post", accept="application/json")
-def opaquelinks_token_handler(request):
-    """Generate an opaquelinks token"""
-    payload = request_payload(request)
-    signer = request.registry.getUtility(ISigner)
-
-    ttl = None
-    if 'ttl' in request.params:
-        ttl_seconds = int(request.params.get('ttl'))
-        ttl = datetime.timedelta(seconds=ttl_seconds)
-
-    return signer.sign(payload, ttl=ttl)
+@router.post("/api/opaquelinks/token", name="opaquelinks-token", summary="opaquelinks token generator")
+def opaquelinks_token_handler(request: Request, state: State, payload: Annotated[Optional[dict], Body()] = None,
+                              ttl: Optional[int] = None):
+    """Generate an opaquelinks token. Query parameters are signed, too."""
+    data = dict(payload or {})
+    data.update(request.query_params)
+    return state.signer.sign(data, ttl=datetime.timedelta(seconds=ttl) if ttl else None)
 
 
-@opaquelinks_verify_service.decorator("post", accept="application/json")
-def opaquelinks_verify_handler(request):
+@router.post("/api/opaquelinks/token/verify", name="opaquelinks-verify", summary="opaquelinks token verifier")
+def opaquelinks_verify_handler(state: State, token: Annotated[Optional[str], Body()] = None):
     """Verify an opaquelinks token"""
-
-    token = token_payload(request)
-
     if not token:
-        return HTTPBadRequest('Token missing')
-
-    signer = request.registry.getUtility(ISigner)
-    data, meta = signer.unsign(token)
+        raise HTTPException(400, 'Token missing')
+    data, meta = state.signer.unsign(token)
     return data
-
-
-# ------------------------------------------
-#   utility functions
-# ------------------------------------------
-def request_payload(request):
-    payload = {}
-    if request.content_type == 'application/json':
-        try:
-            payload = request.json
-        except JSONDecodeError as error:
-            log.error('Could not derive data from json request: %s body=%s', error, request.body)
-
-    payload.update(dict(request.params))
-    return payload
-
-def token_payload(request):
-    token = None
-    if request.content_type == 'application/json':
-
-        try:
-            token = str(request.json)
-        except JSONDecodeError as error:
-            log.error('Could not extract token from json request: %s body=%s', error, request.body)
-
-    if not token:
-        log.error('Could not extract token from request: content-type=%s, body=%s', request.content_type, request.body)
-
-    return token

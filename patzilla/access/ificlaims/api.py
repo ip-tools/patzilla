@@ -70,8 +70,9 @@ class IFIClaimsDocumentResponse:
 
 class IFIClaimsDocumentRequest:
 
-    def __init__(self, identifier, format, options=None):
+    def __init__(self, client, identifier, format, options=None):
         options = options or {}
+        self.client = client
         self.identifier = identifier
         self.format = format
         self.options = options
@@ -89,7 +90,7 @@ class IFIClaimsDocumentRequest:
         if self.format in ['tif', 'png']:
             self.options.setdefault('seq', 1)
 
-        self.response.payload = ificlaims_fetch(self.ucid, self.format, self.options)
+        self.response.payload = ificlaims_fetch(self.client, self.ucid, self.format, self.options)
 
         name_suffix = ''
         if self.format == 'xml':
@@ -137,14 +138,14 @@ class IFIClaimsDocumentRequest:
         return self
 
 
-def ificlaims_download(resource, format, options=None):
+def ificlaims_download(client, resource, format, options=None):
     options = options or {}
     logger.info('ificlaims_download: resource={resource}, format={format}, options={options}'.format(**locals()))
-    r = IFIClaimsDocumentRequest(resource, format, options=options)
+    r = IFIClaimsDocumentRequest(client, resource, format, options=options)
     return r.download().transform().response
 
 
-def ificlaims_download_multi(numberlist, formats):
+def ificlaims_download_multi(client, numberlist, formats):
 
     logger.info('ificlaims_download_multi: numberlist={numberlist}, formats={formats}'.format(**locals()))
 
@@ -179,7 +180,7 @@ def ificlaims_download_multi(numberlist, formats):
             if format_real in ['tif', 'png']:
                 count = 0
                 try:
-                    result_first = ificlaims_download_single(number, format_real, options)
+                    result_first = ificlaims_download_single(client, number, format_real, options)
                 except Exception as ex:
                     logger.error('IFI: {ex}\n{traceback}'.format(ex=ex, traceback=_exception_traceback()))
                     continue
@@ -195,7 +196,7 @@ def ificlaims_download_multi(numberlist, formats):
                     for seq in range(2, 50):
                         options['seq'] = seq
                         try:
-                            result_next = ificlaims_download_single(number, format_real, options)
+                            result_next = ificlaims_download_single(client, number, format_real, options)
                         except Exception as ex:
                             logger.error('IFI: {ex}\n{traceback}'.format(ex=ex, traceback=_exception_traceback()))
                             break
@@ -211,7 +212,7 @@ def ificlaims_download_multi(numberlist, formats):
 
             else:
                 try:
-                    result_single = ificlaims_download_single(number, format_real, options)
+                    result_single = ificlaims_download_single(client, number, format_real, options)
 
                 except Exception as ex:
                     logger.error('IFI: {ex}\n{traceback}'.format(ex=ex, traceback=_exception_traceback()))
@@ -230,13 +231,14 @@ def ificlaims_download_multi(numberlist, formats):
     }
     return response
 
-def ificlaims_download_single(number, format, options=None):
+def ificlaims_download_single(client, number, format, options=None):
 
     try:
-        response = ificlaims_download(number, format, options)
+        response = ificlaims_download(client, number, format, options)
 
     except IFIClaimsException as ex:
         logger.warning('IFI: IFIClaimsException for number={number}, format={format}, options={options}: {ex}'.format(**locals()))
+        return None
 
     if response.payload:
         return response

@@ -5,12 +5,14 @@ import logging
 from copy import deepcopy
 from email.utils import parseaddr
 
-from pyramid.exceptions import ConfigurationError
-from pyramid.threadlocal import get_current_request, get_current_registry
 
 from patzilla.version import __version__
 from patzilla.navigator.util import dict_prefix_key
 from patzilla.util.config import read_list, asbool, get_configuration
+
+
+class ConfigurationError(Exception):
+    pass
 from patzilla.util.date import datetime_isoformat, unixtime_to_datetime
 from patzilla.util.python import _exception_traceback
 from patzilla.util.data.container import SmartMunch
@@ -170,18 +172,25 @@ class GlobalSettings:
 
 class RuntimeSettings:
     """
-    All runtime parameters in one single place
+    All runtime parameters in one single place, computed per request.
+
+    - `request`: The Starlette request.
+    - `settings`: The `GlobalSettings` (application, datasource, and vendor settings).
+    - `user`: The requesting user.
+    - `opaque`: Opaque parameters decoded from the `op` token, see `patzilla.navigator.opaquelinks`.
     """
 
     # TODO: Refactor IpsuiteNavigatorConfig.defaults here as well, trim down config.js
 
-    def __init__(self):
+    def __init__(self, request, settings, user, opaque):
 
-        self.request = get_current_request()
-        self.registry = get_current_registry()
+        self.request = request
+        self.settings = settings
+        self.user = user
+        self.opaque = opaque
 
-        self.hostname = self.request.host.split(':')[0]
-        self.development_mode = development_mode()
+        self.hostname = request.headers.get('host', '').split(':')[0]
+        self.development_mode = development_mode(settings.application_settings)
 
         self.vendor = self.effective_vendor()
         self.config = self.config_parameters()
@@ -199,11 +208,11 @@ class RuntimeSettings:
 
         data = {
             'host_name': self.hostname,
-            'host': self.request.host,
-            'host_port': self.request.host_port,
-            'host_url': self.request.host_url,
-            'path': self.request.path,
-            'path_url': self.request.path_url,
+            'host': self.request.headers.get('host', ''),
+            'host_port': str(self.request.url.port or (443 if self.request.url.scheme == 'https' else 80)),
+            'host_url': '{}://{}'.format(self.request.url.scheme, self.request.url.netloc),
+            'path': self.request.url.path,
+            'path_url': str(self.request.url.replace(query='')),
         }
 
         return data
@@ -212,38 +221,14 @@ class RuntimeSettings:
         """define default settings"""
 
         data = {
-            'app.software.version': self.registry.application_settings.software_version,
+            'app.software.version': self.settings.application_settings.software_version,
         }
 
         return data
 
     def effective_vendor(self):
-        """
-        The selection process will use the first configured vendor as default,
-        after that it will search through the other configured vendors and will
-        select the one which matches the "hostname_matches" pattern
-        on a first come, first serve basis.
-        """
+        return effective_vendor(self.settings.vendor_settings, self.hostname)
 
-        # Skip resolving effective vendor when no vendors are configured at all
-        if self.registry.vendor_settings is None:
-            return SmartMunch()
-
-        # Select vendor by matching hostnames
-        vendor_names = self.registry.vendor_settings.vendors
-        for vendor_name in vendor_names:
-            vendor_info = self.registry.vendor_settings.vendor[vendor_name]
-            vendor_info['name'] = vendor_name
-            if 'hostname_matches' in vendor_info:
-                for hostname_candidate in vendor_info.hostname_matches:
-                    if hostname_candidate in self.hostname:
-                        return vendor_info
-
-        # If no vendor can be resolved, use first configured vendor as fallback
-        vendor_name = self.registry.vendor_settings.vendors[0]
-        vendor_info = self.registry.vendor_settings.vendor[vendor_name]
-
-        return vendor_info
 
     def theme_settings(self):
         """define default settings"""
@@ -258,7 +243,7 @@ class RuntimeSettings:
             #'<a href="https://patentfamily.com/" target="_blank" class="incognito pointer">SIP</a>',
         ]
 
-        software_version_label = 'PatZilla release: ' + self.registry.application_settings.software_version
+        software_version_label = 'PatZilla release: ' + self.settings.application_settings.software_version
         software_version_link  = '<a href="https://github.com/ip-tools/patzilla" target="_blank" ' \
                                  'class="incognito pointer">{label}</a>'.format(label=software_version_label)
 
@@ -303,8 +288,7 @@ class RuntimeSettings:
         """
         Return datasource settings while accounting for sensible settings like API URI and credentials.
         """
-        request = get_current_request()
-        datasource_settings = SmartMunch.munchify(request.registry.datasource_settings)
+        datasource_settings = SmartMunch.munchify(self.settings.datasource_settings)
         if 'protected_fields' in datasource_settings:
             for fieldname in datasource_settings.protected_fields:
                 for name, settings in datasource_settings.datasource.items():
@@ -315,23 +299,24 @@ class RuntimeSettings:
 
     def config_parameters(self):
 
-        request = get_current_request()
+        request = self.request
 
         # prefix environment and settings in configuration model
         environment = dict_prefix_key(self.environment(), 'request.')
         setting_params = dict_prefix_key(self.config_settings(), 'setting.')
-        request_params = dict(request.params)
+        request_params = dict(request.query_params)
+        user = self.user
         user_params = {}
-        if request.user:
+        if user:
 
             # Formulate JS-domain settings
             user_params = dict_prefix_key({
-                'modules': request.user.modules,
-                'tags': request.user.tags},
+                'modules': user.modules,
+                'tags': user.tags},
                 'user.')
 
             # Get representation of user attributes
-            user_dict = json.loads(request.user.to_json())
+            user_dict = json.loads(user.to_json())
 
             # Strip sensitive information
             for sensitive_field in ('_id', 'password', 'upstream_credentials', 'billing'):
@@ -340,11 +325,11 @@ class RuntimeSettings:
             # Add whole user attributes to JS-domain
             user_params['user'] = user_dict
 
-        request_opaque = dict(request.opaque)
-        request_opaque_meta = dict_prefix_key(dict(request.opaque_meta), 'opaque.meta.')
+        request_opaque = dict(self.opaque.data)
+        request_opaque_meta = dict_prefix_key(dict(self.opaque.meta), 'opaque.meta.')
 
         try:
-            unixtime = request.opaque_meta.get('exp')
+            unixtime = self.opaque.meta.get('exp')
             if unixtime:
                 request_opaque['link_expires'] = datetime_isoformat(unixtime_to_datetime(int(unixtime)))
         except Exception as ex:
@@ -355,7 +340,7 @@ class RuntimeSettings:
         # A. parameter firewall, INPUT
 
         # determine if we're in view-only mode by matching against the hostname
-        host = request.headers.get('Host')
+        host = request.headers.get('host', '')
         isviewer = 'patentview' in host or 'viewer' in host or 'patview' in host
 
         # 1. don't allow "query" from outside on view-only domains
@@ -400,7 +385,7 @@ class RuntimeSettings:
 
         # 2. Compute whether data sources are enabled
         params['datasources_enabled'] = []
-        for datasource in self.registry.datasource_settings.datasources:
+        for datasource in self.settings.datasource_settings.datasources:
             if self.is_datasource_enabled(datasource):
                 params['datasources_enabled'].append(datasource)
 
@@ -429,15 +414,15 @@ class RuntimeSettings:
 
         # Matching
         enabled = \
-            datasource in self.registry.datasource_settings.datasources and \
+            datasource in self.settings.datasource_settings.datasources and \
             (self.development_mode or \
-             datasource in self.request.user.modules or \
-             datasource_user_module in self.request.user.modules)
+             datasource in self.user.modules or \
+             datasource_user_module in self.user.modules)
 
         return enabled
 
     def theme_parameters(self):
-        request = get_current_request()
+        request = self.request
 
         params = self.theme_settings()
 
@@ -475,6 +460,35 @@ class RuntimeSettings:
         return params
 
 
+def effective_vendor(vendor_settings, hostname):
+    """
+    The selection process will use the first configured vendor as default,
+    after that it will search through the other configured vendors and will
+    select the one which matches the "hostname_matches" pattern
+    on a first come, first serve basis.
+    """
+
+    # Skip resolving effective vendor when no vendors are configured at all
+    if vendor_settings is None:
+        return SmartMunch()
+
+    # Select vendor by matching hostnames
+    vendor_names = vendor_settings.vendors
+    for vendor_name in vendor_names:
+        vendor_info = vendor_settings.vendor[vendor_name]
+        vendor_info['name'] = vendor_name
+        if 'hostname_matches' in vendor_info:
+            for hostname_candidate in vendor_info.hostname_matches:
+                if hostname_candidate in hostname:
+                    return vendor_info
+
+    # If no vendor can be resolved, use first configured vendor as fallback
+    vendor_name = vendor_settings.vendors[0]
+    vendor_info = vendor_settings.vendor[vendor_name]
+
+    return vendor_info
+
+
 class JavascriptParameterFiddler:
 
     def __init__(self, name, runtime_settings):
@@ -499,9 +513,8 @@ class JavascriptParameterFiddler:
 
 
 # Whether we are in development or production mode
-def development_mode():
-    registry = get_current_registry()
+def development_mode(application_settings):
     try:
-        return asbool(registry.application_settings.ip_navigator.development_mode)
+        return asbool(application_settings.ip_navigator.development_mode)
     except:
         return False

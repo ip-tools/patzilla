@@ -5,21 +5,15 @@ import os
 
 import epo_ops
 from mock import mock
-from pyramid.httpexceptions import HTTPUnauthorized
-from pyramid.threadlocal import get_current_registry
-from zope.interface import implementer
-from zope.interface.interface import Interface
-from zope.interface.interfaces import ComponentLookupError
+from starlette.exceptions import HTTPException
 
-from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
-from patzilla.util.web.identity.store import IUserMetricsManager
+from patzilla.access.generic.credentials import AbstractCredentialsGetter
 
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
-    config.registry.registerUtility(OpsClientPool())
-    config.add_subscriber(attach_ops_client, "pyramid.events.ContextFound")
+def create_pool(datasource_settings, metrics_manager=None):
+    return OpsClientPool(metrics_manager=metrics_manager)
 
 
 class OpsCredentialsGetter(AbstractCredentialsGetter):
@@ -46,56 +40,28 @@ class OpsCredentialsGetter(AbstractCredentialsGetter):
         }
 
 
-def attach_ops_client(event):
-    """
-    Create EPO/OPS client pool per credentials context.
-    """
-
-    # Don't start data source machinery on requests to static assets.
-    if '/static' in event.request.url:
-        return
-
-    request = event.request
-
-    try:
-        dcm = DatasourceCredentialsManager(identifier="ops", credentials_getter=OpsCredentialsGetter)
-        credentials_source, credentials_data = dcm.resolve(request)
-    except:
-        logger.exception("Unable to resolve credentials for OPS")
-        return
-
-    ckshort = credentials_data['consumer_key'][:10] + "..."
-    logger.debug('Attaching OPS credentials from "{}": {}'.format(credentials_source, ckshort))
-
-    pool = request.registry.getUtility(IOpsClientPool)
-    request.ops_client = pool.get(credentials_source, credentials_data)
-
-
-class IOpsClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(IOpsClientPool)
 class OpsClientPool:
     """
-    EPO/OPS client pool as Pyramid utility implementation.
+    EPO/OPS client pool, holding one client per credentials context.
     """
 
-    def __init__(self):
+    def __init__(self, metrics_manager=None):
         logger.info("Creating upstream client pool for EPO/OPS")
+        self.metrics_manager = metrics_manager
         self.clients = {}
 
     def get(self, identifier, credentials=None):
         if identifier not in self.clients:
             if credentials is None:
-                raise HTTPUnauthorized("Unable to discover credentials for EPO OPS. identifier={}".format(identifier))
+                raise HTTPException(401, "Unable to discover credentials for EPO OPS. identifier={}".format(identifier))
             logger.info("Creating upstream client for EPO/OPS. identifier={}".format(identifier))
-            self.clients[identifier] = ops_client_factory(key=credentials['consumer_key'], secret=credentials['consumer_secret'])
+            self.clients[identifier] = ops_client_factory(
+                key=credentials['consumer_key'], secret=credentials['consumer_secret'], metrics_manager=self.metrics_manager)
 
         return self.clients.get(identifier)
 
 
-def ops_client_factory(key, secret):
+def ops_client_factory(key, secret, metrics_manager=None):
 
     # TODO: Enable throttling and caching.
     ops = epo_ops.Client(
@@ -104,11 +70,22 @@ def ops_client_factory(key, secret):
     )
 
     # Attach metrics manager object to ops client instance.
-    registry = get_current_registry()
-    # TODO: Find another place how to propagate the utility, NOT using the OPS Client instance?
-    try:
-        ops.metrics_manager = registry.getUtility(IUserMetricsManager)  # ty: ignore[unresolved-attribute]
-    except ComponentLookupError:
-        ops.metrics_manager = mock.Mock()  # ty: ignore[unresolved-attribute]
+    ops.metrics_manager = metrics_manager or mock.Mock()  # ty: ignore[unresolved-attribute]
 
     return ops
+
+
+class UserBoundClient:
+    """
+    Delegates to a shared, pooled API client, carrying the id of the requesting user for usage accounting.
+    """
+
+    def __init__(self, client, userid=None):
+        object.__setattr__(self, "_client", client)
+        object.__setattr__(self, "userid", userid)
+
+    def __getattr__(self, name):
+        return getattr(self._client, name)
+
+    def __setattr__(self, name, value):
+        setattr(self._client, name, value)

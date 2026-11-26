@@ -6,7 +6,7 @@ import requests
 from beaker.cache import cache_region
 from patzilla.util.numbers.normalize import normalize_patent
 from patzilla.util.network.browser import regular_user_agent
-from pyramid.httpexceptions import HTTPNotFound
+from starlette.exceptions import HTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -50,13 +50,13 @@ def fetch_pdf(document_number):
             msg = 'No PDF document returned from European ' \
                   'publication server for "{document_number}".'.format(**locals())
             logger.warning(msg)
-            raise HTTPNotFound(msg)
+            raise HTTPException(404, msg)
 
     else:
         msg = 'No document found at European publication ' \
               'server for "{document_number}"'.format(**locals())
         logger.warning(msg)
-        raise HTTPNotFound(msg)
+        raise HTTPException(404, msg)
 
 
 if __name__ == '__main__':

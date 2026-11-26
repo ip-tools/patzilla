@@ -26,9 +26,9 @@ from datetime import date, timedelta
 
 import click
 
-from patzilla.access.epo.ops.api import OPS_API_URI, OPS_DEVELOPERS_URI, get_ops_client, get_ops_image, inquire_images
+from patzilla.access.epo.ops.api import OPS_API_URI, OPS_DEVELOPERS_URI, get_ops_image, inquire_images
 from patzilla.boot.config import BootConfiguration
-from patzilla.boot.framework import pyramid_setup
+from patzilla.boot.framework import setup_environment
 from patzilla.util.config import get_configfile_from_commandline
 from patzilla.util.data.container import jd
 
@@ -43,14 +43,14 @@ def ops_cli(ctx):
     Access the EPO/OPS data source adapter.
     """
 
-    # Create a Pyramid runtime environment.
-    env = pyramid_setup(
+    # Create an application runtime environment.
+    env = setup_environment(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ops"]),
     )
 
     # Propagate reference to the environment to the Click context.
-    ctx.meta["pyramid_env"] = env
+    ctx.meta["app_env"] = env
 
 
 date_format_input = "%Y-%m-%d"
@@ -80,7 +80,7 @@ def usage(ctx, date_start, date_end):
     url = '{baseuri}/me/stats/usage?timeRange={date_start}~{date_end}'.format(baseuri=OPS_DEVELOPERS_URI, **locals())
 
     # Invoke API and output result.
-    response = send_request(url, use_get=True, accept_json=True, verbose=verbose)
+    response = send_request(ops_client(ctx), url, use_get=True, accept_json=True, verbose=verbose)
     print(response)
 
 
@@ -103,7 +103,7 @@ def search(ctx, expression, request_json):
     # Invoke API and output result.
     logger.warning("Only the first 100 hits will be displayed. The CLI currently does not employ paging.")
     response = send_request(
-        url, parameters={'q': expression, 'Range': '1-100'}, accept_json=request_json, verbose=verbose)
+        ops_client(ctx), url, parameters={'q': expression, 'Range': '1-100'}, accept_json=request_json, verbose=verbose)
     print(response)
 
 
@@ -115,7 +115,7 @@ def image_info(ctx, document):
     """
     Access the OPS image info API.
     """
-    payload = inquire_images(document)
+    payload = inquire_images(ops_client(ctx), document)
     print(jd(payload))
 
 
@@ -133,7 +133,7 @@ def image(ctx, document, page, kind, format):
     """
     Access the OPS image acquisition API, see OPS handbook section 3.1.3.
     """
-    payload = get_ops_image(document, page, kind, format)
+    payload = get_ops_image(ops_client(ctx), document, page, kind, format)
     sys.stdout.buffer.write(payload)
 
 
@@ -150,11 +150,17 @@ def mangle_range_parameter(parameters):
     return range_value
 
 
-def send_request(url, parameters=None, use_get=False, accept_json=False, verbose=False):
+def ops_client(ctx):
+    client = ctx.find_root().meta["app_env"]["state"].client("ops")
+    if client is None:
+        raise click.ClickException("EPO/OPS: Data source not configured")
+    return client
+
+
+def send_request(client, url, parameters=None, use_get=False, accept_json=False, verbose=False):
     """
     Generic wrapper to submit a request to OPS.
     """
-    client = get_ops_client()
 
     parameters = parameters or {}
 

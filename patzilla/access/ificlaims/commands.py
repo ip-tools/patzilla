@@ -29,12 +29,11 @@ import logging
 
 import click
 
-from patzilla.access.ificlaims import get_ificlaims_client
 from patzilla.boot.cache import configure_cache_backend
 from patzilla.boot.config import BootConfiguration
 from patzilla.util.config import get_configfile_from_commandline
 from patzilla.util.data.container import SmartMunch, jd
-from patzilla.boot.framework import pyramid_setup
+from patzilla.boot.framework import setup_environment
 
 
 logger = logging.getLogger(__name__)
@@ -47,14 +46,14 @@ def ificlaims_cli(ctx):
     Access the IFI CLAIMS data source adapter.
     """
 
-    # Create a Pyramid runtime environment.
-    env = pyramid_setup(
+    # Create an application runtime environment.
+    env = setup_environment(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
     )
 
     # Propagate reference to the environment to the Click context.
-    ctx.meta["pyramid_env"] = env
+    ctx.meta["app_env"] = env
 
 
 @click.command(name="search")
@@ -75,7 +74,9 @@ def search(ctx, expression, request_json):
     """
 
     # Get hold of data source client utility.
-    client = get_ificlaims_client()
+    client = ctx.find_root().meta["app_env"]["state"].client("ificlaims")
+    if client is None:
+        raise click.ClickException("IFI CLAIMS: Data source not configured")
 
     # Invoke API and output result.
     logger.warning("Only the first 100 hits will be displayed. The CLI currently does not employ paging.")
@@ -157,8 +158,8 @@ if __name__ == '__main__':
     Demo program for accessing different IFI CLAIMS services in a high-level manner.
     """
 
-    # Create a Pyramid runtime environment.
-    env = pyramid_setup(
+    # Create an application runtime environment.
+    env = setup_environment(
         configfile=get_configfile_from_commandline(),
         bootconfiguration=BootConfiguration(datasources=["ificlaims"]),
     )
@@ -167,7 +168,7 @@ if __name__ == '__main__':
     configure_cache_backend("filesystem")
 
     # Get hold of data source client utility.
-    client = get_ificlaims_client()
+    client = env["state"].client("ificlaims")
 
     results = make_request(client)
     print(json.dumps(results, indent=2))

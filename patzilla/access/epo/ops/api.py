@@ -9,22 +9,20 @@ from contextlib import contextmanager
 
 import epo_ops
 import epo_ops.models
-from cornice.util import to_list
-from beaker.cache import cache_region
 from simplejson.scanner import JSONDecodeError
 from jsonpointer import JsonPointer, resolve_pointer, set_pointer, JsonPointerException
-from pyramid.threadlocal import get_current_request
-from pyramid.httpexceptions import HTTPNotFound, HTTPError, HTTPBadRequest, HTTPBadGateway
+from starlette.exceptions import HTTPException
 
 from patzilla.access.epo.ops.model import OpsFamilyAwareSearchResult
 from patzilla.navigator.util import object_attributes_to_dict
 from patzilla.util.data.container import jpath
 from patzilla.util.image.convert import pdf_join, pdf_set_metadata, pdf_make_metadata
-from patzilla.access.generic.exceptions import NoResultsException
+from patzilla.access.generic.exceptions import NoResultsException, ServiceError
+from patzilla.boot.cache import client_cache_region
 from patzilla.util.numbers.common import decode_patent_number, split_patent_number
 from patzilla.util.numbers.common import encode_epodoc_number, encode_docdb_number
 from patzilla.util.numbers.normalize import normalize_patent
-from patzilla.util.web.pyramid.cornice import json_error
+from patzilla.util.config import to_list
 
 log = logging.getLogger(__name__)
 
@@ -59,27 +57,11 @@ ops_keyword_fields = [
 ]
 
 
-def get_ops_client():
-    """
-    Get a managed client for accessing the EPO OPS API.
-    """
-    request = get_current_request()
-
-    if hasattr(request, 'ops_client'):
-        client = request.ops_client
-        log.debug('OPS request with consumer key: {}...'.format(client.key[:10]))
-        return client
-    else:
-        raise HTTPBadGateway("EPO OPS: Data source not enabled or not configured")
-
-
 @contextmanager
-def ops_client(xml=False):
+def ops_client(client, xml=False):
 
     # FIXME: Better use "accept_type" on a per-request basis supported by ``python-epo-ops-client``.
-
-    # Acquire OPS client instance.
-    ops = get_ops_client()
+    ops = client
 
     try:
         # Conditionally switch to XML.
@@ -92,18 +74,18 @@ def ops_client(xml=False):
         ops.accept_type = 'application/json'
 
 
-@cache_region('search', 'ops_search')
-def ops_published_data_search_swap_family(constituents, query, range):
+@client_cache_region('search', 'ops_search')
+def ops_published_data_search_swap_family(client, constituents, query, range):
     """
     Run a search on EPO OPS, with adjustments to the selection of
     representative documents.
     """
-    results = ops_published_data_search(constituents, query, range)
-    ofasr = results_swap_family_members(results)
+    results = ops_published_data_search(client, constituents, query, range)
+    ofasr = results_swap_family_members(client, results)
     return ofasr
 
 
-def results_swap_family_members(response):
+def results_swap_family_members(client, response):
     """
     Enhance the response model by choosing different representative documents
     from the list of available family members according to a defined list of
@@ -174,13 +156,11 @@ def results_swap_family_members(response):
 
         # Fetch family members. When failing, use first cycle as representation.
         try:
-            family_info = ops_family_members(representation_pubref_epodoc)
+            family_info = ops_family_members(client, representation_pubref_epodoc)
             #print "family_info:", family_info
         except:
             log.warning('Failed to fetch family information for %s', representation_pubref_epodoc)
             chunk['exchange-document'] = representation
-            request = get_current_request()
-            del request.errors[:]
             continue
 
         #members = family_info.publications_by_country(countries=[])
@@ -212,11 +192,9 @@ def results_swap_family_members(response):
                     #print 'Filter matched for member:', member_pubnum
 
                     try:
-                        bibdata = ops_biblio_documents(member_pubnum)
+                        bibdata = ops_biblio_documents(client, member_pubnum)
                     except:
                         #log.warning('Fetching bibliographic data failed for %s', member_pubnum)
-                        request = get_current_request()
-                        del request.errors[:]
                         continue
 
                     #pprint(bibdata)
@@ -298,21 +276,21 @@ def results_swap_family_members(response):
     )
 
 
-@cache_region('search', 'ops_search')
-def ops_published_data_search(constituents, query, range):
+@client_cache_region('search', 'ops_search')
+def ops_published_data_search(client, constituents, query, range):
     """
     Run a search on EPO OPS, with caching.
     """
-    return ops_published_data_search_real(constituents, query, range)
+    return ops_published_data_search_real(client, constituents, query, range)
 
 
-def ops_published_data_search_real(constituents, query, range):
+def ops_published_data_search_real(client, constituents, query, range):
     """
     Run a search on EPO OPS, without caching.
     """
 
     # OPS client object, impersonated for the current user.
-    ops = get_ops_client()
+    ops = client
 
     # Send request to OPS.
     range_begin, range_end = list(map(int, range.split('-')))
@@ -320,7 +298,7 @@ def ops_published_data_search_real(constituents, query, range):
         query, range_begin=range_begin, range_end=range_end, constituents=to_list(constituents))
 
     # Decode OPS response from JSON
-    payload = handle_response(response, 'ops-search')
+    payload = handle_response(client, response, 'ops-search')
 
     if response.headers['content-type'].startswith('application/json'):
 
@@ -339,8 +317,8 @@ def ops_published_data_search_real(constituents, query, range):
         return payload
 
 
-@cache_region('search')
-def ops_published_data_crawl(constituents, query, chunksize):
+@client_cache_region('search')
+def ops_published_data_crawl(client, constituents, query, chunksize):
 
     if constituents != 'pub-number':
         raise ValueError('Only constituent "pub-number" permitted here')
@@ -350,7 +328,7 @@ def ops_published_data_crawl(constituents, query, chunksize):
         constituents = ''
 
     # fetch first chunk (1-chunksize) from upstream
-    first_chunk = ops_published_data_search(constituents, query, '1-{0}'.format(chunksize))
+    first_chunk = ops_published_data_search(client, constituents, query, '1-{0}'.format(chunksize))
     #print first_chunk
 
     pointer_total_count = JsonPointer('/ops:world-patent-data/ops:biblio-search/@total-result-count')
@@ -373,7 +351,7 @@ def ops_published_data_crawl(constituents, query, chunksize):
         range_end = range_begin + chunksize - 1
         range_string = '{0}-{1}'.format(range_begin, range_end)
         log.info('ops_published_data_crawl range: ' + range_string)
-        chunk = ops_published_data_search(constituents, query, range_string)
+        chunk = ops_published_data_search(client, constituents, query, range_string)
         #print 'chunk:', chunk
         chunks.append(chunk)
 
@@ -455,13 +433,13 @@ def ops_published_data_crawl(constituents, query, chunksize):
     return response
 
 
-def image_representative_from_family(patent, countries, func_filter=None):
+def image_representative_from_family(client, patent, countries, func_filter=None):
 
     log.info('Finding alternative documents for drawings of {patent}'.format(patent=patent))
 
     document             = patent.country + patent.number + patent.kind
     document_no_kindcode = patent.country + patent.number
-    family = ops_family_members(document_no_kindcode)
+    family = ops_family_members(client, document_no_kindcode)
 
     # Compute alternative family members sorted by given countries
     alternatives = family.publications_by_country(exclude=[document], countries=countries)
@@ -478,7 +456,7 @@ def image_representative_from_family(patent, countries, func_filter=None):
     return False
 
 
-def image_representative(patent):
+def image_representative(client, patent):
     """
     When document does not offer drawings, search the family members for representative ones.
     """
@@ -488,23 +466,23 @@ def image_representative(patent):
     if patent.country == 'DE' and (patent.kind == 'A5' or patent.kind == 'A8'):
         def kindcode_filter(item):
             return not (item.startswith('DE') and (item.endswith('A5') or item.endswith('A8')))
-        return image_representative_from_family(patent, ['DE', 'WO'], kindcode_filter)
+        return image_representative_from_family(client, patent, ['DE', 'WO'], kindcode_filter)
 
     # Amend document number for "European Search Report to Offenlegungsschrift". The former does not carry drawings.
     # Example: EP1929706A4 to EP1929706A1
     elif patent.country == 'EP' and (patent.kind == 'A4'):
-        return image_representative_from_family(patent, ['EP', 'WO'])
+        return image_representative_from_family(client, patent, ['EP', 'WO'])
 
 
-@cache_region('medium')
-def inquire_images(document):
+@client_cache_region('medium')
+def inquire_images(client, document):
 
     patent = decode_patent_number(document)
 
     if not patent:
-        raise HTTPBadRequest('{0} is not a valid patent number'.format(document))
+        raise HTTPException(400, '{0} is not a valid patent number'.format(document))
 
-    image_representative(patent)
+    image_representative(client, patent)
 
     # v1: docdb
     if patent.kind:
@@ -523,7 +501,7 @@ def inquire_images(document):
     error_msg_process = 'Error while processing image information for document={0}'.format(document)
 
     # Inquire image metadata from OPS.
-    ops = get_ops_client()
+    ops = client
     response = ops._make_request(url_image_inquiry, ops_patent)
 
     # Evaluate response.
@@ -531,13 +509,11 @@ def inquire_images(document):
 
         if response.status_code == 404:
             log.warning(error_msg_access)
-            error = HTTPNotFound(error_msg_access)
-            error.status_code = response.status_code
+            error = HTTPException(404, error_msg_access)
 
         else:
             log.error(error_msg_access + '\n' + str(response) + '\n' + response.text)
-            error = HTTPError(error_msg_access)
-            error.status_code = response.status_code
+            error = HTTPException(response.status_code, error_msg_access)
 
         # TODO: respond with proper json error
         raise error
@@ -548,8 +524,7 @@ def inquire_images(document):
         # TODO: respond with proper json error
         error_msg_process += ': {0}'.format(str(ex))
         log.error(error_msg_process)
-        error = HTTPError(error_msg_process)
-        error.status_code = 500
+        error = HTTPException(500, error_msg_process)
         raise error
 
     results = to_list(data['ops:world-patent-data']['ops:document-inquiry']['ops:inquiry-result'])
@@ -646,13 +621,13 @@ def enrich_image_inquiry_info(info):
     return enriched
 
 
-@cache_region('static')
-def get_ops_image_pdf(document, page):
-    payload = get_ops_image(document, page, 'FullDocument', 'pdf')
+@client_cache_region('static')
+def get_ops_image_pdf(client, document, page):
+    payload = get_ops_image(client, document, page, 'FullDocument', 'pdf')
     return payload
 
 
-def get_ops_image(document, page, kind, format=None):
+def get_ops_image(client, document, page, kind, format=None):
 
     # http://ops.epo.org/3.1/rest-services/published-data/images/EP/1000000/PA/firstpage.png?Range=1
     # http://ops.epo.org/3.1/rest-services/published-data/images/US/20130311929/A1/thumbnail.tiff?Range=1
@@ -662,7 +637,7 @@ def get_ops_image(document, page, kind, format=None):
         kind = 'FullDocument'
 
     # 1. Inquire images to compute url to image resource
-    image_info = inquire_images(document)
+    image_info = inquire_images(client, document)
     if image_info:
         if kind in image_info:
             drawing_node = image_info.get(kind)
@@ -684,13 +659,13 @@ def get_ops_image(document, page, kind, format=None):
             msg = 'No image information for document={0}, kind={1}'.format(document, kind)
             log.warning(msg)
             # TODO: respond with proper json error
-            raise HTTPNotFound(msg)
+            raise HTTPException(404, msg)
 
     else:
         msg = 'No image information for document={0}'.format(document)
         #log.warning(msg)
         # TODO: respond with proper json error
-        raise HTTPNotFound(msg)
+        raise HTTPException(404, msg)
 
     # Compute document format.
     document_format = 'application/tiff'
@@ -698,20 +673,20 @@ def get_ops_image(document, page, kind, format=None):
         document_format = 'application/pdf'
 
     # Acquire image from OPS.
-    ops = get_ops_client()
+    ops = client
     response = ops.image(link, range=page, document_format=document_format)
 
     if response.status_code == 200:
 
         # Decode and measure content length.
-        measure_response(response)
+        measure_response(client, response)
 
         payload = response.content
         return payload
 
     elif response.status_code == 404:
         msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
-        raise HTTPNotFound(msg)
+        raise HTTPException(404, msg)
     else:
         msg = 'Could not load image for document={document}, kind={kind}, page={page}, format={format}'.format(**locals())
         log.error('[{code}] {message}'.format(code=response.status_code, message=msg))
@@ -730,8 +705,8 @@ def get_ops_image(document, page, kind, format=None):
     """
 
 
-@cache_region('static')
-def ops_description(document_number, xml=False):
+@client_cache_region('static')
+def ops_description(client, document_number, xml=False):
 
     # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666/description.json
     # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666.A2/description.json
@@ -746,13 +721,13 @@ def ops_description(document_number, xml=False):
     log.info('Acquiring description for document "{}" from "{}"'.format(document_number, url))
 
     # Acquire description fulltext from OPS.
-    with ops_client(xml=xml) as ops:
+    with ops_client(client, xml=xml) as ops:
         response = ops._make_request(url, document_number)
-        return handle_response(response, 'ops-description')
+        return handle_response(client, response, 'ops-description')
 
 
-@cache_region('static')
-def ops_claims(document_number, xml=False):
+@client_cache_region('static')
+def ops_claims(client, document_number, xml=False):
 
     # http://ops.epo.org/3.1/rest-services/published-data/publication/epodoc/EP0666666/claims.json
 
@@ -765,13 +740,13 @@ def ops_claims(document_number, xml=False):
     log.info('Acquiring claims for document "{}" from "{}"'.format(document_number, url))
 
     # Acquire claims fulltext from OPS.
-    with ops_client(xml=xml) as ops:
+    with ops_client(client, xml=xml) as ops:
         response = ops._make_request(url, document_number)
-        return handle_response(response, 'ops-claims')
+        return handle_response(client, response, 'ops-claims')
 
 
-@cache_region('search')
-def ops_family_inpadoc(reference_type, document_number, constituents, xml=False):
+@client_cache_region('search')
+def ops_family_inpadoc(client, reference_type, document_number, constituents, xml=False):
     """
     Request family information from OPS in JSON format.
 
@@ -790,7 +765,7 @@ def ops_family_inpadoc(reference_type, document_number, constituents, xml=False)
     document_id = split_patent_number(document_number)
 
     # Acquire family information from OPS.
-    with ops_client(xml=xml) as ops:
+    with ops_client(client, xml=xml) as ops:
         ops_id = epo_ops.models.Epodoc(document_id.country + document_id.number, document_id.kind)
         response = ops.family(reference_type, ops_id, constituents=to_list(constituents))
 
@@ -798,10 +773,10 @@ def ops_family_inpadoc(reference_type, document_number, constituents, xml=False)
             ops_id = epo_ops.models.Docdb(document_id.number, document_id.country, document_id.kind)
             response = ops.family(reference_type, ops_id, constituents=to_list(constituents))
 
-        return handle_response(response, 'ops-family')
+        return handle_response(client, response, 'ops-family')
 
 
-def ops_family_publication_docdb_xml(reference_type, document_number, constituents):
+def ops_family_publication_docdb_xml(client, reference_type, document_number, constituents):
     """
     Request family information from OPS in XML format.
 
@@ -817,18 +792,18 @@ def ops_family_publication_docdb_xml(reference_type, document_number, constituen
     ops_id = epo_ops.models.Docdb(document_id.number, document_id.country, document_id.kind)
 
     # Acquire family information from OPS.
-    ops = get_ops_client()
+    ops = client
 
     # FIXME: Better use "accept_type" on a per-request basis supported by ``python-epo-ops-client``.
     ops.accept_type = 'application/xml'
     response = ops.family(reference_type, ops_id, constituents=to_list(constituents))
     ops.accept_type = 'application/json'
 
-    return handle_response(response, 'ops-family')
+    return handle_response(client, response, 'ops-family')
 
 
-@cache_region('search')
-def ops_register(reference_type, document_number, constituents=None, xml=False):
+@client_cache_region('search')
+def ops_register(client, reference_type, document_number, constituents=None, xml=False):
     """
     Request register information from OPS in JSON or XML format.
 
@@ -848,16 +823,16 @@ def ops_register(reference_type, document_number, constituents=None, xml=False):
     ops_id = epo_ops.models.Epodoc(document_id.country + document_id.number, document_id.kind)
 
     # Acquire register information from OPS.
-    with ops_client(xml=xml) as ops:
+    with ops_client(client, xml=xml) as ops:
         response = ops.register(reference_type, ops_id, constituents=to_list(constituents))
-        return handle_response(response, 'ops-register')
+        return handle_response(client, response, 'ops-register')
 
 
-def handle_response(response, api_location):
+def handle_response(client, response, api_location):
     if response.status_code == 200:
 
         # Decode and measure content length.
-        measure_response(response)
+        measure_response(client, response)
 
         # Decode body by content type.
         content_type = response.headers['content-type']
@@ -871,24 +846,24 @@ def handle_response(response, api_location):
 
         else:
             message = 'OPS service responded with unknown content type "{}"'.format(content_type)
-            raise HTTPBadGateway(message)
+            raise HTTPException(502, message)
 
     else:
-        response = handle_error(response, api_location)
-        raise response
+        raise handle_error(response, api_location)
 
 
-def measure_response(response):
+def measure_response(client, response):
 
     # Decode and measure content length.
     content_length = response.headers.get('Content-Length')
     if content_length and content_length.isdigit():
-        ops = get_ops_client()
-        ops.metrics_manager.measure_upstream('ops', int(content_length))
+        client.metrics_manager.measure_upstream('ops', int(content_length), userid=getattr(client, 'userid', None))
 
 
 def handle_error(response, location):
-    request = get_current_request()
+    """
+    Convert an erroneous OPS response into a `ServiceError`.
+    """
     response_dict = object_attributes_to_dict(response, ['url', 'status_code', 'reason', 'headers', 'content', 'text'])
 
     # Compute name
@@ -903,76 +878,72 @@ def handle_error(response, location):
             "The OPS API might be in maintenance mode, this happens regularly at 05:00 a.m. <br/>" \
             "and usually does not last longer than 30 minutes."
 
-    request.errors.add(location, name, response_dict)
+    if isinstance(response_dict.get('content'), bytes):
+        response_dict['content'] = response_dict['content'].decode('utf-8')
 
-    response_json = json_error(request)
-    response_json.status = response.status_code
+    detail = str(response.status_code) + ' ' + response.reason + ': ' + response.text
+    response_json = ServiceError(location, name, response_dict, status_code=response.status_code, detail=detail)
 
-    # countermeasure against "JSONError: <unprintable JSONError object>" or the like
-    response_json.detail = str(response.status_code) + ' ' + response.reason + ': ' + response.text
+    error_info = response_dict
+    if error_info.get('status_code') == 404:
+        error_content = error_info.get('text', '')
+        url = error_info.get('url')
+        status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
 
-    #print "response:", response
-    if len(request.errors) == 1:
-        error_info = request.errors[0].get('description')
-        if error_info.get('status_code') == 404:
-            error_content = error_info.get('text', '')
-            url = error_info.get('url')
-            status = str(error_info.get('status_code', '')) + ' ' + error_info.get('reason', '')
+        if 'CLIENT.InvalidCountryCode' in error_content:
+            ops_code = 'CLIENT.InvalidCountryCode'
+            message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+            log.error(message)
+            return response_json
 
-            if 'CLIENT.InvalidCountryCode' in error_content:
-                ops_code = 'CLIENT.InvalidCountryCode'
-                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
-                log.error(message)
-                return response_json
+        if 'SERVER.EntityNotFound' in error_content:
+            ops_code = 'SERVER.EntityNotFound'
+            message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+            log.warning(message)
+            return response_json
 
-            if 'SERVER.EntityNotFound' in error_content:
-                ops_code = 'SERVER.EntityNotFound'
-                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
-                log.warning(message)
-                return response_json
+        if 'OPS - 404' in error_content or 'Page not found' in error_content:
+            ops_code = '404 OPS Page not found'
+            message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+            log.error(message)
+            log.error('OPS API errors:\n{}'.format(pformat(response_json.errors)))
+            response_json.status_code = 502
+            return response_json
 
-            if 'OPS - 404' in error_content or 'Page not found' in error_content:
-                ops_code = '404 OPS Page not found'
-                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
-                log.error(message)
-                log.error('OPS API errors:\n{}'.format(pformat(request.errors)))
-                response_json.status_code = 502
-                return response_json
+        if 'This API version is not supported' in error_content:
+            ops_code = '404 API version not supported'
+            message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
+            log.error(message)
+            response_json.status_code = 502
+            return response_json
 
-            if 'This API version is not supported' in error_content:
-                ops_code = '404 API version not supported'
-                message = 'OPS API response ({status}, {ops_code}). url={url}'.format(status=status, ops_code=ops_code, url=url)
-                log.error(message)
-                response_json.status_code = 502
-                return response_json
-
-    log.error('OPS API errors:\n{}'.format(pformat(request.errors)))
+    log.error('OPS API errors:\n{}'.format(pformat(response_json.errors)))
 
     return response_json
 
 
-@cache_region('static')
-def pdf_document_build(patent):
+@client_cache_region('static')
+def pdf_document_build(client, patent):
 
     log.info('PDF {}: OPS attempt'.format(patent))
 
     # 1. collect all single pdf pages
-    image_info = inquire_images(patent)
+    image_info = inquire_images(client, patent)
     if not image_info:
         msg = 'No image information for document={0}'.format(patent)
         # TODO: respond with proper json error
-        raise HTTPNotFound(msg)
+        raise HTTPException(404, msg)
 
     resource_info = image_info.get('FullDocument')
     if not resource_info:
         msg = 'No image information for document={0}, type=FullDocument'.format(patent)
-        raise HTTPNotFound(msg)
+        raise HTTPException(404, msg)
 
     page_count = int(resource_info['@number-of-pages'])
     log.info('OPS PDF builder will collect {0} pages for document {1}'.format(page_count, patent))
     pdf_pages = []
     for page_number in range(1, page_count + 1):
-        page = get_ops_image_pdf(patent, page_number)
+        page = get_ops_image_pdf(client, patent, page_number)
         pdf_pages.append(page)
 
     # 2. join single pdf pages
@@ -992,17 +963,17 @@ def pdf_document_build(patent):
     return pdf_document
 
 
-def ops_biblio_documents(patent):
+def ops_biblio_documents(client, patent):
     """
     Acquire bibliographic information for a specific document.
     """
-    data = get_ops_biblio_data('publication', patent)
+    data = get_ops_biblio_data(client, 'publication', patent)
     documents = to_list(data['ops:world-patent-data']['exchange-documents']['exchange-document'])
     return documents
 
 
-@cache_region('medium')
-def get_ops_biblio_data(reference_type, patent, xml=False):
+@client_cache_region('medium')
+def get_ops_biblio_data(client, reference_type, patent, xml=False):
     """
     Acquire bibliographic information for a specific document,
     in JSON or XML format.
@@ -1016,13 +987,13 @@ def get_ops_biblio_data(reference_type, patent, xml=False):
         ops_id = epo_ops.models.Epodoc(document_id.country + document_id.number, document_id.kind)
 
     # Acquire bibliographic data from OPS.
-    with ops_client(xml=xml) as ops:
+    with ops_client(client, xml=xml) as ops:
         response = ops.published_data(reference_type, ops_id, constituents=['full-cycle'])
-        return handle_response(response, 'ops-biblio')
+        return handle_response(client, response, 'ops-biblio')
 
 
-@cache_region('medium')
-def ops_document_kindcodes(patent):
+@client_cache_region('medium')
+def ops_document_kindcodes(client, patent):
     """
     Acquire all possible kind codes for a specific document.
     """
@@ -1030,15 +1001,14 @@ def ops_document_kindcodes(patent):
     error_msg_access = 'No bibliographic information for document={0}'.format(patent)
 
     log.info('Retrieving kindcodes for document {document}'.format(document=patent))
-    documents = ops_biblio_documents(patent)
+    documents = ops_biblio_documents(client, patent)
 
     kindcodes = []
     for document in documents:
 
         # TODO: check whether a single occurrance of "not found" should really raise this exception
         if '@status' in document and document['@status'] == 'not found':
-            error = HTTPNotFound(error_msg_access)
-            raise error
+            raise HTTPException(404, error_msg_access)
 
         kindcode = document['@kind']
         kindcodes.append(kindcode)
@@ -1059,7 +1029,7 @@ def _get_document_number_date(docref, id_type):
     return None, None
 
 
-def analytics_family(query):
+def analytics_family(client, query):
 
     payload = {}
     family_has_statistics = {}
@@ -1068,7 +1038,7 @@ def analytics_family(query):
     # A. aggregate list of publication numbers
     # http://ops.epo.org/3.1/rest-services/published-data/search/full-cycle/?q=pa=%22MAMMUT%20SPORTS%20GROUP%20AG%22
     # TODO: step through all pages
-    response = ops_published_data_search('biblio', query, '1-50')
+    response = ops_published_data_search(client, 'biblio', query, '1-50')
     pointer_results = JsonPointer('/ops:world-patent-data/ops:biblio-search/ops:search-result/exchange-documents')
     pointer_family_id = JsonPointer('/exchange-document/@family-id')
     pointer_publication_reference = JsonPointer('/exchange-document/bibliographic-data/publication-reference/document-id')
@@ -1094,12 +1064,10 @@ def analytics_family(query):
 
         # B.1 Aggregate all family members
         try:
-             family = ops_family_members(document_number)
+             family = ops_family_members(client, document_number)
              family_members = family.items
              payload[family_id]['family-members'] = family_members
         except Exception as ex:
-            request = get_current_request()
-            del request.errors[:]
             log.warning('Could not fetch OPS family for {0}'.format(document_number))
             continue
 
@@ -1127,7 +1095,7 @@ def analytics_family(query):
 
                     # B.3.1 get data about claims
                     try:
-                        claims_response = ops_claims(pubref_number)
+                        claims_response = ops_claims(client, pubref_number)
                         pointer_claims = JsonPointer('/ops:world-patent-data/ftxt:fulltext-documents/ftxt:fulltext-document/claims')
                         claims = pointer_claims.resolve(claims_response)
                         claim_paragraphs = []
@@ -1140,13 +1108,11 @@ def analytics_family(query):
                         statistics['claims-count'] = len(claim_paragraphs)
 
                     except Exception as ex:
-                        request = get_current_request()
-                        del request.errors[:]
                         log.warning('Could not fetch OPS claims for {0}'.format(pubref_number))
 
                     # B.3.2 get data about description
                     try:
-                        description_response = ops_description(pubref_number)
+                        description_response = ops_description(client, pubref_number)
                         pointer_description = JsonPointer('/ops:world-patent-data/ftxt:fulltext-documents/ftxt:fulltext-document/description')
                         descriptions = pointer_description.resolve(description_response)
                         description_paragraphs = []
@@ -1156,8 +1122,6 @@ def analytics_family(query):
                         statistics['description-words-total'] = len(description_text.split())
 
                     except Exception as ex:
-                        request = get_current_request()
-                        del request.errors[:]
                         log.warning('Could not fetch OPS description for {0}'.format(pubref_number))
 
 
@@ -1166,12 +1130,11 @@ def analytics_family(query):
                         # B.3.3 get data about image count
                         try:
                             pubref_number_docdb = family_member['publication']['number-docdb']
-                            imginfo = inquire_images(pubref_number_docdb)
+                            imginfo = inquire_images(client, pubref_number_docdb)
                             statistics['drawings-count'] = imginfo['META']['drawing-total-count']
 
                         except Exception as ex:
-                            request = get_current_request()
-                            del request.errors[:]
+                            log.warning('Could not fetch OPS image information for {0}'.format(pubref_number_docdb))
 
                         family_member['statistics'] = statistics
                         family_has_statistics[family_id] = True
@@ -1188,10 +1151,8 @@ def analytics_family(query):
                 pubref_number = family_member['publication']['number-epodoc']
                 if pubref_number.startswith(country):
                     try:
-                        reginfo_payload = ops_register('publication', pubref_number, 'biblio')
+                        reginfo_payload = ops_register(client, 'publication', pubref_number, 'biblio')
                     except:
-                        request = get_current_request()
-                        del request.errors[:]
                         log.warning('Could not fetch OPS register information for {0}'.format(pubref_number))
                         continue
 
@@ -1214,7 +1175,7 @@ def analytics_family(query):
     return payload
 
 
-def ops_family_members(document_number):
+def ops_family_members(client, document_number):
     """
     Acquire all family members for a specific document.
     """
@@ -1224,7 +1185,7 @@ def ops_family_members(document_number):
     pointer_application_reference = JsonPointer('/application-reference/document-id')
     #pointer_priority_claim_reference = JsonPointer('/priority-claim/document-id')
 
-    response = ops_family_inpadoc('publication', document_number, '')
+    response = ops_family_inpadoc(client, 'publication', document_number, '')
 
     family_members = OPSFamilyMembers()
 
@@ -1400,8 +1361,7 @@ def _summarize_metrics(payload, kind):
     return total
 
 
-def ops_service_usage(date_begin, date_end):
-    client = get_ops_client()
+def ops_service_usage(client, date_begin, date_end):
 
     url = '{baseuri}/me/stats/usage?timeRange={date_begin}~{date_end}'.format(baseuri=OPS_DEVELOPERS_URI, **locals())
     log.info("Getting metrics at: {}".format(url))
@@ -1428,7 +1388,9 @@ def ops_service_usage(date_begin, date_end):
 
 
 if __name__ == '__main__':  # pragma: nocover
-    data = ops_service_usage('06/11/2014', '09/12/2014')
+    from patzilla.boot.framework import setup_environment
+    client = setup_environment()["state"].client("ops")
+    data = ops_service_usage(client, '06/11/2014', '09/12/2014')
     print('Time range:    {0}'.format(data['time-range']))
     print('Response size: {0}G'.format(data['response-size'] / float(10**9)))
     print('Message count: {0}'.format(data['message-count']))

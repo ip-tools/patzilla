@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-# (c) 2013-2017 Andreas Motl, Elmyra UG
+# (c) 2013-2026 Andreas Motl, Elmyra UG
 import re
 import os
 import json
 import logging
-from pkg_resources import resource_filename
+from urllib.parse import urlencode
+
+from fastapi import APIRouter, HTTPException, Request, Response
+from fastapi.responses import FileResponse, RedirectResponse
 from mongoengine.errors import NotUniqueError
-from pyramid.encode import urlencode
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound
-from pyramid.response import FileResponse
-from pyramid.settings import asbool
-from pyramid.view import view_config
+
+from patzilla.util.config import asbool
 from patzilla.util.date import today_iso, parse_weekrange, date_iso, week_iso, month_iso, year
 from patzilla.util.render.phantomjs import render_pdf
 from patzilla.util.text.format import slugify
@@ -29,94 +29,56 @@ from patzilla.util.web.identity.session import (
     set_session_cookie,
 )
 from patzilla.util.web.identity.store import User, UserHistory
+from patzilla.web.dependencies import CurrentUser, LenientBool, Params, State
+from patzilla.web.templating import PageRenderer
 
 log = logging.getLogger(__name__)
 
-def includeme(config):
+TEMPLATE_STANDALONE = 'patzilla.navigator:templates/standalone.html'
+TEMPLATE_EMBEDDED = 'patzilla.navigator:templates/embedded.html'
+TEMPLATE_HELP = 'patzilla.navigator:templates/help.html'
+TEMPLATE_LOGIN = 'patzilla.navigator:templates/login.html'
+TEMPLATE_MAGIC_LINK_VERIFY = 'patzilla.navigator:templates/magic-link-verify.html'
+TEMPLATE_ADMIN_USER_CREATE = 'patzilla.navigator:templates/admin/user-create.html'
+TEMPLATE_PORTFOLIO_DEMO = 'patzilla.navigator:templates/portfolio-demo.mako'
 
-    # serve favicon.ico
-    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
-    config.add_route('favicon', '/favicon.ico')
-    config.add_view('patzilla.navigator.views.favicon_view', route_name='favicon')
 
-    # serve admin page
-    config.add_route('admin-user-create', '/admin/user/create')
+def navigator_standalone(request: Request, page: PageRenderer, pdf: str = ''):
+    if pdf == 'true':
+        return opspdf(request)
+    return page.render(TEMPLATE_STANDALONE)
 
-    # serve login and auth pages
-    config.add_route('login', '/login')
-    config.add_route('auth-magic-verify', '/auth/magic/verify')
-    config.add_route('logout', '/logout')
 
-    # serve help pages
-    config.add_route('help-hotkeys', '/help/hotkeys')
-    config.add_route('help-ificlaims', '/help/ificlaims')
+def navigator_embedded(page: PageRenderer):
+    return page.render(TEMPLATE_EMBEDDED)
 
-    # serve application
-    config.add_route('patentsearch', '/')
 
-    # serve web components
-    config.add_route('embedded-item', '/embed/item')
-    config.add_route('embedded-list', '/embed/list')
+def patentview(request: Request, page: PageRenderer, field: str, value: str):
 
-    # public
-    config.add_route('patentview',          '/view/{field}/{value}')
-
-    # vanity-/shortcut urls
-    config.add_route('patentsearch-vanity', '/{label}')
-    config.add_route('patentsearch-quick',  '/{field}/{value}')
-    config.add_route('patentsearch-quick2', '/{field}/{value}/{value2}', path_info=r'^(?!.*\.map).*$')
-
-    # Remark:
-    # At route "patentsearch-quick2", exclude access to javascript .map files. Otherwise, these would match.
-    #
-    # Example::
-    #
-    #   $ curl --silent -i http://localhost:6543/static/jquery/jquery.min.map | grep Location
-    #   Location: http://localhost:6543?query=static%3Djquery
-    #
-    # Negative lookahead to the rescue:
-    # http://stackoverflow.com/questions/1240275/how-to-negate-specific-word-in-regex/1240365#1240365
-
-@view_config(route_name='patentsearch', renderer='patzilla.navigator:templates/standalone.html')
-def navigator_standalone(request):
-    return {}
-
-@view_config(route_name='embedded-item', renderer='patzilla.navigator:templates/embedded.html')
-@view_config(route_name='embedded-list', renderer='patzilla.navigator:templates/embedded.html')
-def navigator_embedded(request):
-    return {}
-
-@view_config(route_name='patentview', renderer='patzilla.navigator:templates/embedded.html')
-def patentview(request):
-
-    matchdict = request.matchdict.copy()
-    params = request.params.copy()
-
+    params = dict(request.query_params)
     params['mode'] = 'liveview'
     params['context'] = 'viewer'
 
     payload = {
         'embed_options': json.dumps({
-            'matchdict': dict(matchdict),
-            'params': dict(params),
+            'matchdict': {'field': field, 'value': value},
+            'params': params,
         }),
     }
-    return payload
+    return page.render(TEMPLATE_EMBEDDED, payload)
 
-@view_config(route_name='patentsearch', request_param="pdf=true", renderer='pdf')
-def opspdf(request):
-    name = 'ip-navigator-' + (request.params.get('query') or 'default')
+
+def opspdf(request: Request):
+    name = 'ip-navigator-' + (request.query_params.get('query') or 'default')
     filename = slugify(name, strip_equals=False, lowercase=False)
-    suffix = '.pdf'
-    request.response.headers['Content-Disposition'] = 'inline; filename={filename}{suffix}'.format(**locals())
-    print_url = request.url.replace('pdf=true', 'mode=print')
+    print_url = str(request.url).replace('pdf=true', 'mode=print')
     if request.headers.get('Host') == 'patentsearch.elmyra.de':
         print_url = print_url.replace('ops/browser', '')
-    return render_pdf(print_url)
+    return Response(render_pdf(print_url), media_type='application/pdf',
+                    headers={'Content-Disposition': 'inline; filename={0}.pdf'.format(filename)})
 
-@view_config(route_name='patentsearch-vanity')
-def navigator_vanity(request):
-    label = request.matchdict.get('label')
+
+def navigator_vanity(request: Request, label: str):
 
     field = None
     value = None
@@ -145,19 +107,19 @@ def navigator_vanity(request):
 
     return get_redirect_query(request, query)
 
-@view_config(route_name='patentsearch-quick')
-@view_config(route_name='patentsearch-quick2')
-def navigator_quick(request):
-    field = request.matchdict.get('field')
-    value = request.matchdict.get('value')
-    value2 = request.matchdict.get('value2')
+
+def navigator_quick(request: Request, field: str, value: str, value2: str = None):
+
+    # Exclude access to JavaScript .map files, which would match otherwise.
+    if value2 is not None and '.map' in request.url.path:
+        raise HTTPException(404)
 
     # Compute query expression
-    expression = compute_expression(field, value, value2, parameters=request.params)
-    print('quick expression:', expression)
+    expression = compute_expression(field, value, value2, parameters=request.query_params)
+    log.info('quick expression: {}'.format(expression))
 
-    #return get_redirect_query(request, expression, query_args=query_args)
     return get_redirect_query(request, expression)
+
 
 def compute_expression(field, value, value2=None, **kwargs):
 
@@ -243,17 +205,14 @@ def compute_expression(field, value, value2=None, **kwargs):
 
     return query
 
+
 def get_redirect_query(request, expression=None, query_args=None):
 
     query_args = query_args or {}
 
-    # FIXME: does not work due reverse proxy anomalies, tune it to make it work!
-    #query = '{field}={value}'.format(**locals())
-    #return HTTPFound(location=request.route_url('patentsearch', _query={'query': query}))
-
     # FIXME: this is a hack
     path = '/'
-    host = request.headers.get('Host')
+    host = request.headers.get('Host', '')
 
     # TODO: at least look this up in development.ini
     if 'localhost:6543' in host:
@@ -266,21 +225,22 @@ def get_redirect_query(request, expression=None, query_args=None):
     if query_args:
         redirect_url += '?' + urlencode(query_args)
 
-    return HTTPFound(redirect_url)
+    return RedirectResponse(redirect_url, status_code=302)
 
 
-@view_config(route_name='admin-user-create', renderer='patzilla.navigator:templates/admin/user-create.html')
-def admin_user_create(request):
+def admin_user_create(request: Request, page: PageRenderer, params: Params):
 
     success = False
     success_message = ''
     error = False
     error_messages = []
+    fullname = ''
+    username = ''
 
     if request.method == 'POST':
-        fullname = request.params.get('fullname').strip()
-        username = request.params.get('username').strip().lower()
-        password = request.params.get('password')
+        fullname = params.get('fullname', '').strip()
+        username = params.get('username', '').strip().lower()
+        password = params.get('password')
 
         if not fullname:
             error = True
@@ -308,48 +268,42 @@ def admin_user_create(request):
                 error = True
                 error_messages.append('User already exists: %s' % ex)
 
-    tplvars = {
-        'username': '',
-        'fullname': '',
-        'success': success,
+    tplvars = dict(params)
+    tplvars.update({
+        'username': username,
+        'fullname': fullname,
+        'success': asbool(success),
         'success_message': success_message,
-        'error': error,
+        'error': asbool(error),
         'error_message': '<ul><li>' + '</li><li>'.join(error_messages) + '</li></ul>',
-    }
+    })
+    return page.render(TEMPLATE_ADMIN_USER_CREATE, tplvars)
 
-    tplvars.update(dict(request.params))
-    tplvars.update(**locals())
 
-    tplvars['success'] = asbool(tplvars['success'])
-    tplvars['error'] = asbool(tplvars['error'])
-    return tplvars
-
-@view_config(route_name='login', renderer='patzilla.navigator:templates/login.html')
-def login_page(request):
-    auth_settings = AuthSettings.from_registry(request.registry)
+def login_page(page: PageRenderer, state: State, username: str = '', came_from: str = '',
+               error: LenientBool = False, reason: str = ''):
+    auth_settings = AuthSettings.from_registry(state)
     tplvars = {
-        'username': request.params.get('username', ''),
-        'came_from': sanitize_redirect_url(request.params.get('came_from', ''), default=''),
-        'error': asbool(request.params.get('error')),
-        'reason': request.params.get('reason', ''),
+        'username': username,
+        'came_from': sanitize_redirect_url(came_from, default=''),
+        'error': error,
+        'reason': reason,
         'magic_link_enabled': auth_settings.magic_link_enabled,
     }
-    return tplvars
+    return page.render(TEMPLATE_LOGIN, tplvars)
 
 
-@view_config(route_name='auth-magic-verify', renderer='patzilla.navigator:templates/magic-link-verify.html')
-@view_config(route_name='auth-magic-verify-root', renderer='patzilla.navigator:templates/magic-link-verify.html')
-def auth_magic_verify(request):
+def auth_magic_verify(request: Request, page: PageRenderer, state: State, params: Params):
     """
     Two-step magic-link verification endpoint protecting against email link scanners:
     - GET: validates token read-only and renders a confirmation form.
     - POST: atomically consumes the token, provisions/updates the user, creates a
       server-side session, sets the HttpOnly cookie, and redirects.
     """
-    auth_settings = AuthSettings.from_registry(request.registry)
+    auth_settings = AuthSettings.from_registry(state)
 
     if request.method == 'POST':
-        raw_token = request.POST.get('token', '').strip()
+        raw_token = params.get('token', '').strip()
         try:
             user, redirect_url = consume_magic_link(raw_token, auth_settings)
             raw_session_token, _ = create_session(
@@ -358,11 +312,11 @@ def auth_magic_verify(request):
                 ip_address=get_client_ip(request),
                 user_agent=request.headers.get('User-Agent'),
             )
-            response = HTTPFound(location=redirect_url)
+            response = RedirectResponse(redirect_url, status_code=302)
             set_session_cookie(response, raw_session_token, auth_settings, request=request)
             return response
         except MagicLinkError as ex:
-            return {
+            return page.render(TEMPLATE_MAGIC_LINK_VERIFY, {
                 'token': '',
                 'email': '',
                 'valid': False,
@@ -370,12 +324,12 @@ def auth_magic_verify(request):
                 'error_code': ex.code,
                 'error_message': ex.message,
                 'magic_link_enabled': auth_settings.magic_link_enabled,
-            }
+            })
 
     # GET: read-only inspection (does not consume the token).
-    raw_token = request.params.get('token', '').strip()
+    raw_token = params.get('token', '').strip()
     if not auth_settings.magic_link_enabled:
-        return {
+        return page.render(TEMPLATE_MAGIC_LINK_VERIFY, {
             'token': '',
             'email': '',
             'valid': False,
@@ -383,11 +337,11 @@ def auth_magic_verify(request):
             'error_code': 'magic-link-disabled',
             'error_message': 'Magic-link authentication is currently disabled.',
             'magic_link_enabled': False,
-        }
+        })
 
     try:
         token_doc = inspect_magic_link_token(raw_token)
-        return {
+        return page.render(TEMPLATE_MAGIC_LINK_VERIFY, {
             'token': raw_token,
             'email': token_doc.email,
             'valid': True,
@@ -395,9 +349,9 @@ def auth_magic_verify(request):
             'error_code': '',
             'error_message': '',
             'magic_link_enabled': True,
-        }
+        })
     except MagicLinkError as ex:
-        return {
+        return page.render(TEMPLATE_MAGIC_LINK_VERIFY, {
             'token': '',
             'email': '',
             'valid': False,
@@ -405,18 +359,15 @@ def auth_magic_verify(request):
             'error_code': ex.code,
             'error_message': ex.message,
             'magic_link_enabled': True,
-        }
+        })
 
 
-@view_config(route_name='logout')
-@view_config(route_name='logout-root')
-def logout_view(request):
+def logout_view(request: Request, state: State, user: CurrentUser):
     """
     Revoke active session cookie and redirect to the login page.
     """
-    auth_settings = AuthSettings.from_registry(request.registry)
+    auth_settings = AuthSettings.from_registry(state)
     raw_token = request.cookies.get(auth_settings.session_cookie_name)
-    user = getattr(request, 'user', None)
 
     if raw_token:
         revoke_session(raw_token)
@@ -424,24 +375,44 @@ def logout_view(request):
     if user is not None and user.is_authenticated:
         UserHistory(userid=user.userid, action='logout').save()
 
-    response = HTTPFound(location='/login')
+    response = RedirectResponse('/login', status_code=302)
     clear_session_cookie(response, auth_settings, request=request)
     return response
 
-@view_config(route_name='help-hotkeys', renderer='patzilla.navigator:templates/help.html')
-@view_config(route_name='help-ificlaims', renderer='patzilla.navigator:templates/help.html')
-def help(request):
-    return {}
 
-def favicon_view(request):
-    # http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/assets.html#registering-a-view-callable-to-serve-a-static-asset
-    icon = resource_filename('patzilla.navigator', 'static/favicon.ico')
+def help(page: PageRenderer):
+    return page.render(TEMPLATE_HELP)
+
+
+def favicon_view():
+    icon = os.path.join(os.path.dirname(__file__), 'static', 'favicon.ico')
     if os.path.isfile(icon):
-        return FileResponse(icon, request=request)
-    else:
-        return HTTPNotFound()
+        return FileResponse(icon)
+    raise HTTPException(404)
 
-@view_config(name='portfolio-demo', renderer='patzilla.navigator:templates/portfolio-demo.mako')
-def portfolio(request):
-    return {}
 
+def portfolio(page: PageRenderer):
+    return page.render(TEMPLATE_PORTFOLIO_DEMO)
+
+
+# Routes of the navigator pages, in matching order.
+router = APIRouter(prefix='/navigator', include_in_schema=False)
+router.add_api_route('/favicon.ico', favicon_view, name='favicon')
+router.add_api_route('/admin/user/create', admin_user_create, methods=['GET', 'POST'], name='admin-user-create')
+router.add_api_route('/login', login_page, name='login')
+router.add_api_route('/auth/magic/verify', auth_magic_verify, methods=['GET', 'POST'], name='auth-magic-verify')
+router.add_api_route('/logout', logout_view, name='logout')
+router.add_api_route('/help/hotkeys', help, name='help-hotkeys')
+router.add_api_route('/help/ificlaims', help, name='help-ificlaims')
+router.add_api_route('/', navigator_standalone, name='patentsearch')
+router.add_api_route('/embed/item', navigator_embedded, name='embedded-item')
+router.add_api_route('/embed/list', navigator_embedded, name='embedded-list')
+router.add_api_route('/view/{field}/{value}', patentview, name='patentview')
+router.add_api_route('/{label}', navigator_vanity, name='patentsearch-vanity')
+router.add_api_route('/{field}/{value}', navigator_quick, name='patentsearch-quick')
+router.add_api_route('/{field}/{value}/{value2}', navigator_quick, name='patentsearch-quick2')
+
+root_router = APIRouter(include_in_schema=False)
+root_router.add_api_route('/auth/magic/verify', auth_magic_verify, methods=['GET', 'POST'], name='auth-magic-verify-root')
+root_router.add_api_route('/logout', logout_view, name='logout-root')
+root_router.add_api_route('/portfolio-demo', portfolio, name='portfolio-demo')

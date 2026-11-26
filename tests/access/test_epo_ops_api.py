@@ -2,9 +2,9 @@ from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
-from cornice.errors import Errors
-from cornice.renderer import JSONError
-from pyramid.httpexceptions import HTTPBadGateway
+from starlette.exceptions import HTTPException
+
+from patzilla.access.generic.exceptions import ServiceError
 
 from patzilla.access.epo.ops import api as ops_api
 
@@ -34,7 +34,7 @@ def test_handle_response_decodes_json():
         json_data=data,
     )
 
-    assert ops_api.handle_response(response, "ops-search") == data
+    assert ops_api.handle_response(Mock(), response, "ops-search") == data
     response.json.assert_called_once_with()
 
 
@@ -46,15 +46,15 @@ def test_handle_response_returns_xml_text(content_type):
     xml = "<world-patent-data/>"
     response = make_response(content_type=content_type, text=xml)
 
-    assert ops_api.handle_response(response, "ops-search") == xml
+    assert ops_api.handle_response(Mock(), response, "ops-search") == xml
     response.json.assert_not_called()
 
 
 def test_handle_response_rejects_unknown_content_type():
     response = make_response(content_type="application/octet-stream")
 
-    with pytest.raises(HTTPBadGateway, match="unknown content type"):
-        ops_api.handle_response(response, "ops-search")
+    with pytest.raises(HTTPException, match="unknown content type"):
+        ops_api.handle_response(Mock(), response, "ops-search")
 
 
 @pytest.mark.parametrize(
@@ -75,8 +75,6 @@ def test_handle_response_rejects_unknown_content_type():
 def test_handle_response_raises_classified_error(
     monkeypatch, status, reason, text, expected_name, expected_status
 ):
-    request = SimpleNamespace(errors=Errors())
-    monkeypatch.setattr(ops_api, "get_current_request", lambda: request)
     response = make_response(
         status=status,
         reason=reason,
@@ -84,14 +82,14 @@ def test_handle_response_raises_classified_error(
         text=text,
     )
 
-    with pytest.raises(JSONError) as exc_info:
-        ops_api.handle_response(response, "ops-search")
+    with pytest.raises(ServiceError) as exc_info:
+        ops_api.handle_response(Mock(), response, "ops-search")
 
     error = exc_info.value
     assert error.status_code == expected_status
     assert error.detail == "{} {}: {}".format(status, reason, text)
 
-    recorded = error.json["errors"][0]
+    recorded = error.envelope["errors"][0]
     assert recorded["location"] == "ops-search"
     assert recorded["name"] == expected_name
     assert recorded["description"]["status_code"] == status
@@ -107,16 +105,14 @@ def test_measure_response_records_only_numeric_content_length(
     monkeypatch, content_length
 ):
     metrics = Mock()
-    get_client = Mock(return_value=SimpleNamespace(metrics_manager=metrics))
-    monkeypatch.setattr(ops_api, "get_ops_client", get_client)
+    client = SimpleNamespace(metrics_manager=metrics, userid="foo")
     response = make_response(json_data={"ok": True})
     if content_length is not None:
         response.headers["Content-Length"] = content_length
 
-    assert ops_api.handle_response(response, "ops-search") == {"ok": True}
+    assert ops_api.handle_response(client, response, "ops-search") == {"ok": True}
 
     if content_length == "7":
-        metrics.measure_upstream.assert_called_once_with("ops", 7)
+        metrics.measure_upstream.assert_called_once_with("ops", 7, userid="foo")
     else:
-        get_client.assert_not_called()
         metrics.measure_upstream.assert_not_called()

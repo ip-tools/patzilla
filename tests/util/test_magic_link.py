@@ -10,14 +10,9 @@ from __future__ import annotations
 
 import datetime
 from types import SimpleNamespace
-from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 import pytest
-from pyramid.httpexceptions import HTTPFound
-from pyramid.testing import DummyRequest
-
-from patzilla.navigator.views import auth_magic_verify, login_page, logout_view
 from patzilla.util.web.identity.config import AuthSettings
 from patzilla.util.web.identity.magic_link import (
     ConsumedTokenError,
@@ -36,12 +31,6 @@ from patzilla.util.web.identity.magic_link import (
     sanitize_redirect_url,
     send_magic_link_email,
 )
-from patzilla.util.web.identity.service import (
-    attach_user,
-    identity_logout_handler,
-    identity_magic_link_handler,
-    identity_session_handler,
-)
 from patzilla.util.web.identity.session import (
     authenticate_session,
     create_session,
@@ -49,7 +38,6 @@ from patzilla.util.web.identity.session import (
     hash_token,
     revoke_all_user_sessions,
     revoke_session,
-    set_session_cookie,
 )
 from patzilla.util.web.identity.store import (
     MagicLinkToken,
@@ -459,7 +447,7 @@ def test_send_magic_link_email_logs_in_dev_when_smtp_unconfigured(caplog):
             email="dev@example.org",
             verify_url=verify_url,
             ttl_minutes=15,
-            request=None,
+            mail=None,
             settings=settings,
         )
     assert delivered is False
@@ -507,33 +495,9 @@ def test_session_lifecycle_renewal_and_revocation(memory_db):
 
 
 # ------------------------------------------
-#   Pyramid request/view/service integration tests
+#   HTTP integration tests
 # ------------------------------------------
-class _DummyErrors:
-    def __init__(self):
-        self.status = None
-        self.items: list[tuple[str, str, str]] = []
-
-    def add(self, loc: str, name: str, desc: str) -> None:
-        self.items.append((loc, name, desc))
-
-
-def _make_request(**kwargs) -> Any:
-    request: Any = DummyRequest(**kwargs)
-    request.errors = _DummyErrors()
-    request.registry.application_settings = {
-        "ip_navigator": {"development_mode": True},
-        "auth": {
-            "magic_link_enabled": True,
-            "magic_link_allow_signup": True,
-            "log_magic_link_in_dev": True,
-        },
-        "smtp": {"hostname": "{smtp_hostname}"},
-    }
-    return request
-
-
-def test_attach_user_cookie_and_nginx_coexistence(memory_db):
+def test_session_cookie_and_nginx_coexistence(memory_db, web_client):
     settings = AuthSettings()
     cookie_user = User(username="cookie@example.org", email="cookie@example.org", email_verified=True)
     cookie_user.save()
@@ -542,95 +506,89 @@ def test_attach_user_cookie_and_nginx_coexistence(memory_db):
 
     raw_session, _ = create_session(cookie_user, settings)
 
-    # 1. Native Pyramid session cookie takes precedence.
-    req1 = _make_request(cookies={settings.session_cookie_name: raw_session})
-    attach_user(SimpleNamespace(request=req1))
-    assert req1.user.userid == cookie_user.userid
-    assert req1.auth_session is not None
+    # 1. Session cookie takes precedence.
+    response = web_client.get("/api/identity/session", cookies={settings.session_cookie_name: raw_session},
+                              headers={"X-User-Id": nginx_user.userid})
+    assert response.json()["user"]["email"] == "cookie@example.org"
 
     # 2. Fallback to nginx-auth X-User-Id header when no session cookie is set.
-    req2 = _make_request(headers={"X-User-Id": nginx_user.userid})
-    attach_user(SimpleNamespace(request=req2))
-    assert req2.user.userid == nginx_user.userid
-    assert req2.auth_session is None
+    response = web_client.get("/api/identity/session", headers={"X-User-Id": nginx_user.userid})
+    assert response.json()["user"]["userid"] == nginx_user.userid
 
     # 3. Anonymous placeholder when neither is present.
-    req3 = _make_request()
-    attach_user(SimpleNamespace(request=req3))
-    assert req3.user.is_authenticated is False
+    assert web_client.get("/api/identity/session").json() == {"authenticated": False, "user": None}
 
 
-def test_identity_api_and_verify_views_end_to_end(memory_db):
+def test_identity_api_and_verify_views_end_to_end(memory_db, web_client):
     # 1. Request magic link via API (neutral response).
-    req_ml = _make_request(
-        content_type="application/json",
-        json_body={"email": "founder@example.org", "came_from": "/navigator/"},
-    )
-    resp_ml = identity_magic_link_handler(req_ml)
-    assert resp_ml["status"] == "ok"
+    response = web_client.post("/api/identity/magic-link", json={"email": "founder@example.org", "came_from": "/navigator/"})
+    assert response.json()["status"] == "ok"
     assert len(memory_db.tokens.docs) == 1
+
+    # Invalid email addresses are rejected using the error envelope.
+    response = web_client.post("/api/identity/magic-link", data={"email": "not-an-email"})
+    assert response.status_code == 400
+    assert response.json()["status"] == "error"
 
     # Capture raw token by creating a controlled link for verify view test.
     settings = AuthSettings()
-    captured = {}
     res = request_magic_link(
         email="founder2@example.org",
         settings=settings,
         base_url="http://localhost:6543",
         came_from="/navigator/?query=battery",
-        send_mail_fn=lambda **kw: captured.update(kw) or True,
+        send_mail_fn=lambda **kw: True,
     )
     raw_token = parse_qs(urlsplit(res.verify_url).query)["token"][0]
 
     # 2. GET /auth/magic/verify renders confirmation without consuming token.
-    req_get = _make_request(params={"token": raw_token})
-    req_get.method = "GET"
-    ctx_get = auth_magic_verify(req_get)
-    assert ctx_get["valid"] is True
-    assert ctx_get["email"] == "founder2@example.org"
+    response = web_client.get(f"/auth/magic/verify?token={raw_token}")
+    assert response.status_code == 200
+    assert "founder2@example.org" in response.text
 
     # 3. POST /auth/magic/verify consumes token, sets HttpOnly cookie, redirects.
-    req_post = _make_request(post={"token": raw_token})
-    req_post.method = "POST"
-    resp_post = auth_magic_verify(req_post)
-    assert isinstance(resp_post, HTTPFound)
-    assert resp_post.location == "/navigator/?query=battery"
-    set_cookie_header = resp_post.headers.get("Set-Cookie", "")
+    response = web_client.post("/navigator/auth/magic/verify", data={"token": raw_token}, follow_redirects=False)
+    assert response.status_code == 302
+    assert response.headers["location"] == "/navigator/?query=battery"
+    set_cookie_header = response.headers["set-cookie"]
     assert "patzilla_session=" in set_cookie_header
     assert "HttpOnly" in set_cookie_header
+    cookie_val = response.cookies["patzilla_session"]
 
-    # Extract session cookie value and verify /api/identity/session.
-    cookie_val = set_cookie_header.split("patzilla_session=", 1)[1].split(";", 1)[0]
-    req_sess = _make_request(cookies={"patzilla_session": cookie_val})
-    attach_user(SimpleNamespace(request=req_sess))
-    sess_payload = identity_session_handler(req_sess)
-    assert sess_payload["authenticated"] is True
-    assert sess_payload["user"]["email"] == "founder2@example.org"
-    assert "password" not in sess_payload["user"]
-    assert "billing" not in sess_payload["user"]
+    # Session cookie authenticates `/api/identity/session`.
+    payload = web_client.get("/api/identity/session", cookies={"patzilla_session": cookie_val}).json()
+    assert payload["authenticated"] is True
+    assert payload["user"]["email"] == "founder2@example.org"
+    assert "password" not in payload["user"]
+    assert "billing" not in payload["user"]
 
-    # 4. Second POST with same token returns error context (single-use).
-    req_replay = _make_request(post={"token": raw_token})
-    req_replay.method = "POST"
-    ctx_replay = auth_magic_verify(req_replay)
-    assert ctx_replay["valid"] is False
-    assert ctx_replay["error_code"] == "consumed-token"
+    # 4. Second POST with same token returns error page (single-use).
+    response = web_client.post("/auth/magic/verify", data={"token": raw_token}, follow_redirects=False)
+    assert response.status_code == 200
+    assert "already been used" in response.text
 
-    # 5. Logout revokes session.
-    req_logout = _make_request(cookies={"patzilla_session": cookie_val})
-    attach_user(SimpleNamespace(request=req_logout))
-    logout_payload = identity_logout_handler(req_logout)
-    assert logout_payload["status"] == "ok"
+    # 5. Sliding renewal: When the session is about to expire, the cookie is renewed.
+    memory_db.sessions.docs[0].expires_at = utcnow() + datetime.timedelta(minutes=5)
+    response = web_client.get("/api/identity/session", cookies={"patzilla_session": cookie_val})
+    assert f"patzilla_session={cookie_val}" in response.headers["set-cookie"]
+
+    # 6. Logout revokes session and clears the cookie.
+    response = web_client.post("/api/identity/logout", cookies={"patzilla_session": cookie_val})
+    assert response.json() == {"status": "ok"}
+    assert 'patzilla_session=""' in response.headers["set-cookie"]
     assert authenticate_session(cookie_val, settings) == (None, None, False)
 
-    # 6. Browser /logout view redirects to /login and clears cookie.
-    req_logout_view = _make_request()
-    resp_logout_view = logout_view(req_logout_view)
-    assert isinstance(resp_logout_view, HTTPFound)
-    assert resp_logout_view.location == "/login"
+    # 7. A revoked session cookie is cleared on the next request.
+    response = web_client.get("/api/identity/session", cookies={"patzilla_session": cookie_val})
+    assert response.json()["authenticated"] is False
+    assert 'patzilla_session=""' in response.headers["set-cookie"]
 
-    # 7. Login page exposes magic_link_enabled and sanitizes came_from.
-    req_login = _make_request(params={"came_from": "https://evil.example"})
-    ctx_login = login_page(req_login)
-    assert ctx_login["magic_link_enabled"] is True
-    assert ctx_login["came_from"] == ""
+    # 8. Browser /logout view redirects to /login and clears cookie.
+    response = web_client.get("/logout", follow_redirects=False)
+    assert response.status_code == 302
+    assert response.headers["location"] == "/login"
+
+    # 9. Login page sanitizes came_from.
+    response = web_client.get("/navigator/login?came_from=https://evil.example")
+    assert response.status_code == 200
+    assert "evil.example" not in response.text

@@ -2,19 +2,16 @@
 # (c) 2017-2022 Andreas Motl <andreas.motl@ip-tools.org>
 import logging
 import os
-from pyramid.httpexceptions import HTTPUnauthorized
-from zope.interface.interface import Interface
-from zope.interface import implementer
+from starlette.exceptions import HTTPException
 from patzilla.access.depatech.client import DepaTechClient
-from patzilla.access.generic.credentials import AbstractCredentialsGetter, DatasourceCredentialsManager
+from patzilla.access.generic.credentials import AbstractCredentialsGetter
 
 logger = logging.getLogger(__name__)
 
 
-def includeme(config):
+def create_pool(datasource_settings):
 
     # Acquire settings for depa.tech.
-    datasource_settings = config.registry.datasource_settings
     depatech_settings = datasource_settings.datasource.depatech
 
     # Get URI settings, optionally falling back to environment variables.
@@ -23,8 +20,7 @@ def includeme(config):
     # When an API URI can be discovered, register the component.
     if api_uri:
         logger.info("Using depa.tech API at {}".format(api_uri))
-        config.registry.registerUtility(DepaTechClientPool(api_uri=api_uri))
-        config.add_subscriber(attach_depatech_client, "pyramid.events.ContextFound")
+        return DepaTechClientPool(api_uri=api_uri)
 
 
 class DepaTechCredentialsGetter(AbstractCredentialsGetter):
@@ -51,39 +47,9 @@ class DepaTechCredentialsGetter(AbstractCredentialsGetter):
         }
 
 
-def attach_depatech_client(event):
-    """
-    Create depa.tech client pool per credentials context.
-    """
-
-    # Don't start data source machinery on requests to static assets.
-    if '/static' in event.request.url:
-        return
-
-    request = event.request
-
-    try:
-        dcm = DatasourceCredentialsManager(identifier="depatech", credentials_getter=DepaTechCredentialsGetter)
-        credentials_source, credentials_data = dcm.resolve(request)
-    except:
-        logger.exception("Unable to resolve credentials for depa.tech")
-        return
-
-    username = credentials_data['api_username'][:10]
-    logger.debug('Attaching depa.tech credentials from "{}": {}'.format(credentials_source, username))
-
-    pool = request.registry.getUtility(IDepaTechClientPool)
-    request.depatech_client = pool.get(credentials_source, credentials_data)
-
-
-class IDepaTechClientPool(Interface):  # ty: ignore[unsupported-base]
-    pass
-
-
-@implementer(IDepaTechClientPool)
 class DepaTechClientPool:
     """
-    depa.tech client pool as Pyramid utility implementation.
+    depa.tech client pool, holding one client per credentials context.
     """
 
     def __init__(self, api_uri):
@@ -95,7 +61,7 @@ class DepaTechClientPool:
         if identifier not in self.clients:
 
             if credentials is None:
-                raise HTTPUnauthorized("Unable to discover credentials for depa.tech. identifier={}".format(identifier))
+                raise HTTPException(401, "Unable to discover credentials for depa.tech. identifier={}".format(identifier))
 
             logger.info("Creating upstream client for depa.tech. identifier={}".format(identifier))
             self.clients[identifier] = DepaTechClient(

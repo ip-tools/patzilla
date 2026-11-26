@@ -13,12 +13,12 @@ from typing import Optional, Dict, Union
 import requests
 from pprint import pprint
 from beaker.cache import cache_region
+from patzilla.boot.cache import client_cache_region
 from munch import Munch
 from requests.exceptions import RequestException
 from patzilla.util.image.convert import to_png
 from patzilla.access.generic.exceptions import NoResultsException, GenericAdapterException, SearchException
 from patzilla.access.generic.search import GenericSearchResponse, GenericSearchClient
-from patzilla.access.ificlaims import get_ificlaims_client
 from patzilla.util.data.container import SmartMunch
 from patzilla.util.numbers.normalize import normalize_patent
 
@@ -68,7 +68,7 @@ class IFIClaimsClient(GenericSearchClient):
         return headers
 
     def search_method(self, query: Union[str, Munch], options: Optional[Dict]) -> SmartMunch:
-        return ificlaims_search(query=query, options=options)
+        return ificlaims_search(self, query, options)
 
     @cache_region('search')
     def search(self, query, options=None):
@@ -548,18 +548,8 @@ class IFIClaimsSearchResponse(GenericSearchResponse):
         return document['fam']
 
 
-def ificlaims_client(options=None):
-    options = options or SmartMunch()
-    if 'vendor' in options and options.vendor == 'serviva':
-        client = get_serviva_client()  # ty: ignore[unresolved-reference]
-    else:
-        client = get_ificlaims_client()
-    return client
-
-
-def ificlaims_fetch(resource, format, options=None):
+def ificlaims_fetch(client, resource, format, options=None):
     options = options or {}
-    client = ificlaims_client(options=options)
     if format in ['xml', 'json']:
         return client.text_fetch(resource, format)
     elif format == 'pdf':
@@ -574,12 +564,11 @@ def ificlaims_fetch(resource, format, options=None):
         raise IFIClaimsFormatException(msg)
 
 
-@cache_region('search')
-def ificlaims_search(query, options: Optional[Munch]=None):
+@client_cache_region('search')
+def ificlaims_search(client, query, options: Optional[Munch]=None):
 
     options = options or SmartMunch()
 
-    client = ificlaims_client(options=options)
     try:
         data = client.search(query, options)
         # Raise an exception on empty results to skip caching this response
@@ -592,9 +581,8 @@ def ificlaims_search(query, options: Optional[Munch]=None):
         raise
 
 
-@cache_region('search')
-def ificlaims_crawl(constituents, query, chunksize, options=None):
-    client = ificlaims_client(options=options)
+@client_cache_region('search')
+def ificlaims_crawl(client, constituents, query, chunksize, options=None):
     try:
         return client.crawl(constituents, query, chunksize)
     except SyntaxError as ex:

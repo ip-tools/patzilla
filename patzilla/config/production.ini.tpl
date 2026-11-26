@@ -202,10 +202,12 @@ signature =
 
 
 ###
-# Pyramid application configuration
-# http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/environment.html
+# Web application configuration
 ###
 
+# Evaluate `X-Forwarded-Proto` and `X-Forwarded-For` headers set by a reverse proxy.
+# Use `prefix = /path` to serve the application below a path prefix.
+# Only enable it when the application is exclusively reachable through the reverse proxy.
 [filter:prefix-middleware]
 use = egg:PasteDeploy#prefix
 
@@ -213,13 +215,12 @@ use = egg:PasteDeploy#prefix
 use = egg:patzilla#web
 filter-with = prefix-middleware
 
-pyramid.reload_templates = false
-pyramid.debug_authorization = false
-pyramid.debug_notfound = false
-pyramid.debug_routematch = false
-pyramid.default_locale_name = en
-pyramid.includes =
+# Whether to reload Mako templates when they change.
+reload_templates = false
 
+# Whether to publish the OpenAPI schema and documentation at `/api/openapi.json` and `/api/docs`.
+# Beware: Some endpoints are only protected by the reverse proxy.
+api.docs = false
 
 # Database configuration
 mongodb.patzilla.uri = mongodb://localhost:27017/patzilla
@@ -259,17 +260,18 @@ cache.static.expire = 2592000
 
 
 ###
-# wsgi server configuration
+# HTTP server configuration, used by `patzilla serve`
 ###
 
 [server:main]
-use = egg:waitress#main
 host = 0.0.0.0
 port = 6543
+# Number of worker threads for processing requests. Default: 40.
+#threads = 40
 
 ###
 # logging configuration
-# http://docs.pylonsproject.org/projects/pyramid/en/latest/narr/logging.html
+# https://docs.python.org/3/library/logging.config.html#configuration-file-format
 ###
 
 [loggers]

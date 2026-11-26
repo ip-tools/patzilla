@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 # (c) 2013-2015 Andreas Motl, Elmyra UG
 import logging
+import typing as t
+
 import arrow
-from cornice.service import Service
-from pyramid.httpexceptions import HTTPNotFound
-from pyramid.response import Response
+import simplejson
+from fastapi import APIRouter, HTTPException, Response
 from patzilla.access.epo.ops.api import ops_service_usage
 from patzilla.util.date import week_range, month_range, year_range
 from patzilla.util.web.identity.store import User
+from patzilla.web.dependencies import OpsClient
 
 log = logging.getLogger(__name__)
 
-admin_users_emails_service = Service(
-    name='admin-users-email-service',
-    path='/api/admin/users/emails',
-    description="Responds with email addresses of all customers")
+router = APIRouter(tags=["admin"])
 
-@admin_users_emails_service.decorator("get")
-def admin_users_emails_handler(request):
-    tag = request.params.get('tag')
+
+@router.get("/api/admin/users/emails", name="admin-users-email-service",
+            summary="Responds with email addresses of all customers")
+def admin_users_emails_handler(tag: t.Optional[str] = None):
     users = User.objects()  # ty: ignore[unresolved-attribute]
     user_emails = []
     for user in users:
@@ -32,20 +32,12 @@ def admin_users_emails_handler(request):
 
     payload = '\n'.join(user_emails)
 
-    return Response(payload, content_type='text/plain', charset='utf-8')
+    return Response(payload, media_type='text/plain')
 
 
-ops_usage_service = Service(
-    name='ops-usage',
-    path='/api/ops/usage/{kind}/{duration}',
-    renderer='prettyjson',
-    description="OPS usage interface")
-
-@ops_usage_service.decorator("get")
-def ops_usage_handler(request):
+@router.get("/api/ops/usage/{kind}/{duration}", name="ops-usage", summary="OPS usage interface")
+def ops_usage_handler(kind: str, duration: str, client: OpsClient):
     # TODO: respond with proper 4xx codes if something fails
-    kind = request.matchdict['kind']
-    duration = request.matchdict['duration']
 
     now = arrow.utcnow()
 
@@ -84,10 +76,10 @@ def ops_usage_handler(request):
             date_begin, date_end = year_range(now)
 
     if not date_begin or not date_end:
-        raise HTTPNotFound('Use /day, /week, /month or /year, /{0}/{1} not implemented'.format(kind, duration))
+        raise HTTPException(404, 'Use /day, /week, /month or /year, /{0}/{1} not implemented'.format(kind, duration))
 
     date_begin = date_begin.format('DD/MM/YYYY')
     date_end = date_end.format('DD/MM/YYYY')
 
-    response = ops_service_usage(date_begin, date_end)
-    return response
+    response = ops_service_usage(client, date_begin, date_end)
+    return Response(simplejson.dumps(response, use_decimal=True, sort_keys=True, indent=4), media_type='application/json')

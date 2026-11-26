@@ -4,7 +4,7 @@ import traceback
 import collections
 from typing import Dict
 
-from cornice.renderer import JSONError
+from patzilla.access.generic.exceptions import ServiceError
 
 
 def get_exception_message(ex, add_traceback=False):
@@ -15,11 +15,11 @@ def get_exception_message(ex, add_traceback=False):
     return description
 
 def get_safe_traceback(ex):
-    if type(ex) is not JSONError:
+    if not isinstance(ex, ServiceError):
         tb = traceback.format_exc()
         return tb
     else:
-        return 'traceback not displayed due to JSONError not being printable'
+        return 'traceback not displayed for service errors'
 
 def safe_value(value):
     """

@@ -4,31 +4,37 @@ import logging
 import datetime
 import operator
 import html.parser
+
+import simplejson
 from arrow.arrow import Arrow
-from cornice.service import Service
 from dateutil.relativedelta import relativedelta
+from fastapi import APIRouter, Response
 from jsonpointer import JsonPointer
 from transitions.core import Machine
 from patzilla.access.epo.ops.api import analytics_family, ops_published_data_search, _result_list_compact
 from patzilla.access.sip.client import sip_published_data_search, sip_published_data_crawl
 from patzilla.navigator.services.dpma import dpma_published_data_search
 from patzilla.navigator.services.util import make_expression_filter
+from patzilla.web.dependencies import CurrentUser, OpsClient, Params, SipClient, State, Vendor, \
+    client_dependency, get_ops_client
 
 log = logging.getLogger(__name__)
 
+router = APIRouter(tags=["analytics"])
 
-analytics_family_service = Service(
-    name='analytics-applicant-family',
-    path='/api/analytics/family/overview',
-    renderer='prettyjson',
-    description="Family analytics interface")
 
-@analytics_family_service.decorator("get")
-def analytics_family_handler(request):
+def prettyjson(data):
+    """Respond with indented JSON, like the former `prettyjson` renderer."""
+    return Response(simplejson.dumps(data, use_decimal=True, sort_keys=True, indent=4), media_type='application/json')
+
+
+@router.get("/api/analytics/family/overview", name="analytics-applicant-family",
+            summary="Family analytics interface")
+def analytics_family_handler(client: OpsClient, params: Params):
     # TODO: respond with proper 4xx codes if something fails
 
     # decode query parameters into datasource and criteria
-    expression_data = _decode_expression_from_query(request)
+    expression_data = _decode_expression_from_query(params)
 
     query = make_expression_filter({
         'datasource': expression_data.get('datasource', 'ops'),
@@ -36,33 +42,34 @@ def analytics_family_handler(request):
         'criteria': expression_data['criteria'],
     })['expression']
 
-    response = analytics_family(query)
-    return response
+    response = analytics_family(client, query)
+    return prettyjson(response)
 
 
-
-analytics_daterange_service = Service(
-    name='analytics-daterange',
-    path='/api/analytics/daterange/{kind}',
-    renderer='prettyjson',
-    description="Daterange analytics interface")
-
-@analytics_daterange_service.decorator("get")
-def analytics_daterange_handler(request):
+@router.get("/api/analytics/daterange/{kind}", name="analytics-daterange", summary="Daterange analytics interface")
+def analytics_daterange_handler(kind: str, params: Params, state: State, user: CurrentUser, vendor: Vendor):
     # TODO: respond with proper 4xx codes if something fails
 
-    kind = request.matchdict['kind'].lower()
+    kind = kind.lower()
 
     # decode query parameters into datasource and criteria
-    expression_data = _decode_expression_from_query(request)
+    expression_data = _decode_expression_from_query(params)
+    datasource = expression_data['datasource']
 
-    response = analytics_daterange(expression_data['datasource'], kind, expression_data['criteria'])
-    return response
+    # Acquire upstream client, depending on data source
+    client = None
+    if datasource == 'ops':
+        client = get_ops_client(state, user, vendor)
+    elif datasource == 'sip':
+        client = client_dependency('sip', 'SIP')(state, user, vendor)
 
-def _decode_expression_from_query(request):
+    response = analytics_daterange(datasource, kind, expression_data['criteria'], client=client)
+    return prettyjson(response)
+
+def _decode_expression_from_query(params):
     # decode query parameters into datasource and criteria
     decoded = {}
-    params = dict(request.params)
+    params = dict(params)
     if 'datasource' in params:
         decoded['datasource'] = params['datasource'].lower()
         del params['datasource']
@@ -75,9 +82,10 @@ class QueryDateRangeNarrower:
     OLDEST = 1
     NEWEST = 2
 
-    def __init__(self, datasource, criteria, kind):
+    def __init__(self, datasource, criteria, kind, client=None):
 
         self.datasource = datasource
+        self.client = client
         self.criteria = criteria
         self.kind = kind
 
@@ -134,13 +142,13 @@ class QueryDateRangeNarrower:
         })['expression']
 
         if self.datasource == 'ops':
-            self.response, self.hits = query_ops(query, limit=self.maxcount)
+            self.response, self.hits = query_ops(self.client, query, limit=self.maxcount)
 
         elif self.datasource == 'depatisnet':
             self.response, self.hits = query_depatisnet(query, limit=self.maxcount)
 
         elif self.datasource == 'sip':
-            self.response, self.hits = query_sip(query, limit=self.maxcount)
+            self.response, self.hits = query_sip(self.client, query, limit=self.maxcount)
 
         else:
             raise ValueError('Data source "{0}" not implemented'.format(self.datasource))
@@ -208,13 +216,14 @@ class QueryDateRangeNarrower:
             # self.step()
 
 
-def analytics_daterange(datasource, kind, criteria):
+def analytics_daterange(datasource, kind, criteria, client=None):
+    """`client` is the upstream client for the data source, i.e. for `ops` or `sip`."""
 
     fsm_kind = QueryDateRangeNarrower.NEWEST
     if kind == 'oldest':
         fsm_kind = QueryDateRangeNarrower.OLDEST
 
-    fsm = QueryDateRangeNarrower(datasource, criteria, fsm_kind)
+    fsm = QueryDateRangeNarrower(datasource, criteria, fsm_kind, client=client)
     # fsm.start()
 
     #print 'state:', fsm.state
@@ -246,9 +255,9 @@ def analytics_daterange(datasource, kind, criteria):
 
 
 
-def query_ops(query, limit=50):
+def query_ops(client, query, limit=50):
     #print 'query:', query
-    response = ops_published_data_search('biblio', query, '1-{0}'.format(limit))
+    response = ops_published_data_search(client, 'biblio', query, '1-{0}'.format(limit))
     #print response
 
     pointer_total_count = JsonPointer('/ops:world-patent-data/ops:biblio-search/@total-result-count')
@@ -262,27 +271,21 @@ def query_depatisnet(query, limit=50):
     log.info('query: %s, total_count: %s', query, response['hits'])
     return response, response['hits']
 
-def query_sip(query, limit=50):
-    response = sip_published_data_search(query, {'offset': 1, 'limit': limit})
+def query_sip(sip, query, limit=50):
+    response = sip_published_data_search(sip, query, {'offset': 1, 'limit': limit})
     total_count = int(response['meta']['MemCount'])
     log.info('query: %s, total_count: %s', query, total_count)
     return response, total_count
 
 
 
-
-analytics_applicants_distinct_service = Service(
-    name='analytics-applicants-distinct',
-    path='/api/analytics/applicants-distinct',
-    renderer='prettyjson',
-    description='Applicants distinct analytics interface')
-
-@analytics_applicants_distinct_service.decorator("get")
-def analytics_applicants_distinct_handler(request):
+@router.get("/api/analytics/applicants-distinct", name="analytics-applicants-distinct",
+            summary="Applicants distinct analytics interface")
+def analytics_applicants_distinct_handler(sip: SipClient, params: Params):
     # TODO: respond with proper 4xx codes if something fails
 
     # decode query parameters into datasource and criteria
-    expression_data = _decode_expression_from_query(request)
+    expression_data = _decode_expression_from_query(params)
 
     query = make_expression_filter({
         'datasource': 'sip',
@@ -290,7 +293,7 @@ def analytics_applicants_distinct_handler(request):
         'criteria': expression_data['criteria'],
     })
 
-    results = sip_published_data_crawl('biblio', query, 2500)
+    results = sip_published_data_crawl(sip, 'biblio', query, 2500)
     #print 'results:', results
 
     applicants = {}
@@ -303,4 +306,4 @@ def analytics_applicants_distinct_handler(request):
         applicants[applicant] += 1
 
     response = applicants
-    return response
+    return prettyjson(response)

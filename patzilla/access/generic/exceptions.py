@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 # (c) 2016-2017 Andreas Motl, Elmyra UG <andreas.motl@elmyra.de>
 import html
-import json
 import logging
 from contextlib import contextmanager
-from pyramid.httpexceptions import HTTPError
-from pyramid.response import Response
 
 log = logging.getLogger(__name__)
 
@@ -50,12 +47,29 @@ class NoResultsException(GenericAdapterException):
 
 
 
-class ExampleJsonException(HTTPError, GenericAdapterException):
-    def __init__(self, data=None, status=404):
-        #body = {'status': 'error', 'errors': errors}
-        Response.__init__(self, json.dumps(data, use_decimal=True))
-        self.status = status
-        self.content_type = 'application/json'
+def is_http_error(ex, status_code=None):
+    """Whether `ex` is an HTTP error or service error, optionally with the given status code."""
+    code = getattr(ex, "status_code", None)
+    if not isinstance(code, int) or not isinstance(ex, Exception):
+        return False
+    return status_code is None or code == status_code
+
+
+class ServiceError(Exception):
+    """
+    An error reported to API clients using the JSON error envelope the frontend expects:
+    `{"status": "error", "errors": [{"location": ..., "name": ..., "description": ...}]}`.
+    """
+
+    def __init__(self, location, name, description, status_code=400, detail=None):
+        self.errors = [{"location": location, "name": name, "description": description}]
+        self.status_code = status_code
+        self.detail = detail or str(description)
+        super().__init__(self.detail)
+
+    @property
+    def envelope(self):
+        return {"status": "error", "errors": self.errors}
 
 
 # https://stackoverflow.com/questions/15572288/general-decorator-to-wrap-try-except-in-python/15573313#15573313
