@@ -93,7 +93,7 @@ requires = [
     'attrs<27',
     'munch<5',
     'pyparsing<4',
-    'python-dateutil<3',
+    'python-dateutil<5',
     'ago<0.2',
     'arrow<2',
     'validate_email<2',
